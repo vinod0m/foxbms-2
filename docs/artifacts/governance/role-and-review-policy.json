@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "roles": [
+    {
+      "role_id": "architect",
+      "name": "System Architect",
+      "responsibilities": ["Scope, schemas, shared decisions, allocation, cross-domain integration, gates, final evaluation"],
+      "authority": "Read-only regarding foxBMS implementation; full authority over corpus artifacts",
+      "independence": "Does not author implementation artifacts"
+    },
+    {
+      "role_id": "safety_engineer",
+      "name": "Functional Safety Engineer",
+      "responsibilities": ["Hazard analysis, safety goals, FSR/TSR, safety analyses (FMEA/FTA), safety case"],
+      "authority": "Author of safety artifacts; reviewer of HW/SW safety requirements",
+      "independence": "Separate from HW/SW authors"
+    },
+    {
+      "role_id": "system_engineer",
+      "name": "System Engineer",
+      "responsibilities": ["Stakeholder needs, system requirements, architecture, HSI, validation"],
+      "authority": "Author of system artifacts; owner of HSI authority",
+      "independence": "Separate from HW/SW authors"
+    },
+    {
+      "role_id": "hw_engineer",
+      "name": "Hardware Engineer",
+      "responsibilities": ["HW requirements, architecture, detailed design, HW safety analysis, verification"],
+      "authority": "Author of HW artifacts; reviewer of HSI",
+      "independence": "Separate from SW author"
+    },
+    {
+      "role_id": "sw_engineer",
+      "name": "Software Engineer",
+      "responsibilities": ["SW requirements, architecture, detailed design, implementation mapping, unit verification"],
+      "authority": "Author of SW artifacts; reviewer of HSI",
+      "independence": "Separate from HW author"
+    },
+    {
+      "role_id": "verification_engineer",
+      "name": "Verification Engineer",
+      "responsibilities": ["Verification measures, execution classification, trace coverage, evidence handling"],
+      "authority": "Author of verification artifacts; reviewer of implementation",
+      "independence": "Separate from implementation authors"
+    },
+    {
+      "role_id": "traceability_engineer",
+      "name": "Traceability/Data Engineer",
+      "responsibilities": ["Graph, schemas, exports, metrics, deterministic tooling"],
+      "authority": "Owner of traceability infrastructure; reviewer of link consistency",
+      "independence": "Separate from content authors"
+    },
+    {
+      "role_id": "reviewer_domain",
+      "name": "Domain Reviewer",
+      "responsibilities": ["Domain correctness, safety/standards mapping, provenance, verification quality"],
+      "authority": "Reports findings; cannot modify artifacts directly",
+      "independence": "Separate from artifact authors"
+    },
+    {
+      "role_id": "reviewer_adversarial",
+      "name": "Adversarial Reviewer",
+      "responsibilities": ["Challenge false completeness, unsupported source links, weak oracles, variant contamination, circular arguments, fake approvals, metric gaming"],
+      "authority": "Reports findings; cannot modify artifacts directly",
+      "independence": "Maximum independence; separate session/context"
+    },
+    {
+      "role_id": "project_manager",
+      "name": "Project Manager",
+      "responsibilities": ["Project plan, schedule, resources, milestones, risk management"],
+      "authority": "Author of management artifacts; coordinates reviews",
+      "independence": "Management role; not technical author"
+    },
+    {
+      "role_id": "safety_manager",
+      "name": "Safety Manager",
+      "responsibilities": ["Safety plan, safety culture, escalation, confirmation measures"],
+      "authority": "Author of safety management artifacts; approves safety case",
+      "independence": "Independent from technical authors per ISO 26262"
+    }
+  ],
+  "review_policy": {
+    "required_reviews_per_artifact": [
+      "source_provenance_check",
+      "type_specific_completeness_check",
+      "local_domain_check",
+      "relevant_cross_domain_check",
+      "verification_traceability_check"
+    ],
+    "safety_critical_additional": "separated_challenge_pass_by_adversarial_reviewer",
+    "batch_review_rules": "Only when all covered IDs/digests and findings enumerated",
+    "no_universal_review_from_sample": true,
+    "ai_review_labeling": "All AI reviews labeled with model, session, role; distinct from human approval",
+    "human_approval_required_for": ["safety_case", "production_release", "change_approval"],
+    "review_record_requirements": [
+      "reviewed_ids with revisions and digests",
+      "reviewer identity (role, session, model)",
+      "checklist version",
+      "scope",
+      "findings with severity/category/evidence",
+      "dispositions with actions",
+      "limitations"
+    ]
+  },
+  "approval_semantics": {
+    "human_approval_status_values": ["pending", "approved", "rejected", "not_required"],
+    "synthetic_decision_label": "synthetic_decision with fictional role identities",
+    "production_authorized": false,
+    "product_verification_credit": false
+  }
+}

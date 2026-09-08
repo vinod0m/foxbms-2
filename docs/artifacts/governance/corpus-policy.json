@@ -1,0 +1,260 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "repository_commit": "308028fb",
+  "profiles": {
+    "as_is": {
+      "description": "Faithful reconstruction of what the pinned foxBMS sources demonstrate. Records observed behavior, existing artifacts/tests, justified inferences, evidence gaps, contradictions, and proposed changes. Does not rewrite inconvenient facts or assert undocumented original stakeholder intent. Back-inferred requirements labeled as reconstructed behavior descriptions, not historical approved specifications.",
+      "provenance_rules": {
+        "allowed_origins": ["source_observed", "derived"],
+        "forbidden_origins": ["synthetic"],
+        "derived_requires": ["premises", "reasoning_summary", "source_refs"],
+        "evidence_gaps": "explicitly_recorded_as_gaps",
+        "contradictions": "preserved_as_gaps"
+      },
+      "approval_semantics": {
+        "human_approval_status_values": ["pending", "approved", "rejected", "not_required"],
+        "human_approval_status_default": "pending",
+        "synthetic_decision_label_format": "synthetic_decision:{fictional_role}:{decision_id}",
+        "synthetic_decision_label_example": "synthetic_decision:safety_manager:SYNTH-SAF-APP-001",
+        "production_authorized": false,
+        "product_verification_credit": false
+      },
+      "scope": "Entire pinned repository at commit 308028fb"
+    },
+    "synthetic_reference": {
+      "description": "Complete, coherent hypothetical automotive BMS development project grounded in foxBMS. Defines fictional item, vehicle context, operating assumptions, selected hardware/software baseline, stakeholders, responsibilities, lifecycle, and parameter set. Reuses source-grounded behavior where justified. Fills missing engineering content with labeled synthetic requirements, analyses, design additions, process records, and test fixtures.",
+      "provenance_rules": {
+        "allowed_origins": ["source_observed", "derived", "synthetic"],
+        "source_observed": "Directly from foxBMS sources with durable anchors",
+        "derived": "Logical inference from source_observed premises with reasoning",
+        "synthetic": "Explicitly created to fill gaps, labeled with rationale and validity conditions",
+        "field_level_provenance": "required_for_important_facts_numerical_values_conclusions"
+      },
+      "approval_semantics": {
+        "human_approval_status_values": ["pending", "approved", "rejected", "not_required"],
+        "human_approval_status_default": "pending",
+        "synthetic_decision_label_format": "synthetic_decision:{fictional_role}:{decision_id}",
+        "synthetic_decision_label_example": "synthetic_decision:project_manager:SYNTH-MAN-APP-001",
+        "production_authorized": false,
+        "product_verification_credit": false
+      },
+      "scope": "Hypothetical automotive BMS project using foxBMS as reference platform",
+      "reference_configuration": "VAR-REF-001 (governance/variant-matrix.json)"
+    }
+  },
+  "id_scheme": {
+    "pattern": "FB2-<DOMAIN>-<TYPE>-<NNNNNN>",
+    "domains": {
+      "SYS": "System",
+      "HW": "Hardware",
+      "SW": "Software",
+      "SAF": "Safety",
+      "VER": "Verification",
+      "VAL": "Validation",
+      "MAN": "Management",
+      "SUP": "Supporting",
+      "CFG": "Configuration",
+      "PRM": "Parameter",
+      "ASM": "Assumption",
+      "CHG": "Change",
+      "REV": "Review",
+      "FND": "Finding",
+      "SCN": "Scenario"
+    },
+    "types": {
+      "REQ": "Requirement",
+      "DSN": "Design",
+      "TMS": "Test Measure",
+      "EXE": "Execution",
+      "REV": "Review",
+      "ASM": "Assumption",
+      "PRM": "Parameter",
+      "LNK": "Link",
+      "CHG": "Change",
+      "FND": "Finding",
+      "SCN": "Scenario"
+    },
+    "profile_namespace": {
+      "as_is": "ASIS",
+      "synthetic_reference": "SYNTH"
+    },
+    "rules": [
+      "Never renumber established IDs when inserting records",
+      "Identify exact revisions on baseline-controlled links",
+      "Define supersession, deletion/tombstones, and migration",
+      "IDs must be globally unique across profiles"
+    ]
+  },
+  "link_semantics": {
+    "required_relations": [
+      {
+        "type": "refines",
+        "direction": "lower-level requirement -> parent requirement/goal",
+        "domain": "requirement",
+        "range": "requirement"
+      },
+      {
+        "type": "allocated_to",
+        "direction": "requirement -> architecture/design element",
+        "domain": "requirement",
+        "range": "design"
+      },
+      {
+        "type": "implements",
+        "direction": "implementation element -> design/requirement",
+        "domain": "implementation",
+        "range": ["design", "requirement"]
+      },
+      {
+        "type": "verifies",
+        "direction": "verification measure -> requirement/design",
+        "domain": "test_measure",
+        "range": ["requirement", "design"]
+      },
+      {
+        "type": "validates",
+        "direction": "validation measure -> stakeholder need/use case/goal",
+        "domain": "test_measure",
+        "range": "stakeholder_need"
+      },
+      {
+        "type": "result_of",
+        "direction": "execution -> verification/validation measure",
+        "domain": "execution",
+        "range": "test_measure"
+      },
+      {
+        "type": "supports",
+        "direction": "evidence/argument -> claim",
+        "domain": "evidence",
+        "range": "claim"
+      },
+      {
+        "type": "mitigates",
+        "direction": "safety mechanism -> fault/hazard/failure mode",
+        "domain": "safety_mechanism",
+        "range": ["fault", "hazard", "failure_mode"]
+      },
+      {
+        "type": "specified_by",
+        "direction": "interface/element -> authoritative specification",
+        "domain": ["interface", "element"],
+        "range": "specification"
+      },
+      {
+        "type": "consumes",
+        "direction": "element -> signal/data artifact",
+        "domain": "element",
+        "range": "signal"
+      },
+      {
+        "type": "produces",
+        "direction": "element -> signal/data artifact",
+        "domain": "element",
+        "range": "signal"
+      },
+      {
+        "type": "depends_on",
+        "direction": "dependent artifact -> prerequisite artifact",
+        "domain": "artifact",
+        "range": "artifact"
+      },
+      {
+        "type": "constrained_by",
+        "direction": "artifact -> parameter/assumption/constraint",
+        "domain": "artifact",
+        "range": ["parameter", "assumption"]
+      },
+      {
+        "type": "reviewed_by",
+        "direction": "artifact -> review",
+        "domain": "artifact",
+        "range": "review"
+      },
+      {
+        "type": "changes",
+        "direction": "change request -> affected artifact",
+        "domain": "change",
+        "range": "artifact"
+      },
+      {
+        "type": "supersedes",
+        "direction": "new revision -> prior revision",
+        "domain": "artifact",
+        "range": "artifact"
+      }
+    ],
+    "link_metadata_required": [
+      "link_id",
+      "source_id",
+      "source_revision",
+      "target_id",
+      "target_revision",
+      "relation_type",
+      "profile",
+      "scenario_id",
+      "baseline_id",
+      "variant_applicability",
+      "rationale",
+      "provenance",
+      "review_state",
+      "change_suspect_status"
+    ]
+  },
+  "parameter_registry": {
+    "description": "Single coherent parameter registry: units, tolerances, domains, sign conventions, timing budgets, thresholds, hysteresis, debounce, calibration, configuration selection, assumptions.",
+    "governance": "Parameters defined once, referenced by ID. No scattered conflicting hard-coded values.",
+    "reference_configuration": "VAR-REF-001 with explicit variant deltas"
+  },
+  "evidence_classification": {
+    "execution_kind": {
+      "enum": ["none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"],
+      "description": "Orthogonal to outcome. Planning is not execution. Fabricated simulation-looking numbers are synthetic_fixture."
+    },
+    "outcome": {
+      "enum": ["pass", "fail", "inconclusive", "not_run", "blocked"],
+      "description": "Actual test results or synthetic fixture expectations"
+    },
+    "rules": [
+      "Actual simulation run requires executed model and captured logs",
+      "Missing target hardware or proprietary compilers = blocked, not fabricated success",
+      "Generated consistency-check results validate the corpus, not the BMS product"
+    ]
+  },
+  "review_policy": {
+    "required_reviews_per_artifact": [
+      "source_provenance_check",
+      "type_specific_completeness_check",
+      "local_domain_check",
+      "relevant_cross_domain_check",
+      "verification_traceability_check"
+    ],
+    "safety_critical_additional": "separated_challenge_pass",
+    "batch_review_rules": "Only when all covered IDs/digests and findings enumerated",
+    "no_universal_review_from_sample": true,
+    "ai_review_limitations": "AI reviews are automated reviews. Distinct agent sessions are not organizational independence or human confirmation measures. Real human approval remains pending."
+  },
+  "change_management": {
+    "clean_reference_separate_from_mutations": true,
+    "mutation_scenarios_minimum": 20,
+    "change_lifecycle_demos_minimum": 3,
+    "scenarios_namespaced": true,
+    "superseded_artifacts_preserved": true,
+    "dependent_review_evidence_invalidated": true
+  },
+  "export_contract": {
+    "formats": ["JSONL nodes and edges", "CSV inventory and trace matrices", "Markdown work products", "baseline/content manifests"],
+    "interchange": "Neutral formats as stable interchange. ReqIF, SPDX/CycloneDX, ALM-specific only with correct validation.",
+    "import_contract_documented": true,
+    "schema_versioning": "All exports include schema version, profile/scenario boundaries, provenance, link semantics, approval/evidence semantics"
+  },
+  "boundary_enforcement": {
+    "write_boundary": "docs/artifacts/",
+    "read_boundary": "Entire repository except docs/artifacts/.work/, graphify-out/, openspec/, .agents/, .claude/, .gemini/, .github/, .junie/, .kiro/, .opencode/, .serena/, *.DS_Store",
+    "no_symlinks_outside": true,
+    "no_global_config_modification": true,
+    "no_system_dependencies": true
+  }
+}

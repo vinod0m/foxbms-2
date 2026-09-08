@@ -1,0 +1,359 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "repository_commit": "308028fb",
+  "standards_lock_ref": "governance/standards-lock.json",
+  "process_inventory": [
+    {
+      "process_id": "SYS.1",
+      "name": "Requirements Elicitation",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Stakeholder needs for BMS must be elicited and documented. Applies to both as_is (observed foxBMS capabilities) and synthetic_reference (hypothetical automotive project).",
+      "expected_artifacts": ["Stakeholder Needs", "Use Cases", "Operational Scenarios"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - synthetic_reference stakeholder needs created; as_is back-inferred from features"
+    },
+    {
+      "process_id": "SYS.2",
+      "name": "System Requirements Analysis",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "System requirements derived from stakeholder needs. foxBMS has implicit system requirements in code/config; synthetic_reference needs explicit SYS requirements.",
+      "expected_artifacts": ["System Requirements Specification", "System Modes/States", "Interface Requirements"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - synthetic_reference SYS requirements created; as_is reconstructed from behavior"
+    },
+    {
+      "process_id": "SYS.3",
+      "name": "System Architectural Design",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "System architecture allocating requirements to HW/SW. foxBMS has documented 3-layer architecture; synthetic_reference needs explicit allocation.",
+      "expected_artifacts": ["System Architecture", "HW/SW Allocation", "HSI Specification"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - HSI authority created; allocation documented"
+    },
+    {
+      "process_id": "SYS.4",
+      "name": "System Integration and Integration Test",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Integration of HW/SW components. foxBMS has integration via CAN/SPI; synthetic_reference needs integration strategy and test specs.",
+      "expected_artifacts": ["Integration Plan", "Integration Test Specification", "Integration Test Results"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "partially_mapped - synthetic_reference plan created; as_is has implicit integration"
+    },
+    {
+      "process_id": "SYS.5",
+      "name": "System Qualification Test",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "System-level verification against requirements. foxBMS has unit tests; synthetic_reference needs system qualification test specs.",
+      "expected_artifacts": ["Qualification Test Plan", "Qualification Test Specification", "Qualification Test Results"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "gap - synthetic_reference test specs created; as_is lacks system-level tests"
+    },
+    {
+      "process_id": "SWE.1",
+      "name": "Software Requirements Analysis",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "SW requirements from system requirements. foxBMS has implicit SW requirements in code; synthetic_reference needs explicit SW requirements.",
+      "expected_artifacts": ["Software Requirements Specification", "SW Interface Requirements"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - synthetic_reference SW requirements created per module; as_is back-inferred"
+    },
+    {
+      "process_id": "SWE.2",
+      "name": "Software Architectural Design",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "SW architecture with components, interfaces, data flow. foxBMS has 3-layer architecture documented; synthetic_reference needs detailed SW architecture.",
+      "expected_artifacts": ["Software Architecture", "Component Design", "Interface Specifications"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - SW architecture documented per module; interfaces specified"
+    },
+    {
+      "process_id": "SWE.3",
+      "name": "Software Detailed Design and Unit Construction",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Detailed design and implementation. foxBMS source code IS the detailed design; synthetic_reference maps requirements to code units.",
+      "expected_artifacts": ["Detailed Design", "Source Code", "Unit Test Specifications"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - source code inventoried; detailed design extracted; unit tests mapped"
+    },
+    {
+      "process_id": "SWE.4",
+      "name": "Software Integration and Integration Test",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "SW component integration. foxBMS integrates via database/task model; synthetic_reference needs integration test specs.",
+      "expected_artifacts": ["SW Integration Plan", "SW Integration Test Specification", "SW Integration Test Results"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "partially_mapped - integration approach documented; test specs created for synthetic"
+    },
+    {
+      "process_id": "SWE.5",
+      "name": "Software Qualification Test",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "SW verification against requirements. foxBMS has unit tests (Unity/CMock); synthetic_reference needs qualification test traceability.",
+      "expected_artifacts": ["SW Qualification Test Plan", "SW Qualification Test Specification", "SW Qualification Test Results"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "partially_mapped - unit tests inventoried; qualification traceability created for synthetic"
+    },
+    {
+      "process_id": "SWE.6",
+      "name": "Software Configuration Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Configuration management of SW artifacts. foxBMS uses Git/Waf; synthetic_reference needs CM records.",
+      "expected_artifacts": ["CM Plan", "Baseline Records", "Change Records"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - Git history as CM evidence; synthetic baselines defined"
+    },
+    {
+      "process_id": "HWE.1",
+      "name": "Hardware Requirements Analysis",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "HW requirements from system requirements. foxBMS has hardware design packages; synthetic_reference needs explicit HW requirements.",
+      "expected_artifacts": ["Hardware Requirements Specification", "HW Interface Requirements"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - HW requirements derived from design packages; synthetic created"
+    },
+    {
+      "process_id": "HWE.2",
+      "name": "Hardware Architectural Design",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "HW architecture with blocks, interfaces. foxBMS has schematics/BOM; synthetic_reference needs HW architecture.",
+      "expected_artifacts": ["Hardware Architecture", "Block Diagrams", "Interface Schematics"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "partially_mapped - design packages inventoried; architecture extracted where readable"
+    },
+    {
+      "process_id": "HWE.3",
+      "name": "Hardware Detailed Design",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Detailed HW design (schematics, layout, BOM). foxBMS has Altium packages; synthetic_reference references these.",
+      "expected_artifacts": ["Schematics", "PCB Layout", "BOM", "Component Specifications"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "partially_mapped - design packages referenced; detailed analysis limited by CAD format"
+    },
+    {
+      "process_id": "HWE.4",
+      "name": "Hardware Integration and Test",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "HW integration and verification. foxBMS has bring-up implied; synthetic_reference needs HW integration test specs.",
+      "expected_artifacts": ["HW Integration Plan", "HW Test Specification", "HW Test Results"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "gap - synthetic test specs created; as_is lacks explicit HW test records"
+    },
+    {
+      "process_id": "VAL.1",
+      "name": "Validation",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Validation against stakeholder needs/use cases. Synthetic reference needs validation plan; as_is has no validation records.",
+      "expected_artifacts": ["Validation Plan", "Validation Test Specification", "Validation Results"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "gap - synthetic validation plan created; as_is has no validation evidence"
+    },
+    {
+      "process_id": "ACQ.4",
+      "name": "Supplier Monitoring",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Monitoring of suppliers (AFEs, SBC, MCU, sensors). foxBMS uses multiple vendors; synthetic_reference needs supplier monitoring records.",
+      "expected_artifacts": ["Supplier List", "Monitoring Records", "Supplier Assessments"],
+      "capability_attributes": ["PA1.1", "PA2.1"],
+      "disposition": "mapped - supplier inventory created; synthetic monitoring records"
+    },
+    {
+      "process_id": "SPL.2",
+      "name": "Release Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Release of SW/HW. foxBMS has versioned releases (v1.11.0); synthetic_reference needs release management process.",
+      "expected_artifacts": ["Release Plan", "Release Notes", "Release Checklist"],
+      "capability_attributes": ["PA1.1", "PA2.1"],
+      "disposition": "mapped - release process documented; synthetic release artifacts"
+    },
+    {
+      "process_id": "SUP.1",
+      "name": "Quality Assurance",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "QA processes for development. foxBMS has code reviews, static analysis config; synthetic_reference needs QA records.",
+      "expected_artifacts": ["QA Plan", "Review Records", "Audit Records"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - QA approach documented; synthetic review records"
+    },
+    {
+      "process_id": "SUP.8",
+      "name": "Configuration Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "CM for all work products. foxBMS uses Git; synthetic_reference needs CM for all artifacts.",
+      "expected_artifacts": ["CM Plan", "Configuration Items", "Baselines", "Change Control"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - Git + Waf as CM; synthetic CM records"
+    },
+    {
+      "process_id": "SUP.9",
+      "name": "Problem Resolution Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Defect/issue tracking. foxBMS uses GitHub issues; synthetic_reference needs problem resolution records.",
+      "expected_artifacts": ["Problem Reports", "Resolution Records", "Trend Analysis"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - GitHub issues as evidence; synthetic problem records"
+    },
+    {
+      "process_id": "SUP.10",
+      "name": "Change Request Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Formal change control. foxBMS has PRs/commits; synthetic_reference needs change request process.",
+      "expected_artifacts": ["Change Requests", "Impact Analyses", "Change Decisions"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - PR/commit history as evidence; synthetic change lifecycle demos"
+    },
+    {
+      "process_id": "SUP.11",
+      "name": "Traceability Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Bidirectional traceability. THIS CORPUS IS THE TRACEABILITY IMPLEMENTATION.",
+      "expected_artifacts": ["Traceability Matrix", "Traceability Links", "Coverage Reports"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - corpus implements traceability; matrices generated"
+    },
+    {
+      "process_id": "MAN.3",
+      "name": "Project Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Project planning/monitoring. Synthetic reference needs project plan; as_is has no project management records.",
+      "expected_artifacts": ["Project Plan", "Schedule", "Resource Plan", "Progress Reports"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - synthetic project plan created; as_is has no PM records"
+    },
+    {
+      "process_id": "MAN.5",
+      "name": "Risk Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Project risk management. Synthetic reference needs risk register; as_is has no risk records.",
+      "expected_artifacts": ["Risk Register", "Risk Analyses", "Mitigation Plans"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - synthetic risk register created"
+    },
+    {
+      "process_id": "MAN.6",
+      "name": "Measurement",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Process/product measurement. Synthetic reference needs measurement definitions; as_is has no measurement records.",
+      "expected_artifacts": ["Measurement Plan", "Metrics Definitions", "Measurement Results"],
+      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "disposition": "mapped - synthetic measurement plan created"
+    },
+    {
+      "process_id": "PIM.3",
+      "name": "Process Improvement",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Process improvement. Synthetic reference needs improvement records; as_is has no process improvement records.",
+      "expected_artifacts": ["Improvement Proposals", "Improvement Records", "Effectiveness Evaluation"],
+      "capability_attributes": ["PA1.1", "PA2.1"],
+      "disposition": "mapped - synthetic improvement records created"
+    },
+    {
+      "process_id": "REU.2",
+      "name": "Reuse Program Management",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "applicable",
+      "rationale": "Reuse of components (FreeRTOS, drivers). foxBMS reuses FreeRTOS, vendor drivers; synthetic_reference needs reuse management.",
+      "expected_artifacts": ["Reuse Strategy", "Reuse Assessments", "Reuse Records"],
+      "capability_attributes": ["PA1.1", "PA2.1"],
+      "disposition": "mapped - reuse inventory created; assessments for vendor code"
+    },
+    {
+      "process_id": "MLE.1",
+      "name": "Machine Learning Requirements Analysis",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "not_applicable",
+      "rationale": "foxBMS does not contain embedded machine learning. AI-generated documentation does not establish ML in the BMS product.",
+      "expected_artifacts": [],
+      "capability_attributes": [],
+      "disposition": "not_applicable - explicit non-applicability artifact created per master prompt Section 3"
+    },
+    {
+      "process_id": "MLE.2",
+      "name": "Machine Learning Architectural Design",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "not_applicable",
+      "rationale": "No ML in foxBMS product.",
+      "expected_artifacts": [],
+      "capability_attributes": [],
+      "disposition": "not_applicable"
+    },
+    {
+      "process_id": "MLE.3",
+      "name": "Machine Learning Detailed Design and Training",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "not_applicable",
+      "rationale": "No ML in foxBMS product.",
+      "expected_artifacts": [],
+      "capability_attributes": [],
+      "disposition": "not_applicable"
+    },
+    {
+      "process_id": "MLE.4",
+      "name": "Machine Learning Integration and Test",
+      "standard": "ASPICE_PAM_41",
+      "applicability": "not_applicable",
+      "rationale": "No ML in foxBMS product.",
+      "expected_artifacts": [],
+      "capability_attributes": [],
+      "disposition": "not_applicable"
+    }
+  ],
+  "iso26262_coverage": {
+    "part_1_vocabulary": "referenced",
+    "part_2_management": "mapped - safety plan, roles, tailoring",
+    "part_3_concept": "mapped - item definition, HARA, safety goals, FSC",
+    "part_4_system": "mapped - system requirements, architecture, technical safety concept",
+    "part_5_hardware": "partially_mapped - HW requirements, architecture, FMEDA (synthetic)",
+    "part_6_software": "mapped - SW requirements, architecture, detailed design, unit verification",
+    "part_7_production": "mapped - release, production test plan (synthetic)",
+    "part_8_supporting": "mapped - config management, change management, documentation, QA",
+    "part_9_asils": "mapped - ASIL assignment methodology, safety analyses (FMEA, FTA)",
+    "part_10_guidelines": "referenced - methodology guidance",
+    "part_11_semiconductors": "not_applicable - not semiconductor development",
+    "part_12_motorcycles": "not_applicable - not motorcycle application"
+  },
+  "capability_dimension": {
+    "level_1_performed": "All applicable processes have synthetic examples of performed outcomes",
+    "level_2_managed": "Synthetic work product management, planning/control examples for each process",
+    "level_3_established": "Synthetic process definitions, deployment evidence, training records",
+    "level_4_predictable": "Synthetic quantitative measurement examples, control limits",
+    "level_5_innovating": "Synthetic improvement/innovation examples",
+    "note": "All capability examples are synthetic/fictional. No real organizational capability claimed."
+  },
+  "artifact_coverage_targets": {
+    "requirements": "All features (20) have stakeholder, system, HW, SW requirements in synthetic_reference",
+    "design": "All modules (20+) have architecture and detailed design in synthetic_reference",
+    "verification": "All requirements have verification measures; unit tests mapped for as_is",
+    "traceability": "Complete vertical traceability for reference configuration; lateral for all",
+    "safety": "HARA, FSC, TSC, FMEA, FTA for reference configuration",
+    "process": "All 27 applicable processes have synthetic work products"
+  }
+}

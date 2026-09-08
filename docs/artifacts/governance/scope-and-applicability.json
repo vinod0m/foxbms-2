@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "repository_commit": "308028fb",
+  "item_definition": {
+    "id": "FB2-ITEM-001",
+    "name": "foxBMS 2 Battery Management System Reference Platform",
+    "description": "Modular, open-source BMS development platform for lithium-ion and other battery chemistries. Supports cell voltage/temperature measurement, balancing, state estimation, contactor control, insulation monitoring, and CAN/Ethernet communication. Based on TI TMS570LC4357 MCU with FreeRTOS.",
+    "boundaries": {
+      "included": [
+        "Master BMS controller (TI TMS570LC4357)",
+        "Slave AFE boards (LTC, Maxim, NXP, ADI, TI variants)",
+        "isoSPI/SPI/UART communication interfaces",
+        "Contactor/precharge control",
+        "Insulation monitoring (Bender)",
+        "Interlock monitoring",
+        "SBC (NXP FS85xx)",
+        "Cell balancing (passive)",
+        "State estimation (SOC, SOE, SOF, SOH)",
+        "Safe Operating Area monitoring",
+        "Diagnostic framework",
+        "CAN/Ethernet communication",
+        "Bootloader with firmware update"
+      ],
+      "excluded": [
+        "Battery cells/pack assembly (external)",
+        "High-voltage contactors (external components)",
+        "Current sensors (external, CAN-interfaced)",
+        "Charger/inverter (external systems)",
+        "Vehicle integration (external)",
+        "Active balancing hardware",
+        "Wireless communication",
+        "Cloud connectivity",
+        "Functional safety certification (development platform only)"
+      ]
+    },
+    "functions": [
+      "Cell voltage acquisition and monitoring",
+      "Cell/module temperature acquisition and monitoring",
+      "Pack current acquisition and monitoring",
+      "Safe Operating Area enforcement (V, I, T limits)",
+      "Passive cell balancing during charge",
+      "State-of-Charge estimation (counting + OCV)",
+      "State-of-Energy estimation",
+      "State-of-Function (power) estimation",
+      "State-of-Health estimation (placeholder)",
+      "High-voltage contactor control with precharge",
+      "Contactor diagnostics (weld, stuck-open, cycle count)",
+      "Insulation resistance monitoring",
+      "Interlock loop monitoring",
+      "Measurement plausibility cross-checks",
+      "Fault detection, classification, and response",
+      "Event/data logging to FRAM",
+      "CAN communication (cyclic/async TX, RX)",
+      "Ethernet communication (diagnostics/HMI)",
+      "External watchdog supervision (SBC)",
+      "Firmware update via CAN bootloader"
+    ],
+    "operational_situations": [
+      "Normal operation (driving, charging, standby)",
+      "Startup (self-test, precharge, contactor close)",
+      "Shutdown (contactor open, data save)",
+      "Fault reaction (derating, contactor open, safe state)",
+      "Service/maintenance (interlock open, diagnostics)",
+      "Firmware update (bootloader mode)"
+    ],
+    "modes": [
+      "INIT (power-on initialization)",
+      "SELFTEST (startup self-tests)",
+      "PRECHARGE (precharge sequence)",
+      "NORMAL (normal operation, contactors closed)",
+      "CHARGING (charging mode, balancing active)",
+      "DERATING (reduced power due to limits)",
+      "FAULT (safety fault, contactors open)",
+      "SERVICE (interlock open, diagnostics)",
+      "BOOTLOADER (firmware update)",
+      "SHUTDOWN (controlled shutdown)"
+    ],
+    "environmental_assumptions": [
+      "Automotive temperature range (-40°C to +85°C ambient)",
+      "EMC automotive environment",
+      "Vibration/shock per automotive standards",
+      "Supply voltage 9-16V (12V nominal) or 18-32V (24V nominal)",
+      "Humidity 0-95% non-condensing"
+    ],
+    "external_systems": [
+      "Battery cells/pack (voltage, temperature, current source)",
+      "High-voltage contactors (actuators with feedback)",
+      "Current sensor (CAN-interfaced, e.g., IVT-S, LEM, Honeywell)",
+      "Insulation monitoring device (Bender ISO165C/IR155)",
+      "Interlock loop (hardwired safety loop)",
+      "Vehicle CAN bus (charger, inverter, VCU)",
+      "Ethernet HMI/diagnostic tool",
+      "Charger (external, communicates via CAN)"
+    ],
+    "stakeholder_needs": [
+      "Safe operation of battery within limits",
+      "Accurate state estimation for range/power prediction",
+      "Long battery life through balancing and thermal management",
+      "Diagnostic capability for maintenance and warranty",
+      "Standard communication interfaces for vehicle integration",
+      "Firmware update capability for field updates",
+      "Development platform flexibility for customization"
+    ],
+    "safety_scope": {
+      "functional_safety": "Development platform requiring adaptation for product use. Not ISO 26262 compliant or ASIL certified.",
+      "hazards_addressed": [
+        "Cell overvoltage/undervoltage",
+        "Cell overtemperature/undertemperature",
+        "Pack overcurrent (charge/discharge)",
+        "Insulation failure (shock hazard)",
+        "Contactor weld/stuck-open",
+        "Interlock loop open",
+        "Measurement failure (sensor/AFE/communication)",
+        "Software hang (watchdog)",
+        "Communication loss (CAN/AFE)"
+      ],
+      "inherent_battery_hazards_excluded": [
+        "Thermal runaway (cell chemistry)",
+        "Mechanical damage (external)",
+        "Manufacturing defects (cell level)",
+        "Electrolyte leakage"
+      ]
+    }
+  },
+  "reference_configuration": "VAR-REF-001",
+  "applicability_decisions": [
+    {
+      "id": "APP-ISO-11",
+      "standard": "ISO_26262_2018",
+      "part": "Part 11",
+      "decision": "not_applicable",
+      "rationale": "foxBMS is a BMS platform, not semiconductor development",
+      "responsible_role": "safety_engineer",
+      "review_record": "REV-SAF-001",
+      "conditions_to_change": "If foxBMS develops semiconductor IP"
+    },
+    {
+      "id": "APP-ISO-12",
+      "standard": "ISO_26262_2018",
+      "part": "Part 12",
+      "decision": "not_applicable",
+      "rationale": "foxBMS targets automotive/industrial energy storage, not motorcycle-specific",
+      "responsible_role": "safety_engineer",
+      "review_record": "REV-SAF-001",
+      "conditions_to_change": "If motorcycle BMS variant developed"
+    },
+    {
+      "id": "APP-MLE-ALL",
+      "standard": "ASPICE_PAM_41",
+      "processes": ["MLE.1", "MLE.2", "MLE.3", "MLE.4"],
+      "decision": "not_applicable",
+      "rationale": "foxBMS does not contain embedded machine learning. AI-generated documentation does not establish ML in the BMS product.",
+      "responsible_role": "safety_engineer",
+      "review_record": "REV-SAF-001",
+      "conditions_to_change": "If ML-based estimation/control added to product"
+    }
+  ]
+}
