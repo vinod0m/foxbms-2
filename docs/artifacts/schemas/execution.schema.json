@@ -32,34 +32,61 @@
         },
         "execution_kind": {
           "type": "string",
-          "enum": ["none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"],
-          "description": "Orthogonal to outcome"
+          "enum": ["unknown", "actual_host_run", "actual_simulation_run", "synthetic_fixture"],
+          "description": "Orthogonal to outcome. 'unknown' indicates kind not determined or not applicable."
         },
         "outcome": {
           "type": "string",
-          "enum": ["pass", "fail", "inconclusive", "not_run", "blocked"]
+          "enum": ["pass", "fail", "inconclusive", "not_run", "blocked"],
+          "description": "Execution result: pass (all assertions met), fail (any assertion violated), inconclusive (cannot determine), not_run (skipped), blocked (dependency failure)"
         },
         "environment": {
           "type": "object",
           "required": ["hardware", "software", "tools", "configuration", "tool_versions"],
           "properties": {
-            "hardware": { "type": "string" },
-            "software": { "type": "string" },
-            "tools": { "type": "array", "items": { "type": "string" } },
-            "configuration": { "type": "string" },
-            "tool_versions": { "type": "object" }
+            "hardware": { "type": "string", "description": "Hardware platform identifier (e.g., 'x86_64', 'arm64', 'riscv64')" },
+            "software": { "type": "string", "description": "Software environment (OS, runtime, version)" },
+            "tools": {
+              "type": "array",
+              "description": "Tools used in execution",
+              "items": {
+                "type": "object",
+                "required": ["name", "version", "purpose"],
+                "properties": {
+                  "name": { "type": "string", "description": "Tool name" },
+                  "version": { "type": "string", "pattern": "^\\d+(\\.\\d+)*(-[a-zA-Z0-9.]+)?$", "description": "Tool version (semver-like)" },
+                  "purpose": { "type": "string", "description": "Role of this tool in execution (e.g., 'compiler', 'test_runner', 'analyzer')" }
+                },
+                "additionalProperties": false
+              }
+            },
+            "configuration": { "type": "string", "description": "Build/test configuration identifier" },
+            "tool_versions": {
+              "type": "object",
+              "description": "Mapping of tool names to their exact versions",
+              "patternProperties": {
+                "^[a-zA-Z0-9_.-]+$": { "type": "string", "pattern": "^\\d+(\\.\\d+)*(-[a-zA-Z0-9.]+)?$" }
+              },
+              "additionalProperties": false
+            }
           },
           "additionalProperties": false
         },
         "input_hashes": {
           "type": "object",
           "description": "Content hashes of inputs (test vectors, config, binaries)",
-          "additionalProperties": { "type": "string" }
+          "patternProperties": {
+            "^[a-zA-Z0-9_.-]+$": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+          },
+          "additionalProperties": false
         },
         "output_hashes": {
           "type": "object",
           "description": "Content hashes of outputs (logs, results, coverage)",
-          "additionalProperties": { "type": "string" }
+          "patternProperties": {
+            "^[a-zA-Z0-9_.-]+$": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+          },
+          "additionalProperties": false
         },
         "logs": {
           "type": "array",
@@ -69,18 +96,19 @@
             "properties": {
               "file": { "type": "string" },
               "hash": { "type": "string" },
-              "type": { "type": "string", "enum": ["stdout", "stderr", "coverage", "trace", "custom"] }
+              "type": { "type": "string", "enum": ["stdout", "stderr", "coverage", "trace", "custom", "junit", "xml", "json", "html"] }
             },
             "additionalProperties": false
           }
         },
         "timestamps": {
           "type": "object",
-          "required": ["start", "end", "duration_ms"],
+          "required": ["start", "end", "duration_ms", "timezone"],
           "properties": {
-            "start": { "type": "string", "format": "date-time" },
-            "end": { "type": "string", "format": "date-time" },
-            "duration_ms": { "type": "integer", "minimum": 0 }
+            "start": { "type": "string", "format": "date-time", "description": "ISO 8601 UTC timestamp" },
+            "end": { "type": "string", "format": "date-time", "description": "ISO 8601 UTC timestamp" },
+            "duration_ms": { "type": "integer", "minimum": 0, "description": "Execution duration in milliseconds" },
+            "timezone": { "type": "string", "const": "UTC", "description": "Timezone of timestamps (must be UTC)" }
           },
           "additionalProperties": false
         },
@@ -90,16 +118,16 @@
             "type": "object",
             "required": ["description", "severity", "disposition"],
             "properties": {
-              "description": { "type": "string" },
-              "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
-              "disposition": { "type": "string" }
+              "description": { "type": "string", "description": "Human-readable description of the anomaly" },
+              "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"], "description": "Impact severity" },
+              "disposition": { "type": "string", "enum": ["accepted", "deferred", "fixed", "wontfix", "investigating"], "description": "Resolution status: accepted (known limitation), deferred (postponed), fixed (resolved), wontfix (will not fix), investigating (under analysis)" }
             },
             "additionalProperties": false
           }
         },
         "evidence_refs": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": { "type": "string", "description": "URI or identifier of evidence artifact (log file, screenshot, report, etc.)" },
           "description": "References to evidence artifacts (logs, screenshots, reports)"
         }
       }
