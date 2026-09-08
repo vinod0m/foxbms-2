@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://foxbms2.softwaredevlabs.org/schemas/review.schema.json",
+  "$id": "urn:foxbms2:schemas:review.schema.json",
   "title": "Review Artifact Schema",
   "description": "Schema for review artifacts in the foxBMS 2 lifecycle corpus",
   "allOf": [
@@ -94,15 +94,21 @@
         },
         "checklist_version": {
           "type": "string",
-          "description": "Version of the review checklist used"
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Version of the review checklist used (semver)"
         },
         "scope": {
           "type": "string",
-          "description": "What aspects were reviewed"
+          "enum": [
+            "full",
+            "partial",
+            "targeted",
+            "incremental"
+          ],
+          "description": "Scope of the review: full (complete artifact), partial (subset), targeted (specific concerns), incremental (changes since last review)"
         },
         "findings": {
           "type": "array",
-          "minItems": 0,
           "description": "Findings from the review",
           "items": {
             "type": "object",
@@ -143,16 +149,16 @@
               "category": {
                 "type": "string",
                 "enum": [
-                  "provenance",
-                  "completeness",
-                  "domain",
-                  "cross_domain",
-                  "verification",
-                  "traceability",
-                  "consistency",
-                  "process"
+                  "finding_provenance",
+                  "finding_completeness",
+                  "finding_domain",
+                  "finding_cross_domain",
+                  "finding_verification",
+                  "finding_traceability",
+                  "finding_consistency",
+                  "finding_process"
                 ],
-                "description": "Category of the finding"
+                "description": "Category of the finding (prefixed to avoid confusion with review_type)"
               },
               "evidence": {
                 "type": "string",
@@ -164,7 +170,6 @@
         },
         "dispositions": {
           "type": "array",
-          "minItems": 0,
           "description": "Dispositions for each finding",
           "items": {
             "type": "object",
@@ -186,7 +191,9 @@
                   "rejected",
                   "deferred",
                   "partial",
-                  "in_progress"
+                  "in_progress",
+                  "duplicate",
+                  "wont_fix"
                 ],
                 "description": "Disposition of the finding"
               },
@@ -195,9 +202,16 @@
                 "description": "Action taken or planned"
               },
               "resolved_artifact_id": {
-                "type": "string",
-                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$",
-                "description": "Optional ID of artifact created to resolve this finding"
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Optional ID of artifact created to resolve this finding (null if not applicable)"
               }
             },
             "additionalProperties": false
@@ -207,7 +221,8 @@
           "type": "array",
           "description": "Limitations of this review (AI review disclaimer, scope limitations)",
           "items": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
         }
       },
