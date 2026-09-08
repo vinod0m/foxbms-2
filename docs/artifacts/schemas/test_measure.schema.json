@@ -9,6 +9,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "artifact_type",
         "test_type",
         "objective",
         "referenced_requirements",
@@ -58,9 +59,13 @@
         }
       },
       "properties": {
+        "artifact_type": {
+          "type": "string",
+          "const": "test_measure"
+        },
         "test_type": {
           "type": "string",
-          "enum": ["unit", "integration", "system", "qualification", "validation", "fault_injection", "robustness", "boundary", "acceptance"]
+          "enum": ["unit", "integration", "system", "qualification", "validation", "fault_injection", "robustness", "boundary"]
         },
         "objective": {
           "type": "string",
@@ -128,7 +133,7 @@
         },
         "oracle_basis": {
           "type": "string",
-          "enum": ["source_grounded", "analytical_model", "synthetic_assumption", "measured_reference", "accepted_reference"],
+          "enum": ["source_grounded", "analytical_model", "synthetic_assumption", "measured_reference"],
           "description": "Basis for expected outcomes - must be distinguishable"
         },
         "cleanup": {
