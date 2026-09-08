@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schema_version": "1.0.0",
-  "created_at": "2026-09-08T10:42:59Z",
-  "updated_at": "2026-09-08T10:42:59Z",
-  "repository_commit": "8aaa774edc6b0c67f9af657fe94b76171a981200",
+  "created_at": "{{BUILD_TIMESTAMP}}",
+  "updated_at": "{{BUILD_TIMESTAMP}}",
+  "repository_commit": "{{REPOSITORY_COMMIT}}",
   "profiles": {
     "as_is": {
       "description": "Faithful reconstruction of what the pinned foxBMS sources demonstrate. Records observed behavior, existing artifacts/tests, justified inferences, evidence gaps, contradictions, and proposed changes. Does not rewrite inconvenient facts or assert undocumented original stakeholder intent. Back-inferred requirements labeled as reconstructed behavior descriptions, not historical approved specifications.",
@@ -22,7 +22,7 @@
         "production_authorized": false,
         "product_verification_credit": false
       },
-      "scope": "Entire pinned repository at commit 308028fb"
+      "scope": "Entire pinned repository at commit {{BASELINE_COMMIT}}"
     },
     "synthetic_reference": {
       "description": "Complete, coherent hypothetical automotive BMS development project grounded in foxBMS. Defines fictional item, vehicle context, operating assumptions, selected hardware/software baseline, stakeholders, responsibilities, lifecycle, and parameter set. Reuses source-grounded behavior where justified. Fills missing engineering content with labeled synthetic requirements, analyses, design additions, process records, and test fixtures.",
@@ -41,8 +41,7 @@
         "production_authorized": false,
         "product_verification_credit": false
       },
-      "scope": "Hypothetical automotive BMS project using foxBMS as reference platform",
-      "reference_configuration": "VAR-REF-001 (governance/variant-matrix.json)"
+      "scope": "Hypothetical automotive BMS project using foxBMS as reference platform"
     }
   },
   "id_scheme": {
@@ -252,12 +251,14 @@
   },
   "change_management": {
     "clean_reference_separate_from_mutations": true,
-    "mutation_scenarios_minimum": {
+    "minimum_mutation_scenarios": {
       "value": 20,
+      "constant_ref": "CHANGE_MGMT_MIN_MUTATION_SCENARIOS",
       "justification": "Minimum scenarios to exercise: feature changes (5), safety changes (5), configuration changes (5), architectural changes (3), cross-cutting changes (2)"
     },
-    "change_lifecycle_demos_minimum": {
+    "minimum_change_lifecycle_demos": {
       "value": 3,
+      "constant_ref": "CHANGE_MGMT_MIN_LIFECYCLE_DEMOS",
       "justification": "Covers: normal change request, safety-critical change, emergency change with deviation"
     },
     "scenarios_namespaced": true,

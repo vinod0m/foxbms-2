@@ -1,8 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schema_version": "1.0.0",
-  "created_at": "2026-09-08T10:42:59Z",
-  "updated_at": "2026-09-08T10:42:59Z",
+  "created_at": "{{BUILD_TIMESTAMP}}",
+  "updated_at": "{{BUILD_TIMESTAMP}}",
+  "repository_commit": "{{REPOSITORY_COMMIT}}",
   "roles": [
     {
       "role_id": "architect",
@@ -84,17 +85,16 @@
   ],
   "review_policy": {
     "source": "governance/corpus-policy.json#/review_policy",
-    "note": "Core review policy defined in corpus-policy.json. This file adds role-specific extensions.",
     "additional_fields": {
       "ai_review_labeling": "All AI reviews labeled with model, session, role; distinct from human approval",
       "human_approval_required_for": ["safety_case", "production_release", "change_approval"],
       "review_record_requirements": [
         "reviewed_ids with revisions and digests",
         "reviewer identity (role, session, model)",
-        "checklist version",
+        "checklist_version",
         "scope",
-        "findings with severity/category/evidence",
-        "dispositions with actions",
+        "findings_with_severity_category_evidence",
+        "dispositions_with_actions",
         "limitations"
       ]
     }
