@@ -11,7 +11,15 @@
       "type": "object",
       "required": [
         "design_level",
-        "responsibilities"
+        "responsibilities",
+        "decomposition",
+        "interfaces",
+        "behavior_model",
+        "constraints",
+        "budgets",
+        "failure_response",
+        "decisions",
+        "implementation_mapping"
       ],
       "$defs": {
         "non_negative_number": {
@@ -23,35 +31,10 @@
           "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
           "description": "Valid identifier (letter/underscore start, alphanumeric/underscore)"
         },
-        "signal_type": {
+        "file_path": {
           "type": "string",
-          "pattern": "^(u?int(8|16|32|64)|float(32|64)|bool)$",
-          "description": "Standard signal data types"
-        },
-        "signal_unit": {
-          "type": "string",
-          "pattern": "^(V|A|Hz|kHz|MHz|degC|rpm|s|ms|us|ns|m|mm|cm|km|kg|g|N|Pa|W|J|C|F|H|Ohm|S|T|Wb|lx|lm|cd|rad|sr|mol|K|dimensionless|%|count)$",
-          "description": "Standard physical units"
-        },
-        "signal_range": {
-          "type": "string",
-          "pattern": "^(-?\\d+(\\.\\d+)?\\.\\.-?\\d+(\\.\\d+)?|-?\\d+(\\.\\d+)?)$",
-          "description": "Range format: min..max or single value"
-        },
-        "signal_rate": {
-          "type": "string",
-          "pattern": "^(\\d+(\\.\\d+)?(ms|us|ns|Hz|kHz|MHz)|event-driven)$",
-          "description": "Update rate: number with unit (ms, us, ns, Hz, kHz, MHz) or event-driven"
-        },
-        "decision_id_pattern": {
-          "type": "string",
-          "pattern": "^DEC-\\d{3,}$",
-          "description": "Decision ID format: DEC-XXX"
-        },
-        "interface_id_pattern": {
-          "type": "string",
-          "pattern": "^IF-\\d{3,}$",
-          "description": "Interface ID format: IF-XXX"
+          "pattern": "^[a-zA-Z0-9._/-]+$",
+          "description": "File path with alphanumeric, dot, slash, dash, underscore"
         }
       },
       "properties": {
@@ -61,7 +44,7 @@
         "design_level": {
           "type": "string",
           "enum": [
-            "architecture_design",
+            "architecture",
             "detailed_design",
             "interface_specification"
           ],
@@ -70,7 +53,6 @@
         "responsibilities": {
           "type": "array",
           "minItems": 1,
-          "uniqueItems": true,
           "items": {
             "type": "string"
           },
@@ -99,8 +81,7 @@
                 ],
                 "description": "Type of relationship to child element (snake_case)"
               }
-            },
-            "additionalProperties": false
+            }
           },
           "description": "Child design elements and their relationships"
         },
@@ -116,8 +97,8 @@
             ],
             "properties": {
               "interface_id": {
-                "$ref": "#/$defs/interface_id_pattern",
-                "description": "Unique identifier for this interface (format: IF-XXX)"
+                "type": "string",
+                "description": "Unique identifier for this interface"
               },
               "direction": {
                 "type": "string",
@@ -131,7 +112,6 @@
               "signals": {
                 "type": "array",
                 "minItems": 1,
-                "uniqueItems": true,
                 "items": {
                   "type": "object",
                   "required": [
@@ -146,28 +126,26 @@
                       "description": "Signal name (valid identifier)"
                     },
                     "type": {
-                      "$ref": "#/$defs/signal_type",
+                      "type": "string",
                       "description": "Signal data type (e.g., uint16, float32, bool)"
                     },
                     "unit": {
-                      "$ref": "#/$defs/signal_unit",
+                      "type": "string",
                       "description": "Physical unit (e.g., V, A, degC, rpm, dimensionless)"
                     },
                     "range": {
-                      "$ref": "#/$defs/signal_range",
+                      "type": "string",
                       "description": "Valid range (e.g., 0..5, -40..85, 0/1)"
                     },
                     "rate": {
-                      "$ref": "#/$defs/signal_rate",
+                      "type": "string",
                       "description": "Update rate or frequency (e.g., 10ms, 100Hz, event-driven)"
                     }
-                  },
-                  "additionalProperties": false
+                  }
                 },
                 "description": "Signals carried by this interface"
               }
-            },
-            "additionalProperties": false
+            }
           },
           "description": "Interfaces exposed by this design element"
         },
@@ -184,14 +162,13 @@
               "enum": [
                 "state_machine",
                 "data_flow",
-                "sequence_diagram",
-                "combination_model"
+                "sequence",
+                "combination"
               ],
               "description": "Type of behavioral model (snake_case)"
             },
             "states": {
               "type": "array",
-              "uniqueItems": true,
               "items": {
                 "$ref": "#/$defs/identifier"
               },
@@ -227,18 +204,15 @@
                     "type": "string",
                     "description": "Optional action executed on transition"
                   }
-                },
-                "additionalProperties": false
+                }
               },
               "description": "Transitions between states"
             }
           },
-          "additionalProperties": false,
           "description": "Behavioral model of the design element"
         },
         "constraints": {
           "type": "array",
-          "uniqueItems": true,
           "items": {
             "type": "string"
           },
@@ -246,7 +220,6 @@
         },
         "budgets": {
           "type": "object",
-          "minProperties": 1,
           "properties": {
             "cpu_time_ms": {
               "$ref": "#/$defs/non_negative_number",
@@ -267,8 +240,7 @@
               "description": "Bus bandwidth utilization budget as percentage (0-100)"
             }
           },
-          "additionalProperties": false,
-          "description": "Resource budgets (at least one required if present)"
+          "description": "Resource budgets"
         },
         "failure_response": {
           "type": "array",
@@ -297,8 +269,7 @@
                 "type": "string",
                 "description": "Optional recovery procedure"
               }
-            },
-            "additionalProperties": false
+            }
           },
           "description": "Failure modes and responses"
         },
@@ -315,13 +286,12 @@
             ],
             "properties": {
               "decision_id": {
-                "$ref": "#/$defs/decision_id_pattern",
-                "description": "Unique identifier for this decision (format: DEC-XXX)"
+                "type": "string",
+                "description": "Unique identifier for this decision"
               },
               "alternatives": {
                 "type": "array",
                 "minItems": 1,
-                "uniqueItems": true,
                 "items": {
                   "type": "string"
                 },
@@ -335,8 +305,7 @@
                 "type": "string",
                 "description": "Reason for selection"
               }
-            },
-            "additionalProperties": false
+            }
           },
           "description": "Design decisions with rationale"
         },
@@ -352,7 +321,7 @@
             ],
             "properties": {
               "source_file": {
-                "$ref": "#/$defs/identifier",
+                "$ref": "#/$defs/file_path",
                 "description": "Path to source file implementing this design"
               },
               "symbol": {
@@ -365,12 +334,11 @@
                   "implemented",
                   "proposed",
                   "partial",
-                  "missing"
+                  "not_in_source"
                 ],
                 "description": "Implementation status (snake_case)"
               }
-            },
-            "additionalProperties": false
+            }
           },
           "description": "Mapping from design elements to source code"
         }
