@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://foxbms2.softwaredevlabs.org/schemas/requirement.schema.json",
+  "$comment": "Base domain for schema IDs; override via build-time substitution if needed",
   "title": "Requirement Schema",
   "description": "Schema for requirement artifacts extending the artifact base schema",
   "allOf": [
@@ -50,7 +51,7 @@
         "acceptance_criteria": {
           "type": "array",
           "minItems": 1,
-          "description": "Acceptance criteria for verifying the requirement",
+          "description": "Acceptance criteria for verifying the requirement (at least one criterion required)",
           "items": {
             "type": "object",
             "required": [
@@ -82,11 +83,11 @@
         "verification_approach": {
           "type": "string",
           "enum": [
-            "test",
-            "analysis",
-            "inspection",
-            "demonstration",
-            "review"
+            "Test",
+            "Analysis",
+            "Inspection",
+            "Demonstration",
+            "Review"
           ],
           "description": "Verification approach for this requirement"
         },
@@ -106,7 +107,7 @@
                 "ASIL_B",
                 "ASIL_C",
                 "ASIL_D",
-                "not_applicable"
+                "NOT_APPLICABLE"
               ],
               "description": "Automotive Safety Integrity Level"
             },
