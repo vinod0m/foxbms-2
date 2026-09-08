@@ -32,8 +32,8 @@
         },
         "execution_kind": {
           "type": "string",
-          "enum": ["unknown", "actual_host_run", "actual_simulation_run", "synthetic_fixture"],
-          "description": "Orthogonal to outcome. 'unknown' indicates kind not determined or not applicable."
+          "enum": ["none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"],
+          "description": "Orthogonal to outcome. 'none' indicates kind not determined or not applicable."
         },
         "outcome": {
           "type": "string",
@@ -49,16 +49,7 @@
             "tools": {
               "type": "array",
               "description": "Tools used in execution",
-              "items": {
-                "type": "object",
-                "required": ["name", "version", "purpose"],
-                "properties": {
-                  "name": { "type": "string", "description": "Tool name" },
-                  "version": { "type": "string", "pattern": "^\\d+(\\.\\d+)*(-[a-zA-Z0-9.]+)?$", "description": "Tool version (semver-like)" },
-                  "purpose": { "type": "string", "description": "Role of this tool in execution (e.g., 'compiler', 'test_runner', 'analyzer')" }
-                },
-                "additionalProperties": false
-              }
+              "items": { "type": "string" }
             },
             "configuration": { "type": "string", "description": "Build/test configuration identifier" },
             "tool_versions": {
@@ -96,19 +87,18 @@
             "properties": {
               "file": { "type": "string" },
               "hash": { "type": "string" },
-              "type": { "type": "string", "enum": ["stdout", "stderr", "coverage", "trace", "custom", "junit", "xml", "json", "html"] }
+              "type": { "type": "string", "enum": ["stdout", "stderr", "coverage", "trace", "custom"] }
             },
             "additionalProperties": false
           }
         },
         "timestamps": {
           "type": "object",
-          "required": ["start", "end", "duration_ms", "timezone"],
+          "required": ["start", "end", "duration_ms"],
           "properties": {
             "start": { "type": "string", "format": "date-time", "description": "ISO 8601 UTC timestamp" },
             "end": { "type": "string", "format": "date-time", "description": "ISO 8601 UTC timestamp" },
-            "duration_ms": { "type": "integer", "minimum": 0, "description": "Execution duration in milliseconds" },
-            "timezone": { "type": "string", "const": "UTC", "description": "Timezone of timestamps (must be UTC)" }
+            "duration_ms": { "type": "integer", "minimum": 0, "description": "Execution duration in milliseconds" }
           },
           "additionalProperties": false
         },
