@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/assumption.schema.json",
+  "title": "Assumption Schema",
+  "description": "Schema for assumption artifacts in the foxBMS 2 lifecycle corpus",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "statement",
+        "rationale",
+        "affected_scope",
+        "source",
+        "validity_conditions",
+        "invalidation_consequence",
+        "review_status"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "assumption"
+        },
+        "statement": {
+          "type": "string",
+          "description": "The assumption statement/value"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this assumption is made"
+        },
+        "affected_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Artifact IDs this assumption affects"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "source_observed",
+            "derived",
+            "synthetic"
+          ],
+          "description": "Provenance origin category"
+        },
+        "validity_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Conditions under which assumption holds"
+        },
+        "invalidation_consequence": {
+          "type": "string",
+          "description": "What happens if assumption is invalidated"
+        },
+        "review_status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed",
+            "accepted",
+            "challenged",
+            "invalidated"
+          ],
+          "description": "Current review status of the assumption"
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}
