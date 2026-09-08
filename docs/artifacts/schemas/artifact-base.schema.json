@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/artifact-base.schema.json",
+  "title": "Artifact Base Schema",
+  "description": "Base schema for all engineering artifacts in the foxBMS 2 lifecycle corpus",
+  "type": "object",
+  "required": [
+    "id",
+    "revision",
+    "schema_version",
+    "artifact_type",
+    "engineering_domain",
+    "profile",
+    "scenario_id",
+    "baseline_id",
+    "variant_applicability",
+    "title",
+    "owner_role",
+    "origin",
+    "source_refs",
+    "assumption_refs",
+    "standards_mappings",
+    "lifecycle_status",
+    "automated_review_status",
+    "human_approval_status",
+    "production_authorized",
+    "product_verification_credit",
+    "created_at",
+    "updated_at",
+    "revision_history"
+  ],
+  "$defs": {
+    "revision_history_item": {
+      "type": "object",
+      "required": [
+        "revision",
+        "date",
+        "author",
+        "description"
+      ],
+      "properties": {
+        "revision": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "author": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "standards_mapping": {
+      "type": "object",
+      "required": [
+        "standard_id",
+        "reference",
+        "status"
+      ],
+      "properties": {
+        "standard_id": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string",
+          "description": "Clause/process/practice reference"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "mapped",
+            "partially_mapped",
+            "unverified",
+            "not_applicable",
+            "gap"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$",
+      "description": "Globally unique, stable, readable ID"
+    },
+    "revision": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)$",
+      "description": "Revision number as string (no leading zeros except '0')"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of the artifact schema used (semver)"
+    },
+    "artifact_type": {
+      "type": "string",
+      "enum": [
+        "requirement",
+        "design",
+        "test_measure",
+        "execution",
+        "review",
+        "assumption",
+        "parameter",
+        "link",
+        "change",
+        "finding",
+        "scenario",
+        "stakeholder_need",
+        "hazard",
+        "safety_goal",
+        "safety_mechanism",
+        "claim",
+        "argument",
+        "evidence"
+      ]
+    },
+    "engineering_domain": {
+      "type": "string",
+      "enum": [
+        "system",
+        "hardware",
+        "software",
+        "safety",
+        "verification",
+        "validation",
+        "management",
+        "supporting",
+        "configuration"
+      ]
+    },
+    "profile": {
+      "type": "string",
+      "enum": [
+        "as_is",
+        "synthetic_reference"
+      ]
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^SCN-(BASELINE|MUT-\\d{3}|VAR-\\d{3})$",
+      "description": "Scenario identifier (e.g., SCN-BASELINE for baseline, SCN-MUT-001 for mutation, SCN-VAR-001 for variant)"
+    },
+    "baseline_id": {
+      "type": "string",
+      "pattern": "^BAS-(REF|MUT|VAR)-\\d{3}$",
+      "description": "Baseline identifier this artifact belongs to (e.g., BAS-REF-001, BAS-MUT-001, BAS-VAR-001)"
+    },
+    "variant_applicability": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^VAR-[A-Z]{2,3}-\\d{3}$"
+      },
+      "description": "Variant IDs from variant-matrix.json this artifact applies to (e.g., VAR-HW-001)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title"
+    },
+    "owner_role": {
+      "type": "string",
+      "enum": [
+        "system_engineer",
+        "safety_engineer",
+        "hw_engineer",
+        "sw_engineer",
+        "verification_engineer",
+        "validation_engineer",
+        "configuration_manager",
+        "quality_engineer",
+        "project_manager"
+      ],
+      "description": "Responsible role"
+    },
+    "origin": {
+      "type": "string",
+      "enum": [
+        "source_observed",
+        "derived",
+        "synthetic"
+      ],
+      "description": "Provenance origin category"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Durable source anchors (from source-registry.json)"
+    },
+    "assumption_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Assumption IDs this artifact depends on"
+    },
+    "standards_mappings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/standards_mapping"
+      }
+    },
+    "lifecycle_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "reviewed",
+        "approved",
+        "baselined",
+        "published",
+        "released",
+        "archived",
+        "superseded",
+        "withdrawn"
+      ]
+    },
+    "automated_review_status": {
+      "type": "object",
+      "required": [
+        "schema_valid",
+        "links_valid",
+        "provenance_consistent",
+        "consistency_checks",
+        "last_run"
+      ],
+      "properties": {
+        "schema_valid": {
+          "type": "boolean"
+        },
+        "links_valid": {
+          "type": "boolean"
+        },
+        "provenance_consistent": {
+          "type": "boolean"
+        },
+        "consistency_checks": {
+          "type": "boolean"
+        },
+        "last_run": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "human_approval_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "not_required"
+      ],
+      "default": "pending"
+    },
+    "production_authorized": {
+      "type": "boolean",
+      "default": false
+    },
+    "product_verification_credit": {
+      "type": "boolean",
+      "default": false
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revision_history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/revision_history_item"
+      }
+    }
+  },
+  "additionalProperties": false
+}
