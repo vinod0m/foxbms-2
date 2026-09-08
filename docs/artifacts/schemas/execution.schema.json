@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/execution.schema.json",
+  "title": "Execution Schema",
+  "description": "Schema for test execution records",
+  "allOf": [
+    { "$ref": "artifact-base.schema.json" },
+    {
+      "type": "object",
+      "required": [
+        "test_measure_id",
+        "test_measure_revision",
+        "execution_kind",
+        "outcome",
+        "environment",
+        "input_hashes",
+        "output_hashes",
+        "logs",
+        "timestamps",
+        "anomalies",
+        "evidence_refs"
+      ],
+      "properties": {
+        "artifact_type": { "const": "execution" },
+        "test_measure_id": {
+          "type": "string",
+          "description": "ID of the test measure executed"
+        },
+        "test_measure_revision": {
+          "type": "string",
+          "description": "Exact revision of test measure executed"
+        },
+        "execution_kind": {
+          "type": "string",
+          "enum": ["none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"],
+          "description": "Orthogonal to outcome"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": ["pass", "fail", "inconclusive", "not_run", "blocked"]
+        },
+        "environment": {
+          "type": "object",
+          "required": ["hardware", "software", "tools", "configuration", "tool_versions"],
+          "properties": {
+            "hardware": { "type": "string" },
+            "software": { "type": "string" },
+            "tools": { "type": "array", "items": { "type": "string" } },
+            "configuration": { "type": "string" },
+            "tool_versions": { "type": "object" }
+          },
+          "additionalProperties": false
+        },
+        "input_hashes": {
+          "type": "object",
+          "description": "Content hashes of inputs (test vectors, config, binaries)",
+          "additionalProperties": { "type": "string" }
+        },
+        "output_hashes": {
+          "type": "object",
+          "description": "Content hashes of outputs (logs, results, coverage)",
+          "additionalProperties": { "type": "string" }
+        },
+        "logs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["file", "hash", "type"],
+            "properties": {
+              "file": { "type": "string" },
+              "hash": { "type": "string" },
+              "type": { "type": "string", "enum": ["stdout", "stderr", "coverage", "trace", "custom"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "timestamps": {
+          "type": "object",
+          "required": ["start", "end", "duration_ms"],
+          "properties": {
+            "start": { "type": "string", "format": "date-time" },
+            "end": { "type": "string", "format": "date-time" },
+            "duration_ms": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "anomalies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["description", "severity", "disposition"],
+            "properties": {
+              "description": { "type": "string" },
+              "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+              "disposition": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "References to evidence artifacts (logs, screenshots, reports)"
+        }
+      }
+    }
+  ]
+}
