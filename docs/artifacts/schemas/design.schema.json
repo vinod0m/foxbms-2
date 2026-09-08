@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://foxbms2.softwaredevlabs.org/schemas/design.schema.json",
+  "$comment": "Domain: https://foxbms2.softwaredevlabs.org/schemas/design.schema.json",
   "title": "Design Artifact Schema",
   "description": "Schema for design artifacts in the foxBMS 2 lifecycle corpus, extending artifact-base.schema.json",
   "allOf": [
@@ -25,16 +26,6 @@
         "non_negative_number": {
           "type": "number",
           "minimum": 0
-        },
-        "identifier": {
-          "type": "string",
-          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
-          "description": "Valid identifier (letter/underscore start, alphanumeric/underscore)"
-        },
-        "file_path": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9._/-]+$",
-          "description": "File path with alphanumeric, dot, slash, dash, underscore"
         }
       },
       "properties": {
@@ -69,7 +60,7 @@
             ],
             "properties": {
               "child_id": {
-                "$ref": "#/$defs/identifier",
+                "type": "string",
                 "description": "ID of the child design element"
               },
               "relationship": {
@@ -122,7 +113,7 @@
                   ],
                   "properties": {
                     "name": {
-                      "$ref": "#/$defs/identifier",
+                      "type": "string",
                       "description": "Signal name (valid identifier)"
                     },
                     "type": {
@@ -170,7 +161,7 @@
             "states": {
               "type": "array",
               "items": {
-                "$ref": "#/$defs/identifier"
+                "type": "string"
               },
               "description": "List of states in the behavior model"
             },
@@ -185,11 +176,11 @@
                 ],
                 "properties": {
                   "from": {
-                    "$ref": "#/$defs/identifier",
+                    "type": "string",
                     "description": "Source state"
                   },
                   "to": {
-                    "$ref": "#/$defs/identifier",
+                    "type": "string",
                     "description": "Target state"
                   },
                   "trigger": {
@@ -321,11 +312,11 @@
             ],
             "properties": {
               "source_file": {
-                "$ref": "#/$defs/file_path",
+                "type": "string",
                 "description": "Path to source file implementing this design"
               },
               "symbol": {
-                "$ref": "#/$defs/identifier",
+                "type": "string",
                 "description": "Function, class, or variable name in source"
               },
               "status": {
