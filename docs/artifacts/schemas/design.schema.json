@@ -5,7 +5,7 @@
   "description": "Schema for design artifacts in the foxBMS 2 lifecycle corpus, extending artifact-base.schema.json",
   "allOf": [
     {
-      "$ref": "artifact-base.schema.json"
+      "$ref": "./artifact-base.schema.json"
     },
     {
       "type": "object",
@@ -13,6 +13,47 @@
         "design_level",
         "responsibilities"
       ],
+      "$defs": {
+        "non_negative_number": {
+          "type": "number",
+          "minimum": 0
+        },
+        "identifier": {
+          "type": "string",
+          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+          "description": "Valid identifier (letter/underscore start, alphanumeric/underscore)"
+        },
+        "signal_type": {
+          "type": "string",
+          "pattern": "^(u?int(8|16|32|64)|float(32|64)|bool)$",
+          "description": "Standard signal data types"
+        },
+        "signal_unit": {
+          "type": "string",
+          "pattern": "^(V|A|Hz|kHz|MHz|degC|rpm|s|ms|us|ns|m|mm|cm|km|kg|g|N|Pa|W|J|C|F|H|Ohm|S|T|Wb|lx|lm|cd|rad|sr|mol|K|dimensionless|%|count)$",
+          "description": "Standard physical units"
+        },
+        "signal_range": {
+          "type": "string",
+          "pattern": "^(-?\\d+(\\.\\d+)?\\.\\.-?\\d+(\\.\\d+)?|-?\\d+(\\.\\d+)?)$",
+          "description": "Range format: min..max or single value"
+        },
+        "signal_rate": {
+          "type": "string",
+          "pattern": "^(\\d+(\\.\\d+)?(ms|us|ns|Hz|kHz|MHz)|event-driven)$",
+          "description": "Update rate: number with unit (ms, us, ns, Hz, kHz, MHz) or event-driven"
+        },
+        "decision_id_pattern": {
+          "type": "string",
+          "pattern": "^DEC-\\d{3,}$",
+          "description": "Decision ID format: DEC-XXX"
+        },
+        "interface_id_pattern": {
+          "type": "string",
+          "pattern": "^IF-\\d{3,}$",
+          "description": "Interface ID format: IF-XXX"
+        }
+      },
       "properties": {
         "artifact_type": {
           "const": "design"
@@ -20,15 +61,16 @@
         "design_level": {
           "type": "string",
           "enum": [
-            "architecture",
+            "architecture_design",
             "detailed_design",
             "interface_specification"
           ],
-          "description": "Level of design abstraction"
+          "description": "Level of design abstraction (snake_case)"
         },
         "responsibilities": {
           "type": "array",
           "minItems": 1,
+          "uniqueItems": true,
           "items": {
             "type": "string"
           },
@@ -45,7 +87,7 @@
             ],
             "properties": {
               "child_id": {
-                "type": "string",
+                "$ref": "#/$defs/identifier",
                 "description": "ID of the child design element"
               },
               "relationship": {
@@ -55,7 +97,7 @@
                   "uses",
                   "delegates_to"
                 ],
-                "description": "Type of relationship to child element"
+                "description": "Type of relationship to child element (snake_case)"
               }
             },
             "additionalProperties": false
@@ -74,8 +116,8 @@
             ],
             "properties": {
               "interface_id": {
-                "type": "string",
-                "description": "Unique identifier for this interface"
+                "$ref": "#/$defs/interface_id_pattern",
+                "description": "Unique identifier for this interface (format: IF-XXX)"
               },
               "direction": {
                 "type": "string",
@@ -89,6 +131,7 @@
               "signals": {
                 "type": "array",
                 "minItems": 1,
+                "uniqueItems": true,
                 "items": {
                   "type": "object",
                   "required": [
@@ -99,23 +142,23 @@
                   ],
                   "properties": {
                     "name": {
-                      "type": "string",
-                      "description": "Signal name"
+                      "$ref": "#/$defs/identifier",
+                      "description": "Signal name (valid identifier)"
                     },
                     "type": {
-                      "type": "string",
+                      "$ref": "#/$defs/signal_type",
                       "description": "Signal data type (e.g., uint16, float32, bool)"
                     },
                     "unit": {
-                      "type": "string",
+                      "$ref": "#/$defs/signal_unit",
                       "description": "Physical unit (e.g., V, A, degC, rpm, dimensionless)"
                     },
                     "range": {
-                      "type": "string",
+                      "$ref": "#/$defs/signal_range",
                       "description": "Valid range (e.g., 0..5, -40..85, 0/1)"
                     },
                     "rate": {
-                      "type": "string",
+                      "$ref": "#/$defs/signal_rate",
                       "description": "Update rate or frequency (e.g., 10ms, 100Hz, event-driven)"
                     }
                   },
@@ -141,15 +184,16 @@
               "enum": [
                 "state_machine",
                 "data_flow",
-                "sequence",
-                "combination"
+                "sequence_diagram",
+                "combination_model"
               ],
-              "description": "Type of behavioral model"
+              "description": "Type of behavioral model (snake_case)"
             },
             "states": {
               "type": "array",
+              "uniqueItems": true,
               "items": {
-                "type": "string"
+                "$ref": "#/$defs/identifier"
               },
               "description": "List of states in the behavior model"
             },
@@ -164,11 +208,11 @@
                 ],
                 "properties": {
                   "from": {
-                    "type": "string",
+                    "$ref": "#/$defs/identifier",
                     "description": "Source state"
                   },
                   "to": {
-                    "type": "string",
+                    "$ref": "#/$defs/identifier",
                     "description": "Target state"
                   },
                   "trigger": {
@@ -194,6 +238,7 @@
         },
         "constraints": {
           "type": "array",
+          "uniqueItems": true,
           "items": {
             "type": "string"
           },
@@ -201,31 +246,29 @@
         },
         "budgets": {
           "type": "object",
+          "minProperties": 1,
           "properties": {
             "cpu_time_ms": {
-              "type": "number",
-              "minimum": 0,
+              "$ref": "#/$defs/non_negative_number",
               "description": "CPU time budget in milliseconds"
             },
             "memory_bytes": {
-              "type": "number",
-              "minimum": 0,
+              "$ref": "#/$defs/non_negative_number",
               "description": "Memory budget in bytes"
             },
             "stack_bytes": {
-              "type": "number",
-              "minimum": 0,
+              "$ref": "#/$defs/non_negative_number",
               "description": "Stack size budget in bytes"
             },
             "bus_bandwidth_percent": {
               "type": "number",
               "minimum": 0,
               "maximum": 100,
-              "description": "Bus bandwidth utilization budget as percentage"
+              "description": "Bus bandwidth utilization budget as percentage (0-100)"
             }
           },
           "additionalProperties": false,
-          "description": "Resource budgets (all optional)"
+          "description": "Resource budgets (at least one required if present)"
         },
         "failure_response": {
           "type": "array",
@@ -272,12 +315,13 @@
             ],
             "properties": {
               "decision_id": {
-                "type": "string",
-                "description": "Unique identifier for this decision"
+                "$ref": "#/$defs/decision_id_pattern",
+                "description": "Unique identifier for this decision (format: DEC-XXX)"
               },
               "alternatives": {
                 "type": "array",
                 "minItems": 1,
+                "uniqueItems": true,
                 "items": {
                   "type": "string"
                 },
@@ -308,11 +352,11 @@
             ],
             "properties": {
               "source_file": {
-                "type": "string",
+                "$ref": "#/$defs/identifier",
                 "description": "Path to source file implementing this design"
               },
               "symbol": {
-                "type": "string",
+                "$ref": "#/$defs/identifier",
                 "description": "Function, class, or variable name in source"
               },
               "status": {
@@ -321,9 +365,9 @@
                   "implemented",
                   "proposed",
                   "partial",
-                  "not_in_source"
+                  "missing"
                 ],
-                "description": "Implementation status"
+                "description": "Implementation status (snake_case)"
               }
             },
             "additionalProperties": false
