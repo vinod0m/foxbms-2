@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/test_measure.schema.json",
+  "title": "Test Measure Schema",
+  "description": "Schema for verification/validation test measures",
+  "allOf": [
+    { "$ref": "artifact-base.schema.json" },
+    {
+      "type": "object",
+      "required": [
+        "objective",
+        "referenced_requirements",
+        "referenced_designs",
+        "preconditions",
+        "environment",
+        "stimuli",
+        "steps",
+        "expected_outcomes",
+        "tolerances",
+        "timing",
+        "oracle_basis",
+        "cleanup",
+        "regression_selection"
+      ],
+      "properties": {
+        "artifact_type": { "const": "test_measure" },
+        "test_type": {
+          "type": "string",
+          "enum": ["unit", "integration", "system", "qualification", "validation", "fault_injection", "robustness", "boundary"]
+        },
+        "objective": {
+          "type": "string",
+          "description": "What this test measure verifies/validates"
+        },
+        "referenced_requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Requirement IDs this test verifies"
+        },
+        "referenced_designs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Design IDs this test verifies"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Required state before test execution"
+        },
+        "environment": {
+          "type": "object",
+          "required": ["hardware", "software", "tools", "configuration"],
+          "properties": {
+            "hardware": { "type": "string" },
+            "software": { "type": "string" },
+            "tools": { "type": "array", "items": { "type": "string" } },
+            "configuration": { "type": "string" }
+          }
+        },
+        "stimuli": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "required": ["signal", "value", "timing"],
+            "properties": {
+              "signal": { "type": "string" },
+              "value": { "type": "string" },
+              "timing": { "type": "string" }
+            }
+          }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["step", "action", "expected"],
+            "properties": {
+              "step": { "type": "integer" },
+              "action": { "type": "string" },
+              "expected": { "type": "string" }
+            }
+          }
+        },
+        "expected_outcomes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["signal", "expected_value", "tolerance"],
+            "properties": {
+              "signal": { "type": "string" },
+              "expected_value": { "type": "string" },
+              "tolerance": { "type": "string" },
+              "unit": { "type": "string" }
+            }
+          }
+        },
+        "tolerances": {
+          "type": "object",
+          "description": "Numerical tolerances for pass/fail criteria"
+        },
+        "timing": {
+          "type": "object",
+          "required": ["max_execution_time_ms", "setup_time_ms", "teardown_time_ms"],
+          "properties": {
+            "max_execution_time_ms": { "type": "number" },
+            "setup_time_ms": { "type": "number" },
+            "teardown_time_ms": { "type": "number" }
+          }
+        },
+        "oracle_basis": {
+          "type": "string",
+          "enum": ["source_grounded", "analytical_model", "synthetic_assumption", "measured_reference"],
+          "description": "Basis for expected outcomes - must be distinguishable"
+        },
+        "cleanup": {
+          "type": "string",
+          "description": "Post-test cleanup actions"
+        },
+        "regression_selection": {
+          "type": "string",
+          "description": "Criteria for including in regression suite"
+        }
+      }
+    }
+  ]
+}
