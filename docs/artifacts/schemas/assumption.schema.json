@@ -25,11 +25,13 @@
         "statement": {
           "type": "string",
           "minLength": 1,
+          "pattern": "\\S",
           "description": "The assumption statement/value"
         },
         "rationale": {
           "type": "string",
           "minLength": 1,
+          "pattern": "\\S",
           "description": "Why this assumption is made"
         },
         "affected_scope": {
@@ -37,7 +39,14 @@
           "minItems": 1,
           "items": {
             "type": "string",
-            "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$",
+            "allOf": [
+              {
+                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
+              },
+              {
+                "pattern": "\\S"
+              }
+            ],
             "description": "Artifact ID this assumption affects (format: FB2-XX-XX-XXXXXX)"
           },
           "description": "Artifact IDs this assumption affects"
@@ -57,6 +66,7 @@
           "items": {
             "type": "string",
             "minLength": 1,
+            "pattern": "\\S",
             "description": "Condition under which assumption holds (non-empty)"
           },
           "description": "Conditions under which assumption holds"
@@ -64,6 +74,7 @@
         "invalidation_consequence": {
           "type": "string",
           "minLength": 1,
+          "pattern": "\\S",
           "description": "What happens if assumption is invalidated"
         },
         "review_status": {
