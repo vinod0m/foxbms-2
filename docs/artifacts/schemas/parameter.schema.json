@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/parameter.schema.json",
+  "title": "Parameter Artifact Schema",
+  "description": "Schema for parameter engineering artifacts in the foxBMS 2 lifecycle corpus",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "name",
+        "value",
+        "unit",
+        "tolerance",
+        "domain",
+        "sign_convention",
+        "timing_budget",
+        "thresholds",
+        "hysteresis",
+        "debounce",
+        "calibration",
+        "configuration_selection",
+        "assumptions"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "parameter"
+        },
+        "name": {
+          "type": "string",
+          "description": "Parameter name"
+        },
+        "value": {
+          "type": "number",
+          "description": "Parameter value"
+        },
+        "unit": {
+          "type": "string",
+          "description": "SI unit or dimensionless"
+        },
+        "tolerance": {
+          "type": "object",
+          "required": [
+            "min",
+            "max",
+            "type"
+          ],
+          "properties": {
+            "min": {
+              "type": "number",
+              "description": "Minimum tolerance value"
+            },
+            "max": {
+              "type": "number",
+              "description": "Maximum tolerance value"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "absolute",
+                "relative",
+                "percentage"
+              ],
+              "description": "Tolerance type"
+            }
+          },
+          "additionalProperties": false
+        },
+        "domain": {
+          "type": "string",
+          "description": "Valid domain/range description"
+        },
+        "sign_convention": {
+          "type": "string",
+          "description": "Sign convention (e.g., discharge positive, charge negative)"
+        },
+        "timing_budget": {
+          "type": "object",
+          "required": [
+            "value_ms",
+            "type"
+          ],
+          "properties": {
+            "value_ms": {
+              "type": "number",
+              "description": "Timing budget value in milliseconds"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "worst_case",
+                "typical",
+                "best_case"
+              ],
+              "description": "Timing budget type"
+            }
+          },
+          "additionalProperties": false
+        },
+        "thresholds": {
+          "type": "object",
+          "required": [
+            "warning",
+            "derating",
+            "shutdown"
+          ],
+          "properties": {
+            "warning": {
+              "type": "number",
+              "description": "Warning threshold value"
+            },
+            "derating": {
+              "type": "number",
+              "description": "Derating threshold value"
+            },
+            "shutdown": {
+              "type": "number",
+              "description": "Shutdown threshold value"
+            }
+          },
+          "additionalProperties": false
+        },
+        "hysteresis": {
+          "type": "number",
+          "description": "Hysteresis value for threshold crossing"
+        },
+        "debounce": {
+          "type": "object",
+          "required": [
+            "time_ms",
+            "count"
+          ],
+          "properties": {
+            "time_ms": {
+              "type": "number",
+              "description": "Debounce time in milliseconds"
+            },
+            "count": {
+              "type": "integer",
+              "description": "Debounce count"
+            }
+          },
+          "additionalProperties": false
+        },
+        "calibration": {
+          "type": "object",
+          "required": [
+            "method",
+            "frequency",
+            "reference"
+          ],
+          "properties": {
+            "method": {
+              "type": "string",
+              "description": "Calibration method"
+            },
+            "frequency": {
+              "type": "string",
+              "description": "Calibration frequency"
+            },
+            "reference": {
+              "type": "string",
+              "description": "Calibration reference"
+            }
+          },
+          "additionalProperties": false
+        },
+        "configuration_selection": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Variant IDs this parameter value applies to"
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Assumption IDs this parameter depends on"
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}
