@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/link.schema.json",
+  "title": "Link Artifact Schema",
+  "description": "Schema for link artifacts representing traceability relationships between engineering artifacts in the foxBMS 2 lifecycle corpus",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "relation_type",
+        "source_id",
+        "source_revision",
+        "target_id",
+        "target_revision",
+        "rationale",
+        "provenance",
+        "review_state",
+        "change_suspect_status"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "link"
+        },
+        "relation_type": {
+          "type": "string",
+          "enum": [
+            "refines",
+            "allocated_to",
+            "implements",
+            "verifies",
+            "validates",
+            "result_of",
+            "supports",
+            "mitigates",
+            "specified_by",
+            "consumes",
+            "produces",
+            "depends_on",
+            "constrained_by",
+            "reviewed_by",
+            "changes",
+            "supersedes"
+          ],
+          "description": "Type of traceability relationship between source and target artifacts"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$",
+          "description": "Source artifact ID (globally unique, stable, readable ID)"
+        },
+        "source_revision": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$",
+          "description": "Source artifact revision number as string (no leading zeros except '0')"
+        },
+        "target_id": {
+          "type": "string",
+          "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$",
+          "description": "Target artifact ID (globally unique, stable, readable ID)"
+        },
+        "target_revision": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$",
+          "description": "Target artifact revision number as string (no leading zeros except '0')"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why this link exists - the justification for this traceability relationship"
+        },
+        "provenance": {
+          "type": "string",
+          "enum": [
+            "source_observed",
+            "derived",
+            "synthetic"
+          ],
+          "description": "Provenance category of this link"
+        },
+        "review_state": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "reviewed",
+            "approved",
+            "challenged"
+          ],
+          "description": "Review status of this link"
+        },
+        "change_suspect_status": {
+          "type": "boolean",
+          "description": "Whether this link is suspect due to changes in source or target artifacts"
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}
