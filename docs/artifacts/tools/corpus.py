@@ -461,6 +461,212 @@ class CorpusTool:
                     self.findings.add("high", "consistency", aid,
                                       f"timing budget {sum(serial)}ms exceeds FTTI {ftti}ms")
                     ok = False
+
+        # Load source registry for provenance checks
+        sr = self.sources_dir / "source-registry.json"
+        sources_registry = {}
+        if sr.exists():
+            for a in load_json(sr).get("anchors", []):
+                sources_registry[a.get("anchor_id")] = a
+
+        # Rule: Parameter unit consistency check (MUT-004)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "parameter":
+                unit = d.get("unit")
+                value = d.get("value")
+                if unit and value is not None:
+                    if unit in ("V", "A", "W", "Hz") and isinstance(value, (int, float)):
+                        if unit == "V" and value < 10 and value > 0.1:
+                            self.findings.add("medium", "consistency", aid,
+                                              f"parameter {aid} unit is V but value {value} suggests mV (missing scaling)")
+                        elif unit == "A" and value < 10 and value > 0.1:
+                            self.findings.add("medium", "consistency", aid,
+                                              f"parameter {aid} unit is A but value {value} suggests mA (missing scaling)")
+
+        # Rule: HSI/SW interface consistency checker (MUT-005)
+        hsi_artifacts = {_id(k): d for k, (_, d) in index.items() if d.get("artifact_type") == "design" and "hsi" in d.get("id", "").lower()}
+        hw_tsr_artifacts = {_id(k): d for k, (_, d) in index.items() if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "hardware"}
+        for hsi_id, hsi in hsi_artifacts.items():
+            hsi_signals = hsi.get("signal_definitions", {})
+            for hw_id, hw in hw_tsr_artifacts.items():
+                hw_signals = hw.get("signal_definitions", {})
+                if hw_signals and hsi_signals:
+                    for signal, hsi_def in hsi_signals.items():
+                        if signal in hw_signals:
+                            hw_def = hw_signals[signal]
+                            if hsi_def != hw_def:
+                                self.findings.add("high", "traceability", hsi_id,
+                                                  f"HSI/SW interface mismatch for signal {signal}: HSI={hsi_def}, HW={hw_def}")
+
+        # Rule: FTTI budget consistency checker (MUT-006) - already implemented above
+
+        # Rule: Parameter threshold order validator (MUT-007)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "parameter":
+                thresholds = d.get("thresholds") or {}
+                warning = thresholds.get("warning")
+                derating = thresholds.get("derating")
+                shutdown = thresholds.get("shutdown")
+                if warning is not None and derating is not None and shutdown is not None:
+                    if "max" in d.get("name", "").lower() or "max" in d.get("id", "").lower():
+                        if not (warning < derating < shutdown):
+                            self.findings.add("high", "consistency", aid,
+                                              f"parameter {aid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
+                            ok = False
+                    elif "min" in d.get("name", "").lower() or "min" in d.get("id", "").lower():
+                        if not (warning > derating > shutdown):
+                            self.findings.add("high", "consistency", aid,
+                                              f"parameter {aid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
+                            ok = False
+
+        # Rule: Safety requirement completeness checker (MUT-008)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety" and "-FSR-" in _id(key):
+                if "fault_reaction" not in d or not d.get("fault_reaction"):
+                    self.findings.add("medium", "verification", aid,
+                                      f"safety requirement {aid} has no fault_reaction defined")
+
+        # Rule: ASIL assignment validator (MUT-009)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "safety_goal":
+                asil = d.get("asil")
+                if asil:
+                    valid_asils = ["ASIL_A", "ASIL_B", "ASIL_C", "ASIL_D", "QM"]
+                    if asil not in valid_asils:
+                        self.findings.add("high", "verification", aid,
+                                          f"safety goal {aid} has invalid ASIL '{asil}'")
+                    if "asil_justification" not in d or not d.get("asil_justification"):
+                        self.findings.add("medium", "verification", aid,
+                                          f"safety goal {aid} ASIL {asil} lacks justification")
+
+        # Rule: Diagnostic coverage claim validator (MUT-010)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety" and "-FSR-" in _id(key):
+                coverage = d.get("diagnostic_coverage")
+                if coverage:
+                    if "diagnostic_coverage_evidence" not in d or not d.get("diagnostic_coverage_evidence"):
+                        self.findings.add("high", "verification", aid,
+                                          f"FSR {aid} claims diagnostic coverage '{coverage}' without evidence")
+
+        # Rule: Configuration consistency checker (MUT-011)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "configuration":
+                config = d.get("configuration") or {}
+                for key_opt, val_opt in config.items():
+                    if isinstance(val_opt, list) and len(val_opt) > 1:
+                        mutually_exclusive = [
+                            {"voltage_based", "none"},
+                            {"counting", "lookup_table"},
+                        ]
+                        for excl in mutually_exclusive:
+                            if excl.issubset(set(val_opt)):
+                                self.findings.add("high", "consistency", aid,
+                                                  f"configuration {aid} enables mutually exclusive options: {excl}")
+
+        # Rule: Execution kind classifier (MUT-012)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "execution":
+                ek = d.get("execution_kind")
+                if ek == "actual_host_run":
+                    evidence = d.get("evidence_refs") or []
+                    if not evidence:
+                        self.findings.add("high", "evidence", aid,
+                                          f"execution {aid} claims actual_host_run but has no evidence")
+                elif ek == "synthetic_fixture":
+                    if "evidence_refs" not in d or not d.get("evidence_refs"):
+                        self.findings.add("medium", "evidence", aid,
+                                          f"execution {aid} claims synthetic_fixture but lacks evidence")
+
+        # Rule: Evidence reference validator (MUT-014)
+        # Build a set of all artifact IDs in the index
+        all_artifact_ids = set(_id(k) for k in index.keys())
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if "evidence_refs" in d:
+                for ref in d["evidence_refs"]:
+                    # Allow file paths as evidence references (they start with tests/ or src/)
+                    if ref not in all_artifact_ids and not (isinstance(ref, str) and (ref.startswith("tests/") or ref.startswith("src/") or ref.endswith(".c") or ref.endswith(".h"))):
+                        self.findings.add("high", "provenance", aid,
+                                          f"artifact {aid} references non-existent evidence {ref}")
+
+        # Rule: Identity uniqueness checker (profile-aware) (MUT-015)
+        id_counts = {}
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            profile = d.get("profile", "unknown")
+            key2 = (profile, aid)
+            id_counts[key2] = id_counts.get(key2, 0) + 1
+        for (profile, aid), count in id_counts.items():
+            if count > 1:
+                self.findings.add("high", "traceability", aid,
+                                  f"duplicate artifact ID {aid} within profile {profile}")
+
+        # Rule: Source anchor drift detector (MUT-016)
+        sr = self.sources_dir / "source-registry.json"
+        sources_registry = {}
+        if sr.exists():
+            for a in load_json(sr).get("anchors", []):
+                sources_registry[a.get("anchor_id")] = a
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if "source_refs" in d:
+                for ref in d["source_refs"]:
+                    if ref not in sources_registry:
+                        self.findings.add("high", "provenance", aid,
+                                          f"artifact {aid} references non-existent source anchor {ref}")
+
+        # Rule: Production authorization governance checker (MUT-017)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("production_authorized") is True:
+                if d.get("human_approval_status") != "approved":
+                    self.findings.add("high", "process", aid,
+                                      f"artifact {aid} has production_authorized=true but human_approval_status != approved")
+
+        # Rule: Change impact analyzer (MUT-018)
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") == "change":
+                suspect = d.get("suspect_links") or []
+                required = d.get("required_updates") or []
+                if not suspect and not required:
+                    self.findings.add("medium", "traceability", aid,
+                                      f"change {aid} has no suspect_links or required_updates")
+
+        # Rule: Refinement cycle detector (MUT-019)
+        refines_graph = {}
+        for l in links:
+            if l.get("relation_type") == "refines":
+                src = l.get("source_id")
+                tgt = l.get("target_id")
+                if src and tgt:
+                    refines_graph.setdefault(src, []).append(tgt)
+        def has_cycle(node, visited, rec_stack):
+            visited.add(node)
+            rec_stack.add(node)
+            for neighbor in refines_graph.get(node, []):
+                if neighbor not in visited:
+                    if has_cycle(neighbor, visited, rec_stack):
+                        return True
+                elif neighbor in rec_stack:
+                    return True
+            rec_stack.remove(node)
+            return False
+        visited = set()
+        for node in refines_graph:
+            if node not in visited:
+                if has_cycle(node, visited, set()):
+                    self.findings.add("high", "traceability", node,
+                                      f"circular refinement chain detected involving {node}")
+                    break
+
         return ok
 
     def cmd_validate(self, quiet=False):
