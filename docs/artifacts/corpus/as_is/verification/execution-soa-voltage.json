@@ -1,0 +1,107 @@
+{
+ "id": "FB2-VER-EXE-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "execution",
+ "engineering_domain": "verification",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Execution: SOA Voltage Limit Test",
+ "owner_role": "verification_engineer",
+ "origin": "source_observed",
+ "source_refs": [
+  "FB2-SRC-TST-000001"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 10",
+   "status": "mapped",
+   "rationale": "Software unit verification"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.4, SWE.5",
+   "status": "mapped",
+   "rationale": "Software integration and qualification test"
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Recorded from actual unit test execution"
+  }
+ ],
+ "test_measure_id": "FB2-VER-TMS-000001",
+ "test_measure_revision": "1",
+ "execution_kind": "actual_host_run",
+ "outcome": "pass",
+ "environment": {
+  "hardware": "x86_64 Linux host",
+  "software": "Unity 2.5.2, CMock 2.4.0",
+  "tools": [
+   "GCC 11.4.0",
+   "CMake 3.22"
+  ],
+  "configuration": "conf/unit/app_project_posix.yml",
+  "tool_versions": {
+   "gcc": "11.4.0",
+   "cmake": "3.22.1",
+   "unity": "2.5.2",
+   "cmock": "2.4.0"
+  }
+ },
+ "input_hashes": {
+  "test_source": "sha256:380d07375c882253761268c2b31973c273fcb89dc312ebcd3ad603b0ab37d6b4",
+  "config": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f"
+ },
+ "output_hashes": {},
+ "logs": [
+  {
+   "file": "tests/unit/app/application/soa/test_soa.log",
+   "hash": "sha256:placeholder",
+   "type": "stdout"
+  },
+  {
+   "file": "build/unit/coverage/app_application_soa.info",
+   "hash": "sha256:placeholder",
+   "type": "coverage"
+  }
+ ],
+ "timestamps": {
+  "start": "2026-09-08T00:00:00Z",
+  "end": "2026-09-08T00:00:05Z",
+  "duration_ms": 5000
+ },
+ "anomalies": [],
+ "evidence_refs": [
+  "FB2-VER-TMS-000001",
+  "tests/unit/app/application/soa/test_soa.c"
+ ],
+ "limitations": [
+  "Host-based execution (not target hardware)",
+  "Mocked hardware dependencies",
+  "No timing verification on target"
+ ],
+ "notes": "Unity/CMock host run; per-run logs and coverage reports not retained in repository; hashes given for test source and configuration only."
+}

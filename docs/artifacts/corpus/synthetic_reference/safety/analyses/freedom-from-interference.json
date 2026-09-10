@@ -1,0 +1,176 @@
+{
+ "id": "FB2-SAF-ANL-000004",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_analysis",
+ "analysis_type": "freedom_from_interference",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Freedom From Interference: Coexisting Safety and Non-Safety Functions",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-COD-000027"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-010"
+ ],
+ "standards_mappings": [
+  {
+   "standard": "ISO 26262:2018",
+   "part": "6",
+   "clause": "7.4.4"
+  },
+  {
+   "standard": "ISO 26262:2018",
+   "part": "9",
+   "clause": "6"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Initial synthetic FFI analysis"
+  }
+ ],
+ "interference_categories": [
+  {
+   "category": "timing",
+   "source_elements": [
+    "SOC/SOE/SOH estimation tasks (lower priority)",
+    "CAN/Ethernet communication tasks"
+   ],
+   "affected_elements": [
+    "SOA monitoring task (ASIL_D)",
+    "Contactor control task (ASIL_D)"
+   ],
+   "interference_mode": "CPU starvation, blocking on shared resources",
+   "mitigations": [
+    {
+     "name": "Priority assignment: safety tasks highest app-level priorities",
+     "requirement_refs": [
+      "FB2-SW-SWR-000002",
+      "FB2-SW-SWR-000003"
+     ],
+     "design_refs": [
+      "FB2-SW-DSN-000002",
+      "FB2-SW-DSN-000003"
+     ]
+    },
+    {
+     "name": "Non-blocking database access pattern (immediate read/copy)",
+     "design_refs": [
+      "FB2-SW-DSN-000001"
+     ]
+    },
+    {
+     "name": "SBC windowed watchdog supervises safety task liveness",
+     "assumption_refs": [
+      "FB2-ASM-007"
+     ],
+     "requirement_refs": [
+      "FB2-SW-SWR-000002"
+     ]
+    }
+   ],
+   "verification_refs": [
+    "FB2-VER-TMS-000001",
+    "FB2-VER-TMS-000002"
+   ],
+   "residual_risk": "WCET bounds on target HW not measured (execution_kind: blocked) - documented gap"
+  },
+  {
+   "category": "memory",
+   "source_elements": [
+    "Diagnostic/engineering module (debug)",
+    "Data logging"
+   ],
+   "affected_elements": [
+    "Database (db.c) cell voltage records"
+   ],
+   "interference_mode": "Out-of-bounds write corrupting safety-relevant records",
+   "mitigations": [
+    {
+     "name": "Database record versioning + checksum (PEC-protected write path)",
+     "design_refs": [
+      "FB2-SW-DSN-000001"
+     ],
+     "requirement_refs": [
+      "FB2-SAF-FSR-000001"
+     ]
+    },
+    {
+     "name": "MPU regions restrict debug/engineering code (HW architecture)",
+     "source_refs": [
+      "SRC-HW-000001"
+     ]
+    }
+   ],
+   "verification_refs": [
+    "FB2-VER-TMS-000001"
+   ],
+   "residual_risk": "None identified"
+  },
+  {
+   "category": "communication",
+   "source_elements": [
+    "CAN task (commanded states)",
+    "Ethernet engineering interface"
+   ],
+   "affected_elements": [
+    "Contactor control state machine"
+   ],
+   "interference_mode": "Illegitimate command forcing contactor state",
+   "mitigations": [
+    {
+     "name": "Command plausibility: CAN commands only request states, never direct contactor drive",
+     "design_refs": [
+      "FB2-SW-DSN-000003"
+     ],
+     "requirement_refs": [
+      "FB2-SAF-FSR-000003",
+      "FB2-SW-SWR-000003"
+     ]
+    },
+    {
+     "name": "Engineering access disabled in normal operation (interlock on debug interface)",
+     "design_refs": [
+      "FB2-SW-DSN-000003"
+     ]
+    }
+   ],
+   "verification_refs": [
+    "FB2-VER-TMS-000002"
+   ],
+   "residual_risk": "Cybersecurity threat analysis out of corpus scope (documented limitation)"
+  }
+ ],
+ "summary": {
+  "categories_analyzed": 3,
+  "mitigations": 7,
+  "residual_risks": 2,
+  "verified_on_target": false
+ }
+}

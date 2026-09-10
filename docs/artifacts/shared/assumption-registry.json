@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "repository_commit": "308028fb",
+  "assumptions": [
+    {
+      "id": "FB2-ASM-001",
+      "statement": "Lithium-ion cell chemistry with nominal voltage 3.7V, operating range 2.5V-4.2V",
+      "rationale": "Based on foxBMS supported chemistries; defines voltage limits for SOA",
+      "affected_scope": ["FB2-PRM-000001", "FB2-PRM-000002"],
+      "source": "synthetic",
+      "validity_conditions": "Applies to Li-ion, LiFePO4, NMC chemistries. Not applicable to LTO (different voltage range).",
+      "invalidation_consequence": "Voltage limits must be reconfigured per chemistry; SOA thresholds invalid",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-002",
+      "statement": "Thermal runaway initiates at cell voltage > 4.3V and temperature > 60°C",
+      "rationale": "Conservative boundary from literature; defines hazardous event boundary",
+      "affected_scope": ["FB2-SAF-HAZ-000001", "FB2-PRM-000004"],
+      "source": "synthetic",
+      "validity_conditions": "Valid for NMC/LCO chemistries. LFP has higher thermal stability.",
+      "invalidation_consequence": "ASIL assignment may change; FTTI budget may need adjustment",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-003",
+      "statement": "Vehicle charger respects BMS charge current limits communicated via CAN",
+      "rationale": "Standard EV charging protocol (ISO 15118 / DIN 70121)",
+      "affected_scope": ["FB2-SAF-HAZ-000001", "FB2-SAF-SGO-000001"],
+      "source": "synthetic",
+      "validity_conditions": "Requires compatible charger. Non-compliant charger is external hazard.",
+      "invalidation_consequence": "Overcharge protection relies solely on contactor opening",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-004",
+      "statement": "AFE SPI communication latency < 5 ms (including DMA transfer and PEC validation)",
+      "rationale": "Based on LTC6811/6813 datasheet timing at 1 MHz SPI with DMA",
+      "affected_scope": ["FB2-SAF-FSR-000001", "FB2-PRM-000003"],
+      "source": "derived",
+      "validity_conditions": "Assumes 1 MHz SPI, DMA available, no bus contention. Validated on target.",
+      "invalidation_consequence": "FTTI budget exceeded; acquisition period must increase",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-005",
+      "statement": "Cell voltage measurement noise follows Gaussian distribution with sigma <= 5 mV",
+      "rationale": "Based on AFE datasheet accuracy (±1.5 mV) plus system noise margin",
+      "affected_scope": ["FB2-SAF-FSR-000002", "FB2-PRM-000006"],
+      "source": "derived",
+      "validity_conditions": "Valid for calibrated AFE at 25°C. Noise increases at temperature extremes.",
+      "invalidation_consequence": "Debounce count may be insufficient; false positive rate increases",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-006",
+      "statement": "Contactor mechanical opening time <= 30 ms (worst case) at -40°C to +85°C",
+      "rationale": "Based on typical automotive contactor datasheets (e.g., TE Connectivity EV200)",
+      "affected_scope": ["FB2-SAF-FSR-000003", "FB2-PRM-000005"],
+      "source": "derived",
+      "validity_conditions": "Valid for specified contactor model. Degraded contactors may exceed.",
+      "invalidation_consequence": "FTTI budget exceeded; independent monitor required",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-007",
+      "statement": "SBC (FS85xx) watchdog is independent of main MCU and can trigger contactor opening",
+      "rationale": "FS85xx datasheet specifies independent watchdog with fail-safe outputs",
+      "affected_scope": ["FB2-SAF-FSR-000003", "FB2-SAF-FSR-000004"],
+      "source": "derived",
+      "validity_conditions": "Requires correct SBC configuration. Shared power supply is common cause.",
+      "invalidation_consequence": "Single point of failure for contactor control; ASIL D not achievable",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-008",
+      "statement": "Independent hardware voltage monitor (ASIL B) can be implemented with separate voltage dividers, comparator, and contactor drive",
+      "rationale": "Addresses timing budget violation (115 ms > 100 ms FTTI) in main path",
+      "affected_scope": ["FB2-SAF-FSR-000004", "FB2-PRM-000007"],
+      "source": "synthetic",
+      "validity_conditions": "Requires PCB space, separate power domain, additional BOM cost. Feasibility to be confirmed.",
+      "invalidation_consequence": "Must rely on main path timing optimization or accept residual risk",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-009",
+      "statement": "Current sensor (Isabellenhutte IVT-S / LEM CAB500 / Honeywell BAS6C) provides +/-0.5% accuracy over -40°C to +85°C",
+      "rationale": "Datasheet specifications for automotive current sensors",
+      "affected_scope": ["FB2-PRM-000008", "FB2-PRM-000009"],
+      "source": "derived",
+      "validity_conditions": "Requires periodic calibration. Accuracy degrades with temperature cycling.",
+      "invalidation_consequence": "SOA current limits may be inaccurate; power estimation affected",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-010",
+      "statement": "NTC temperature sensors (EPCOS B57332) with polynomial interpolation provide +/-1°C accuracy over -40°C to +125°C",
+      "rationale": "Based on sensor datasheet and foxBMS polynomial implementation",
+      "affected_scope": ["FB2-PRM-000010"],
+      "source": "derived",
+      "validity_conditions": "Requires calibration at 3 points. Self-heating effect neglected.",
+      "invalidation_consequence": "SOA temperature limits may be inaccurate; thermal protection degraded",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-011",
+      "statement": "FreeRTOS task scheduling provides deterministic execution with worst-case latency < 2 ms for high-priority safety tasks",
+      "rationale": "FreeRTOS config with configUSE_PREEMPTION=1, priority-based scheduling",
+      "affected_scope": ["FB2-SAF-FSR-000001", "FB2-SAF-FSR-000002", "FB2-SAF-FSR-000003"],
+      "source": "derived",
+      "validity_conditions": "Assumes no priority inversion, stack overflow, or interrupt latency spikes.",
+      "invalidation_consequence": "Software timing budget violated; SOA check may miss deadline",
+      "review_status": "accepted"
+    },
+    {
+      "id": "FB2-ASM-012",
+      "statement": "FRAM (MB85RS64) retains data across power cycles with 10^12 write cycles endurance",
+      "rationale": "Fujitsu FRAM datasheet; used for fault logging and contactor cycle count",
+      "affected_scope": ["FB2-SAF-FSR-000003", "FB2-SAF-FSR-000004"],
+      "source": "derived",
+      "validity_conditions": "Write endurance sufficient for 15-year vehicle life at 100 cycles/day",
+      "invalidation_consequence": "Fault history and cycle count lost; warranty/maintenance impact",
+      "review_status": "accepted"
+    }
+  ]
+}

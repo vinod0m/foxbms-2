@@ -1,0 +1,102 @@
+{
+ "id": "FB2-SAF-HAZ-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "hazard",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Cell Overvoltage / Undervoltage Hazard",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-DOC-000001"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-002",
+  "FB2-ASM-003"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 6",
+   "status": "mapped",
+   "rationale": "Hazard analysis for E/E system"
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 6",
+   "status": "mapped",
+   "rationale": "System-level hazard analysis"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Synthetic hazard analysis for hypothetical automotive BMS project"
+  }
+ ],
+ "malfunctioning_behavior": "AFE reports incorrect cell voltage (stuck-at, drift, communication error) OR SOA fails to detect limit violation OR contactor fails to open on violation OR BMS fails to request contactor opening",
+ "hazardous_events": [
+  {
+   "id": "HE-01",
+   "description": "Cell overvoltage during charging leading to thermal runaway",
+   "operational_situation": "CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45\u00b0C",
+   "severity": "S3",
+   "exposure": "E4",
+   "controllability": "C3",
+   "asil": "ASIL_D",
+   "rationale": "Thermal runaway can cause fire/explosion with fatal injuries; continuous exposure during charging; driver cannot detect or control individual cell overvoltage"
+  },
+  {
+   "id": "HE-02",
+   "description": "Cell undervoltage during discharge leading to copper shunts and potential thermal event on subsequent recharge",
+   "operational_situation": "NORMAL mode, deep discharge (<2.0V/cell), high load, low temperature",
+   "severity": "S2",
+   "exposure": "E3",
+   "controllability": "C2",
+   "asil": "ASIL_B",
+   "rationale": "Cell damage creates latent failure; moderate exposure during deep discharge; vehicle may provide warning but driver may ignore"
+  }
+ ],
+ "safe_states": [
+  "All HV contactors open (HV bus isolated from pack)",
+  "Charging permanently disabled until service",
+  "Fault logged to FRAM with timestamp and cell index",
+  "Vehicle propulsion disabled (torque request = 0)"
+ ],
+ "degraded_states": [
+  "Reduced charge current to 0.1C (derating)",
+  "Balancing disabled for affected cell group",
+  "Reduced discharge current to 0.5C",
+  "Enhanced monitoring: 1 Hz acquisition for affected cells"
+ ],
+ "assumptions": [
+  "Vehicle provides independent HW monitoring (e.g., redundant voltage monitor ASIL B)",
+  "Charger respects BMS charge current limits",
+  "Contactor opening is irreversible without service tool",
+  "FRAM retains fault data across power cycles"
+ ]
+}

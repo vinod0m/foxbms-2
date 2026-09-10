@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/finding.schema.json",
+  "title": "Finding Artifact Schema",
+  "description": "Schema for finding artifacts in the foxBMS 2 lifecycle corpus",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "severity",
+        "category",
+        "evidence",
+        "disposition",
+        "impact",
+        "root_cause",
+        "resolution"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "finding"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
+          "description": "Severity level of the finding"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "provenance",
+            "completeness",
+            "domain",
+            "cross_domain",
+            "verification",
+            "traceability",
+            "consistency",
+            "process"
+          ],
+          "description": "Category of the finding"
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Evidence supporting the finding"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "rejected",
+            "deferred",
+            "partial",
+            "in_progress"
+          ],
+          "description": "Disposition of the finding"
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Impact of the finding"
+        },
+        "root_cause": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Root cause of the finding"
+        },
+        "resolution": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Resolution of the finding"
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

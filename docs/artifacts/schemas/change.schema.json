@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/change.schema.json",
+  "title": "Change Artifact Schema",
+  "description": "Schema for change artifacts representing change management in the foxBMS 2 lifecycle corpus",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "change_type",
+        "trigger",
+        "impact_analysis",
+        "decision",
+        "new_revisions",
+        "suspect_links",
+        "required_updates",
+        "reverification_selection",
+        "post_change_baseline"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "change"
+        },
+        "change_type": {
+          "type": "string",
+          "enum": [
+            "safety_threshold",
+            "hsi_interface",
+            "software_behavior",
+            "hardware_design",
+            "process",
+            "configuration"
+          ],
+          "description": "Type of change being made"
+        },
+        "trigger": {
+          "type": [
+            "object",
+            "string"
+          ],
+          "required": [
+            "source",
+            "description",
+            "date"
+          ],
+          "properties": {
+            "source": {
+              "type": "string",
+              "description": "Source of the change trigger (e.g., supplier notification, test failure, audit finding)"
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of what triggered the change"
+            },
+            "date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the change was triggered"
+            }
+          },
+          "additionalProperties": true
+        },
+        "impact_analysis": {
+          "type": "object",
+          "required": [
+            "affected_artifacts",
+            "affected_links",
+            "affected_reviews",
+            "affected_evidence",
+            "risk_assessment"
+          ],
+          "properties": {
+            "affected_artifacts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
+              },
+              "description": "List of artifact IDs affected by this change"
+            },
+            "affected_links": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^FB2-LNK-[A-Z]{2,4}-[0-9]{6}$"
+              },
+              "description": "List of link IDs affected by this change"
+            },
+            "affected_reviews": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^FB2-REV-[A-Z]{2,4}-[0-9]{6}$"
+              },
+              "description": "List of review IDs affected by this change"
+            },
+            "affected_evidence": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^FB2-EVD-[A-Z]{2,4}-[0-9]{6}$"
+              },
+              "description": "List of evidence IDs affected by this change"
+            },
+            "risk_assessment": {
+              "type": "string",
+              "description": "Risk assessment of the change impact"
+            }
+          },
+          "additionalProperties": false
+        },
+        "decision": {
+          "type": "object",
+          "required": [
+            "decision_id",
+            "decision_maker",
+            "date",
+            "rationale",
+            "disposition"
+          ],
+          "properties": {
+            "decision_id": {
+              "type": "string",
+              "pattern": "^FB2-CHG-[A-Z]{2,4}-[0-9]{6}$",
+              "description": "Unique change decision ID"
+            },
+            "decision_maker": {
+              "type": "string",
+              "description": "Role or identity of the decision maker"
+            },
+            "date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time of the decision"
+            },
+            "rationale": {
+              "type": "string",
+              "description": "Rationale for the decision"
+            },
+            "disposition": {
+              "type": "string",
+              "enum": [
+                "approved",
+                "rejected",
+                "deferred",
+                "partial"
+              ],
+              "description": "Disposition of the change request"
+            }
+          },
+          "additionalProperties": false
+        },
+        "new_revisions": {
+          "type": "array",
+          "description": "New artifact revisions resulting from the change",
+          "items": {
+            "type": "object",
+            "required": [
+              "artifact_id",
+              "old_revision",
+              "new_revision"
+            ],
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
+              },
+              "old_revision": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)$"
+              },
+              "new_revision": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "suspect_links": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^FB2-LNK-[A-Z]{2,4}-[0-9]{6}$"
+          },
+          "description": "Link IDs marked as suspect due to this change"
+        },
+        "required_updates": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
+          },
+          "description": "Artifact IDs requiring updates due to this change"
+        },
+        "reverification_selection": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^FB2-VER-[A-Z]{2,4}-[0-9]{6}$"
+          },
+          "description": "Test measure IDs selected for reverification"
+        },
+        "post_change_baseline": {
+          "type": "string",
+          "pattern": "^BAS-REF-[0-9]{3}$",
+          "description": "Baseline ID after change is complete"
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

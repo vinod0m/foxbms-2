@@ -1,0 +1,102 @@
+{
+ "id": "FB2-SAF-SCS-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_case",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Cell Voltage Protection Safety Case Skeleton",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 8",
+   "status": "mapped",
+   "rationale": "Safety case structure"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Synthetic safety case skeleton"
+  }
+ ],
+ "claims": [
+  {
+   "id": "CLAIM-001",
+   "description": "Cell overvoltage/undervoltage is prevented to ASIL D",
+   "arguments": [
+    {
+     "id": "ARG-001",
+     "description": "Hazard analysis identifies overvoltage/undervoltage as ASIL D",
+     "evidence": [
+      "FB2-SAF-HAZ-000001"
+     ]
+    },
+    {
+     "id": "ARG-002",
+     "description": "Safety goal defines FTTI=100ms with timing budget allocation",
+     "evidence": [
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "id": "ARG-003",
+     "description": "FSR chain: acquisition (25ms) + SOA check (5ms) + contactor (30ms) + independent monitor (50ms parallel) = 70ms < 100ms FTTI",
+     "evidence": [
+      "FB2-SAF-FSR-000001",
+      "FB2-SAF-FSR-000002",
+      "FB2-SAF-FSR-000003",
+      "FB2-SAF-FSR-000004"
+     ]
+    },
+    {
+     "id": "ARG-004",
+     "description": "Independent HW monitor provides ASIL B parallel path for freedom from interference",
+     "evidence": [
+      "FB2-SAF-FSR-000004"
+     ]
+    }
+   ],
+   "defeaters": [
+    {
+     "id": "DEF-001",
+     "description": "AFE communication failure not detected within FTTI",
+     "mitigation": "CRC + timeout + plausibility; independent monitor backup"
+    },
+    {
+     "id": "DEF-002",
+     "description": "Contactor weld not detected",
+     "mitigation": "Feedback monitoring + independent SBC watchdog"
+    }
+   ]
+  }
+ ],
+ "release_recommendation": {
+  "text": "Conditional release for development use only. Not for production deployment without independent assessment.",
+  "production_authorized": false
+ }
+}

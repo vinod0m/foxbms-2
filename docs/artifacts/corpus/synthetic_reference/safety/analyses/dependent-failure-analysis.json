@@ -1,0 +1,115 @@
+{
+ "id": "FB2-SAF-ANL-000003",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_analysis",
+ "analysis_type": "dependent_failure",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Dependent Failure Analysis: Main Path and Independent Monitor",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-HW-000001",
+  "FB2-SRC-HW-000002"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-007",
+  "FB2-ASM-008"
+ ],
+ "standards_mappings": [
+  {
+   "standard": "ISO 26262:2018",
+   "part": "9",
+   "clause": "7.4.4"
+  },
+  {
+   "standard": "ISO 26262:2018",
+   "part": "5",
+   "clause": "7.4.5"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Initial synthetic dependent failure analysis"
+  }
+ ],
+ "coupling_categories": [
+  {
+   "coupling_id": "DFC-01",
+   "category": "shared_resource",
+   "description": "Main MCU and SBC watchdog share supply rail (SBC supplies MCU)",
+   "elements": [
+    "MCU (TMS570LC4357)",
+    "SBC (watchdog supervisor)"
+   ],
+   "impact": "Common-cause supply failure disables both main path and watchdog detection",
+   "independence_argument": "Independent monitor (FB2-HW-TSR-000004) uses separate comparator with own reference; not supplied by SBC",
+   "requirement_refs": [
+    "FB2-SAF-FSR-000004"
+   ],
+   "residual_risk": "Supply coupling accepted; monitor rail separation specified in HSI"
+  },
+  {
+   "coupling_id": "DFC-02",
+   "category": "shared_resource",
+   "description": "SOA task and contactor task run on same MCU with same RTOS",
+   "elements": [
+    "SOA monitoring (soa.c)",
+    "Contactor control (contactor.c)"
+   ],
+   "impact": "RTOS scheduling fault could delay both detection and reaction",
+   "independence_argument": "None within MCU - covered by independent HW monitor path",
+   "requirement_refs": [
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003"
+   ],
+   "assumption_refs": [
+    "FB2-ASM-010"
+   ],
+   "residual_risk": "Managed via external monitor; FFIO analysis FB2-SAF-ANL-000004"
+  },
+  {
+   "coupling_id": "DFC-03",
+   "category": "shared_input",
+   "description": "Main AFE path and independent monitor both connect to cell voltage tap",
+   "elements": [
+    "AFE LTC6811",
+    "Independent comparator monitor"
+   ],
+   "impact": "Connector failure at cell tap removes both voltage sensing paths",
+   "independence_argument": "Separate tap points and separate harness for monitor (design constraint in FB2-HW-TSR-000004)",
+   "requirement_refs": [
+    "FB2-HW-TSR-000001",
+    "FB2-HW-TSR-000004"
+   ],
+   "assumption_refs": [
+    "FB2-ASM-008"
+   ],
+   "residual_risk": "Documented; harness separation is HW design constraint"
+  }
+ ],
+ "freedom_from_interference_verified": false,
+ "ffi_analysis_ref": "FB2-SAF-ANL-000004"
+}

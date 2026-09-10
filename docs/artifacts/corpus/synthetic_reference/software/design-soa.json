@@ -1,0 +1,230 @@
+{
+ "id": "FB2-SW-DSN-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "design",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Design: SOA Voltage Monitoring Module",
+ "owner_role": "sw_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-COD-000005",
+  "FB2-SRC-COD-000006"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8",
+   "status": "mapped",
+   "rationale": "Software architectural design"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "mapped",
+   "rationale": "Software architectural design"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Synthetic SOA detailed design with debounce rationale"
+  }
+ ],
+ "design_level": "detailed_design",
+ "responsibilities": [
+  "Read cell voltages from database",
+  "Compare against min/max limits from config",
+  "Debounce violations (configurable count)",
+  "Trigger FAULT state on confirmed violation",
+  "Report violation details to DIAG"
+ ],
+ "decomposition": [],
+ "interfaces": [
+  {
+   "interface_id": "SOA_DATABASE_IN",
+   "direction": "input",
+   "signals": [
+    {
+     "name": "cell_voltages",
+     "type": "uint16_t[]",
+     "unit": "mV",
+     "range": "0-5000",
+     "rate": "20 Hz"
+    },
+    {
+     "name": "soa_config",
+     "type": "SOA_CONFIG_s",
+     "unit": "struct",
+     "range": "config",
+     "rate": "static"
+    }
+   ]
+  },
+  {
+   "interface_id": "SOA_SYS_OUT",
+   "direction": "output",
+   "signals": [
+    {
+     "name": "fault_request",
+     "type": "bool",
+     "unit": "bool",
+     "range": "0/1",
+     "rate": "event"
+    },
+    {
+     "name": "violation_details",
+     "type": "SOA_VIOLATION_s",
+     "unit": "struct",
+     "range": "details",
+     "rate": "event"
+    }
+   ]
+  }
+ ],
+ "behavior_model": {
+  "type": "state_machine",
+  "states": [
+   "IDLE",
+   "CHECKING",
+   "DEBOUNCING",
+   "VIOLATION_CONFIRMED",
+   "FAULT_TRIGGERED"
+  ],
+  "transitions": [
+   {
+    "from": "IDLE",
+    "to": "CHECKING",
+    "trigger": "database_updated",
+    "guard": "data_valid",
+    "action": "read_voltages"
+   },
+   {
+    "from": "CHECKING",
+    "to": "DEBOUNCING",
+    "trigger": "limit_exceeded",
+    "guard": "voltage > max OR voltage < min",
+    "action": "start_debounce"
+   },
+   {
+    "from": "DEBOUNCING",
+    "to": "VIOLATION_CONFIRMED",
+    "trigger": "debounce_complete",
+    "guard": "consecutive_violations >= config",
+    "action": "confirm_violation"
+   },
+   {
+    "from": "DEBOUNCING",
+    "to": "IDLE",
+    "trigger": "back_in_limits",
+    "guard": "voltage within limits",
+    "action": "reset_debounce"
+   },
+   {
+    "from": "VIOLATION_CONFIRMED",
+    "to": "FAULT_TRIGGERED",
+    "trigger": "fault_callback",
+    "guard": "always",
+    "action": "request_fault_state"
+   },
+   {
+    "from": "FAULT_TRIGGERED",
+    "to": "IDLE",
+    "trigger": "system_reset",
+    "guard": "fault_cleared",
+    "action": "reset_state"
+   }
+  ]
+ },
+ "constraints": [
+  "Check latency < 10 ms from database update",
+  "Debounce count configurable (default: 2)",
+  "Must not block database access",
+  "Stack usage: < 1 KB"
+ ],
+ "budgets": {
+  "cpu_time_ms": 2,
+  "memory_bytes": 4096,
+  "stack_bytes": 1024
+ },
+ "failure_response": [
+  {
+   "failure_mode": "Database read failure",
+   "detection": "DATA_ReadData returns error",
+   "reaction": "Report to DIAG, use last valid",
+   "recovery": "Retry next cycle"
+  },
+  {
+   "failure_mode": "Config invalid",
+   "detection": "Config checksum mismatch",
+   "reaction": "Use safe defaults, report to DIAG",
+   "recovery": "Reload config"
+  }
+ ],
+ "decisions": [
+  {
+   "decision_id": "DEC-SOA-001",
+   "alternatives": [
+    "Polling",
+    "Callback",
+    "Event"
+   ],
+   "selected": "Callback (DIAG CBS)",
+   "rationale": "Event-driven minimizes latency"
+  },
+  {
+   "decision_id": "DEC-SOA-002",
+   "alternatives": [
+    "Per-cell debounce",
+    "Pack-level debounce"
+   ],
+   "selected": "Per-cell debounce",
+   "rationale": "Isolates faulty cells, prevents nuisance trips"
+  }
+ ],
+ "implementation_mapping": [
+  {
+   "source_file": "src/app/application/soa/soa.c",
+   "symbol": "SOA_CheckVoltageLimits",
+   "status": "implemented"
+  },
+  {
+   "source_file": "src/app/application/soa/soa.c",
+   "symbol": "SOA_CheckCurrentLimits",
+   "status": "implemented"
+  },
+  {
+   "source_file": "src/app/application/soa/soa.c",
+   "symbol": "SOA_CheckTemperatureLimits",
+   "status": "implemented"
+  },
+  {
+   "source_file": "src/app/engine/diag/cbs/diag_cbs_voltage.c",
+   "symbol": "DIAG_CBS_Voltage",
+   "status": "implemented"
+  }
+ ]
+}

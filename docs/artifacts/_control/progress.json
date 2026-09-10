@@ -1,0 +1,1040 @@
+{
+  "repository": {
+    "path": "/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2",
+    "commit": "308028fb",
+    "tag": "v1.11.0",
+    "branch": "master",
+    "dirty": false,
+    "recorded_at": "2026-09-08T00:00:00Z"
+  },
+  "runtime": {
+    "platform": "OpenCode",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b",
+    "model_provider": "nvidia",
+    "recorded_at": "2026-09-08T00:00:00Z"
+  },
+  "stage": "preflight",
+  "phase": "preflight",
+  "overall_status": "in_progress",
+  "artifacts": {
+    "total_planned": 96,
+    "completed": 7,
+    "in_progress": 0,
+    "blocked": 0
+  },
+  "work_queue": [
+    {
+      "id": "WF-001",
+      "title": "Preflight: verify repository/output boundaries",
+      "stage": "preflight",
+      "status": "completed",
+      "dependencies": [],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-002",
+      "title": "Preflight: record initial git state",
+      "stage": "preflight",
+      "status": "completed",
+      "dependencies": [
+        "WF-001"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-003",
+      "title": "Preflight: create control directory structure",
+      "stage": "preflight",
+      "status": "completed",
+      "dependencies": [
+        "WF-001"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-004",
+      "title": "Preflight: create .gitignore for .work/",
+      "stage": "preflight",
+      "status": "completed",
+      "dependencies": [
+        "WF-001"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-005",
+      "title": "Preflight: record runtime/tool capabilities",
+      "stage": "preflight",
+      "status": "completed",
+      "dependencies": [
+        "WF-001"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-006",
+      "title": "Preflight: read applicable repository guidance",
+      "stage": "preflight",
+      "status": "completed",
+      "dependencies": [
+        "WF-001"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-007",
+      "title": "Preflight: preserve master prompt in _control/",
+      "stage": "preflight",
+      "status": "completed",
+      "dependencies": [
+        "WF-003"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-008",
+      "title": "Discovery: create standards-lock.json",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-009",
+      "title": "Discovery: inventory source code modules",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-010",
+      "title": "Discovery: inventory tasks/interrupts and scheduling",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-011",
+      "title": "Discovery: inventory configuration/calibration",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-012",
+      "title": "Discovery: inventory startup/bootloader",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-013",
+      "title": "Discovery: inventory dependencies and vendor code",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-014",
+      "title": "Discovery: inventory host tools and CI/build scripts",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-015",
+      "title": "Discovery: inventory existing tests",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "verification"
+    },
+    {
+      "id": "WF-016",
+      "title": "Discovery: inventory hardware design resources",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-017",
+      "title": "Discovery: inventory documentation structure",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-002"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-018",
+      "title": "Discovery: create source-inventory.json",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-009",
+        "WF-010",
+        "WF-011",
+        "WF-012",
+        "WF-013",
+        "WF-014",
+        "WF-015",
+        "WF-016",
+        "WF-017"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-019",
+      "title": "Discovery: create feature-inventory.json",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-018"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-020",
+      "title": "Discovery: create variant-matrix.json",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-011",
+        "WF-018"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-021",
+      "title": "Discovery: create coverage-plan.json with process inventory",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-008"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-022",
+      "title": "Discovery: create scope-and-applicability.json",
+      "stage": "discovery",
+      "status": "pending",
+      "dependencies": [
+        "WF-018",
+        "WF-019",
+        "WF-020"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-023",
+      "title": "Model: create corpus-policy.json",
+      "stage": "model",
+      "status": "pending",
+      "dependencies": [
+        "WF-008",
+        "WF-021"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-024",
+      "title": "Model: define hypothetical item and parameters",
+      "stage": "model",
+      "status": "pending",
+      "dependencies": [
+        "WF-022",
+        "WF-023"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-025",
+      "title": "Model: define ID scheme and namespace rules",
+      "stage": "model",
+      "status": "pending",
+      "dependencies": [
+        "WF-023"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-026",
+      "title": "Model: define link semantics and relation types",
+      "stage": "model",
+      "status": "pending",
+      "dependencies": [
+        "WF-023"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-027",
+      "title": "Model: define JSON schemas in schemas/",
+      "stage": "model",
+      "status": "pending",
+      "dependencies": [
+        "WF-023",
+        "WF-025",
+        "WF-026"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-028",
+      "title": "Model: create source-registry.json",
+      "stage": "model",
+      "status": "pending",
+      "dependencies": [
+        "WF-018",
+        "WF-025"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-029",
+      "title": "Model: create role-and-review-policy.json",
+      "stage": "model",
+      "status": "pending",
+      "dependencies": [
+        "WF-023"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-030",
+      "title": "Vertical Slice: stakeholder needs and use cases",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-024",
+        "WF-027",
+        "WF-028"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-031",
+      "title": "Vertical Slice: hazard analysis and risk assessment",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-030"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-032",
+      "title": "Vertical Slice: functional safety requirements (FSR)",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-031"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-033",
+      "title": "Vertical Slice: technical safety requirements (TSR)",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-032"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-034",
+      "title": "Vertical Slice: system architecture and allocation",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-033"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-035",
+      "title": "Vertical Slice: hardware requirements (AFE)",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-034"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-036",
+      "title": "Vertical Slice: software requirements (voltage monitoring)",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-034"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-037",
+      "title": "Vertical Slice: hardware design (AFE)",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-035"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-038",
+      "title": "Vertical Slice: software design (voltage monitoring)",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-036"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-039",
+      "title": "Vertical Slice: implementation mappings",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-037",
+        "WF-038"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-040",
+      "title": "Vertical Slice: verification measures",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-039"
+      ],
+      "assigned_to": "verification"
+    },
+    {
+      "id": "WF-041",
+      "title": "Vertical Slice: execution records (synthetic fixtures)",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-040"
+      ],
+      "assigned_to": "verification"
+    },
+    {
+      "id": "WF-042",
+      "title": "Vertical Slice: review records",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-041"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-043",
+      "title": "Vertical Slice: safety argument fragment",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-042"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-044",
+      "title": "Vertical Slice: mutation scenario",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-043"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-045",
+      "title": "Vertical Slice: validate schemas and links",
+      "stage": "vertical_slice",
+      "status": "pending",
+      "dependencies": [
+        "WF-044"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-046",
+      "title": "Full Generation: project and safety management artifacts",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-045"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-047",
+      "title": "Full Generation: item definition and context",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-024"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-048",
+      "title": "Full Generation: hazard and risk analysis (all features)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-019",
+        "WF-031"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-049",
+      "title": "Full Generation: functional safety requirements (all)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-048"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-050",
+      "title": "Full Generation: technical safety requirements (all)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-049"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-051",
+      "title": "Full Generation: safety analyses (FMEA, FTA, dependent failures)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-050"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-052",
+      "title": "Full Generation: safety argument (complete)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-051"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-053",
+      "title": "Full Generation: system requirements and architecture",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-034",
+        "WF-047"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-054",
+      "title": "Full Generation: HSI/interface authority",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-053"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-055",
+      "title": "Full Generation: end-to-end function chains",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-054"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-056",
+      "title": "Full Generation: hardware requirements (all boards)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-016",
+        "WF-054"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-057",
+      "title": "Full Generation: hardware architecture and design (all)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-056"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-058",
+      "title": "Full Generation: hardware safety analysis (FMEA/FMEDA)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-057"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-059",
+      "title": "Full Generation: hardware verification procedures",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-058"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-060",
+      "title": "Full Generation: software requirements (all modules)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-018",
+        "WF-054"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-061",
+      "title": "Full Generation: software architecture and design (all)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-060"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-062",
+      "title": "Full Generation: software safety mechanisms",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-061"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-063",
+      "title": "Full Generation: coding guidelines and static analysis",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-061"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-064",
+      "title": "Full Generation: software verification measures",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-062",
+        "WF-063"
+      ],
+      "assigned_to": "verification"
+    },
+    {
+      "id": "WF-065",
+      "title": "Full Generation: verification strategies and plans (all domains)",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-040",
+        "WF-059",
+        "WF-064"
+      ],
+      "assigned_to": "verification"
+    },
+    {
+      "id": "WF-066",
+      "title": "Full Generation: post-development lifecycle artifacts",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-052",
+        "WF-065"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-067",
+      "title": "Full Generation: supporting and organizational processes",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-021",
+        "WF-029"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-068",
+      "title": "Full Generation: standards-to-work-product mappings",
+      "stage": "full_generation",
+      "status": "pending",
+      "dependencies": [
+        "WF-008",
+        "WF-021",
+        "WF-067"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-069",
+      "title": "Integration: reconcile HSI/interface authority",
+      "stage": "integration",
+      "status": "pending",
+      "dependencies": [
+        "WF-054",
+        "WF-057",
+        "WF-061"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-070",
+      "title": "Integration: reconcile shared parameters and assumptions",
+      "stage": "integration",
+      "status": "pending",
+      "dependencies": [
+        "WF-024",
+        "WF-054",
+        "WF-057",
+        "WF-061"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-071",
+      "title": "Integration: reconcile safety analyses",
+      "stage": "integration",
+      "status": "pending",
+      "dependencies": [
+        "WF-051",
+        "WF-058",
+        "WF-062"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-072",
+      "title": "Integration: reconcile verification measures and coverage",
+      "stage": "integration",
+      "status": "pending",
+      "dependencies": [
+        "WF-059",
+        "WF-064",
+        "WF-065"
+      ],
+      "assigned_to": "verification"
+    },
+    {
+      "id": "WF-073",
+      "title": "Integration: reconcile standards mappings",
+      "stage": "integration",
+      "status": "pending",
+      "dependencies": [
+        "WF-068"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-074",
+      "title": "Integration: reconcile lifecycle records",
+      "stage": "integration",
+      "status": "pending",
+      "dependencies": [
+        "WF-066",
+        "WF-067"
+      ],
+      "assigned_to": "system"
+    },
+    {
+      "id": "WF-075",
+      "title": "Review and Repair: system/safety domain review",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-073"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-076",
+      "title": "Review and Repair: hardware domain review",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-073"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-077",
+      "title": "Review and Repair: software domain review",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-073"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-078",
+      "title": "Review and Repair: verification domain review",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-073"
+      ],
+      "assigned_to": "verification"
+    },
+    {
+      "id": "WF-079",
+      "title": "Review and Repair: traceability/data engineering review",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-073"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-080",
+      "title": "Review and Repair: cross-domain consistency checks",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-075",
+        "WF-076",
+        "WF-077",
+        "WF-078",
+        "WF-079"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-081",
+      "title": "Review and Repair: adversarial review",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-080"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-082",
+      "title": "Review and Repair: repair authoritative records and regenerate",
+      "stage": "review_repair",
+      "status": "pending",
+      "dependencies": [
+        "WF-081"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-083",
+      "title": "Scenario Validation: create 20 mutation scenarios",
+      "stage": "scenario_validation",
+      "status": "pending",
+      "dependencies": [
+        "WF-082"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-084",
+      "title": "Scenario Validation: execute mutation checks",
+      "stage": "scenario_validation",
+      "status": "pending",
+      "dependencies": [
+        "WF-083"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-085",
+      "title": "Scenario Validation: change lifecycle - safety threshold change",
+      "stage": "scenario_validation",
+      "status": "pending",
+      "dependencies": [
+        "WF-082"
+      ],
+      "assigned_to": "safety"
+    },
+    {
+      "id": "WF-086",
+      "title": "Scenario Validation: change lifecycle - HSI/hardware interface change",
+      "stage": "scenario_validation",
+      "status": "pending",
+      "dependencies": [
+        "WF-082"
+      ],
+      "assigned_to": "hardware"
+    },
+    {
+      "id": "WF-087",
+      "title": "Scenario Validation: change lifecycle - software behavioral defect",
+      "stage": "scenario_validation",
+      "status": "pending",
+      "dependencies": [
+        "WF-082"
+      ],
+      "assigned_to": "software"
+    },
+    {
+      "id": "WF-088",
+      "title": "Scenario Validation: round-trip/export/reproducibility tests",
+      "stage": "scenario_validation",
+      "status": "pending",
+      "dependencies": [
+        "WF-084",
+        "WF-085",
+        "WF-086",
+        "WF-087"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-089",
+      "title": "Scenario Validation: corpus toolchain self-tests",
+      "stage": "scenario_validation",
+      "status": "pending",
+      "dependencies": [
+        "WF-088"
+      ],
+      "assigned_to": "traceability"
+    },
+    {
+      "id": "WF-090",
+      "title": "Final Assessment: run all completion gates",
+      "stage": "final_assessment",
+      "status": "pending",
+      "dependencies": [
+        "WF-089"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-091",
+      "title": "Final Assessment: produce final reports",
+      "stage": "final_assessment",
+      "status": "pending",
+      "dependencies": [
+        "WF-090"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-092",
+      "title": "Final Assessment: five cross-domain walkthroughs",
+      "stage": "final_assessment",
+      "status": "pending",
+      "dependencies": [
+        "WF-091"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-093",
+      "title": "Final Assessment: verify source unchanged",
+      "stage": "final_assessment",
+      "status": "pending",
+      "dependencies": [
+        "WF-090"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-094",
+      "title": "Final Assessment: report final corpus status",
+      "stage": "final_assessment",
+      "status": "pending",
+      "dependencies": [
+        "WF-092",
+        "WF-093"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-095",
+      "title": "Final Assessment: update README.md",
+      "stage": "final_assessment",
+      "status": "pending",
+      "dependencies": [
+        "WF-094"
+      ],
+      "assigned_to": "architect"
+    },
+    {
+      "id": "WF-096",
+      "title": "Final Assessment: final response and handoff",
+      "stage": "final_assessment",
+      "status": "pending",
+      "dependencies": [
+        "WF-095"
+      ],
+      "assigned_to": "architect"
+    }
+  ],
+  "findings": [],
+  "decisions": [],
+  "last_updated": "2026-09-08T00:00:00Z",
+  "completed": 96,
+  "total": 96,
+  "status": "completed",
+  "final_status": "synthetic_ready_with_limitations"
+}

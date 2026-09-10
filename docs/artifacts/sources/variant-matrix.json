@@ -1,0 +1,421 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "repository_commit": "308028fb",
+  "reference_configuration": {
+    "id": "VAR-REF-001",
+    "name": "foxBMS 2 Reference Configuration (Master + 12-cell LTC6811 Slaves)",
+    "description": "Primary reference configuration used for synthetic_reference profile. Based on TI TMS570LC4357 master with LTC6811-1 12-cell slaves connected via LTC6820 isoSPI.",
+    "master_board": "HW-BMS-MASTER (ti-tms570lc4357-vx.x.x)",
+    "slave_boards": [
+      "HW-BMS-SLAVE-12-LTC6811 (12-ltc-ltc6811-1-vx.x.x) x N strings"
+    ],
+    "interfaces": ["HW-IF-LTC6820 (ltc-ltc6820-vx.x.x)"],
+    "afe_driver": "LTC 6811-1 / 6813-1 common driver (src/app/driver/afe/ltc)",
+    "current_sensor": "Isabellenhütte IVT-S (CAN)",
+    "imd": "Bender ISO165C (CAN)",
+    "sbc": "NXP FS85xx",
+    "temperature_sensors": "EPCOS B57332 (polynomial)",
+    "balancing_strategy": "voltage-based",
+    "soc_method": "counting + lookup-table",
+    "soe_method": "counting",
+    "sof_method": "trapezoid",
+    "communication": "CAN (vehicle) + Ethernet (diagnostics/HMI)",
+    "os": "FreeRTOS + FreeRTOS+TCP",
+    "bootloader": "CAN-based with CRC64",
+    "compiler": "TI CCS (ARM Cortex-R5F)",
+    "disposition": "fully_modeled"
+  },
+  "variants": [
+    {
+      "id": "VAR-AFE-ADI-1830",
+      "name": "ADI ADES1830 16-cell Slave",
+      "category": "afe",
+      "description": "Analog Devices ADES1830 AFE with 16 channels, SPI/DMA communication",
+      "master_board": "HW-BMS-MASTER",
+      "slave_board": "HW-BMS-SLAVE-16-ADES1830",
+      "interface": "SPI/DMA (no isoSPI)",
+      "driver_path": "src/app/driver/afe/adi/ades1830, src/app/driver/afe/adi/common/ades183x",
+      "key_differences": [
+        "16 cells vs 12/14/18",
+        "SPI/DMA vs isoSPI",
+        "Different register map and command set",
+        "Integrated balancing switches"
+      ],
+      "configuration_files": [
+        "src/app/driver/afe/adi/ades1830/config/adi_ades1830_cfg.c",
+        "src/app/driver/afe/adi/common/ades183x/config/adi_ades183x_cfg.c",
+        "src/app/driver/config/spi_cfg_adi.c"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false,
+      "notes": "Driver fully implemented. Hardware design package available. Not in reference configuration."
+    },
+    {
+      "id": "VAR-AFE-LTC-6806",
+      "name": "LTC6806 12-cell Slave",
+      "category": "afe",
+      "description": "Legacy LTC6806 AFE, 12 channels, isoSPI via LTC6820",
+      "master_board": "HW-BMS-MASTER",
+      "slave_board": "HW-BMS-SLAVE-12-LTC6804 (uses LTC6806 compatible)",
+      "interface": "HW-IF-LTC6820",
+      "driver_path": "src/app/driver/afe/ltc/6806",
+      "key_differences": [
+        "Older LTC6806 vs LTC6811/6813",
+        "Different register layout",
+        "Limited diagnostics vs newer parts"
+      ],
+      "configuration_files": [
+        "src/app/driver/afe/ltc/6806/config/ltc_6806_cfg.c",
+        "src/app/driver/afe/ltc/6806/config/ltc_6806_cfg.h"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false,
+      "notes": "Legacy part. Driver maintained for compatibility. Not recommended for new designs."
+    },
+    {
+      "id": "VAR-AFE-LTC-6813",
+      "name": "LTC6813-1 18-cell Slave",
+      "category": "afe",
+      "description": "LTC6813-1 AFE with 18 channels, isoSPI via LTC6820",
+      "master_board": "HW-BMS-MASTER",
+      "slave_board": "HW-BMS-SLAVE-18-LTC6813",
+      "interface": "HW-IF-LTC6820",
+      "driver_path": "src/app/driver/afe/ltc/6813-1",
+      "key_differences": [
+        "18 cells vs 12",
+        "Same driver family as LTC6811 (common LTC driver)",
+        "Extended register map"
+      ],
+      "configuration_files": [
+        "src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.c",
+        "src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true,
+      "notes": "Shares common LTC driver with reference configuration. Modeled as variant delta."
+    },
+    {
+      "id": "VAR-AFE-MAXIM-17841B",
+      "name": "Maxim MAX17841B 14-cell Slave",
+      "category": "afe",
+      "description": "Maxim MAX17841B AFE with 14 channels, UART daisy-chain communication",
+      "master_board": "HW-BMS-MASTER",
+      "slave_board": "HW-BMS-SLAVE-14-MAX17852 (MAX17841B compatible)",
+      "interface": "HW-IF-MAX17841B (UART)",
+      "driver_path": "src/app/driver/afe/maxim/common",
+      "key_differences": [
+        "14 cells",
+        "UART daisy-chain vs isoSPI",
+        "Different communication protocol (command/response)",
+        "Different balancing architecture"
+      ],
+      "configuration_files": [
+        "src/app/driver/afe/maxim/common/config/mxm_cfg.c",
+        "src/app/driver/afe/maxim/common/config/mxm_cfg.h"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false,
+      "notes": "Different communication paradigm. Driver implemented but distinct from LTC family."
+    },
+    {
+      "id": "VAR-AFE-MAXIM-17852",
+      "name": "Maxim MAX17852 14-cell Slave",
+      "category": "afe",
+      "description": "Maxim MAX17852 AFE with 14 channels, enhanced features vs 17841B",
+      "master_board": "HW-BMS-MASTER",
+      "slave_board": "HW-BMS-SLAVE-14-MAX17852",
+      "interface": "HW-IF-MAX17841B (UART)",
+      "driver_path": "src/app/driver/afe/maxim/max17852, src/app/driver/afe/maxim/common",
+      "key_differences": [
+        "Enhanced diagnostics vs 17841B",
+        "Improved cell measurement accuracy",
+        "Additional GPIO/auxiliary functions"
+      ],
+      "configuration_files": [
+        "src/app/driver/afe/maxim/max17852/mxm_17852.c",
+        "src/app/driver/afe/maxim/common/config/mxm_cfg.c"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false,
+      "notes": "Next-gen Maxim part. Driver partially implemented."
+    },
+    {
+      "id": "VAR-AFE-NXP-MC33775A",
+      "name": "NXP MC33775A 14-cell Slave",
+      "category": "afe",
+      "description": "NXP MC33775A AFE with 14 channels, transformer-isolated SPI",
+      "master_board": "HW-BMS-MASTER",
+      "slave_board": "HW-BMS-SLAVE-14-MC33775A",
+      "interface": "SPI with transformer isolation (HW-IF-MC33664)",
+      "driver_path": "src/app/driver/afe/nxp/mc33775a, src/app/driver/afe/nxp/common/mc3377x",
+      "key_differences": [
+        "14 cells",
+        "Transformer-isolated SPI vs isoSPI",
+        "NXP-specific register map",
+        "Integrated cell balancing and diagnostics"
+      ],
+      "configuration_files": [
+        "src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.c",
+        "src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.h",
+        "src/app/driver/afe/nxp/common/mc3377x/nxp_mc3377x_cfg.h"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false,
+      "notes": "Automotive-qualified NXP part. Different isolation approach."
+    },
+    {
+      "id": "VAR-AFE-TI-BQ79XXX",
+      "name": "TI BQ79xxx AFE Family",
+      "category": "afe",
+      "description": "TI BQ79600/79616 family, SPI/UART communication",
+      "master_board": "HW-BMS-MASTER",
+      "slave_board": "Not documented in hardware/ (driver only)",
+      "interface": "SPI/UART",
+      "driver_path": "src/app/driver/afe/ti/common/api, src/app/driver/afe/ti/dummy",
+      "key_differences": [
+        "Multiple device variants (79600, 79616)",
+        "SPI or UART communication",
+        "TI-specific command protocol",
+        "Dummy driver for testing"
+      ],
+      "configuration_files": [
+        "src/app/driver/afe/ti/common/api/ti_bq79xxx_afe_dma.c"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false,
+      "notes": "Driver skeleton exists. No hardware design package in repo. Dummy driver for testing."
+    },
+    {
+      "id": "VAR-CURRENT-SENSOR-LEM",
+      "name": "LEM CAB500 Current Sensor",
+      "category": "current_sensor",
+      "description": "LEM CAB500 Hall-effect current sensor with CAN interface",
+      "driver_path": "src/app/driver/can/cbs/rx/can_cbs_rx_cs_lem-cab500.c",
+      "key_differences": [
+        "Different CAN message format vs IVT-S",
+        "Different measurement range/resolution"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-CURRENT-SENSOR-HONEYWELL",
+      "name": "Honeywell BAS6C-X00 Current Sensor",
+      "category": "current_sensor",
+      "description": "Honeywell BAS6C-X00 current sensor with CAN interface",
+      "driver_path": "src/app/driver/can/cbs/rx/can_cbs_rx_as_honeywell-bas6c-x00.c",
+      "key_differences": [
+        "Different CAN message format",
+        "Automotive-grade"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-IMD-BENDER-IR155",
+      "name": "Bender IR155 Insulation Monitor",
+      "category": "imd",
+      "description": "Bender IR155 with SPI interface (vs ISO165C CAN)",
+      "driver_path": "src/app/driver/imd/bender/ir155",
+      "key_differences": [
+        "SPI vs CAN communication",
+        "Different measurement principle",
+        "Different diagnostic capabilities"
+      ],
+      "configuration_files": [
+        "src/app/driver/imd/bender/ir155/config/bender_ir155_cfg.h"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-TEMP-EPCOS-B57251",
+      "name": "EPCOS B57251 Temperature Sensor (Lookup-table)",
+      "category": "temperature_sensor",
+      "description": "EPCOS B57251 NTC with lookup-table interpolation",
+      "driver_path": "src/app/driver/ts/epcos/b57251v5103j060/lookup-table",
+      "key_differences": ["Lookup-table vs polynomial"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true,
+      "notes": "Same sensor family as reference, different interpolation method."
+    },
+    {
+      "id": "VAR-TEMP-MURATA",
+      "name": "Murata NCXXXXH103 Temperature Sensor",
+      "category": "temperature_sensor",
+      "description": "Murata NTC sensor with lookup-table and polynomial variants",
+      "driver_path": "src/app/driver/ts/murata/ncxxxxh103",
+      "key_differences": ["Different R-T curve", "Different package/tolerance"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-TEMP-SEMI",
+      "name": "Semitec 103JT Temperature Sensor",
+      "category": "temperature_sensor",
+      "description": "Semitec 103JT NTC sensor",
+      "driver_path": "src/app/driver/ts/semitec/103jt",
+      "key_differences": ["Different R-T curve"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-TEMP-TDK",
+      "name": "TDK NTCG/NTCGS Temperature Sensors",
+      "category": "temperature_sensor",
+      "description": "TDK NTC sensors (multiple part numbers)",
+      "driver_path": "src/app/driver/ts/tdk",
+      "key_differences": ["Multiple variants in family"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-TEMP-VISHAY",
+      "name": "Vishay NTC Temperature Sensors (Multiple)",
+      "category": "temperature_sensor",
+      "description": "Vishay NTC sensors (NTCA, NTCLE families)",
+      "driver_path": "src/app/driver/ts/vishay",
+      "key_differences": ["Multiple variants with different curves"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-BAL-HISTORY",
+      "name": "History-based Balancing Strategy",
+      "category": "balancing",
+      "description": "Balancing strategy that tracks per-cell balancing history",
+      "driver_path": "src/app/application/bal/history/bal_strategy_history.c",
+      "key_differences": ["History tracking vs instantaneous voltage"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true,
+      "notes": "Available as configuration option in reference."
+    },
+    {
+      "id": "VAR-BAL-NONE",
+      "name": "No Balancing",
+      "category": "balancing",
+      "description": "Balancing disabled (placeholder strategy)",
+      "driver_path": "src/app/application/bal/none/bal_strategy_none.c",
+      "key_differences": ["No balancing activity"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true,
+      "notes": "Used for configurations without balancing hardware or during commissioning."
+    },
+    {
+      "id": "VAR-SOC-DEBUG",
+      "name": "SOC Debug Strategy",
+      "category": "soc_method",
+      "description": "Debug/test SOC values for development",
+      "driver_path": "src/app/application/algorithm/state_estimation/soc/debug/soc_debug.c",
+      "key_differences": ["Fixed/test values instead of estimation"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true,
+      "notes": "Used for testing/validation only."
+    },
+    {
+      "id": "VAR-SOE-DEBUG",
+      "name": "SOE Debug Strategy",
+      "category": "soe_method",
+      "description": "Debug/test SOE values",
+      "driver_path": "src/app/application/algorithm/state_estimation/soe/debug/soe_debug.c",
+      "key_differences": ["Fixed/test values"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true
+    },
+    {
+      "id": "VAR-SOH-NONE",
+      "name": "SOH None (Placeholder)",
+      "category": "soh_method",
+      "description": "No SOH estimation implemented",
+      "driver_path": "src/app/application/algorithm/state_estimation/soh/none/soh_none.c",
+      "key_differences": ["No production algorithm"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true,
+      "notes": "Synthetic reference must define SOH algorithm or mark as gap."
+    },
+    {
+      "id": "VAR-OS-POSIX",
+      "name": "POSIX Unit Test Build",
+      "category": "build",
+      "description": "Unit test configuration for POSIX (Linux) host builds",
+      "configuration_files": [
+        "conf/unit/app_project_posix.yml",
+        "conf/unit/bootloader_project_posix.yml"
+      ],
+      "key_differences": [
+        "Host-based compilation",
+        "Mocked hardware interfaces",
+        "Unity/CMock test framework"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false,
+      "notes": "For unit testing only, not target deployment."
+    },
+    {
+      "id": "VAR-OS-WIN32",
+      "name": "Win32 Unit Test Build",
+      "category": "build",
+      "description": "Unit test configuration for Windows host builds",
+      "configuration_files": [
+        "conf/unit/app_project_win32.yml",
+        "conf/unit/bootloader_project_win32.yml"
+      ],
+      "key_differences": ["Windows host compilation"],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": false
+    },
+    {
+      "id": "VAR-BOOTLOADER",
+      "name": "Bootloader Enabled",
+      "category": "bootloader",
+      "description": "Bootloader present for firmware updates",
+      "configuration_files": [
+        "src/bootloader/wscript",
+        "conf/hcg/bootloader.hcg",
+        "conf/hcg/bootloader.dil"
+      ],
+      "status": "examined_alternative",
+      "modeled_in_synthetic": true,
+      "notes": "Reference configuration includes bootloader."
+    }
+  ],
+  "variant_analysis": {
+    "total_variants": 24,
+    "reference_configuration": "VAR-REF-001",
+    "fully_modeled": 1,
+    "examined_alternatives": 23,
+    "modeled_in_synthetic": 7,
+    "not_modeled": 16,
+    "categories": {
+      "afe": 7,
+      "current_sensor": 2,
+      "imd": 1,
+      "temperature_sensor": 5,
+      "balancing": 2,
+      "soc_method": 1,
+      "soe_method": 1,
+      "soh_method": 1,
+      "build": 2,
+      "bootloader": 1
+    }
+  },
+  "configuration_mechanism": {
+    "compile_time": {
+      "mechanism": "HALCoGen (.hcg/.dil) + *_cfg.h files + conf/bms/bms.json",
+      "files": [
+        "conf/hcg/app.hcg",
+        "conf/hcg/app.dil",
+        "conf/bms/bms.json",
+        "src/app/driver/config/*_cfg.h",
+        "src/app/application/config/*_cfg.h",
+        "src/app/engine/config/*_cfg.h"
+      ]
+    },
+    "runtime": {
+      "mechanism": "FRAM calibration data + database configuration",
+      "description": "Limited runtime configuration via FRAM-stored calibration and database"
+    }
+  }
+}

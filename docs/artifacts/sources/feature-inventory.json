@@ -1,0 +1,444 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "repository_commit": "308028fb",
+  "features": [
+    {
+      "id": "FEAT-CELL-VOLTAGE",
+      "name": "Cell/Pack Voltage Measurement",
+      "category": "measurement",
+      "status": "implemented",
+      "description": "Acquisition of individual cell voltages and pack/string voltages via AFE drivers",
+      "source_modules": ["MOD-APP-DRIVER-AFE", "MOD-APP-DRIVER-CAN (TX cyclic)"],
+      "hardware_dependencies": ["HW-BMS-SLAVE-* (all variants)", "HW-IF-LTC6820", "HW-IF-MAX17841B", "HW-IF-MC33664"],
+      "supported_variants": ["ADI ADES1830", "LTC 6806/6811/6813-1", "Maxim 17841B/1785x/17852", "NXP MC3377x/MC33775A", "TI BQ79xxx"],
+      "key_functions": [
+        "AFE SPI/DMA communication",
+        "Cell voltage register readout",
+        "PEC/CRC validation",
+        "Voltage plausibility checks",
+        "CAN cyclic transmission (pack-values-p0/p1, string-values-p0/p1)"
+      ],
+      "safety_relevance": "high - SOA monitoring, balancing, state estimation",
+      "as_is_evidence": "Full driver implementations for all AFE variants; cyclic CAN TX callbacks; plausibility module",
+      "gaps": ["No explicit worst-case timing analysis for AFE readout cycle", "Diagnostic coverage for AFE communication not quantified"]
+    },
+    {
+      "id": "FEAT-TEMPERATURE",
+      "name": "Temperature Measurement",
+      "category": "measurement",
+      "status": "implemented",
+      "description": "Acquisition of cell/module temperatures via AFE GPIO and external NTC sensors",
+      "source_modules": ["MOD-APP-DRIVER-AFE", "MOD-APP-DRIVER-TS", "MOD-APP-DRIVER-CAN (TX cyclic)"],
+      "hardware_dependencies": ["HW-BMS-SLAVE-* (AFE GPIO)", "External NTC sensors (EPCOS, Murata, Semitec, TDK, Vishay)"],
+      "supported_variants": ["AFE internal GPIO sensors", "External NTC: EPCOS B57251/B57332/B57861, Murata NCXXXXH103, Semitec 103JT, TDK NTCG163/NTCGS103, Vishay NTCA/NTcle"],
+      "key_functions": [
+        "AFE GPIO voltage readout for internal temp sensors",
+        "External NTC via lookup-table or polynomial",
+        "Temperature plausibility checks",
+        "CAN cyclic transmission (cell-temperatures, string-state)"
+      ],
+      "safety_relevance": "high - SOA monitoring, thermal management, balancing",
+      "as_is_evidence": "TS driver with multiple sensor families; lookup-table and polynomial variants; AFE temperature readout; cyclic CAN TX",
+      "gaps": ["No explicit sensor calibration procedure documented", "Thermal model for cell-to-sensor gradient not specified"]
+    },
+    {
+      "id": "FEAT-CURRENT",
+      "name": "Current Measurement",
+      "category": "measurement",
+      "status": "implemented",
+      "description": "Pack current measurement via external current sensors (shunt, Hall effect)",
+      "source_modules": ["MOD-APP-DRIVER-CAN (RX)", "MOD-APP-ENGINE-DIAG (current sensor CBS)"],
+      "hardware_dependencies": ["Isabellenhütte IVT-S", "LEM CAB500", "Honeywell BAS6C-X00"],
+      "supported_variants": ["Isabellenhütte IVT-S (CAN)", "LEM CAB500 (CAN)", "Honeywell BAS6C-X00 (CAN)"],
+      "key_functions": [
+        "CAN RX callbacks for current sensor messages",
+        "Current sensor diagnostics",
+        "Power measurement (V * I)"
+      ],
+      "safety_relevance": "high - SOA monitoring, SOC estimation, power limits",
+      "as_is_evidence": "CAN RX handlers for 3 current sensor types; diagnostic callbacks; power measurement in diag",
+      "gaps": ["Current sensor accuracy/offset calibration not in source", "Redundant current measurement not implemented"]
+    },
+    {
+      "id": "FEAT-MEASUREMENT-PLAUSIBILITY",
+      "name": "Measurement Plausibility Checks",
+      "category": "diagnostics",
+      "status": "implemented",
+      "description": "Cross-checks and plausibility validation for voltage, current, temperature measurements",
+      "source_modules": ["MOD-APP-PLAUSIBILITY", "MOD-APP-DRIVER-AFE (api/afe_plausibility)"],
+      "hardware_dependencies": "None (software-only)",
+      "supported_variants": "All",
+      "key_functions": [
+        "Cell voltage cross-channel comparison",
+        "Pack vs string voltage consistency",
+        "Current sensor plausibility (range, gradient)",
+        "Temperature gradient and range checks",
+        "AFE communication plausibility (PEC, sequence)"
+      ],
+      "safety_relevance": "high - detects sensor/AFE faults before SOA violation",
+      "as_is_evidence": "plausibility.c/h with multiple checks; AFE plausibility API; config headers for thresholds",
+      "gaps": ["Plausibility thresholds not tied to specific hardware tolerances", "No statistical false-positive/false-negative analysis"]
+    },
+    {
+      "id": "FEAT-SOA",
+      "name": "Safe Operating Area Monitoring",
+      "category": "safety",
+      "status": "implemented",
+      "description": "Continuous monitoring of voltage, current, temperature against configured limits with graduated response",
+      "source_modules": ["MOD-APP-SOA", "MOD-APP-ENGINE-DIAG (voltage/current/temperature CBS)"],
+      "hardware_dependencies": "None (software-only, consumes measurements)",
+      "supported_variants": "All",
+      "key_functions": [
+        "Cell voltage min/max limit monitoring",
+        "Pack voltage min/max limit monitoring",
+        "Charge/discharge current limit monitoring",
+        "Cell temperature min/max limit monitoring",
+        "Graduated response: warning -> derating -> contactor open"
+      ],
+      "safety_relevance": "critical - primary protection function",
+      "as_is_evidence": "soa.c/h with limit checking; config for limits; diagnostic callbacks feed measurements; contactor control integration",
+      "gaps": ["Response timing not formally verified", "Limit hysteresis/debounce parameters configurable but not analyzed", "Common-cause failure between measurement and SOA not addressed"]
+    },
+    {
+      "id": "FEAT-BALANCING",
+      "name": "Cell Balancing",
+      "category": "management",
+      "status": "implemented",
+      "description": "Passive cell balancing during charge with voltage-based and history-based strategies",
+      "source_modules": ["MOD-APP-BAL", "MOD-APP-DRIVER-AFE (balancing control)"],
+      "hardware_dependencies": ["AFE balancing switches (all variants)"],
+      "supported_variants": ["All AFE variants with balancing support"],
+      "key_functions": [
+        "Voltage-based balancing (highest cells first)",
+        "History-based balancing (tracks balancing time per cell)",
+        "Balancing during charge only",
+        "Balancing current monitoring via AFE",
+        "Thermal consideration (pause if temp high)"
+      ],
+      "safety_relevance": "medium - prevents overcharge, thermal management",
+      "as_is_evidence": "bal.c/h with state machine; 3 strategies; AFE balancing commands; config for thresholds",
+      "gaps": ["Active balancing not supported", "Balancing effectiveness verification not implemented", "Thermal model for balancing current not in source"]
+    },
+    {
+      "id": "FEAT-SOC",
+      "name": "State-of-Charge Estimation",
+      "category": "estimation",
+      "status": "implemented",
+      "description": "SOC estimation via coulomb counting with OCV lookup-table correction",
+      "source_modules": ["MOD-APP-ALGORITHM (SOC counting, lookup-table)"],
+      "hardware_dependencies": "Current sensor, cell voltage measurement",
+      "supported_variants": ["Counting (coulomb counting)", "Lookup-table (OCV correction)", "Debug (test values)"],
+      "key_functions": [
+        "Coulomb counting integration",
+        "OCV lookup-table correction at rest",
+        "Current sensor offset compensation",
+        "SOC bounds clamping (0-100%)"
+      ],
+      "safety_relevance": "medium - informs SOA, user display",
+      "as_is_evidence": "soc_counting.c, soc_lookup-table.c, soc_debug.c; state_estimation.c orchestrates",
+      "gaps": ["No temperature compensation in counting method", "OCV table source/validation not documented", "Convergence time not bounded", "No ASIL-rated implementation"]
+    },
+    {
+      "id": "FEAT-SOE",
+      "name": "State-of-Energy Estimation",
+      "category": "estimation",
+      "status": "implemented",
+      "description": "SOE estimation based on SOC and voltage/power integration",
+      "source_modules": ["MOD-APP-ALGORITHM (SOE counting)"],
+      "hardware_dependencies": "Current sensor, voltage measurement",
+      "supported_variants": ["Counting (energy integration)", "Debug"],
+      "key_functions": [
+        "Energy integration (charge/discharge)",
+        "Available energy calculation"
+      ],
+      "safety_relevance": "medium - range prediction, power limits",
+      "as_is_evidence": "soe_counting.c, soe_debug.c",
+      "gaps": ["Simplified model - no aging/temperature compensation", "Energy accuracy not quantified"]
+    },
+    {
+      "id": "FEAT-SOF",
+      "name": "State-of-Function / Power Estimation",
+      "category": "estimation",
+      "status": "implemented",
+      "description": "Maximum available charge/discharge power estimation (trapezoid method)",
+      "source_modules": ["MOD-APP-ALGORITHM (SOF trapezoid)"],
+      "hardware_dependencies": "Current sensor, voltage measurement, temperature, SOC",
+      "supported_variants": ["Trapezoid (voltage/current/temp/SOC limits)", "Debug"],
+      "key_functions": [
+        "Power limit calculation from SOA limits",
+        "Voltage-based power limit (V_min/max * I_max)",
+        "Current-based power limit",
+        "Thermal power limit",
+        "SOC-dependent power derating"
+      ],
+      "safety_relevance": "high - prevents SOA violation during high-power demand",
+      "as_is_evidence": "sof_trapezoid.c/h with multi-limit calculation; config for parameters",
+      "gaps": ["Dynamic resistance model not implemented", "Transient thermal effects not modeled", "Validation against cell datasheet not in source"]
+    },
+    {
+      "id": "FEAT-SOH",
+      "name": "State-of-Health Estimation",
+      "category": "estimation",
+      "status": "placeholder",
+      "description": "SOH estimation - only debug placeholder implemented",
+      "source_modules": ["MOD-APP-ALGORITHM (SOH debug/none)"],
+      "hardware_dependencies": "Long-term data storage (FRAM)",
+      "supported_variants": ["Debug (test values)", "None (placeholder)"],
+      "key_functions": [],
+      "safety_relevance": "low - informational only",
+      "as_is_evidence": "soh_debug.c, soh_none.c - no production algorithm",
+      "gaps": ["No production SOH algorithm", "Capacity fade tracking not implemented", "Resistance growth tracking not implemented", "FRAM storage for aging data not utilized"]
+    },
+    {
+      "id": "FEAT-PRECHARGE-CONTACTOR",
+      "name": "Precharge and Contactor Control",
+      "category": "safety",
+      "status": "implemented",
+      "description": "High-voltage contactor state machine with precharge sequence, feedback monitoring, and fault response",
+      "source_modules": ["MOD-APP-DRIVER-CONTACTOR", "MOD-APP-BMS", "MOD-APP-ENGINE-DIAG (contactor CBS)"],
+      "hardware_dependencies": ["Main contactors (positive/negative/precharge)", "Contactor feedback contacts", "Precharge resistor", "SBC (FS85xx) for contactor drive"],
+      "supported_variants": "All (configurable contactor assignments)",
+      "key_functions": [
+        "Contactor state machine (open -> precharge -> close -> hold)",
+        "Precharge voltage monitoring and timeout",
+        "Contactor feedback monitoring (weld detection)",
+        "Emergency open on SOA violation",
+        "Contactor cycle counting (FRAM)"
+      ],
+      "safety_relevance": "critical - HV isolation, fault response",
+      "as_is_evidence": "contactor.c/h with state machine; BMS integration; diagnostic callbacks; SBC driver for drive",
+      "gaps": ["Precharge timing not formally verified for all contactor types", "Weld detection latency not bounded", "Contactor aging/degradation model not implemented"]
+    },
+    {
+      "id": "FEAT-CONTACTOR-DIAGNOSTICS",
+      "name": "Contactor Diagnostics",
+      "category": "diagnostics",
+      "status": "implemented",
+      "description": "Contactor weld detection, stuck-open detection, cycle counting",
+      "source_modules": ["MOD-APP-DRIVER-CONTACTOR", "MOD-APP-ENGINE-DIAG (contactor CBS)"],
+      "hardware_dependencies": "Contactor feedback contacts (auxiliary)",
+      "supported_variants": "All",
+      "key_functions": [
+        "Weld detection (feedback closed when commanded open)",
+        "Stuck-open detection (feedback open when commanded closed)",
+        "Cycle counting with FRAM persistence",
+        "Diagnostic reporting via CAN"
+      ],
+      "safety_relevance": "high - detects contactor failure modes",
+      "as_is_evidence": "contactor.c feedback monitoring; diag_cbs_contactor.c; FRAM storage",
+      "gaps": ["No contactor resistance measurement", "No predictive wear model"]
+    },
+    {
+      "id": "FEAT-INSULATION",
+      "name": "Insulation Monitoring",
+      "category": "safety",
+      "status": "implemented",
+      "description": "HV insulation resistance monitoring via Bender IMD (ISO165C, IR155)",
+      "source_modules": ["MOD-APP-DRIVER-IMD", "MOD-APP-ENGINE-DIAG (insulation CBS)", "MOD-APP-DRIVER-CAN (IMD TX async)"],
+      "hardware_dependencies": ["Bender ISO165C", "Bender IR155"],
+      "supported_variants": ["ISO165C (CAN)", "IR155 (SPI)", "None (placeholder)"],
+      "key_functions": [
+        "Insulation resistance measurement",
+        "ISO165C CAN communication",
+        "IR155 SPI communication",
+        "Threshold monitoring with graduated response",
+        "CAN async TX for IMD requests"
+      ],
+      "safety_relevance": "critical - shock protection, ISO 26262",
+      "as_is_evidence": "imd.c/h with variant support; bender_iso165c.c, bender_ir155.c; CAN TX async; diag callback",
+      "gaps": ["ISO165C response time not analyzed", "IR155 SPI fault modes not fully covered", "Insulation fault location not supported"]
+    },
+    {
+      "id": "FEAT-INTERLOCK",
+      "name": "Interlock Monitoring",
+      "category": "safety",
+      "status": "implemented",
+      "description": "High-voltage interlock loop monitoring (service disconnect, hood, crash)",
+      "source_modules": ["MOD-APP-DRIVER-INTERLOCK", "MOD-APP-ENGINE-DIAG (interlock CBS)"],
+      "hardware_dependencies": ["Interlock loop (hardwired)", "GPIO inputs for interlock status"],
+      "supported_variants": "All",
+      "key_functions": [
+        "Interlock loop continuity monitoring",
+        "Interlock open -> contactor open request",
+        "Diagnostic reporting"
+      ],
+      "safety_relevance": "critical - service safety, crash response",
+      "as_is_evidence": "interlock.c/h; diag_cbs_interlock.c",
+      "gaps": ["Interlock loop resistance not measured", "No distinction between service/crash interlock"]
+    },
+    {
+      "id": "FEAT-COMMUNICATION-CAN",
+      "name": "CAN Communication",
+      "category": "communication",
+      "status": "implemented",
+      "description": "CAN bus communication for BMS data exchange, diagnostics, and external interface",
+      "source_modules": ["MOD-APP-DRIVER-CAN", "MOD-APP-APPLICATION-ETHERNET (separate)"],
+      "hardware_dependencies": ["MCU CAN controller", "CAN transceiver (MC33664 via SBC)"],
+      "supported_variants": "All (configurable message IDs, bitrates)",
+      "key_functions": [
+        "Cyclic TX: cell voltages, temperatures, pack state, SOE, SOF, SOA, BMS state",
+        "Async TX: debug, crash dump, fatal error, IMD requests",
+        "RX: AFE data, current sensor, IMD response, debug requests, BMS state request",
+        "Message multiplexing for large data sets",
+        "Bus-off recovery"
+      ],
+      "safety_relevance": "high - safety data exchange, vehicle integration",
+      "as_is_evidence": "Full CAN driver; 30+ TX cyclic messages; 10+ RX handlers; config for message definitions",
+      "gaps": ["CAN bus-off recovery timing not bounded", "Message scheduling/jitter not analyzed", "No CAN FD support evident"]
+    },
+    {
+      "id": "FEAT-COMMUNICATION-ETHERNET",
+      "name": "Ethernet Communication",
+      "category": "communication",
+      "status": "implemented",
+      "description": "Ethernet/TCP communication via FreeRTOS+TCP for diagnostics, data logging, HMI",
+      "source_modules": ["MOD-APP-ETHERNET", "MOD-OS-FREERTOS (FreeRTOS+TCP)"],
+      "hardware_dependencies": ["DP83869 PHY", "MAC (TMS570 EMAC)"],
+      "supported_variants": "Master board only",
+      "key_functions": [
+        "TCP/IP stack (FreeRTOS+TCP)",
+        "Socket API for application",
+        "Network interface (PHY/MAC)",
+        "DHCP/DNS support"
+      ],
+      "safety_relevance": "low - non-safety communication",
+      "as_is_evidence": "ethernet.c/h, ethernet_freertos.c/h; DP83869 PHY driver; EMAC driver",
+      "gaps": ["No safety-critical data over Ethernet", "No TSN/Deterministic Ethernet", "Cybersecurity (TLS, authentication) not implemented"]
+    },
+    {
+      "id": "FEAT-WATCHDOG",
+      "name": "Watchdog Supervision",
+      "category": "safety",
+      "status": "implemented",
+      "description": "External watchdog via SBC (FS85xx) and internal CPU watchdog",
+      "source_modules": ["MOD-APP-DRIVER-SBC", "MOD-APP-ENGINE-SYS_MON", "MOD-APP-TASK (OS)"],
+      "hardware_dependencies": ["NXP FS85xx SBC (external WD)", "TMS570 internal WD"],
+      "supported_variants": "All",
+      "key_functions": [
+        "SBC external watchdog configuration and servicing",
+        "CPU internal watchdog",
+        "Task runtime monitoring (sys_mon)",
+        "Watchdog trigger on task overrun"
+      ],
+      "safety_relevance": "critical - detects software hang",
+      "as_is_evidence": "sbc_fs8x.c watchdog functions; sys_mon.c task monitoring; OS task hooks",
+      "gaps": ["Window watchdog configuration not detailed", "Watchdog test/diagnostic not implemented", "Independent watchdog vs QM watchdog separation not evident"]
+    },
+    {
+      "id": "FEAT-FAULT-MANAGEMENT",
+      "name": "Fault Management and Error Handling",
+      "category": "diagnostics",
+      "status": "implemented",
+      "description": "Centralized diagnostic framework with callback-based fault detection, classification, and response",
+      "source_modules": ["MOD-APP-ENGINE-DIAG", "MOD-APP-BMS", "MOD-APP-ENGINE-SYS"],
+      "hardware_dependencies": "None (software framework)",
+      "supported_variants": "All",
+      "key_functions": [
+        "Diagnostic callback registration (30+ callbacks)",
+        "Fault classification (severity, debouncing)",
+        "Fault reaction (warning, derating, contactor open)",
+        "Fault memory (FRAM persistence)",
+        "Fault reporting via CAN"
+      ],
+      "safety_relevance": "critical - systematic fault handling",
+      "as_is_evidence": "diag.c/h framework; 30+ diag_cbs_*.c files; FRAM storage; BMS state machine integration",
+      "gaps": ["Fault classification rationale not documented", "Fault tree analysis not in source", "Multiple fault interaction not analyzed", "Fault latency bounds not specified"]
+    },
+    {
+      "id": "FEAT-LOGGING",
+      "name": "Event/Data Logging",
+      "category": "diagnostics",
+      "status": "implemented",
+      "description": "FRAM-based non-volatile logging of faults, events, and operational data",
+      "source_modules": ["MOD-APP-DRIVER-FRAM", "MOD-APP-ENGINE-DIAG", "MOD-APP-DRIVER-CONTACTOR (cycle count)"],
+      "hardware_dependencies": ["FRAM (Fujitsu MB85RS64 or similar)"],
+      "supported_variants": "All",
+      "key_functions": [
+        "Fault/event logging to FRAM",
+        "Contactor cycle counting",
+        "Operational hours counter",
+        "CRC protection of FRAM data"
+      ],
+      "safety_relevance": "medium - post-crash analysis, warranty",
+      "as_is_evidence": "fram.c/h; diag FRAM functions; contactor cycle count",
+      "gaps": ["Log capacity/overflow handling not specified", "Log integrity verification not implemented", "No circular buffer management evident"]
+    },
+    {
+      "id": "FEAT-CALIBRATION",
+      "name": "Calibration and Configuration Management",
+      "category": "management",
+      "status": "implemented",
+      "description": "Configuration headers for all modules, battery-specific parameters, calibration data",
+      "source_modules": ["MOD-APP-DRIVER-CONFIG (all *_cfg.c/h)", "MOD-APP-APPLICATION-CONFIG"],
+      "hardware_dependencies": "None (compile-time configuration)",
+      "supported_variants": "Per-battery configuration via conf/bms/bms.json and *_cfg.h files",
+      "key_functions": [
+        "Battery cell parameters (capacity, voltage limits, temp limits, R/C)",
+        "AFE-specific configuration (cell count, balancing, communication)",
+        "SOA limits per battery type",
+        "Contactor/precharge timing",
+        "CAN message IDs and bitrates",
+        "Current sensor calibration"
+      ],
+      "safety_relevance": "high - incorrect config = unsafe operation",
+      "as_is_evidence": "Extensive *_cfg.c/h files; bms.json; HALCoGen config (.hcg/.dil)",
+      "gaps": ["No runtime configuration validation", "Configuration checksum/CRC not evident", "Calibration data versioning not implemented", "No calibration procedure documentation"]
+    },
+    {
+      "id": "FEAT-REDUNDANCY",
+      "name": "Measurement Redundancy",
+      "category": "safety",
+      "status": "implemented",
+      "description": "Redundant measurement comparison for safety-critical signals",
+      "source_modules": ["MOD-APP-REDUNDANCY"],
+      "hardware_dependencies": "Requires redundant sensors/AFEs",
+      "supported_variants": "Configurable (requires hardware support)",
+      "key_functions": [
+        "Redundant voltage comparison",
+        "Redundant current comparison",
+        "Voting logic (2oo3, 1oo2)",
+        "Fault isolation on mismatch"
+      ],
+      "safety_relevance": "high - supports ASIL-D decomposition",
+      "as_is_evidence": "redundancy.c/h framework exists",
+      "gaps": ["No hardware redundancy in default configurations", "Voting algorithm not fully implemented", "Common-cause failure analysis missing"]
+    },
+    {
+      "id": "FEAT-BOOTLOADER",
+      "name": "Bootloader with Firmware Update",
+      "category": "lifecycle",
+      "status": "implemented",
+      "description": "CAN-based bootloader for firmware update with CRC verification",
+      "source_modules": ["MOD-BOOTLOADER"],
+      "hardware_dependencies": ["CAN transceiver", "Flash memory", "TMS570"],
+      "supported_variants": "Master board",
+      "key_functions": [
+        "CAN bootloader protocol (proprietary)",
+        "Flash erase/program/verify",
+        "CRC64 integrity verification",
+        "Application validation (CRC, version) before jump",
+        "Version info exchange"
+      ],
+      "safety_relevance": "medium - firmware integrity, update safety",
+      "as_is_evidence": "bootloader/engine/boot.c; CAN callbacks; flash.c; CRC64 vendor code",
+      "gaps": ["No rollback/fallback on failed update", "No authentication/encryption of firmware", "Update process not fail-safe (power loss during flash)", "Bootloader itself not updatable"]
+    }
+  ],
+  "summary": {
+    "total_features": 20,
+    "implemented": 18,
+    "placeholder": 1,
+    "not_implemented": 1,
+    "by_category": {
+      "measurement": 3,
+      "diagnostics": 4,
+      "safety": 6,
+      "management": 2,
+      "estimation": 4,
+      "communication": 2,
+      "lifecycle": 1
+    }
+  }
+}

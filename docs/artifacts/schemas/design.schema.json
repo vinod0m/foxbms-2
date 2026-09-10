@@ -12,22 +12,8 @@
       "type": "object",
       "required": [
         "design_level",
-        "responsibilities",
-        "decomposition",
-        "interfaces",
-        "behavior_model",
-        "constraints",
-        "budgets",
-        "failure_response",
-        "decisions",
-        "implementation_mapping"
+        "responsibilities"
       ],
-      "$defs": {
-        "non_negative_number": {
-          "type": "number",
-          "minimum": 0
-        }
-      },
       "properties": {
         "artifact_type": {
           "const": "design"
@@ -142,11 +128,7 @@
         },
         "behavior_model": {
           "type": "object",
-          "required": [
-            "type",
-            "states",
-            "transitions"
-          ],
+          "required": [],
           "properties": {
             "type": {
               "type": "string",
@@ -333,7 +315,14 @@
           },
           "description": "Mapping from design elements to source code"
         }
-      }
+      },
+      "additionalProperties": true
     }
-  ]
+  ],
+  "$defs": {
+    "non_negative_number": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
 }

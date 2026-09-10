@@ -1,0 +1,178 @@
+{
+ "id": "FB2-VER-TMS-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Test: Contactor State Machine and Fault Response",
+ "owner_role": "verification_engineer",
+ "origin": "source_observed",
+ "source_refs": [
+  "FB2-SRC-TST-000002"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 10",
+   "status": "mapped",
+   "rationale": "Software unit verification"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.4, SWE.5",
+   "status": "mapped",
+   "rationale": "Software integration and qualification test"
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Extracted from existing unit test"
+  }
+ ],
+ "test_type": "unit",
+ "objective": "Verify contactor state machine transitions and fault response latency",
+ "referenced_requirements": [
+  "FB2-SAF-FSR-000003",
+  "FB2-SW-SWR-000003"
+ ],
+ "referenced_designs": [
+  "FB2-SW-DSN-000003"
+ ],
+ "preconditions": [
+  "Contactor driver initialized",
+  "SBC mock injected",
+  "Feedback GPIO mocks injected",
+  "FRAM mock injected"
+ ],
+ "environment": {
+  "hardware": "POSIX host (Linux)",
+  "software": "Unity/CMock test framework",
+  "tools": [
+   "GCC",
+   "CMock",
+   "Unity"
+  ],
+  "configuration": "conf/unit/app_project_posix.yml"
+ },
+ "stimuli": [
+  {
+   "signal": "state_request",
+   "value": "PRECHARGE",
+   "timing": "t=0"
+  },
+  {
+   "signal": "interlock",
+   "value": "closed",
+   "timing": "t=0"
+  },
+  {
+   "signal": "precharge_feedback",
+   "value": "closed",
+   "timing": "t=10ms"
+  },
+  {
+   "signal": "pack_voltage",
+   "value": "400V",
+   "timing": "t=100ms"
+  },
+  {
+   "signal": "main_feedback",
+   "value": "closed",
+   "timing": "t=105ms"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Request PRECHARGE",
+   "expected": "Precharge contactor coil energized"
+  },
+  {
+   "step": 2,
+   "action": "Simulate precharge feedback closed",
+   "expected": "State -> PRECHARGE_WAIT"
+  },
+  {
+   "step": 3,
+   "action": "Simulate pack voltage > threshold",
+   "expected": "Main contactor energized, precharge de-energized"
+  },
+  {
+   "step": 4,
+   "action": "Simulate main feedback closed",
+   "expected": "State -> HOLD"
+  },
+  {
+   "step": 5,
+   "action": "Inject FAULT request",
+   "expected": "All coils de-energized within 5 ms"
+  },
+  {
+   "step": 6,
+   "action": "Verify feedback open",
+   "expected": "State -> FAULT_OPEN"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "precharge_coil",
+   "expected_value": "energized",
+   "tolerance": "exact",
+   "unit": "state"
+  },
+  {
+   "signal": "main_coil",
+   "expected_value": "energized",
+   "tolerance": "exact",
+   "unit": "state"
+  },
+  {
+   "signal": "fault_response_latency",
+   "expected_value": "< 5",
+   "tolerance": "max",
+   "unit": "ms"
+  },
+  {
+   "signal": "final_state",
+   "expected_value": "FAULT_OPEN",
+   "tolerance": "exact",
+   "unit": "enum"
+  }
+ ],
+ "tolerances": {
+  "precharge_timeout": "5 s",
+  "voltage_threshold": "1 V",
+  "fault_latency": "5 ms"
+ },
+ "timing": {
+  "max_execution_time_ms": 500,
+  "setup_time_ms": 20,
+  "teardown_time_ms": 10
+ },
+ "oracle_basis": "source_grounded",
+ "cleanup": "Reset contactor state, clear mocks, verify FRAM write",
+ "regression_selection": "Always included in regression suite"
+}

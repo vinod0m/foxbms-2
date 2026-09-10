@@ -1,0 +1,638 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "repository": {
+    "path": "/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2",
+    "commit": "308028fb",
+    "tag": "v1.11.0",
+    "branch": "master",
+    "dirty": false
+  },
+  "summary": {
+    "total_source_files": 612,
+    "c_files": 306,
+    "h_files": 306,
+    "directories": {
+      "app": 450,
+      "bootloader": 45,
+      "os": 117,
+      "portable": 0,
+      "version": 1
+    }
+  },
+  "modules": [
+    {
+      "id": "MOD-APP-HAL",
+      "path": "src/app/hal",
+      "type": "application",
+      "layer": "HAL",
+      "description": "Application Hardware Abstraction Layer - notification handling",
+      "files": [
+        "src/app/hal/app-hl_notification.c"
+      ],
+      "public_interfaces": ["app-hl_notification.h (implied)"],
+      "significant_internal_units": ["Notification callback handlers"]
+    },
+    {
+      "id": "MOD-APP-MAIN",
+      "path": "src/app/main",
+      "type": "application",
+      "layer": "main",
+      "description": "Main application entry point, startup, assertions, system initialization",
+      "files": [
+        "src/app/main/main.c",
+        "src/app/main/fassert.c",
+        "src/app/main/fstartup.c"
+      ],
+      "public_interfaces": [
+        "src/app/main/include/main.h",
+        "src/app/main/include/fassert.h",
+        "src/app/main/include/fstartup.h",
+        "src/app/main/include/fstd_types.h",
+        "src/app/main/include/fsystem.h",
+        "src/app/main/include/general.h",
+        "src/app/main/include/infinite-loop-helper.h"
+      ],
+      "significant_internal_units": ["Main loop", "Assertion handler", "Startup sequence"]
+    },
+    {
+      "id": "MOD-APP-TASK",
+      "path": "src/app/task",
+      "type": "application",
+      "layer": "OS/Task",
+      "description": "Task management, FreeRTOS integration, timer services",
+      "files": [
+        "src/app/task/ftask/freertos/ftask_freertos.c",
+        "src/app/task/os/freertos/os_freertos.c",
+        "src/app/task/timer/timer.c",
+        "src/app/task/config/ftask_cfg.c"
+      ],
+      "public_interfaces": [
+        "src/app/task/ftask/ftask.h",
+        "src/app/task/os/os.h",
+        "src/app/task/timer/timer.h",
+        "src/app/task/config/ftask_cfg.h"
+      ],
+      "significant_internal_units": ["Task abstraction", "OS wrapper", "Timer management"]
+    },
+    {
+      "id": "MOD-APP-DRIVER-AFE",
+      "path": "src/app/driver/afe",
+      "type": "driver",
+      "layer": "Driver",
+      "description": "Analog Front End drivers for cell voltage/temperature measurement - supports ADI, LTC, Maxim, NXP, TI AFEs",
+      "submodules": [
+        {"name": "ADI ADES1830", "path": "src/app/driver/afe/adi/ades1830"},
+        {"name": "ADI ADES183x common", "path": "src/app/driver/afe/adi/common/ades183x"},
+        {"name": "LTC 6806", "path": "src/app/driver/afe/ltc/6806"},
+        {"name": "LTC 6813-1", "path": "src/app/driver/afe/ltc/6813-1"},
+        {"name": "LTC common", "path": "src/app/driver/afe/ltc/common"},
+        {"name": "Maxim 17841B/1785x", "path": "src/app/driver/afe/maxim/common"},
+        {"name": "Maxim 17852", "path": "src/app/driver/afe/maxim/max17852"},
+        {"name": "NXP MC3377x", "path": "src/app/driver/afe/nxp/common/mc3377x"},
+        {"name": "NXP MC33775A", "path": "src/app/driver/afe/nxp/mc33775a"},
+        {"name": "TI BQ79xxx", "path": "src/app/driver/afe/ti/common/api"},
+        {"name": "TI Dummy", "path": "src/app/driver/afe/ti/dummy"}
+      ],
+      "files_count": 62,
+      "public_interfaces": [
+        "src/app/driver/afe/api/afe.h",
+        "src/app/driver/afe/api/afe_dma.h",
+        "src/app/driver/afe/api/afe_plausibility.h"
+      ],
+      "significant_internal_units": [
+        "AFE communication (SPI/DMA)",
+        "Cell voltage acquisition",
+        "Temperature acquisition",
+        "Balancing control",
+        "PEC/CRC error detection",
+        "Plausibility checks"
+      ]
+    },
+    {
+      "id": "MOD-APP-DRIVER-CAN",
+      "path": "src/app/driver/can",
+      "type": "driver",
+      "layer": "Driver",
+      "description": "CAN communication driver with cyclic/async TX callbacks and RX handlers",
+      "submodules": [
+        {"name": "CAN core", "path": "src/app/driver/can"},
+        {"name": "CBS TX Cyclic", "path": "src/app/driver/can/cbs/tx-cyclic"},
+        {"name": "CBS TX Async", "path": "src/app/driver/can/cbs/tx-async"},
+        {"name": "CBS RX", "path": "src/app/driver/can/cbs/rx"},
+        {"name": "CAN Config", "path": "src/app/driver/config"}
+      ],
+      "files_count": 58,
+      "public_interfaces": [
+        "src/app/driver/can/can.h",
+        "src/app/driver/can/cbs/can_helper.h",
+        "src/app/driver/config/can_cfg.h"
+      ],
+      "significant_internal_units": [
+        "Cyclic message transmission (cell voltages, temperatures, pack state, SOE, SOF, SOA)",
+        "Async message transmission (debug, crash dump, fatal error, IMD requests)",
+        "RX message handling (AFE data, current sensor, IMD, debug requests)",
+        "Message configuration and definitions"
+      ]
+    },
+    {
+      "id": "MOD-APP-DRIVER-CONTACTOR",
+      "path": "src/app/driver/contactor",
+      "type": "driver",
+      "layer": "Driver",
+      "description": "Contactor driver for high-voltage contactor control and feedback monitoring",
+      "files": [
+        "src/app/driver/contactor/contactor.c",
+        "src/app/driver/contactor/contactor.h",
+        "src/app/driver/config/contactor_cfg.c",
+        "src/app/driver/config/contactor_cfg.h"
+      ],
+      "public_interfaces": ["contactor.h", "contactor_cfg.h"],
+      "significant_internal_units": ["Contactor state machine", "Feedback monitoring", "Precharge control"]
+    },
+    {
+      "id": "MOD-APP-DRIVER-IMD",
+      "path": "src/app/driver/imd",
+      "type": "driver",
+      "layer": "Driver",
+      "description": "Insulation Monitoring Device drivers for Bender ISO165C and IR155",
+      "files_count": 7,
+      "public_interfaces": ["src/app/driver/imd/imd.h"],
+      "significant_internal_units": ["ISO165C communication", "IR155 communication", "Insulation resistance measurement"]
+    },
+    {
+      "id": "MOD-APP-DRIVER-SBC",
+      "path": "src/app/driver/sbc",
+      "type": "driver",
+      "layer": "Driver",
+      "description": "System Basis Chip driver for NXP FS85xx - power management, watchdog, voltage monitoring",
+      "files_count": 7,
+      "public_interfaces": ["src/app/driver/sbc/sbc.h", "src/app/driver/sbc/nxpfs85xx.h"],
+      "significant_internal_units": ["SPI communication", "Watchdog servicing", "Voltage regulator monitoring", "Fail-safe outputs"]
+    },
+    {
+      "id": "MOD-APP-DRIVER-TS",
+      "path": "src/app/driver/ts",
+      "type": "driver",
+      "layer": "Driver",
+      "description": "Temperature sensor drivers supporting multiple sensor types (EPCOS, Murata, Semitec, TDK, Vishay) with lookup-table and polynomial variants",
+      "files_count": 24,
+      "public_interfaces": [
+        "src/app/driver/ts/api/tsi.h",
+        "src/app/driver/ts/temperature_sensor_defs.h"
+      ],
+      "significant_internal_units": ["Lookup-table interpolation", "Polynomial calculation", "Sensor type abstraction"]
+    },
+    {
+      "id": "MOD-APP-DRIVER-OTHER",
+      "path": "src/app/driver",
+      "type": "driver",
+      "layer": "Driver",
+      "description": "Other peripheral drivers",
+      "submodules": [
+        {"name": "ADC", "path": "src/app/driver/adc"},
+        {"name": "CRC", "path": "src/app/driver/crc"},
+        {"name": "DMA", "path": "src/app/driver/dma"},
+        {"name": "EMAC", "path": "src/app/driver/emac"},
+        {"name": "FoxMath", "path": "src/app/driver/foxmath"},
+        {"name": "FRAM", "path": "src/app/driver/fram"},
+        {"name": "HTSensor", "path": "src/app/driver/htsensor"},
+        {"name": "I2C", "path": "src/app/driver/i2c"},
+        {"name": "Interlock", "path": "src/app/driver/interlock"},
+        {"name": "IO", "path": "src/app/driver/io"},
+        {"name": "LED", "path": "src/app/driver/led"},
+        {"name": "MCU", "path": "src/app/driver/mcu"},
+        {"name": "MEAS", "path": "src/app/driver/meas"},
+        {"name": "PEX", "path": "src/app/driver/pex"},
+        {"name": "PHY", "path": "src/app/driver/phy"},
+        {"name": "PWM", "path": "src/app/driver/pwm"},
+        {"name": "RTC", "path": "src/app/driver/rtc"},
+        {"name": "SPI", "path": "src/app/driver/spi"},
+        {"name": "SPS", "path": "src/app/driver/sps"},
+        {"name": "UART", "path": "src/app/driver/uart"}
+      ],
+      "files_count": 42
+    },
+    {
+      "id": "MOD-APP-ENGINE-DATABASE",
+      "path": "src/app/engine/database",
+      "type": "engine",
+      "layer": "Engine",
+      "description": "Data exchange module (producer/consumer pattern) for safe asynchronous data exchange between tasks",
+      "files": [
+        "src/app/engine/database/database.c",
+        "src/app/engine/database/database.h",
+        "src/app/engine/database/database_helper.c",
+        "src/app/engine/database/database_helper.h",
+        "src/app/engine/config/database_cfg.c",
+        "src/app/engine/config/database_cfg.h"
+      ],
+      "public_interfaces": ["database.h", "database_helper.h"],
+      "significant_internal_units": ["Data producer registration", "Data consumer subscription", "Data integrity validation", "Atomic data exchange"]
+    },
+    {
+      "id": "MOD-APP-ENGINE-DIAG",
+      "path": "src/app/engine/diag",
+      "type": "engine",
+      "layer": "Engine",
+      "description": "Diagnostic engine with callback-based monitoring for all safety-relevant parameters",
+      "files_count": 30,
+      "public_interfaces": ["src/app/engine/diag/diag.h", "src/app/engine/diag/cbs/diag_cbs.h"],
+      "significant_internal_units": [
+        "Diagnostic callback framework",
+        "Voltage monitoring (cell, pack, string)",
+        "Current monitoring",
+        "Temperature monitoring",
+        "SOA monitoring",
+        "Contactor monitoring",
+        "Insulation monitoring",
+        "Interlock monitoring",
+        "Communication monitoring (CAN, SPI, I2C)",
+        "SBC monitoring",
+        "RTC monitoring",
+        "FRAM monitoring",
+        "System monitoring",
+        "Power measurement monitoring"
+      ]
+    },
+    {
+      "id": "MOD-APP-ENGINE-SYS",
+      "path": "src/app/engine/sys",
+      "type": "engine",
+      "layer": "Engine",
+      "description": "System state management and reset handling",
+      "files": [
+        "src/app/engine/sys/sys.c",
+        "src/app/engine/sys/sys.h",
+        "src/app/engine/sys/reset.c",
+        "src/app/engine/sys/reset.h",
+        "src/app/engine/config/sys_cfg.c",
+        "src/app/engine/config/sys_cfg.h"
+      ],
+      "public_interfaces": ["sys.h", "reset.h"],
+      "significant_internal_units": ["System state machine", "Reset reason tracking", "State transitions"]
+    },
+    {
+      "id": "MOD-APP-ENGINE-SYS_MON",
+      "path": "src/app/engine/sys_mon",
+      "type": "engine",
+      "layer": "Engine",
+      "description": "System monitoring for hard- and software (CPU load, stack, timing)",
+      "files": [
+        "src/app/engine/sys_mon/sys_mon.c",
+        "src/app/engine/sys_mon/sys_mon.h",
+        "src/app/engine/config/sys_mon_cfg.c",
+        "src/app/engine/config/sys_mon_cfg.h"
+      ],
+      "public_interfaces": ["sys_mon.h"],
+      "significant_internal_units": ["Task runtime monitoring", "Stack watermark monitoring", "Timing violation detection"]
+    },
+    {
+      "id": "MOD-APP-ENGINE-HW_INFO",
+      "path": "src/app/engine/hw_info",
+      "type": "engine",
+      "layer": "Engine",
+      "description": "Hardware information and version tracking",
+      "files": [
+        "src/app/engine/hw_info/master_info.c",
+        "src/app/engine/hw_info/master_info.h"
+      ],
+      "public_interfaces": ["master_info.h"],
+      "significant_internal_units": ["Hardware version detection", "Board identification"]
+    },
+    {
+      "id": "MOD-APP-ALGORITHM",
+      "path": "src/app/application/algorithm",
+      "type": "application",
+      "layer": "Application",
+      "description": "Algorithm module for state estimation (SOC, SOE, SOF, SOH) with multiple strategies",
+      "submodules": [
+        {"name": "Moving Average", "path": "src/app/application/algorithm/moving_average"},
+        {"name": "SOC Counting", "path": "src/app/application/algorithm/state_estimation/soc/counting"},
+        {"name": "SOC Lookup Table", "path": "src/app/application/algorithm/state_estimation/soc/lookup-table"},
+        {"name": "SOC Debug", "path": "src/app/application/algorithm/state_estimation/soc/debug"},
+        {"name": "SOE Counting", "path": "src/app/application/algorithm/state_estimation/soe/counting"},
+        {"name": "SOE Debug", "path": "src/app/application/algorithm/state_estimation/soe/debug"},
+        {"name": "SOF Trapezoid", "path": "src/app/application/algorithm/state_estimation/sof/trapezoid"},
+        {"name": "SOH Debug", "path": "src/app/application/algorithm/state_estimation/soh/debug"}
+      ],
+      "files_count": 20,
+      "public_interfaces": [
+        "src/app/application/algorithm/algorithm.h",
+        "src/app/application/algorithm/state_estimation/state_estimation.h"
+      ],
+      "significant_internal_units": [
+        "State-of-Charge estimation (counting, lookup-table)",
+        "State-of-Energy estimation (counting)",
+        "State-of-Function estimation (trapezoid)",
+        "State-of-Health estimation (debug/placeholder)"
+      ]
+    },
+    {
+      "id": "MOD-APP-BAL",
+      "path": "src/app/application/bal",
+      "type": "application",
+      "layer": "Application",
+      "description": "Cell balancing strategies (voltage-based, history-based, none)",
+      "files": [
+        "src/app/application/bal/bal.c",
+        "src/app/application/bal/bal.h",
+        "src/app/application/bal/voltage/bal_strategy_voltage.c",
+        "src/app/application/bal/history/bal_strategy_history.c",
+        "src/app/application/bal/none/bal_strategy_none.c",
+        "src/app/application/config/bal_cfg.c",
+        "src/app/application/config/bal_cfg.h"
+      ],
+      "public_interfaces": ["bal.h", "bal_cfg.h"],
+      "significant_internal_units": ["Balancing state machine", "Voltage-based strategy", "History-based strategy"]
+    },
+    {
+      "id": "MOD-APP-BMS",
+      "path": "src/app/application/bms",
+      "type": "application",
+      "layer": "Application",
+      "description": "Core BMS application state machine and coordination",
+      "files": [
+        "src/app/application/bms/bms.c",
+        "src/app/application/bms/bms.h"
+      ],
+      "public_interfaces": ["bms.h"],
+      "significant_internal_units": ["BMS state machine", "Mode management", "Error handling coordination"]
+    },
+    {
+      "id": "MOD-APP-SOA",
+      "path": "src/app/application/soa",
+      "type": "application",
+      "layer": "Application",
+      "description": "Safe Operating Area monitoring - voltage, current, temperature limits",
+      "files": [
+        "src/app/application/soa/soa.c",
+        "src/app/application/soa/soa.h",
+        "src/app/application/config/soa_cfg.c",
+        "src/app/application/config/soa_cfg.h"
+      ],
+      "public_interfaces": ["soa.h", "soa_cfg.h"],
+      "significant_internal_units": ["Voltage limit monitoring", "Current limit monitoring", "Temperature limit monitoring", "Limit violation response"]
+    },
+    {
+      "id": "MOD-APP-PLAUSIBILITY",
+      "path": "src/app/application/plausibility",
+      "type": "application",
+      "layer": "Application",
+      "description": "Measurement plausibility checks for voltage, current, temperature",
+      "files": [
+        "src/app/application/plausibility/plausibility.c",
+        "src/app/application/plausibility/plausibility.h",
+        "src/app/application/config/plausibility_cfg.h",
+        "src/app/driver/afe/api/afe_plausibility.c",
+        "src/app/driver/afe/api/afe_plausibility.h"
+      ],
+      "public_interfaces": ["plausibility.h", "afe_plausibility.h"],
+      "significant_internal_units": ["Cross-channel voltage comparison", "Current sensor plausibility", "Temperature gradient checks"]
+    },
+    {
+      "id": "MOD-APP-REDUNDANCY",
+      "path": "src/app/application/redundancy",
+      "type": "application",
+      "layer": "Application",
+      "description": "Redundancy management for safety-critical measurements",
+      "files": [
+        "src/app/application/redundancy/redundancy.c",
+        "src/app/application/redundancy/redundancy.h"
+      ],
+      "public_interfaces": ["redundancy.h"],
+      "significant_internal_units": ["Redundant measurement comparison", "Voting logic", "Fault isolation"]
+    },
+    {
+      "id": "MOD-APP-ETHERNET",
+      "path": "src/app/application/ethernet",
+      "type": "application",
+      "layer": "Application",
+      "description": "Ethernet communication stack with FreeRTOS+TCP integration",
+      "files": [
+        "src/app/application/ethernet/ethernet.c",
+        "src/app/application/ethernet/ethernet.h",
+        "src/app/application/ethernet/ethernet_freertos.c",
+        "src/app/application/ethernet/ethernet_freertos.h",
+        "src/app/application/config/ethernet_cfg.c",
+        "src/app/application/config/ethernet_cfg.h"
+      ],
+      "public_interfaces": ["ethernet.h", "ethernet_freertos.h", "ethernet_cfg.h"],
+      "significant_internal_units": ["TCP/IP stack integration", "Socket management", "Network interface"]
+    },
+    {
+      "id": "MOD-BOOTLOADER",
+      "path": "src/bootloader",
+      "type": "bootloader",
+      "layer": "Bootloader",
+      "description": "Bootloader with CAN-based firmware update, flash management, CRC verification",
+      "files_count": 45,
+      "public_interfaces": [
+        "src/bootloader/main/include/main.h",
+        "src/bootloader/main/include/fassert.h",
+        "src/bootloader/main/include/fstartup.h",
+        "src/bootloader/driver/can/can.h",
+        "src/bootloader/driver/flash/flash.h",
+        "src/bootloader/engine/boot/boot.h"
+      ],
+      "significant_internal_units": [
+        "CAN bootloader protocol",
+        "Flash programming/verification",
+        "CRC64 integrity check",
+        "Version info exchange",
+        "Application validation and jump"
+      ]
+    },
+    {
+      "id": "MOD-OS-FREERTOS",
+      "path": "src/os/freertos",
+      "type": "os",
+      "layer": "OS",
+      "description": "FreeRTOS kernel + FreeRTOS+TCP stack (vendor code - reuse/assurance disposition required)",
+      "files_count": 117,
+      "public_interfaces": ["FreeRTOS.h", "task.h", "queue.h", "semphr.h", "timers.h", "FreeRTOS_IP.h", "FreeRTOS_Sockets.h"],
+      "significant_internal_units": ["Kernel (tasks, queues, semaphores, timers)", "Memory management (heap_1-5)", "Portable layer (ARM Cortex-R5)", "TCP/IP stack (FreeRTOS+TCP)"],
+      "reuse_disposition": "vendor_code - requires assurance strategy, interfaces documented, limitations noted"
+    }
+  ],
+  "configuration": {
+    "path": "conf/",
+    "files": [
+      "conf/bms/bms.json",
+      "conf/cc/cc-options.yaml",
+      "conf/env/env.json",
+      "conf/env/paths_linux.txt",
+      "conf/env/paths_win32.txt",
+      "conf/hcg/app.hcg",
+      "conf/hcg/app.dil",
+      "conf/hcg/bootloader.hcg",
+      "conf/hcg/bootloader.dil",
+      "conf/unit/app_project_posix.yml",
+      "conf/unit/app_project_win32.yml",
+      "conf/unit/bootloader_project_posix.yml",
+      "conf/unit/bootloader_project_win32.yml"
+    ],
+    "description": "Build configuration, compiler options, HALCoGen code generation, unit test project configs"
+  },
+  "hardware": {
+    "boards": [
+      {
+        "id": "HW-BMS-MASTER",
+        "name": "foxBMS BMS Master",
+        "variant": "ti-tms570lc4357-vx.x.x",
+        "path": "docs/hardware/master/ti-tms570lc4357-vx.x.x",
+        "mcu": "TI TMS570LC4357 (ARM Cortex-R5F, dual-core lockstep)",
+        "design_package": "Altium Designer (schematics, layout, BOM, 3D model, ODB++, assembly)",
+        "interfaces": ["CAN", "Ethernet", "SPI (AFE)", "UART", "GPIO", "ADC", "Contactor control", "Interlock", "IMD", "SBC (FS85xx)"]
+      },
+      {
+        "id": "HW-BMS-SLAVE-12-LTC6804",
+        "name": "BMS Slave 12-cell LTC6804-1",
+        "variant": "12-ltc-ltc6804-1-vx.x.x",
+        "path": "docs/hardware/slaves/12-ltc-ltc6804-1-vx.x.x",
+        "afe": "LTC LTC6804-1",
+        "cells": 12,
+        "communication": "isoSPI (LTC6820)"
+      },
+      {
+        "id": "HW-BMS-SLAVE-12-LTC6811",
+        "name": "BMS Slave 12-cell LTC6811-1",
+        "variant": "12-ltc-ltc6811-1-vx.x.x",
+        "path": "docs/hardware/slaves/12-ltc-ltc6811-1-vx.x.x",
+        "afe": "LTC LTC6811-1",
+        "cells": 12,
+        "communication": "isoSPI (LTC6820)"
+      },
+      {
+        "id": "HW-BMS-SLAVE-14-MAX17852",
+        "name": "BMS Slave 14-cell MAX17852",
+        "variant": "14-maxim-max17852-vx.x.x",
+        "path": "docs/hardware/slaves/14-maxim-max17852-vx.x.x",
+        "afe": "Maxim MAX17852",
+        "cells": 14,
+        "communication": "UART/DAISY CHAIN"
+      },
+      {
+        "id": "HW-BMS-SLAVE-14-MC33775A",
+        "name": "BMS Slave 14-cell MC33775A",
+        "variant": "14-nxp-mc33775a-vx.x.x",
+        "path": "docs/hardware/slaves/14-nxp-mc33775a-vx.x.x",
+        "afe": "NXP MC33775A",
+        "cells": 14,
+        "communication": "SPI/Transformer isolation"
+      },
+      {
+        "id": "HW-BMS-SLAVE-16-ADES1830",
+        "name": "BMS Slave 16-cell ADES1830",
+        "variant": "16-adi-ades1830-vx.x.x",
+        "path": "docs/hardware/slaves/16-adi-ades1830-vx.x.x",
+        "afe": "ADI ADES1830",
+        "cells": 16,
+        "communication": "SPI/DMA"
+      },
+      {
+        "id": "HW-BMS-SLAVE-18-LTC6813",
+        "name": "BMS Slave 18-cell LTC6813-1",
+        "variant": "18-ltc-ltc6813-1-vx.x.x",
+        "path": "docs/hardware/slaves/18-ltc-ltc6813-1-vx.x.x",
+        "afe": "LTC LTC6813-1",
+        "cells": 18,
+        "communication": "isoSPI (LTC6820)"
+      }
+    ],
+    "interfaces": [
+      {
+        "id": "HW-IF-LTC6820",
+        "name": "LTC6820 isoSPI Interface",
+        "variant": "ltc-ltc6820-vx.x.x",
+        "path": "docs/hardware/interfaces/ltc-ltc6820-vx.x.x"
+      },
+      {
+        "id": "HW-IF-MAX17841B",
+        "name": "MAX17841B Interface",
+        "variant": "maxim-max17841b-vx.x.x",
+        "path": "docs/hardware/interfaces/maxim-max17841b-vx.x.x"
+      },
+      {
+        "id": "HW-IF-MC33664",
+        "name": "MC33664 CAN/SBC Interface",
+        "variant": "nxp-mc33664-vx.x.x",
+        "path": "docs/hardware/interfaces/nxp-mc33664-vx.x.x"
+      }
+    ]
+  },
+  "tests": {
+    "unit_tests_count": 120,
+    "frameworks": ["Unity", "CMock", "Ceedling"],
+    "structure": "tests/unit mirroring src/app and src/bootloader",
+    "coverage_areas": [
+      "AFE drivers (all variants)",
+      "CAN TX/RX callbacks",
+      "Contactor driver",
+      "IMD drivers",
+      "SBC driver",
+      "FRAM driver",
+      "Database engine",
+      "Diagnostic callbacks",
+      "Algorithm modules",
+      "Balancing strategies",
+      "SOA monitoring",
+      "Plausibility checks",
+      "Redundancy management",
+      "Temperature sensors",
+      "Bootloader CAN/Flash"
+    ]
+  },
+  "build_system": {
+    "type": "Waf (wscript)",
+    "main_scripts": [
+      "wscript",
+      "src/wscript",
+      "src/app/wscript",
+      "src/bootloader/wscript"
+    ],
+    "tools": [
+      "tools/",
+      "cli/",
+      "fox.py",
+      "fox.sh",
+      "fox.ps1"
+    ]
+  },
+  "documentation": {
+    "source": "docs/",
+    "format": "reStructuredText (Sphinx)",
+    "key_sections": [
+      "getting-started",
+      "hardware (design-resources, master, slaves, interfaces)",
+      "software (structure, modules, configuration, build, unit-tests, bootloader)",
+      "system",
+      "developer-manual",
+      "introduction",
+      "general (changelog, license)",
+      "tools"
+    ]
+  },
+  "vendor_generated_code": [
+    {
+      "module": "MOD-OS-FREERTOS",
+      "description": "FreeRTOS kernel + FreeRTOS+TCP stack",
+      "disposition": "vendor_code - requires assurance strategy, interfaces documented, limitations noted. Not developed by foxBMS team."
+    }
+  ],
+  "excluded_from_corpus": [
+    "docs/artifacts/",
+    "graphify-out/",
+    "openspec/",
+    ".agents/",
+    ".claude/",
+    ".gemini/",
+    ".github/",
+    ".junie/",
+    ".kiro/",
+    ".opencode/",
+    ".serena/",
+    "*.DS_Store"
+  ]
+}

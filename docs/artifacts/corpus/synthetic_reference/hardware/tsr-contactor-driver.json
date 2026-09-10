@@ -1,0 +1,103 @@
+{
+ "id": "FB2-HW-TSR-000003",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "hardware",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "TSR: Contactor Driver and Feedback",
+ "owner_role": "hw_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-HW-000001",
+  "FB2-SRC-COD-000007",
+  "FB2-SRC-COD-000008",
+  "FB2-SRC-COD-000027"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-009"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 5, Clause 7",
+   "status": "mapped",
+   "rationale": "Hardware safety requirements"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "HWE.1, HWE.2",
+   "status": "mapped",
+   "rationale": "Hardware requirements and architecture"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "hw_engineer",
+   "description": "Synthetic TSR with timing budget allocation"
+  }
+ ],
+ "statement": "The SBC (FS85xx) shall drive contactor coils with controlled slew rate and monitor auxiliary feedback contacts with < 2 ms latency.",
+ "rationale": "Contactor control and feedback monitoring must meet FSR-003 30 ms latency budget",
+ "classification": "safety",
+ "acceptance_criteria": [
+  {
+   "criterion": "Coil drive slew rate",
+   "measure": "dV/dt at coil terminals",
+   "threshold": "50",
+   "unit": "V/ms"
+  },
+  {
+   "criterion": "Feedback latency",
+   "measure": "Time from contactor state change to SW notification",
+   "threshold": "2",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Weld detection",
+   "measure": "Feedback mismatch detection time",
+   "threshold": "100",
+   "unit": "ms"
+  }
+ ],
+ "verification_approach": "test",
+ "safety_allocation": {
+  "asil": "ASIL_D",
+  "safety_goal_ref": "FB2-SAF-SGO-000001",
+  "mitigation": "Independent SBC, feedback monitoring, watchdog"
+ },
+ "assumptions": [
+  "FB2-ASM-009"
+ ],
+ "conditions_modes": [
+  "NORMAL",
+  "CHARGING",
+  "PRECHARGE",
+  "DERATING",
+  "FAULT"
+ ],
+ "feasibility_dependencies": [
+  "FB2-HW-TSR-000001",
+  "FB2-HW-TSR-000002"
+ ]
+}

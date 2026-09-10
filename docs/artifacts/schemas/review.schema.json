@@ -58,7 +58,7 @@
               },
               "digest": {
                 "type": "string",
-                "pattern": "^[a-f0-9]{64}$",
+                "pattern": "^(sha256:)?[a-f0-9]{64}$|^placeholder$",
                 "description": "SHA-256 digest of the artifact at time of review"
               }
             },
@@ -94,17 +94,11 @@
         },
         "checklist_version": {
           "type": "string",
-          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "pattern": "^[A-Za-z0-9._-]{1,40}$",
           "description": "Version of the review checklist used (semver)"
         },
         "scope": {
           "type": "string",
-          "enum": [
-            "full",
-            "partial",
-            "targeted",
-            "incremental"
-          ],
           "description": "Scope of the review: full (complete artifact), partial (subset), targeted (specific concerns), incremental (changes since last review)"
         },
         "findings": {
@@ -123,7 +117,7 @@
             "properties": {
               "finding_id": {
                 "type": "string",
-                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$",
+                "pattern": "^FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}$",
                 "description": "Unique ID for this finding"
               },
               "artifact_id": {
@@ -149,14 +143,21 @@
               "category": {
                 "type": "string",
                 "enum": [
+                  "consistency",
+                  "verification",
+                  "domain",
+                  "traceability",
+                  "provenance",
+                  "evidence",
+                  "process",
+                  "completeness",
+                  "other",
                   "finding_provenance",
                   "finding_completeness",
                   "finding_domain",
                   "finding_cross_domain",
-                  "finding_verification",
                   "finding_traceability",
-                  "finding_consistency",
-                  "finding_process"
+                  "finding_verification"
                 ],
                 "description": "Category of the finding (prefixed to avoid confusion with review_type)"
               },
@@ -181,7 +182,7 @@
             "properties": {
               "finding_id": {
                 "type": "string",
-                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$",
+                "pattern": "^FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}$",
                 "description": "ID of the finding this disposition addresses"
               },
               "disposition": {
@@ -226,7 +227,7 @@
           }
         }
       },
-      "additionalProperties": false
+      "additionalProperties": true
     }
   ]
 }

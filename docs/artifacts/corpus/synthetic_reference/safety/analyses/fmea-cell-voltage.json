@@ -1,0 +1,245 @@
+{
+ "id": "FB2-SAF-ANL-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_analysis",
+ "analysis_type": "fmea",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "FMEA: Cell Voltage Acquisition and Protection Chain",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000003",
+  "FB2-SRC-COD-000004"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-004",
+  "FB2-ASM-009"
+ ],
+ "standards_mappings": [
+  {
+   "standard": "ISO 26262:2018",
+   "part": "9",
+   "clause": "7.4.2"
+  },
+  {
+   "standard": "Automotive SPICE PAM 4.1",
+   "process": "MAN.5"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Initial synthetic FMEA for cell voltage chain"
+  }
+ ],
+ "scope": "Cell voltage acquisition, plausibility, SOA monitoring, contactor control (synthetic_reference profile)",
+ "method": "Bottom-up inductive analysis (ISO 26262-9:7.4.2 methodology). Illustrative severity/occurrence/detection ratings; no supplier reliability data used.",
+ "failure_modes": [
+  {
+   "failure_mode_id": "FM-001",
+   "element": "AFE (LTC6811) cell voltage acquisition",
+   "failure_mode": "Cell voltage value corrupted during SPI transmission",
+   "failure_effect": "SOA evaluation on wrong voltage; overvoltage undetected (HE-01) or false fault",
+   "severity": 9,
+   "occurrence": 3,
+   "detection": 2,
+   "rpn": 54,
+   "cause": "isoSPI noise, connector intermittency",
+   "mechanisms": [
+    {
+     "mechanism_id": "M-001",
+     "name": "PEC (CRC-15) validation",
+     "diagnostic_coverage": "high",
+     "requirement_refs": [
+      "FB2-SAF-FSR-000001",
+      "FB2-SW-SWR-000001"
+     ],
+     "design_refs": [
+      "FB2-SW-DSN-000001"
+     ],
+     "verification_refs": [
+      "FB2-VER-TMS-000001"
+     ],
+     "assumption_refs": [
+      "FB2-ASM-004"
+     ]
+    },
+    {
+     "mechanism_id": "M-002",
+     "name": "Plausibility check (cell count, range, gradient)",
+     "diagnostic_coverage": "medium",
+     "requirement_refs": [
+      "FB2-SAF-FSR-000001"
+     ],
+     "design_refs": [
+      "FB2-SW-DSN-000002"
+     ],
+     "verification_refs": [
+      "FB2-VER-TMS-000001"
+     ]
+    }
+   ],
+   "residual_risk": "ASIL_D path additionally covered by independent monitor (FB2-SAF-FSR-000004)"
+  },
+  {
+   "failure_mode_id": "FM-002",
+   "element": "SOA monitoring (soa.c)",
+   "failure_mode": "SOA check task delayed beyond 50 ms period (starvation)",
+   "failure_effect": "Overvoltage reaction exceeds FTTI 100 ms (HE-01)",
+   "severity": 10,
+   "occurrence": 2,
+   "detection": 3,
+   "rpn": 60,
+   "cause": "CPU overload, priority inversion, blocking driver call",
+   "mechanisms": [
+    {
+     "mechanism_id": "M-003",
+     "name": "Fixed-priority preemptive scheduling (SOA highest app priority)",
+     "diagnostic_coverage": "medium",
+     "requirement_refs": [
+      "FB2-SW-SWR-000002"
+     ],
+     "design_refs": [
+      "FB2-SW-DSN-000002"
+     ],
+     "assumption_refs": [
+      "FB2-ASM-010"
+     ]
+    },
+    {
+     "mechanism_id": "M-004",
+     "name": "SBC watchdog (windowed, task supervision)",
+     "diagnostic_coverage": "high",
+     "requirement_refs": [
+      "FB2-SW-SWR-000002"
+     ],
+     "verification_refs": [
+      "FB2-VER-TMS-000001"
+     ],
+     "assumption_refs": [
+      "FB2-ASM-007"
+     ]
+    }
+   ],
+   "residual_risk": "Independent HW monitor covers 50 ms window (FB2-HW-TSR-000004)"
+  },
+  {
+   "failure_mode_id": "FM-003",
+   "element": "Contactor control (contactor.c)",
+   "failure_mode": "Contactor opening command not executed (welded main contactor)",
+   "failure_effect": "Safe state not reachable despite correct detection (HE-03)",
+   "severity": 10,
+   "occurrence": 2,
+   "detection": 4,
+   "rpn": 80,
+   "cause": "Contact welding due to inrush current, mechanical wear",
+   "mechanisms": [
+    {
+     "mechanism_id": "M-005",
+     "name": "Contactor feedback monitoring (aux contacts, current sense)",
+     "diagnostic_coverage": "high",
+     "requirement_refs": [
+      "FB2-SAF-FSR-000003",
+      "FB2-SW-SWR-000003"
+     ],
+     "design_refs": [
+      "FB2-SW-DSN-000003"
+     ],
+     "verification_refs": [
+      "FB2-VER-TMS-000002"
+     ],
+     "assumption_refs": [
+      "FB2-ASM-006"
+     ]
+    }
+   ],
+   "residual_risk": "Weld detection alerts driver; vehicle-level safe stop out of BMS scope (assumption ASM-006)"
+  },
+  {
+   "failure_mode_id": "FM-004",
+   "element": "Independent voltage monitor",
+   "failure_mode": "Monitor false positive (nuisance contactor open)",
+   "failure_effect": "Availability loss; no direct safety hazard",
+   "severity": 4,
+   "occurrence": 3,
+   "detection": 5,
+   "rpn": 60,
+   "cause": "Comparator threshold drift, reference voltage noise",
+   "mechanisms": [
+    {
+     "mechanism_id": "M-006",
+     "name": "Monitor threshold above main path warning (hysteresis)",
+     "diagnostic_coverage": "medium",
+     "requirement_refs": [
+      "FB2-SAF-FSR-000004",
+      "FB2-HW-TSR-000004"
+     ],
+     "assumption_refs": [
+      "FB2-ASM-008"
+     ]
+    }
+   ],
+   "residual_risk": "Accepted: fail-safe direction (spurious open) per FSR-000004"
+  },
+  {
+   "failure_mode_id": "FM-005",
+   "element": "Database (db.c)",
+   "failure_mode": "Stale cell voltage read by SOA (freshness > 30 ms)",
+   "failure_effect": "Delayed overvoltage detection; FTTI budget consumed",
+   "severity": 8,
+   "occurrence": 2,
+   "detection": 2,
+   "rpn": 32,
+   "cause": "Database lock contention, task overrun",
+   "mechanisms": [
+    {
+     "mechanism_id": "M-007",
+     "name": "Freshness timestamp check in SOA read",
+     "diagnostic_coverage": "high",
+     "requirement_refs": [
+      "FB2-SAF-FSR-000001",
+      "FB2-SW-SWR-000001"
+     ],
+     "design_refs": [
+      "FB2-SW-DSN-000001",
+      "FB2-SYS-HSI-000001"
+     ],
+     "verification_refs": [
+      "FB2-VER-TMS-000001"
+     ]
+    }
+   ],
+   "residual_risk": "None identified; freshness fault triggers derating state"
+  }
+ ],
+ "summary": {
+  "failure_modes": 5,
+  "mechanisms": 7,
+  "highest_rpn": 80,
+  "residual_risks_with_independent_mitigation": 3
+ }
+}

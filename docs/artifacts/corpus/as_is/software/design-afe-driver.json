@@ -1,0 +1,264 @@
+{
+ "id": "FB2-SW-DSN-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "design",
+ "engineering_domain": "software",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Design: AFE Driver Architecture (LTC Family)",
+ "owner_role": "sw_engineer",
+ "origin": "source_observed",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000002"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8",
+   "status": "mapped",
+   "rationale": "Software architectural design"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "mapped",
+   "rationale": "Software architectural design"
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Extracted from AFE driver source"
+  }
+ ],
+ "design_level": "architecture",
+ "responsibilities": [
+  "SPI/DMA communication with LTC AFEs",
+  "Command sequencing (wakeup, read, balancing)",
+  "PEC calculation and validation",
+  "Data conversion to mV/\u00b0C",
+  "Database publishing"
+ ],
+ "decomposition": [
+  {
+   "child_id": "FB2-SW-DSN-000002",
+   "relationship": "contains"
+  },
+  {
+   "child_id": "FB2-SW-DSN-000003",
+   "relationship": "contains"
+  },
+  {
+   "child_id": "FB2-SW-DSN-000004",
+   "relationship": "contains"
+  }
+ ],
+ "interfaces": [
+  {
+   "interface_id": "AFE_DATABASE",
+   "direction": "output",
+   "signals": [
+    {
+     "name": "cell_voltages",
+     "type": "uint16_t[]",
+     "unit": "mV",
+     "range": "0-5000",
+     "rate": "20 Hz"
+    },
+    {
+     "name": "cell_temperatures",
+     "type": "int16_t[]",
+     "unit": "0.1\u00b0C",
+     "range": "-400-1500",
+     "rate": "20 Hz"
+    },
+    {
+     "name": "balancing_feedback",
+     "type": "bool[]",
+     "unit": "bool",
+     "range": "0/1",
+     "rate": "20 Hz"
+    }
+   ]
+  },
+  {
+   "interface_id": "AFE_SPI",
+   "direction": "bidirectional",
+   "signals": [
+    {
+     "name": "spi_tx",
+     "type": "uint8_t[]",
+     "unit": "bytes",
+     "range": "0-255",
+     "rate": "1 MHz"
+    },
+    {
+     "name": "spi_rx",
+     "type": "uint8_t[]",
+     "unit": "bytes",
+     "range": "0-255",
+     "rate": "1 MHz"
+    }
+   ]
+  }
+ ],
+ "behavior_model": {
+  "type": "state_machine",
+  "states": [
+   "INIT",
+   "WAKEUP",
+   "READ_VOLTAGES",
+   "READ_TEMPERATURES",
+   "BALANCING",
+   "ERROR",
+   "SLEEP"
+  ],
+  "transitions": [
+   {
+    "from": "INIT",
+    "to": "WAKEUP",
+    "trigger": "driver_init",
+    "guard": "config_valid",
+    "action": "send_wakeup"
+   },
+   {
+    "from": "WAKEUP",
+    "to": "READ_VOLTAGES",
+    "trigger": "wakeup_done",
+    "guard": "afe_ready",
+    "action": "start_voltage_read"
+   },
+   {
+    "from": "READ_VOLTAGES",
+    "to": "READ_TEMPERATURES",
+    "trigger": "voltages_done",
+    "guard": "pec_valid",
+    "action": "start_temp_read"
+   },
+   {
+    "from": "READ_TEMPERATURES",
+    "to": "BALANCING",
+    "trigger": "temps_done",
+    "guard": "pec_valid",
+    "action": "apply_balancing"
+   },
+   {
+    "from": "BALANCING",
+    "to": "READ_VOLTAGES",
+    "trigger": "cycle_timer",
+    "guard": "period_elapsed",
+    "action": "start_voltage_read"
+   },
+   {
+    "from": "*",
+    "to": "ERROR",
+    "trigger": "pec_failure",
+    "guard": "retries_exhausted",
+    "action": "report_fault"
+   },
+   {
+    "from": "ERROR",
+    "to": "INIT",
+    "trigger": "reinit_request",
+    "guard": "fault_cleared",
+    "action": "restart_driver"
+   }
+  ]
+ },
+ "constraints": [
+  "SPI clock \u2264 1 MHz (LTC6811 spec)",
+  "DMA buffer size: 256 bytes per slave",
+  "Task period: 100 ms (FreeRTOS task)",
+  "Stack usage: < 2 KB"
+ ],
+ "budgets": {
+  "cpu_time_ms": 5,
+  "memory_bytes": 8192,
+  "stack_bytes": 2048
+ },
+ "failure_response": [
+  {
+   "failure_mode": "PEC failure",
+   "detection": "CRC check on RX",
+   "reaction": "Retry 3x, then ERROR state",
+   "recovery": "Reinit on fault clear"
+  },
+  {
+   "failure_mode": "SPI timeout",
+   "detection": "DMA timeout",
+   "reaction": "ERROR state, report to DIAG",
+   "recovery": "Reinit on fault clear"
+  },
+  {
+   "failure_mode": "AFE not responding",
+   "detection": "No RX data",
+   "reaction": "ERROR state",
+   "recovery": "Power cycle AFE via SBC"
+  }
+ ],
+ "decisions": [
+  {
+   "decision_id": "DEC-AFE-001",
+   "alternatives": [
+    "Polling",
+    "DMA",
+    "Interrupt"
+   ],
+   "selected": "DMA",
+   "rationale": "Lowest CPU overhead for multi-slave reads"
+  },
+  {
+   "decision_id": "DEC-AFE-002",
+   "alternatives": [
+    "Single read all",
+    "Split voltage/temp"
+   ],
+   "selected": "Split voltage/temp",
+   "rationale": "LTC6811 requires separate commands"
+  }
+ ],
+ "implementation_mapping": [
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_afe.c",
+   "symbol": "LTC_AFE_TriggerMeasurement",
+   "status": "implemented"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+   "symbol": "LTC_AFE_DMA_RxCallback",
+   "status": "implemented"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_pec.c",
+   "symbol": "LTC_PEC_Calculate",
+   "status": "implemented"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "LTC_6813_ReadVoltages",
+   "status": "implemented"
+  }
+ ]
+}

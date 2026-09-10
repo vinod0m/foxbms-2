@@ -1,0 +1,91 @@
+{
+  "id": "FB2-SCN-CHG-000001",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "scenario",
+  "engineering_domain": "safety",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-CHG-001",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": ["VAR-REF-001"],
+  "title": "Change Lifecycle: Cell Voltage Maximum Threshold Change (4.2V -> 4.15V)",
+  "owner_role": "safety_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "baselined",
+  "automated_review_status": { "schema_valid": true, "links_valid": true, "provenance_consistent": true, "consistency_checks": true, "last_run": "2026-09-08T00:00:00Z" },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "revision_history": [{ "revision": "1", "date": "2026-09-08T00:00:00Z", "author": "safety_engineer", "description": "Change lifecycle demo: voltage threshold" }],
+  "scenario_type": "change_lifecycle",
+  "change_type": "safety_threshold",
+  "baseline_before": "BAS-REF-001",
+  "trigger": {
+    "source": "Cell supplier change notification",
+    "description": "New cell batch has lower maximum voltage (4.15V vs 4.2V) due to chemistry optimization",
+    "date": "2026-09-15T00:00:00Z"
+  },
+  "impact_analysis": {
+    "affected_artifacts": [
+      "FB2-PRM-000001 (cell_voltage_max: 4200 -> 4150 mV)",
+      "FB2-SAF-FSR-000002 (acceptance criteria thresholds)",
+      "FB2-SW-DSN-000002 (SOA config thresholds)",
+      "FB2-HW-TSR-000001 (measurement accuracy allocation)",
+      "FB2-VER-TMS-000001 (test stimuli thresholds)",
+      "FB2-SAF-HAZ-000001 (hazard boundary)"
+    ],
+    "affected_links": [
+      "FB2-LNK-SAF-000009 (test verifies)",
+      "FB2-LNK-SAF-000014 (test verifies)"
+    ],
+    "affected_reviews": ["FB2-REV-000001"],
+    "affected_evidence": ["FB2-VER-EXE-000001"],
+    "risk_assessment": "Lowering threshold reduces overvoltage margin; may increase false positives. Requires re-verification of debounce statistical analysis."
+  },
+  "decision": {
+    "decision_id": "DEC-CHG-001",
+    "decision_maker": "safety_manager (fictional: Dr. Sarah Chen)",
+    "date": "2026-09-20T00:00:00Z",
+    "rationale": "Cell supplier change is mandatory; threshold must match cell specification. Debounce count increased from 2 to 3 to maintain false positive rate.",
+    "disposition": "approved"
+  },
+  "new_revisions": [
+    { "artifact_id": "FB2-PRM-000001", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-SAF-FSR-000002", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-SW-DSN-000002", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-HW-TSR-000001", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-VER-TMS-000001", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-SAF-HAZ-000001", "old_revision": "1", "new_revision": "2" }
+  ],
+  "suspect_links": [
+    "FB2-LNK-SAF-000014 (test verifies)"
+  ],
+  "required_updates": [
+    "Update parameter registry FB2-PRM-000001",
+    "Update FSR acceptance criteria",
+    "Update SOA config in design",
+    "Update HW TSR accuracy allocation",
+    "Update test stimuli and expected outcomes",
+    "Update hazard analysis boundary",
+    "Re-run statistical debounce analysis (2 -> 3)",
+    "Re-execute verification tests",
+    "Re-run review FB2-REV-000001"
+  ],
+  "reverification_selection": [
+    "FB2-VER-TMS-000001 (SOA voltage limit test)",
+    "FB2-VER-TMS-000002 (Contactor test - regression)",
+    "New test: boundary value at 4150mV"
+  ],
+  "post_change_baseline": "BAS-REF-002",
+  "change_summary": {
+    "description": "Cell voltage maximum threshold reduced from 4.2V to 4.15V per supplier specification",
+    "safety_impact": "Reduced overvoltage margin; debounce increased to maintain false positive rate",
+    "schedule_impact": "2 weeks for analysis, update, verification",
+    "cost_impact": "Engineering effort only; no hardware change"
+  }
+}

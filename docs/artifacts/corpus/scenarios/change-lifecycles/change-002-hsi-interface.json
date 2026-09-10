@@ -1,0 +1,104 @@
+{
+  "id": "FB2-SCN-CHG-000002",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "scenario",
+  "engineering_domain": "system",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-CHG-002",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": ["VAR-REF-001"],
+  "title": "Change Lifecycle: AFE Communication Interface Change (LTC6811 -> ADI ADES1830)",
+  "owner_role": "system_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "baselined",
+  "automated_review_status": { "schema_valid": true, "links_valid": true, "provenance_consistent": true, "consistency_checks": true, "last_run": "2026-09-08T00:00:00Z" },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "revision_history": [{ "revision": "1", "date": "2026-09-08T00:00:00Z", "author": "system_engineer", "description": "Change lifecycle demo: HSI interface change" }],
+  "scenario_type": "change_lifecycle",
+  "change_type": "hsi_interface",
+  "baseline_before": "BAS-REF-001",
+  "trigger": {
+    "source": "Obsolescence notice for LTC6811",
+    "description": "LTC6811 entering NRND (Not Recommended for New Designs); migration to ADI ADES1830 required",
+    "date": "2026-10-01T00:00:00Z"
+  },
+  "impact_analysis": {
+    "affected_artifacts": [
+      "FB2-SYS-HSI-000001 (HSI authority - new interface spec HSI_AFE_SPI_ADI)",
+      "FB2-HW-TSR-000001 (new AFE accuracy spec)",
+      "FB2-HW-TSR-000002 (new communication integrity spec - SPI/DMA vs isoSPI)",
+      "FB2-SW-SWR-000001 (new AFE driver requirements)",
+      "FB2-SW-DSN-000001 (new AFE driver architecture)",
+      "FB2-VER-TMS-000001 (new test for ADI driver)",
+      "FB2-SRC-COD-000001/000002 (new driver implementation)",
+      "FB2-SRC-HW-000002 (new slave board variant)",
+      "VAR-AFE-ADI-1830 (new variant modeled)"
+    ],
+    "affected_links": [
+      "FB2-LNK-SAF-000005 (HW TSR allocates to FSR-001)",
+      "FB2-LNK-SAF-000006 (HW TSR allocates to FSR-001)",
+      "FB2-LNK-SAF-000008 (SW SWR allocates to FSR-001)",
+      "FB2-LNK-SAF-000011 (Design implements SWR)",
+      "FB2-LNK-SAF-000014 (Test verifies FSR-002)"
+    ],
+    "affected_reviews": ["FB2-REV-000001"],
+    "affected_evidence": ["FB2-VER-EXE-000001"],
+    "risk_assessment": "Major architecture change: isoSPI (transformer isolated) -> SPI/DMA (direct). Different fault modes, timing, diagnostic coverage. Independent monitor interface may need redesign."
+  },
+  "decision": {
+    "decision_id": "DEC-CHG-002",
+    "decision_maker": "system_architect (fictional: Dr. Michael Torres)",
+    "date": "2026-10-15T00:00:00Z",
+    "rationale": "Obsolescence forces migration. ADI ADES1830 offers integrated balancing, 16 channels, SPI/DMA. Higher integration but loss of transformer isolation. Independent monitor must be redesigned.",
+    "disposition": "approved"
+  },
+  "new_revisions": [
+    { "artifact_id": "FB2-SYS-HSI-000001", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-HW-TSR-000001", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-HW-TSR-000002", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-SW-SWR-000001", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-SW-DSN-000001", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-VER-TMS-000001", "old_revision": "1", "new_revision": "2" }
+  ],
+  "suspect_links": [
+    "FB2-LNK-SAF-000005 (allocation may not hold for new AFE)",
+    "FB2-LNK-SAF-000006 (communication integrity link type may change)",
+    "FB2-LNK-SAF-000008 (SWR allocation may need new requirements)",
+    "FB2-LNK-SAF-000011 (design completely new)",
+    "FB2-LNK-SAF-000014 (test completely new)"
+  ],
+  "required_updates": [
+    "Create new HSI specification HSI_AFE_SPI_ADI",
+    "Update HW TSRs for ADI ADES1830 specs",
+    "Create new SW requirements for ADI driver",
+    "Create new AFE driver architecture design",
+    "Implement new ADI driver (src/app/driver/afe/adi/ades1830)",
+    "Create new verification tests for ADI driver",
+    "Update variant matrix (VAR-AFE-ADI-1830 -> modeled)",
+    "Redo HW FMEDA for new AFE",
+    "Redo independent monitor interface design",
+    "Re-run all affected reviews"
+  ],
+  "reverification_selection": [
+    "New test: ADI AFE voltage acquisition accuracy",
+    "New test: ADI AFE SPI/DMA communication integrity",
+    "New test: ADI AFE balancing control",
+    "Regression: Contactor fault response",
+    "Regression: Independent monitor (redesigned)"
+  ],
+  "post_change_baseline": "BAS-REF-003",
+  "change_summary": {
+    "description": "Migration from LTC6811 (isoSPI) to ADI ADES1830 (SPI/DMA) due to obsolescence",
+    "safety_impact": "Loss of transformer isolation; different fault modes; independent monitor redesign required",
+    "schedule_impact": "3 months for design, implementation, verification",
+    "cost_impact": "New slave board spin; new driver development; re-verification"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "id": "FB2-SCN-CHG-000003",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "scenario",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-CHG-003",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": ["VAR-REF-001"],
+  "title": "Change Lifecycle: SOA Debounce Logic Defect (Counter Not Reset on Recovery)",
+  "owner_role": "sw_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "baselined",
+  "automated_review_status": { "schema_valid": true, "links_valid": true, "provenance_consistent": true, "consistency_checks": true, "last_run": "2026-09-08T00:00:00Z" },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "revision_history": [{ "revision": "1", "date": "2026-09-08T00:00:00Z", "author": "sw_engineer", "description": "Change lifecycle demo: software behavioral defect" }],
+  "scenario_type": "change_lifecycle",
+  "change_type": "software_behavioral_defect",
+  "baseline_before": "BAS-REF-001",
+  "trigger": {
+    "source": "Field report / integration test",
+    "description": "SOA debounce counter not reset when voltage returns to normal range; causes false fault after transient noise",
+    "date": "2026-11-01T00:00:00Z"
+  },
+  "impact_analysis": {
+    "affected_artifacts": [
+      "FB2-SW-DSN-000002 (SOA design - state machine missing transition)",
+      "FB2-SW-SWR-000002 (SWR - missing requirement for counter reset)",
+      "FB2-SRC-COD-000004 (soa.c - SOA_CheckVoltageLimits implementation)",
+      "FB2-VER-TMS-000001 (test missing transient recovery case)"
+    ],
+    "affected_links": [
+      "FB2-LNK-SAF-000009 (SWR allocates to FSR)",
+      "FB2-LNK-SAF-000012 (Design implements SWR)",
+      "FB2-LNK-SAF-000014 (Test verifies SWR)"
+    ],
+    "affected_reviews": ["FB2-REV-000001"],
+    "affected_evidence": ["FB2-VER-EXE-000001"],
+    "risk_assessment": "Transient voltage noise (e.g., contactor switching) causes debounce counter to accumulate; subsequent normal operation triggers false fault after 2 transients. Vehicle experiences nuisance contactor openings."
+  },
+  "decision": {
+    "decision_id": "DEC-CHG-003",
+    "decision_maker": "sw_architect (fictional: Ms. Lisa Park)",
+    "date": "2026-11-05T00:00:00Z",
+    "rationale": "Defect in state machine: DEBOUNCING -> IDLE transition missing counter reset. Add explicit reset action. Add test case for transient recovery.",
+    "disposition": "approved"
+  },
+  "new_revisions": [
+    { "artifact_id": "FB2-SW-DSN-000002", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-SW-SWR-000002", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-SRC-COD-000004", "old_revision": "1", "new_revision": "2" },
+    { "artifact_id": "FB2-VER-TMS-000001", "old_revision": "1", "new_revision": "2" }
+  ],
+  "suspect_links": [
+    "FB2-LNK-SAF-000009 (SWR behavior changed)",
+    "FB2-LNK-SAF-000012 (Design behavior changed)",
+    "FB2-LNK-SAF-000014 (Test must cover new case)"
+  ],
+  "required_updates": [
+    "Add DEBOUNCING -> IDLE transition with counter reset in SOA design",
+    "Add requirement: 'Debounce counter shall reset when voltage returns within limits'",
+    "Implement counter reset in soa.c",
+    "Add test case: transient overvoltage followed by recovery -> no fault",
+    "Re-execute SOA test",
+    "Re-run review for affected artifacts"
+  ],
+  "reverification_selection": [
+    "FB2-VER-TMS-000001 (updated with transient recovery test case)",
+    "New test: 3 transients of 4300mV for 50ms each, separated by 200ms normal -> no fault",
+    "Regression: Contactor fault response"
+  ],
+  "post_change_baseline": "BAS-REF-004",
+  "change_summary": {
+    "description": "SOA debounce counter not reset on voltage recovery; causes false fault after transients",
+    "safety_impact": "Nuisance contactor openings; driver distraction; reduced availability",
+    "schedule_impact": "1 week for fix, test, review",
+    "cost_impact": "Software patch only; OTA update possible"
+  }
+}

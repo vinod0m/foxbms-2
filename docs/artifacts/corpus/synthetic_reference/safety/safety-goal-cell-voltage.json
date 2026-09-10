@@ -1,0 +1,92 @@
+{
+ "id": "FB2-SAF-SGO-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_goal",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Cell Voltage Safety Goal",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-COD-000005",
+  "FB2-SRC-COD-000006"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-002",
+  "FB2-ASM-003",
+  "FB2-ASM-004"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 7",
+   "status": "mapped",
+   "rationale": "Safety goal definition"
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7",
+   "status": "mapped",
+   "rationale": "Functional safety requirements"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Synthetic safety goal for hypothetical automotive BMS project"
+  }
+ ],
+ "statement": "The BMS shall detect cell voltage limit violations and open all HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events, with a target diagnostic test interval of 10 ms and a target contactor opening time of 30 ms.",
+ "hazard_refs": [
+  "FB2-SAF-HAZ-000001"
+ ],
+ "asil": "ASIL_D",
+ "fault_tolerant_time_interval_ms": 100,
+ "safe_state": "All HV contactors open, charging disabled, propulsion disabled, fault logged",
+ "degraded_state": "Derated charging (0.1C), reduced discharge (0.5C), enhanced monitoring (1 Hz)",
+ "functional_safety_requirements": [
+  "FB2-SAF-FSR-000001",
+  "FB2-SAF-FSR-000002",
+  "FB2-SAF-FSR-000003",
+  "FB2-SAF-FSR-000004"
+ ],
+ "timing_budget": {
+  "total_ftti_ms": 100,
+  "allocation": {
+   "afe_acquisition_ms": 25,
+   "spi_transfer_ms": 5,
+   "pec_validation_ms": 2,
+   "database_publish_ms": 3,
+   "soa_limit_check_ms": 5,
+   "fault_classification_ms": 2,
+   "sys_state_transition_ms": 3,
+   "contactor_command_ms": 5,
+   "contactor_mechanical_ms": 30,
+   "feedback_verification_ms": 5,
+   "margin_ms": 20
+  }
+ }
+}

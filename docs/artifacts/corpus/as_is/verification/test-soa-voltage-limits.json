@@ -1,0 +1,150 @@
+{
+ "id": "FB2-VER-TMS-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Test: SOA Voltage Limit Detection",
+ "owner_role": "verification_engineer",
+ "origin": "source_observed",
+ "source_refs": [
+  "FB2-SRC-TST-000001"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 10",
+   "status": "mapped",
+   "rationale": "Software unit verification"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.4, SWE.5",
+   "status": "mapped",
+   "rationale": "Software integration and qualification test"
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Extracted from existing unit test"
+  }
+ ],
+ "test_type": "unit",
+ "objective": "Verify SOA voltage limit detection accuracy and latency",
+ "referenced_requirements": [
+  "FB2-SAF-FSR-000002",
+  "FB2-SW-SWR-000002"
+ ],
+ "referenced_designs": [
+  "FB2-SW-DSN-000002"
+ ],
+ "preconditions": [
+  "SOA module initialized with valid config",
+  "Database accessible",
+  "Test doubles for DATA_ReadData injected"
+ ],
+ "environment": {
+  "hardware": "POSIX host (Linux)",
+  "software": "Unity/CMock test framework",
+  "tools": [
+   "GCC",
+   "CMock",
+   "Unity"
+  ],
+  "configuration": "conf/unit/app_project_posix.yml"
+ },
+ "stimuli": [
+  {
+   "signal": "cell_voltages[0]",
+   "value": "4300",
+   "timing": "t=0"
+  },
+  {
+   "signal": "soa_config.voltage_max",
+   "value": "4200",
+   "timing": "t=0"
+  },
+  {
+   "signal": "soa_config.debounce_count",
+   "value": "3",
+   "timing": "t=0"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Inject cell voltage 4300 mV (above 4200 mV limit)",
+   "expected": "SOA_CheckVoltageLimits called"
+  },
+  {
+   "step": 2,
+   "action": "Repeat injection 3 times (debounce count)",
+   "expected": "Debounce counter increments"
+  },
+  {
+   "step": 3,
+   "action": "Verify FAULT request triggered",
+   "expected": "SYS_SetState(FAULT) called"
+  },
+  {
+   "step": 4,
+   "action": "Inject voltage 4100 mV (within limits)",
+   "expected": "No fault triggered"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "fault_request",
+   "expected_value": "true",
+   "tolerance": "exact",
+   "unit": "bool"
+  },
+  {
+   "signal": "violation_cell_index",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "index"
+  },
+  {
+   "signal": "violation_type",
+   "expected_value": "OVERVOLTAGE",
+   "tolerance": "exact",
+   "unit": "enum"
+  }
+ ],
+ "tolerances": {
+  "voltage_threshold": "1 mV",
+  "latency": "10 ms"
+ },
+ "timing": {
+  "max_execution_time_ms": 100,
+  "setup_time_ms": 10,
+  "teardown_time_ms": 5
+ },
+ "oracle_basis": "source_grounded",
+ "cleanup": "Reset SOA state, clear mocks",
+ "regression_selection": "Always included in regression suite"
+}

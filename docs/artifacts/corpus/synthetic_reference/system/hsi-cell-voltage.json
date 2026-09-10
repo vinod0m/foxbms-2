@@ -1,0 +1,253 @@
+{
+ "id": "FB2-SYS-HSI-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "design",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001",
+  "VAR-AFE-LTC-6813",
+  "VAR-AFE-LTC-6806",
+  "VAR-AFE-ADI-1830",
+  "VAR-AFE-MAXIM-17841B",
+  "VAR-AFE-NXP-MC33775A"
+ ],
+ "title": "HSI: Cell Voltage Interface Authority",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-HW-000002"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-004",
+  "FB2-ASM-005"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7",
+   "status": "mapped",
+   "rationale": "System technical safety concept"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.3, SYS.4",
+   "status": "mapped",
+   "rationale": "System architectural design and integration"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Synthetic HSI authority for cell voltage chain"
+  }
+ ],
+ "design_level": "interface_specification",
+ "responsibilities": [
+  "Define electrical interface between AFE and MCU (SPI)",
+  "Define logical data interface (database signals)",
+  "Define timing requirements (acquisition, transfer, validation)",
+  "Define ownership and access control",
+  "Define fault indication and stale data handling"
+ ],
+ "interfaces": [
+  {
+   "interface_id": "HSI_AFE_SPI",
+   "direction": "bidirectional",
+   "owner": "hw_engineer",
+   "signals": [
+    {
+     "name": "SPI_CLK",
+     "type": "clock",
+     "unit": "MHz",
+     "range": "0.5-1.0",
+     "rate": "continuous",
+     "polarity": "CPOL=0, CPHA=1",
+     "direction": "MCU->AFE",
+     "startup_default": "low",
+     "invalid_state": "stuck high/low",
+     "timing": "t_clk_high > 250ns, t_clk_low > 250ns"
+    },
+    {
+     "name": "SPI_MOSI",
+     "type": "data",
+     "unit": "bits",
+     "range": "0/1",
+     "rate": "1 Mbps",
+     "polarity": "MSB first",
+     "direction": "MCU->AFE",
+     "startup_default": "low",
+     "invalid_state": "stuck",
+     "timing": "t_setup > 50ns, t_hold > 50ns"
+    },
+    {
+     "name": "SPI_MISO",
+     "type": "data",
+     "unit": "bits",
+     "range": "0/1",
+     "rate": "1 Mbps",
+     "polarity": "MSB first",
+     "direction": "AFE->MCU",
+     "startup_default": "Hi-Z",
+     "invalid_state": "stuck",
+     "timing": "t_valid < 50ns"
+    },
+    {
+     "name": "SPI_CS[n]",
+     "type": "control",
+     "unit": "active_low",
+     "range": "0/1",
+     "rate": "per transaction",
+     "polarity": "active low",
+     "direction": "MCU->AFE",
+     "startup_default": "high",
+     "invalid_state": "stuck low",
+     "timing": "t_cs_setup > 100ns"
+    }
+   ]
+  },
+  {
+   "interface_id": "HSI_AFE_DATABASE",
+   "direction": "output",
+   "owner": "sw_engineer",
+   "signals": [
+    {
+     "name": "cell_voltage[mV]",
+     "type": "uint16_t[]",
+     "unit": "mV",
+     "range": "0-5000",
+     "rate": "20 Hz",
+     "polarity": "positive",
+     "direction": "AFE_DRV->DB",
+     "startup_default": "0",
+     "invalid_state": "stale (>100ms)",
+     "timing": "freshness < 30ms",
+     "conversions": "raw_adc * calibration_gain + calibration_offset"
+    },
+    {
+     "name": "cell_temperature[0.1\u00b0C]",
+     "type": "int16_t[]",
+     "unit": "0.1\u00b0C",
+     "range": "-400-1500",
+     "rate": "20 Hz",
+     "polarity": "signed",
+     "direction": "AFE_DRV->DB",
+     "startup_default": "0",
+     "invalid_state": "stale (>100ms)",
+     "timing": "freshness < 30ms"
+    },
+    {
+     "name": "balancing_status",
+     "type": "bool[]",
+     "unit": "bool",
+     "range": "0/1",
+     "rate": "20 Hz",
+     "polarity": "active high",
+     "direction": "AFE_DRV->DB",
+     "startup_default": "false",
+     "invalid_state": "stale"
+    },
+    {
+     "name": "communication_error_count",
+     "type": "uint16_t",
+     "unit": "count",
+     "range": "0-65535",
+     "rate": "event",
+     "polarity": "incrementing",
+     "direction": "AFE_DRV->DB",
+     "startup_default": "0",
+     "invalid_state": "overflow"
+    }
+   ]
+  }
+ ],
+ "electrical_budgets": {
+  "spi_clock_max_mhz": 1.0,
+  "spi_setup_ns": 50,
+  "spi_hold_ns": 50,
+  "cs_setup_ns": 100,
+  "dma_buffer_bytes": 256,
+  "iso_spi_transformer_isolation_vrms": 2500
+ },
+ "timing_budget": {
+  "acquisition_trigger_to_spi_start_us": 100,
+  "spi_transaction_us": 500,
+  "pec_validation_us": 20,
+  "database_publish_us": 3000,
+  "total_acquisition_to_db_ms": 25
+ },
+ "fault_indications": [
+  {
+   "signal": "cell_voltage",
+   "fault": "stale_data",
+   "condition": "age > 100ms",
+   "reaction": "DIAG fault, use last valid"
+  },
+  {
+   "signal": "cell_voltage",
+   "fault": "pec_error",
+   "condition": "CRC mismatch",
+   "reaction": "Retry 3x, then DIAG fault"
+  },
+  {
+   "signal": "cell_voltage",
+   "fault": "out_of_range",
+   "condition": "value < 0 or > 5000mV",
+   "reaction": "DIAG fault, plausibility"
+  },
+  {
+   "signal": "SPI_CS",
+   "fault": "stuck_low",
+   "condition": "CS low > 10ms",
+   "reaction": "DIAG fault, SPI bus recovery"
+  }
+ ],
+ "decisions": [
+  {
+   "decision_id": "DEC-HSI-001",
+   "alternatives": [
+    "Polling vs Interrupt-driven"
+   ],
+   "selected": "DMA + callback",
+   "rationale": "Minimizes CPU load, deterministic timing"
+  },
+  {
+   "decision_id": "DEC-HSI-002",
+   "alternatives": [
+    "Single database signal per cell",
+    "Packed array"
+   ],
+   "selected": "Packed array (uint16_t[])",
+   "rationale": "Memory efficiency, atomic update"
+  }
+ ],
+ "variant_applicability_table": {
+  "VAR-REF-001": "Full compliance (LTC6811 reference)",
+  "VAR-AFE-LTC-6813": "Full compliance (extended cell count)",
+  "VAR-AFE-LTC-6806": "Legacy - reduced diagnostics",
+  "VAR-AFE-ADI-1830": "Different interface (HSI_AFE_SPI_ADI)",
+  "VAR-AFE-MAXIM-17841B": "Different interface (HSI_AFE_UART)",
+  "VAR-AFE-NXP-MC33775A": "Different interface (HSI_AFE_SPI_ADI)"
+ }
+}

@@ -1,0 +1,139 @@
+{
+ "id": "FB2-SAF-ANL-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_analysis",
+ "analysis_type": "fta",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "FTA: Cell Overvoltage Not Mitigated Within FTTI (HE-01)",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000004"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-007",
+  "FB2-ASM-008",
+  "FB2-ASM-010"
+ ],
+ "standards_mappings": [
+  {
+   "standard": "ISO 26262:2018",
+   "part": "9",
+   "clause": "7.4.3"
+  },
+  {
+   "standard": "Automotive SPICE PAM 4.1",
+   "process": "MAN.5"
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Initial synthetic FTA for HE-01"
+  }
+ ],
+ "top_event": {
+  "event_id": "TE-01",
+  "description": "Cell overvoltage persists beyond FTTI 100 ms (HE-01, ASIL_D)",
+  "gate": "OR",
+  "children": [
+   {
+    "event_id": "G-01",
+    "description": "Main detection path fails AND independent monitor fails",
+    "gate": "AND",
+    "children": [
+     {
+      "event_id": "G-02",
+      "description": "Main path: detection or reaction fails",
+      "gate": "OR",
+      "children": [
+       {
+        "event_id": "BE-01",
+        "description": "AFE voltage value corrupted and PEC fails (undetected)",
+        "probability_basis": "illustrative",
+        "requirement_refs": [
+         "FB2-SAF-FSR-000001"
+        ],
+        "mechanism_refs": [
+         "M-001"
+        ]
+       },
+       {
+        "event_id": "BE-02",
+        "description": "SOA task delayed beyond deadline",
+        "probability_basis": "illustrative",
+        "requirement_refs": [
+         "FB2-SAF-FSR-000002"
+        ],
+        "mechanism_refs": [
+         "M-003"
+        ]
+       },
+       {
+        "event_id": "BE-03",
+        "description": "Contactor does not open (weld)",
+        "probability_basis": "illustrative",
+        "requirement_refs": [
+         "FB2-SAF-FSR-000003"
+        ],
+        "mechanism_refs": [
+         "M-005"
+        ]
+       },
+       {
+        "event_id": "BE-04",
+        "description": "SBC watchdog fails to detect task stall",
+        "probability_basis": "illustrative",
+        "assumption_refs": [
+         "FB2-ASM-007"
+        ],
+        "mechanism_refs": [
+         "M-004"
+        ]
+       }
+      ]
+     },
+     {
+      "event_id": "BE-05",
+      "description": "Independent monitor fails (HW, ASIL_B)",
+      "probability_basis": "illustrative",
+      "requirement_refs": [
+       "FB2-SAF-FSR-000004",
+       "FB2-HW-TSR-000004"
+      ],
+      "assumption_refs": [
+       "FB2-ASM-008"
+      ],
+      "mechanism_refs": [
+       "M-006"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "notes": "AND gate implements redundancy (main ASIL_D path + independent ASIL_B monitor). Probabilities deliberately illustrative - no supplier failure rate data represented as qualified evidence. Watchdog independence argument depends on SBC assumption ASM-007."
+}

@@ -1,0 +1,74 @@
+{
+ "id": "FB2-SAF-SGO-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_goal",
+ "engineering_domain": "safety",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Cell Voltage Safety Goal",
+ "owner_role": "safety_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-COD-000005",
+  "FB2-SRC-COD-000006"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-002",
+  "FB2-ASM-003"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 7",
+   "status": "mapped",
+   "rationale": "Safety goal definition"
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7",
+   "status": "mapped",
+   "rationale": "Functional safety requirements"
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Initial safety goal derived from SOA implementation"
+  }
+ ],
+ "statement": "The BMS shall detect cell voltage limit violations and open HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events.",
+ "hazard_refs": [
+  "FB2-SAF-HAZ-000001"
+ ],
+ "asil": "ASIL_D",
+ "fault_tolerant_time_interval_ms": 100,
+ "safe_state": "HV contactors open, charging disabled",
+ "degraded_state": "Derated charging, balancing disabled",
+ "functional_safety_requirements": [
+  "FB2-SAF-FSR-000001",
+  "FB2-SAF-FSR-000002",
+  "FB2-SAF-FSR-000003"
+ ]
+}

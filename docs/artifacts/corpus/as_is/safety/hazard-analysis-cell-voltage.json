@@ -1,0 +1,92 @@
+{
+ "id": "FB2-SAF-HAZ-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "hazard",
+ "engineering_domain": "safety",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Cell Overvoltage / Undervoltage Hazard",
+ "owner_role": "safety_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-DOC-000001"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-002"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 6",
+   "status": "mapped",
+   "rationale": "Hazard analysis for E/E system"
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 6",
+   "status": "mapped",
+   "rationale": "System-level hazard analysis"
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-08T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-08T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-08T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Initial hazard analysis derived from foxBMS SOA implementation"
+  }
+ ],
+ "malfunctioning_behavior": "AFE reports incorrect cell voltage (stuck-at, drift, communication error) OR SOA fails to detect limit violation OR contactor fails to open on violation",
+ "hazardous_events": [
+  {
+   "id": "HE-01",
+   "description": "Cell overvoltage during charging leading to thermal runaway",
+   "operational_situation": "CHARGING mode, high SOC, fast charge",
+   "severity": "S3",
+   "exposure": "E4",
+   "controllability": "C3",
+   "asil": "ASIL_D",
+   "rationale": "Thermal runaway can cause fire/explosion with fatal injuries; high exposure during charging; driver cannot control cell-level overvoltage"
+  },
+  {
+   "id": "HE-02",
+   "description": "Cell undervoltage during discharge leading to cell damage and potential thermal event on recharge",
+   "operational_situation": "NORMAL mode, deep discharge, high load",
+   "severity": "S2",
+   "exposure": "E3",
+   "controllability": "C2",
+   "asil": "ASIL_B",
+   "rationale": "Cell damage may lead to latent failure; moderate exposure; vehicle may provide warning"
+  }
+ ],
+ "safe_states": [
+  "Contactor open (HV isolated)",
+  "Charging disabled",
+  "Fault logged to FRAM"
+ ],
+ "degraded_states": [
+  "Reduced charge current (derating)",
+  "Balancing disabled for affected cells"
+ ]
+}
