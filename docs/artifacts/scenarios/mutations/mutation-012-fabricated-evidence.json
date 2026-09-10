@@ -1,0 +1,67 @@
+{
+ "id": "FB2-SCN-MUT-000012",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "scenario",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-MUT-012",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Mutation: Fabricated Evidence Classification",
+ "owner_role": "verification_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": false,
+  "provenance_consistent": true,
+  "consistency_checks": false,
+  "last_run": "2026-09-10T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-10T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-10T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Mutation scenario: fabricated evidence classification"
+  }
+ ],
+ "scenario_type": "mutation",
+ "baseline_ref": "BAS-REF-001",
+ "patch": {
+  "description": "Change execution kind from synthetic_fixture to actual_host_run",
+  "affected_links": [],
+  "operation": "modify",
+  "new_value": {
+   "execution_kind": "actual_host_run"
+  }
+ },
+ "affected_ids": [
+  "FB2-VER-EXE-000001"
+ ],
+ "trigger": "Execution kind classification validation",
+ "expected_detector": "Execution kind classifier",
+ "expected_finding": {
+  "finding_id": "FB2-FND-MUT-000012",
+  "severity": "medium",
+  "category": "verification",
+  "description": "safety requirement has no verifies/validates link"
+ },
+ "impact_paths": [
+  "False evidence inflates verification coverage metrics",
+  "Safety case based on fabricated evidence"
+ ],
+ "expected_remediation": "Correct execution_kind to synthetic_fixture; update evidence classification",
+ "oracle_manifest_ref": "SCN-MUT-012/oracle-manifest.json"
+}

@@ -1,0 +1,72 @@
+{
+ "id": "FB2-SCN-MUT-000016",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "scenario",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-MUT-016",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Mutation: Source Anchor Drift",
+ "owner_role": "traceability_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": false,
+  "provenance_consistent": true,
+  "consistency_checks": false,
+  "last_run": "2026-09-10T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-10T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-10T00:00:00Z",
+   "author": "traceability_engineer",
+   "description": "Mutation scenario: source anchor drift"
+  }
+ ],
+ "scenario_type": "mutation",
+ "baseline_ref": "BAS-REF-001",
+ "patch": {
+  "description": "Change source anchor symbol to non-existent function",
+  "affected_links": [],
+  "operation": "modify",
+  "new_value": {
+   "source_refs": [
+    "FB2-SRC-COD-000001"
+   ],
+   "location": {
+    "symbol": "NONEXISTENT_FUNCTION"
+   }
+  }
+ },
+ "affected_ids": [
+  "FB2-SAF-ANL-000001"
+ ],
+ "trigger": "Source anchor drift detection",
+ "expected_detector": "Source anchor drift detector",
+ "expected_finding": {
+  "finding_id": "FB2-FND-MUT-000016",
+  "severity": "medium",
+  "category": "verification",
+  "description": "safety requirement has no verifies/validates link"
+ },
+ "impact_paths": [
+  "Provenance traceability broken",
+  "Cannot trace requirement to implementation"
+ ],
+ "expected_remediation": "Update source anchor to valid symbol; re-verify traceability",
+ "oracle_manifest_ref": "SCN-MUT-016/oracle-manifest.json"
+}

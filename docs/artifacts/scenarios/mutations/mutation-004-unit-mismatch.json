@@ -1,0 +1,68 @@
+{
+ "id": "FB2-SCN-MUT-000004",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "scenario",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-MUT-004",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Mutation: Unit/Scaling Mismatch in Parameter",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": false,
+  "provenance_consistent": true,
+  "consistency_checks": false,
+  "last_run": "2026-09-10T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-10T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-10T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Mutation scenario: unit/scaling mismatch in parameter"
+  }
+ ],
+ "scenario_type": "mutation",
+ "baseline_ref": "BAS-REF-001",
+ "patch": {
+  "description": "Change parameter unit from mV to V without scaling the value",
+  "affected_links": [],
+  "operation": "modify",
+  "new_value": {
+   "unit": "V",
+   "value": 4.2
+  }
+ },
+ "affected_ids": [
+  "FB2-MAN-SCO-000001"
+ ],
+ "trigger": "Parameter registry validation on unit consistency",
+ "expected_detector": "Parameter unit consistency checker",
+ "expected_finding": {
+  "finding_id": "FB2-FND-MUT-000004",
+  "severity": "medium",
+  "category": "verification",
+  "description": "safety requirement has no verifies/validates link"
+ },
+ "impact_paths": [
+  "All artifacts referencing cell_voltage_max will use incorrect voltage threshold",
+  "SOA voltage checks will trigger at wrong threshold"
+ ],
+ "expected_remediation": "Apply correct scaling (4200 mV = 4.2 V); update all dependent threshold checks",
+ "oracle_manifest_ref": "SCN-MUT-004/oracle-manifest.json"
+}

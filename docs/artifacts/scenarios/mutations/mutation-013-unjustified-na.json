@@ -1,0 +1,65 @@
+{
+  "id": "FB2-SCN-MUT-000013",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "scenario",
+  "engineering_domain": "safety",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-MUT-013",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": ["VAR-REF-001"],
+  "title": "Mutation: Unjustified Non-Applicability",
+  "owner_role": "safety_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "baselined",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": false,
+    "provenance_consistent": true,
+    "consistency_checks": false,
+    "last_run": "2026-09-10T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-10T00:00:00Z",
+  "updated_at": "2026-09-10T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-10T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Mutation scenario: unjustified non-applicability"
+    }
+  ],
+  "scenario_type": "mutation",
+  "baseline_ref": "BAS-REF-001",
+  "patch": {
+    "description": "Mark safety requirement as non-applicable without justification",
+    "affected_links": [],
+    "operation": "modify",
+    "new_value": {
+      "applicability": "non_applicable"
+    }
+  },
+  "affected_ids": [
+    "FB2-SAF-FSR-000004"
+  ],
+  "trigger": "Requirement applicability validation",
+  "expected_detector": "Requirement applicability validator",
+  "expected_finding": {
+    "finding_id": "FB2-FND-MUT-000013",
+    "severity": "medium",
+    "category": "verification",
+    "description": "Safety requirement FB2-SAF-FSR-000004 marked non_applicable without justification"
+  },
+  "impact_paths": [
+    "Critical safety function may be omitted from verification",
+    "Gap in safety case argument"
+  ],
+  "expected_remediation": "Provide justification for non-applicability or restore applicability",
+  "oracle_manifest_ref": "SCN-MUT-013/oracle-manifest.json"
+}

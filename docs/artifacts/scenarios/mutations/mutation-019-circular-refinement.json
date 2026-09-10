@@ -1,0 +1,72 @@
+{
+ "id": "FB2-SCN-MUT-000019",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "scenario",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-MUT-019",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Mutation: Circular Refinement Chain",
+ "owner_role": "traceability_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": false,
+  "provenance_consistent": true,
+  "consistency_checks": false,
+  "last_run": "2026-09-10T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-10T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-10T00:00:00Z",
+   "author": "traceability_engineer",
+   "description": "Mutation scenario: circular refinement chain"
+  }
+ ],
+ "scenario_type": "mutation",
+ "baseline_ref": "BAS-REF-001",
+ "patch": {
+  "description": "Create circular refines link chain",
+  "affected_links": [
+   "FB2-LNK-SAF-000002"
+  ],
+  "operation": "modify",
+  "new_value": {
+   "relation_type": "refines",
+   "source_id": "FB2-SAF-SGO-000001",
+   "target_id": "FB2-SAF-HAZ-000001"
+  }
+ },
+ "affected_ids": [
+  "FB2-SAF-HAZ-000001",
+  "FB2-SAF-SGO-000001"
+ ],
+ "trigger": "Refinement chain cycle detection",
+ "expected_detector": "Refinement cycle detector",
+ "expected_finding": {
+  "finding_id": "FB2-FND-MUT-000019",
+  "severity": "medium",
+  "category": "verification",
+  "description": "safety requirement has no verifies/validates link"
+ },
+ "impact_paths": [
+  "Traceability traversal infinite loop",
+  "Impact analysis and reverification selection broken"
+ ],
+ "expected_remediation": "Break cycle by removing or reversing one refines link; ensure DAG structure",
+ "oracle_manifest_ref": "SCN-MUT-019/oracle-manifest.json"
+}

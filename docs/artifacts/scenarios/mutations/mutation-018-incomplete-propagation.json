@@ -1,0 +1,70 @@
+{
+ "id": "FB2-SCN-MUT-000018",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "scenario",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-MUT-018",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Mutation: Incomplete Change Propagation",
+ "owner_role": "project_manager",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": false,
+  "provenance_consistent": true,
+  "consistency_checks": false,
+  "last_run": "2026-09-10T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-10T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-10T00:00:00Z",
+   "author": "project_manager",
+   "description": "Mutation scenario: incomplete change propagation"
+  }
+ ],
+ "scenario_type": "mutation",
+ "baseline_ref": "BAS-REF-001",
+ "patch": {
+  "description": "Change parameter without updating all dependent artifacts",
+  "affected_links": [],
+  "operation": "modify",
+  "new_value": {
+   "value": 4100
+  }
+ },
+ "affected_ids": [
+  "FB2-MAN-SCO-000001",
+  "FB2-SAF-SGO-000001",
+  "FB2-SAF-FSR-000001",
+  "FB2-SW-SWR-000002"
+ ],
+ "trigger": "Change impact analysis",
+ "expected_detector": "Change impact analyzer",
+ "expected_finding": {
+  "finding_id": "FB2-FND-MUT-000018",
+  "severity": "high",
+  "category": "traceability",
+  "description": "Parameter FB2-PRM-000001 changed but 3 dependent artifacts not updated: FB2-SAF-SGO-000001, FB2-SAF-FSR-000001, FB2-SW-SWR-000002"
+ },
+ "impact_paths": [
+  "Dependent artifacts use stale parameter value",
+  "Safety analysis based on stale threshold"
+ ],
+ "expected_remediation": "Update all dependent artifacts; run impact analysis; re-verify",
+ "oracle_manifest_ref": "SCN-MUT-018/oracle-manifest.json"
+}

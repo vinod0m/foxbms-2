@@ -1,0 +1,76 @@
+{
+ "id": "FB2-SCN-MUT-000011",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "scenario",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-MUT-011",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Mutation: Invalid Configuration Combination",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": false,
+  "provenance_consistent": true,
+  "consistency_checks": false,
+  "last_run": "2026-09-10T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-10T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-10T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Mutation scenario: invalid configuration combination"
+  }
+ ],
+ "scenario_type": "mutation",
+ "baseline_ref": "BAS-REF-001",
+ "patch": {
+  "description": "Enable mutually exclusive configuration options",
+  "affected_links": [],
+  "operation": "modify",
+  "new_value": {
+   "configuration": {
+    "balancing_strategy": [
+     "voltage_based",
+     "none"
+    ],
+    "soe_method": [
+     "counting",
+     "lookup_table"
+    ]
+   }
+  }
+ },
+ "affected_ids": [
+  "FB2-MAN-SCO-000001"
+ ],
+ "trigger": "Configuration consistency validation",
+ "expected_detector": "Configuration consistency checker",
+ "expected_finding": {
+  "finding_id": "FB2-FND-MUT-000011",
+  "severity": "medium",
+  "category": "verification",
+  "description": "safety requirement has no verifies/validates link"
+ },
+ "impact_paths": [
+  "Runtime behavior undefined for conflicting configurations",
+  "System may enter invalid state"
+ ],
+ "expected_remediation": "Resolve configuration conflicts; ensure mutually exclusive options",
+ "oracle_manifest_ref": "SCN-MUT-011/oracle-manifest.json"
+}

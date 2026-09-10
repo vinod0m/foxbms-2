@@ -1,0 +1,72 @@
+{
+ "id": "FB2-SCN-MUT-000006",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "scenario",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-MUT-006",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Mutation: Timing Budget Exceeds FTTI",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": false,
+  "provenance_consistent": true,
+  "consistency_checks": false,
+  "last_run": "2026-09-10T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-10T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-10T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Mutation scenario: timing budget exceeds FTTI"
+  }
+ ],
+ "scenario_type": "mutation",
+ "baseline_ref": "BAS-REF-001",
+ "patch": {
+  "description": "Increase SOA debounce time to exceed FTTI budget",
+  "affected_links": [],
+  "operation": "modify",
+  "new_value": {
+   "timing_budget": {
+    "acquisition": 50,
+    "check": 40,
+    "reaction": 40,
+    "margin": 10
+   }
+  }
+ },
+ "affected_ids": [
+  "FB2-SAF-SGO-000001"
+ ],
+ "trigger": "Safety goal timing budget validation",
+ "expected_detector": "FTTI budget consistency checker",
+ "expected_finding": {
+  "finding_id": "FB2-FND-MUT-000006",
+  "severity": "medium",
+  "category": "verification",
+  "description": "safety requirement has no verifies/validates link"
+ },
+ "impact_paths": [
+  "Safety goal cannot be met within fault tolerant time interval",
+  "Cell overvoltage protection may not react in time"
+ ],
+ "expected_remediation": "Reduce debounce time or increase FTTI; re-verify timing budget",
+ "oracle_manifest_ref": "SCN-MUT-006/oracle-manifest.json"
+}
