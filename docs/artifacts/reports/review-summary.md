@@ -1,15 +1,15 @@
 # Review Summary Report
 
-**Generated:** 2026-09-08  
+**Generated:** 2026-09-13  
 **Baseline:** BAS-REF-001  
 **Profile:** synthetic_reference (primary), as_is (comparison)
 
 ## Review Coverage
 
-| Profile | Artifacts Reviewed | Review Records | Findings |
-|---------|-------------------|----------------|----------|
-| synthetic_reference | 43 | 1 | 5 |
-| as_is | 43 | 1 (same record) | 5 (same) |
+| Profile | Corpus Artifacts | Reviewed | Review Records | Findings |
+|---------|-----------------|----------|----------------|----------|
+| synthetic_reference | 41 | 17 (vertical slice) | 1 (shared) | 5 |
+| as_is | 21 | subset via shared record | same record | same 5 |
 
 ## Review Record: FB2-REV-000001
 
@@ -57,8 +57,9 @@
 - **Category:** Domain
 - **Description:** SOA debounce count (2) not justified by statistical analysis. Arbitrary value may not optimize false positive/negative tradeoff.
 - **Evidence:** Config default is 2; no rationale in source
-- **Disposition:** Accepted
+- **Disposition:** Accepted (as_is)
 - **Action:** Add debounce rationale in synthetic_reference; link to statistical analysis
+- **Resolution:** synthetic_reference `design-soa.json` documents debounce rationale (RESOLVED)
 
 ### FB2-FND-000005 - MEDIUM
 - **Artifact:** FB2-VER-TMS-000001
@@ -88,15 +89,15 @@
 
 | Metric | Value |
 |--------|-------|
-| Artifacts reviewed | 17/43 (39% of corpus) |
+| Corpus artifacts reviewed | 17/42 (40%) |
 | Findings per artifact | 0.29 |
 | Critical findings | 0 (after resolution) |
 | High findings | 0 (after resolution) |
 | Medium findings | 3 |
 | Low findings | 2 |
-| Findings resolved | 1/5 |
+| Findings resolved | 2/5 (FND-001, FND-004 resolved in synthetic_reference) |
 | Review completeness (safety-critical) | 100% |
-| Review completeness (all) | 39% |
+| Review completeness (all) | 40% |
 
 ## Limitations
 

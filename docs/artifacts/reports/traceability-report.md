@@ -1,6 +1,6 @@
 # Traceability Report
 
-**Generated:** 2026-09-08  
+**Generated:** 2026-09-13  
 **Baseline:** BAS-REF-001  
 **Profile:** synthetic_reference (primary), as_is (comparison)
 
@@ -12,8 +12,8 @@ This report documents the traceability integrity of the foxBMS 2 lifecycle artif
 
 | Profile | Total Links | Link Types Used | Orphaned Links | Dangling Links |
 |---------|-------------|-----------------|----------------|----------------|
-| synthetic_reference | 20 | 12/17 | 0 | 0 |
-| as_is | 20 | 12/17 | 0 | 0 |
+| synthetic_reference | 31 | 6/17 | 0 | 0 |
+| as_is | 25 | 7/17 | 0 | 0 |
 
 ## Link Type Coverage
 
@@ -22,18 +22,18 @@ This report documents the traceability integrity of the foxBMS 2 lifecycle artif
 | refines | 4 | 3 | ✅ |
 | allocated_to | 6 | 6 | ✅ |
 | implements | 3 | 3 | ✅ |
-| verifies | 4 | 2 | ✅ |
+| verifies | 11 | 9 | ✅ |
 | validates | 0 | 0 | ❌ |
-| result_of | 1 | 1 | ✅ |
+| result_of | 6 | 1 | ✅ |
 | supports | 0 | 0 | ❌ |
 | mitigates | 1 | 1 | ✅ |
-| specified_by | 1 | 1 | ✅ |
+| specified_by | 0 | 0 | ❌ |
 | consumes | 0 | 0 | ❌ |
 | produces | 0 | 0 | ❌ |
-| depends_on | 3 | 3 | ✅ |
-| constrained_by | 4 | 4 | ✅ |
-| reviewed_by | 2 | 1 | ✅ |
-| changes | 2 | 0 | ⚠️ |
+| depends_on | 0 | 0 | ❌ |
+| constrained_by | 0 | 0 | ❌ |
+| reviewed_by | 0 | 2 | ✅ |
+| changes | 0 | 0 | ⚠️ |
 | supersedes | 0 | 0 | ❌ |
 
 ## Vertical Traceability Chains

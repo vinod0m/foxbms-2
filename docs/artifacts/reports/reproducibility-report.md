@@ -1,6 +1,6 @@
 # Reproducibility Report
 
-**Generated:** 2026-09-08  
+**Generated:** 2026-09-13  
 **Baseline:** BAS-REF-001  
 **Profile:** synthetic_reference (primary), as_is (comparison)
 

@@ -1,12 +1,12 @@
 # Consistency Report
 
-**Generated:** 2026-09-08  
+**Generated:** 2026-09-13  
 **Baseline:** BAS-REF-001  
 **Profile:** synthetic_reference (primary), as_is (comparison)
 
 ## Overview
 
-This report documents the results of semantic consistency checks per master prompt Section 14. Checks are implemented as automated validators and structured reviews.
+This report documents the results of semantic consistency checks per master prompt Section 14. Checks are implemented as automated validators (`corpus.py validate`: 16 findings, errors=0) and structured reviews.
 
 ## Check Categories
 
@@ -14,7 +14,7 @@ This report documents the results of semantic consistency checks per master prom
 
 | Check | synthetic_reference | as_is | Details |
 |-------|---------------------|-------|---------|
-| Unique IDs across profiles | ✅ | ✅ | 43 IDs total, no duplicates |
+| Unique IDs across profiles | ✅ | ✅ | No duplicates within profile (86 validated artifacts incl. registries) |
 | Schema validation | ✅ | ✅ | All artifacts validate |
 | Revision format | ✅ | ✅ | Integer strings |
 | Reference resolution | ✅ | ✅ | All source_refs resolve |
@@ -81,7 +81,7 @@ This report documents the results of semantic consistency checks per master prom
 | Plans vs outcomes distinguished | ✅ | ✅ | TMS (plan) vs EXE (outcome) |
 | Honest evidence classification | ✅ | ✅ | actual_host_run, synthetic_fixture labeled |
 
-**Gap:** Only 2/10 requirements have test measures; integration tests missing.
+**Gap:** 20/21 requirements have test measures (11 corpus TMS: 5 as_is source-grounded + 6 synthetic_reference); the single uncovered item is the management scope (SCO-001, process-audit by nature). Integration-level test measures remain missing.
 
 ### 7. Safety-Analysis Coherence ✅
 

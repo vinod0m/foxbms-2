@@ -1,6 +1,6 @@
 # Source vs Synthetic Gap Report
 
-**Generated:** 2026-09-08  
+**Generated:** 2026-09-13  
 **Baseline:** BAS-REF-001  
 **Comparison:** as_is (source-grounded) vs synthetic_reference (hypothetical automotive project)
 
@@ -63,7 +63,7 @@ This report documents the gaps between what is actually present in the foxBMS 2 
 | Implementation Mapping | Source code | Explicit mapping | Partial |
 | Coding Guidelines | .clang-format | Not documented | Gap |
 | Static Analysis | Not documented | Plans/findings | Gap |
-| Unit Verification | 80 tests (Unity/CMock) | 2 test measures | Partial |
+| Unit Verification | 80 tests (Unity/CMock) | 11 test measures (6 synthetic + 5 as_is grounded in real unit tests) | Partial |
 | Integration Verification | Not present | Not generated | Major gap |
 | Regression Selection | Not documented | "Always in regression" | Gap |
 
@@ -72,9 +72,9 @@ This report documents the gaps between what is actually present in the foxBMS 2 
 | Artifact | as_is | synthetic_reference | Gap |
 |----------|-------|---------------------|-----|
 | Verification Strategy | Not documented | Per FSR approach | Gap |
-| Test Plans | Unity/CMock configs | 2 test measures | Major gap |
+| Test Plans | Unity/CMock configs | 11 test measures | Partial |
 | Test Specifications | Test source code | Structured TMS | Partial |
-| Test Executions | CI runs (not captured) | 1 host execution | Major gap |
+| Test Executions | CI runs (not captured) | 7 executions (1 actual_host_run + 6 synthetic_fixture) | Partial |
 | Coverage Analysis | Not documented | Not generated | Gap |
 | Anomaly Records | Not captured | Not generated | Gap |
 | Validation Measures | Not present | Synthetic plan | Major gap |
@@ -140,12 +140,12 @@ This report documents the gaps between what is actually present in the foxBMS 2 
 6. **Safety analyses** - FMEA, FTA, dependent failure (synthetic)
 7. **Safety case** - Structured argument with claims/evidence
 6. **Change management** - 3 full lifecycle demos
-7. **Mutation scenarios** - 2/20 for corpus validation
+7. **Mutation scenarios** - 20/20 for corpus validation (severity+category matched)
 8. **Tooling** - Corpus management CLI
 7. **Reports** - 10 comprehensive reports
 
 ### What Neither Has (Remaining Gaps)
-1. **FTA** - Not generated
+1. **FTA depth** - FTA skeleton exists (`FB2-SAF-ANL-000002`) with empty gate lists
 2. **Integration tests** - Only unit tests
 3. **Target hardware evidence** - All tests on host
 4. **Human approval** - All pending

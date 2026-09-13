@@ -57,12 +57,12 @@ This report documents the verification evidence for all requirements in the corp
 
 | ID | Title | Type | Requirements | Oracle Basis | Profile |
 |----|-------|------|--------------|--------------|---------|
-| FB2-VER-TMS-000001 | SOA Voltage Limit Detection | unit | FSR-002, SWR-002 | source_grounded (as_is: test_soa.c) | both |
-| FB2-VER-TMS-000002 | Contactor State Machine Fault Response | unit | FSR-003, SWR-003 | source_grounded (as_is: test_contactor.c) | both |
-| FB2-VER-TMS-000003 | AFE Cell Voltage Plausibility Checks | unit | FSR-001, SWR-001, TSR-001 | source_grounded (as_is: test_afe_plausibility.c) | both |
-| FB2-VER-TMS-000004 | Independent Voltage Monitor Reaction | fault_injection | FSR-004, TSR-004 | synthetic_assumption | synthetic_reference |
-| FB2-VER-TMS-000005 | AFE Communication Integrity | robustness | TSR-002 | source_grounded (as_is: test_ltc_6813-1.c) | both |
-| FB2-VER-TMS-000006 | Contactor Driver Configuration and Control | unit | TSR-003 | source_grounded (as_is: test_contactor.c) | synthetic_reference |
+| FB2-VER-TMS-000001 | SOA Voltage Limit Detection | unit | FSR-002, SWR-002 | source_grounded (as_is: test_soa.c) / synthetic_assumption (synthetic mirror) | both |
+| FB2-VER-TMS-000002 | Contactor State Machine Fault Response | unit | FSR-003, SWR-003 | source_grounded (as_is: test_contactor.c) / synthetic_assumption (synthetic mirror) | both |
+| FB2-VER-TMS-000003 | AFE Cell Voltage Plausibility Checks | unit | FSR-001, SWR-001, TSR-001 | source_grounded (as_is: test_afe_plausibility.c) / synthetic_assumption (synthetic mirror) | both |
+| FB2-VER-TMS-000004 | Independent Voltage Monitor Reaction | fault_injection | FSR-004, TSR-004 | synthetic_assumption (no upstream test; documented gap) | synthetic_reference |
+| FB2-VER-TMS-000005 | AFE Communication Integrity | robustness | TSR-002 | source_grounded (as_is: test_ltc_6813-1.c) / synthetic_assumption (synthetic mirror) | both |
+| FB2-VER-TMS-000006 | Contactor Driver Configuration and Control | unit | TSR-003 | source_grounded (as_is: test_contactor.c) / synthetic_assumption (synthetic mirror) | both |
 
 ## Execution Records
 
@@ -137,8 +137,8 @@ Corpus disposition for this gap:
 
 | Oracle Basis | Count | Notes |
 |--------------|-------|-------|
-| source_grounded | 5 (as_is) / 4 (synthetic mirrors) | Grounded in existing foxBMS unit tests |
-| synthetic_assumption | 2 | TMS-004, TMS-005 (synthetic profile robustness/fault-injection designs) |
+| source_grounded | 5 (as_is test measures) | Grounded in existing foxBMS unit tests (TMS-001..005, test_soa.c / test_contactor.c / test_afe_plausibility.c / test_ltc_6813-1.c) |
+| synthetic_assumption | 6 (synthetic_reference test measures) | Synthetic mirrors of the as_is tests (TMS-001/002/003/005/006) plus the fault-injection monitor test (TMS-004, no upstream equivalent) |
 | analytical_model | 0 | Not used |
 | measured_reference | 0 | No HW testing |
 

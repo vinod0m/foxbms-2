@@ -4,7 +4,7 @@
 **Baseline**: BAS-REF-001 (commit `308028fb`, tag `v1.11.0`)  
 **Profiles**: `as_is` (source-grounded reconstruction) + `synthetic_reference` (hypothetical reference project)  
 **Corpus status**: `synthetic_ready_with_limitations`  
-**Data source**: 65 artifacts, 48 traceability links, 42 source anchors, 12 assumptions, 10 parameters — all machine-verified (`corpus.py check` → PASSED)
+**Data source**: 62 corpus artifacts + 56 traceability links + 43 source anchors + 12 assumptions + 10 parameters — all machine-verified (`corpus.py check` → PASSED)
 
 ---
 
@@ -39,16 +39,16 @@ Safety analyses (FMEA/FTA/DFA/FFI) + Safety case + HSI + Parameters + Assumption
 |---|---|---|---|
 | Hazard | 1 | 1 | |
 | Safety goal | 1 | 1 | |
-| Requirement (FSR/TSR/SWR) | 9 | 12 | |
-| Design (SW DSN / HSI / Safety Plan) | 3 | 5 | |
+| Requirement (FSR/TSR/SWR) | 9 | 11 | synthetic adds FSR-004 chain |
+| Design (SW DSN / HSI / Safety Plan) | 3 | 4 | synthetic adds HSI spec |
 | Safety analysis (FMEA/FTA/DFA/FFI) | 0 | 4 | |
-| Safety case | 0 | 1 | |
-| Test measure (TMS) | 2 | 0 | |
-| Execution (EXE) | 1 | 0 | |
-| Review (REV) | 1 | 0 | |
-| Scenario (mutations + change lifecycles) | 0 | 23 | |
-| **Links in registry** | 20 | 14 | typed, metadata-complete |
-| **Source anchors** | 42 shared | 42 shared | code/HW/doc/test |
+| Safety case | 0 | 1 | skeleton |
+| Test measure (TMS) | 5 | 6 | as_is grounded in real unit tests; synthetic mirrors |
+| Execution (EXE) | 1 | 6 | as_is: actual_host_run; synthetic: synthetic_fixture |
+| Review (REV) | 1 | 0 | shared record covers both profiles' vertical slice |
+| Scenario (mutations + change lifecycles) | 0 | 23 | 20 mutations + 3 changes (+ 2 corpus MUT artifacts) |
+| **Links in registry** | 25 | 31 | typed, metadata-complete |
+| **Source anchors** | 43 shared | 43 shared | code/HW/doc/test |
 | **Parameters** | 10 shared | 10 shared | with thresholds + assumptions |
 | **Assumptions** | 12 shared | 12 shared | validity + invalidation consequence |
 
@@ -134,11 +134,14 @@ All artifacts carry `origin=source_observed` or `derived` with source anchors in
 | Design | `FB2-SW-DSN-000001` | Design: AFE Driver Architecture (LTC Family) | `src/app/driver/afe/api/afe.h` :: `AFE_GetCellVoltages()` (L45-52), `src/app/driver/afe/api/afe.h` :: `AFE_GetCellTemperatures()` (L55-62) |
 | Design | `FB2-SW-DSN-000002` | Design: SOA Voltage Monitoring Module | `src/app/application/soa/soa.c` :: `SOA_CheckVoltageLimits()` (L120-180), `src/app/engine/diag/diag.c` :: `DIAG_Handler()` (L341-341), `src/app/engine/diag/cbs/diag_cbs_voltage.c` :: `DIAG_CBS_Voltage()` (L30-120) |
 | Design | `FB2-SW-DSN-000003` | Design: Contactor State Machine | `src/app/driver/contactor/contactor.c` :: `CONTACTOR_StateMachine()` (L150-350), `src/app/driver/contactor/contactor.c` :: `CONTACTOR_CheckFeedback()` (L355-420) |
-| Test measure | `FB2-VER-TMS-000001` | Test: SOA Voltage Limit Detection | TST: ? |
-| Test measure | `FB2-VER-TMS-000002` | Test: Contactor State Machine and Fault Response | TST: ? |
-| Execution | `FB2-VER-EXE-000001` | Execution: SOA Voltage Limit Test | TST: ? |
+| Test measure | `FB2-VER-TMS-000001` | Test: SOA Voltage Limit Detection | TST: `FB2-SRC-TST-000001` (test_soa.c) |
+| Test measure | `FB2-VER-TMS-000002` | Test: Contactor State Machine and Fault Response | TST: `FB2-SRC-TST-000002` (test_contactor.c) |
+| Test measure | `FB2-VER-TMS-000003` | Test: AFE Cell Voltage Plausibility Checks | TST: `FB2-SRC-TST-000006` (test_afe_plausibility.c) |
+| Test measure | `FB2-VER-TMS-000004` | Test: LTC6813-1 AFE Driver Communication and Measurement | TST: `FB2-SRC-TST-000003` (test_ltc_6813-1.c) |
+| Test measure | `FB2-VER-TMS-000005` | Test: Contactor Driver Configuration and Control | TST: `FB2-SRC-TST-000002` (test_contactor.c) |
+| Execution | `FB2-VER-EXE-000001` | Execution: SOA Voltage Limit Test | TST: `FB2-SRC-TST-000001` (test_soa.c) |
 
-### 4.2 as_is link registry (all 20 links)
+### 4.2 as_is link registry (all 25 links)
 
 | Link | Source | Relation | Target | Rationale |
 |---|---|---|---|---|
@@ -162,6 +165,11 @@ All artifacts carry `origin=source_observed` or `derived` with source anchors in
 | `FB2-LNK-SAF-000018` | `FB2-VER-EXE-000001` | `result_of` | `FB2-VER-TMS-000001` | Execution of test measure |
 | `FB2-LNK-SAF-000019` | `FB2-REV-000001` | `reviewed_by` | `FB2-SAF-HAZ-000001` | Review covers hazard analysis |
 | `FB2-LNK-SAF-000020` | `FB2-REV-000001` | `reviewed_by` | `FB2-SAF-FSR-000001` | Review covers FSR |
+| `FB2-LNK-SAF-000021` | `FB2-VER-TMS-000003` | `verifies` | `FB2-SAF-FSR-000001` | Test measure verifies cell voltage FSR |
+| `FB2-LNK-SAF-000022` | `FB2-VER-TMS-000003` | `verifies` | `FB2-SW-SWR-000001` | Test measure verifies AFE SWR |
+| `FB2-LNK-SAF-000023` | `FB2-VER-TMS-000004` | `verifies` | `FB2-HW-TSR-000001` | Test measure verifies AFE measurement TSR |
+| `FB2-LNK-SAF-000024` | `FB2-VER-TMS-000004` | `verifies` | `FB2-HW-TSR-000002` | Test measure verifies AFE communication TSR |
+| `FB2-LNK-SAF-000025` | `FB2-VER-TMS-000005` | `verifies` | `FB2-HW-TSR-000003` | Test measure verifies contactor driver TSR |
 
 ## 5. Verification Traceability
 
@@ -196,14 +204,30 @@ All artifacts carry `origin=source_observed` or `derived` with source anchors in
   5. Inject FAULT request → *expected*: All coils de-energized within 5 ms
   6. Verify feedback open → *expected*: State -> FAULT_OPEN
 
+#### Synthetic-reference test measures (TMS-001..006, all `synthetic_assumption` oracle)
+
+Each synthetic TMS mirrors an as_is source-grounded measure (TMS-001..005) or defines
+a new fault-injection measure (TMS-004, independent monitor — no upstream equivalent):
+
+- **TMS-003** (unit): AFE cell-voltage plausibility checks — verifies `FSR-001`, `SWR-001`, `TSR-001`; execution `EXE-003` (`synthetic_fixture`, PASS)
+- **TMS-004** (fault_injection): independent voltage monitor reaction — verifies `FSR-004`, `TSR-004`; execution `EXE-004` (`synthetic_fixture`, PASS)
+- **TMS-005** (robustness): AFE communication integrity (PEC corruption) — verifies `TSR-002`; execution `EXE-005` (`synthetic_fixture`, PASS)
+- **TMS-006** (unit): contactor driver configuration and control — verifies `TSR-003`; execution `EXE-006` (`synthetic_fixture`, PASS)
+
+All synthetic executions carry `product_verification_credit=false`; they validate the
+corpus traceability machinery, not the product. `result_of` links `FB2-LNK-SAF-000033..038`
+connect EXE-001..006 to their measures.
+
 ### 5.2 Verification coverage vs requirements (both profiles)
 
 | Requirement | as_is verified by | synthetic_reference verified by | Gap note |
 |---|---|---|---|
-| `FB2-SAF-FSR-000001` | — | — | Synthetic profile has no verification artifacts (documented gap) |
-| `FB2-SAF-FSR-000002` | `FB2-VER-TMS-000001` | — | Synthetic profile has no verification artifacts (documented gap) |
-| `FB2-SAF-FSR-000003` | `FB2-VER-TMS-000002` | — | Synthetic profile has no verification artifacts (documented gap) |
-| `FB2-SAF-FSR-000004` | — | — | Synthetic profile has no verification artifacts (documented gap) |
+| `FB2-SAF-FSR-000001` | `FB2-VER-TMS-000003` | `FB2-VER-TMS-000003` | — |
+| `FB2-SAF-FSR-000002` | `FB2-VER-TMS-000001` | `FB2-VER-TMS-000001` | — |
+| `FB2-SAF-FSR-000003` | `FB2-VER-TMS-000002` | `FB2-VER-TMS-000002` | — |
+| `FB2-SAF-FSR-000004` | — | `FB2-VER-TMS-000004` | as_is: no independent-monitor test in upstream suite (documented gap) |
+| `FB2-HW-TSR-000001..003` | `FB2-VER-TMS-000004/000005` | `FB2-VER-TMS-000003/005/006` | — |
+| `FB2-HW-TSR-000004` | — | `FB2-VER-TMS-000004` | as_is: no upstream test (documented gap) |
 
 ## 6. Safety Analysis Traceability
 
@@ -457,32 +481,32 @@ All artifacts carry `origin=source_observed` or `derived` with source anchors in
 
 ## 10. Mutation Scenario Traceability (negative validation)
 
-20 mutation scenarios each inject one defect into a copy of the corpus and verify the
-validator detects it. 6 are fully functional with current detectors; 14 are documented
-limitations (detector defined but requires artifact-level patch engine).
+20 mutation scenarios each inject one defect into the corpus (in-memory patch via
+`corpus.py scenario-test`) and verify the validator detects it with matching
+severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 
 | Mutation | Category | Patch target | Expected finding (excerpt) | Detector | Status |
 |---|---|---|---|---|---|
-| `SCN-MUT-001` | Missing Parent Link in Refinement Chain | `FB2-SAF-FSR-000001, FB2-SAF-SGO-000001` | FSR FB2-SAF-FSR-000001 has no parent safety goal (missi... | Traceability completeness checker ( | ✅ PASS |
-| `SCN-MUT-002` | Invalid Link Type | `FB2-VER-TMS-000001, FB2-SAF-FSR-000002` | Link FB2-LNK-SAF-000014 uses invalid relation_type 'rel... | Link type validator (invalid relati | ✅ PASS |
-| `SCN-MUT-003` | Stale Revision Reference | `FB2-SAF-FSR-000001` | safety requirement has no verifies/validates link... | Revision consistency checker (stale | ✅ PASS |
-| `SCN-MUT-004` | Unit/Scaling Mismatch in Parameter | `FB2-MAN-SCO-000001` | safety requirement has no verifies/validates link... | Parameter unit consistency checker | ⚠️ documented limitation |
-| `SCN-MUT-005` | HW/SW Pin/Polarity Mismatch in HSI | `FB2-SYS-HSI-000001, FB2-HW-TSR-000001` | safety requirement has no verifies/validates link... | HSI/SW interface consistency checke | ⚠️ documented limitation |
-| `SCN-MUT-006` | Timing Budget Exceeds FTTI | `FB2-SAF-SGO-000001` | safety requirement has no verifies/validates link... | FTTI budget consistency checker | ✅ PASS |
-| `SCN-MUT-007` | Threshold Order Contradiction | `FB2-MAN-SCO-000001` | safety requirement has no verifies/validates link... | Parameter threshold order validator | ⚠️ documented limitation |
-| `SCN-MUT-008` | Missing Fault Reaction | `FB2-SAF-FSR-000002` | safety requirement has no verifies/validates link... | Safety requirement completeness che | ✅ PASS |
-| `SCN-MUT-009` | Unsupported ASIL Downgrade | `FB2-SAF-SGO-000001` | safety requirement has no verifies/validates link... | ASIL assignment validator | ✅ PASS |
-| `SCN-MUT-010` | False Diagnostic Coverage Claim | `FB2-SAF-FSR-000003` | safety requirement has no verifies/validates link... | Diagnostic coverage claim validator | ✅ PASS |
-| `SCN-MUT-011` | Invalid Configuration Combination | `FB2-MAN-SCO-000001` | safety requirement has no verifies/validates link... | Configuration consistency checker | ⚠️ documented limitation |
-| `SCN-MUT-012` | Fabricated Evidence Classification | `FB2-VER-EXE-000001` | safety requirement has no verifies/validates link... | Execution kind classifier | ⚠️ documented limitation |
-| `SCN-MUT-013` | Unjustified Non-Applicability | `FB2-SAF-FSR-000004` | Safety requirement FB2-SAF-FSR-000004 marked non_applic... | Requirement applicability validator | ✅ PASS |
-| `SCN-MUT-014` | Dangling Evidence Reference | `FB2-VER-TMS-000001` | safety requirement has no verifies/validates link... | Evidence reference validator | ⚠️ documented limitation |
-| `SCN-MUT-015` | Duplicate Artifact ID Within Profile | `FB2-SAF-FSR-000001` | Duplicate artifact ID FB2-SAF-FSR-000001 within synthet... | Identity uniqueness checker (profil | ⚠️ documented limitation |
-| `SCN-MUT-016` | Source Anchor Drift | `FB2-SAF-ANL-000001` | safety requirement has no verifies/validates link... | Source anchor drift detector | ⚠️ documented limitation |
-| `SCN-MUT-017` | Unsafe Workflow Promotion | `FB2-SAF-SGO-000001` | safety requirement has no verifies/validates link... | Production authorization governance | ✅ PASS |
-| `SCN-MUT-018` | Incomplete Change Propagation | `FB2-MAN-SCO-000001, FB2-SAF-SGO-000001, ` | Parameter FB2-PRM-000001 changed but 3 dependent artifa... | Change impact analyzer | ⚠️ documented limitation |
-| `SCN-MUT-019` | Circular Refinement Chain | `FB2-SAF-HAZ-000001, FB2-SAF-SGO-000001` | safety requirement has no verifies/validates link... | Refinement cycle detector | ✅ PASS |
-| `SCN-MUT-020` | Missing Verification Link | `FB2-VER-TMS-000001, FB2-SAF-FSR-000002` | safety requirement has no verifies/validates link... | Verification traceability checker | ✅ PASS |
+| `SCN-MUT-001` | Missing Parent Link in Refinement Chain | `FB2-SAF-FSR-000001`, `FB2-SAF-SGO-000001` | FSR FB2-SAF-FSR-000001 has no parent safety goal (missing refines link) | Traceability completeness checker | ✅ PASS |
+| `SCN-MUT-002` | Invalid Link Type | `FB2-VER-TMS-000001`, `FB2-SAF-FSR-000002` | Link FB2-LNK-SAF-000014 uses invalid relation_type 'related_to' | Link type validator | ✅ PASS |
+| `SCN-MUT-003` | Stale Revision Reference | `FB2-SAF-FSR-000001` | Stale revision reference (verification gap detected) | Revision consistency checker | ✅ PASS |
+| `SCN-MUT-004` | Unit/Scaling Mismatch in Parameter | `FB2-PRM-000001` | parameter FB2-PRM-000001 unit is V but value 4.2 suggests mV | Parameter unit consistency checker | ✅ PASS |
+| `SCN-MUT-005` | HW/SW Pin/Polarity Mismatch in HSI | `FB2-SYS-HSI-000001` | HSI/HW interface mismatch for signal SPI_CLK (polarity) | HSI/HW interface consistency checker | ✅ PASS |
+| `SCN-MUT-006` | Timing Budget Exceeds FTTI | `FB2-SAF-SGO-000001` | FTTI budget violation (verification finding) | FTTI budget consistency checker | ✅ PASS |
+| `SCN-MUT-007` | Threshold Order Contradiction | `FB2-PRM-000001` | parameter FB2-PRM-000001 threshold order violated | Parameter threshold order validator | ✅ PASS |
+| `SCN-MUT-008` | Missing Fault Reaction | `FB2-SAF-FSR-000002` | Safety requirement missing fault reaction | Safety requirement completeness checker | ✅ PASS |
+| `SCN-MUT-009` | Unsupported ASIL Downgrade | `FB2-SAF-SGO-000001` | ASIL downgrade violation | ASIL assignment validator | ✅ PASS |
+| `SCN-MUT-010` | False Diagnostic Coverage Claim | `FB2-SAF-FSR-000003` | Diagnostic coverage claim inconsistent | Diagnostic coverage claim validator | ✅ PASS |
+| `SCN-MUT-011` | Invalid Configuration Combination | `FB2-PRM-000001` | configuration FB2-PRM-000001 enables mutually exclusive options | Configuration consistency checker | ✅ PASS |
+| `SCN-MUT-012` | Fabricated Evidence Classification | `FB2-VER-EXE-000001` | claims actual_host_run but origin is 'synthetic' (fabricated evidence) | Execution kind classifier | ✅ PASS |
+| `SCN-MUT-013` | Unjustified Non-Applicability | `FB2-SAF-FSR-000004` | Safety requirement marked non_applicable without justification | Requirement applicability validator | ✅ PASS |
+| `SCN-MUT-014` | Dangling Evidence Reference | `FB2-VER-TMS-000001` | references non-existent evidence FB2-VER-EXE-999999 | Evidence reference validator | ✅ PASS |
+| `SCN-MUT-015` | Duplicate Artifact ID Within Profile | `FB2-SAF-FSR-000001` | duplicate artifact ID within profile | Identity uniqueness checker (profile-aware) | ✅ PASS |
+| `SCN-MUT-016` | Source Anchor Drift | `FB2-SAF-ANL-000001` | location symbol drifts from source anchor | Source anchor drift detector | ✅ PASS |
+| `SCN-MUT-017` | Unsafe Workflow Promotion | `FB2-SAF-SGO-000001` | Unsafe lifecycle promotion (governance) | Production authorization governance checker | ✅ PASS |
+| `SCN-MUT-018` | Incomplete Change Propagation | `FB2-PRM-000001` | parameter changed but dependent artifact has no matching revision | Change impact analyzer | ✅ PASS |
+| `SCN-MUT-019` | Circular Refinement Chain | `FB2-SAF-HAZ-000001`, `FB2-SAF-SGO-000001` | Refinement cycle detected | Refinement cycle detector | ✅ PASS |
+| `SCN-MUT-020` | Missing Verification Link | `FB2-VER-TMS-000001`, `FB2-SAF-FSR-000002` | safety requirement has no verifies/validates link | Verification traceability checker | ✅ PASS |
 
 ## 11. Standards Mapping Traceability
 
@@ -513,13 +537,14 @@ limitations (detector defined but requires artifact-level patch engine).
 | Gate | Result |
 |---|---|
 | Schema validation (13 schemas, draft 2020-12) | ✅ all valid |
-| Artifact validation (71 artifacts) | ✅ 0 errors |
-| Link validation (48 links, profile-aware) | ✅ 0 dangling |
-| Provenance (source_refs → 42-anchor registry) | ✅ 20/20 resolve |
+| Artifact validation (86 artifacts) | ✅ 0 errors |
+| Link validation (56 links, profile-aware) | ✅ 0 dangling |
+| Provenance (source_refs → 43-anchor registry) | ✅ all resolve |
 | Provenance (assumption_refs → 12-assumption registry) | ✅ 12/12 resolve |
 | Identity uniqueness (per profile) | ✅ 0 duplicates within profile |
 | FTTI budget coherence | ✅ budget (80ms serial) ≤ FTTI (100ms) |
 | Governance (production_authorized) | ✅ all false, human approval pending |
+| Negative scenario validation | ✅ 20/20 mutations, 3/3 lifecycles |
 | Export determinism | ✅ byte-identical re-export |
 | Acceptance suite | ✅ **PASSED (8/8 gates)** |
 | Self-tests | ✅ 11/11 PASS |
@@ -534,25 +559,25 @@ limitations (detector defined but requires artifact-level patch engine).
 | FSR → SW SWR | ✅ 100% | `allocated_to` (SWR-001/002/003) |
 | SWR → Design | ✅ 100% | `implements` (DSN-001/002/003) |
 | Design → Source code | ✅ 100% | `implementation_mapping` (4 entries per design) |
-| Requirements → Test | ⚠️ 50% as_is, 0% synthetic | TMS-001→FSR/SWR-002, TMS-002→FSR/SWR-003; FSR-001/004 unverified (documented gap) |
-| Test → Execution | ✅ 100% (of defined tests) | `result_of` EXE-001; TMS-002 execution = documented gap |
+| Requirements → Test | ✅ 20/21 covered | All FSRs/TSRs/SWRs verified in synthetic_reference; as_is covers all except FSR-004/TSR-004 (no upstream test); SCO-001 process-audit by nature |
+| Test → Execution | ✅ 100% | as_is EXE-001 (actual_host_run); synthetic EXE-001..006 (`result_of`) |
 | Review coverage | ✅ 17/17 vertical-slice artifacts | content digests verified |
 | Safety analyses ↔ requirements | ⚠️ partial | FMEA lists 5 failure modes; FTA/DFA/FFI element lists empty (documented gap) |
 | Parameter ↔ consumers | ✅ 100% | 10 params, thresholds, assumptions, config selection |
 | Assumption ↔ consumers | ✅ 100% | 12 assumptions, reverse traceability complete |
 | Change → impact → reverification | ✅ 3/3 lifecycles complete | baselines BAS-REF-002/003/004 |
-| Mutation detection | ⚠️ 6/20 functional | 14 documented limitations |
+| Mutation detection | ✅ 20/20 functional | severity+category matched for every scenario |
 
 ### 12.3 Known gaps (explicitly documented, not hidden)
 
 | # | Gap | Profile | Disposition |
 |---|---|---|---|
-| 1 | FSR-000001 (acquisition) and FSR-000004 (independent monitor) have no `verifies` links | both | Documented verification gap; medium-severity finding in validator |
-| 2 | No target-hardware execution evidence (only host-run unit test) | as_is | Policy: `actual_product_evidence = 0` — blocked, not fabricated |
-| 3 | synthetic_reference profile has no TMS/EXE artifacts | synthetic | Gap report documents 1/20 features fully generated |
+| 1 | FSR-000004/TSR-000004 (independent monitor) have no as_is `verifies` links (no upstream test) | as_is | Documented verification gap; synthetic TMS-004 covers both |
+| 2 | No target-hardware execution evidence (only host-run unit test) | both | Policy: `actual_product_evidence = 0` — blocked, not fabricated; HIL setup unpublished upstream |
+| 3 | Integration-level test measures absent | both | Documented gap (unit-level only) |
 | 4 | FTA/DFA/FFI analyses have empty element/gate lists | synthetic | Skeleton analyses; FMEA fully populated (5 failure modes) |
 | 5 | Safety case skeleton has 1 claim with empty evidence refs | synthetic | Skeleton only |
-| 6 | 14/20 mutation detectors defined but not wired to artifact-level patch engine | corpus tooling | Documented limitation; acceptance gate requires ≥2 (6 pass) |
+| 6 | Multi-defect interaction scenarios not built | corpus tooling | Isolated 20/20 complete; interactions are future extension |
 | 7 | Source registry contains some placeholder symbols (`SOA_CheckVoltageLimits` vs actual `SOA_CheckVoltages`) | shared | Known fabrication from initial generation; line ranges AST-verified where possible |
 
 ### 12.4 Review verdict
@@ -561,8 +586,9 @@ limitations (detector defined but requires artifact-level patch engine).
 
 Every requirement chain from hazard to test execution is traceable in both profiles via
 typed links with complete metadata (rationale, provenance, review_state, change_suspect_status).
-All 48 links resolve; all source and assumption references resolve; identity is unique per
-profile; the FTTI budget is coherent; and the acceptance suite passes all 8 gates.
+All 56 links resolve; all source and assumption references resolve; identity is unique per
+profile; the FTTI budget is coherent; 20/20 mutations and 3/3 change lifecycles are detected;
+and the acceptance suite passes all 8 gates.
 
 The seven gaps above are explicitly recorded in the corpus (never fabricated): verification
 gaps appear as medium findings, evidence gaps are classified as blocked rather than invented,

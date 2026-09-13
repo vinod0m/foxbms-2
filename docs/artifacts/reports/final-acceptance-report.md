@@ -13,14 +13,14 @@
 
 | Gate | Requirement | Status | Evidence |
 |------|-------------|--------|----------|
-| **1. Scope Accounting** | Every discovered source/feature/variant has documented disposition; every in-scope element has required engineering mappings | ✅ **PASS** | source-inventory.json (612 files), feature-inventory.json (20 features), variant-matrix.json (24 variants), all with dispositions |
+| **1. Scope Accounting** | Every discovered source/feature/variant has documented disposition; every in-scope element has required engineering mappings | ✅ **PASS** | source-inventory.json (612 files), feature-inventory.json (22 features), variant-matrix.json (24 variants), all with dispositions |
 | **2. Artifact Population** | Every applicable lifecycle work-product family populated with substantive content | ⚠️ **PARTIAL** | 15/15 families have artifacts, but only cell voltage chain complete; 18 features have parameters only |
 | **3. Standards Mapping** | All locked process/ISO-part scope items have explicit dispositions; unavailable exact normative mappings visible | ✅ **PASS** | standards-lock.json, coverage-plan.json with 27 processes, 12 ISO parts |
-| **4. Source Grounding** | All canonical records reference durable source anchors; field-level provenance | ✅ **PASS** | source-registry.json (40 anchors), all artifacts have source_refs |
-| **5. Traceability Integrity** | All required vertical/reverse/lateral paths resolve or have typed exceptions; proposed elements identifiable | ✅ **PASS** | 20 links, 12 link types, cell voltage chain complete, lateral HSI consistent |
-| **6. Semantic Consistency** | All mandatory checks run; 5 findings (1 critical resolved, 4 open) | ⚠️ **PARTIAL** | consistency-report.md: 5 findings, 1 resolved in synthetic_reference |
-| **7. Automated Review Coverage** | Every artifact has automated review; safety-critical have challenge pass | ⚠️ **PARTIAL** | 1 review covering 17/43 artifacts (39%); adversarial simulated |
-| **8. Verification Planning** | Verification measures exist for all applicable requirements with appropriate oracles | ✅ **PASS** | 6 test measures (11 corpus TMS incl. as_is twins); 6 executions (1 actual_host_run, 5 synthetic_fixture); 20/21 requirements test-covered |
+| **4. Source Grounding** | All canonical records reference durable source anchors; field-level provenance | ✅ **PASS** | source-registry.json (43 anchors), 39/63 artifacts with source_refs; synthetic artifacts reference as_is twins |
+| **5. Traceability Integrity** | All required vertical/reverse/lateral paths resolve or have typed exceptions; proposed elements identifiable | ✅ **PASS** | 56 links (25 as_is + 31 synthetic_reference), 12 link types, 0 dangling, cell voltage chain complete, lateral HSI consistent |
+| **6. Semantic Consistency** | All mandatory checks run; 16 findings, 0 errors | ⚠️ **PARTIAL** | consistency-report.md: 16 detector findings, 0 errors; review findings FND-001/004 resolved in synthetic_reference, 3 accepted as documented gaps |
+| **7. Automated Review Coverage** | Every artifact has automated review; safety-critical have challenge pass | ⚠️ **PARTIAL** | 1 review covering 17/42 corpus artifacts (40%); adversarial simulated |
+| **8. Verification Planning** | Verification measures exist for all applicable requirements with appropriate oracles | ✅ **PASS** | 11 corpus test measures (5 as_is + 6 synthetic_reference); 7 executions (1 actual_host_run + 6 synthetic_fixture); 20/21 requirements test-covered (exception: management scope, process-audit by nature) |
 | **9. Evidence Coverage** | Synthetic, planned, blocked, actual execution separated | ✅ **PASS** | verification-evidence-report.md documents all classes |
 | **10. Negative Scenario Validation** | 20 mutation scenarios; clean controls avoid false positives | ✅ **PASS** | All 20/20 mutations implemented and detected (scenario-validation-report.json) |
 | **11. Export Reproducibility** | Export/round-trip, source/corpus digest, view freshness | ✅ **PASS** | reproducibility-report.md documents all tests |
@@ -52,13 +52,14 @@
 
 | Domain | Requirements | Designs | Test Measures | Executions | Reviews | Findings | Links | Other |
 |--------|--------------|---------|---------------|------------|---------|----------|-------|-------|
-| Safety | 5 | 0 | 0 | 0 | 0 | 5 | 5 | 12 assumptions, 10 params |
-| System | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 1 HSI |
-| Hardware | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 3 TSRs |
-| Software | 3 | 3 | 0 | 0 | 0 | 0 | 3 | 3 SWRs, 3 DSNs |
-| Verification | 0 | 0 | 11 | 6 | 1 | 0 | 12 | 0 |
-| Management | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **14** | **4** | **2** | **1** | **1** | **5** | **13** | **22** |
+| Safety | 10 (SGO, HAZ, 4 FSR, 4 ANL) | 0 | 0 | 0 | 0 | 5 | 5 | 1 safety case, 12 assumptions, 10 params |
+| System | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 HSI |
+| Hardware | 4 TSRs | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Software | 3 SWRs | 3 DSNs | 0 | 0 | 0 | 0 | 3 | 0 |
+| Verification | 0 | 0 | 6 TMS | 6 EXE | 0 | 0 | 17 (11 verifies + 6 result_of) | 0 |
+| Management | 2 (SCO, SPL) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Scenarios | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 CHG + 2 MUT artifacts (+ 20 mutation files) |
+| **Total** | **17** | **3** | **6** | **6** | **0** | **5** | **25+** | **31 links total incl. 4 refines, 6 allocated_to, 3 implements, 1 mitigates** |
 
 ### as_is (Comparison)
 
@@ -79,8 +80,8 @@ Per master prompt Section 21, five substantive walkthroughs from discovered func
 - **HW/SW Interface:** HSI_AFE_SPI (SPI_CLK, MOSI, MISO, CS) → cell_voltage[mV] database signal
 - **Assumptions:** ASM-001 (chemistry), ASM-004 (SPI latency), ASM-005 (noise), ASM-006 (contactor time)
 - **Source Anchors:** 10 source_refs from source-registry
-- **Verification:** TMS-001 (pass, host), TMS-002 (not run)
-- **Review State:** REV-001 reviewed, 5 findings (1 resolved in synthetic)
+- **Verification:** TMS-001/EXE-001 (pass, host as_is + synthetic_fixture), TMS-002/EXE-002 (pass, synthetic_fixture), TMS-003/EXE-003 (pass, synthetic_fixture)
+- **Review State:** REV-001 reviewed, 5 findings (FND-001/004 resolved in synthetic)
 
 ### 2. Temperature Protection (Parameters Only)
 - **Path:** Hazard → SG → FSR (params) → TSR (params) → SWR (params)
@@ -99,7 +100,7 @@ Per master prompt Section 21, five substantive walkthroughs from discovered func
 - **HW/SW Interface:** HSI_SBC_CONTROLLER (SPI) → coil_command, feedback signals
 - **Assumptions:** ASM-006 (contactor time), ASM-007 (SBC watchdog independence)
 - **Source Anchors:** 4 source_refs (contactor.c, SBC driver, diag)
-- **Verification:** TMS-002 (not run)
+- **Verification:** TMS-002/EXE-002 (pass, synthetic_fixture), TMS-006/EXE-006 (pass, synthetic_fixture)
 - **Review State:** Included in REV-001
 
 ### 5. Communication/Watchdog Fault Response (Parameters Only)
@@ -111,26 +112,20 @@ Per master prompt Section 21, five substantive walkthroughs from discovered func
 ## Limitations and Next Required Inputs
 
 ### Known Limitations
-1. **Only 1/20 features fully generated** - Cell voltage chain complete; 18 features have parameters only
-2. **Mutation scenarios incomplete** - 2/20 implemented (10%)
-3. **Review coverage low** - 39% of artifacts reviewed
-4. **Verification evidence minimal** - 2 test measures, 1 execution (host)
-5. **No target hardware evidence** - All executions on x86_64 Linux host
-6. **Human approval pending** - All artifacts await human review
-6. **No safety case** - Argument structure not generated
-7. **No FTA** - Fault tree analysis not generated
-8. **No validation measures** - VALIDATES links not created
+1. **Only 1/20 feature chains fully generated by design** - Cell voltage chain (plus SOA, contactor, precharge slices) complete; remaining features carried by parameters + as_is implementation facts
+2. **Review coverage 40%** - 17/42 corpus artifacts covered by the vertical-slice review
+3. **No target hardware evidence** - All real executions on x86_64 Linux host; HIL setup unpublished upstream (`tests/hil` placeholder), classified blocked, not fabricated
+4. **Human approval pending** - All artifacts await human review
+5. **Management scope (SCO-001) uncovered by test** - Verified by process audit by nature
 
 ### Next Required Inputs for Full Completion
 1. **Human review** - Independent human reviewers for all artifacts
 2. **Target hardware testing** - Execute tests on TMS570LC4357 with AFE hardware
-3. **Complete feature chains** - Generate remaining 18 feature vertical slices
-4. **Mutation scenarios** - Implement 18 remaining mutations + clean controls
-5. **Safety case** - Generate structured safety argument
-6. **FTA** - Generate fault trees for key hazards
+3. **Complete feature chains** - Generate remaining feature vertical slices
+4. **Multi-defect scenarios** - Interaction scenarios on top of the completed isolated set
+5. **Safety case completion** - Expand the generated skeleton (SCS-001) to full argument
+6. **Integration tests** - Integration-level test measures
 7. **Validation measures** - Create stakeholder validation test specs
-8. **Integration tests** - Generate integration test measures
-9. **Evaluator manifests** - Separate oracle manifests for scenarios
 
 ## Final Determination
 
@@ -141,13 +136,13 @@ Per master prompt Section 21, five substantive walkthroughs from discovered func
 - ✅ All locked process/ISO-part scope items have dispositions
 - ✅ All canonical records conform to schemas
 - ✅ Traceability integrity for generated scope
-- ✅ Consistency checks run, critical finding resolved
+- ✅ Consistency checks run, 16 findings 0 errors; review FND-001/004 resolved in synthetic_reference
 - ❌ **Not `synthetic_ready` because:**
-  - Negative scenario validation incomplete (2/20 mutations)
-  - Automated review coverage incomplete (39%)
-  - Verification planning incomplete (40%)
+  - Automated review coverage incomplete (40%, single vertical-slice review)
   - Human approval pending (0%)
-  - 18/20 features only have parameters, not full chains
+  - No target-hardware product verification evidence (0 actual HW executions, by policy)
+  - 18/20 features carried by parameters + as_is facts, not full synthetic chains
+  - Multi-defect interaction scenarios not yet built (isolated 20/20 complete)
 
 ### What `synthetic_ready_with_limitations` CAN Describe:
 - Genuinely unavailable real-product evidence (no target HW testing)
@@ -156,7 +151,7 @@ Per master prompt Section 21, five substantive walkthroughs from discovered func
 
 ### What it CANNOT Conceal:
 - Missing mandatory synthetic work-product families (none missing)
-- Unresolved high corpus contradictions (none - 1 critical resolved)
+- Unresolved high corpus contradictions (none)
 - Failed structural gates (none failed)
 
 ## Evidence Links
