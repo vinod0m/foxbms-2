@@ -9,11 +9,62 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-12T01:01:53Z |
+| Generated | 2026-09-13T02:20:37Z |
 
 ## Scope
 
-Software verification by level — unit, component, integration, HIL — each with test specification, cases, execution report; execution_kind labeled; actual vs synthetic distinguished.
+Software verification by level: (1) reverse-engineered unit verification evidence — the full per-module unit-test inventory from `tests/unit/app/`; (2) corpus test levels (unit, component, integration, HIL) with cases, execution reports, execution_kind labeled; actual vs synthetic distinguished.
+
+## Reverse-Engineered Unit Verification Evidence
+
+The repository carries **313 C unit test files** (Ceedling/Unity, host-based) in `tests/unit/app/`. Per-module inventory:
+
+| Module | Unit test files | Count |
+|---|---|---|
+| `application/algorithm` | `test_algorithm.c` | 1 |
+| `application/bal` | `test_bal.c` | 1 |
+| `application/bms` | `test_bms.c` | 1 |
+| `application/ethernet` | `test_ethernet.c`, `test_ethernet_freertos.c` | 2 |
+| `application/plausibility` | `test_plausibility.c` | 1 |
+| `application/redundancy` | `test_redundancy.c` | 1 |
+| `application/soa` | `test_soa.c` | 1 |
+| `driver/adc` | `test_adc.c` | 1 |
+| `driver/can` | `test_can.c`, `test_can_1.c`, `test_can_2.c`, `test_can_can_message_notification.c` | 4 |
+| `driver/contactor` | `test_contactor.c` | 1 |
+| `driver/crc` | `test_crc.c` | 1 |
+| `driver/dma` | `test_dma.c`, `test_dma_dma_group_a_notification.c`, `test_dma_nxp.c`, `test_dma_uart.c` | 4 |
+| `driver/emac` | `test_emac-low-level.c`, `test_emac.c` | 2 |
+| `driver/foxmath` | `test_foxmath.c`, `test_utils.c` | 2 |
+| `driver/fram` | `test_fram.c` | 1 |
+| `driver/htsensor` | `test_htsensor.c` | 1 |
+| `driver/i2c` | `test_i2c.c` | 1 |
+| `driver/imd` | `test_imd.c` | 1 |
+| `driver/interlock` | `test_interlock.c` | 1 |
+| `driver/io` | `test_io.c` | 1 |
+| `driver/led` | `test_led.c` | 1 |
+| `driver/mcu` | `test_mcu.c` | 1 |
+| `driver/meas` | `test_meas.c` | 1 |
+| `driver/pex` | `test_pex.c` | 1 |
+| `driver/phy` | `test_dp83869.c` | 1 |
+| `driver/pwm` | `test_pwm.c` | 1 |
+| `driver/rtc` | `test_rtc.c` | 1 |
+| `driver/sbc` | `test_nxpfs85xx.c`, `test_nxpfs85xx_mcu_spi_transfer_data.c`, `test_sbc.c` | 3 |
+| `driver/spi` | `test_spi.c`, `test_spi_adi.c`, `test_spi_debug.c`, `test_spi_ltc.c`, `test_spi_mxm.c`, `test_spi_nxp.c` … | 9 |
+| `driver/sps` | `test_sps.c` | 1 |
+| `driver/ts` | `test_beta.c` | 1 |
+| `driver/uart` | `test_uart.c`, `test_uart_sci_notification.c` | 2 |
+| `engine/database` | `test_database.c`, `test_database_helper.c` | 2 |
+| `engine/diag` | `test_diag.c` | 1 |
+| `engine/hw_info` | `test_master_info.c` | 1 |
+| `engine/sys` | `test_reset.c`, `test_sys.c` | 2 |
+| `engine/sys_mon` | `test_sys_mon.c` | 1 |
+| `task/ftask` | `test_ftask.c`, `test_ftask_emac.c` | 2 |
+| `task/os` | `test_os.c` | 1 |
+| `task/timer` | `test_timer.c` | 1 |
+
+**Coverage of the module inventory**: 40/40 modules have direct unit tests; config files are covered by `*/config` test folders (e.g. `tests/unit/app/application/config/`, `driver/config/`, `engine/config/`, `task/config/`).
+
+CI enforces the run of these tests for every revision; the coverage report MUST reach 100% line and branch coverage (`docs/developer-manual/software/software-testing.rst`, `docs/software/unit-tests/unit-tests.rst`).
 
 ## Unit Testing
 
@@ -113,4 +164,4 @@ No target-HIL executions exist in the corpus — per governance policy, actual p
 
 ---
 
-*Generated: 2026-09-12T01:01:53Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-13T02:20:37Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

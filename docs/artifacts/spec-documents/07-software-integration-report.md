@@ -9,11 +9,36 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-12T01:01:53Z |
+| Generated | 2026-09-13T02:20:37Z |
 
 ## Scope
 
-Integrated software components, available integration evidence, and explicit integration gaps. Per governance policy, evidence is blocked, not fabricated.
+Integrated software components of the foxBMS 2 build: (1) reverse-engineered integration facts — build system (waf), linked programs (application, bootloader, unit-test variants), CAN/DBC interface integration, unit-test harness integration; (2) corpus `implements` links and integration evidence; (3) explicit integration gaps. Per governance policy, missing evidence is blocked, not fabricated.
+
+## Reverse-Engineered Integration Facts
+
+### Build System and Linked Programs
+
+The repository builds with the **waf** build tool (`waf-tools/`, per-module `wscript` files). Linked programs and build entry points (from the repository structure and `conf/`):
+
+| Program | Build root | Description |
+|---|---|---|
+| foxBMS application | `src/app` (wscript at repo root) | Embedded BMS application, linked against `foxbms-afe` (selected AFE driver), `foxbms-driver`, engine, application layers and FreeRTOS |
+| Bootloader | `src/bootloader` | Field-update bootloader for the TMS570LC4357, CAN-based, PC application in the CLI (`fox bootloader`) |
+| Unit tests | `tests/unit` + `conf/unit/*.yml` | Ceedling/Unity host-based unit tests (313 C test files), build variants `app_project_posix`, `app_project_win32` |
+| CLI tool | `cli/` (`fox` command) | Repository interaction: build, flash, bootloader, diagnostics (Click-based Python) |
+
+Per-module wscript libraries integrate each module into the linked programs (driver layer `foxbms-driver`, AFE library `foxbms-afe` per `src/app/driver/afe/README.md`).
+
+### Configuration Integration
+
+The BMS hardware/software configuration is integrated through `conf/bms/bms.json` → generated `*_cfg` sources; unit-test and variant configurations through `conf/unit/` and `conf/env/`. Compiler configurations: `conf/cc/` (TI CGT for target, GCC for host tests).
+
+### Interface Integration
+
+- **CAN**: 41 messages of `tools/dbc/foxbms.dbc` are implemented as callbacks in `src/app/driver/can/cbs/` (tx/rx message sets, period monitoring `DIAG_ID_CAN_TIMING`).
+- **AFE daisy-chain**: AFE drivers implement the AFE API (`src/app/driver/afe/api/afe.h`); supported chips: adi (ades1830), ltc (6804-1, 6806, 6811-1, 6812-1, 6813-1), maxim (max17852), nxp (mc33775a), ti (dummy).
+- **Interlock, contactors/SPS, SBC, PEX/HTSEN/RTC (I2C task), IMD**: driver modules integrated into the task engine as listed in the task model.
 
 ## Profile: `as_is`
 
@@ -62,4 +87,4 @@ No execution artifacts in this profile. Integration-level executions: **none in 
 
 ---
 
-*Generated: 2026-09-12T01:01:53Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-13T02:20:37Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

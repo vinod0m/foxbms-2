@@ -9,11 +9,33 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-12T01:01:53Z |
+| Generated | 2026-09-13T02:20:37Z |
 
 ## Scope
 
-Software requirements (SWRs and software-facing requirements) of both profiles, grouped under their parent FSR with the allocation rationale quoted.
+Software requirements of both corpus profiles (SWRs grouped under their parent FSR with allocation rationale) plus software requirements reverse-engineered from the 40 implemented modules and the diagnosis/SOA configuration.
+
+## Reverse-Engineered Software Requirements (module-grounded)
+
+The implemented software directly satisfies the following software requirements. Each requirement cites its implementing module(s) with repository anchors; unit-test evidence is listed per module in the Detailed Design and Implementation Mapping documents.
+
+| ID | Requirement | Implementing modules (anchors) |
+|---|---|---|
+| `SWR-RE-01` | The software shall acquire cell voltages and cell temperatures via the AFE daisy-chain and validate them (plausibility, redundancy). | `src/app/driver/afe/*` (8 AFE drivers), `src/app/driver/meas/`, `src/app/application/plausibility/`, `src/app/application/redundancy/` |
+| `SWR-RE-02` | The software shall evaluate the safe operating area (cell voltage, cell temperature, cell/pack current) against MOL/RSL/MSL limits. | `src/app/application/soa/soa.c` (`SOA_*`), config `battery_cell_cfg.h` |
+| `SWR-RE-03` | The software shall detect and classify 85 diagnosis events with configurable severity, latency and occurrence counters. | `src/app/engine/diag/`, `src/app/engine/config/diag_cfg.c` |
+| `SWR-RE-04` | The software shall run the BMS state machine (13 states, 34 substates) in the 10 ms task context and reach the safe state (contactors open) on fatal errors. | `src/app/application/bms/`, `src/app/application/config/bms_cfg.h` |
+| `SWR-RE-05` | The software shall control string-minus, string-plus and precharge contactors through smart power switches with feedback supervision. | `src/app/driver/contactor/`, `src/app/driver/sps/` |
+| `SWR-RE-06` | The software shall supervise the interlock line and open the contactors on interlock faults. | `src/app/driver/interlock/` (ILCK) |
+| `SWR-RE-07` | The software shall balance cells passively (reference strategy: voltage-based). | `src/app/application/bal/` (strategies: `none`, `voltage`) |
+| `SWR-RE-08` | The software shall estimate SOC/SOE/SOF/SOH (reference: coulomb/energy counting, trapezoid SOF). | `src/app/application/algorithm/state_estimation/`, `algorithm.c` |
+| `SWR-RE-09` | The software shall exchange data asynchronously between tasks via the database (single producer, multiple consumers). | `src/app/engine/database/` |
+| `SWR-RE-10` | The software shall monitor task execution times and supply voltages (system monitoring, FRAM-persisted). | `src/app/engine/sys_mon/`, `src/app/engine/hw_info/`, `src/app/driver/fram/` |
+| `SWR-RE-11` | The software shall communicate on CAN (41 messages) and provide an Ethernet TCP/IP interface for user applications. | `src/app/driver/can/`, `src/app/application/ethernet/`, `tools/dbc/foxbms.dbc` |
+| `SWR-RE-12` | The software shall supervise the system basis chip (SBC) and react to FIN/RSTB errors. | `src/app/driver/sbc/` (NXP FS85) |
+| `SWR-RE-13` | The software shall provide timekeeping (RTC), port expansion (PEX), humidity/temperature sensing (HTSEN) and debug LEDs on the continuous I2C task. | `src/app/driver/rtc/`, `pex/`, `htsensor/`, `led/` |
+| `SWR-RE-14` | The software shall support optional insulation monitoring (IMD). | `src/app/driver/imd/` |
+| `SWR-RE-15` | The software shall be unit-testable: 313 C unit tests run in CI with 100% line/branch coverage policy. | `tests/unit/app/**/test_*.c`, `docs/developer-manual/software/software-testing.rst` |
 
 ## Profile: `as_is`
 
@@ -211,4 +233,4 @@ Software requirements (SWRs and software-facing requirements) of both profiles, 
 
 ---
 
-*Generated: 2026-09-12T01:01:53Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-13T02:20:37Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
