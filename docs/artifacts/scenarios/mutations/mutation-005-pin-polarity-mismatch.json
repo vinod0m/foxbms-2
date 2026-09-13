@@ -40,29 +40,35 @@
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Change HSI SPI pin polarity in SW design without updating HW design",
+  "description": "Flip SPI polarity of HSI_AFE_SPI/SPI_CLK signal to CPOL=1, CPHA=1 contradicting the hardware requirement",
   "affected_links": [
    "FB2-LNK-SYS-000001"
   ],
   "operation": "modify",
   "new_value": {
-   "signal_definition": {
-    "spi_cpol": 1,
-    "spi_cpha": 1
-   }
+   "interfaces": [
+    {
+     "interface_id": "HSI_AFE_SPI",
+     "signals": [
+      {
+       "name": "SPI_CLK",
+       "polarity": "CPOL=1, CPHA=1"
+      }
+     ]
+    }
+   ]
   }
  },
  "affected_ids": [
-  "FB2-SYS-HSI-000001",
-  "FB2-HW-TSR-000001"
+  "FB2-SYS-HSI-000001"
  ],
  "trigger": "HSI lateral consistency check",
  "expected_detector": "HSI/SW interface consistency checker",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000005",
-  "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "severity": "high",
+  "category": "traceability",
+  "description": "HSI/HW interface mismatch for signal SPI_CLK (polarity)"
  },
  "impact_paths": [
   "SPI communication between master and AFE will fail",

@@ -40,18 +40,23 @@
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Change parameter without updating all dependent artifacts",
+  "description": "Change parameter FB2-PRM-000001 value to 4100 with a change record, without updating dependent artifacts",
   "affected_links": [],
   "operation": "modify",
   "new_value": {
-   "value": 4100
+   "value": 4100,
+   "revision_history": [
+    {
+     "revision": "2",
+     "date": "2026-09-13T00:00:00Z",
+     "author": "system_engineer",
+     "description": "change: reduce shutdown threshold to 4100 mV"
+    }
+   ]
   }
  },
  "affected_ids": [
-  "FB2-MAN-SCO-000001",
-  "FB2-SAF-SGO-000001",
-  "FB2-SAF-FSR-000001",
-  "FB2-SW-SWR-000002"
+  "FB2-PRM-000001"
  ],
  "trigger": "Change impact analysis",
  "expected_detector": "Change impact analyzer",
@@ -59,7 +64,7 @@
   "finding_id": "FB2-FND-MUT-000018",
   "severity": "high",
   "category": "traceability",
-  "description": "Parameter FB2-PRM-000001 changed but 3 dependent artifacts not updated: FB2-SAF-SGO-000001, FB2-SAF-FSR-000001, FB2-SW-SWR-000002"
+  "description": "parameter FB2-PRM-000001 changed but dependent artifact has no matching revision entry"
  },
  "impact_paths": [
   "Dependent artifacts use stale parameter value",

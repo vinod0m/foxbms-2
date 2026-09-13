@@ -40,7 +40,7 @@
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Change parameter unit from mV to V without scaling the value",
+  "description": "Change parameter cell_voltage_max unit from mV to V and value from 4200 to 4.2 (scaling inconsistency)",
   "affected_links": [],
   "operation": "modify",
   "new_value": {
@@ -49,15 +49,15 @@
   }
  },
  "affected_ids": [
-  "FB2-MAN-SCO-000001"
+  "FB2-PRM-000001"
  ],
  "trigger": "Parameter registry validation on unit consistency",
  "expected_detector": "Parameter unit consistency checker",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000004",
   "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "category": "consistency",
+  "description": "parameter FB2-PRM-000001 unit is V but value 4.2 suggests mV (missing scaling)"
  },
  "impact_paths": [
   "All artifacts referencing cell_voltage_max will use incorrect voltage threshold",

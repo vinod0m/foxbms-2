@@ -1,140 +1,141 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://foxbms2.softwaredevlabs.org/schemas/scenario.schema.json",
-  "title": "Scenario Artifact Schema",
-  "description": "Schema for scenario artifacts (mutations and change lifecycles) in the foxBMS 2 lifecycle corpus",
-  "allOf": [
-    {
-      "$ref": "artifact-base.schema.json"
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://foxbms2.softwaredevlabs.org/schemas/scenario.schema.json",
+ "title": "Scenario Artifact Schema",
+ "description": "Schema for scenario artifacts (mutations and change lifecycles) in the foxBMS 2 lifecycle corpus",
+ "allOf": [
+  {
+   "$ref": "artifact-base.schema.json"
+  },
+  {
+   "type": "object",
+   "required": [
+    "scenario_type"
+   ],
+   "properties": {
+    "artifact_type": {
+     "const": "scenario"
     },
-    {
-      "type": "object",
-      "required": [
-        "scenario_type"
-      ],
-      "properties": {
-        "artifact_type": {
-          "const": "scenario"
-        },
-        "scenario_type": {
-          "type": "string",
-          "enum": [
-            "mutation",
-            "change_lifecycle"
-          ],
-          "description": "Type of scenario: mutation (defect injection) or change lifecycle (change management)"
-        },
-        "baseline_ref": {
-          "type": "string",
-          "description": "Baseline ID this scenario derives from (e.g., BAS-REF-001)"
-        },
-        "patch": {
-          "type": "object",
-          "description": "Documented patch/change applied to create this scenario",
-          "properties": {
-            "description": {
-              "type": "string",
-              "description": "Description of the change/patch"
-            },
-            "affected_artifacts": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
-              },
-              "description": "Artifact IDs affected by the patch"
-            },
-            "operation": {
-              "type": "string",
-              "enum": [
-                "add",
-                "modify",
-                "delete",
-                "replace"
-              ],
-              "description": "Type of patch operation"
-            }
-          },
-          "additionalProperties": true,
-          "required": [
-            "operation"
-          ]
-        },
-        "affected_ids": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
-          },
-          "description": "Artifact IDs affected by this scenario"
-        },
-        "trigger": {
-          "type": [
-            "object",
-            "string"
-          ],
-          "description": "What triggers this scenario (e.g., specific input, condition, event)",
-          "additionalProperties": true
-        },
-        "expected_detector": {
-          "type": "string",
-          "description": "Expected detector/rule that should detect this scenario"
-        },
-        "expected_finding": {
-          "type": "object",
-          "required": [
-            "finding_id",
-            "severity",
-            "category"
-          ],
-          "properties": {
-            "finding_id": {
-              "type": "string",
-              "pattern": "^FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}$"
-            },
-            "severity": {
-              "type": "string",
-              "enum": [
-                "info",
-                "low",
-                "medium",
-                "high",
-                "critical"
-              ]
-            },
-            "category": {
-              "type": "string",
-              "enum": [
-                "provenance",
-                "completeness",
-                "domain",
-                "cross_domain",
-                "verification",
-                "traceability",
-                "consistency",
-                "process"
-              ]
-            }
-          },
-          "additionalProperties": true
-        },
-        "impact_paths": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Artifact IDs in the impact path of this scenario"
-        },
-        "expected_remediation": {
-          "type": "string",
-          "description": "Expected remediation for this scenario"
-        },
-        "oracle_manifest_ref": {
-          "type": "string",
-          "description": "Reference to evaluator-only manifest with expected labels"
-        }
+    "scenario_type": {
+     "type": "string",
+     "enum": [
+      "mutation",
+      "change_lifecycle"
+     ],
+     "description": "Type of scenario: mutation (defect injection) or change lifecycle (change management)"
+    },
+    "baseline_ref": {
+     "type": "string",
+     "description": "Baseline ID this scenario derives from (e.g., BAS-REF-001)"
+    },
+    "patch": {
+     "type": "object",
+     "description": "Documented patch/change applied to create this scenario",
+     "properties": {
+      "description": {
+       "type": "string",
+       "description": "Description of the change/patch"
       },
-      "additionalProperties": true
+      "affected_artifacts": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
+       },
+       "description": "Artifact IDs affected by the patch"
+      },
+      "operation": {
+       "type": "string",
+       "enum": [
+        "add",
+        "modify",
+        "delete",
+        "replace"
+       ],
+       "description": "Type of patch operation"
+      }
+     },
+     "additionalProperties": true,
+     "required": [
+      "operation"
+     ]
+    },
+    "affected_ids": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "pattern": "^FB2-[A-Z]{2,3}(-[A-Z]{2,3})?-[0-9]{6}$"
+     },
+     "description": "Artifact IDs affected by this scenario"
+    },
+    "trigger": {
+     "type": [
+      "object",
+      "string"
+     ],
+     "description": "What triggers this scenario (e.g., specific input, condition, event)",
+     "additionalProperties": true
+    },
+    "expected_detector": {
+     "type": "string",
+     "description": "Expected detector/rule that should detect this scenario"
+    },
+    "expected_finding": {
+     "type": "object",
+     "required": [
+      "finding_id",
+      "severity",
+      "category"
+     ],
+     "properties": {
+      "finding_id": {
+       "type": "string",
+       "pattern": "^FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}$"
+      },
+      "severity": {
+       "type": "string",
+       "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+       ]
+      },
+      "category": {
+       "type": "string",
+       "enum": [
+        "provenance",
+        "completeness",
+        "domain",
+        "cross_domain",
+        "verification",
+        "traceability",
+        "consistency",
+        "process",
+        "evidence"
+       ]
+      }
+     },
+     "additionalProperties": true
+    },
+    "impact_paths": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Artifact IDs in the impact path of this scenario"
+    },
+    "expected_remediation": {
+     "type": "string",
+     "description": "Expected remediation for this scenario"
+    },
+    "oracle_manifest_ref": {
+     "type": "string",
+     "description": "Reference to evaluator-only manifest with expected labels"
     }
-  ]
+   },
+   "additionalProperties": true
+  }
+ ]
 }

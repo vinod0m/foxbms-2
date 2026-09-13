@@ -40,10 +40,11 @@
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Change execution kind from synthetic_fixture to actual_host_run",
+  "description": "Execution with origin=synthetic claims execution_kind=actual_host_run (fabricated classification)",
   "affected_links": [],
   "operation": "modify",
   "new_value": {
+   "origin": "synthetic",
    "execution_kind": "actual_host_run"
   }
  },
@@ -55,8 +56,8 @@
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000012",
   "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "category": "evidence",
+  "description": "claims actual_host_run but origin is 'synthetic' (fabricated evidence classification)"
  },
  "impact_paths": [
   "False evidence inflates verification coverage metrics",

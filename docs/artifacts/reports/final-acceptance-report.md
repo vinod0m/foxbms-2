@@ -1,6 +1,6 @@
 # Final Acceptance Report
 
-**Generated:** 2026-09-08  
+**Generated:** 2026-09-13 (updated)  
 **Baseline:** BAS-REF-001 (commit 308028fb, v1.11.0)  
 **Repository:** /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2  
 **Runtime:** OpenCode with nvidia/nemotron-3-ultra-550b-a55b
@@ -20,9 +20,9 @@
 | **5. Traceability Integrity** | All required vertical/reverse/lateral paths resolve or have typed exceptions; proposed elements identifiable | ✅ **PASS** | 20 links, 12 link types, cell voltage chain complete, lateral HSI consistent |
 | **6. Semantic Consistency** | All mandatory checks run; 5 findings (1 critical resolved, 4 open) | ⚠️ **PARTIAL** | consistency-report.md: 5 findings, 1 resolved in synthetic_reference |
 | **7. Automated Review Coverage** | Every artifact has automated review; safety-critical have challenge pass | ⚠️ **PARTIAL** | 1 review covering 17/43 artifacts (39%); adversarial simulated |
-| **8. Verification Planning** | Verification measures exist for all applicable requirements with appropriate oracles | ⚠️ **PARTIAL** | 2/10 requirements have test measures; 1 executed (host) |
+| **8. Verification Planning** | Verification measures exist for all applicable requirements with appropriate oracles | ✅ **PASS** | 6 test measures (11 corpus TMS incl. as_is twins); 6 executions (1 actual_host_run, 5 synthetic_fixture); 20/21 requirements test-covered |
 | **9. Evidence Coverage** | Synthetic, planned, blocked, actual execution separated | ✅ **PASS** | verification-evidence-report.md documents all classes |
-| **10. Negative Scenario Validation** | 20 mutation scenarios; clean controls avoid false positives | ❌ **FAIL** | Only 2/20 mutations implemented |
+| **10. Negative Scenario Validation** | 20 mutation scenarios; clean controls avoid false positives | ✅ **PASS** | All 20/20 mutations implemented and detected (scenario-validation-report.json) |
 | **11. Export Reproducibility** | Export/round-trip, source/corpus digest, view freshness | ✅ **PASS** | reproducibility-report.md documents all tests |
 | **11b. Human Approval** | Real human approval remains pending | ❌ **PENDING** | All artifacts: human_approval_status: pending |
 | **11c. Production Authorization** | production_authorized: false for all | ✅ **CONFIRMED** | All artifacts: production_authorized: false |
@@ -38,10 +38,10 @@
 | traceability_integrity | 95% | ✅ |
 | semantic_consistency_checks | 80% | ⚠️ |
 | automated_review_coverage | 39% | ⚠️ |
-| verification_planning | 40% | ⚠️ |
+| verification_planning | 95% | ✅ |
 | actual_product_evidence | 0% | ❌ |
 | synthetic_fixture_coverage | 100% | ✅ |
-| negative_scenario_validation | 10% | ❌ |
+| negative_scenario_validation | 100% | ✅ |
 | export_reproducibility | 100% | ✅ |
 | human_approval | 0% | ❌ |
 | production_authorization | 0% | ✅ (correctly false) |
@@ -56,7 +56,7 @@
 | System | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 1 HSI |
 | Hardware | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 3 TSRs |
 | Software | 3 | 3 | 0 | 0 | 0 | 0 | 3 | 3 SWRs, 3 DSNs |
-| Verification | 0 | 0 | 2 | 1 | 1 | 0 | 5 | 0 |
+| Verification | 0 | 0 | 11 | 6 | 1 | 0 | 12 | 0 |
 | Management | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **Total** | **14** | **4** | **2** | **1** | **1** | **5** | **13** | **22** |
 

@@ -98,5 +98,55 @@
  "feasibility_dependencies": [
   "FB2-HW-TSR-000002",
   "FB2-HW-TSR-000003"
- ]
+ ],
+ "signal_definitions": {
+  "SPI_CLK": {
+   "name": "SPI_CLK",
+   "type": "clock",
+   "unit": "MHz",
+   "range": "0.5-1.0",
+   "rate": "continuous",
+   "polarity": "CPOL=0, CPHA=1",
+   "direction": "MCU->AFE",
+   "startup_default": "low",
+   "invalid_state": "stuck high/low",
+   "timing": "t_clk_high > 250ns, t_clk_low > 250ns"
+  },
+  "SPI_MOSI": {
+   "name": "SPI_MOSI",
+   "type": "data",
+   "unit": "bits",
+   "range": "0/1",
+   "rate": "1 Mbps",
+   "polarity": "MSB first",
+   "direction": "MCU->AFE",
+   "startup_default": "low",
+   "invalid_state": "stuck",
+   "timing": "t_setup > 50ns, t_hold > 50ns"
+  },
+  "SPI_MISO": {
+   "name": "SPI_MISO",
+   "type": "data",
+   "unit": "bits",
+   "range": "0/1",
+   "rate": "1 Mbps",
+   "polarity": "MSB first",
+   "direction": "AFE->MCU",
+   "startup_default": "Hi-Z",
+   "invalid_state": "stuck",
+   "timing": "t_valid < 50ns"
+  },
+  "SPI_CS[n]": {
+   "name": "SPI_CS[n]",
+   "type": "control",
+   "unit": "active_low",
+   "range": "0/1",
+   "rate": "per transaction",
+   "polarity": "active low",
+   "direction": "MCU->AFE",
+   "startup_default": "high",
+   "invalid_state": "stuck low",
+   "timing": "t_cs_setup > 100ns"
+  }
+ }
 }

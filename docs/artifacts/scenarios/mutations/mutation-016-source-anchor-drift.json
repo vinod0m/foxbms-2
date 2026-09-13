@@ -40,15 +40,13 @@
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Change source anchor symbol to non-existent function",
+  "description": "Declare location symbol NONEXISTENT_FUNCTION while anchor FB2-SRC-COD-000001 points to AFE_GetCellVoltages",
   "affected_links": [],
   "operation": "modify",
   "new_value": {
-   "source_refs": [
-    "FB2-SRC-COD-000001"
-   ],
    "location": {
-    "symbol": "NONEXISTENT_FUNCTION"
+    "symbol": "NONEXISTENT_FUNCTION",
+    "path": "src/app/driver/afe/api/afe.h"
    }
   }
  },
@@ -59,9 +57,9 @@
  "expected_detector": "Source anchor drift detector",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000016",
-  "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "severity": "high",
+  "category": "provenance",
+  "description": "location symbol 'NONEXISTENT_FUNCTION' drifts from anchor FB2-SRC-COD-000001 symbol 'AFE_GetCellVoltages'"
  },
  "impact_paths": [
   "Provenance traceability broken",

@@ -40,32 +40,26 @@
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Enable mutually exclusive configuration options",
+  "description": "Enable mutually exclusive balancing options in parameter configuration_selection",
   "affected_links": [],
   "operation": "modify",
   "new_value": {
-   "configuration": {
-    "balancing_strategy": [
-     "voltage_based",
-     "none"
-    ],
-    "soe_method": [
-     "counting",
-     "lookup_table"
-    ]
-   }
+   "configuration_selection": [
+    "voltage_based",
+    "none"
+   ]
   }
  },
  "affected_ids": [
-  "FB2-MAN-SCO-000001"
+  "FB2-PRM-000001"
  ],
  "trigger": "Configuration consistency validation",
  "expected_detector": "Configuration consistency checker",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000011",
-  "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "severity": "high",
+  "category": "consistency",
+  "description": "configuration FB2-PRM-000001 enables mutually exclusive options"
  },
  "impact_paths": [
   "Runtime behavior undefined for conflicting configurations",

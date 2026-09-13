@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-13T02:20:37Z |
+| Generated | 2026-09-13T04:11:53Z |
 
 ## Scope
 
@@ -74,7 +74,12 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 ### Integration Evidence
 
-No execution artifacts in this profile. Integration-level executions: **none in corpus**.
+- `FB2-VER-EXE-000001`: kind=`synthetic_fixture`, outcome=`pass`
+- `FB2-VER-EXE-000002`: kind=`synthetic_fixture`, outcome=`pass`
+- `FB2-VER-EXE-000003`: kind=`synthetic_fixture`, outcome=`pass`
+- `FB2-VER-EXE-000004`: kind=`synthetic_fixture`, outcome=`pass`
+- `FB2-VER-EXE-000005`: kind=`synthetic_fixture`, outcome=`pass`
+- `FB2-VER-EXE-000006`: kind=`synthetic_fixture`, outcome=`pass`
 
 ### Integration Gaps
 
@@ -87,4 +92,4 @@ No execution artifacts in this profile. Integration-level executions: **none in 
 
 ---
 
-*Generated: 2026-09-13T02:20:37Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-13T04:11:53Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

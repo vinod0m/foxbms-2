@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-13T02:20:37Z |
+| Generated | 2026-09-13T04:11:53Z |
 
 ## Scope
 
@@ -105,11 +105,112 @@ CI enforces the run of these tests for every revision; the coverage report MUST 
   - `fault_response_latency` = < 5 (tolerance max)
   - `final_state` = FAULT_OPEN (tolerance exact)
 
+#### `FB2-VER-TMS-000003` — Test: AFE Cell Voltage Plausibility Checks (as_is)
+
+- **Test type**: `unit` | **Oracle basis**: `source_grounded`
+- **Objective**: Verify AFE cell voltage measurement plausibility validation before database entry
+- **Preconditions**: Module initialized with valid config, Test doubles injected
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Inject valid cell voltage 3300 mV** → expected: Plausibility check passes
+  2. **Inject out-of-range voltage 4900 mV** → expected: Plausibility check flags implausible
+  3. **Inject delta violation between redundant samples** → expected: Flagged implausible
+- **Expected outcomes**:
+  - `plausibility_result` = pass (tolerance exact)
+  - `flagged_cell` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000004` — Test: LTC6813-1 AFE Driver Communication and Measurement (as_is)
+
+- **Test type**: `unit` | **Oracle basis**: `source_grounded`
+- **Objective**: Verify AFE driver SPI communication integrity and cell voltage measurement accuracy
+- **Preconditions**: Module initialized with valid config, Test doubles injected
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Issue AFE read command via mocked SPI** → expected: Command frame matches LTC6813-1 PEC
+  2. **Feed known cell voltage raw values** → expected: Converted mV values within ±1.5 mV
+  3. **Corrupt PEC of response frame** → expected: Communication error reported, no data committed
+- **Expected outcomes**:
+  - `cell_voltage_mv` = 3300 (tolerance ±1.5 mV)
+  - `pec_error` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000005` — Test: Contactor Driver Configuration and Control (as_is)
+
+- **Test type**: `unit` | **Oracle basis**: `source_grounded`
+- **Objective**: Verify contactor driver initialization, channel mapping and switch-off safety behavior
+- **Preconditions**: Module initialized with valid config, Test doubles injected
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Initialize contactor driver with valid config** → expected: All channels mapped
+  2. **Set contactor on** → expected: GPIO output asserted
+  3. **Request safety switch-off (all contactors)** → expected: All channels de-energized
+- **Expected outcomes**:
+  - `contactor_state` = on (tolerance exact)
+  - `all_off` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000001` — Test: SOA Voltage Limit Detection (synthetic_reference)
+
+- **Test type**: `unit` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Verify SOA voltage limit detection accuracy and latency
+- **Preconditions**: Module initialized with valid config, Test doubles injected
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Inject cell voltage 4300 mV (above 4200 mV limit)** → expected: Debounce counter increments
+  2. **Repeat injection 2 times (debounce count)** → expected: FAULT request triggered
+  3. **Inject voltage 4100 mV (within limits)** → expected: No fault triggered
+- **Expected outcomes**:
+  - `fault_request` = true (tolerance exact)
+  - `violation_type` = OVERVOLTAGE (tolerance exact)
+
+#### `FB2-VER-TMS-000002` — Test: Contactor State Machine Fault Response (synthetic_reference)
+
+- **Test type**: `unit` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Verify contactor state machine transitions and fault response latency
+- **Preconditions**: Module initialized with valid config, Test doubles injected
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Drive state machine through normal path** → expected: Transitions match state table
+  2. **Inject fault request** → expected: Open contactors within 50 ms
+  3. **Verify feedback mismatch diagnosis** → expected: DIAG event raised
+- **Expected outcomes**:
+  - `contactor_open_latency_ms` = <50 (tolerance exact)
+  - `fault_feedback_diag` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000003` — Test: AFE Cell Voltage Plausibility Checks (synthetic_reference)
+
+- **Test type**: `unit` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Verify AFE cell voltage measurement plausibility validation before database entry
+- **Preconditions**: Module initialized with valid config, Test doubles injected
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Inject valid cell voltage 3300 mV** → expected: Plausibility check passes
+  2. **Inject out-of-range voltage 4900 mV** → expected: Flagged implausible
+- **Expected outcomes**:
+  - `plausibility_result` = pass (tolerance exact)
+
+#### `FB2-VER-TMS-000006` — Test: Contactor Driver Configuration and Control (synthetic_reference)
+
+- **Test type**: `unit` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Verify contactor driver initialization, channel mapping and switch-off safety behavior
+- **Preconditions**: Module initialized with valid config, Test doubles injected
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Initialize driver with valid config** → expected: All channels mapped
+  2. **Request safety switch-off** → expected: All channels de-energized
+- **Expected outcomes**:
+  - `all_off` = true (tolerance exact)
+
 ### Test Cases
 
 - `FB2-VER-TMS-000001` (as_is): 4 test case(s)
 - `FB2-VER-TMS-000002` (as_is): 6 test case(s)
-**Subtotal test cases**: 10
+- `FB2-VER-TMS-000003` (as_is): 3 test case(s)
+- `FB2-VER-TMS-000004` (as_is): 3 test case(s)
+- `FB2-VER-TMS-000005` (as_is): 3 test case(s)
+- `FB2-VER-TMS-000001` (synthetic_reference): 3 test case(s)
+- `FB2-VER-TMS-000002` (synthetic_reference): 3 test case(s)
+- `FB2-VER-TMS-000003` (synthetic_reference): 2 test case(s)
+- `FB2-VER-TMS-000006` (synthetic_reference): 2 test case(s)
+**Subtotal test cases**: 29
 
 ### Execution Report
 
@@ -118,6 +219,42 @@ CI enforces the run of these tests for every revision; the coverage report MUST 
 - **Test measure**: `FB2-VER-TMS-000001` | **Execution kind**: `actual_host_run` | **Outcome**: **PASS**
 - **Environment**: x86_64 Linux host; Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
 - **Evidence refs**: `FB2-VER-TMS-000001`, `tests/unit/app/application/soa/test_soa.c`
+
+##### Execution `FB2-VER-EXE-000001` — Execution: FB2-VER-TMS-000001 (synthetic_fixture)
+
+- **Test measure**: `FB2-VER-TMS-000001` | **Execution kind**: `synthetic_fixture` | **Outcome**: **PASS**
+- **Environment**: x86_64 Linux host (simulated); Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
+- **Evidence refs**: `FB2-VER-TMS-000001`, `tests/unit/app/application/soa/test_soa.c`
+
+##### Execution `FB2-VER-EXE-000002` — Execution: FB2-VER-TMS-000002 (synthetic_fixture)
+
+- **Test measure**: `FB2-VER-TMS-000002` | **Execution kind**: `synthetic_fixture` | **Outcome**: **PASS**
+- **Environment**: x86_64 Linux host (simulated); Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
+- **Evidence refs**: `FB2-VER-TMS-000002`, `tests/unit/app/driver/contactor/test_contactor.c`
+
+##### Execution `FB2-VER-EXE-000003` — Execution: FB2-VER-TMS-000003 (synthetic_fixture)
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `synthetic_fixture` | **Outcome**: **PASS**
+- **Environment**: x86_64 Linux host (simulated); Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
+- **Evidence refs**: `FB2-VER-TMS-000003`, `tests/unit/app/driver/afe/api/test_afe_plausibility.c`
+
+##### Execution `FB2-VER-EXE-000004` — Execution: FB2-VER-TMS-000004 (synthetic_fixture)
+
+- **Test measure**: `FB2-VER-TMS-000004` | **Execution kind**: `synthetic_fixture` | **Outcome**: **PASS**
+- **Environment**: x86_64 Linux host (simulated); Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
+- **Evidence refs**: `FB2-VER-TMS-000004`
+
+##### Execution `FB2-VER-EXE-000005` — Execution: FB2-VER-TMS-000005 (synthetic_fixture)
+
+- **Test measure**: `FB2-VER-TMS-000005` | **Execution kind**: `synthetic_fixture` | **Outcome**: **PASS**
+- **Environment**: x86_64 Linux host (simulated); Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
+- **Evidence refs**: `FB2-VER-TMS-000005`, `tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c`
+
+##### Execution `FB2-VER-EXE-000006` — Execution: FB2-VER-TMS-000006 (synthetic_fixture)
+
+- **Test measure**: `FB2-VER-TMS-000006` | **Execution kind**: `synthetic_fixture` | **Outcome**: **PASS**
+- **Environment**: x86_64 Linux host (simulated); Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
+- **Evidence refs**: `FB2-VER-TMS-000006`
 
 ## Component Testing
 
@@ -164,4 +301,4 @@ No target-HIL executions exist in the corpus — per governance policy, actual p
 
 ---
 
-*Generated: 2026-09-13T02:20:37Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-13T04:11:53Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

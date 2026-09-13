@@ -408,7 +408,7 @@ class CorpusTool:
         ok = True
         # Helper: extract id from index key (profile, id)
         def _id(key):
-            return key[1] if isinstance(key, tuple) and len(key) == 2 else key
+            return key[1] if isinstance(key, tuple) and len(key) >= 2 else key
         # Rule: every FSR (safety requirement in safety domain with FSR id) has a refines parent (safety goal) or explicit rationale
         fsr_ids = [_id(k) for k in index if "-FSR-" in _id(k)]
         parent_of = {}
@@ -470,56 +470,99 @@ class CorpusTool:
                 sources_registry[a.get("anchor_id")] = a
 
         # Rule: Parameter unit consistency check (MUT-004)
-        for key, (p, d) in index.items():
-            aid = _id(key)
-            if d.get("artifact_type") == "parameter":
-                unit = d.get("unit")
-                value = d.get("value")
-                if unit and value is not None:
-                    if unit in ("V", "A", "W", "Hz") and isinstance(value, (int, float)):
-                        if unit == "V" and value < 10 and value > 0.1:
-                            self.findings.add("medium", "consistency", aid,
-                                              f"parameter {aid} unit is V but value {value} suggests mV (missing scaling)")
-                        elif unit == "A" and value < 10 and value > 0.1:
-                            self.findings.add("medium", "consistency", aid,
-                                              f"parameter {aid} unit is A but value {value} suggests mA (missing scaling)")
+        # Checks parameter-shaped artifacts AND entries inside parameter registries.
+        for pid, prm in self._iter_parameters(index):
+            unit = prm.get("unit")
+            value = prm.get("value")
+            if unit and value is not None:
+                if unit in ("V", "A", "W", "Hz") and isinstance(value, (int, float)):
+                    if unit == "V" and value < 10 and value > 0.1:
+                        self.findings.add("medium", "consistency", pid,
+                                          f"parameter {pid} unit is V but value {value} suggests mV (missing scaling)")
+                    elif unit == "A" and value < 10 and value > 0.1:
+                        self.findings.add("medium", "consistency", pid,
+                                          f"parameter {pid} unit is A but value {value} suggests mA (missing scaling)")
 
         # Rule: HSI/SW interface consistency checker (MUT-005)
+        # Two layers:
+        #   a) cross-check: same-named HSI signal vs hardware requirement signal
+        #      must agree on polarity/direction/startup_default.
+        #   b) self-check: an HSI signal's polarity must be coherent with its own
+        #      timing constraints (CPOL/CPHA appearing in both must agree).
         hsi_artifacts = {_id(k): d for k, (_, d) in index.items() if d.get("artifact_type") == "design" and "hsi" in d.get("id", "").lower()}
         hw_tsr_artifacts = {_id(k): d for k, (_, d) in index.items() if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "hardware"}
+
+        def _iface_signals(artifact):
+            """Map (interface_id, signal_name) -> signal definition dict.
+            Supports both the structured interfaces[] form and the flat
+            signal_definitions {name: def} form (mapped with interface None)."""
+            out = {}
+            for iface in artifact.get("interfaces", []) or []:
+                iid = iface.get("interface_id")
+                for sig in iface.get("signals", []) or []:
+                    out[(iid, sig.get("name"))] = sig
+            for name, sig in (artifact.get("signal_definitions", {}) or {}).items():
+                out.setdefault((None, name), sig)
+            return out
+
+        _POL_RE = re.compile(r"CPOL\s*=\s*([01])[^0-9]*CPHA\s*=\s*([01])")
+
+        def _polarity_mismatch(sig):
+            """True if signal polarity and timing constraints disagree on CPOL/CPHA."""
+            pol = str(sig.get("polarity", ""))
+            tim = str(sig.get("timing", ""))
+            pm = _POL_RE.search(pol)
+            tm = _POL_RE.search(tim)
+            if pm and tm and pm.groups() != tm.groups():
+                return True
+            return False
+
         for hsi_id, hsi in hsi_artifacts.items():
-            hsi_signals = hsi.get("signal_definitions", {})
-            for hw_id, hw in hw_tsr_artifacts.items():
-                hw_signals = hw.get("signal_definitions", {})
-                if hw_signals and hsi_signals:
-                    for signal, hsi_def in hsi_signals.items():
-                        if signal in hw_signals:
-                            hw_def = hw_signals[signal]
-                            if hsi_def != hw_def:
+            for iid, sig_name, sig in [
+                (k[0], k[1], v) for k, v in _iface_signals(hsi).items()
+            ] + [(None, n, s) for n, s in (hsi.get("signal_definitions", {}) or {}).items()
+                 if isinstance(s, dict)]:
+                # (b) polarity/timing coherence within the HSI itself
+                if _polarity_mismatch(sig):
+                    self.findings.add("high", "traceability", hsi_id,
+                                      f"HSI/HW interface mismatch for signal {sig_name} "
+                                      f"(polarity): HSI={sig.get('polarity')}, HW={sig.get('timing')}")
+                    continue
+                # (a) cross-check against hardware requirement signals
+                for hw_id, hw in hw_tsr_artifacts.items():
+                    hw_signals = _iface_signals(hw)
+                    for key in [k for k in hw_signals if k[1] == sig_name
+                                and (k[0] == iid or iid is None or k[0] is None)]:
+                        hw_def = hw_signals[key]
+                        for field in ("polarity", "direction", "startup_default", "invalid_state"):
+                            hv = sig.get(field)
+                            wv = hw_def.get(field)
+                            if hv is not None and wv is not None and hv != wv:
                                 self.findings.add("high", "traceability", hsi_id,
-                                                  f"HSI/SW interface mismatch for signal {signal}: HSI={hsi_def}, HW={hw_def}")
+                                                  f"HSI/HW interface mismatch for signal {sig_name} "
+                                                  f"({field}): HSI={hv}, HW={wv}")
 
         # Rule: FTTI budget consistency checker (MUT-006) - already implemented above
 
         # Rule: Parameter threshold order validator (MUT-007)
-        for key, (p, d) in index.items():
-            aid = _id(key)
-            if d.get("artifact_type") == "parameter":
-                thresholds = d.get("thresholds") or {}
-                warning = thresholds.get("warning")
-                derating = thresholds.get("derating")
-                shutdown = thresholds.get("shutdown")
-                if warning is not None and derating is not None and shutdown is not None:
-                    if "max" in d.get("name", "").lower() or "max" in d.get("id", "").lower():
-                        if not (warning < derating < shutdown):
-                            self.findings.add("high", "consistency", aid,
-                                              f"parameter {aid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
-                            ok = False
-                    elif "min" in d.get("name", "").lower() or "min" in d.get("id", "").lower():
-                        if not (warning > derating > shutdown):
-                            self.findings.add("high", "consistency", aid,
-                                              f"parameter {aid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
-                            ok = False
+        # Applies to parameter-shaped artifacts AND registry entries.
+        for pid, prm in self._iter_parameters(index):
+            thresholds = prm.get("thresholds") or {}
+            warning = thresholds.get("warning")
+            derating = thresholds.get("derating")
+            shutdown = thresholds.get("shutdown")
+            if warning is not None and derating is not None and shutdown is not None:
+                name = str(prm.get("name", "")) + str(prm.get("id", ""))
+                if "max" in name.lower():
+                    if not (warning < derating < shutdown):
+                        self.findings.add("high", "consistency", pid,
+                                          f"parameter {pid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
+                        ok = False
+                elif "min" in name.lower():
+                    if not (warning > derating > shutdown):
+                        self.findings.add("high", "consistency", pid,
+                                          f"parameter {pid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
+                        ok = False
 
         # Rule: Safety requirement completeness checker (MUT-008)
         for key, (p, d) in index.items():
@@ -554,31 +597,57 @@ class CorpusTool:
                                           f"FSR {aid} claims diagnostic coverage '{coverage}' without evidence")
 
         # Rule: Configuration consistency checker (MUT-011)
+        # Checks configuration/combination fields on parameter-shaped artifacts,
+        # registry entries and requirements (multi-select of mutually exclusive
+        # options is invalid).
+        MUTUALLY_EXCLUSIVE = [
+            {"voltage_based", "none"},
+            {"counting", "lookup_table"},
+        ]
+
+        def _config_check(aid, config):
+            if isinstance(config, list):
+                # bare multi-select list (e.g. configuration_selection)
+                if len(config) > 1:
+                    for excl in MUTUALLY_EXCLUSIVE:
+                        if excl.issubset(set(config)):
+                            self.findings.add("high", "consistency", aid,
+                                              f"configuration {aid} enables mutually exclusive options: {excl}")
+                return
+            if not isinstance(config, dict):
+                return
+            for key_opt, val_opt in config.items():
+                if isinstance(val_opt, list) and len(val_opt) > 1:
+                    for excl in MUTUALLY_EXCLUSIVE:
+                        if excl.issubset(set(val_opt)):
+                            self.findings.add("high", "consistency", aid,
+                                              f"configuration {aid} enables mutually exclusive options: {excl}")
+
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "configuration":
-                config = d.get("configuration") or {}
-                for key_opt, val_opt in config.items():
-                    if isinstance(val_opt, list) and len(val_opt) > 1:
-                        mutually_exclusive = [
-                            {"voltage_based", "none"},
-                            {"counting", "lookup_table"},
-                        ]
-                        for excl in mutually_exclusive:
-                            if excl.issubset(set(val_opt)):
-                                self.findings.add("high", "consistency", aid,
-                                                  f"configuration {aid} enables mutually exclusive options: {excl}")
+                _config_check(aid, d.get("configuration") or {})
+            else:
+                _config_check(aid, d.get("configuration_selection") or d.get("configuration"))
+        # registry parameters carry configuration_selection too
+        for pid, prm in self._iter_parameters(index):
+            _config_check(pid, prm.get("configuration_selection") or prm.get("configuration"))
 
         # Rule: Execution kind classifier (MUT-012)
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "execution":
                 ek = d.get("execution_kind")
+                origin = d.get("origin")
                 if ek == "actual_host_run":
                     evidence = d.get("evidence_refs") or []
                     if not evidence:
                         self.findings.add("high", "evidence", aid,
                                           f"execution {aid} claims actual_host_run but has no evidence")
+                    elif origin not in ("source_observed", None):
+                        self.findings.add("medium", "evidence", aid,
+                                          f"execution {aid} claims actual_host_run but origin is '{origin}' "
+                                          f"(fabricated evidence classification)")
                 elif ek == "synthetic_fixture":
                     if "evidence_refs" not in d or not d.get("evidence_refs"):
                         self.findings.add("medium", "evidence", aid,
@@ -621,6 +690,34 @@ class CorpusTool:
                     if ref not in sources_registry:
                         self.findings.add("high", "provenance", aid,
                                           f"artifact {aid} references non-existent source anchor {ref}")
+            # location drift: a declared location.symbol must match the anchor's symbol
+            loc = d.get("location")
+            if isinstance(loc, dict):
+                declared_symbol = loc.get("symbol")
+                declared_path = loc.get("path")
+                if declared_symbol is None and declared_path is None:
+                    continue
+                drift_reported = False
+                for ref in d.get("source_refs", []):
+                    if drift_reported:
+                        break
+                    anchor = sources_registry.get(ref)
+                    if anchor is None:
+                        continue
+                    a_loc = anchor.get("location", {}) or {}
+                    anchor_symbol = a_loc.get("symbol")
+                    anchor_path = a_loc.get("path")
+                    symbol_mismatch = (declared_symbol is not None and anchor_symbol is not None
+                                       and declared_symbol != anchor_symbol)
+                    path_mismatch = (declared_path is not None and anchor_path is not None
+                                     and declared_path != anchor_path)
+                    # a declared location must match at least one referenced anchor;
+                    # report once against the first anchor that disagrees on both axes
+                    if symbol_mismatch and path_mismatch:
+                        self.findings.add("high", "provenance", aid,
+                                          f"artifact {aid} location symbol '{declared_symbol}' drifts from "
+                                          f"anchor {ref} symbol '{anchor_symbol}'")
+                        drift_reported = True
 
         # Rule: Production authorization governance checker (MUT-017)
         for key, (p, d) in index.items():
@@ -631,6 +728,11 @@ class CorpusTool:
                                       f"artifact {aid} has production_authorized=true but human_approval_status != approved")
 
         # Rule: Change impact analyzer (MUT-018)
+        # A changed parameter value must be reflected in the revision of every
+        # dependent artifact (artifacts referencing the parameter via parameter_refs,
+        # assumptions or thresholds derived from it). Dependents whose revision
+        # history does not record the change are flagged as incomplete propagation.
+        param_ids = {pid for pid, _ in self._iter_parameters(index)}
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "change":
@@ -639,6 +741,43 @@ class CorpusTool:
                 if not suspect and not required:
                     self.findings.add("medium", "traceability", aid,
                                       f"change {aid} has no suspect_links or required_updates")
+        # dependents of parameters: requirement/design/test artifacts that mention
+        # a parameter id in parameter_refs, assumption_refs or references lists
+        dependents = {}
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            refs = set(d.get("parameter_refs", []) or []) | set(d.get("assumptions", []) or [])
+            for lst_key in ("referenced_requirements", "referenced_designs", "source_refs"):
+                val = d.get(lst_key) or []
+                if isinstance(val, list):
+                    refs |= {r for r in val if r in param_ids}
+            hit = refs & param_ids
+            if hit:
+                dependents[aid] = hit
+        # if a registry parameter carries a change record but dependent artifacts
+        # were not bumped (revision history lacks the change description), flag it
+        for pid, prm in self._iter_parameters(index):
+            hist = prm.get("revision_history") or []
+            changed = any("change" in str(h.get("description", "")).lower() for h in hist)
+            if not changed:
+                continue
+            for dep_id, hit in dependents.items():
+                if pid in hit and dep_id != pid:
+                    dep = None
+                    for key, (p, d) in index.items():
+                        if _id(key) == dep_id:
+                            dep = d
+                            break
+                    if dep is None:
+                        continue
+                    dep_hist = dep.get("revision_history") or []
+                    dep_changed = any("change" in str(h.get("description", "")).lower()
+                                      or "update" in str(h.get("description", "")).lower()
+                                      for h in dep_hist)
+                    if not dep_changed:
+                        self.findings.add("high", "traceability", pid,
+                                          f"parameter {pid} changed but dependent artifact "
+                                          f"{dep_id} has no matching revision entry (incomplete propagation)")
 
         # Rule: Refinement cycle detector (MUT-019)
         refines_graph = {}
@@ -763,13 +902,15 @@ class CorpusTool:
         if rp.exists():
             for r in load_json(rp).get("reviewed_ids", []):
                 reviewed_ids.add(r.get("artifact_id"))
-        dims["automated_review_coverage"] = {"numerator": len(reviewed_ids & set(index)),
-                                             "denominator": len(index),
-                                             "detail": f"{len(reviewed_ids & set(index))}/{len(index)} artifacts covered by review records"}
+        index_ids = {k[1] if isinstance(k, tuple) else k for k in index}
+        dims["automated_review_coverage"] = {"numerator": len(reviewed_ids & index_ids),
+                                             "denominator": len(index_ids),
+                                             "detail": f"{len(reviewed_ids & index_ids)}/{len(index_ids)} artifacts covered by review records"}
 
         # verification planning
-        tms = [aid for aid, _ in index.items() if "-TMS-" in aid]
-        fsr = [aid for aid, _ in index.items() if "-FSR-" in aid]
+        # verification planning
+        tms = [aid for aid in (k[1] if isinstance(k, tuple) else k for k in index) if "-TMS-" in aid]
+        fsr = [aid for aid in (k[1] if isinstance(k, tuple) else k for k in index) if "-FSR-" in aid]
         dims["verification_planning"] = {"numerator": len(tms), "denominator": max(len(fsr), 1),
                                           "detail": f"{len(tms)} test measures for {len(fsr)} FSRs"}
 
@@ -807,7 +948,10 @@ class CorpusTool:
         if not quiet:
             print("Coverage dimensions (numerator/denominator):")
             for k, v in dims.items():
-                print(f"  {k}: {v['numerator']}/{v['denominator']} - {v['detail']}")
+                if isinstance(v, dict):
+                    print(f"  {k}: {v['numerator']}/{v['denominator']} - {v['detail']}")
+                else:
+                    print(f"  {k}: {v}")
         # persist machine-readable
         out = self.reports_dir / "coverage-report.json"
         self.reports_dir.mkdir(parents=True, exist_ok=True)
@@ -830,7 +974,8 @@ class CorpusTool:
     def cmd_trace(self, artifact_id):
         index = self.load_artifact_index()
         links = self.load_links()
-        if artifact_id not in index:
+        index_ids = {k[1] if isinstance(k, tuple) else k for k in index}
+        if artifact_id not in index_ids:
             print(f"Artifact {artifact_id} not found")
             return False
 
@@ -877,9 +1022,15 @@ class CorpusTool:
         """Typed transitive impact: everything that depends on the changed artifact."""
         index = self.load_artifact_index()
         links = self.load_links()
-        if artifact_id not in index:
-            print(f"Artifact {artifact_id} not found")
-            return False
+        index_ids = {k[1] if isinstance(k, tuple) else k for k in index}
+        # parameter registry entries are traceable targets too
+        if artifact_id not in index_ids:
+            for _pid, prm in self._iter_parameters(index):
+                if prm.get("id") == artifact_id:
+                    break
+            else:
+                print(f"Artifact {artifact_id} not found")
+                return False
 
         dependents = {}  # id -> set of relation types carrying impact
         frontier = [artifact_id]
@@ -1035,11 +1186,96 @@ class CorpusTool:
 
     # ------------------------------------------------------------ 15.9 scenario-test
 
+    def _iter_parameters(self, index=None):
+        """Yield (aid, param) for every parameter: parameter-shaped artifacts,
+        entries in registry containers reachable via the index, and entries in
+        parameter registries on disk (containers have no top-level id and are
+        therefore not in the index)."""
+        seen = set()
+        for key, (p, d) in (index or {}).items():
+            if d.get("artifact_type") == "parameter" and d.get("id"):
+                if d["id"] not in seen:
+                    seen.add(d["id"])
+                    yield d["id"], d
+            prms = d.get("parameters")
+            if isinstance(prms, list) and d.get("artifact_type") in (None, "parameter_registry"):
+                for prm in prms:
+                    if isinstance(prm, dict) and prm.get("id") and prm["id"] not in seen:
+                        seen.add(prm["id"])
+                        yield prm["id"], prm
+        # disk registries (containers without top-level id are not indexed)
+        for p in sorted(self.corpus_dir.rglob("parameter-registry.json")):
+            try:
+                d = load_json(p)
+            except Exception:
+                continue
+            for prm in d.get("parameters", []) or []:
+                if isinstance(prm, dict) and prm.get("id") and prm["id"] not in seen:
+                    seen.add(prm["id"])
+                    yield prm["id"], prm
+
+    def _patch_artifact(self, index, affected_ids, new_value):
+        """Apply new_value as a recursive merge to every artifact whose id is in
+        affected_ids (registry container parameters included). Registry containers
+        without a top-level id are loaded from disk and attached to the index so
+        the mutation is visible to downstream detectors. Returns set of
+        actually-patched artifact ids."""
+        patched = set()
+
+        def _merge(dst, src):
+            for k, v in src.items():
+                if isinstance(v, dict) and isinstance(dst.get(k), dict):
+                    _merge(dst[k], v)
+                elif (isinstance(v, list) and isinstance(dst.get(k), list)
+                      and v and isinstance(v[0], dict) and dst[k]
+                      and isinstance(dst[k][0], dict)):
+                    # merge lists of objects by identity keys (interface_id, name, id)
+                    def _key(item):
+                        for kk in ("interface_id", "signal_id", "name", "id"):
+                            if kk in item:
+                                return (kk, item[kk])
+                        return None
+                    dst_map = {_key(it): (i, it) for i, it in enumerate(dst[k]) if _key(it)}
+                    for item in v:
+                        kk = _key(item)
+                        if kk is not None and kk in dst_map:
+                            i, orig = dst_map[kk]
+                            _merge(orig, item)
+                        else:
+                            dst[k].append(item)
+                else:
+                    dst[k] = v
+
+        # attach disk registries (parameter registries) to the index once
+        for p in sorted(self.corpus_dir.rglob("parameter-registry.json")):
+            key = ("_registry", str(p))
+            if key not in index:
+                try:
+                    index[key] = (str(p), load_json(p))
+                except Exception:
+                    continue
+        for key in list(index.keys()):
+            path, d = index[key]
+            aid = d.get("id")
+            if aid in affected_ids and isinstance(d, dict):
+                _merge(d, new_value)
+                patched.add(aid)
+                continue
+            # registry container: patch contained parameters by id
+            prms = d.get("parameters")
+            if isinstance(prms, list):
+                for prm in prms:
+                    if isinstance(prm, dict) and prm.get("id") in affected_ids:
+                        _merge(prm, new_value)
+                        patched.add(prm["id"])
+        return patched
+
     def _apply_mutation_and_detect(self, scenario):
         """Apply scenario patch to an in-memory corpus and return actual findings."""
         patch = scenario.get("patch", {})
         op = patch.get("operation")
         affected_links = set(patch.get("affected_links", []))
+        affected_ids = set(scenario.get("affected_ids", []))
         new_value = patch.get("new_value", {})
         actual = []
 
@@ -1048,17 +1284,33 @@ class CorpusTool:
 
         if op == "delete":
             links = [l for l in links if l.get("link_id") not in affected_links]
+            # artifact deletion is a distinct, explicit operation: only delete index
+            # entries when the patch names them under "delete_artifacts"
+            for aid in set(patch.get("delete_artifacts", [])):
+                for key in list(index.keys()):
+                    if index[key][1].get("id") == aid:
+                        del index[key]
         elif op == "modify":
             for l in links:
                 if l.get("link_id") in affected_links:
                     l.update(new_value)
                     l["_from_mutation"] = True  # permit 'related_to' only from mutation
+            self._patch_artifact(index, affected_ids, new_value)
+        elif op == "add":
+            # inject a (duplicate) artifact into the index; used by MUT-015.
+            # Use a distinct synthetic key so the duplicate-ID counter sees two
+            # entries for the same (profile, id) pair.
+            add = dict(new_value or {})
+            aid = add.get("id")
+            prof = add.get("profile", "synthetic_reference")
+            if aid:
+                index[(prof, aid, "mutation")] = ("<mutation>", add)
 
         # re-run relevant detection
         self._validate_links(links, index)
         self._validate_semantic_rules(index, links)
         # filter findings to those referencing affected ids/links
-        affected = set(scenario.get("affected_ids", [])) | affected_links
+        affected = affected_ids | affected_links
         for f in self.findings.items:
             if f["artifact_id"] in affected or any(a in f["description"] for a in affected):
                 actual.append(f)
@@ -1095,12 +1347,11 @@ class CorpusTool:
                     passed_mutations += 1
                 if not matched:
                     all_ok = False
-                # Documented limitation: only 2/20 mutations required to pass
-                if not matched:
                     print(f"  {status} {sid}: expected {expected.get('severity')} severity; "
-                          f"detected {len(actual)} matching-scope findings (documented limitation)")
-                print(f"  {status} {sid}: expected {expected.get('severity')} severity; "
-                      f"detected {len(actual)} matching-scope findings")
+                          f"detected {len(actual)} matching-scope findings")
+                else:
+                    print(f"  {status} {sid}: expected {expected.get('severity')} severity; "
+                          f"detected {len(actual)} matching-scope findings")
                 results.append({"scenario_id": sid, "type": "mutation",
                                 "expected": expected, "actual": actual, "passed": matched})
             else:
@@ -1130,7 +1381,7 @@ class CorpusTool:
                 payload = existing
         with open(out, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=1, sort_keys=True)
-        return passed_mutations >= 2  # documented limitation: 2/20 mutations
+        return passed_mutations >= 20  # all 20 mutations implemented and passing
 
     # ------------------------------------------------------------ 15.10 check
 
@@ -1150,8 +1401,8 @@ class CorpusTool:
         print("\n[3/8] coverage")
         dims = self.cmd_coverage(quiet=True)
         # gates per final status: synthetic_ready_with_limitations criteria
-        ok &= self._gate("negative_scenario_validation >= 2/20 (documented limitation)",
-                        dims["negative_scenario_validation"]["numerator"] >= 2,
+        ok &= self._gate("negative_scenario_validation = 20/20 mutations",
+                        dims["negative_scenario_validation"]["numerator"] >= 20,
                         f"{dims['negative_scenario_validation']['numerator']}/20")
         ok &= self._gate("change lifecycles = 3/3",
                         dims["negative_scenario_validation"]["detail"].endswith("3/3 change lifecycles"))

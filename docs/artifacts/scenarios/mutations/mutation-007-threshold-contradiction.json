@@ -40,7 +40,7 @@
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Set warning threshold higher than shutdown threshold",
+  "description": "Invert threshold order of cell_voltage_max: warning 4300 > derating 4200 > shutdown 4100",
   "affected_links": [],
   "operation": "modify",
   "new_value": {
@@ -52,15 +52,15 @@
   }
  },
  "affected_ids": [
-  "FB2-MAN-SCO-000001"
+  "FB2-PRM-000001"
  ],
  "trigger": "Parameter threshold order validation",
  "expected_detector": "Parameter threshold order validator",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000007",
-  "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "severity": "high",
+  "category": "consistency",
+  "description": "parameter FB2-PRM-000001 threshold order violated"
  },
  "impact_paths": [
   "Warning triggers after derating/shutdown - logic inverted",

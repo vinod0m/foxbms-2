@@ -1,0 +1,113 @@
+{
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "owner_role": "verification_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 10",
+   "status": "mapped",
+   "rationale": "Software unit verification"
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.4, SWE.5",
+   "status": "mapped",
+   "rationale": "Software integration and qualification test"
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-13T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-13T00:00:00Z",
+ "updated_at": "2026-09-13T00:00:00Z",
+ "id": "FB2-VER-TMS-000006",
+ "title": "Test: Contactor Driver Configuration and Control",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-13T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Synthetic test measure for hypothetical project"
+  }
+ ],
+ "test_type": "unit",
+ "objective": "Verify contactor driver initialization, channel mapping and switch-off safety behavior",
+ "referenced_requirements": [
+  "FB2-HW-TSR-000003"
+ ],
+ "referenced_designs": [],
+ "preconditions": [
+  "Module initialized with valid config",
+  "Test doubles injected"
+ ],
+ "stimuli": [
+  {
+   "signal": "input",
+   "value": "per step definition",
+   "timing": "t=0"
+  }
+ ],
+ "environment": {
+  "hardware": "POSIX host (Linux)",
+  "software": "Unity/CMock",
+  "tools": [
+   "GCC",
+   "CMock",
+   "Unity"
+  ],
+  "configuration": "conf/unit/app_project_posix.yml"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "action": "Initialize driver with valid config",
+   "expected": "All channels mapped"
+  },
+  {
+   "step": 2,
+   "action": "Request safety switch-off",
+   "expected": "All channels de-energized"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "all_off",
+   "expected_value": "true",
+   "tolerance": "exact",
+   "unit": "bool"
+  }
+ ],
+ "tolerances": {
+  "value": "exact"
+ },
+ "timing": {
+  "max_execution_time_ms": 100,
+  "setup_time_ms": 10,
+  "teardown_time_ms": 5
+ },
+ "oracle_basis": "synthetic_assumption",
+ "cleanup": "Reset module state, clear mocks",
+ "regression_selection": "Always included in regression suite"
+}
