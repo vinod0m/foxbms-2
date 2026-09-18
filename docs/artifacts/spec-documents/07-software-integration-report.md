@@ -52,7 +52,7 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 ### Integration Evidence
 
-- `FB2-VER-EXE-000001`: kind=`actual_host_run`, outcome=`pass`
+- `FB2-VER-EXE-000001` (`result_of` → `FB2-VER-TMS-000001`, `FB2-LNK-SAF-000018`): kind=`actual_host_run`, outcome=`pass` — unit-level execution only (SOA voltage test); hashes `sha256:placeholder`, `output_hashes` empty, not independently substantiated. No component/integration-level executions exist in `as_is`.
 
 ### Integration Gaps
 
@@ -73,6 +73,8 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 | `FB2-SW-DSN-000003` | `FB2-SW-SWR-000003` | Design implements software requirement |
 
 ### Integration Evidence
+
+All six executions are unit-level `synthetic_fixture` results (`result_of` links `FB2-LNK-SAF-000033..038`), demonstrating corpus structure only — no component/integration-level test measures exist in `synthetic_reference`.
 
 - `FB2-VER-EXE-000001`: kind=`synthetic_fixture`, outcome=`pass`
 - `FB2-VER-EXE-000002`: kind=`synthetic_fixture`, outcome=`pass`

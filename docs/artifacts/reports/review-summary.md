@@ -89,7 +89,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Corpus artifacts reviewed | 17/42 (40%) |
+| Corpus artifacts reviewed | 17/45 (38%) |
 | Findings per artifact | 0.29 |
 | Critical findings | 0 (after resolution) |
 | High findings | 0 (after resolution) |

@@ -81,6 +81,18 @@ All software modules reverse-engineered from `src/app/` (layer / module / prefix
 
 Configuration is separated from module logic into per-layer `config/` directories (`src/app/*/config/*_cfg.c|h`) — each module pairs with a `*_cfg` file (see Detailed Design).
 
+## Design-to-Implementation Allocation
+
+Each software design (`FB2-SW-DSN-*`) implements its parent SWR (`implements` links `FB2-LNK-SAF-000011`–`FB2-LNK-SAF-000013`, identical in both profiles) and carries an `implementation_mapping` with `status: implemented` source anchors (identical in both profiles' DSN records).
+
+| Design | Implements | Allocated source files / symbols |
+|---|---|---|
+| `FB2-SW-DSN-000001` (AFE driver) | `FB2-SW-SWR-000001` (`FB2-LNK-SAF-000011`) | `src/app/driver/afe/ltc/common/ltc_afe.c` (`LTC_AFE_TriggerMeasurement`), `ltc_afe_dma.c` (`LTC_AFE_DMA_RxCallback`), `ltc_pec.c` (`LTC_PEC_Calculate`), `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` (`LTC_6813_ReadVoltages`) |
+| `FB2-SW-DSN-000002` (SOA monitoring) | `FB2-SW-SWR-000002` (`FB2-LNK-SAF-000012`) | `src/app/application/soa/soa.c` (`SOA_CheckVoltageLimits`, `SOA_CheckCurrentLimits`, `SOA_CheckTemperatureLimits`), `src/app/engine/diag/cbs/diag_cbs_voltage.c` (`DIAG_CBS_Voltage`) |
+| `FB2-SW-DSN-000003` (contactor) | `FB2-SW-SWR-000003` (`FB2-LNK-SAF-000013`) | `src/app/driver/contactor/contactor.c` (`CONTACTOR_StateMachine`, `CONTACTOR_CheckFeedback`), `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c` (`SBC_FS8X_SetContactor`), `src/app/engine/diag/cbs/diag_cbs_contactor.c` (`DIAG_CBS_Contactor`) |
+
+`status: implemented` records the mapping claim in the corpus; it is not execution evidence. No design exists for `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004` (independent monitor, `synthetic_reference` only) — that requirement pair is covered by test measure `FB2-VER-TMS-000004` with no allocated SWR or DSN.
+
 ## Dynamic Viewpoint — Task Model
 
 **Caption**: RTOS task set (FreeRTOS): four cyclic tasks (1 ms, 10 ms, 100 ms, 100 ms algorithm) plus continuous blocking tasks (I2C, engine). Source: `src/app/task/ftask/ftask.c`, `src/app/task/config/ftask_cfg.c`.
@@ -332,6 +344,34 @@ flowchart LR
 ```
 
 
+
+## Design Verification Coverage
+
+Upstream chain (identical link IDs both profiles except FSR-004, `synthetic_reference` only): `FB2-SAF-SGO-000001` `mitigates` `FB2-SAF-HAZ-000001` (`FB2-LNK-SAF-000001`); `FB2-SAF-FSR-000001/002/003` `refines` `FB2-SAF-SGO-000001` (`FB2-LNK-SAF-000002/003/004`); `FB2-SAF-FSR-000004` `refines` `FB2-SAF-SGO-000001` (`FB2-LNK-SAF-000021`, synthetic only). Review links exist in `as_is` only: `FB2-REV-000001` `reviewed_by` `FB2-SAF-HAZ-000001` (`FB2-LNK-SAF-000019`) and `FB2-SAF-FSR-000001` (`FB2-LNK-SAF-000020`).
+
+Test measures linked against the software designs' parent requirements. `verifies` links target requirements, not DSNs — design coverage below is inherited via each DSN's parent SWR.
+
+### Profile: `as_is` (test measures `source_grounded`)
+
+| Design | Parent SWR | Verifying test measure | Execution record |
+|---|---|---|---|
+| `FB2-SW-DSN-000001` | `FB2-SW-SWR-000001` | `FB2-VER-TMS-000003` (`FB2-LNK-SAF-000021`, `FB2-LNK-SAF-000022`) | none recorded |
+| `FB2-SW-DSN-000002` | `FB2-SW-SWR-000002` | `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000014`, `FB2-LNK-SAF-000015`) | `FB2-VER-EXE-000001` (`FB2-LNK-SAF-000018`), `actual_host_run`, `pass` — hashes `sha256:placeholder`, `output_hashes` empty |
+| `FB2-SW-DSN-000003` | `FB2-SW-SWR-000003` | `FB2-VER-TMS-000002` (`FB2-LNK-SAF-000016`, `FB2-LNK-SAF-000017`) | none recorded |
+
+### Profile: `synthetic_reference` (test measures `synthetic_assumption`, executions `synthetic_fixture`)
+
+| Design | Parent SWR | Verifying test measure | Execution record |
+|---|---|---|---|
+| `FB2-SW-DSN-000001` | `FB2-SW-SWR-000001` | `FB2-VER-TMS-000003` (`FB2-LNK-SAF-000026`, `FB2-LNK-SAF-000027`) | `FB2-VER-EXE-000003` (`FB2-LNK-SAF-000035`), `synthetic_fixture`, `pass` |
+| `FB2-SW-DSN-000002` | `FB2-SW-SWR-000002` | `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000022`, `FB2-LNK-SAF-000023`) | `FB2-VER-EXE-000001` (`FB2-LNK-SAF-000033`), `synthetic_fixture`, `pass` |
+| `FB2-SW-DSN-000003` | `FB2-SW-SWR-000003` | `FB2-VER-TMS-000002` (`FB2-LNK-SAF-000024`, `FB2-LNK-SAF-000025`) | `FB2-VER-EXE-000002` (`FB2-LNK-SAF-000034`), `synthetic_fixture`, `pass` |
+
+### Evidence limits
+
+- No `verifies` link targets a DSN directly; a `pass` on a test measure verifies the linked requirement, not the design document.
+- `synthetic_fixture` results demonstrate corpus structure only; `product_verification_credit` is `false`, `human_approval_status` is `pending`.
+- In `as_is`, `FB2-VER-TMS-000002` and `FB2-VER-TMS-000003` have test-measure records but no execution records; the single `actual_host_run` pass (`FB2-VER-EXE-000001`) is not independently substantiated.
 
 ---
 

@@ -537,8 +537,8 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 | Gate | Result |
 |---|---|
 | Schema validation (13 schemas, draft 2020-12) | ✅ all valid |
-| Artifact validation (86 artifacts) | ✅ 0 errors |
-| Link validation (56 links, profile-aware) | ✅ 0 dangling |
+| Artifact validation (89 artifacts) | ✅ 0 errors (last validated run; re-run pending for TMS-007/008/009 + LNK-039..047) |
+| Link validation (65 links, profile-aware) | ✅ 0 dangling (last validated run; re-run pending for LNK-039..047) |
 | Provenance (source_refs → 43-anchor registry) | ✅ all resolve |
 | Provenance (assumption_refs → 12-assumption registry) | ✅ 12/12 resolve |
 | Identity uniqueness (per profile) | ✅ 0 duplicates within profile |
@@ -559,8 +559,8 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 | FSR → SW SWR | ✅ 100% | `allocated_to` (SWR-001/002/003) |
 | SWR → Design | ✅ 100% | `implements` (DSN-001/002/003) |
 | Design → Source code | ✅ 100% | `implementation_mapping` (4 entries per design) |
-| Requirements → Test | ✅ 20/21 covered | All FSRs/TSRs/SWRs verified in synthetic_reference; as_is covers all except FSR-004/TSR-004 (no upstream test); SCO-001 process-audit by nature |
-| Test → Execution | ✅ 100% | as_is EXE-001 (actual_host_run); synthetic EXE-001..006 (`result_of`) |
+| Requirements → Test | ✅ 21/21 linked | All FSRs/TSRs/SWRs/SCO verified or validated in synthetic_reference (TMS-001..009, incl. draft stubs 007/008/009); as_is covers all except FSR-004/TSR-004 (no upstream test); SCO-001 `validates` via TMS-009 stub |
+| Test → Execution | ✅ 6/6 executed (synthetic fixtures) + stubs | as_is EXE-001 (actual_host_run); synthetic EXE-001..006 (`result_of`); TMS-007/008/009 draft stubs have no executions |
 | Review coverage | ✅ 17/17 vertical-slice artifacts | content digests verified |
 | Safety analyses ↔ requirements | ⚠️ partial | FMEA lists 5 failure modes; FTA/DFA/FFI element lists empty (documented gap) |
 | Parameter ↔ consumers | ✅ 100% | 10 params, thresholds, assumptions, config selection |
@@ -574,7 +574,7 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 |---|---|---|---|
 | 1 | FSR-000004/TSR-000004 (independent monitor) have no as_is `verifies` links (no upstream test) | as_is | Documented verification gap; synthetic TMS-004 covers both |
 | 2 | No target-hardware execution evidence (only host-run unit test) | both | Policy: `actual_product_evidence = 0` — blocked, not fabricated; HIL setup unpublished upstream |
-| 3 | Integration-level test measures absent | both | Documented gap (unit-level only) |
+| 3 | Integration/qualification/validation executions absent (planning stubs TMS-007/008/009 only) | both | Documented gap; stubs linked, executions blocked |
 | 4 | FTA/DFA/FFI analyses have empty element/gate lists | synthetic | Skeleton analyses; FMEA fully populated (5 failure modes) |
 | 5 | Safety case skeleton has 1 claim with empty evidence refs | synthetic | Skeleton only |
 | 6 | Multi-defect interaction scenarios not built | corpus tooling | Isolated 20/20 complete; interactions are future extension |
@@ -586,7 +586,7 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 
 Every requirement chain from hazard to test execution is traceable in both profiles via
 typed links with complete metadata (rationale, provenance, review_state, change_suspect_status).
-All 56 links resolve; all source and assumption references resolve; identity is unique per
+All 65 links resolve (per last validated run; LNK-039..047 added after, re-run pending); all source and assumption references resolve; identity is unique per
 profile; the FTTI budget is coherent; 20/20 mutations and 3/3 change lifecycles are detected;
 and the acceptance suite passes all 8 gates.
 

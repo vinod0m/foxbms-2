@@ -37,6 +37,25 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 
 ## Test Specification
 
+Upstream `verifies` links per test measure. Full requirement chain above each measure: `HAZ-000001` ← `SGO-000001` (`LNK-001`) ← FSR (`LNK-002/003/004`, `LNK-021` synthetic FSR-004) ← TSR/SWR allocation (`LNK-005..010`). All corpus test measures below are `unit`, `robustness`, or `fault_injection` type — no system-qualification test measures exist in either profile.
+
+| Test measure | Verifies (`verifies` links) |
+|---|---|
+| `FB2-VER-TMS-000001` (as_is) | `FSR-000002` + `SWR-000002` (`LNK-014/015`) |
+| `FB2-VER-TMS-000002` (as_is) | `FSR-000003` + `SWR-000003` (`LNK-016/017`) |
+| `FB2-VER-TMS-000003` (as_is) | `FSR-000001` + `SWR-000001` (`LNK-021/022`) |
+| `FB2-VER-TMS-000004` (as_is) | `TSR-000001` + `TSR-000002` (`LNK-023/024`) |
+| `FB2-VER-TMS-000005` (as_is) | `TSR-000003` (`LNK-025`) |
+| `FB2-VER-TMS-000001` (synthetic) | `FSR-000002` + `SWR-000002` (`LNK-022/023`) |
+| `FB2-VER-TMS-000002` (synthetic) | `FSR-000003` + `SWR-000003` (`LNK-024/025`) |
+| `FB2-VER-TMS-000003` (synthetic) | `FSR-000001` + `SWR-000001` + `TSR-000001` (`LNK-026/027/028`) |
+| `FB2-VER-TMS-000004` (synthetic) | `FSR-000004` + `TSR-000004` (`LNK-029/030`) |
+| `FB2-VER-TMS-000005` (synthetic) | `TSR-000002` (`LNK-031`) |
+| `FB2-VER-TMS-000006` (synthetic) | `TSR-000003` (`LNK-032`) |
+| `FB2-VER-TMS-000007` (synthetic, draft stub) | `SWR-000001/002/003` (`LNK-039/040/041`) |
+| `FB2-VER-TMS-000008` (synthetic, draft stub) | `FSR-000001/002/003/004` (`LNK-042/043/044/045`) |
+| `FB2-VER-TMS-000009` (synthetic, draft stub) | `SGO-000001` + `SCO-000001` (`LNK-046/047`, `validates`) |
+
 #### `FB2-VER-TMS-000001` — Test: SOA Voltage Limit Detection (as_is)
 
 - **Test type**: `unit` | **Oracle basis**: `source_grounded`
@@ -194,6 +213,44 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - **Expected outcomes**:
   - `all_off` = true (tolerance exact)
 
+#### `FB2-VER-TMS-000007` — Test: Software Integration Chain (synthetic_reference, draft planning stub)
+
+- **Test type**: `integration` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Define the software integration verification intent for the SOA-database-contactor chain; no execution performed (harness blocked)
+- **Preconditions**: SOA, database and contactor units available as host builds; integration harness defined (blocked)
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Publish violated cell voltage set to database via MEAS path** → expected: SOA reads violated set within task cycle
+  2. **Confirm SOA fault request propagates to BMS state machine** → expected: FAULT state entered
+  3. **Confirm contactor open command issued** → expected: Coil de-energize commanded within 5 ms
+- **Expected outcomes**:
+  - `chain_fault_to_open_verified` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000008` — Test: System Qualification (synthetic_reference, draft planning stub)
+
+- **Test type**: `qualification` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Define the system/software qualification verification intent against FSR-001..004 end to end; no execution performed (harness/target blocked)
+- **Preconditions**: Integrated system build available (blocked); qualification environment defined (blocked)
+- **Environment**: Target + HIL bench (blocked — unpublished); Unity/CMock
+- **Test cases (steps)**:
+  1. **Drive cell-voltage limit violation at system boundary** → expected: FAULT state reached end to end
+  2. **Confirm contactor open within FTTI budget** → expected: Timing within 100 ms FTTI
+  3. **Confirm DIAG records safety reaction** → expected: Diagnosis entry present
+- **Expected outcomes**:
+  - `qual_chain_pass` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000009` — Test: Stakeholder Validation (synthetic_reference, draft planning stub)
+
+- **Test type**: `validation` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Define the validation intent of cell-voltage stakeholder use cases; no execution performed (environment blocked)
+- **Preconditions**: Stakeholder use cases baselined; validation environment defined (blocked)
+- **Environment**: Operational target vehicle/bench (blocked)
+- **Test cases (steps)**:
+  1. **Execute normal-operation charging use case** → expected: No spurious safety reaction
+  2. **Execute overvoltage field scenario** → expected: System reaches safe state, stakeholder acceptance criteria met
+- **Expected outcomes**:
+  - `validation_accepted` = true (tolerance exact)
+
 ## Test Cases
 
 - `FB2-VER-TMS-000001` (as_is): 4 test case(s)
@@ -207,8 +264,11 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - `FB2-VER-TMS-000004` (synthetic_reference): 3 test case(s)
 - `FB2-VER-TMS-000005` (synthetic_reference): 3 test case(s)
 - `FB2-VER-TMS-000006` (synthetic_reference): 2 test case(s)
+- `FB2-VER-TMS-000007` (synthetic_reference, draft stub): 3 test case(s)
+- `FB2-VER-TMS-000008` (synthetic_reference, draft stub): 3 test case(s)
+- `FB2-VER-TMS-000009` (synthetic_reference, draft stub): 2 test case(s)
 
-**Total system-level test cases**: 35
+**Total test cases across unit-level measures**: 43 (no system-qualification executions exist in the corpus; TMS-007/008/009 are unexecuted planning stubs)
 
 ## Execution Report
 
@@ -256,6 +316,16 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 
 
 
+## Execution Traceability and Evidence Limits
+
+`result_of` links (execution → test measure): as_is `FB2-VER-EXE-000001` → `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000018`); synthetic `FB2-VER-EXE-000001..000006` → `FB2-VER-TMS-000001..000006` (`FB2-LNK-SAF-000033..038`).
+
+- as_is `actual_host_run` PASS (`FB2-VER-EXE-000001`) is not independently substantiated: log/coverage hashes are `sha256:placeholder`, `output_hashes` empty, per-run logs not retained. `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have no execution records.
+- All synthetic executions are `synthetic_fixture` PASS results demonstrating corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
+- Planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation) have `verifies`/`validates` links but no execution records.
+- No system-qualification, integration, component, or HIL executions exist in either profile — system verification rests on unit-level measures plus reverse-engineered repository evidence above.
+
 ---
 
 *Generated: 2026-09-13T15:17:46Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+

@@ -29,7 +29,7 @@
 
 ### Part 6: Software-Level Product Development
 - **Status:** Mapped
-- **Artifacts:** SW requirements (`FB2-SW-SWR-000001-003`), architecture (`FB2-SW-DSN-000001`), detailed design (`FB2-SW-DSN-000002-003`), unit verification (`FB2-VER-TMS-000001-002`)
+- **Artifacts:** SW requirements (`FB2-SW-SWR-000001-003`), architecture (`FB2-SW-DSN-000001`), detailed design (`FB2-SW-DSN-000002-003`), unit verification (`FB2-VER-TMS-000001-006`, unit/robustness/fault_injection only; no integration/qualification measures)
 
 ### Part 7: Production, Operation, Service, Decommissioning
 - **Status:** Mapped
@@ -59,10 +59,15 @@
 
 | Process | Mapping | Key Artifacts |
 |---------|---------|---------------|
-| SYS.1-SYS.5 | Mapped | Stakeholder needs, SYS reqs, arch, integration, qual test |
-| SWE.1-SWE.6 | Mapped | SW reqs, arch, detailed design, integration, qual test, CM |
+| SYS.1-SYS.3 | Mapped | Stakeholder needs, SYS reqs, arch, allocation |
+| SYS.4 | Partially Mapped | Integration strategy documented; planning stub TMS-007 (draft, no execution) |
+| SYS.5 | Partially Mapped | Planning stub TMS-008 (draft, no execution); no qualification executions |
+| SWE.1-SWE.3 | Mapped | SW reqs, arch, detailed design, unit construction, CM |
+| SWE.4 | Partially Mapped | Unit test measures exist; `as_is` TMS-002..005 have no executions, single host-run unsubstantiated |
+| SWE.5 | Partially Mapped | Integration approach documented; planning stub TMS-007 (draft, no execution) |
+| SWE.6 | Partially Mapped | Planning stub TMS-008 (draft, no execution); no qualification executions |
 | HWE.1-HWE.4 | Partially Mapped | HW reqs, arch, detailed design, integration/test |
-| VAL.1 | Mapped (synthetic) | Validation plan, measures, results |
+| VAL.1 | Partially Mapped | Planning stub TMS-009 (draft, no execution); no validation executions |
 | ACQ.4 | Mapped | Supplier monitoring records |
 | SPL.2 | Mapped | Release management process |
 | SUP.1 | Mapped | QA plan, review records |

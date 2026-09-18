@@ -1,0 +1,112 @@
+{
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [
+    "FB2-ASM-001"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "VAL.1",
+      "status": "mapped",
+      "rationale": "Validation"
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 9",
+      "status": "mapped",
+      "rationale": "System validation"
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": false,
+    "links_valid": false,
+    "provenance_consistent": false,
+    "consistency_checks": false,
+    "last_run": "2026-09-18T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-18T00:00:00Z",
+  "updated_at": "2026-09-18T00:00:00Z",
+  "id": "FB2-VER-TMS-000009",
+  "title": "Test: Stakeholder Validation (Cell-Voltage Use Cases)",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-18T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Planning stub for VAL.1 validation intent; no execution"
+    }
+  ],
+  "test_type": "validation",
+  "objective": "Define the validation intent of cell-voltage stakeholder use cases on the integrated system; PLANNING STUB — no execution performed, execution blocked (no validation environment or operational data in corpus scope)",
+  "referenced_requirements": [
+    "FB2-SAF-SGO-000001",
+    "FB2-MAN-SCO-000001"
+  ],
+  "referenced_designs": [],
+  "preconditions": [
+    "Stakeholder use cases baselined",
+    "Validation environment defined (blocked — not in corpus scope)"
+  ],
+  "stimuli": [
+    {
+      "signal": "input",
+      "value": "per step definition",
+      "timing": "t=0"
+    }
+  ],
+  "environment": {
+    "hardware": "Operational target vehicle/bench (blocked)",
+    "software": "N/A — operational use",
+    "tools": [
+      "GCC"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml"
+  },
+  "steps": [
+    {
+      "step": 1,
+      "action": "Execute normal-operation charging use case",
+      "expected": "No spurious safety reaction"
+    },
+    {
+      "step": 2,
+      "action": "Execute overvoltage field scenario",
+      "expected": "System reaches safe state, stakeholder acceptance criteria met"
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "validation_accepted",
+      "expected_value": "true",
+      "tolerance": "exact",
+      "unit": "bool"
+    }
+  ],
+  "tolerances": {
+    "value": "exact"
+  },
+  "timing": {
+    "max_execution_time_ms": 60000,
+    "setup_time_ms": 5000,
+    "teardown_time_ms": 1000
+  },
+  "oracle_basis": "synthetic_assumption",
+  "cleanup": "Return system to operational state",
+  "regression_selection": "Include once validation environment exists"
+}

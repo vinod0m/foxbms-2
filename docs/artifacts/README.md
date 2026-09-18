@@ -41,7 +41,7 @@ docs/artifacts/
 │   ├── feature-inventory.json
 │   ├── variant-matrix.json
 │   └── role-and-review-policy.json
-├── schemas/                            # JSON Schemas (draft-07)
+├── schemas/                            # JSON Schemas (draft 2020-12)
 │   ├── artifact-base.schema.json
 │   ├── requirement.schema.json
 │   ├── design.schema.json
@@ -107,15 +107,16 @@ docs/artifacts/
 ├── tests/                              # Corpus toolchain tests
 ├── reports/                            # Final reports
 │   ├── coverage-report.md + .json
-│   ├── standards-mapping-report.md + .json
-│   ├── traceability-report.md + .json
-│   ├── consistency-report.md + .json
-│   ├── review-summary.md + .json
-│   ├── source-vs-synthetic-gap-report.md + .json
-│   ├── verification-evidence-report.md + .json
+│   ├── standards-mapping-report.md
+│   ├── traceability-report.md
+│   ├── consistency-report.md
+│   ├── review-summary.md
+│   ├── source-vs-synthetic-gap-report.md
+│   ├── verification-evidence-report.md
 │   ├── scenario-validation-report.md + .json
-│   ├── reproducibility-report.md + .json
-│   └── final-acceptance-report.md + .json
+│   ├── reproducibility-report.md
+│   ├── final-acceptance-report.md + .json
+│   └── TRACEABILITY_DOCUMENT.md + .docx (end-to-end walkthrough)
 └── .work/                              # Temporary (gitignored)
 ```
 
@@ -278,8 +279,14 @@ python3 docs/artifacts/tools/corpus.py render
 # Regenerate all exports
 python3 docs/artifacts/tools/corpus.py export
 
-# Regenerate all reports
-python3 docs/artifacts/tools/corpus.py reports
+# Regenerate machine-verified coverage JSON
+python3 docs/artifacts/tools/corpus.py coverage
+
+# Regenerate the 10 spec documents (Markdown + DOCX)
+python3 docs/artifacts/tools/render_spec_documents.py
+
+# Markdown reports are hand-maintained but data-verified against the
+# canonical corpus (validate/check/scenario-test outputs above)
 ```
 
 **Invariants:**
@@ -333,7 +340,7 @@ cat docs/artifacts/_control/resume.md
 | ISO 26262 | 2018 (Parts 1-12) | Locked in `governance/standards-lock.json` |
 | ASPICE PAM | 4.1 (VDA QMC English 2026-08-24) | Locked in `governance/standards-lock.json` |
 
-**Coverage:** 27 processes (20 applicable, 4 not_applicable MLE, 3 gaps), 12 ISO parts (9 mapped, 2 not_applicable, 1 gap).
+**Coverage:** 32 ASPICE processes (28 applicable, 4 not_applicable), 12 ISO parts (see `governance/coverage-plan.json`); acceptance gate verifies 44/44 mapping items.
 
 ---
 

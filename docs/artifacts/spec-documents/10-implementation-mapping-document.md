@@ -120,35 +120,22 @@ Complete mapping of every implemented module to its source files, configuration,
 
 ### Requirement → Design → Source → Test Chains
 
-#### `FB2-SW-SWR-000001` (as_is)
+`implements` / `verifies` / `result_of` link IDs in parentheses. `verifies` links target requirements, never DSNs. Upstream parent chain shared by all rows: `SGO-000001` `mitigates` `HAZ-000001` (`LNK-001`); `FSR-000001/002/003` `refines` `SGO-000001` (`LNK-002/003/004`); `FSR-000004` `refines` `SGO-000001` (`LNK-021`, `synthetic_reference` only).
 
-- Design `FB2-SW-DSN-000001` implements `FB2-SW-SWR-000001` → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c`
-- Verifying test measures: `FB2-VER-TMS-000003`
+#### Chains (`as_is`, test measures `source_grounded`)
 
-#### `FB2-SW-SWR-000002` (as_is)
+- `FB2-SW-SWR-000001` ←implements— `FB2-SW-DSN-000001` (`FB2-LNK-SAF-000011`) → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c` — allocation `SWR-000001` → `FSR-000001` (`LNK-008`); verified by `FB2-VER-TMS-000003` (`LNK-021/022`); execution: none recorded.
+- `FB2-SW-SWR-000002` ←implements— `FB2-SW-DSN-000002` (`FB2-LNK-SAF-000012`) → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c` — allocation `SWR-000002` → `FSR-000002` (`LNK-009`); verified by `FB2-VER-TMS-000001` (`LNK-014/015`); execution `FB2-VER-EXE-000001` (`LNK-018`), `actual_host_run`, `pass` — hashes `sha256:placeholder`, `output_hashes` empty.
+- `FB2-SW-SWR-000003` ←implements— `FB2-SW-DSN-000003` (`FB2-LNK-SAF-000013`) → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c` — allocation `SWR-000003` → `FSR-000003` (`LNK-010`); verified by `FB2-VER-TMS-000002` (`LNK-016/017`); execution: none recorded.
+- `FB2-HW-TSR-000001` / `FB2-HW-TSR-000002` (allocation `LNK-005/006`) verified by `FB2-VER-TMS-000004` (`LNK-023/024`); `FB2-HW-TSR-000003` (allocation `LNK-007`) verified by `FB2-VER-TMS-000005` (`LNK-025`); execution: none recorded.
 
-- Design `FB2-SW-DSN-000002` implements `FB2-SW-SWR-000002` → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c`
-- Verifying test measures: `FB2-VER-TMS-000001`
+#### Chains (`synthetic_reference`, test measures `synthetic_assumption`, executions `synthetic_fixture`)
 
-#### `FB2-SW-SWR-000003` (as_is)
-
-- Design `FB2-SW-DSN-000003` implements `FB2-SW-SWR-000003` → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c`
-- Verifying test measures: `FB2-VER-TMS-000002`
-
-#### `FB2-SW-SWR-000001` (synthetic_reference)
-
-- Design `FB2-SW-DSN-000001` implements `FB2-SW-SWR-000001` → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c`
-- Verifying test measures: `FB2-VER-TMS-000003`
-
-#### `FB2-SW-SWR-000002` (synthetic_reference)
-
-- Design `FB2-SW-DSN-000002` implements `FB2-SW-SWR-000002` → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c`
-- Verifying test measures: `FB2-VER-TMS-000001`
-
-#### `FB2-SW-SWR-000003` (synthetic_reference)
-
-- Design `FB2-SW-DSN-000003` implements `FB2-SW-SWR-000003` → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c`
-- Verifying test measures: `FB2-VER-TMS-000002`
+- `FB2-SW-SWR-000001` ←implements— `FB2-SW-DSN-000001` (`FB2-LNK-SAF-000011`) → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c` — allocation (`LNK-008`); verified by `FB2-VER-TMS-000003` (`LNK-026/027/028`); execution `FB2-VER-EXE-000003` (`LNK-035`), `pass`.
+- `FB2-SW-SWR-000002` ←implements— `FB2-SW-DSN-000002` (`FB2-LNK-SAF-000012`) → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c` — allocation (`LNK-009`); verified by `FB2-VER-TMS-000001` (`LNK-022/023`); execution `FB2-VER-EXE-000001` (`LNK-033`), `pass`.
+- `FB2-SW-SWR-000003` ←implements— `FB2-SW-DSN-000003` (`FB2-LNK-SAF-000013`) → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c` — allocation (`LNK-010`); verified by `FB2-VER-TMS-000002` (`LNK-024/025`); execution `FB2-VER-EXE-000002` (`LNK-034`), `pass`.
+- `FB2-HW-TSR-000002` verified by `FB2-VER-TMS-000005` (`LNK-031`) → `FB2-VER-EXE-000005` (`LNK-037`), `pass`; `FB2-HW-TSR-000003` verified by `FB2-VER-TMS-000006` (`LNK-032`) → `FB2-VER-EXE-000006` (`LNK-038`), `pass`.
+- `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004`: no allocated SWR or DSN exists; verified by `FB2-VER-TMS-000004` (`LNK-029/030`) → `FB2-VER-EXE-000004` (`LNK-036`), `pass`. No `allocated_to` link from `TSR-004` to `FSR-004` in registry.
 
 ## Requirement-to-Test Coverage Matrix
 
@@ -169,7 +156,7 @@ One row per requirement artifact across FSR/TSR/SWR/management classes, both pro
 | `synthetic_reference` | `FB2-HW-TSR-000002` | TSR | **COVERED-DIRECT** | `FB2-VER-TMS-000005` | — | `FB2-VER-TMS-000005` |  |
 | `synthetic_reference` | `FB2-HW-TSR-000003` | TSR | **COVERED-DIRECT** | `FB2-VER-TMS-000006` | — | `FB2-VER-TMS-000006` |  |
 | `synthetic_reference` | `FB2-HW-TSR-000004` | TSR | **COVERED-DIRECT** | `FB2-VER-TMS-000004` | — | `FB2-VER-TMS-000004` |  |
-| `synthetic_reference` | `FB2-MAN-SCO-000001` | MGT | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-MAN-SCO-000001` | MGT | **COVERED-DIRECT** | `FB2-VER-TMS-000009` (`validates`, `LNK-047`) | — | `FB2-VER-TMS-000009` | Draft planning stub; no execution |
 | `synthetic_reference` | `FB2-SAF-FSR-000001` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000003` | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005` |  |
 | `synthetic_reference` | `FB2-SAF-FSR-000002` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000001` | `FB2-SW-SWR-000002`←FB2-VER-TMS-000001 | `FB2-VER-TMS-000001` |  |
 | `synthetic_reference` | `FB2-SAF-FSR-000003` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000002` | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000006` |  |
@@ -181,12 +168,18 @@ One row per requirement artifact across FSR/TSR/SWR/management classes, both pro
 ### Coverage Summary
 
 - **Total requirement artifacts**: 21
-- **Covered (any status)**: 20 (95%)
-- **UNCOVERED**: 1
-  - `FB2-MAN-SCO-000001` (`synthetic_reference`)
+- **Covered (any status)**: 21 (100%)
+- **UNCOVERED**: 0
+
+Statuses above mean test-measure linkage only (see Evidence limits); execution coverage is tracked separately per test measure.
 
 UNCOVERED requirements are the honest corpus state; the gaps are tracked by review dispositions in `FB2-REV-000001` and the gap report. No coverage is fabricated.
 
+### Evidence limits
+
+- COVERED in the matrix above means test-measure linkage (`verifies`), not execution evidence. Execution credit requires a `result_of`-linked execution record with retained, checkable evidence.
+- In `as_is`, only `FB2-VER-TMS-000001` has an execution record (`actual_host_run`, `pass`), which is not independently substantiated (hashes `sha256:placeholder`, `output_hashes` empty, no retained per-run logs); `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have no execution records.
+- In `synthetic_reference`, all executions are `synthetic_fixture` `pass` results demonstrating corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
 
 ---
 

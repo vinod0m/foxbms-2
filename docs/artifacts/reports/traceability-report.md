@@ -12,7 +12,7 @@ This report documents the traceability integrity of the foxBMS 2 lifecycle artif
 
 | Profile | Total Links | Link Types Used | Orphaned Links | Dangling Links |
 |---------|-------------|-----------------|----------------|----------------|
-| synthetic_reference | 31 | 6/17 | 0 | 0 |
+| synthetic_reference | 40 | 7/17 | 0 | 0 |
 | as_is | 25 | 7/17 | 0 | 0 |
 
 ## Link Type Coverage
@@ -22,8 +22,8 @@ This report documents the traceability integrity of the foxBMS 2 lifecycle artif
 | refines | 4 | 3 | ✅ |
 | allocated_to | 6 | 6 | ✅ |
 | implements | 3 | 3 | ✅ |
-| verifies | 11 | 9 | ✅ |
-| validates | 0 | 0 | ❌ |
+| verifies | 18 | 9 | ✅ |
+| validates | 2 | 0 | ✅ |
 | result_of | 6 | 1 | ✅ |
 | supports | 0 | 0 | ❌ |
 | mitigates | 1 | 1 | ✅ |

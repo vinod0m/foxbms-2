@@ -55,25 +55,30 @@ This report documents the verification evidence for all requirements in the corp
 
 ## Test Measures Detail
 
-| ID | Title | Type | Requirements | Oracle Basis | Profile |
-|----|-------|------|--------------|--------------|---------|
-| FB2-VER-TMS-000001 | SOA Voltage Limit Detection | unit | FSR-002, SWR-002 | source_grounded (as_is: test_soa.c) / synthetic_assumption (synthetic mirror) | both |
-| FB2-VER-TMS-000002 | Contactor State Machine Fault Response | unit | FSR-003, SWR-003 | source_grounded (as_is: test_contactor.c) / synthetic_assumption (synthetic mirror) | both |
-| FB2-VER-TMS-000003 | AFE Cell Voltage Plausibility Checks | unit | FSR-001, SWR-001, TSR-001 | source_grounded (as_is: test_afe_plausibility.c) / synthetic_assumption (synthetic mirror) | both |
-| FB2-VER-TMS-000004 | Independent Voltage Monitor Reaction | fault_injection | FSR-004, TSR-004 | synthetic_assumption (no upstream test; documented gap) | synthetic_reference |
-| FB2-VER-TMS-000005 | AFE Communication Integrity | robustness | TSR-002 | source_grounded (as_is: test_ltc_6813-1.c) / synthetic_assumption (synthetic mirror) | both |
-| FB2-VER-TMS-000006 | Contactor Driver Configuration and Control | unit | TSR-003 | source_grounded (as_is: test_contactor.c) / synthetic_assumption (synthetic mirror) | both |
+| ID | Title | Type | Requirements | Oracle Basis | Profile | `verifies` links |
+|----|-------|------|--------------|--------------|---------|------------------|
+| FB2-VER-TMS-000001 | SOA Voltage Limit Detection | unit | FSR-002, SWR-002 | source_grounded (as_is: test_soa.c) / synthetic_assumption (synthetic mirror) | both | as_is `LNK-014/015`; synthetic `LNK-022/023` |
+| FB2-VER-TMS-000002 | Contactor State Machine Fault Response | unit | FSR-003, SWR-003 | source_grounded (as_is: test_contactor.c) / synthetic_assumption (synthetic mirror) | both | as_is `LNK-016/017`; synthetic `LNK-024/025` |
+| FB2-VER-TMS-000003 | AFE Cell Voltage Plausibility Checks | unit | FSR-001, SWR-001, TSR-001 | source_grounded (as_is: test_afe_plausibility.c) / synthetic_assumption (synthetic mirror) | both | as_is `LNK-021/022`; synthetic `LNK-026/027/028` |
+| FB2-VER-TMS-000004 | Independent Voltage Monitor Reaction | fault_injection | FSR-004, TSR-004 | synthetic_assumption (no upstream test; documented gap) | synthetic_reference | `LNK-029/030` |
+| FB2-VER-TMS-000004 | LTC6813-1 AFE Driver Communication and Measurement | unit | TSR-001, TSR-002 | source_grounded (test_ltc_6813-1.c) | as_is | `LNK-023/024` |
+| FB2-VER-TMS-000005 | Contactor Driver Configuration and Control | unit | TSR-003 | source_grounded (test_contactor.c) | as_is | `LNK-025` |
+| FB2-VER-TMS-000005 | AFE Communication Integrity | robustness | TSR-002 | synthetic_assumption | synthetic_reference | `LNK-031` |
+| FB2-VER-TMS-000006 | Contactor Driver Configuration and Control | unit | TSR-003 | synthetic_assumption | synthetic_reference | `LNK-032` |
+| FB2-VER-TMS-000007 | Software Integration Chain (SOA-Database-Contactor) | integration | SWR-001, SWR-002, SWR-003 | synthetic_assumption | synthetic_reference | `LNK-039/040/041` |
+| FB2-VER-TMS-000008 | System Qualification (Cell-Voltage Safety Chain) | qualification | FSR-001, FSR-002, FSR-003, FSR-004 | synthetic_assumption | synthetic_reference | `LNK-042/043/044/045` |
+| FB2-VER-TMS-000009 | Stakeholder Validation (Cell-Voltage Use Cases) | validation | SGO-001, SCO-001 | synthetic_assumption | synthetic_reference | `LNK-046/047` (`validates`) |
 
 ## Execution Records
 
-| ID | Test Measure | Kind | Outcome | Duration | Limitations |
-|----|--------------|------|---------|----------|-------------|
-| FB2-VER-EXE-000001 | TMS-001 | synthetic_fixture (as_is twin: actual_host_run) | pass | 5000 ms | Mocked database; no target timing |
-| FB2-VER-EXE-000002 | TMS-002 | synthetic_fixture | pass | 5000 ms | Mocked SBC/GPIO; no HW-in-loop |
-| FB2-VER-EXE-000003 | TMS-003 | synthetic_fixture | pass | 5000 ms | Mocked AFE; no target measurement |
-| FB2-VER-EXE-000004 | TMS-004 | synthetic_fixture | pass | 5000 ms | Fault injection on model, not diverse hardware path |
-| FB2-VER-EXE-000005 | TMS-005 | synthetic_fixture | pass | 5000 ms | PEC corruption simulated at driver API level |
-| FB2-VER-EXE-000006 | TMS-006 | synthetic_fixture | pass | 5000 ms | GPIO mocked; no contactor hardware |
+| ID | Test Measure | Kind | Outcome | Duration | Limitations | `result_of` link |
+|----|--------------|------|---------|----------|-------------|------------------|
+| FB2-VER-EXE-000001 | TMS-001 | synthetic_fixture (as_is twin: actual_host_run) | pass | 5000 ms | Mocked database; no target timing; as_is twin hashes `sha256:placeholder`, `output_hashes` empty | synthetic `LNK-033`; as_is twin `LNK-018` |
+| FB2-VER-EXE-000002 | TMS-002 | synthetic_fixture | pass | 5000 ms | Mocked SBC/GPIO; no HW-in-loop | `LNK-034` |
+| FB2-VER-EXE-000003 | TMS-003 | synthetic_fixture | pass | 5000 ms | Mocked AFE; no target measurement | `LNK-035` |
+| FB2-VER-EXE-000004 | TMS-004 | synthetic_fixture | pass | 5000 ms | Fault injection on model, not diverse hardware path | `LNK-036` |
+| FB2-VER-EXE-000005 | TMS-005 | synthetic_fixture | pass | 5000 ms | PEC corruption simulated at driver API level | `LNK-037` |
+| FB2-VER-EXE-000006 | TMS-006 | synthetic_fixture | pass | 5000 ms | GPIO mocked; no contactor hardware | `LNK-038` |
 
 ## Hardware-in-the-Loop (HIL) Disposition
 
@@ -89,10 +94,10 @@ Corpus disposition for this gap:
    fabricated. Unit-test coverage (313 C test files under `tests/unit/app/`) is the
    observable evidence; HIL evidence is explicitly classified `blocked`
    (missing target hardware and test setup).
-2. **synthetic_reference profile** — hardware TSR verification is demonstrated at the
-   *unit level with mocked hardware boundaries* (TMS-003/005/006). These executions
-   are honest about their class (`synthetic_fixture`); they do not claim target
-   measurement credit. `product_verification_credit` remains `false` for every
+2. **synthetic_reference profile** — hardware TSR verification planning uses
+   *host-based models with mocked hardware boundaries* (TMS-003/004/005/006).
+   The associated `synthetic_fixture` records demonstrate corpus structure, not
+   independently verified test execution or target measurement. `product_verification_credit` remains `false` for every
    artifact by governance policy.
 3. **No execution claims HIL.** The `execution_kind` vocabulary contains no HIL entry;
    target-hardware verification would require `actual_hardware_run` evidence (logs,
@@ -102,7 +107,11 @@ Corpus disposition for this gap:
 
 ### By Requirement (synthetic_reference)
 
-| Requirement | Verified? | Evidence Class | Notes |
+This table shows test-measure and synthetic-fixture coverage, not verified product
+behavior. A fixture `pass` does not establish that the requirement was satisfied
+on a host or target; product verification credit remains false.
+
+| Requirement | Test Measure / Fixture Present? | Evidence Class | Notes |
 |-------------|-----------|----------------|-------|
 | FSR-001 | Yes | synthetic_fixture | TMS-003/EXE-003 |
 | FSR-002 | Yes | synthetic_fixture | TMS-001/EXE-001 |
@@ -115,41 +124,40 @@ Corpus disposition for this gap:
 | SWR-001 | Yes | synthetic_fixture | TMS-003/EXE-003 |
 | SWR-002 | Yes | synthetic_fixture | TMS-001/EXE-001 |
 | SWR-003 | Yes | synthetic_fixture | TMS-002/EXE-002 |
-| SCO-001 (management) | No | N/A | Management scope item; verification by process audit, not test |
+| SCO-001 (management) | Planning stub only | synthetic_assumption | TMS-009 (`validates`, `LNK-047`), draft, no execution |
 
-### By Feature (as_is, real repository unit tests)
+### Recorded Execution Coverage (as_is)
 
-| Feature | Unit Tests | Integration Tests | Target Testing | Evidence Class |
-|---------|------------|-------------------|---------------|----------------|
-| Cell Voltage | 5 tests | 0 | 0 | actual_host_run |
-| Temperature | 8 tests | 0 | 0 | actual_host_run |
-| Current | 3 tests | 0 | 0 | actual_host_run |
-| SOA | 5 tests | 0 | 0 | actual_host_run |
-| Balancing | 3 tests | 0 | 0 | actual_host_run |
-| SOC | 4 tests | 0 | 0 | actual_host_run |
-| Contactor | 2 tests | 0 | 0 | actual_host_run |
-| AFE (all) | 45 tests | 0 | 0 | actual_host_run |
-| CAN | 15 tests | 0 | 0 | actual_host_run |
-| SBC | 2 tests | 0 | 0 | actual_host_run |
-| Bootloader | 5 tests | 0 | 0 | actual_host_run |
+| Scope | Test Measure | Execution Record | Evidence Status |
+|-------|--------------|------------------|-----------------|
+| SOA voltage limits | FB2-VER-TMS-000001 | FB2-VER-EXE-000001 | Recorded as actual_host_run/pass; execution evidence not independently verified |
+| Contactor state machine, AFE plausibility, LTC6813-1 driver, contactor driver | FB2-VER-TMS-000002..000005 | No corresponding execution records in as_is/verification | Test planning/source references only; no execution credit inferred |
+
+The SOA execution record contains `sha256:placeholder` log and coverage hashes,
+empty `output_hashes`, and a note that per-run logs were not retained. Its recorded
+`pass` is not independently substantiated by those fields. Source test files and
+`source_grounded` oracle labels do not establish that tests ran. Feature-wide test
+counts and host-run claims are therefore not inferred from source availability.
 
 ## Oracle Basis Analysis
 
 | Oracle Basis | Count | Notes |
 |--------------|-------|-------|
 | source_grounded | 5 (as_is test measures) | Grounded in existing foxBMS unit tests (TMS-001..005, test_soa.c / test_contactor.c / test_afe_plausibility.c / test_ltc_6813-1.c) |
-| synthetic_assumption | 6 (synthetic_reference test measures) | Synthetic mirrors of the as_is tests (TMS-001/002/003/005/006) plus the fault-injection monitor test (TMS-004, no upstream equivalent) |
+| synthetic_assumption | 9 (synthetic_reference test measures) | Synthetic mirrors of the as_is tests (TMS-001/002/003/005/006) plus fault-injection monitor (TMS-004), integration stub (TMS-007), qualification stub (TMS-008), validation stub (TMS-009) |
 | analytical_model | 0 | Not used |
 | measured_reference | 0 | No HW testing |
 
 ## Verification Gaps (remaining, honest)
 
-1. **Target hardware measurement** — TSR-001/002/004 verified at unit level only;
+1. **Target hardware measurement** — TSR-001..004 have test measures and synthetic fixtures only;
    actual hardware measurements remain blocked (no target hardware in corpus scope).
 2. **HIL execution** — no HIL runs; upstream test setup unpublished (see disposition above).
-3. **Integration test measures** — no dedicated integration-level test measures in the corpus.
+3. **Integration executions** — planning stub `FB2-VER-TMS-000007` exists (`draft`, linked); no integration execution records (harness blocked).
 4. **Timing verification** — no worst-case execution time analysis on target.
 5. **Management scope (SCO-001)** — verified by process audit only, no test measure (by nature of the artifact).
+6. **Component / qualification / validation executions** — planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation) exist as `draft` with `verifies`/`validates` links but no execution records; component-level measures remain absent.
+7. **TSR-004 allocation** — no `allocated_to` link from `FB2-HW-TSR-000004` to `FB2-SAF-FSR-000004`; both are verified by `FB2-VER-TMS-000004` without an allocated SWR or DSN.
 
 Every gap above is tracked as a corpus limitation (`final_status:
 synthetic_ready_with_limitations`); no evidence is fabricated to close it.

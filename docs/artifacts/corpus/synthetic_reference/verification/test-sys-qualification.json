@@ -1,0 +1,131 @@
+{
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [
+    "FB2-ASM-001"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 8",
+      "status": "mapped",
+      "rationale": "System qualification test"
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.5",
+      "status": "mapped",
+      "rationale": "System qualification test"
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.6",
+      "status": "mapped",
+      "rationale": "Software qualification test"
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": false,
+    "links_valid": false,
+    "provenance_consistent": false,
+    "consistency_checks": false,
+    "last_run": "2026-09-18T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-18T00:00:00Z",
+  "updated_at": "2026-09-18T00:00:00Z",
+  "id": "FB2-VER-TMS-000008",
+  "title": "Test: System Qualification (Cell-Voltage Safety Chain)",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-18T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Planning stub for SYS.5/SWE.6 qualification intent; no execution"
+    }
+  ],
+  "test_type": "qualification",
+  "objective": "Define the system/software qualification verification intent against FSR-001..004 end to end; PLANNING STUB — no execution performed, execution blocked (no qualification harness or target hardware in corpus scope)",
+  "referenced_requirements": [
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004"
+  ],
+  "referenced_designs": [
+    "FB2-SW-DSN-000001",
+    "FB2-SW-DSN-000002",
+    "FB2-SW-DSN-000003"
+  ],
+  "preconditions": [
+    "Integrated system build available (blocked — not in corpus scope)",
+    "Qualification environment defined (blocked)"
+  ],
+  "stimuli": [
+    {
+      "signal": "input",
+      "value": "per step definition",
+      "timing": "t=0"
+    }
+  ],
+  "environment": {
+    "hardware": "Target + HIL bench (blocked — unpublished)",
+    "software": "Unity/CMock",
+    "tools": [
+      "GCC",
+      "CMock",
+      "Unity"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml"
+  },
+  "steps": [
+    {
+      "step": 1,
+      "action": "Drive cell-voltage limit violation at system boundary",
+      "expected": "FAULT state reached end to end"
+    },
+    {
+      "step": 2,
+      "action": "Confirm contactor open within FTTI budget",
+      "expected": "Timing within 100 ms FTTI"
+    },
+    {
+      "step": 3,
+      "action": "Confirm DIAG records safety reaction",
+      "expected": "Diagnosis entry present"
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "qual_chain_pass",
+      "expected_value": "true",
+      "tolerance": "exact",
+      "unit": "bool"
+    }
+  ],
+  "tolerances": {
+    "value": "exact"
+  },
+  "timing": {
+    "max_execution_time_ms": 5000,
+    "setup_time_ms": 500,
+    "teardown_time_ms": 100
+  },
+  "oracle_basis": "synthetic_assumption",
+  "cleanup": "Restore system to safe state snapshot",
+  "regression_selection": "Include once qualification environment exists"
+}

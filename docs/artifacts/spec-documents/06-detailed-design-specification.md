@@ -880,6 +880,22 @@ Extracted from `FB2-SW-DSN-000003` design fields:
 - Budget `stack_bytes` = 512 (source: `FB2-SW-DSN-000003` budgets)
 
 
+## Design Traceability and Gaps
+
+Upstream and downstream links per design, identical in both profiles unless noted.
+
+| Design | Implements (upstream) | Upstream chain | Implementation anchors (downstream) | Verifying test measure (downstream) |
+|---|---|---|---|---|
+| `FB2-SW-DSN-000001` | `FB2-SW-SWR-000001` (`FB2-LNK-SAF-000011`) | `SWR-000001` → `FSR-000001` (`LNK-008`) → `SGO-000001` (`LNK-002`) → `HAZ-000001` (`LNK-001`) | `ltc_afe.c`, `ltc_afe_dma.c`, `ltc_pec.c`, `ltc_6813-1.c` (symbols in Software Architecture Specification) | as_is `TMS-000003` (`LNK-021/022`, no execution); synthetic `TMS-000003` (`LNK-026/027/028`) → `EXE-000003` (`LNK-035`, `synthetic_fixture`) |
+| `FB2-SW-DSN-000002` | `FB2-SW-SWR-000002` (`FB2-LNK-SAF-000012`) | `SWR-000002` → `FSR-000002` (`LNK-009`) → `SGO-000001` (`LNK-003`) → `HAZ-000001` (`LNK-001`) | `soa.c`, `diag_cbs_voltage.c` (symbols in Software Architecture Specification) | as_is `TMS-000001` (`LNK-014/015`) → `EXE-000001` (`LNK-018`, `actual_host_run`, hashes `sha256:placeholder`); synthetic `TMS-000001` (`LNK-022/023`) → `EXE-000001` (`LNK-033`, `synthetic_fixture`) |
+| `FB2-SW-DSN-000003` | `FB2-SW-SWR-000003` (`FB2-LNK-SAF-000013`) | `SWR-000003` → `FSR-000003` (`LNK-010`) → `SGO-000001` (`LNK-004`) → `HAZ-000001` (`LNK-001`) | `contactor.c`, `sbc_fs8x.c`, `diag_cbs_contactor.c` (symbols in Software Architecture Specification) | as_is `TMS-000002` (`LNK-016/017`, no execution); synthetic `TMS-000002` (`LNK-024/025`) → `EXE-000002` (`LNK-034`, `synthetic_fixture`) |
+
+Gaps:
+- No design exists for `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004` (independent monitor, `synthetic_reference` only).
+- `FB2-SW-DSN-000001` is recorded at level `architecture`, not `detailed_design`.
+- Decomposition is placeholder (`C0`/`C1`/`C2`) in `FB2-SW-DSN-000001` and unspecified in `FB2-SW-DSN-000002` / `FB2-SW-DSN-000003`.
+- No `verifies` link targets a DSN; design verification is inherited via each parent SWR. `synthetic_fixture` results demonstrate corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
+
 ---
 
 *Generated: 2026-09-13T15:17:46Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

@@ -222,6 +222,36 @@ The implemented software directly satisfies the following software requirements.
 - **Source references**: `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
 - **Assumption references**: `FB2-ASM-012`
 
+### Parent FSR: `FB2-SAF-FSR-000004` (`synthetic_reference` only — no `as_is` record)
+
+#### `FB2-SAF-FSR-000004` — FSR: Independent Hardware Voltage Monitor
+
+- **Refines**: `FB2-SAF-SGO-000001` (link `FB2-LNK-SAF-000021`, rationale: "FSR refines safety goal into functional requirement")
+- **Statement**: The BMS shall include an independent hardware voltage monitor (ASIL B) that continuously monitors cell voltages and can open HV contactors independently of the main MCU within 50 ms of overvoltage detection.
+- **Rationale**: Provides freedom from interference for ASIL D safety goal; addresses timing budget violation in main path (115 ms > 100 ms FTTI) by providing parallel safety channel
+- **Classification**: `safety`
+- **ASIL**: `ASIL_B`
+- **Acceptance criteria**:
+  - Independent detection latency: Time from overvoltage to contactor command ≤ 50 ms
+  - Independence: No shared MCU, power supply, or communication with main path ≤ 100% %
+  - Monitoring coverage: Cells monitored ≤ All cells (or representative subset >= 50%) %
+  - Threshold accuracy: Overvoltage threshold accuracy ≤ 50 mV
+- **Assumption references**: `FB2-ASM-008`
+
+#### `FB2-HW-TSR-000004` — TSR: Independent Hardware Voltage Monitor
+
+- **Statement**: The BMS shall include an independent hardware voltage monitor (ASIL B) that continuously monitors cell voltages and can open HV contactors independently of the main MCU within 50 ms of overvoltage detection.
+- **Rationale**: Provides freedom from interference for ASIL D safety goal; addresses timing budget violation in main path (115 ms > 100 ms FTTI) by providing parallel safety channel
+- **Classification**: `safety`
+- **ASIL**: `ASIL_B`
+- **Acceptance criteria**:
+  - Independent detection latency: Time from overvoltage to contactor command ≤ 50 ms
+  - Independence: No shared MCU, power supply, or communication with main path ≤ 100% %
+  - Monitoring coverage: Cells monitored ≤ All cells (or representative subset >= 50%) %
+  - Threshold accuracy: Overvoltage threshold accuracy ≤ 50 mV
+- **Assumption references**: `FB2-ASM-008`
+- **Note**: no `allocated_to` link from `FB2-HW-TSR-000004` to `FB2-SAF-FSR-000004` exists in the link registry; both are verified by `FB2-VER-TMS-000004` (links `FB2-LNK-SAF-000029`, `FB2-LNK-SAF-000030`).
+
 ### Software Requirements Without Parent FSR Link
 
 #### `FB2-MAN-SCO-000001` — Project Scope: foxBMS 2 Reference BMS Development
@@ -230,6 +260,49 @@ The implemented software directly satisfies the following software requirements.
 - **Classification**: `management` | **Profile**: `synthetic_reference`
 - **Note**: no `allocated_to` link to a parent FSR in this profile's registry.
 
+## Upstream Traceability
+
+Full chain hazard → safety goal → FSR. Link IDs identical in both profiles except `FB2-SAF-FSR-000004` (`synthetic_reference` only).
+
+| Child | Relation | Parent |
+|---|---|---|
+| `FB2-SAF-SGO-000001` | `mitigates` `FB2-SAF-HAZ-000001` (`FB2-LNK-SAF-000001`) | `FB2-SAF-HAZ-000001` |
+| `FB2-SAF-FSR-000001` | `refines` (`FB2-LNK-SAF-000002`) | `FB2-SAF-SGO-000001` |
+| `FB2-SAF-FSR-000002` | `refines` (`FB2-LNK-SAF-000003`) | `FB2-SAF-SGO-000001` |
+| `FB2-SAF-FSR-000003` | `refines` (`FB2-LNK-SAF-000004`) | `FB2-SAF-SGO-000001` |
+| `FB2-SAF-FSR-000004` (`synthetic_reference` only) | `refines` (`FB2-LNK-SAF-000021`) | `FB2-SAF-SGO-000001` |
+
+Review coverage (`as_is` only, no review links recorded in `synthetic_reference`): `FB2-REV-000001` `reviewed_by` `FB2-SAF-HAZ-000001` (`FB2-LNK-SAF-000019`) and `FB2-SAF-FSR-000001` (`FB2-LNK-SAF-000020`).
+
+## Requirements Verification Traceability
+
+Test-measure (`verifies`) and execution (`result_of`) links per profile. A linked test measure records verification intent; only an execution record with retained, checkable evidence confers execution credit.
+
+### Profile: `as_is` (test measures `source_grounded`)
+
+| SWR / TSR | Allocated to | Test measure (`verifies` links) | Execution record |
+|---|---|---|---|
+| `FB2-SW-SWR-000001` | `FB2-SAF-FSR-000001` (`FB2-LNK-SAF-000008`) | `FB2-VER-TMS-000003` (`FB2-LNK-SAF-000021`, `FB2-LNK-SAF-000022`) | none recorded |
+| `FB2-SW-SWR-000002` | `FB2-SAF-FSR-000002` (`FB2-LNK-SAF-000009`) | `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000014`, `FB2-LNK-SAF-000015`) | `FB2-VER-EXE-000001` (`FB2-LNK-SAF-000018`), `actual_host_run`, `pass` — log/coverage hashes are `sha256:placeholder`, `output_hashes` empty, per-run logs not retained |
+| `FB2-SW-SWR-000003` | `FB2-SAF-FSR-000003` (`FB2-LNK-SAF-000010`) | `FB2-VER-TMS-000002` (`FB2-LNK-SAF-000016`, `FB2-LNK-SAF-000017`) | none recorded |
+| `FB2-HW-TSR-000001` / `FB2-HW-TSR-000002` | `FB2-SAF-FSR-000001` (`FB2-LNK-SAF-000005`, `FB2-LNK-SAF-000006`) | `FB2-VER-TMS-000004` (`FB2-LNK-SAF-000023`, `FB2-LNK-SAF-000024`) | none recorded |
+| `FB2-HW-TSR-000003` | `FB2-SAF-FSR-000003` (`FB2-LNK-SAF-000007`) | `FB2-VER-TMS-000005` (`FB2-LNK-SAF-000025`) | none recorded |
+
+### Profile: `synthetic_reference` (test measures `synthetic_assumption`, executions `synthetic_fixture`)
+
+| SWR / TSR | Allocated to | Test measure (`verifies` links) | Execution record |
+|---|---|---|---|
+| `FB2-SW-SWR-000001` | `FB2-SAF-FSR-000001` (`FB2-LNK-SAF-000008`) | `FB2-VER-TMS-000003` (`FB2-LNK-SAF-000026`, `FB2-LNK-SAF-000027`, also `FB2-HW-TSR-000001` via `FB2-LNK-SAF-000028`) | `FB2-VER-EXE-000003` (`FB2-LNK-SAF-000035`), `synthetic_fixture`, `pass` |
+| `FB2-SW-SWR-000002` | `FB2-SAF-FSR-000002` (`FB2-LNK-SAF-000009`) | `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000022`, `FB2-LNK-SAF-000023`) | `FB2-VER-EXE-000001` (`FB2-LNK-SAF-000033`), `synthetic_fixture`, `pass` |
+| `FB2-SW-SWR-000003` | `FB2-SAF-FSR-000003` (`FB2-LNK-SAF-000010`) | `FB2-VER-TMS-000002` (`FB2-LNK-SAF-000024`, `FB2-LNK-SAF-000025`) | `FB2-VER-EXE-000002` (`FB2-LNK-SAF-000034`), `synthetic_fixture`, `pass` |
+| `FB2-HW-TSR-000002` | `FB2-SAF-FSR-000001` (`FB2-LNK-SAF-000006`) | `FB2-VER-TMS-000005` (`FB2-LNK-SAF-000031`) | `FB2-VER-EXE-000005` (`FB2-LNK-SAF-000037`), `synthetic_fixture`, `pass` |
+| `FB2-HW-TSR-000003` | `FB2-SAF-FSR-000003` (`FB2-LNK-SAF-000007`) | `FB2-VER-TMS-000006` (`FB2-LNK-SAF-000032`) | `FB2-VER-EXE-000006` (`FB2-LNK-SAF-000038`), `synthetic_fixture`, `pass` |
+| `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004` | refines `FB2-SAF-SGO-000001` (`FB2-LNK-SAF-000021`); no `allocated_to` link for TSR-004 | `FB2-VER-TMS-000004` (`FB2-LNK-SAF-000029`, `FB2-LNK-SAF-000030`) | `FB2-VER-EXE-000004` (`FB2-LNK-SAF-000036`), `synthetic_fixture`, `pass` |
+
+### Evidence limits
+
+- `synthetic_fixture` `pass` results demonstrate corpus structure, not independently verified test execution; `product_verification_credit` is `false` and `human_approval_status` is `pending` on these records.
+- In `as_is`, only `FB2-VER-TMS-000001` has an execution record; `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have no execution records — no execution credit is inferred for them. The single `actual_host_run` pass is not independently substantiated (placeholder hashes, empty `output_hashes`, no retained per-run logs).
 
 ---
 

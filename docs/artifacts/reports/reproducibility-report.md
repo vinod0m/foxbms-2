@@ -14,7 +14,7 @@ This report documents the reproducibility of the corpus generation, export, and 
 
 | Aspect | Mechanism | Status |
 |--------|-----------|--------|
-| Schema validation | JSON Schema (draft-07) | ✅ Deterministic |
+| Schema validation | JSON Schema (draft 2020-12) | ✅ Deterministic |
 | ID generation | Fixed pattern FB2-<DOMAIN>-<TYPE>-<NNNNNN> | ✅ Deterministic |
 | Link generation | Explicit link registry with fixed IDs | ✅ Deterministic |
 | Parameter values | Single parameter registry | ✅ Deterministic |
@@ -40,18 +40,18 @@ This report documents the reproducibility of the corpus generation, export, and 
 
 | Format | Tool | Deterministic | Notes |
 |--------|------|---------------|-------|
-| JSONL nodes/edges | Custom Python | ✅ | Sorted by ID |
-| CSV inventory | Custom Python | ✅ | Sorted by ID |
-| Markdown reports | Jinja2 templates | ✅ | Sorted, fixed template |
+| JSONL nodes/edges | Custom Python (`corpus.py export`) | ✅ | Sorted by ID |
+| CSV trace-matrix | Custom Python | ✅ | Sorted by ID |
+| Markdown reports | Hand-maintained, data-verified | ✅ | Content derived from canonical corpus |
 | Link registry | JSON partition | ✅ | Sorted by link_id |
 
-### Round-Trip Import/Export
+### Round-Trip / Determinism Verification
 
 | Test | synthetic_reference | as_is | Status |
 |------|---------------------|-------|--------|
-| Export → Import → Export | ✅ Identical | ✅ Identical | Pass |
+| Re-export → byte-identical nodes/edges/manifest | ✅ Identical | ✅ Identical | Pass (acceptance gate 6: `deterministic export hashes`) |
 | Content hash preservation | ✅ | ✅ | Pass |
-| Link integrity | ✅ | ✅ | Pass |
+| Link integrity (0 dangling) | ✅ | ✅ | Pass |
 | Profile isolation | ✅ | ✅ | Pass |
 | Variant filtering | ✅ | ✅ | Pass |
 
@@ -60,13 +60,13 @@ This report documents the reproducibility of the corpus generation, export, and 
 ### Schema Validation
 
 | Schema | Tool | Deterministic | Notes |
-|--------|------|---------------|-------|
-| artifact-base | Python jsonschema | ✅ | Strict mode |
-| requirement | Python jsonschema | ✅ | Strict mode |
-| design | Python jsonschema | ✅ | Strict mode |
-| test_measure | Python jsonschema | ✅ | Strict mode |
-| execution | Python jsonschema | ✅ | Strict mode |
-| review | Python jsonschema | ✅ | Strict mode |
+|-------|------|---------------|-------|
+| artifact-base | Python jsonschema (Draft 2020-12) | ✅ | 13 schemas, `check_schema` + instance validation |
+| requirement | Python jsonschema | ✅ | see `corpus.py validate` |
+| design | Python jsonschema | ✅ | |
+| test_measure | Python jsonschema | ✅ | |
+| execution | Python jsonschema | ✅ | |
+| review | Python jsonschema | ✅ | |
 | link | Python jsonschema | ✅ | Strict mode |
 
 ### Consistency Checks
@@ -77,15 +77,15 @@ This report documents the reproducibility of the corpus generation, export, and 
 | Link endpoint existence | Python dict lookup | ✅ | O(n) |
 | Link type validity | Python enum | ✅ | O(n) |
 | Parameter cross-ref | Python dict | ✅ | O(n) |
-| Timing budget arithmetic | Python decimal | ✅ | Exact arithmetic |
+| Timing budget arithmetic | Python int/float | ✅ | Checked against FTTI parameter |
 | Profile isolation | Python set | ✅ | O(n) |
 
 ### Mutation Scenario Validation
 
 | Scenario | Deterministic | Notes |
 |----------|---------------|-------|
-| SCN-MUT-001 | ✅ | Fixed patch, fixed expected finding |
-| SCN-MUT-002 | ✅ | Fixed patch, fixed expected finding |
+| SCN-MUT-001 .. SCN-MUT-020 | ✅ (20/20) | In-memory patch, fixed expected finding (severity+category); acceptance gate requires 20/20 |
+| SCN-CHG-001 .. SCN-CHG-003 | ✅ (3/3) | Fixed lifecycle structure checks |
 
 ## Offline Determinism
 
@@ -113,23 +113,23 @@ This report documents the reproducibility of the corpus generation, export, and 
 
 | Tool | Version | Pinned | Notes |
 |------|---------|--------|-------|
-| Python | 3.11+ | ✅ | Standard library only |
-| jsonschema | 4.x | ✅ | Pinned in requirements |
-| Jinja2 | 3.x | ✅ | Pinned in requirements |
+| Python | 3.12.x (system) | ✅ | stdlib + jsonschema only |
+| jsonschema | 4.x | ✅ | Draft 2020-12 validators |
 | Git | 2.x | ✅ | For commit hashes |
 | SHA-256 | Built-in | ✅ | hashlib |
+
+No Jinja2, LLM, or network dependencies in the validation/export pipeline (`docs/artifacts/tools/` contains only stdlib-Python tools).
 
 ## Reproducibility Test Results
 
 | Test | synthetic_reference | as_is | Status |
 |------|---------------------|-------|--------|
-| Fresh generation from canonical | ✅ Identical | ✅ Identical | Pass |
-| Export → Import → Export cycle | ✅ Identical | ✅ Identical | Pass |
-| Validation on regenerated | ✅ Pass | ✅ Pass | Pass |
-| Reports from regenerated | ✅ Identical | ✅ Identical | Pass |
-| Mutation detection on clean | ✅ Detects | ✅ Detects | Pass |
-| Mutation detection on mutated | ✅ Finds expected | ✅ Finds expected | Pass |
-| Change lifecycle application | ✅ Produces BAS-REF-002/3/4 | N/A | Pass |
+| Deterministic re-export (byte-identical) | ✅ Identical | ✅ Identical | Pass (acceptance gate) |
+| Validation on current corpus | ✅ 0 errors | ✅ 0 errors | Pass (16 findings, 0 errors) |
+| Spec-doc regeneration | ⚠️ Overlays diverge by design | — | `render_spec_documents.py --check`: integrity PASSED; docs 04–10 carry hand-maintained traceability/evidence overlays (link-ID tables, FSR-004 section, stub specs) that the renderer does not emit, so byte-determinism vs fresh render intentionally fails on those files; corpus JSON remains the stable source of truth |
+| Mutation detection on clean corpus | ✅ No mutation-specific findings | ✅ | Pass (validate runs in every acceptance pass) |
+| Mutation detection on mutated | ✅ Finds expected (20/20) | ✅ | Pass |
+| Change lifecycle structure | ✅ 3/3 complete | N/A | Pass |
 
 ## Limitations
 
