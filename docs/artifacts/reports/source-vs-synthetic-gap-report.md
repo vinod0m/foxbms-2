@@ -63,7 +63,7 @@ This report documents the gaps between what is actually present in the foxBMS 2 
 | Implementation Mapping | Source code | Explicit mapping | Partial |
 | Coding Guidelines | .clang-format | Not documented | Gap |
 | Static Analysis | Not documented | Plans/findings | Gap |
-| Unit Verification | 80 tests (Unity/CMock) | 11 test measures (6 synthetic + 5 as_is grounded in real unit tests) | Partial |
+| Unit Verification | 80 tests (Unity/CMock) | 16 test measures (11 synthetic + 5 as_is grounded in real unit tests) | Partial |
 | Integration Verification | Not present | Not generated | Major gap |
 | Regression Selection | Not documented | "Always in regression" | Gap |
 
@@ -72,7 +72,7 @@ This report documents the gaps between what is actually present in the foxBMS 2 
 | Artifact | as_is | synthetic_reference | Gap |
 |----------|-------|---------------------|-----|
 | Verification Strategy | Not documented | Per FSR approach | Gap |
-| Test Plans | Unity/CMock configs | 11 test measures | Partial |
+| Test Plans | Unity/CMock configs | 16 test measures | Partial |
 | Test Specifications | Test source code | Structured TMS | Partial |
 | Test Executions | CI runs (not captured) | 7 executions (1 actual_host_run + 6 synthetic_fixture) | Partial |
 | Coverage Analysis | Not documented | Not generated | Gap |
