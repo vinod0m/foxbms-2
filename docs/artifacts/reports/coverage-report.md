@@ -13,7 +13,7 @@
 | Artifact Population | 11 families | 10/11 populated | ✅ (management = process audit by nature) |
 | Standards Mapping | 44 items | 44/44 (ASPICE 32/32, ISO 12/12) | ✅ |
 | Source Grounding | all artifacts | 39/68 with source_refs (43 anchors) | ✅ (synthetic artifacts reference as_is twins) |
-| Traceability Integrity | 0 dangling | 70/70 links valid (re-run pending for LNK-039..047) | ✅ |
+| Traceability Integrity | 0 dangling | 70/70 links valid (validated run 2026-09-18, LNK-039..052 included) | ✅ |
 | Semantic Consistency | all checks | 10/10 categories, 16 findings, 0 errors | ✅ |
 | Automated Review Coverage | all artifacts | 17/47 corpus artifacts | ⚠️ Partial (vertical-slice review by design) |
 | Verification Planning | test measures per FSR | 16 test measures / 21/21 requirements linked | ✅ |
