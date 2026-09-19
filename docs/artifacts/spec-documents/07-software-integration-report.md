@@ -58,7 +58,7 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 | Gap | Disposition |
 |---|---|
-| No component-level test measures | Gap documented; synthetic_reference to add per review disposition FB2-FND-000005 |
+| No component/integration-level executions (planning stubs TMS-007/010 only) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
 | No integration-level executions (only unit `actual_host_run` exists) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
 | No target-hardware integration runs | as_is gap documented in review `FB2-REV-000001` (finding FB2-FND-000002) |
 
@@ -87,7 +87,7 @@ All six executions are unit-level `synthetic_fixture` results (`result_of` links
 
 | Gap | Disposition |
 |---|---|
-| No component-level test measures | Gap documented; synthetic_reference to add per review disposition FB2-FND-000005 |
+| No component/integration-level executions (planning stubs TMS-007/010 only) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
 | No integration-level executions (only unit `actual_host_run` exists) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
 | No target-hardware integration runs | as_is gap documented in review `FB2-REV-000001` (finding FB2-FND-000002) |
 

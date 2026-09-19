@@ -68,6 +68,8 @@ This report documents the verification evidence for all requirements in the corp
 | FB2-VER-TMS-000007 | Software Integration Chain (SOA-Database-Contactor) | integration | SWR-001, SWR-002, SWR-003 | synthetic_assumption | synthetic_reference | `LNK-039/040/041` |
 | FB2-VER-TMS-000008 | System Qualification (Cell-Voltage Safety Chain) | qualification | FSR-001, FSR-002, FSR-003, FSR-004 | synthetic_assumption | synthetic_reference | `LNK-042/043/044/045` |
 | FB2-VER-TMS-000009 | Stakeholder Validation (Cell-Voltage Use Cases) | validation | SGO-001, SCO-001 | synthetic_assumption | synthetic_reference | `LNK-046/047` (`validates`) |
+| FB2-VER-TMS-000010 | Component Verification (SOA Monitor + DIAG Callbacks) | unit | SWR-002 | synthetic_assumption | synthetic_reference | `LNK-048` |
+| FB2-VER-TMS-000011 | HIL Fault Reaction (Target) | system | FSR-001, FSR-002, FSR-003, FSR-004 | synthetic_assumption | synthetic_reference | `LNK-049/050/051/052` |
 
 ## Execution Records
 
@@ -144,7 +146,7 @@ counts and host-run claims are therefore not inferred from source availability.
 | Oracle Basis | Count | Notes |
 |--------------|-------|-------|
 | source_grounded | 5 (as_is test measures) | Grounded in existing foxBMS unit tests (TMS-001..005, test_soa.c / test_contactor.c / test_afe_plausibility.c / test_ltc_6813-1.c) |
-| synthetic_assumption | 9 (synthetic_reference test measures) | Synthetic mirrors of the as_is tests (TMS-001/002/003/005/006) plus fault-injection monitor (TMS-004), integration stub (TMS-007), qualification stub (TMS-008), validation stub (TMS-009) |
+| synthetic_assumption | 11 (synthetic_reference test measures) | Synthetic mirrors of the as_is tests (TMS-001/002/003/005/006) plus fault-injection monitor (TMS-004), integration stub (TMS-007), qualification stub (TMS-008), validation stub (TMS-009), component stub (TMS-010), HIL stub (TMS-011) |
 | analytical_model | 0 | Not used |
 | measured_reference | 0 | No HW testing |
 
@@ -156,7 +158,7 @@ counts and host-run claims are therefore not inferred from source availability.
 3. **Integration executions** — planning stub `FB2-VER-TMS-000007` exists (`draft`, linked); no integration execution records (harness blocked).
 4. **Timing verification** — no worst-case execution time analysis on target.
 5. **Management scope (SCO-001)** — verified by process audit only, no test measure (by nature of the artifact).
-6. **Component / qualification / validation executions** — planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation) exist as `draft` with `verifies`/`validates` links but no execution records; component-level measures remain absent.
+6. **Component / qualification / validation / HIL executions** — planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation), `FB2-VER-TMS-000010` (component), `FB2-VER-TMS-000011` (HIL) exist as `draft` with `verifies`/`validates` links but no execution records; all such executions remain blocked, not fabricated.
 7. **TSR-004 allocation** — no `allocated_to` link from `FB2-HW-TSR-000004` to `FB2-SAF-FSR-000004`; both are verified by `FB2-VER-TMS-000004` without an allocated SWR or DSN.
 
 Every gap above is tracked as a corpus limitation (`final_status:

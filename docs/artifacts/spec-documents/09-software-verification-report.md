@@ -88,6 +88,8 @@ Upstream `verifies` links per test measure (`result_of` execution links in Execu
 | `FB2-VER-TMS-000007` (synthetic, draft stub) | `SWR-000001/002/003` (`LNK-039/040/041`) |
 | `FB2-VER-TMS-000008` (synthetic, draft stub) | `FSR-000001/002/003/004` (`LNK-042/043/044/045`) |
 | `FB2-VER-TMS-000009` (synthetic, draft stub) | `SGO-000001` + `SCO-000001` (`LNK-046/047`, `validates`) |
+| `FB2-VER-TMS-000010` (synthetic, draft stub) | `SWR-000002` (`LNK-048`) |
+| `FB2-VER-TMS-000011` (synthetic, draft stub) | `FSR-000001/002/003/004` (`LNK-049/050/051/052`) |
 
 #### `FB2-VER-TMS-000001` — Test: SOA Voltage Limit Detection (as_is)
 
@@ -284,6 +286,32 @@ Upstream `verifies` links per test measure (`result_of` execution links in Execu
 - **Expected outcomes**:
   - `validation_accepted` = true (tolerance exact)
 
+#### `FB2-VER-TMS-000010` — Test: Component Verification (synthetic_reference, draft planning stub)
+
+- **Test type**: `unit` (component level) | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Define the component-level verification intent for the SOA monitor plus DIAG callback chain; no execution performed (harness blocked)
+- **Preconditions**: SOA and DIAG units available as host builds; component harness defined (blocked)
+- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Drive SOA limit violation at component boundary** → expected: DIAG callback invoked with severity
+  2. **Confirm occurrence counter and latency fields** → expected: Counter increments within debounce window
+  3. **Clear stimulus and confirm recovery** → expected: No latched fault after clear
+- **Expected outcomes**:
+  - `component_reaction_verified` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000011` — Test: HIL Fault Reaction (synthetic_reference, draft planning stub)
+
+- **Test type**: `system` (HIL) | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Define the HIL verification intent for the cell-voltage safety chain on target hardware; no execution performed (`tests/hil` placeholder only)
+- **Preconditions**: HIL bench available (blocked — unpublished upstream); target program built with coverage instrumentation (blocked)
+- **Environment**: Target TMS570LC4357 + HIL bench (blocked — unpublished)
+- **Test cases (steps)**:
+  1. **Apply overvoltage stimulus on HIL cell emulator** → expected: AFE path acquires violated sample
+  2. **Observe contactor command on target I/O** → expected: Coils de-energized within FTTI
+  3. **Collect line/branch coverage on target** → expected: Coverage record retained
+- **Expected outcomes**:
+  - `hil_reaction_verified` = true (tolerance exact)
+
 ### Test Cases
 
 - `FB2-VER-TMS-000001` (as_is): 4 test case(s)
@@ -300,7 +328,9 @@ Upstream `verifies` links per test measure (`result_of` execution links in Execu
 - `FB2-VER-TMS-000007` (synthetic_reference, draft stub): 3 test case(s)
 - `FB2-VER-TMS-000008` (synthetic_reference, draft stub): 3 test case(s)
 - `FB2-VER-TMS-000009` (synthetic_reference, draft stub): 2 test case(s)
-**Subtotal test cases**: 43
+- `FB2-VER-TMS-000010` (synthetic_reference, draft stub): 3 test case(s)
+- `FB2-VER-TMS-000011` (synthetic_reference, draft stub): 3 test case(s)
+**Subtotal test cases**: 49
 
 ### Execution Report
 
@@ -394,7 +424,7 @@ No target-HIL executions exist in the corpus — per governance policy, actual p
 
 - as_is `actual_host_run` PASS (`FB2-VER-EXE-000001`) is not independently substantiated: log/coverage hashes are `sha256:placeholder`, `output_hashes` empty, per-run logs not retained. `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have no execution records — no execution credit inferred.
 - All synthetic executions are `synthetic_fixture` PASS results demonstrating corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
-- Planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation) have `verifies`/`validates` links but no execution records. Component-level measures remain absent; component, integration, and HIL executions are all zero (blocked, not fabricated).
+- Planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation), `FB2-VER-TMS-000010` (component), `FB2-VER-TMS-000011` (HIL) have `verifies`/`validates` links but no execution records. Component, integration, qualification, validation, and HIL executions are all zero (blocked, not fabricated).
 
 ---
 

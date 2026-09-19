@@ -12,21 +12,21 @@
 | Scope Accounting | 1/1 inventories | 1/1 | ✅ |
 | Artifact Population | 11 families | 10/11 populated | ✅ (management = process audit by nature) |
 | Standards Mapping | 44 items | 44/44 (ASPICE 32/32, ISO 12/12) | ✅ |
-| Source Grounding | all artifacts | 39/66 with source_refs (43 anchors) | ✅ (synthetic artifacts reference as_is twins) |
-| Traceability Integrity | 0 dangling | 65/65 links valid (re-run pending for LNK-039..047) | ✅ |
+| Source Grounding | all artifacts | 39/68 with source_refs (43 anchors) | ✅ (synthetic artifacts reference as_is twins) |
+| Traceability Integrity | 0 dangling | 70/70 links valid (re-run pending for LNK-039..047) | ✅ |
 | Semantic Consistency | all checks | 10/10 categories, 16 findings, 0 errors | ✅ |
-| Automated Review Coverage | all artifacts | 17/45 corpus artifacts | ⚠️ Partial (vertical-slice review by design) |
-| Verification Planning | test measures per FSR | 14 test measures / 21/21 requirements linked | ✅ |
-| Actual Product Evidence | target executions | 0/14 (policy: blocked, not fabricated) | ⚠️ By policy |
-| Synthetic Fixture Coverage | 43 artifacts | 44/43 | ✅ |
+| Automated Review Coverage | all artifacts | 17/47 corpus artifacts | ⚠️ Partial (vertical-slice review by design) |
+| Verification Planning | test measures per FSR | 16 test measures / 21/21 requirements linked | ✅ |
+| Actual Product Evidence | target executions | 0/16 (policy: blocked, not fabricated) | ⚠️ By policy |
+| Synthetic Fixture Coverage | 43 artifacts | 46/43 | ✅ |
 | Negative Scenario Validation | 20 mutations | 20/20 mutations, 3/3 change lifecycles | ✅ |
 | Export Reproducibility | manifest | 1/1 | ✅ |
-| Human Approval | all artifacts | 0/66 pending | ⚠️ By policy |
-| Production Authorization | — | 0/66 (all `production_authorized=false`) | ⚠️ By policy |
+| Human Approval | all artifacts | 0/68 pending | ⚠️ By policy |
+| Production Authorization | — | 0/68 (all `production_authorized=false`) | ⚠️ By policy |
 
 **Final status:** `synthetic_ready_with_limitations`
 
-## Corpus Population (65 artifacts + 65 links)
+## Corpus Population (67 artifacts + 70 links)
 
 | Family | as_is | synthetic_reference | Notes |
 |--------|-------|---------------------|-------|
@@ -39,21 +39,21 @@
 | Software requirements (SW-SWR) | 3 | 3 | |
 | Software detailed design (SW-DSN) | 3 | 3 | |
 | HSI specification (SYS-HSI) | — | 1 | |
-| Test measures (VER-TMS) | 5 | 9 | as_is: real unit tests; synthetic: mirror set + 3 draft stubs (007/008/009) |
+| Test measures (VER-TMS) | 5 | 11 | as_is: real unit tests; synthetic: mirror set + 5 draft stubs (007/008/009/010/011) |
 | Test executions (VER-EXE) | 1 | 6 | as_is: 1 actual_host_run; synthetic: fixtures |
 | Reviews (REV) | 1 | — | vertical-slice review, 17 artifacts |
 | Change lifecycle artifacts (SCN-CHG) | — | 3 | demo changes 001–003 (mirrored under `scenarios/`) |
 | Mutation scenario artifacts (SCN-MUT) | — | 2 | + 20 scenario files under `scenarios/mutations/` |
 | Management artifacts (MAN) | — | 2 | scope + plan |
-| Links | 25 | 40 | `traceability/link-registry/` |
+| Links | 25 | 45 | `traceability/link-registry/` |
 
 ## Verification Planning Detail
 
 - **as_is:** 5 test measures extracted from real foxBMS 2 unit tests
   (`test_soa.c`, `test_contactor.c`, `test_afe_plausibility.c`,
   `test_ltc_6813-1.c`, `test_contactor.c`), 1 actual host execution.
-- **synthetic_reference:** 9 test measures (TMS-001..009) with synthetic-fixture
-  executions (EXE-001..006; TMS-007/008/009 draft stubs unexecuted); oracle bases: 9 synthetic_assumption (5 mirrors + fault-injection + robustness + 3 stubs).
+- **synthetic_reference:** 11 test measures (TMS-001..011) with synthetic-fixture
+  executions (EXE-001..006; TMS-007/008/009/010/011 draft stubs unexecuted); oracle bases: 11 synthetic_assumption (5 mirrors + fault-injection + robustness + 5 stubs).
 - Requirement-to-test linkage 21/21; SCO-001 links via TMS-009 `validates` stub (draft, no execution).
 
 ## Feature Coverage (from feature-inventory.json)
@@ -76,7 +76,7 @@
 3. **Human approval** — all artifacts pending (none performed).
 4. **Production authorization** — `production_authorized=false` for all artifacts
    (by policy).
-5. **Automated review coverage** — 17/45 corpus artifacts covered by the
+5. **Automated review coverage** — 17/47 corpus artifacts covered by the
    vertical-slice review record (adversarial challenges simulated for
    safety-critical items).
 
