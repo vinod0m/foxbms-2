@@ -158,7 +158,7 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 | `FB2-SW-SWR-000002` | `FSR-000002` (`LNK-009`) | `SGO-000001` (`LNK-003`) | `HAZ-000001` (`LNK-001`) |
 | `FB2-SW-SWR-000003` | `FSR-000003` (`LNK-010`) | `SGO-000001` (`LNK-004`) | `HAZ-000001` (`LNK-001`) |
 
-## 4. Process Status Summary
+## 4. Process Status Summary and Work-Product Detail
 
 | Process | Applicability | Disposition | Blocking work product |
 |---|---|---|---|
@@ -177,6 +177,52 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 | VAL.1 | applicable | partially_mapped | validation executions (TMS-009 stub linked) |
 | SUP.8/10/11 | applicable | mapped | — |
 | MLE.1–MLE.4 | not_applicable | explicit non-applicability | — |
+
+`partially_mapped` means every expected work product is either **present and linked** (specification, measures, trace links) or **explicitly blocked** (executions only). No work product is missing without disposition. Per-process detail:
+
+### SYS.4 / SWE.5 — Integration (same measure artifact)
+
+| Work product | State | Artifact / links |
+|---|---|---|
+| Integration plan | ✅ present | doc 07 (waf build, task engine, CAN/DBC, conf integration) |
+| Integration test specification | ✅ linked | `FB2-VER-TMS-000007` (draft stub) — `verifies` SWR-001/002/003 (`LNK-039/040/041`), also referenced_designs DSN-001/002/003 |
+| Integration test results | 🚫 blocked | no execution record — harness not in corpus scope; policy: blocked, not fabricated |
+
+### SYS.5 / SWE.6 — Qualification (same measure artifact)
+
+| Work product | State | Artifact / links |
+|---|---|---|
+| Qualification test specification | ✅ linked | `FB2-VER-TMS-000008` (draft stub) — `verifies` FSR-001..004 (`LNK-042/043/044/045`), referenced_designs DSN-001/002/003 |
+| HIL test specification | ✅ linked | `FB2-VER-TMS-000011` (draft stub) — `verifies` FSR-001..004 (`LNK-049/050/051/052`), config `tests/hil` placeholder |
+| Qualification test results | 🚫 blocked | no execution record — no qualification environment or target hardware |
+| HIL test results | 🚫 blocked | no execution record — HIL bench unpublished upstream (`tests/hil` placeholder) |
+
+### SWE.4 — Unit Verification
+
+| Work product | State | Artifact / links |
+|---|---|---|
+| Unit verification measures | ✅ linked | TMS-001..006 (5 as_is `source_grounded` + synthetic mirrors) + TMS-010 component stub (`LNK-048`) |
+| Unit test specifications | ✅ linked | structured steps/outcomes per TMS in docs 08/09; `tests/unit/app/**` (313 C files) |
+| Unit test results (synthetic) | ✅ recorded | EXE-001..006 `synthetic_fixture` pass (`result_of` LNK-033..038) — corpus structure only |
+| Unit test results (as_is) | ⚠️ partial | EXE-001 only (`actual_host_run`, hashes `sha256:placeholder`); TMS-002..005 no execution records |
+| Component test results | 🚫 blocked | TMS-010 draft stub, no execution — component harness not in corpus scope |
+
+### HWE.1–HWE.4 — Hardware
+
+| Work product | State | Artifact / links |
+|---|---|---|
+| HW requirements | ✅ linked | `FB2-HW-TSR-000001..000004` — `allocated_to` FSR (`LNK-005/006/007`); TSR-004 no allocation link (gap) |
+| HW architecture | ⚠️ partial | design packages inventoried (`source-registry.json` HW anchors); architecture extracted where readable |
+| HW detailed design | ⚠️ partial | Altium/schematic packages referenced; CAD-format limited analysis |
+| HW test specification | ✅ linked | as_is TMS-000004/000005 (LTC6813-1, contactor driver, `LNK-023/024`, `LNK-025`); synthetic TMS-000005/000006/000011 |
+| HW test results | 🚫 blocked | no target-hardware executions — policy: blocked, not fabricated |
+
+### VAL.1 — Validation
+
+| Work product | State | Artifact / links |
+|---|---|---|
+| Validation plan/specification | ✅ linked | `FB2-VER-TMS-000009` (draft stub) — `validates` SGO-000001 + SCO-000001 (`LNK-046/047`) |
+| Validation results | 🚫 blocked | no execution record — no validation environment or operational data |
 
 32 ASPICE processes inventoried (28 applicable + 4 not_applicable); 12 ISO parts (10 mapped/referenced + 2 not_applicable); acceptance gate 44/44.
 
