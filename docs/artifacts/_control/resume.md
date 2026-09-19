@@ -23,7 +23,7 @@
   spec docs re-rendered (integrity check PASSED, deterministic)
 
 ## In Progress
-- 2026-09-18 honesty + ASPICE-completeness pass (uncommitted): SRS/SAS/DDS/impl-mapping/SW-verification/SYS-verification/integration reports extended with upstream links + evidence limits; FSR-004 section added to SRS; SWE.4/5/6 renamed to PAM 4.0 in coverage-plan; new stubs TMS-007 (integration) / TMS-008 (qualification) / TMS-009 (validation, `validates` SGO-001 + SCO-001) with LNK-039..047 in both registries; mirror registry backfilled LNK-022..038; all report counts synced (65 artifacts + 65 links); DOCX twins stale
+- 2026-09-18 follow-ups committed: component stub TMS-010 + HIL stub TMS-011 (LNK-048..052, 70/70 links), verification workflow diagram, reports/TRACEABILITY_DOCUMENT synced (67 artifacts, 16 measures, 21/21 linked, re-run caveats settled), DOCX rebuilt — commits 94a6e224, 1d5a1091 pushed
 
 ## Blocked
 - No shell in session: `corpus.py check/coverage`, `render_spec_documents.py`, DOCX rebuild, git commit/push all pending; subagent reviewers broken (`Model not found`), reviews done inline
@@ -32,4 +32,4 @@
 - Repository: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2
 - Artifacts root: docs/artifacts
 - Baseline: BAS-REF-001 (commit 308028fb, tag v1.11.0)
-- Validation: 89 artifacts (86 + 3 stubs, re-run pending), 65 links (56 + 9, re-run pending); all source/assumption refs resolve per last run
+- Validation: 91 artifacts, 0 errors; 70 links, 0 dangling (2026-09-18, LNK-039..052 included); all source/assumption refs resolve
