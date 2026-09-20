@@ -152,14 +152,31 @@ counts and host-run claims are therefore not inferred from source availability.
 
 ## Verification Gaps (remaining, honest)
 
-1. **Target hardware measurement** — TSR-001..004 have test measures and synthetic fixtures only;
+1. **Target hardware measurement** — TSR-001..004 have test measures and recorded blocked executions only;
    actual hardware measurements remain blocked (no target hardware in corpus scope).
-2. **HIL execution** — no HIL runs; upstream test setup unpublished (see disposition above).
-3. **Integration executions** — planning stub `FB2-VER-TMS-000007` exists (`draft`, linked); no integration execution records (harness blocked).
+2. **HIL execution** — `FB2-VER-EXE-000011` recorded `blocked` (`outcome: blocked`, `execution_kind: none`); upstream test setup unpublished (`tests/hil` placeholder).
+3. **Integration executions** — stub `FB2-VER-TMS-000007` linked; `FB2-VER-EXE-000007` recorded `blocked` (integration harness not in corpus scope).
 4. **Timing verification** — no worst-case execution time analysis on target.
-5. **Management scope (SCO-001)** — verified by process audit only, no test measure (by nature of the artifact).
-6. **Component / qualification / validation / HIL executions** — planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation), `FB2-VER-TMS-000010` (component), `FB2-VER-TMS-000011` (HIL) exist as `draft` with `verifies`/`validates` links but no execution records; all such executions remain blocked, not fabricated.
+5. **Management scope (SCO-001)** — `validates` via TMS-009 stub (`LNK-047`), `FB2-VER-EXE-000009` recorded `blocked`.
+6. **Component / qualification / validation / HIL executions** — all recorded as blocked execution records (`FB2-VER-EXE-000007..000011`, `outcome: blocked`, `execution_kind: none`); dependency failures documented per record, not fabricated.
 7. **TSR-004 allocation** — `allocated_to` link `FB2-LNK-SAF-000058` added (TSR-004 → FSR-004); no allocated SWR or DSN exists for the pair (both verified by `FB2-VER-TMS-000004`).
+8. **as_is unit-test executions (TMS-002..005)** — recorded `blocked` (`FB2-VER-EXE-000002..000005`, `outcome: blocked`): upstream CI enforces these tests every revision, but per-run logs are not captured in the corpus; local execution confirmed infeasible (macOS unsupported by `fox.sh`; direct Ceedling 1.1.8 fails on missing HALCoGen codegen `./include` headers and `gdb`).
+9. **as_is host-run substantiation (TMS-001/EXE-001)** — recorded `actual_host_run`/`pass` with `sha256:placeholder` hashes and empty `output_hashes`; not independently substantiated.
+10. **HWE.2/HWE.3 hardware architecture and detailed design** — `partially_mapped`: design packages inventoried (43-anchor registry), but Altium/CAD binaries are unreadable to the corpus tooling — a format limit, only real hardware analysis closes it.
 
 Every gap above is tracked as a corpus limitation (`final_status:
 synthetic_ready_with_limitations`); no evidence is fabricated to close it.
+
+### Unblocking conditions (what would close each gap)
+
+| Gap | Unblocked by |
+|---|---|
+| as_is unit executions (TMS-002..005) | Running Ceedling on Linux/Windows with HALCoGen codegen (`./include`) + `gdb`, or capturing upstream CI per-run logs |
+| Integration executions (TMS-007/EXE-007) | Defining an integration harness in corpus scope |
+| Component executions (TMS-010/EXE-010) | Defining a component harness in corpus scope |
+| Qualification executions (TMS-008/EXE-008) | A qualification environment |
+| HIL executions (TMS-011/EXE-011) | Publishing the HIL test setup upstream (`tests/hil`) + target hardware |
+| Validation executions (TMS-009/EXE-009) | A validation environment with operational data |
+| Timing verification | WCET analysis on target |
+| Host-run substantiation (EXE-001) | Re-running the SOA test with retained logs/coverage hashes |
+| HWE.2/HWE.3 partial | Real hardware architecture/design analysis of the CAD packages |
