@@ -394,37 +394,37 @@ No `component` execution artifacts in the corpus — gap (blocked, not fabricate
 
 ### Test Specification
 
-No `integration` test specification artifacts in the corpus — **gap** (blocked, not fabricated).
+No `integration` test specification artifacts in the corpus — **gap** (blocked, not fabricated). The integration measure exists as a draft stub: `FB2-VER-TMS-000007` (verifies SWR-001/002/003, `LNK-039/040/041`).
 
 ### Test Cases
 
-**Subtotal test cases**: 0
+**Subtotal test cases**: 0 (stub unexecuted)
 
 ### Execution Report
 
-No `integration` execution artifacts in the corpus — gap (blocked, not fabricated).
+`FB2-VER-EXE-000007` (synthetic_reference): `execution_kind: none`, `outcome: blocked` (`result_of` `LNK-053`) — integration harness not in corpus scope; recorded honestly, no run performed.
 
 ## HIL Testing
 
 ### Test Specification
 
-No `hil` test specification artifacts in the corpus — **gap** (blocked, not fabricated).
+No `hil` test specification artifacts in the corpus — **gap** (blocked, not fabricated). The HIL measure exists as a draft stub: `FB2-VER-TMS-000011` (verifies FSR-001..004, `LNK-049/050/051/052`).
 
 ### Test Cases
 
-**Subtotal test cases**: 0
+**Subtotal test cases**: 0 (stub unexecuted)
 
 ### Execution Report
 
-No target-HIL executions exist in the corpus — per governance policy, actual product evidence = 0 (blocked, not fabricated).
+`FB2-VER-EXE-000011` (synthetic_reference): `execution_kind: none`, `outcome: blocked` (`result_of` `LNK-057`) — HIL bench unpublished upstream (`tests/hil` placeholder); recorded honestly, no run performed.
 
 ## Execution Traceability and Evidence Limits
 
-`result_of` links (execution → test measure): as_is `FB2-VER-EXE-000001` → `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000018`); synthetic `FB2-VER-EXE-000001..000006` → `FB2-VER-TMS-000001..000006` (`FB2-LNK-SAF-000033..038`).
+`result_of` links (execution → test measure): as_is `FB2-VER-EXE-000001` → `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000018`), plus blocked records `FB2-VER-EXE-000002..000005` → `FB2-VER-TMS-000002..000005` (`FB2-LNK-SAF-000026..029`); synthetic `FB2-VER-EXE-000001..000006` → `FB2-VER-TMS-000001..000006` (`FB2-LNK-SAF-000033..038`), plus blocked records `FB2-VER-EXE-000007..000011` → `FB2-VER-TMS-000007..000011` (`FB2-LNK-SAF-000053..057`).
 
-- as_is `actual_host_run` PASS (`FB2-VER-EXE-000001`) is not independently substantiated: log/coverage hashes are `sha256:placeholder`, `output_hashes` empty, per-run logs not retained. `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have no execution records — no execution credit inferred.
-- All synthetic executions are `synthetic_fixture` PASS results demonstrating corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
-- Planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation), `FB2-VER-TMS-000010` (component), `FB2-VER-TMS-000011` (HIL) have `verifies`/`validates` links but no execution records. Component, integration, qualification, validation, and HIL executions are all zero (blocked, not fabricated).
+- as_is `actual_host_run` PASS (`FB2-VER-EXE-000001`) is not independently substantiated: log/coverage hashes are `sha256:placeholder`, `output_hashes` empty, per-run logs not retained. `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have recorded blocked executions (`outcome: blocked` — upstream CI runs not captured in corpus).
+- Synthetic pass executions are `synthetic_fixture` results demonstrating corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
+- Planning stubs `FB2-VER-TMS-000007..000011` have `verifies`/`validates` links and recorded blocked executions (`outcome: blocked`, `execution_kind: none`) — no fabricated runs.
 
 ---
 

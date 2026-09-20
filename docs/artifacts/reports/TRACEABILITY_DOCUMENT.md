@@ -537,8 +537,8 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 | Gate | Result |
 |---|---|
 | Schema validation (13 schemas, draft 2020-12) | ✅ all valid |
-| Artifact validation (91 artifacts) | ✅ 0 errors (validated run 2026-09-18: 91 artifacts, TMS-007..011 + LNK-039..052 included) |
-| Link validation (70 links, profile-aware) | ✅ 0 dangling (validated run 2026-09-18, LNK-039..052 included) |
+| Artifact validation (91 artifacts) | ✅ 0 errors (validated run 2026-09-19: 100 artifacts, TMS-007..011 + EXE-000007..011 + LNK-039..057 included) |
+| Link validation (79 links, profile-aware) | ✅ 0 dangling (validated run 2026-09-19, LNK-039..057 included) |
 | Provenance (source_refs → 43-anchor registry) | ✅ all resolve |
 | Provenance (assumption_refs → 12-assumption registry) | ✅ 12/12 resolve |
 | Identity uniqueness (per profile) | ✅ 0 duplicates within profile |
@@ -574,7 +574,7 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 |---|---|---|---|
 | 1 | FSR-000004/TSR-000004 (independent monitor) have no as_is `verifies` links (no upstream test) | as_is | Documented verification gap; synthetic TMS-004 covers both |
 | 2 | No target-hardware execution evidence (only host-run unit test) | both | Policy: `actual_product_evidence = 0` — blocked, not fabricated; HIL setup unpublished upstream |
-| 3 | Integration/qualification/validation/component/HIL executions absent (planning stubs TMS-007/008/009/010/011 only) | both | Documented gap; stubs linked, executions blocked |
+| 3 | Integration/qualification/validation/component/HIL executions recorded blocked (EXE-000007..011, `outcome: blocked`) | both | Documented gap; stubs linked, executions honestly recorded blocked — no fabricated runs |
 | 4 | FTA/DFA/FFI analyses have empty element/gate lists | synthetic | Skeleton analyses; FMEA fully populated (5 failure modes) |
 | 5 | Safety case skeleton has 1 claim with empty evidence refs | synthetic | Skeleton only |
 | 6 | Multi-defect interaction scenarios not built | corpus tooling | Isolated 20/20 complete; interactions are future extension |
@@ -586,7 +586,7 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 
 Every requirement chain from hazard to test execution is traceable in both profiles via
 typed links with complete metadata (rationale, provenance, review_state, change_suspect_status).
-All 70 links resolve (validated run 2026-09-18, LNK-039..052 included); all source and assumption references resolve; identity is unique per
+All 79 links resolve (validated run 2026-09-19, LNK-039..057 included); all source and assumption references resolve; identity is unique per
 profile; the FTTI budget is coherent; 20/20 mutations and 3/3 change lifecycles are detected;
 and the acceptance suite passes all 8 gates.
 

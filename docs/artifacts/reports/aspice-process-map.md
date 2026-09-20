@@ -4,7 +4,7 @@
 **Baseline:** BAS-REF-001 (commit `308028fb`, tag `v1.11.0`)  
 **Standard:** ASPICE PAM 4.1 (+ ISO 26262:2018 cross-references)  
 **Statuses from:** `governance/coverage-plan.json` (2026-09-18 run)  
-**Corpus:** 67 artifacts + 70 links (`corpus.py check` → PASSED, selftest 11/11)
+**Corpus:** 67 artifacts + 79 links (`corpus.py check` → PASSED, selftest 11/11)
 
 ## 1. Process Chain
 
@@ -165,20 +165,20 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 | SYS.1 | applicable | mapped | — |
 | SYS.2 | applicable | mapped | — |
 | SYS.3 | applicable | mapped | — |
-| SYS.4 | applicable | partially_mapped | integration executions (TMS-007 stub linked) |
-| SYS.5 | applicable | partially_mapped | qualification + HIL executions (TMS-008/011 stubs linked) |
+| SYS.4 | applicable | partially_mapped | integration executions recorded blocked (EXE-000007) |
+| SYS.5 | applicable | partially_mapped | qualification + HIL executions recorded blocked (EXE-000008/011) |
 | SWE.1 | applicable | mapped | — |
 | SWE.2 | applicable | mapped | — |
 | SWE.3 | applicable | mapped | — |
-| SWE.4 | applicable | partially_mapped | as_is executions 4/5 missing; component execution (TMS-010 stub linked) |
-| SWE.5 | applicable | partially_mapped | integration executions (TMS-007 stub linked) |
-| SWE.6 | applicable | partially_mapped | qualification executions (TMS-008 stub linked) |
-| HWE.1–HWE.4 | applicable | partially_mapped | HW test records (blocked) |
-| VAL.1 | applicable | partially_mapped | validation executions (TMS-009 stub linked) |
+| SWE.4 | applicable | partially_mapped | as_is executions mixed (EXE-002..005 recorded blocked, CI runs not captured); component execution recorded blocked (EXE-000010) |
+| SWE.5 | applicable | partially_mapped | integration executions recorded blocked (EXE-000007) |
+| SWE.6 | applicable | partially_mapped | qualification executions recorded blocked (EXE-000008) |
+| HWE.1–HWE.4 | applicable | partially_mapped | HW test executions recorded blocked (EXE-000004/005/011); HW arch/design CAD-format partial |
+| VAL.1 | applicable | partially_mapped | validation executions recorded blocked (EXE-000009) |
 | SUP.8/10/11 | applicable | mapped | — |
 | MLE.1–MLE.4 | not_applicable | explicit non-applicability | — |
 
-`partially_mapped` means every expected work product is either **present and linked** (specification, measures, trace links) or **explicitly blocked** (executions only). No work product is missing without disposition. Per-process detail:
+`partially_mapped` means every expected work product is **present and linked** (specification, measures, trace links) or **recorded blocked with an execution record** (`outcome: blocked`, `execution_kind: none`). No work product is missing without disposition and no execution is fabricated. Per-process detail:
 
 ### SYS.4 / SWE.5 — Integration (same measure artifact)
 
@@ -186,7 +186,7 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 |---|---|---|
 | Integration plan | ✅ present | doc 07 (waf build, task engine, CAN/DBC, conf integration) |
 | Integration test specification | ✅ linked | `FB2-VER-TMS-000007` (draft stub) — `verifies` SWR-001/002/003 (`LNK-039/040/041`), also referenced_designs DSN-001/002/003 |
-| Integration test results | 🚫 blocked | no execution record — harness not in corpus scope; policy: blocked, not fabricated |
+| Integration test results | ⚠️ recorded blocked | `FB2-VER-EXE-000007` (`result_of` `LNK-053`) — `outcome: blocked`, `execution_kind: none`, harness not in corpus scope; policy: blocked, not fabricated |
 
 ### SYS.5 / SWE.6 — Qualification (same measure artifact)
 
@@ -194,8 +194,8 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 |---|---|---|
 | Qualification test specification | ✅ linked | `FB2-VER-TMS-000008` (draft stub) — `verifies` FSR-001..004 (`LNK-042/043/044/045`), referenced_designs DSN-001/002/003 |
 | HIL test specification | ✅ linked | `FB2-VER-TMS-000011` (draft stub) — `verifies` FSR-001..004 (`LNK-049/050/051/052`), config `tests/hil` placeholder |
-| Qualification test results | 🚫 blocked | no execution record — no qualification environment or target hardware |
-| HIL test results | 🚫 blocked | no execution record — HIL bench unpublished upstream (`tests/hil` placeholder) |
+| Qualification test results | ⚠️ recorded blocked | `FB2-VER-EXE-000008` (`result_of` `LNK-054`) — `outcome: blocked`, no qualification environment or target hardware |
+| HIL test results | ⚠️ recorded blocked | `FB2-VER-EXE-000011` (`result_of` `LNK-057`) — `outcome: blocked`, HIL bench unpublished upstream (`tests/hil` placeholder) |
 
 ### SWE.4 — Unit Verification
 
@@ -204,8 +204,8 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 | Unit verification measures | ✅ linked | TMS-001..006 (5 as_is `source_grounded` + synthetic mirrors) + TMS-010 component stub (`LNK-048`) |
 | Unit test specifications | ✅ linked | structured steps/outcomes per TMS in docs 08/09; `tests/unit/app/**` (313 C files) |
 | Unit test results (synthetic) | ✅ recorded | EXE-001..006 `synthetic_fixture` pass (`result_of` LNK-033..038) — corpus structure only |
-| Unit test results (as_is) | ⚠️ partial | EXE-001 only (`actual_host_run`, hashes `sha256:placeholder`); TMS-002..005 no execution records |
-| Component test results | 🚫 blocked | TMS-010 draft stub, no execution — component harness not in corpus scope |
+| Unit test results (as_is) | ⚠️ mixed | EXE-001 `actual_host_run` (hashes `sha256:placeholder`); EXE-002..005 recorded blocked (`result_of` LNK-026..029) — upstream CI runs not captured in corpus |
+| Component test results | ⚠️ recorded blocked | `FB2-VER-EXE-000010` (`result_of` `LNK-056`) — `outcome: blocked`, component harness not in corpus scope |
 
 ### HWE.1–HWE.4 — Hardware
 
@@ -215,14 +215,14 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 | HW architecture | ⚠️ partial | design packages inventoried (`source-registry.json` HW anchors); architecture extracted where readable |
 | HW detailed design | ⚠️ partial | Altium/schematic packages referenced; CAD-format limited analysis |
 | HW test specification | ✅ linked | as_is TMS-000004/000005 (LTC6813-1, contactor driver, `LNK-023/024`, `LNK-025`); synthetic TMS-000005/000006/000011 |
-| HW test results | 🚫 blocked | no target-hardware executions — policy: blocked, not fabricated |
+| HW test results | ⚠️ recorded blocked | as_is EXE-000004/000005 blocked (upstream CI not captured, `LNK-028/029`); HIL EXE-000011 blocked (`LNK-057`) — no target-hardware executions |
 
 ### VAL.1 — Validation
 
 | Work product | State | Artifact / links |
 |---|---|---|
 | Validation plan/specification | ✅ linked | `FB2-VER-TMS-000009` (draft stub) — `validates` SGO-000001 + SCO-000001 (`LNK-046/047`) |
-| Validation results | 🚫 blocked | no execution record — no validation environment or operational data |
+| Validation results | ⚠️ recorded blocked | `FB2-VER-EXE-000009` (`result_of` `LNK-055`) — `outcome: blocked`, no validation environment or operational data |
 
 32 ASPICE processes inventoried (28 applicable + 4 not_applicable); 12 ISO parts (10 mapped/referenced + 2 not_applicable); acceptance gate 44/44.
 

@@ -14,7 +14,7 @@ This report documents the results of semantic consistency checks per master prom
 
 | Check | synthetic_reference | as_is | Details |
 |-------|---------------------|-------|---------|
-| Unique IDs across profiles | ✅ | ✅ | No duplicates within profile (91 artifacts incl. registries, per last validated run + 3 new stubs) |
+| Unique IDs across profiles | ✅ | ✅ | No duplicates within profile (100 validated artifacts incl. registries, 2026-09-19 run: 9 new blocked execution records included) |
 | Schema validation | ✅ | ✅ | All artifacts validate |
 | Revision format | ✅ | ✅ | Integer strings |
 | Reference resolution | ✅ | ✅ | All source_refs resolve |

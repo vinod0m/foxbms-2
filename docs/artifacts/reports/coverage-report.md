@@ -12,21 +12,21 @@
 | Scope Accounting | 1/1 inventories | 1/1 | ✅ |
 | Artifact Population | 11 families | 10/11 populated | ✅ (management = process audit by nature) |
 | Standards Mapping | 44 items | 44/44 (ASPICE 32/32, ISO 12/12) | ✅ |
-| Source Grounding | all artifacts | 39/68 with source_refs (43 anchors) | ✅ (synthetic artifacts reference as_is twins) |
-| Traceability Integrity | 0 dangling | 70/70 links valid (validated run 2026-09-18, LNK-039..052 included) | ✅ |
+| Source Grounding | all artifacts | 39/77 with source_refs (43 anchors) | ✅ (synthetic artifacts reference as_is twins) |
+| Traceability Integrity | 0 dangling | 79/79 links valid (validated run 2026-09-19, LNK-039..057 included) | ✅ |
 | Semantic Consistency | all checks | 10/10 categories, 16 findings, 0 errors | ✅ |
-| Automated Review Coverage | all artifacts | 17/47 corpus artifacts | ⚠️ Partial (vertical-slice review by design) |
+| Automated Review Coverage | all artifacts | 17/52 corpus artifacts | ⚠️ Partial (vertical-slice review by design) |
 | Verification Planning | test measures per FSR | 16 test measures / 21/21 requirements linked | ✅ |
 | Actual Product Evidence | target executions | 0/16 (policy: blocked, not fabricated) | ⚠️ By policy |
-| Synthetic Fixture Coverage | 43 artifacts | 46/43 | ✅ |
+| Synthetic Fixture Coverage | 43 artifacts | 51/43 | ✅ |
 | Negative Scenario Validation | 20 mutations | 20/20 mutations, 3/3 change lifecycles | ✅ |
 | Export Reproducibility | manifest | 1/1 | ✅ |
-| Human Approval | all artifacts | 0/68 pending | ⚠️ By policy |
-| Production Authorization | — | 0/68 (all `production_authorized=false`) | ⚠️ By policy |
+| Human Approval | all artifacts | 0/77 pending | ⚠️ By policy |
+| Production Authorization | — | 0/77 (all `production_authorized=false`) | ⚠️ By policy |
 
 **Final status:** `synthetic_ready_with_limitations`
 
-## Corpus Population (67 artifacts + 70 links)
+## Corpus Population (76 artifacts + 79 links)
 
 | Family | as_is | synthetic_reference | Notes |
 |--------|-------|---------------------|-------|
@@ -40,12 +40,12 @@
 | Software detailed design (SW-DSN) | 3 | 3 | |
 | HSI specification (SYS-HSI) | — | 1 | |
 | Test measures (VER-TMS) | 5 | 11 | as_is: real unit tests; synthetic: mirror set + 5 draft stubs (007/008/009/010/011) |
-| Test executions (VER-EXE) | 1 | 6 | as_is: 1 actual_host_run; synthetic: fixtures |
+| Test executions (VER-EXE) | 5 | 11 | as_is: 1 actual_host_run + 4 recorded blocked (CI runs not captured); synthetic: 6 fixtures + 5 recorded blocked |
 | Reviews (REV) | 1 | — | vertical-slice review, 17 artifacts |
 | Change lifecycle artifacts (SCN-CHG) | — | 3 | demo changes 001–003 (mirrored under `scenarios/`) |
 | Mutation scenario artifacts (SCN-MUT) | — | 2 | + 20 scenario files under `scenarios/mutations/` |
 | Management artifacts (MAN) | — | 2 | scope + plan |
-| Links | 25 | 45 | `traceability/link-registry/` |
+| Links | 25 | 54 | `traceability/link-registry/` |
 
 ## Verification Planning Detail
 
@@ -53,7 +53,7 @@
   (`test_soa.c`, `test_contactor.c`, `test_afe_plausibility.c`,
   `test_ltc_6813-1.c`, `test_contactor.c`), 1 actual host execution.
 - **synthetic_reference:** 11 test measures (TMS-001..011) with synthetic-fixture
-  executions (EXE-001..006; TMS-007/008/009/010/011 draft stubs unexecuted); oracle bases: 11 synthetic_assumption (5 mirrors + fault-injection + robustness + 5 stubs).
+  executions (EXE-001..006 pass; EXE-007..011 recorded blocked); oracle bases: 11 synthetic_assumption (5 mirrors + fault-injection + robustness + 5 stubs).
 - Requirement-to-test linkage 21/21; SCO-001 links via TMS-009 `validates` stub (draft, no execution).
 
 ## Feature Coverage (from feature-inventory.json)
@@ -76,7 +76,7 @@
 3. **Human approval** — all artifacts pending (none performed).
 4. **Production authorization** — `production_authorized=false` for all artifacts
    (by policy).
-5. **Automated review coverage** — 17/47 corpus artifacts covered by the
+5. **Automated review coverage** — 17/52 corpus artifacts covered by the
    vertical-slice review record (adversarial challenges simulated for
    safety-critical items).
 

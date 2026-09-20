@@ -74,7 +74,7 @@ This report documents the gaps between what is actually present in the foxBMS 2 
 | Verification Strategy | Not documented | Per FSR approach | Gap |
 | Test Plans | Unity/CMock configs | 16 test measures | Partial |
 | Test Specifications | Test source code | Structured TMS | Partial |
-| Test Executions | CI runs (not captured) | 7 executions (1 actual_host_run + 6 synthetic_fixture) | Partial |
+| Test Executions | CI runs (not captured) | 16 executions (1 actual_host_run + 6 synthetic_fixture + 9 recorded blocked) | Partial |
 | Coverage Analysis | Not documented | Not generated | Gap |
 | Anomaly Records | Not captured | Not generated | Gap |
 | Validation Measures | Not present | Synthetic plan | Major gap |
