@@ -81,7 +81,7 @@ This report documents the results of semantic consistency checks per master prom
 | Plans vs outcomes distinguished | ✅ | ✅ | TMS (plan) vs EXE (outcome) |
 | Honest evidence classification | ✅ | ✅ | actual_host_run, synthetic_fixture labeled |
 
-**Gap:** 20/21 requirements have test measures (11 corpus TMS: 5 as_is source-grounded + 6 synthetic_reference); the single uncovered item is the management scope (SCO-001, process-audit by nature). Integration-level test measures remain missing.
+**Gap:** 21/21 requirements linked (16 corpus TMS: 5 as_is source-grounded + 11 synthetic_reference, incl. draft stubs TMS-007..011; blocked execution records EXE-000002..005 + EXE-000007..011 recorded; SCO-001 `validates` via TMS-009 stub). Integration/qualification/HIL/component/validation executions remain recorded blocked — no fabricated runs; unblocking conditions in verification-evidence-report.md.
 
 ### 7. Safety-Analysis Coherence ✅
 

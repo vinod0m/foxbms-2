@@ -572,13 +572,16 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 
 | # | Gap | Profile | Disposition |
 |---|---|---|---|
-| 1 | FSR-000004/TSR-000004 (independent monitor) have no as_is `verifies` links (no upstream test) | as_is | Documented verification gap; synthetic TMS-004 covers both |
+| 1 | FSR-000004/TSR-000004 (independent monitor) have no as_is `verifies` links (no upstream test) | as_is | Documented verification gap; synthetic TMS-004 covers both; TSR-004 `allocated_to` FSR-004 (`LNK-058`, synthetic only) |
 | 2 | No target-hardware execution evidence (only host-run unit test) | both | Policy: `actual_product_evidence = 0` — blocked, not fabricated; HIL setup unpublished upstream |
 | 3 | Integration/qualification/validation/component/HIL executions recorded blocked (EXE-000007..011, `outcome: blocked`) | both | Documented gap; stubs linked, executions honestly recorded blocked — no fabricated runs |
 | 4 | FTA/DFA/FFI analyses have empty element/gate lists | synthetic | Skeleton analyses; FMEA fully populated (5 failure modes) |
 | 5 | Safety case skeleton has 1 claim with empty evidence refs | synthetic | Skeleton only |
 | 6 | Multi-defect interaction scenarios not built | corpus tooling | Isolated 20/20 complete; interactions are future extension |
 | 7 | Source registry contains some placeholder symbols (`SOA_CheckVoltageLimits` vs actual `SOA_CheckVoltages`) | shared | Known fabrication from initial generation; line ranges AST-verified where possible |
+| 8 | as_is unit-test executions TMS-002..005 recorded blocked (EXE-000002..005) — upstream CI runs not captured; local run infeasible (macOS unsupported, missing HALCoGen codegen + gdb) | as_is | Blocked, not fabricated; unblocking conditions in verification-evidence-report.md |
+| 9 | as_is host-run substantiation (EXE-001) — `sha256:placeholder` hashes, empty `output_hashes` | as_is | Recorded pass not independently substantiated |
+| 10 | HWE.2/HWE.3 hardware architecture/detailed design partial — Altium/CAD binaries unreadable to corpus tooling | both | Format limit; only real hardware analysis closes it |
 
 ### 12.4 Review verdict
 
