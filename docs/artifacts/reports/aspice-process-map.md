@@ -1,10 +1,11 @@
 # foxBMS 2 — ASPICE Process-to-Artifact Map
 
-**Generated:** 2026-09-19  
+**Generated:** 2026-09-20  
 **Baseline:** BAS-REF-001 (commit `308028fb`, tag `v1.11.0`)  
 **Standard:** ASPICE PAM 4.1 (+ ISO 26262:2018 cross-references)  
-**Statuses from:** `governance/coverage-plan.json` (2026-09-18 run)  
-**Corpus:** 67 artifacts + 79 links (`corpus.py check` → PASSED, selftest 11/11)
+**Statuses from:** `governance/coverage-plan.json` (2026-09-19 run)  
+**Corpus:** 76 artifacts + 80 links (`corpus.py check` → PASSED, selftest 11/11, validate 100 artifacts/0 errors)  
+**Code graph:** graphify-out fresh at commit `3fbfd82d` (18086 nodes, 31372 edges, 1469 communities)
 
 ## 1. Process Chain
 

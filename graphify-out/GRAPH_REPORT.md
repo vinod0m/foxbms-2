@@ -1,17 +1,17 @@
-# Graph Report - foxbms-2  (2026-09-13)
+# Graph Report - foxbms-2  (2026-09-20)
 
 ## Corpus Check
-- 2241 files · ~2,411,259 words
+- 2267 files · ~2,820,389 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 345 file(s) not represented in the graph (top: .csv 154, .drawio 95, (none) 32)
 
 ## Summary
-- 18022 nodes · 31310 edges · 1457 communities (703 shown, 272 thin omitted)
+- 18086 nodes · 31372 edges · 1469 communities (703 shown, 283 thin omitted)
 - Extraction: 85% EXTRACTED · 15% INFERRED · 0% AMBIGUOUS · INFERRED: 4755 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5b76540d`
+- Built from commit: `3fbfd82d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,20 +30,20 @@
 - tasks.c
 - mpu_wrappers.c
 - TestPlotConfigFrame
-- CANProcess
+- CAN
 - test_bal.c
 - uxIPHeaderSizePacket
 - Converter
-- install_impl.py
+- patch
 - can_cbs_rx_f_debug.c
 - CAN_TxSetMessageDataWithSignalData
 - BootloaderInterfaceCan
 - CAN_TxSetCanDataWithMessageData
 - BootloaderCanBasics
-- c_etl.py
+- CANDecode
 - ltc_6813-1.c
 - test_mxm_17841b.c
-- FreeRTOS_IP_Timers.c
+- FreeRTOS_DHCPv6.c
 - queue.c
 - bms.c
 - OS_EnterTaskCritical
@@ -52,30 +52,29 @@
 - CSVHandler
 - nxp_mc3377x.c
 - test_pwm.c
-- test_ltc_6806.c
 - i2c.c
 - xTaskResumeAll
-- spi.c
+- spi_cfg-helper.h
 - can_cbs_tx_cyclic.h
 - Executor
 - can_cbs_tx_f_debug-response.c
 - boot.c
-- test_c_etl.py
+- c_etl.py
 - patch
 - os_freertos.c
 - TestPlotConfigFrameNoUiTestableMethods
 - LineGraphDrawer
-- FileTracker
+- .check_file_changed
 - Bootloader
 - test_can_cbs_rx_f_debug.c
 - TestCommands
-- test___init__.py
-- patch
+- CellSpec
+- SubprocessResult
 - FreeRTOS_ARP.c
 - CAN_SendAcknowledgeMessage
 - Messages
-- can_cbs_rx_cs_isabellenhuette-ivt-s.c
-- TmpHandler
+- OS_GetTickCount
+- TestTmpHandlerCheckForTmpDirectory
 - CAN_TxPrepareSignalData
 - RunPlotFrame
 - redundancy.c
@@ -84,40 +83,39 @@
 - test_spi.c
 - can_cbs_tx_f_pack-minimum-maximum-values.c
 - TestCheckDoxygenComment
-- diag.c
+- DIAG_Handler
 - ADDED Requirements
 - doxygen.py
 - test_mxm_1785x_tools.c
 - can_cbs_tx_f_pack-state-estimation.c
 - BootloaderStatus
-- test_emac.c
+- emac.c
 - test_bootloader-hl_notification.c
 - adi_ades183x_helpers.c
 - ADI_CopyCommandBytes
 - uart.c
-- CurrentLimitModel
+- CurrentLimits
 - foxBMS 2 — End-to-End Traceability Document
 - Reverse-Engineered Module Designs
 - foxBMS 2 - End-to-End Traceability Document
-- FoxDB
+- FileWriter
 - embedded_ut_impl.py
 - log
 - test_c_com.py
 - database.c
-- ethernet.c
+- ETH_CreateListeningTask
 - FreeRTOS_IP_Utils.c
 - test_mxm_registry.c
 - test_can_cbs_rx_imd_bender-iso165c-info.c
 - diag_cbs.h
-- test_assert_helper.h
 - bms_config_validator.py
 - test_measure.schema.json
 - CorpusTool
 - stream_buffer.c
 - timers.c
 - TestSpR
-- adi_ades183x.c
-- DIAG_Handler
+- adi_ades183x_defs.h
+- rtc.c
 - afe.h
 - ltc_6806.c
 - ftask_cfg.c
@@ -131,20 +129,20 @@
 - TestUpdateVersionCore
 - foxbms_config.h
 - log_can_message
-- vListInitialise
+- uxListRemove
 - FreeRTOS_DNS.c
-- TestRunDecode2File
+- run_decode2file
 - Software Installation
 - Test Specification
 - FLASH_WriteFlashSector
 - imd.c
-- debug_can.c
+- OS_DelayTaskUntil
 - ti_afe.c
 - emac-low-level.c
-- test_adi_ades1830.c
+- adi_ades183x.c
 - f_ti_arm_cgt.py
 - bms_impl.py
-- SubprocessResult
+- pre_commit_impl.py
 - create_app_build_cfg.py
 - bms_config_validator_base.py
 - f_vscode.py
@@ -153,17 +151,17 @@
 - test_timer.c
 - FreeRTOS_DNS_Cache.c
 - TestBootloaderInterfaceCan
-- TestPlotFrameNoUiTestableMethods
-- CellSpec
+- TestPlotFrame
+- FreeRTOS_IP_Timers.c
 - check_license_info.py
 - ILCK_SetStateRequest
 - nxp_mc33775a_measurement.c
 - MPU_xTaskCreateStatic_TestCallback
-- app/driver/can/test_can.c
+- app/driver/can/can.c
 - CANFilter
-- xND_CACHE_TABLE_ROW
+- xRA_DATA
 - SOA_CheckCurrent
-- TestPlotFrame
+- ComInterface
 - patch
 - xTaskGetTickCount
 - item_definition
@@ -176,16 +174,16 @@
 - OS_ReceiveFromQueue
 - TestPlotPeriods
 - .__init__
-- get_config_file_options
-- Cell
-- BaseModel
+- read_config
+- table_helper.py
+- run_process
 - PythonTestFiles
 - Findings
 - test_mxm_bit_extract.c
-- N77x_CommunicationWrite
-- can_cbs_tx_f_string-state.c
+- bal_strategy_history.c
+- can_cbs_tx_f_bms-state-details.c
 - can_cbs_tx_f_string-state-estimation.c
-- OS_GetTickCount
+- TestBootloaderCanBasics
 - f_hcg.py
 - TestBootloader
 - test_cli_unittest_gui.py
@@ -198,15 +196,15 @@
 - ADDED Requirements
 - Requirements
 - uc_msg_t.c
-- FreeRTOS_Stream_Buffer.c
+- bender_ir155.c
 - xIP_HEADER_IPv6
 - TestRunFrame
 - TestCheckLicenseInfo
-- SimulateBmsFrame
+- .__init__
 - python_setup.py
 - foxBMS 2 — Full-Lifecycle Engineering Artifact and Traceability Corpus
 - nxpfs85xx.c
-- can_cbs_tx_f_bms-state-details.c
+- xEventGroupWaitBits
 - none_none.c
 - patch
 - create_version.py
@@ -225,12 +223,12 @@
 - test_database_helper.c
 - vcs_git.py
 - PL_CheckStringVoltage
-- temperature_sensor_defs.h
+- epcos_b57251v5103j060.c
 - xEthernetPhy
 - patch
-- app/driver/can/can.c
-- emac.c
-- contactor.c
+- CAN_RxInterrupt
+- .send_data_as_a_sector
+- 3. SYS.3 → SWE.1 → … → SWE.6 → SYS.4 → SYS.5 — artifact-level chains
 - sys.c
 - test_foxbms_version.py
 - render_template
@@ -239,12 +237,12 @@
 - Final Acceptance Report
 - foxBMS 2 — System Requirements Specification
 - test_sps.c
-- battery_system_cfg.h
+- DIAG_UpdateFlags
 - can_cbs_rx_cs_lem-cab500.c
 - test_can_cbs_rx_imd_bender-iso165c-response.c
 - can_cbs_tx_f_pack-values-p0.c
 - check_ids.py
-- patch
+- test_ltc_6813-1.c
 - patch
 - run_filter
 - Foo
@@ -263,9 +261,9 @@
 - properties
 - foxBMS 2 — Software Architecture Specification
 - RepoModel
-- _runner
+- conf.py
 - ADDED Requirements
-- sps.c
+- validate_table_config
 - test_soc_lookup-table.c
 - test_can_1.c
 - TestBootloaderFrame
@@ -273,7 +271,7 @@
 - CANTX_BuildBmsStateMessage
 - .join
 - .get_selected_item
-- .get_tmp_data
+- FileTracker
 - Path
 - manifest.json
 - Reproducibility Report
@@ -299,9 +297,9 @@
 - LinesSettings
 - ADDED Requirements
 - ADDED Requirements
-- SPS_Ctrl
+- test_can_decode_helper.py
 - test_diag_cbs_current.c
-- test_sys.c
+- test_adi_ades1830_gpio_voltages.c
 - test_run_gui.py
 - patch
 - TestFoxGuiNoUiTestableMethods
@@ -319,13 +317,13 @@
 - 2026-09-10-foxbms-lifecycle-artifact-corpus/tasks.md
 - link-integrity/spec.md
 - Requirements
-- test_nxp_mc33775a_alarm.c
+- N77x_CommunicationWrite
 - FreeRTOS_IPv6_Sockets.c
 - FreeRTOS_Tiny_TCP.c
 - TestSimulateBmsFrameNoUiTestableMethods
 - TestSimulateBmsFrame
 - test_vcs_git.py
-- get_prefixes
+- c_misc.py
 - properties
 - Mapping
 - update_version_core.py
@@ -335,8 +333,8 @@
 - test_master_info.c
 - Decisions
 - sof_trapezoid.c
-- can_cbs_tx_f_debug-identify-hardware.c
-- spi_cfg_initialization.h
+- can_cfg_tx-async-message-definitions.h
+- spi.c
 - app-hl_notification.c
 - CRC_SemiAutoCrcCalculation
 - TestDataConfigFrame
@@ -344,7 +342,7 @@
 - app/driver/can/test_can_can_message_notification.c
 - adc.c
 - .check_for_missing_test_files
-- create_doc_sources
+- BootloaderFrame
 - wscript
 - domains
 - Verification Evidence Report
@@ -359,14 +357,14 @@
 - patch
 - TestBuildFrame
 - TestBuildFrameNoUiTestableMethods
-- test_setup.py
-- test_misc.py
-- test_debug_default.c
+- TestReadJson
+- test_package_helpers.py
+- main
 - .get_data
 - line_graph_drawer.py
 - properties
 - properties
-- misc
+- BAL_Init
 - TestForTabs
 - properties
 - foxBMS 2 — Software Integration Report
@@ -377,7 +375,7 @@
 - test_diag_cbs_temperature.c
 - test_app-hl_notification.c
 - freertos-plus-tcp/README.md
-- TestUnittestImpl
+- waf
 - Path
 - TestCppComments
 - bootloader/driver/can/test_can_can_message_notification.c
@@ -391,10 +389,10 @@
 - Requirements
 - test_state_estimation.c
 - test_can_cbs_tx_f_pack-values-p1.c
-- test_can_cbs_tx_f_string-values-p1.c
+- get_cantools_database
 - test_diag_cbs_contactor.c
 - tests/cli/cmd_gui/frame_sim/__init__.py
-- TestReadConfig
+- c_gui.py
 - TestCheckerReadErrorHandling
 - crc_init.py
 - AFE_PlausibilityCheckTempMinMax
@@ -422,7 +420,7 @@
 - patch
 - test_redundancy.c
 - bootloader/driver/config/test_can_cfg.c
-- .test_generate_data_config_cb
+- 3. Direction-by-Direction Link Map
 - run_program
 - run_script
 - tests/cli/pre_commit_scripts/__init__.py
@@ -432,7 +430,7 @@
 - revision
 - foxBMS 2 — System Architecture Specification
 - Detailed Design: `FB2-SW-DSN-000001` (as_is)
-- conf.py
+- soc_counting.c
 - soe_counting.c
 - debug_default_afe.c
 - ltc_afe.c
@@ -441,16 +439,15 @@
 - led.c
 - test_beta.c
 - xNBNSRequest
-- TestValidateConverterConfig
 - TestFoxGuiCloseWindow
 - test_can_bootloader-version-info.c
 - .agents/skills/openspec-explore/SKILL.md
 - ._draw_line
 - .claude/skills/openspec-explore/SKILL.md
 - initialize_logger
-- TestBootloaderSendAndValidateVectorTable
+- patch
 - OutputFormats
-- TestDataConfigFrameNoUiTestableMethods
+- foxbms_version.py
 - foxBMS 2 Lifecycle Artifact Corpus — Execution Plan
 - boundary_enforcement
 - iso26262_coverage
@@ -462,19 +459,19 @@
 - .junie/skills/openspec-explore/SKILL.md
 - .kiro/skills/openspec-explore/SKILL.md
 - .opencode/skills/openspec-explore/SKILL.md
-- test_can_2.c
-- test_semitec_103jt.c
+- debug_can_afe.c
+- test_diag_cbs_bms.c
 - test_tdk_ntcg163jx103dt1s.c
-- test_tdk_ntcgs103jf103ft8.c
+- temperature_sensor_defs.h
 - test_vishay_ntcle413e2103f102l.c
 - DIAG_FramError
 - DIAG_I2c
-- test_diag_cbs_insulation.c
+- TestAllSoftwareAvailable
 - DIAG_Rtc
 - test_bootloader_gui.py
 - test_build_gui.py
 - TestPathChecker
-- patch
+- run_decode2stdout
 - TestGetProjectRoot
 - TestCheckEncoding
 - main
@@ -483,7 +480,7 @@
 - explore.md
 - .get_bootloader_state
 - .generate_plot_config_cb
-- ._handle_pyplot_warnings
+- ._data_format
 - cmd_show
 - capability_dimension
 - foxBMS 2 — Stakeholder Requirements Specification
@@ -494,18 +491,18 @@
 - .kiro/prompts/opsx-explore.prompt.md
 - .opencode/commands/opsx-explore.md
 - adi_ades183x_diagnostic_w.c
-- test_adi_ades1830_pec.c
-- SPS_GetChannelCurrentFeedback
+- test_cli.py
+- OS_InitializeScheduler
 - app/driver/foxmath/test_utils.c
 - DIAG_ErrorDeepDischarge
 - DIAG_ErrorInterlock
-- DIAG_Sbc
-- TestRunWaf
+- cmd_update_version
+- calc_crc64_user
 - test_gui_impl.py
 - TestFoxGuiNoUiCloseWindow
 - TestFoxGuiWin32
 - TestPARQUETHandlerGetData
-- TestCreatePreCommitFile
+- test_misc.py
 - TestFileNames
 - TestPythonCheckMain
 - test_hatch_build.py
@@ -532,26 +529,28 @@
 - test_sim_gui.py
 - test_gui.py
 - test_run_script_impl.py
+- xICMPPrefixOption_IPv6
 - gen_hcg/wscript
 - CustomBuildHook
 - .extend_ids
-- .generate_data_config_cb
+- xICMPRouterAdvertisement_IPv6
 - approval_semantics
 - evidence_classification
 - coverage-plan.json
 - Tasks: foxBMS 2 Lifecycle Artifact Corpus Fixes
+- TestDoInit
 - xLLMNRAnswer
 - xIPV6Parameters
 - TestEmbeddedUTImplPrivateMakeUnitTestDir
-- TestEmbeddedUTImplPrivatePrintresult
+- TestBootloaderSendPreInfo
 - TestSimBms
 - skipUnless
 - TestFoxGuiLinux
-- TestIdeImpl
+- plot
 - Path
 - test_run_program_impl.py
-- TestDecode
-- TestGetEnv
+- N77x_ErrorHandling
+- xND_CACHE_TABLE_ROW
 - TestGetFilePath
 - TestInstallConfirmation
 - TestPythonCheckDocstring
@@ -581,13 +580,13 @@
 - SYS_TriggerSoftwareReset
 - xNBNSAnswer
 - TestBuildImport
-- test_frame_data_config.py
+- xNetworkEndPoint
 - test_line_graph_drawer.py
-- TestFoxCliMainCommandWaf
-- TestFoxCliMainRunProgram
-- TestFoxCliMainRunScript
-- TestHostPlatform
-- TestVariables
+- xDNSMessage
+- xIPV4Parameters
+- freertos_sockaddr
+- tests/cli/helpers/__init__.py
+- TestCANWrite
 - MockTIMER_Create_Callback
 - app/main/test_fstartup.c
 - extract_enum_from_dbc_file
@@ -596,8 +595,8 @@
 - f_bootstrap_library_project.py
 - f_ti_arm_cgt_cc_options.py
 - f_ti_arm_helper.py
-- Column
-- .remove_column_cb
+- set_logging_level_cb
+- ulTaskGetIdleRunTimeCounter
 - Resume Checkpoint
 - id_scheme
 - review_policy
@@ -609,23 +608,22 @@
 - review.schema.json
 - scenario.schema.json
 - source_anchor.schema.json
-- validate_app_modules
+- TestRunShell
 - misc/wscript
 - Tasks: complete-spec-documents
 - soc_debug.c
 - soc_none.c
-- EMAC_Transmit
+- TestCreatesModels
 - CAN_InitializeTransceiver
 - xICMPEcho_IPv6
 - ccs_build_helper.py
 - .test_wait_can_ack_msg_0
-- TestEmbeddedUTImplModuleImport
 - TestChangeInterfaceCb
-- test_release_impl.py
+- release_impl.py
 - TestMisc
 - TestCreateEnvProcess
 - TestInstallPackagesProcess
-- TestInstallFoxCliPackageProcess
+- xWIN_PROPS
 - TestAsScript
 - test_check_license_info.py
 - TestCMissingTests
@@ -633,6 +631,7 @@
 - test_fox_plot.py
 - FreeRTOS
 - TestGetNumericVersion
+- test_ltc_pec.c
 - test_mxm_17852.c
 - test_crc64_ti_impl.py
 - symbol_creator.py
@@ -646,7 +645,7 @@
 - Tasks: html-e2e-engineering-document
 - ADI_ConvertGpioVoltageToTemperature
 - FreeRTOS-Plus-TCP Library for TI TMS570LC43x in foxBMS
-- xDNSAnswerRecord
+- .get_foxbms_state
 - FreeRTOS for TI TMS570LC43x  in foxBMS
 - TestAppConstants
 - TestCliUnittestConstants
@@ -657,8 +656,8 @@
 - TestLineGraphDrawerInterface
 - .test_apply_update_version
 - TestClickHelpers
-- .test_adds_queue_handler
-- TestMisc
+- get_listener
+- c_embedded_ut.py
 - TestPathOptions
 - TestRunCmd
 - TestValidLicense
@@ -717,7 +716,7 @@
 - TestCCheckStyle
 - TestAsRepoRelative
 - test_fox_etl.py
-- xSendEventStructToIPTask
+- foxBMS 2 — Detailed Design Specification
 - AnalogFrontEnd
 - bingen
 - c
@@ -939,16 +938,16 @@
 - shell_script.sh
 - _merge
 - vertical-slice.md
-- gen_fox_bms_help
-- gen_fox_cli_embedded_ut_help
-- gen_fox_etl_convert_gamry_help
-- gen_fox_etl_convert_graphtec_help
-- gen_fox_etl_convert_help
-- gen_fox_etl_table_help
-- gen_fox_ide_help
-- gen_fox_install_help
-- gen_fox_log_help
-- gen_fox_plot_help
+- TestConvertGroup
+- TEST_CANRX_DummyCallback
+- test_ftask_cfg_afe.c
+- .__init__
+- .__init__
+- .select_command_cb
+- .__init__
+- .__init__
+- ._run_selected_command
+- .test_get_object_permission_error
 - docs/README.md
 - adi/api/README.md
 - debug/api/README.md
@@ -991,6 +990,18 @@
 - deploy_internal_server.sh
 - tools/README.md
 - fox-cli
+- .test_do_rtc_1
+- .test_do_softwarereset_0
+- .test_do_softwarereset_1
+- .test_do_getrtc_1
+- .test_do_uptime_1
+- .test_do_buildconfig_0
+- .test_do_mcuwaferinfo_0
+- .test_do_mculotnumber_0
+- .test_do_mculotnumber_1
+- .test_do_mcuid_0
+- .test_do_mcuid_1
+- .test_do_softwareversion_0
 
 ## God Nodes (most connected - your core abstractions)
 1. `recho()` - 126 edges
@@ -1009,9 +1020,9 @@
   tests/unit/app/application/bal/test_bal.c → src/app/application/bal/bal.c
 - `testApplicationGetNextSequenceNumber()` --calls--> `ulApplicationGetNextSequenceNumber()`  [INFERRED]
   tests/unit/app/application/ethernet/test_ethernet.c → src/app/application/ethernet/ethernet.c
-- `testApplicationGetRandomNumber()` --calls--> `xApplicationGetRandomNumber()`  [INFERRED]
-  tests/unit/app/application/ethernet/test_ethernet.c → src/app/application/ethernet/ethernet.c
 - `testMRC_CalculateCellVoltageMinMaxAverageNullPointer()` --calls--> `TEST_MRC_CalculateCellVoltageMinMaxAverage()`  [INFERRED]
+  tests/unit/app/application/redundancy/test_redundancy.c → src/app/application/redundancy/redundancy.c
+- `testMRC_CalculateCellTemperatureMinMaxAverageNullPointer()` --calls--> `TEST_MRC_CalculateCellTemperatureMinMaxAverage()`  [INFERRED]
   tests/unit/app/application/redundancy/test_redundancy.c → src/app/application/redundancy/redundancy.c
 - `testMRC_ValidateCellVoltageNullPointer()` --calls--> `TEST_MRC_ValidateCellVoltage()`  [INFERRED]
   tests/unit/app/application/redundancy/test_redundancy.c → src/app/application/redundancy/redundancy.c
@@ -1019,87 +1030,87 @@
 ## Import Cycles
 - None detected.
 
-## Communities (1457 total, 272 thin omitted)
+## Communities (1469 total, 283 thin omitted)
 
 ### Community 0 - "ComControl"
-Cohesion: 0.01
-Nodes (237): can_main(), modbus_main(), mqtt_main(), Path, CLI entry point that performs Modbus transactions based on an input file. It…, Implementation of the mqtt command, Implements a CLI command to test the available foxCLI-COM functionalities., Implementation of the can command (+229 more)
+Cohesion: 0.02
+Nodes (135): CANProcess, BusABC, Process for handling CAN bus communication. Manages low-level connections,…, Starts the CAN process: - Connects to the CAN bus - Starts a thread for sending…, Creates a connection to the CAN bus. Returns: Any | None: The CAN bus object if…, Continuously sends CAN messages from the input queue to the CAN bus. Runs in a…, Continuously receives CAN messages from the bus and puts them into the output…, Receives a CAN message from the CAN bus and puts it into the output queue.… (+127 more)
 
 ### Community 1 - "misc.py"
-Cohesion: 0.01
-Nodes (195): Path, Implements the functionalities behind the 'waf' command, Execute ``waf`` with the provided argument list. Args: args: Command-line…, Execute ``waf`` from the project top-level context. This wrapper currently…, run_top_level_waf(), run_waf(), BootloaderFrame, Entry (+187 more)
+Cohesion: 0.02
+Nodes (112): Implements the functionalities behind the 'waf' command, Execute ``waf`` from the project top-level context. This wrapper currently…, run_top_level_waf(), BuildFrame, Command, Run 'waf --help' and use the output as the command list, Run the provided build command, If the provided thread is not alive the button is activated. (+104 more)
 
 ### Community 2 - "CanBusConfig"
-Cohesion: 0.01
-Nodes (199): Define and register the foxBMS command-line interface commands., Implements the functionalities behind the 'bms' command, _add_filters(), catch_bus_initialization_failures(), wrap(), _check_bootloader(), _check_bootloader_status(), _check_bootloader_wrapper() (+191 more)
+Cohesion: 0.02
+Nodes (134): Implements the functionalities behind the 'bms' command, _add_filters(), catch_bus_initialization_failures(), wrap(), _check_bootloader(), _check_bootloader_wrapper(), _create_filter(), FoxPyFilter (+126 more)
 
 ### Community 3 - "mpu_wrappers_v2.c"
 Cohesion: 0.03
-Nodes (177): OpaqueObjectHandle_t, BaseType_t, configRUN_TIME_COUNTER_TYPE, configSTACK_DEPTH_TYPE, eNotifyAction, eTaskState, EventBits_t, EventGroupHandle_t (+169 more)
+Nodes (176): OpaqueObjectHandle_t, BaseType_t, configRUN_TIME_COUNTER_TYPE, configSTACK_DEPTH_TYPE, eNotifyAction, eTaskState, EventBits_t, EventGroupHandle_t (+168 more)
 
 ### Community 4 - "main"
 Cohesion: 0.02
-Nodes (95): get_program_config(), main(), Context, group, option, pass_context, Return a mapping with high-level foxBMS configuration details., Run the top-level ``fox.py`` command group. Args: ctx: Click context for… (+87 more)
+Nodes (120): get_program_config(), main(), Context, group, option, pass_context, Define and register the foxBMS command-line interface commands., Return a mapping with high-level foxBMS configuration details. (+112 more)
 
 ### Community 5 - "Table"
-Cohesion: 0.02
-Nodes (93): Basic functions for the subcommand definitions, convert_start_date(), get_output_format_enum(), Path, TimestampScalar, Returns the enum value for the passed output format Args: output_format: The…, Validates the configuration file of the table subcommand Args: config_dict:…, Executes the table creation step Args: table: Object which handles the creation… (+85 more)
+Cohesion: 0.04
+Nodes (46): convert_start_date(), TimestampScalar, This method converts a string in UTC format to a pyarrow TimestampScalar Args:…, The method _add_date adds a Date column based on the Timestamp column and the…, The _cast_columns method converts all columns with units at the end of the…, Implements the functionalities to create tables out of the decoded CAN…, Table, patch (+38 more)
 
 ### Community 6 - "FreeRTOS_Sockets.c"
-Cohesion: 0.04
-Nodes (138): ConstSocketSet_t, eIPEvent_t, nfds_t, SocketSelect_t, SocketSet_t, ETH_EchoServerInstance(), ETH_ListenForConnection(), BaseType_t (+130 more)
+Cohesion: 0.05
+Nodes (131): ConstSocketSet_t, eIPEvent_t, nfds_t, SocketSelect_t, SocketSet_t, ETH_EchoServerInstance(), ETH_ListenForConnection(), TickType_t (+123 more)
 
 ### Community 7 - "recho"
 Cohesion: 0.02
-Nodes (77): BMSShell, Path, Starts the receive and send process, the read process and initializes the CAN…, Reinitializes the FRAM, Sets the rtc time to the current time, Triggers a software reset, Requests the Boot Timestamp, Get the Uptime information (+69 more)
+Nodes (130): BMSShell, Path, Starts the receive and send process, the read process and initializes the CAN…, Reinitializes the FRAM, Sets the rtc time to the current time, Triggers a software reset, Requests the Boot Timestamp, Get the Uptime information (+122 more)
 
 ### Community 8 - "FreeRTOS_IP.c"
 Cohesion: 0.04
-Nodes (127): ICMPPrefixOption_IPv6_t, IPPacket_t, IPv6_Type_t, BaseType_t, eFrameProcessingResult_t, NetworkBufferDescriptor_t, NetworkEndPoint_t, Socket_t (+119 more)
+Nodes (112): IPPacket_t, IPv6_Type_t, BaseType_t, eFrameProcessingResult_t, IPStackEvent_t, NetworkBufferDescriptor_t, Socket_t, TaskHandle_t (+104 more)
 
 ### Community 9 - "FreeRTOS.h"
 Cohesion: 0.03
-Nodes (45): vDNSCallbackInitialise(), vDNSInitialise(), NetworkBufferDescriptor_t, xRecv_Update_IPv4(), xSend_UDP_Update_IPv4(), freertos_addrinfo, xDNSBuffer, pucPayloadBuffer (+37 more)
+Nodes (43): NetworkBufferDescriptor_t, xRecv_Update_IPv4(), xSend_UDP_Update_IPv4(), freertos_addrinfo, xDNSAnswerRecord, ulTTL, usClass, usDataLength (+35 more)
 
 ### Community 10 - "MQTTProcess"
 Cohesion: 0.03
-Nodes (81): MQTTProcess, Any, Background process for handling MQTT client connection, publishing, and…, Initializes the MQTT process. Args: name (str): Process name. control…, Starts the MQTT process, connects to the broker, and begins the event loop., Connects to the MQTT broker and subscribes to topics. Returns: Client | None:…, Creates and configures the MQTT client, connects to the broker, and subscribes…, Sets username and password for MQTT client authentication if provided. Args:… (+73 more)
+Nodes (84): MQTT, MQTTProcess, Any, Background process for handling MQTT client connection, publishing, and…, Initializes the MQTT process. Args: name (str): Process name. control…, Starts the MQTT process, connects to the broker, and begins the event loop., Connects to the MQTT broker and subscribes to topics. Returns: Client | None:…, Creates and configures the MQTT client, connects to the broker, and subscribes… (+76 more)
 
 ### Community 11 - "tasks.c"
 Cohesion: 0.05
-Nodes (123): ConstTaskHandle_t, eSleepModeStatus, UBaseType_t, uxListRemove(), BaseType_t, configRUN_TIME_COUNTER_TYPE, configSTACK_DEPTH_TYPE, eNotifyAction (+115 more)
+Nodes (112): ConstTaskHandle_t, eSleepModeStatus, BaseType_t, configRUN_TIME_COUNTER_TYPE, configSTACK_DEPTH_TYPE, eNotifyAction, eTaskState, List_t (+104 more)
 
 ### Community 12 - "mpu_wrappers.c"
 Cohesion: 0.04
-Nodes (115): BaseType_t, configRUN_TIME_COUNTER_TYPE, configSTACK_DEPTH_TYPE, eNotifyAction, eTaskState, EventBits_t, EventGroupHandle_t, QueueHandle_t (+107 more)
+Nodes (113): BaseType_t, configSTACK_DEPTH_TYPE, eNotifyAction, eTaskState, EventBits_t, EventGroupHandle_t, QueueHandle_t, QueueSetHandle_t (+105 more)
 
 ### Community 13 - "TestPlotConfigFrame"
 Cohesion: 0.03
 Nodes (49): patch, skipUnless, Test 'add_plot_cb' function if input for x-axis is invalid, Test 'add_plot_cb' function if title is invalid, Test 'add_plot_cb' function if label for x-axis is invalid, Test 'add_plot_cb' function if labels for y-axes are invalid, Test 'add_plot_cb' function if type is invalid, Test 'add_plot_cb' function if there are more than 3 labels for the y-axes (+41 more)
 
-### Community 14 - "CANProcess"
-Cohesion: 0.03
-Nodes (56): CANProcess, BusABC, Database, Process for handling CAN bus communication. Manages low-level connections,…, Initializes the CAN process. Args: name (str): Name of the process. control…, Starts the CAN process: - Connects to the CAN bus - Starts a thread for sending…, Creates a connection to the CAN bus. Returns: Any | None: The CAN bus object if…, Continuously sends CAN messages from the input queue to the CAN bus. Runs in a… (+48 more)
+### Community 14 - "CAN"
+Cohesion: 0.05
+Nodes (31): Implements the BMS simulation, Implementation of the BMS simulation, sim_bms(), Notebook, Text, Start or stop the simulation, Configure and send the selected message, Run the bms simulation (+23 more)
 
 ### Community 15 - "test_bal.c"
-Cohesion: 0.04
-Nodes (70): BAL_CheckStateRequest(), BAL_Init(), BAL_ProcessStateInitialization(), BAL_ProcessStateInitialized(), BAL_ProcessStateUninitialized(), BAL_SaveLastStates(), BAL_TransferStateRequest(), BAL_RETURN_TYPE_e (+62 more)
+Cohesion: 0.07
+Nodes (44): BAL_CheckStateRequest(), BAL_ProcessStateInitialization(), BAL_ProcessStateInitialized(), BAL_ProcessStateUninitialized(), BAL_SaveLastStates(), BAL_TransferStateRequest(), BAL_RETURN_TYPE_e, BAL_STATE_REQUEST_e (+36 more)
 
 ### Community 16 - "uxIPHeaderSizePacket"
-Cohesion: 0.07
-Nodes (84): eIPTCPState_t, ulApplicationGetNextSequenceNumber(), FreeRTOS_Socket_t, FreeRTOS_min_uint32(), pxDuplicateNetworkBufferWithDescriptor(), uxIPHeaderSizePacket(), uxIPHeaderSizeSocket(), BaseType_t (+76 more)
+Cohesion: 0.06
+Nodes (93): eIPTCPState_t, ulApplicationGetNextSequenceNumber(), FreeRTOS_Socket_t, FreeRTOS_min_uint32(), pxDuplicateNetworkBufferWithDescriptor(), uxIPHeaderSizePacket(), uxIPHeaderSizeSocket(), BaseType_t (+85 more)
 
 ### Community 17 - "Converter"
-Cohesion: 0.05
-Nodes (53): converter_setup(), Converter subcommand implementation, Create and return a configured Converter instance. This function validates the…, Validate the conversion configuration dictionary. Validations performed: -…, validate_converter_config(), ConversionSettings, Converter, InputFormats (+45 more)
+Cohesion: 0.06
+Nodes (42): ConversionSettings, Converter, Container for all conversion-related settings. Attributes: input_format: The…, High-level converter that discovers files and transforms them. The converter…, Initialize a new Converter. Args: data_path: Path to a single file to convert…, Path, For DTA format, convert should discover .dta files, read them and call _write., Test convert dta with empty dataframe. (+34 more)
 
-### Community 18 - "install_impl.py"
-Cohesion: 0.04
-Nodes (56): all_software_available(), check_for_all_softwares(), _create_shortcut_win32(), install_fox_cli_tools_on_host(), Path, Simplified wrapper to check whether all software is available or not., Creates a Windows shortcut (.lnk) in the specified parent directory. Args:…, Install the fox CLI toolchain locally (i.e., outside the project directory). (+48 more)
+### Community 18 - "patch"
+Cohesion: 0.07
+Nodes (29): _create_shortcut_win32(), install_fox_cli_tools_on_host(), Path, Creates a Windows shortcut (.lnk) in the specified parent directory. Args:…, Install the fox CLI toolchain locally (i.e., outside the project directory)., get_numeric_version(), Convert the foxBMS version into a dot-separated numeric string., Testing file 'cli/cmd_install/__init__.py'. (+21 more)
 
 ### Community 19 - "can_cbs_rx_f_debug.c"
 Cohesion: 0.07
-Nodes (78): CAN_RxGetSignalDataFromMessageData(), CAN_ENDIANNESS_e, CANRX_CheckIfBmsSoftwareVersionIsRequested(), CANRX_CheckIfBootTimestampIsRequested(), CANRX_CheckIfBuildConfigurationIsRequested(), CANRX_CheckIfCommitHashIsRequested(), CANRX_CheckIfFramInitializationIsRequested(), CANRX_CheckIfIdentifyHardwareIsRequested() (+70 more)
+Nodes (81): CAN_RxGetSignalDataFromMessageData(), CAN_ENDIANNESS_e, CANRX_CheckIfBmsSoftwareVersionIsRequested(), CANRX_CheckIfBootTimestampIsRequested(), CANRX_CheckIfBuildConfigurationIsRequested(), CANRX_CheckIfCommitHashIsRequested(), CANRX_CheckIfFramInitializationIsRequested(), CANRX_CheckIfIdentifyHardwareIsRequested() (+73 more)
 
 ### Community 20 - "CAN_TxSetMessageDataWithSignalData"
 Cohesion: 0.06
@@ -1107,107 +1118,103 @@ Nodes (70): CAN_TxSetMessageDataWithSignalData(), STD_RETURN_TYPE_e, CANTX_Debug
 
 ### Community 21 - "BootloaderInterfaceCan"
 Cohesion: 0.05
-Nodes (49): This file implement the basic functions of CAN module (CanInterface) to send…, BootloaderInterfaceCan, AcknowledgeFlag, AcknowledgeMessage, AcknowledgeMessageType, BootFsmState, BootloaderAction, BootloaderFsmStatesType (+41 more)
+Nodes (49): Implementation for handling and preparing an application binary for usage with…, This file implement the basic functions of CAN module (CanInterface) to send…, BootloaderInterfaceCan, AcknowledgeFlag, AcknowledgeMessage, AcknowledgeMessageType, BootFsmState, BootloaderAction (+41 more)
 
 ### Community 22 - "CAN_TxSetCanDataWithMessageData"
-Cohesion: 0.06
-Nodes (50): CAN_IDENTIFIER_TYPE_e, CANTX_FATAL_ERRORS_ACTIONS_e, CANTX_IMD_BENDER_ISO165C_REQUEST_ACTIONS_e, uint8, CAN_DataSend(), CAN_TxSetCanDataWithMessageData(), CANTX_CrashDump(), CANTX_DebugUnsupportedMultiplexerVal() (+42 more)
+Cohesion: 0.12
+Nodes (38): CAN_IDENTIFIER_TYPE_e, CANTX_IMD_BENDER_ISO165C_REQUEST_ACTIONS_e, uint8, CAN_DataSend(), CAN_ENDIANNESS_e, CAN_TxSetCanDataWithMessageData(), CANTX_DebugUnsupportedMultiplexerVal(), STD_RETURN_TYPE_e (+30 more)
 
 ### Community 23 - "BootloaderCanBasics"
-Cohesion: 0.03
-Nodes (40): BootloaderCanBasics, BusABC, Enum, Path, This function wait for a specified CAN message. Args: arbitration_id: id of the…, The function is to send any CAN messages contained in the dbc file. Args:…, The function is to send a request CAN message to bootloader. Args:…, The function is to send a data CAN message (8 bytes) to bootloader. Args:… (+32 more)
-
-### Community 24 - "c_etl.py"
 Cohesion: 0.04
-Nodes (51): can_decode_setup(), get_cantools_database(), Database, Path, Executes the can decode step Args: decode_obj: Object which handles the decoding, Executes the can decode step Args: decode_obj: Object which handles the…, CAN decode subcommand implementation, Reads config file and creates the CANDecode object Args: config: Path to the… (+43 more)
+Nodes (39): BootloaderCanBasics, BusABC, Enum, Path, This function wait for a specified CAN message. Args: arbitration_id: id of the…, The function is to send any CAN messages contained in the dbc file. Args:…, The function is to send a request CAN message to bootloader. Args:…, The function is to send a data CAN message (8 bytes) to bootloader. Args:… (+31 more)
+
+### Community 24 - "CANDecode"
+Cohesion: 0.12
+Nodes (17): CAN decode subcommand implementation, CANDecode, Class to decode CAN messages Args: dbc: Path to the .dbc file timestamp_pos:…, Tests the handle_decoding method of the CANDecode class, Tests the handle_decoding method of the CANDecode class with a non multiplexed…, Tests the handle_decoding method of the CANDecode class with a multiplexed…, Tests the handle_decoding method of the CANDecode class with two CAN message…, Tests the data_format method of the CANDecode class (+9 more)
 
 ### Community 25 - "ltc_6813-1.c"
-Cohesion: 0.08
-Nodes (66): LTC_MUX_CH_CFG_s, LTC_PORT_EXPANDER_TI_DIRECTION_e, DIAG_ID_e, LTC_ADCMEAS_CHAN_e, LTC_ADCMODE_e, LTC_REQUEST_s, LTC_RETURN_TYPE_e, LTC_STATE_s (+58 more)
+Cohesion: 0.09
+Nodes (64): LTC_MUX_CH_CFG_s, LTC_PORT_EXPANDER_TI_DIRECTION_e, DIAG_ID_e, LTC_ADCMEAS_CHAN_e, LTC_ADCMODE_e, LTC_REQUEST_s, LTC_RETURN_TYPE_e, LTC_STATE_s (+56 more)
 
 ### Community 26 - "test_mxm_17841b.c"
 Cohesion: 0.07
-Nodes (64): MXM_41B_REG_ADD_t, MXM_41B_REG_FUNCTION_e, MXM_41B_STATE_REQUEST_STATUS_e, MXM_STATEMACH_41B_e, STD_RETURN_TYPE_e, MXM_EnableBridgeIc(), MXM_GetSPIStateReady(), MXM_ReceiveData() (+56 more)
+Nodes (66): MXM_41B_REG_ADD_t, MXM_41B_REG_FUNCTION_e, MXM_41B_STATE_REQUEST_STATUS_e, MXM_STATEMACH_41B_e, STD_RETURN_TYPE_e, MXM_EnableBridgeIc(), MXM_GetSPIStateReady(), MXM_InitializeMonitoringPins() (+58 more)
 
-### Community 27 - "FreeRTOS_IP_Timers.c"
-Cohesion: 0.08
-Nodes (69): DHCPMessage_IPv6_t, DHCPOptionSet_t, IPTimer_t, FreeRTOS_ClearARP(), BaseType_t, BitConfig_t, pucBitConfig_peek_last_index_uc(), ucBitConfig_read_8() (+61 more)
+### Community 27 - "FreeRTOS_DHCPv6.c"
+Cohesion: 0.17
+Nodes (38): DHCPMessage_IPv6_t, DHCPOptionSet_t, BaseType_t, BitConfig_t, pucBitConfig_peek_last_index_uc(), ucBitConfig_read_8(), ulBitConfig_read_32(), usBitConfig_read_16() (+30 more)
 
 ### Community 29 - "queue.c"
-Cohesion: 0.09
-Nodes (69): Queue_t, List_t, TickType_t, vCoRoutineAddToDelayedList(), xCoRoutineRemoveFromEventList(), BaseType_t, QueueHandle_t, QueueSetHandle_t (+61 more)
+Cohesion: 0.10
+Nodes (65): Queue_t, xCoRoutineRemoveFromEventList(), BaseType_t, QueueHandle_t, QueueSetHandle_t, QueueSetMemberHandle_t, StaticQueue_t, TaskHandle_t (+57 more)
 
 ### Community 30 - "bms.c"
-Cohesion: 0.07
-Nodes (63): BMS_CONSIDER_PRECHARGE_e, BMS_FSM_SUB_e, BMS_RESULT_PRECHARGE_PROCESS_e, BMS_RETURN_TYPE_e, BMS_STATE_REQUEST_e, BS_PRECHARGE_MONITORING_e, BMS_CheckCanRequests(), BMS_CheckOpenSenseWire() (+55 more)
+Cohesion: 0.04
+Nodes (94): BMS_CONSIDER_PRECHARGE_e, BMS_FSM_STATES_e, BMS_FSM_SUB_e, BMS_RESULT_PRECHARGE_PROCESS_e, BMS_RETURN_TYPE_e, BMS_STATE_REQUEST_e, BS_PRECHARGE_MONITORING_e, BMS_CheckCanRequests() (+86 more)
 
 ### Community 31 - "OS_EnterTaskCritical"
 Cohesion: 0.06
-Nodes (61): BAL_CheckReEntrance(), BAL_SetStateRequest(), BAL_RETURN_TYPE_e, BAL_STATE_REQUEST_e, ADI_SetFirstMeasurementCycleFinished(), LTC_InitializeMonitoringPin(), LTC_GetStateRequest(), LTC_InitializeMonitoringPin() (+53 more)
+Nodes (62): BAL_CheckReEntrance(), BAL_SetStateRequest(), BAL_RETURN_TYPE_e, BAL_STATE_REQUEST_e, LTC_GetStateRequest(), LTC_InitializeMonitoringPin(), LTC_GetStateRequest(), LTC_InitializeMonitoringPin() (+54 more)
 
 ### Community 32 - "FRAM_WriteData"
-Cohesion: 0.06
-Nodes (50): FRAM_BLOCK_ID_e, FRAM_RETURN_TYPE_e, DATA_BLOCK_SOC_s, float_t, SE_CalculateStateOfCharge(), SE_GetStateOfChargeFromVoltage(), SE_InitializeStateOfCharge(), SOC_CheckDatabaseSocPercentageLimits() (+42 more)
+Cohesion: 0.07
+Nodes (41): FRAM_BLOCK_ID_e, FRAM_RETURN_TYPE_e, STD_RETURN_TYPE_e, CRC_CalculateCrc(), STD_RETURN_TYPE_e, FRAM_Initialize(), FRAM_ReadData(), FRAM_ReinitializeAllEntries() (+33 more)
 
 ### Community 33 - "test_mxm_1785x.c"
 Cohesion: 0.07
-Nodes (60): MXM_5X_COMMAND_PAYLOAD_s, MXM_5X_STATE_REQUEST_STATUS_e, MXM_BALANCING_STATE_s, MXM_DATA_STORAGE_s, MXM_MEASURE_TYPE_e, MXM_MONITORING_STATE_e, MXM_STATEMACHINE_5X_e, MXM_STATEMACHINE_OPERATION_STATES_e (+52 more)
+Nodes (56): MXM_BALANCING_STATE_s, MXM_DATA_STORAGE_s, MXM_MEASURE_TYPE_e, MXM_MONITORING_STATE_e, MXM_STATEMACHINE_OPERATION_STATES_e, MXM_Tick(), MXM_CONVERSION_TYPE_e, MXM_MONITORING_INSTANCE_s (+48 more)
 
 ### Community 34 - "CSVHandler"
-Cohesion: 0.05
-Nodes (42): CSVHandler, Implementation of the CSVHandler class which enables reading data from a .csv…, Implementation of the CSVHandler, Creates the CSVHandler object, DataHandlerFactory, DataHandlerFactoryInterface, ABC, Path (+34 more)
+Cohesion: 0.07
+Nodes (37): CSVHandler, Implementation of the CSVHandler class which enables reading data from a .csv…, Implementation of the CSVHandler, Creates the CSVHandler object, DataHandlerFactory, DataHandlerFactoryInterface, ABC, Path (+29 more)
 
 ### Community 35 - "nxp_mc3377x.c"
-Cohesion: 0.06
-Nodes (37): N77X_STATE_s, STD_RETURN_TYPE_e, N77X_STATE_s, N77x_InitializeDatabase(), N77x_ResetMessageCounter(), N77X_STATE_s, STD_RETURN_TYPE_e, N77x_IncrementMuxIndex() (+29 more)
+Cohesion: 0.07
+Nodes (38): N77X_STATE_s, STD_RETURN_TYPE_e, N77X_STATE_s, N77x_InitializeDatabase(), N77x_ConvertVoltagesToTemperatures(), N77x_ResetMessageCounter(), N77X_STATE_s, STD_RETURN_TYPE_e (+30 more)
 
 ### Community 36 - "test_pwm.c"
-Cohesion: 0.05
-Nodes (42): IR155_MEASUREMENT_MODE_e, IR155_MEASUREMENT_s, PWM_SIGNAL_s, DATA_BLOCK_INSULATION_s, IMD_FSM_STATES_e, float_t, IR155_CalculateResistance(), IR155_GetMeasurementMode() (+34 more)
-
-### Community 37 - "test_ltc_6806.c"
-Cohesion: 0.04
-Nodes (8): LTC_ConvertMuxVoltagesToTemperatures(), LTC_GetVoltageInputIndexFromCellBlockIndex(), AFE_DmaCallback(), AFE_IsTransmitOngoing(), AFE_SetTransmitOngoing(), LTC_STATE_s, testLTC_GetVoltageInputIndexFromCellBlockIndex(), testLTC_ConvertMuxVoltagesToTemperatures()
+Cohesion: 0.10
+Nodes (27): PWM_SIGNAL_s, IR155_Initialize(), ecapBASE_t, uint16, ecapNotification(), PWM_ComputeCounterValueFromDutyCycle(), PWM_GetEtpwmTimePeriod(), PWM_GetPwmData() (+19 more)
 
 ### Community 38 - "i2c.c"
-Cohesion: 0.07
-Nodes (48): dmaInterrupt_t, uint32, dmaGroupANotification(), i2cBASE_t, STD_RETURN_TYPE_e, I2C_ClearNotifications(), I2C_GetWordTransmitTime(), I2C_Initialize() (+40 more)
+Cohesion: 0.08
+Nodes (45): i2cBASE_t, STD_RETURN_TYPE_e, I2C_ClearNotifications(), I2C_GetWordTransmitTime(), I2C_Initialize(), I2C_Read(), I2C_ReadDma(), I2C_ReadLastRxByte() (+37 more)
 
 ### Community 39 - "xTaskResumeAll"
-Cohesion: 0.06
-Nodes (46): HeapRegion_t, vApplicationMallocFailedHook(), NetworkBufferDescriptor_t, BaseType_t, FOnDNSEvent, ParseSet_t, TickType_t, xDNSDoCallback() (+38 more)
-
-### Community 40 - "spi.c"
 Cohesion: 0.05
-Nodes (26): SPI_CHIP_SELECT_TYPE_e, SPI_GetChipSelectPin(), SPI_GetHardwareChipSelectPin(), SPI_Initialize(), SPI_InitializeChipSelects(), SPI_InitializeChipSelectsAfe(), TEST_SPI_GetChipSelectPin(), TEST_SPI_GetHardwareChipSelectPin() (+18 more)
+Nodes (51): HeapRegion_t, vApplicationMallocFailedHook(), vEventGroupDelete(), NetworkBufferDescriptor_t, BaseType_t, FOnDNSEvent, ParseSet_t, TickType_t (+43 more)
+
+### Community 40 - "spi_cfg-helper.h"
+Cohesion: 0.05
+Nodes (18): TEST_SPI_InitializeChipSelects(), TEST_SPI_InitializeChipSelectsAfe(), testSPI_InitializeChipSelects(), testSPI_InitializeChipSelectsAfeAdi(), testSPI_InitializeChipSelects(), testSPI_InitializeChipSelectsAfeDebug(), testSPI_InitializeChipSelects(), testSPI_InitializeChipSelectsAfeLtc() (+10 more)
 
 ### Community 41 - "can_cbs_tx_cyclic.h"
 Cohesion: 0.05
-Nodes (29): CAN_ENDIANNESS_e, CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CAN_SIGNAL_TYPE_s, CANTX_CellTemperatures(), CANTX_TemperatureSetData(), TEST_CANTX_TemperatureSetData(), CAN_ENDIANNESS_e (+21 more)
+Nodes (36): CAN_ENDIANNESS_e, CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CAN_SIGNAL_TYPE_s, CANTX_CellTemperatures(), CANTX_TemperatureSetData(), TEST_CANTX_TemperatureSetData(), CAN_ENDIANNESS_e (+28 more)
 
 ### Community 42 - "Executor"
 Cohesion: 0.05
-Nodes (36): Implements the 'Run Plot' frame, DataSourceTypes, Enum, Implementation of the Enum for supported Data source Types., Definition of all supported Data source types, Executor, KwargsTyping, Path (+28 more)
+Nodes (34): Executor, KwargsTyping, Path, TypedDict, Unpack, Get all files from input_data attribute, Determines the data source type depending on the passed input data and the type…, This method should handle all warning coming from pyplot (+26 more)
 
 ### Community 43 - "can_cbs_tx_f_debug-response.c"
-Cohesion: 0.06
-Nodes (44): CANTX_DEBUG_RESPONSE_ACTIONS_e, STD_RETURN_TYPE_e, CANTX_DebugResponse(), CANTX_DebugResponseSendMessage(), CANTX_TransmitBmsVersionInfo(), CANTX_TransmitBootMagic(), CANTX_TransmitBootMagicEnd(), CANTX_TransmitBootMagicStart() (+36 more)
+Cohesion: 0.07
+Nodes (40): CANTX_DEBUG_RESPONSE_ACTIONS_e, STD_RETURN_TYPE_e, CANTX_DebugResponse(), CANTX_DebugResponseSendMessage(), CANTX_TransmitBmsVersionInfo(), CANTX_TransmitBootMagic(), CANTX_TransmitBootMagicEnd(), CANTX_TransmitBootMagicStart() (+32 more)
 
 ### Community 44 - "boot.c"
-Cohesion: 0.06
-Nodes (34): BOOT_FSM_STATES_e, BOOT_GetBootState(), BOOT_GetBootStateDuringError(), BOOT_GetBootStateDuringLoad(), BOOT_IsProgramAvailableAndValidated(), BOOT_JumpInToLastFlashedProgram(), BOOT_ResetBootloader(), BOOT_WriteAndValidateCurrentSector() (+26 more)
+Cohesion: 0.08
+Nodes (32): BOOT_FSM_STATES_e, BOOT_GetBootState(), BOOT_GetBootStateDuringError(), BOOT_GetBootStateDuringLoad(), BOOT_IsProgramAvailableAndValidated(), BOOT_JumpInToLastFlashedProgram(), BOOT_ResetBootloader(), BOOT_WriteAndValidateCurrentSector() (+24 more)
 
-### Community 45 - "test_c_etl.py"
-Cohesion: 0.06
-Nodes (45): Execute the conversion using the provided Converter instance. This convenience…, run_converter(), cmd_convert(), cmd_convert_gamry(), cmd_convert_graphtec(), cmd_filter(), cmd_table(), etl() (+37 more)
+### Community 45 - "c_etl.py"
+Cohesion: 0.04
+Nodes (65): converter_setup(), Execute the conversion using the provided Converter instance. This convenience…, Converter subcommand implementation, Create and return a configured Converter instance. This function validates the…, Validate the conversion configuration dictionary. Validations performed: -…, run_converter(), validate_converter_config(), InputFormats (+57 more)
 
 ### Community 46 - "patch"
-Cohesion: 0.04
-Nodes (32): Message, Sends a CAN message by placing it on the input queue. Args: msg (Message): The…, Reads a CAN message from the output queue. Args: block (bool): Whether to block…, Message, Writes a CAN message to the input queue for output processing. Args: msg…, Writes string data to the input queue for output processing. Args: data (str):…, Send a Modbus command to the input queue for execution. Args: command (dict):…, Publishes a message to a specific MQTT topic via the input queue. Args: msg… (+24 more)
+Cohesion: 0.05
+Nodes (29): Message, Writes a CAN message to the input queue for output processing. Args: msg…, Writes string data to the input queue for output processing. Args: data (str):…, Send a Modbus command to the input queue for execution. Args: command (dict):…, Publishes a message to a specific MQTT topic via the input queue. Args: msg…, RuntimeError, patch, Runs the main loop once with input and output and exits cleanly via… (+21 more)
 
 ### Community 47 - "os_freertos.c"
-Cohesion: 0.06
-Nodes (48): OS_SEMAPHORE_HANDLE, AFE_DmaCallback(), AFE_DmaCallback(), BaseType_t, configSTACK_DEPTH_TYPE, OS_QUEUE, OS_STD_RETURN_e, StackType_t (+40 more)
+Cohesion: 0.05
+Nodes (47): OS_SEMAPHORE_HANDLE, AFE_DmaCallback(), AFE_DmaCallback(), BaseType_t, configSTACK_DEPTH_TYPE, StackType_t, StaticTask_t, TaskHandle_t (+39 more)
 
 ### Community 48 - "TestPlotConfigFrameNoUiTestableMethods"
 Cohesion: 0.05
@@ -1217,33 +1224,33 @@ Nodes (28): Add the Input-Data for the Plot to the Table, Add the Input-Data for
 Cohesion: 0.07
 Nodes (32): Creates a LineGraphDrawer object from the given configuration., LineGraphDrawer, Shows the plot if wanted, Class that implements the interface LineGraphDrawer, Description, GraphSettings, Class that contains all information of the Description of the plot., Class that contains all information about the graph. (+24 more)
 
-### Community 50 - "FileTracker"
+### Community 50 - ".check_file_changed"
 Cohesion: 0.05
-Nodes (37): plot(), argument, command, Context, option, pass_context, Path, Generate plots from input data files or directories. This command reads input… (+29 more)
+Nodes (27): Path, Initialize the tracker and create its hash database if missing. Args: tmp_dir:…, Return whether the given file changed since the last recorded hash. Args:…, Read the persisted hash mapping from disk. Returns: Dictionary mapping absolute…, Write an updated hash mapping to disk. Args: hash_dict: Mapping to persist as…, patch, Creates the FileTracker object for the later tests, Tests the check_file_changed method in case file has not changed (+19 more)
 
 ### Community 51 - "Bootloader"
-Cohesion: 0.05
-Nodes (25): Bootloader, Implementation of the communication between host-implementation of the…, Send one sub-sector of data to bootloader. Args: i_loop_start: start index of…, Get the start and end loop number (i_loop) of one subsector. Args: idx: the…, Send data of one sector to the embedded bootloader. Args: i_loop: start loop…, Send the application binary file as data in 8 bytes (and calculated crc in 8…, Reset bootloader Returns: True if the bootloader has been successfully reset,…, Run application on bootloader Returns: True if bootloader has been successfully… (+17 more)
+Cohesion: 0.07
+Nodes (21): Bootloader, Implementation of the communication between host-implementation of the…, Send the application binary file as data in 8 bytes (and calculated crc in 8…, Reset bootloader Returns: True if the bootloader has been successfully reset,…, Run application on bootloader Returns: True if bootloader has been successfully…, Send CAN message to the embedded bootloader to let the embedded bootloader…, Check if bootloader at the start states. Args: can_fsm_state: can_fsm_state…, Transfer the app binary to the embedded bootloader Args: bl_info: Instance of a… (+13 more)
 
 ### Community 52 - "test_can_cbs_rx_f_debug.c"
 Cohesion: 0.05
-Nodes (50): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANRX_Debug(), testCANRX_CheckIfBmsSoftwareVersionIsRequested(), testCANRX_CheckIfBootTimestampIsRequested(), testCANRX_CheckIfBuildConfigurationIsRequested(), testCANRX_CheckIfCommitHashIsRequested(), testCANRX_CheckIfIdentifyHardwareIsRequested() (+42 more)
+Nodes (47): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANRX_Debug(), testCANRX_CheckIfBmsSoftwareVersionIsRequested(), testCANRX_CheckIfBuildConfigurationIsRequested(), testCANRX_CheckIfCommitHashIsRequested(), testCANRX_CheckIfIdentifyHardwareIsRequested(), testCANRX_CheckIfMcuLotNumberIsRequested() (+39 more)
 
 ### Community 53 - "TestCommands"
-Cohesion: 0.05
-Nodes (27): patch, Class to test all commands that send a message, Tests the do_fram method, when the CAN bus is not initialized., Tests the do_fram method, when the CAN bus is initialized., Tests the do_rtc method, when the CAN bus is not initialized., Tests the do_rtc method, when the CAN bus is initialized., Tests the do_softwarereset method, when the CAN bus is not initialized., Tests the do_softwarereset method, when the CAN bus is initialized. (+19 more)
+Cohesion: 0.13
+Nodes (8): Class to test all commands that send a message, Tests the do_fram method, when the CAN bus is not initialized., Tests the do_rtc method, when the CAN bus is not initialized., Tests the do_boottimestamp method, when the CAN bus is not initialized., Tests the do_getrtc method, when the CAN bus is not initialized., Tests the do_uptime method, when the CAN bus is not initialized., Tests the do_commithash method, when the CAN bus is not initialized., TestCommands
 
-### Community 54 - "test___init__.py"
-Cohesion: 0.06
-Nodes (35): create_cell_directory(), DummyModel, Path, Tests for FoxDB initialization behavior., Ensure FoxDB loads cells from a root directory and validates the DB., Ensure initialization fails with an error on duplicate cells., Tests for listing cell identifiers., Return manufacturer-name identifiers for all cells. (+27 more)
+### Community 54 - "CellSpec"
+Cohesion: 0.02
+Nodes (123): db_list(), db_show(), R, Implementations backing the ``db`` command. This module provides thin wrappers…, Decorate functions that require an initialzed database., List available cells in the database and print them to the console. Args: db:…, Show details of a specific cell by its identifier. Print the cell dataclass or…, with_db() (+115 more)
 
-### Community 55 - "patch"
-Cohesion: 0.05
-Nodes (28): Testing file 'cli/cmd_embedded_ut/__init__.py'., object, patch, Testing 'run_embedded_tests' function., Pickle file does not exist, Pickle file exist, but is invalid, Pickle file exist, but is invalid, Testing '_cleanup_hcg_sources' function. (+20 more)
+### Community 55 - "SubprocessResult"
+Cohesion: 0.03
+Nodes (67): Return a string representation of the subprocess result. Returns: Formatted…, Represent the result of a subprocess execution. Attributes: returncode: The…, Combine two subprocess results. Args: other: Another subprocess result to add.…, SubprocessResult, patch, Test the 'waf' wrapper., Test the 'run_waf' function., Test the 'run_waf' function. (+59 more)
 
 ### Community 56 - "FreeRTOS_ARP.c"
-Cohesion: 0.09
-Nodes (47): ARPPacket_t, CacheLocation_t, IPHeader_t, BaseType_t, eFrameProcessingResult_t, eResolutionLookupResult_t, MACAddress_t, NetworkBufferDescriptor_t (+39 more)
+Cohesion: 0.11
+Nodes (39): ARPPacket_t, CacheLocation_t, IPHeader_t, BaseType_t, eFrameProcessingResult_t, eResolutionLookupResult_t, MACAddress_t, NetworkBufferDescriptor_t (+31 more)
 
 ### Community 57 - "CAN_SendAcknowledgeMessage"
 Cohesion: 0.08
@@ -1251,15 +1258,15 @@ Nodes (38): CAN_ACKNOWLEDGE_FLAG_e, CAN_ACKNOWLEDGE_MESSAGE_e, CAN_STATUS_CODE_e
 
 ### Community 58 - "Messages"
 Cohesion: 0.05
-Nodes (28): Messages, Path, Signal, This class provides the methods to get valid messages, Get valid CAN message. Args: name: name of this CAN message. Returns: A valid…, Check if the CAN signal value is in its range. Args: signal: signal of the CAN…, Check if the CAN signal value is one of its enum values, if this signal has…, Get request CAN message for sending. Returns: dict: message. (+20 more)
+Nodes (27): Messages, Path, Signal, This class provides the methods to get valid messages, Get valid CAN message. Args: name: name of this CAN message. Returns: A valid…, Check if the CAN signal value is in its range. Args: signal: signal of the CAN…, Check if the CAN signal value is one of its enum values, if this signal has…, Get request CAN message for sending. Returns: dict: message. (+19 more)
 
-### Community 59 - "can_cbs_rx_cs_isabellenhuette-ivt-s.c"
+### Community 59 - "OS_GetTickCount"
 Cohesion: 0.10
-Nodes (46): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANRX_CsIsabellenhuetteIvtS(), CANRX_HandleChannelError(), CANRX_HandleMeasurementError(), CANRX_HandleSensorData(), CANRX_HandleSystemError(), CANRX_ResetError() (+38 more)
+Nodes (47): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANRX_CsIsabellenhuetteIvtS(), CANRX_HandleChannelError(), CANRX_HandleMeasurementError(), CANRX_HandleSensorData(), CANRX_HandleSystemError(), CANRX_ResetError() (+39 more)
 
-### Community 60 - "TmpHandler"
-Cohesion: 0.06
-Nodes (31): Path, Create and return a new managed temporary directory. Returns: Path to the newly…, Generate a deterministic cache filename from an absolute file path. Args:…, Temporary directory helper for caching intermediate command artifacts., Create and reuse a temporary working directory., Initialize the temporary directory handler. Args: tmp_dir_parent: Parent…, Return a cached temporary file path if one already exists. Args: file_path:…, Return an existing managed temporary directory if available. Returns: Existing… (+23 more)
+### Community 60 - "TestTmpHandlerCheckForTmpDirectory"
+Cohesion: 0.09
+Nodes (14): Path, Create and return a new managed temporary directory. Returns: Path to the newly…, Generate a deterministic cache filename from an absolute file path. Args:…, Initialize the temporary directory handler. Args: tmp_dir_parent: Parent…, Return a cached temporary file path if one already exists. Args: file_path:…, Return an existing managed temporary directory if available. Returns: Existing…, Class to test the TmpHandler check_for_tmp_directory, Tests the check_for_tmp_dir method in case no tmp dir is found (+6 more)
 
 ### Community 61 - "CAN_TxPrepareSignalData"
 Cohesion: 0.07
@@ -1267,23 +1274,23 @@ Nodes (34): CAN_SIGNAL_TYPE_s, float_t, CAN_ConvertBitStartBigEndian(), CAN_RxCo
 
 ### Community 62 - "RunPlotFrame"
 Cohesion: 0.06
-Nodes (27): Notebook, Open filedialog and print it in TextBox, Open filedialog and print it in TextBox, Open filedialog and print it in TextBox, Open filedialog and print it in TextBox, RunPlotFrame, Notebook, Text (+19 more)
+Nodes (26): Notebook, Open filedialog and print it in TextBox, Open filedialog and print it in TextBox, Open filedialog and print it in TextBox, Open filedialog and print it in TextBox, Implements the 'Run Plot' frame, RunPlotFrame, patch (+18 more)
 
 ### Community 63 - "redundancy.c"
-Cohesion: 0.11
-Nodes (46): DATA_BLOCK_CURRENT_s, DATA_BLOCK_POWER_s, DATA_BLOCK_SYSTEM_VOLTAGE_1_s, DATA_BLOCK_SYSTEM_VOLTAGE_3_s, DIAG_IMPACT_LEVEL_e, DATA_BLOCK_CELL_TEMPERATURE_s, DATA_BLOCK_CELL_VOLTAGE_s, DATA_BLOCK_MIN_MAX_s (+38 more)
+Cohesion: 0.13
+Nodes (41): DATA_BLOCK_CURRENT_s, DATA_BLOCK_POWER_s, DATA_BLOCK_SYSTEM_VOLTAGE_1_s, DATA_BLOCK_SYSTEM_VOLTAGE_3_s, DATA_BLOCK_CELL_TEMPERATURE_s, DATA_BLOCK_CELL_VOLTAGE_s, DATA_BLOCK_MIN_MAX_s, STD_RETURN_TYPE_e (+33 more)
 
 ### Community 64 - "FreeRTOS_TCP_WIN.c"
 Cohesion: 0.13
 Nodes (46): MiniListItem_t, FreeRTOS_min_int32(), BaseType_t, List_t, ListItem_t, portINLINE, TCPTimer_t, TCPWindow_t (+38 more)
 
 ### Community 65 - "test_dp83869.c"
-Cohesion: 0.09
+Cohesion: 0.08
 Nodes (43): PHY_OPERATION_MODE_s, PHY_SPEED_SEL_e, STD_RETURN_TYPE_e, PHY_AutoNegotiate(), PHY_EnableLoopback(), PHY_GetId(), PHY_GetLinkStatus(), PHY_GetOperationMode() (+35 more)
 
 ### Community 66 - "test_spi.c"
-Cohesion: 0.07
-Nodes (39): spiDAT1_t, SpiDataStatus_t, spiBASE_t, SPI_CheckInterfaceAvailable(), SPI_DmaSendLastByte(), SPI_SetFunctional(), spiNotification(), config_value_type_t (+31 more)
+Cohesion: 0.08
+Nodes (35): spiDAT1_t, SpiDataStatus_t, spiBASE_t, SPI_CheckInterfaceAvailable(), SPI_SetFunctional(), spiNotification(), config_value_type_t, spi_config_reg_t (+27 more)
 
 ### Community 67 - "can_cbs_tx_f_pack-minimum-maximum-values.c"
 Cohesion: 0.11
@@ -1293,9 +1300,9 @@ Nodes (44): BMS_GetNumberOfConnectedStrings(), BMS_IsStringClosed(), CAN_MESSAGE
 Cohesion: 0.05
 Nodes (25): expected_error_msg(), patch, @version shall be ignored, A valid doxygen comment shall not raise an error, Invalid file encoding, All doxygen comments are missing, Doxygen block comment start label is missing, @file comment is missing (+17 more)
 
-### Community 69 - "diag.c"
-Cohesion: 0.09
-Nodes (43): DIAG_DEV_s, DIAG_DIAGNOSIS_STATE_s, BMS_IsAnyFatalErrorFlagSet(), DIAG_ID_e, STD_RETURN_TYPE_e, TimerHandle_t, DIAG_ClearFatalErrorById(), DIAG_GetDelay() (+35 more)
+### Community 69 - "DIAG_Handler"
+Cohesion: 0.08
+Nodes (50): DIAG_DEV_s, DIAG_DIAGNOSIS_STATE_s, DIAG_IMPACT_LEVEL_e, DIAG_RETURNTYPE_e, BMS_IsAnyFatalErrorFlagSet(), DIAG_EVENT_e, DIAG_ID_e, STD_RETURN_TYPE_e (+42 more)
 
 ### Community 70 - "ADDED Requirements"
 Cohesion: 0.04
@@ -1315,31 +1322,31 @@ Nodes (41): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, float_t, CANTX_BuildPackStateE
 
 ### Community 74 - "BootloaderStatus"
 Cohesion: 0.09
-Nodes (16): BootloaderStatus, Check if the bootloader can be reached and print its current status. Returns: 0…, Transfer the app binary to the embedded bootloader Args: bl_info: Instance of a…, Container to store the status of the bootloader, Test '_check_bootloader_status' function, Timeout when checking the bootloader status, Bootloader is not attached, wait for it to be powered on., Unknown bootloader state (+8 more)
+Nodes (19): BootloaderStatus, _check_bootloader_status(), Check if the bootloader can be reached and print its current status. Returns: 0…, Container to store the status of the bootloader, Testing '_check_bootloader' function., Bootloader is running, Bootloader is running, but something undefined is wrong., Application is running (+11 more)
 
-### Community 75 - "test_emac.c"
-Cohesion: 0.08
-Nodes (40): EMAC_RX_BUFFER_DESCRIPTOR_s, STD_RETURN_TYPE_e, EMAC_AcknowledgePacket(), EMAC_EmacIsOwner(), EMAC_EndOfReception(), EMAC_GetEthernetBuffer(), EMAC_GetPhyLinkStatus(), EMAC_GetRxActiveHead() (+32 more)
+### Community 75 - "emac.c"
+Cohesion: 0.06
+Nodes (57): EMAC_HDKIF_s, EMAC_RX_BUFFER_DESCRIPTOR_s, EMAC_PACKET_BUFFER_s, STD_RETURN_TYPE_e, EMAC_AcknowledgePacket(), EMAC_AcknowledgeRxInterrupt(), EMAC_ConfigureInstance(), EMAC_EmacIsOwner() (+49 more)
 
 ### Community 76 - "test_bootloader-hl_notification.c"
 Cohesion: 0.06
 Nodes (25): rtiBASE_t, canBASE_t, dmaInterrupt_t, esmBASE_t, gioPORT_t, uint32, canErrorNotification(), canStatusChangeNotification() (+17 more)
 
 ### Community 77 - "adi_ades183x_helpers.c"
-Cohesion: 0.10
-Nodes (39): ADI_CFG_REGISTER_SET_e, ADI_PEC_FAULT_INJECTION_e, ADI_DeactivateBalancing(), ADI_DetermineBalancingRegisterConfiguration(), ADI_STATE_s, ADI_CheckConfigurationRegister(), ADI_ClearCommandCounter(), ADI_IncrementCommandCounter() (+31 more)
+Cohesion: 0.08
+Nodes (42): ADI_CFG_REGISTER_SET_e, ADI_PEC_FAULT_INJECTION_e, ADI_DeactivateBalancing(), ADI_CheckConfigurationRegister(), ADI_ClearCommandCounter(), ADI_IncrementCommandCounter(), ADI_ReadRegister(), ADI_SpiTransmitReceiveData() (+34 more)
 
 ### Community 78 - "ADI_CopyCommandBytes"
 Cohesion: 0.12
-Nodes (39): ADI_COMMAND_READ_REGISTERS_s, ADI_VOLTAGE_REGISTER_TYPE_e, ADI_VOLTAGE_STORE_LOCATION_e, ADI_AccessToDatabase(), ADI_BalanceControl(), ADI_RunCurrentStringMeasurement(), ADI_CopyCommandBytes(), ADI_Wait() (+31 more)
+Nodes (35): ADI_COMMAND_READ_REGISTERS_s, ADI_VOLTAGE_REGISTER_TYPE_e, ADI_VOLTAGE_STORE_LOCATION_e, ADI_CopyCommandBytes(), ADI_WriteCommandConfigurationBits(), ADI_CopyCommandBytesAverageCellVoltageRegisters(), ADI_CopyCommandBytesCellVoltageRegister(), ADI_CopyCommandBytesFilteredCellVoltageRegisters() (+27 more)
 
 ### Community 79 - "uart.c"
 Cohesion: 0.08
 Nodes (32): sciBASE_t, uint32, sciNotification(), TEST_UART_GetReceiving(), TEST_UART_GetRxDataAddr(), TEST_UART_GetSending(), TEST_UART_GetTxBufferString(), TEST_UART_RxInterrupt() (+24 more)
 
-### Community 80 - "CurrentLimitModel"
+### Community 80 - "CurrentLimits"
 Cohesion: 0.08
-Nodes (26): CurrentLimitModel, CurrentLimits, Post-initialize by validating base fields and normalizing inputs. Converts…, Dataclasses for current limit model parameters. Defines: - ``CurrentLimits``:…, Dataclass for current limits as a function of temperature. Attributes:…, Validate container types and lengths for limits. Ensures both ``currents`` and…, Model parameter container for charge and discharge current limits. Attributes:…, Should raise TypeError if list lengths do not match. (+18 more)
+Nodes (22): CurrentLimits, Post-initialize by validating base fields and normalizing inputs. Converts…, Dataclass for current limits as a function of temperature. Attributes:…, Validate container types and lengths for limits. Ensures both ``currents`` and…, Should raise TypeError if list lengths do not match., Tests for CurrentLimitModel.__post_init__ including BaseModel behavior., Should convert charge/discharge dicts to CurrentLimits and normalize sources., Should raise TypeError if nested CurrentLimits in 'charge' is invalid. (+14 more)
 
 ### Community 81 - "foxBMS 2 — End-to-End Traceability Document"
 Cohesion: 0.05
@@ -1353,13 +1360,13 @@ Nodes (42): `application/algorithm`, `application/bal`, `application/bms`, `appl
 Cohesion: 0.05
 Nodes (41): 10.1 Coverage Statistics, 10.2 Traceability Completeness, 10. Traceability Matrix Summary, 11.1 Traceability Automation, 11.2 Traceability Automation Rules, 11. Tools and Automation, 12.1 Baseline Management, 12.2 Change Impact Traceability (+33 more)
 
-### Community 84 - "FoxDB"
-Cohesion: 0.07
-Nodes (28): db_list(), db_show(), R, Implementations backing the ``db`` command. This module provides thin wrappers…, Decorate functions that require an initialzed database., List available cells in the database and print them to the console. Args: db:…, Show details of a specific cell by its identifier. Print the cell dataclass or…, with_db() (+20 more)
+### Community 84 - "FileWriter"
+Cohesion: 0.03
+Nodes (55): FileReader, FileWriter, Process that reads lines from an input file and places them on the output queue., Starts the file reading process and reads from the input file., Reads lines from the input file and puts them into the output queue. Raises:…, Process that writes data to an output file or logs CAN messages., Starts the file writing process, either writing CAN logs or standard output., Writes string messages from the input queue to the output file. Raises:… (+47 more)
 
 ### Community 85 - "embedded_ut_impl.py"
-Cohesion: 0.07
-Nodes (35): Constants that are related to the embedded unit tests (paths etc.), _cleanup_hcg_sources(), _copy_config_if_needed(), _get_remove_cfg(), HcgRunData, _make_unit_test_dir(), _print_result(), EmbeddedUnitTestVariants (+27 more)
+Cohesion: 0.11
+Nodes (29): Constants that are related to the embedded unit tests (paths etc.), _cleanup_hcg_sources(), _copy_config_if_needed(), _get_remove_cfg(), HcgRunData, _make_unit_test_dir(), _print_result(), EmbeddedUnitTestVariants (+21 more)
 
 ### Community 86 - "log"
 Cohesion: 0.08
@@ -1373,25 +1380,25 @@ Nodes (35): can(), client(), com_test(), device(), modbus(), mqtt(), command, Co
 Cohesion: 0.10
 Nodes (35): DATA_BLOCK_ACCESS_TYPE_e, DATA_QUEUE_MESSAGE_s, STD_RETURN_TYPE_e, DATA_AccessDatabaseEntries(), DATA_CopyData(), DATA_ExecuteDataBist(), DATA_Initialize(), DATA_IterateOverDatabaseEntries() (+27 more)
 
-### Community 89 - "ethernet.c"
-Cohesion: 0.07
-Nodes (31): eIPCallbackEvent_t, ETH_RETURN_TYPE_e, BaseType_t, Socket_t, ETH_ConfigureSlidingWindow(), ETH_Initialize(), NetworkEndPoint_t, TaskFunction_t (+23 more)
+### Community 89 - "ETH_CreateListeningTask"
+Cohesion: 0.15
+Nodes (12): eIPCallbackEvent_t, ETH_RETURN_TYPE_e, NetworkEndPoint_t, TaskFunction_t, ETH_CreateEchoServerTask(), ETH_CreateListeningTask(), ETH_DeleteCurrentTask(), vApplicationIPNetworkEventHook_Multi() (+4 more)
 
 ### Community 90 - "FreeRTOS_IP_Utils.c"
-Cohesion: 0.08
-Nodes (36): ICMPPacket_t, eFrameProcessingResult_t, NetworkBufferDescriptor_t, ProcessICMPPacket(), prvProcessICMPEchoReply(), prvProcessICMPEchoRequest(), UBaseType_t, BaseType_t (+28 more)
+Cohesion: 0.07
+Nodes (41): ICMPPacket_t, eFrameProcessingResult_t, NetworkBufferDescriptor_t, ProcessICMPPacket(), prvProcessICMPEchoReply(), prvProcessICMPEchoRequest(), UBaseType_t, BaseType_t (+33 more)
 
 ### Community 91 - "test_mxm_registry.c"
 Cohesion: 0.11
-Nodes (38): MXM_MONITORING_INSTANCE_s, MXM_REG_NAME_e, STD_RETURN_TYPE_e, MXM_CheckIfADeviceHasBeenReset(), MXM_CheckIfADeviceIsConnected(), MXM_MonRegistryConnectDevices(), MXM_MonRegistryGetHighestConnected5XDevice(), MXM_MonRegistryInit() (+30 more)
+Nodes (39): MXM_MONITORING_INSTANCE_s, MXM_REG_NAME_e, STD_RETURN_TYPE_e, MXM_CheckIfADeviceHasBeenReset(), MXM_CheckIfADeviceIsConnected(), MXM_MonRegistryConnectDevices(), MXM_MonRegistryGetHighestConnected5XDevice(), MXM_MonRegistryInit() (+31 more)
 
 ### Community 92 - "test_can_cbs_rx_imd_bender-iso165c-info.c"
 Cohesion: 0.09
-Nodes (37): CAN_ENDIANNESS_e, CAN_RxGetMessageDataFromCanData(), CAN_BUFFER_ELEMENT_s, CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, DATA_BLOCK_INSULATION_s, CANRX_GetImcStatus(), CANRX_GetMeasuredResistance() (+29 more)
+Nodes (35): CAN_BUFFER_ELEMENT_s, CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, DATA_BLOCK_INSULATION_s, CANRX_GetImcStatus(), CANRX_GetMeasuredResistance(), CANRX_GetVifcStatus(), CANRX_ImdBenderIso165cInfo() (+27 more)
 
 ### Community 93 - "diag_cbs.h"
-Cohesion: 0.06
-Nodes (24): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_AerosolAlert(), DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_AlertFlag() (+16 more)
+Cohesion: 0.05
+Nodes (28): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_AerosolAlert(), DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_SupplyVoltageClamp30c() (+20 more)
 
 ### Community 95 - "bms_config_validator.py"
 Cohesion: 0.09
@@ -1410,32 +1417,32 @@ Cohesion: 0.13
 Nodes (39): else, BaseType_t, StaticStreamBuffer_t, StreamBuffer_t, StreamBufferCallbackFunction_t, StreamBufferHandle_t, TickType_t, UBaseType_t (+31 more)
 
 ### Community 99 - "timers.c"
-Cohesion: 0.13
-Nodes (38): PendedFunction_t, BaseType_t, StaticTimer_t, TaskHandle_t, TickType_t, TimerCallbackFunction_t, TimerHandle_t, UBaseType_t (+30 more)
+Cohesion: 0.14
+Nodes (36): BaseType_t, StaticTimer_t, TaskHandle_t, TickType_t, TimerCallbackFunction_t, TimerHandle_t, UBaseType_t, pcTimerGetName() (+28 more)
 
 ### Community 100 - "TestSpR"
 Cohesion: 0.07
 Nodes (20): Update @version and @updated in recognized foxBMS files., Skip files that cannot be decoded or are not eligible for replacement., Replace from-version with to-version in wscript., Update version and date when publishing a concrete release., Reset date to magic date when switching to x.y.z placeholder., Insert a new vx.y.z include section when preparing next release., Promote vx.y.z changelog entry to concrete version and recreate template., Do not create release file when to-version is x.y.z. (+12 more)
 
-### Community 101 - "adi_ades183x.c"
-Cohesion: 0.09
-Nodes (14): ADI_AUXILIARY_REGISTER_TYPE_e, ADI_AUXILIARY_STORE_LOCATION_e, ADI_GetGpioVoltages(), ADI_SaveRxToGpioVoltageBuffer(), ADI_STATE_s, TEST_ADI_SaveRxToGpioVoltageBuffer(), ADI_EvaluateDiagnosticGpioVoltages(), testADI_DeactivateBalancing() (+6 more)
+### Community 101 - "adi_ades183x_defs.h"
+Cohesion: 0.13
+Nodes (4): ADI_DetermineBalancingRegisterConfiguration(), ADI_STATE_s, testADI_DeactivateBalancing(), testADI_DetermineBalancingRegisterConfiguration()
 
-### Community 102 - "DIAG_Handler"
-Cohesion: 0.10
-Nodes (34): DIAG_RETURNTYPE_e, RTC_SYSTEM_TIMER_EPOCH_s, RTC_TIME_DATA_s, CAN_CheckCanTiming(), RTC_AdjustTime(), RTC_CheckBatteryLowVoltageAlert(), RTC_GetSystemStartUpTime(), RTC_GetSystemTimeEpochFormat() (+26 more)
+### Community 102 - "rtc.c"
+Cohesion: 0.11
+Nodes (31): RTC_SYSTEM_TIMER_EPOCH_s, RTC_TIME_DATA_s, STD_RETURN_TYPE_e, RTC_AdjustTime(), RTC_CheckBatteryLowVoltageAlert(), RTC_GetSystemStartUpTime(), RTC_GetSystemTimeEpochFormat(), RTC_GetSystemTimeRtcFormat() (+23 more)
 
 ### Community 103 - "afe.h"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (31): AFE_IdentifyAfes(), AFE_Initialize(), AFE_IsFirstMeasurementCycleFinished(), AFE_RequestBalancingFeedbackRead(), AFE_RequestEepromRead(), AFE_RequestEepromWrite(), AFE_RequestOpenWireCheck(), AFE_RequestTemperatureRead() (+23 more)
 
 ### Community 104 - "ltc_6806.c"
-Cohesion: 0.14
-Nodes (37): DIAG_ID_e, LTC_ADCMEAS_CHAN_e, LTC_ADCMODE_e, LTC_REQUEST_s, LTC_RETURN_TYPE_e, LTC_STATE_s, LTC_STATEMACH_e, SPI_INTERFACE_CONFIG_s (+29 more)
+Cohesion: 0.11
+Nodes (40): DIAG_ID_e, LTC_ADCMEAS_CHAN_e, LTC_ADCMODE_e, LTC_REQUEST_s, LTC_RETURN_TYPE_e, LTC_STATE_s, LTC_STATEMACH_e, SPI_INTERFACE_CONFIG_s (+32 more)
 
 ### Community 105 - "ftask_cfg.c"
 Cohesion: 0.06
-Nodes (26): CAN_ReadRxBuffer(), MEAS_Control(), DATA_Task(), MINFO_CheckSupplyVoltageClamp30c(), FTSK_InitializeUserCodeEngine(), FTSK_InitializeUserCodePreCyclicTasks(), FTSK_RunUserCodeAfe(), FTSK_RunUserCodeCyclic100ms() (+18 more)
+Nodes (36): CAN_ReadRxBuffer(), DATA_Task(), FTSK_InitializeUserCodeEngine(), FTSK_RunUserCodeAfe(), FTSK_RunUserCodeCyclic1ms(), FTSK_RunUserCodeCyclicAlgorithm100ms(), FTSK_RunUserCodeEmac(), FTSK_RunUserCodeEngine() (+28 more)
 
 ### Community 106 - "patch"
 Cohesion: 0.06
@@ -1447,10 +1454,10 @@ Nodes (25): Implements the 'plot_config' frame, GraphDrawerFactory, GraphDrawerF
 
 ### Community 108 - "test_sys_mon.c"
 Cohesion: 0.09
-Nodes (34): FRAM_SYS_MON_RECORD_s, STD_RETURN_TYPE_e, SYSM_TASK_ID_e, SYSM_TIMING_VIOLATION_RESPONSE_s, SYSM_CheckNotifications(), SYSM_ConvertRecordedTimingsToViolation(), SYSM_CopyFramStruct(), SYSM_GetRecordedTimingViolations() (+26 more)
+Nodes (36): FRAM_SYS_MON_RECORD_s, STD_RETURN_TYPE_e, SYSM_TASK_ID_e, SYSM_TIMING_VIOLATION_RESPONSE_s, SYSM_CheckNotifications(), SYSM_ConvertRecordedTimingsToViolation(), SYSM_CopyFramStruct(), SYSM_GetRecordedTimingViolations() (+28 more)
 
 ### Community 109 - "bender_iso165c.c"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (37): I165C_DISABLE_STATE_s, I165C_ENABLE_STATE_s, I165C_FSM_DISABLE_STATES_e, I165C_FSM_ENABLE_STATES_e, I165C_FSM_INITIALIZATION_STATES_e, I165C_FSM_RUNNING_STATES_e, I165C_INITIALIZATION_STATE_s, I165C_RESPONSE_RETURN_VALUE_e (+29 more)
 
 ### Community 110 - "SBC_Trigger"
@@ -1462,8 +1469,8 @@ Cohesion: 0.13
 Nodes (34): ADI_ReadDataBits(), ADI_ClearAllFlagsInStatusRegisterGroupC(), ADI_DisableBalancingOnStartup(), ADI_GetRevisionOfAllIcsInString(), ADI_GetSerialIdsOfAllIcsInString(), ADI_InitializeConfiguration(), ADI_InitializeMeasurement(), ADI_ResetErrorTable() (+26 more)
 
 ### Community 112 - ".setUp"
-Cohesion: 0.05
-Nodes (18): Test 'run_app' method of the 'Bootloader' class., Function to test function run_app()., Function to test function run_app()., Test 'reset_bootloader' method of the 'Bootloader' class., Function to test function reset_bootloader()., Function to test function reset_bootloader()., Test 'send_pre_info' method of the 'Bootloader' class., Function to test function send_pre_info(). (+10 more)
+Cohesion: 0.06
+Nodes (17): Send vector table to the bootloader Returns: True if vector table has been…, Test 'run_app' method of the 'Bootloader' class., Function to test function run_app()., Function to test function run_app()., Test 'reset_bootloader' method of the 'Bootloader' class., Function to test function reset_bootloader()., Function to test function reset_bootloader()., Test 'send_data_as_a_sub_sector' method of the 'Bootloader' class. (+9 more)
 
 ### Community 113 - "TestUpdateVersionCore"
 Cohesion: 0.08
@@ -1471,43 +1478,43 @@ Nodes (19): Path, Skip files that cannot be decoded or are not replacement candi
 
 ### Community 114 - "foxbms_config.h"
 Cohesion: 0.08
-Nodes (16): CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s, CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s, CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANRX_CellTemperatures(), CANRX_GetCanAfeCellTemperaturesFromMessage(), TEST_CANRX_GetCanAfeCellTemperaturesFromMessage(), CAN_MESSAGE_PROPERTIES_s (+8 more)
+Nodes (17): CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s, CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s, CAN_RxGetMessageDataFromCanData(), CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANRX_CellTemperatures(), CANRX_GetCanAfeCellTemperaturesFromMessage(), TEST_CANRX_GetCanAfeCellTemperaturesFromMessage() (+9 more)
 
 ### Community 115 - "log_can_message"
 Cohesion: 0.07
 Nodes (23): log_can_message(), Database, Reads the CAN message and prints it if needed., Prints the message if needed., read_can_message(), ListProxy, Test log_can_message method, Tests the log_can_message function when msg_arr is empty (+15 more)
 
-### Community 116 - "vListInitialise"
-Cohesion: 0.10
-Nodes (33): crCOROUTINE_CODE, BaseType_t, UBaseType_t, prvCheckDelayedList(), prvCheckPendingReadyList(), prvInitialiseCoRoutineLists(), vCoRoutineSchedule(), xCoRoutineCreate() (+25 more)
+### Community 116 - "uxListRemove"
+Cohesion: 0.08
+Nodes (44): crCOROUTINE_CODE, BaseType_t, List_t, TickType_t, UBaseType_t, prvCheckDelayedList(), prvCheckPendingReadyList(), prvInitialiseCoRoutineLists() (+36 more)
 
 ### Community 117 - "FreeRTOS_DNS.c"
 Cohesion: 0.11
-Nodes (35): IPPreference_t, BaseType_t, FOnDNSEvent, NetworkEndPoint_t, Socket_t, TickType_t, UBaseType_t, FreeRTOS_freeaddrinfo() (+27 more)
+Nodes (34): IPPreference_t, BaseType_t, FOnDNSEvent, NetworkEndPoint_t, Socket_t, TickType_t, UBaseType_t, vDNSCallbackInitialise() (+26 more)
 
-### Community 118 - "TestRunDecode2File"
-Cohesion: 0.07
-Nodes (22): patch, StringIO, Test exits on invalid dbc file., Tests for run_decode2stdout method, Tests the run_decode2stdout method with a valid txt as input, Tests the run_decode2stdout method with multiple incoming messages, Tests the run_decode2stdout method with an empty message, Tests for run_decode2file method (+14 more)
+### Community 118 - "run_decode2file"
+Cohesion: 0.13
+Nodes (14): Executes the can decode step Args: decode_obj: Object which handles the…, run_decode2file(), StringIO, Tests for run_decode2file method, Creates temporary directory, Delete temporary directory, Tests the run_decode2file with an invalid output directory, Tests the run_decode2file creating a valid output file (+6 more)
 
 ### Community 119 - "Software Installation"
 Cohesion: 0.06
 Nodes (31): Changelog, Please read this before creating a Pull Request, Environment Updates, Get the foxBMS 2 Sources, Install Code Composer Studio, Install Doxygen, Install drawio-desktop, Install git (+23 more)
 
 ### Community 120 - "Test Specification"
-Cohesion: 0.06
-Nodes (35): Component Testing, Execution `FB2-VER-EXE-000001` — Execution: FB2-VER-TMS-000001 (synthetic_fixture), Execution `FB2-VER-EXE-000001` — Execution: SOA Voltage Limit Test, Execution `FB2-VER-EXE-000002` — Execution: FB2-VER-TMS-000002 (synthetic_fixture), Execution `FB2-VER-EXE-000003` — Execution: FB2-VER-TMS-000003 (synthetic_fixture), Execution `FB2-VER-EXE-000004` — Execution: FB2-VER-TMS-000004 (synthetic_fixture), Execution `FB2-VER-EXE-000005` — Execution: FB2-VER-TMS-000005 (synthetic_fixture), Execution `FB2-VER-EXE-000006` — Execution: FB2-VER-TMS-000006 (synthetic_fixture) (+27 more)
+Cohesion: 0.05
+Nodes (43): Component Testing, Execution `FB2-VER-EXE-000001` — Execution: FB2-VER-TMS-000001 (synthetic_fixture), Execution `FB2-VER-EXE-000001` — Execution: SOA Voltage Limit Test, Execution `FB2-VER-EXE-000002` — Execution: FB2-VER-TMS-000002 (synthetic_fixture), Execution `FB2-VER-EXE-000003` — Execution: FB2-VER-TMS-000003 (synthetic_fixture), Execution `FB2-VER-EXE-000004` — Execution: FB2-VER-TMS-000004 (synthetic_fixture), Execution `FB2-VER-EXE-000005` — Execution: FB2-VER-TMS-000005 (synthetic_fixture), Execution `FB2-VER-EXE-000006` — Execution: FB2-VER-TMS-000006 (synthetic_fixture) (+35 more)
 
 ### Community 121 - "FLASH_WriteFlashSector"
-Cohesion: 0.09
-Nodes (26): Fapi_FlashBankType, Fapi_StatusType, FLASH_FLASH_SECTOR_s, Fapi_serviceWatchdogTimer(), FLASH_EraseFlashForApp(), FLASH_EraseFlashSector(), FLASH_FlashProgramCheck(), FLASH_GetFlashSector() (+18 more)
+Cohesion: 0.13
+Nodes (18): Fapi_FlashBankType, Fapi_StatusType, FLASH_FLASH_SECTOR_s, Fapi_serviceWatchdogTimer(), FLASH_EraseFlashForApp(), FLASH_EraseFlashSector(), FLASH_FlashProgramCheck(), FLASH_GetFlashSector() (+10 more)
 
 ### Community 122 - "imd.c"
 Cohesion: 0.13
 Nodes (30): IMD_CHECK_MULTIPLE_CALLS_e, IMD_FSM_SUBSTATES_e, IMD_RETURN_TYPE_e, IMD_STATE_REQUEST_e, IMD_STATE_s, DATA_BLOCK_INSULATION_s, IMD_FSM_STATES_e, STD_RETURN_TYPE_e (+22 more)
 
-### Community 123 - "debug_can.c"
-Cohesion: 0.10
-Nodes (29): AFE_Initialize(), AFE_RequestBalancingFeedbackRead(), AFE_RequestEepromRead(), AFE_RequestEepromWrite(), AFE_RequestOpenWireCheck(), AFE_RequestTemperatureRead(), AFE_StartMeasurement(), AFE_TriggerIc() (+21 more)
+### Community 123 - "OS_DelayTaskUntil"
+Cohesion: 0.15
+Nodes (21): STD_RETURN_TYPE_e, DECAN_ConvertIndexForTemperature(), DECAN_ConvertIndexForVoltage(), DECAN_Initialize(), DECAN_ModifiedModuloFunction(), DECAN_ReceiveCanCellTemperatures(), DECAN_ReceiveCanCellVoltages(), DECAN_TriggerAfe() (+13 more)
 
 ### Community 124 - "ti_afe.c"
 Cohesion: 0.11
@@ -1515,11 +1522,11 @@ Nodes (30): AFE_Initialize(), AFE_IsFirstMeasurementCycleFinished(), AFE_Request
 
 ### Community 125 - "emac-low-level.c"
 Cohesion: 0.08
-Nodes (21): EMAC_CONFIGURATION_REGISTER_s, EMAC_RETURN_TYPE_e, EMAC_InitializeHardware(), EMAC_SetupLink(), config_value_type_t, EMAC_DisableLoopback(), EMAC_EnableLoopback(), EMAC_EnableMii() (+13 more)
+Nodes (23): EMAC_CONFIGURATION_REGISTER_s, EMAC_RETURN_TYPE_e, EMAC_InitializeHardware(), EMAC_SetupLink(), config_value_type_t, EMAC_DisableLoopback(), EMAC_EnableLoopback(), EMAC_EnableMii() (+15 more)
 
-### Community 126 - "test_adi_ades1830.c"
-Cohesion: 0.10
-Nodes (30): AFE_REQUEST_e, ADI_GetRequest(), ADI_IsFirstMeasurementCycleFinished(), ADI_MakeRequest(), ADI_MeasurementCycle(), ADI_ProcessMeasurementNotStartedState(), ADI_SanityConfigurationCheck(), ADI_STATE_s (+22 more)
+### Community 126 - "adi_ades183x.c"
+Cohesion: 0.11
+Nodes (36): AFE_REQUEST_e, ADI_AccessToDatabase(), ADI_ActivateInterfaceBoard(), ADI_BalanceControl(), ADI_GetRequest(), ADI_IsFirstMeasurementCycleFinished(), ADI_MakeRequest(), ADI_MeasurementCycle() (+28 more)
 
 ### Community 127 - "f_ti_arm_cgt.py"
 Cohesion: 0.09
@@ -1529,9 +1536,9 @@ Nodes (33): after, add_bingen_task(), add_copy_elf_task(), add_crc_task(), add_h
 Cohesion: 0.17
 Nodes (31): get_boot_timestamp(), get_build_configuration(), get_commit_hash(), get_mcu_id(), get_mcu_lot_number(), get_mcu_wafer_info(), get_rtc_time(), get_software_version() (+23 more)
 
-### Community 129 - "SubprocessResult"
-Cohesion: 0.09
-Nodes (20): Return a string representation of the subprocess result. Returns: Formatted…, Represent the result of a subprocess execution. Attributes: returncode: The…, Combine two subprocess results. Args: other: Another subprocess result to add.…, SubprocessResult, patch, Open bootloader unit tests, Open bootloader unit tests, TestIdeImpl (+12 more)
+### Community 129 - "pre_commit_impl.py"
+Cohesion: 0.10
+Nodes (16): Implements the functionalities behind the 'pre-commit' command, Implements the functionalities behind the 'pre-commit' command, Run the waf binary with the provided arguments., run_pre_commit(), pre_commit(), argument, command, Context (+8 more)
 
 ### Community 130 - "create_app_build_cfg.py"
 Cohesion: 0.09
@@ -1565,57 +1572,57 @@ Nodes (30): BaseType_t, IPv46_Address_t, IPv6_Address_t, UBaseType_t, FreeRTOS_d
 Cohesion: 0.08
 Nodes (17): object, Function to test the function send_program_info()., Function to test the function send_loop_number_to_bootloader()., Function to test the function send_data_to_bootloader()., Function to test the function wait_can_ack_msg()., Function to test the function start_transfer()., Function to test the function reset_bootloader()., Function to test the function run_app_on_bootloader(). (+9 more)
 
-### Community 138 - "TestPlotFrameNoUiTestableMethods"
-Cohesion: 0.08
-Nodes (19): Testing file 'cli/cmd_gui/frame_plot/__init__.py'., get_birthtime(), datetime, Path, Test of the PlotFrame class, Test 'check_thread' function when the Thread is still alive, Test 'check_thread' function when the Thread is not alive and plotting was…, Test 'check_thread' function when the Thread is not alive and plotting not… (+11 more)
+### Community 138 - "TestPlotFrame"
+Cohesion: 0.04
+Nodes (36): Testing file 'cli/cmd_gui/frame_plot/__init__.py'., get_birthtime(), datetime, patch, Path, skipUnless, Test 'check_thread' function when the Thread is not alive and plotting was…, Test 'check_thread' function when the Thread is not alive and plotting not… (+28 more)
 
-### Community 139 - "CellSpec"
-Cohesion: 0.11
-Nodes (19): CellSpec, Dataclass for cell specification parameters. This module defines the immutable…, Specification of a lithium-ion cell. Attributes: name: Model name of the cell.…, Validate attributes and enforce basic consistency rules. - String fields must…, make_valid_kwargs(), Should raise ValueError if shape is cylindrical and width != length., Should raise ValueError if shape is cylindrical and width != length., Should raise ValueError if temperature_max < temperature_min. (+11 more)
+### Community 139 - "FreeRTOS_IP_Timers.c"
+Cohesion: 0.09
+Nodes (49): ICMPPrefixOption_IPv6_t, IPTimer_t, FreeRTOS_ClearARP(), FreeRTOS_dnsclear(), NetworkEndPoint_t, FreeRTOS_NetworkDown(), prvCallDHCP_RA_Handler(), prvIPTask() (+41 more)
 
 ### Community 140 - "check_license_info.py"
 Cohesion: 0.14
 Nodes (31): _as_repo_relative(), check_asm(), check_c(), check_pwsh(), check_py(), check_shell(), check_toml(), check_yaml() (+23 more)
 
 ### Community 141 - "ILCK_SetStateRequest"
-Cohesion: 0.12
-Nodes (27): ILCK_ELECTRICAL_STATE_TYPE_e, ILCK_RETURN_TYPE_e, ILCK_STATE_REQUEST_e, ILCK_STATE_s, ILCK_STATEMACH_e, ILCK_CheckReEntrance(), ILCK_CheckStateRequest(), ILCK_GetInterlockFeedback() (+19 more)
+Cohesion: 0.13
+Nodes (24): ILCK_ELECTRICAL_STATE_TYPE_e, ILCK_RETURN_TYPE_e, ILCK_STATE_REQUEST_e, ILCK_STATE_s, ILCK_STATEMACH_e, ILCK_CheckStateRequest(), ILCK_GetInterlockFeedback(), ILCK_GetState() (+16 more)
 
 ### Community 142 - "nxp_mc33775a_measurement.c"
-Cohesion: 0.11
-Nodes (24): N77X_COMMUNICATION_STATUS_e, N77X_STATE_s, N77x_ConvertVoltagesToTemperatures(), N77x_ErrorHandling(), N77x_Wait(), N77X_STATE_s, N775_InitMeasurement(), N775_RetrieveMeasurement() (+16 more)
+Cohesion: 0.20
+Nodes (17): N77X_STATE_s, N775_InitMeasurement(), N775_RetrieveMeasurement(), N775_RetrieveTemperatures(), N775_RetrieveVoltages(), N77x_CaptureMeasurement(), N77x_StartMeasurement(), TEST_N77x_InitMeasurement() (+9 more)
 
 ### Community 143 - "MPU_xTaskCreateStatic_TestCallback"
-Cohesion: 0.06
-Nodes (17): FTSK_CreateTasks(), OS_InitializeScheduler(), OS_InitializeOperatingSystem(), testFTSK_CreateTasks(), configSTACK_DEPTH_TYPE, StackType_t, StaticTask_t, TaskFunction_t (+9 more)
+Cohesion: 0.10
+Nodes (11): FTSK_CreateTasks(), testFTSK_CreateTasks(), configSTACK_DEPTH_TYPE, StackType_t, StaticTask_t, TaskFunction_t, TaskHandle_t, UBaseType_t (+3 more)
 
-### Community 144 - "app/driver/can/test_can.c"
-Cohesion: 0.07
-Nodes (29): CAN_STATE_s, CAN_EnablePeriodic(), CAN_IsCurrentSensorCcPresent(), CAN_IsCurrentSensorPresent(), TEST_CAN_CheckCanTiming(), TEST_CAN_CheckCanTimingOfCurrentSensor(), TEST_CAN_GetCANState(), TEST_CAN_SetCurrentSensorCcPresent() (+21 more)
+### Community 144 - "app/driver/can/can.c"
+Cohesion: 0.06
+Nodes (50): CAN_STATE_s, CAN_SHIM_s, STD_RETURN_TYPE_e, CAN_CalculateCounterResetValue(), CAN_CheckCanTiming(), CAN_CheckDatabaseNullPointer(), CAN_ConfigureRxMailboxesForExtendedIdentifiers(), CAN_EnablePeriodic() (+42 more)
 
 ### Community 145 - "CANFilter"
 Cohesion: 0.09
 Nodes (19): CAN filter subcommand implementation, CANFilter, Returns a proper string representation of a CANFilter object, Implements the CAN message filter functionalities Args: _ids: CAN ids which…, Filters the incoming CAN message with respect to the _ids, _id_pos and…, Tests the filter_msg method of the CANFilter class with wrong id, Tests the filter_msg method of the CANFilter class with invalid CAN msg, Tests the filter_msg method of the CANFilter class with sampling (+11 more)
 
-### Community 146 - "xND_CACHE_TABLE_ROW"
-Cohesion: 0.06
-Nodes (31): eRAState_t, IPv6_Address_t, MACAddress_t, xND_CACHE_TABLE_ROW, pxEndPoint, ucAge, ucValid, xIPAddress (+23 more)
+### Community 146 - "xRA_DATA"
+Cohesion: 0.25
+Nodes (8): eRAState_t, TickType_t, UBaseType_t, xRA_DATA, bits, eRAState, ulPreferredLifeTime, uxRetryCount
 
 ### Community 147 - "SOA_CheckCurrent"
 Cohesion: 0.09
 Nodes (18): BMS_IsStringPrecharging(), BMS_CURRENT_FLOW_STATE_e, SOA_IsCellCurrentLimitViolated(), SOA_IsCurrentOnOpenString(), SOA_IsPackCurrentLimitViolated(), SOA_IsStringCurrentLimitViolated(), DATA_BLOCK_MIN_MAX_s, DATA_BLOCK_PACK_VALUES_s (+10 more)
 
-### Community 148 - "TestPlotFrame"
-Cohesion: 0.08
-Nodes (17): patch, skipUnless, Test 'check_thread' function when the Thread is not alive and plotting was…, Test 'check_thread' function when the Thread is not alive and plotting not…, Test 'check_thread' function when the Thread is not alive but the queue is empty, Test 'run_command_cb' function when all input is correct, Test 'run_command_cb' function when ROOT_IS_PROJECT is False and when all input…, Test 'run_command_cb' function when an input is not a file (+9 more)
+### Community 148 - "ComInterface"
+Cohesion: 0.06
+Nodes (29): ComInterface, Checks whether the managed process or all processes are still alive. Args:…, Signals the process to shut down by setting the shutdown event., Base class for communication interfaces. Manages process control, logging, and…, Starts all managed processes and waits until they are ready. Also starts the…, Signals all processes to shut down and optionally waits until they have…, patch, Test starting a process and waiting for it to become ready. (+21 more)
 
 ### Community 149 - "patch"
 Cohesion: 0.08
 Nodes (19): patch, Tests for dedicated wscript pairing checks., Wscript handler type is reported correctly., Missing tests/unit wscript for src wscript should be reported., Existing tests/unit wscript should pass., Wscript check has no style phase., Wscript check_test_files should sum missing and style return values., Tests for main argument handling and dispatch. (+11 more)
 
 ### Community 150 - "xTaskGetTickCount"
-Cohesion: 0.22
-Nodes (29): DHCPMessage_IPv4_t, ProcessSet_t, xApplicationGetRandomNumber(), vARPSendGratuitous(), BaseType_t, ConstSocket_t, NetworkEndPoint_t, prvCloseDHCPSocket() (+21 more)
+Cohesion: 0.09
+Nodes (48): DHCPMessage_IPv4_t, ProcessSet_t, BaseType_t, Socket_t, ETH_ConfigureSlidingWindow(), ETH_Initialize(), TEST_ETH_ConfigureSlidingWindow(), TEST_ETH_EchoServerInstance() (+40 more)
 
 ### Community 151 - "item_definition"
 Cohesion: 0.07
@@ -1626,8 +1633,8 @@ Cohesion: 0.08
 Nodes (20): FS85_FS_REGISTER_s, FS85_MAIN_REGISTERS_s, FS85_CheckIgnitionSignal(), FS85_UpdateFailSafeRegister(), FS85_UpdateMainRegister(), TEST_FS85_CheckRegisterValues(), TEST_FS85_UpdateFailSafeRegister(), TEST_FS85_UpdateMainRegister() (+12 more)
 
 ### Community 153 - "mxm_battery_management.c"
-Cohesion: 0.21
-Nodes (29): MXM_5X_INSTANCE_s, MXM_5X_SUBSTATES_e, MXM_DC_BYTE_e, MXM_41B_INSTANCE_s, MXM_MODEL_ID_e, STD_RETURN_TYPE_e, MXM_52IsUserAccessibleRegister(), MXM_53IsUserAccessibleRegister() (+21 more)
+Cohesion: 0.18
+Nodes (33): MXM_5X_COMMAND_PAYLOAD_s, MXM_5X_INSTANCE_s, MXM_5X_STATE_REQUEST_STATUS_e, MXM_5X_SUBSTATES_e, MXM_DC_BYTE_e, MXM_STATEMACHINE_5X_e, MXM_41B_INSTANCE_s, MXM_MODEL_ID_e (+25 more)
 
 ### Community 154 - "ADDED Requirements"
 Cohesion: 0.07
@@ -1642,12 +1649,12 @@ Cohesion: 0.07
 Nodes (29): Purpose, Requirement: Check function (acceptance suite), Requirement: Corpus CLI tool, Requirement: Coverage function, Requirement: Export function, Requirement: Graph reachability validation, Requirement: Impact function, Requirement: Inventory function (+21 more)
 
 ### Community 157 - "app/driver/foxmath/test_foxmath.c"
-Cohesion: 0.10
-Nodes (23): BMS_IsPrechargeVoltageBelowLimit(), float_t, MATH_AbsInt32_t(), MATH_AbsInt64_t(), MATH_LinearInterpolation(), MATH_MinimumOfTwoFloats(), MATH_StartupSelfTest(), MATH_SwapBytesUint16() (+15 more)
+Cohesion: 0.07
+Nodes (24): float_t, MATH_LinearInterpolation(), MATH_MinimumOfTwoFloats(), MATH_MinimumOfTwoUint16_t(), MATH_SwapBytesUint16(), MATH_SwapBytesUint64(), TSI_GetTemperature(), TS_Sem00GetTemperatureFromLut() (+16 more)
 
 ### Community 158 - "OS_ReceiveFromQueue"
-Cohesion: 0.14
-Nodes (26): N77X_STATE_s, STD_RETURN_TYPE_e, N775_I2cTransmitRead(), N775_I2cTransmitWrite(), N77x_I2cRead(), N77x_I2cWrite(), N77x_I2cWriteRead(), N77x_InitializeI2c() (+18 more)
+Cohesion: 0.12
+Nodes (32): N77x_Wait(), N77X_COMMUNICATION_STATUS_e, N77X_STATE_s, N77x_CommunicationRead(), N77x_CommunicationReadMultiple(), N77X_STATE_s, STD_RETURN_TYPE_e, N775_I2cTransmitRead() (+24 more)
 
 ### Community 159 - "TestPlotPeriods"
 Cohesion: 0.09
@@ -1657,17 +1664,17 @@ Nodes (21): extract_timestamps_for_ids(), main(), plot_stats(), plot_time_differ
 Cohesion: 0.10
 Nodes (21): generate_crc_64_for_tms570_on_board_crc_calculation(), r"""Implementation of the CRC64 Polynomial x\\ :sup:`64` + x\\ :sup:`4` + x\\…, r"""Python-port of the TI CRC64 implementation x\\ :sup:`64` + x\\ :sup:`4` +…, BootloaderBinaryFile, FlashSector, get_sha256_file_hash(), get_sha256_file_hash_str(), ndarray (+13 more)
 
-### Community 161 - "get_config_file_options"
-Cohesion: 0.11
-Nodes (20): get_config_file_options(), Context, Parameter, Path, Read configuration options from a configuration file, if present., patch, Test when the configuration file exists., Test when the configuration file exists and sampling is provided. (+12 more)
+### Community 161 - "read_config"
+Cohesion: 0.06
+Nodes (32): get_config_file_options(), Context, Parameter, Path, Basic functions for the subcommand definitions, Read configuration options from a configuration file, if present., Path, Read a YAML configuration file. Args: config: Path to the YAML configuration… (+24 more)
 
-### Community 162 - "Cell"
-Cohesion: 0.09
-Nodes (18): Cell, Dataclass aggregating all parameters of a cell. A cell comprises its static…, Container for all available information of a cell. Attributes: spec : CellSpec…, Path, Collect all cells from the database root. Args: db_root: Path to the database…, Iterate over the database root and parse each cell directory. Args:…, Parse a single cell directory. Reads the cell specification and model parameter…, Check that a cell directory contains all required files. Required entries are:… (+10 more)
+### Community 162 - "table_helper.py"
+Cohesion: 0.06
+Nodes (30): get_output_format_enum(), Path, Returns the enum value for the passed output format Args: output_format: The…, Executes the table creation step Args: table: Object which handles the creation…, Table subcommand implementation, Reads config file and creates the Table object Args: config: Path to the…, run_table(), table_setup() (+22 more)
 
-### Community 163 - "BaseModel"
-Cohesion: 0.09
-Nodes (18): BaseModel, Base definitions for model parameter dataclasses. This package module provides…, Base class for model parameter dataclasses. This dataclass provides common…, Validate attributes and normalize source paths. This method performs the…, creates_models(), Path, Create model parameter objects from JSON dictionaries. This function iterates…, Init file of db.model_parameter tests (+10 more)
+### Community 163 - "run_process"
+Cohesion: 0.08
+Nodes (22): Start the plot-process, If the provided thread is not alive the button is activated, Writes the file content in the text box, prepare_subprocess_output(), Any, IO, Path, Decode subprocess output from bytes to string and return a SubprocessResult.… (+14 more)
 
 ### Community 164 - "PythonTestFiles"
 Cohesion: 0.09
@@ -1681,21 +1688,21 @@ Nodes (13): t_authorized_rejected(), t_dangling_link(), t_duplicate_id(), t_ftti
 Cohesion: 0.13
 Nodes (24): MXM_41B_REG_BITS, bitValue(), MXM_41B_REG_BIT_VALUE, mxm_41bReadValue(), mxm_41bWriteValue(), testReadValueKeepAlive(), testReadValueKeepAliveFiveBits(), testReadValueKeepAliveOne() (+16 more)
 
-### Community 167 - "N77x_CommunicationWrite"
-Cohesion: 0.10
-Nodes (21): N77X_COMMUNICATION_STATUS_e, N77X_STATE_s, SPI_INTERFACE_CONFIG_s, N77x_CommunicationRead(), N77x_CommunicationReadMultiple(), N77x_CommunicationWrite(), N77x_ConvertMessageToBuffer(), N77x_WaitForRxCompletedNotification() (+13 more)
+### Community 167 - "bal_strategy_history.c"
+Cohesion: 0.09
+Nodes (21): BAL_ActivateBalancing(), BAL_CheckImbalances(), BAL_ComputeImbalances(), BAL_Deactivate(), BAL_GetInitializationState(), BAL_GetState(), BAL_ProcessStateBalancing(), BAL_ProcessStateCheckBalancing() (+13 more)
 
-### Community 168 - "can_cbs_tx_f_string-state.c"
-Cohesion: 0.16
-Nodes (25): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANTX_BuildStringStateMessage(), CANTX_SetCurrentSensorFlags(), CANTX_SetMolFlags(), CANTX_SetMslFlags(), CANTX_SetOtherErrorFlags(), CANTX_SetPlausibilityFlags() (+17 more)
+### Community 168 - "can_cbs_tx_f_bms-state-details.c"
+Cohesion: 0.09
+Nodes (52): CAN_ConvertBooleanToInteger(), CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, SYSM_TIMING_VIOLATION_RESPONSE_s, CANTX_BmsStateDetails(), CANTX_SetTimingViolation100Ms(), CANTX_SetTimingViolation100MsAlgo(), CANTX_SetTimingViolation100MsAlgoRec() (+44 more)
 
 ### Community 169 - "can_cbs_tx_f_string-state-estimation.c"
 Cohesion: 0.16
 Nodes (25): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANTX_BuildStringStateEstimationMessage(), CANTX_CalculateMaximumStringSoc(), CANTX_CalculateMaximumStringSoe(), CANTX_CalculateMinimumStringSoc(), CANTX_CalculateMinimumStringSoe(), CANTX_CalculateStringEnergy() (+17 more)
 
-### Community 170 - "OS_GetTickCount"
-Cohesion: 0.13
-Nodes (21): SYSM_Notify(), FTSK_RunUserCodeI2c(), FTSK_CreateTaskAfe(), FTSK_CreateTaskCyclic100ms(), FTSK_CreateTaskCyclic10ms(), FTSK_CreateTaskCyclic1ms(), FTSK_CreateTaskCyclicAlgorithm100ms(), FTSK_CreateTaskEmac() (+13 more)
+### Community 170 - "TestBootloaderCanBasics"
+Cohesion: 0.07
+Nodes (15): object, Class to test the class BootloaderCanBasics., Function to test the init function., Function to test function wait_can_message., Function to test function send_request_to_bootloader()., Function to test function send_data_to_bootloader()., Function to test function send_crc_to_bootloader()., Function to test function send_transfer_program_info_to_bootloader(). (+7 more)
 
 ### Community 171 - "f_hcg.py"
 Cohesion: 0.08
@@ -1722,16 +1729,16 @@ Cohesion: 0.07
 Nodes (16): BootloaderInterface, ABC, Enum, Run the application on bootloader. Returns: True if the application has been…, Reset bootloader. Args: time_to_wait: time to wait for bootloader to reset…, Get the bootloader's current state. Returns: CanFsmState, BootFsmState., Get the bootloader's current transfer data loop number. Returns: Current number…, Get the bootloader's version number. Returns: Current version number… (+8 more)
 
 ### Community 177 - "cli_unittest_impl.py"
-Cohesion: 0.10
-Nodes (23): Constants that are related to the CLI unit tests (paths etc.), _add_verbosity_to_cmd_list(), Path, Implements the functionalities behind the 'cli-unittest' command, Run the unittest module with the provided arguments., Add verbosity flags to the unittest command list, Run unit tests on Python modules and files in the repository., run_script_tests() (+15 more)
+Cohesion: 0.09
+Nodes (25): Constants that are related to the CLI unit tests (paths etc.), _add_verbosity_to_cmd_list(), Path, Implements the functionalities behind the 'cli-unittest' command, Run the unittest module with the provided arguments., Add verbosity flags to the unittest command list, Run unit tests on Python modules and files in the repository., run_script_tests() (+17 more)
 
 ### Community 178 - "foxBMS 2 Lifecycle Artifact Corpus"
 Cohesion: 0.07
 Nodes (27): `as_is` — Faithful Reconstruction, By Artifact ID, By Lateral Query, By Review, By Traceability Path, Coverage Report, ⚠️ Critical Warning Labels, Directory Structure (+19 more)
 
 ### Community 179 - "Test Specification"
-Cohesion: 0.07
-Nodes (27): Diagnosis Reaction Verification (built-in), Execution `FB2-VER-EXE-000001` — Execution: FB2-VER-TMS-000001 (synthetic_fixture), Execution `FB2-VER-EXE-000001` — Execution: SOA Voltage Limit Test, Execution `FB2-VER-EXE-000002` — Execution: FB2-VER-TMS-000002 (synthetic_fixture), Execution `FB2-VER-EXE-000003` — Execution: FB2-VER-TMS-000003 (synthetic_fixture), Execution `FB2-VER-EXE-000004` — Execution: FB2-VER-TMS-000004 (synthetic_fixture), Execution `FB2-VER-EXE-000005` — Execution: FB2-VER-TMS-000005 (synthetic_fixture), Execution `FB2-VER-EXE-000006` — Execution: FB2-VER-TMS-000006 (synthetic_fixture) (+19 more)
+Cohesion: 0.06
+Nodes (33): Diagnosis Reaction Verification (built-in), Execution `FB2-VER-EXE-000001` — Execution: FB2-VER-TMS-000001 (synthetic_fixture), Execution `FB2-VER-EXE-000001` — Execution: SOA Voltage Limit Test, Execution `FB2-VER-EXE-000002` — Execution: FB2-VER-TMS-000002 (synthetic_fixture), Execution `FB2-VER-EXE-000003` — Execution: FB2-VER-TMS-000003 (synthetic_fixture), Execution `FB2-VER-EXE-000004` — Execution: FB2-VER-TMS-000004 (synthetic_fixture), Execution `FB2-VER-EXE-000005` — Execution: FB2-VER-TMS-000005 (synthetic_fixture), Execution `FB2-VER-EXE-000006` — Execution: FB2-VER-TMS-000006 (synthetic_fixture) (+25 more)
 
 ### Community 180 - "ADDED Requirements"
 Cohesion: 0.07
@@ -1742,16 +1749,16 @@ Cohesion: 0.07
 Nodes (27): Purpose, reports Specification, Requirement: Consistency report, Requirement: Coverage report, Requirement: Final acceptance report, Requirement: Machine-readable data for all reports, Requirement: README with corpus documentation, Requirement: Reproducibility report (+19 more)
 
 ### Community 182 - "uc_msg_t.c"
-Cohesion: 0.19
-Nodes (27): uc_msg_t, N77x_CommunicationComposeMessage(), N77x_CommunicationDecomposeMessage(), uc_msg_t, calc_crc(), check_crc(), crc_add_item(), get_cadd() (+19 more)
+Cohesion: 0.13
+Nodes (32): uc_msg_t, N77x_CommunicationComposeMessage(), N77x_CommunicationDecomposeMessage(), uc_msg_t, calc_crc(), check_crc(), crc_add_item(), get_cadd() (+24 more)
 
-### Community 183 - "FreeRTOS_Stream_Buffer.c"
-Cohesion: 0.18
-Nodes (26): FreeRTOS_min_size_t(), lTCPAddRxdata(), vTCPAddRxdata_Callback(), BaseType_t, StreamBuffer_t, uxStreamBufferAdd(), uxStreamBufferDistance(), uxStreamBufferFrontSpace() (+18 more)
+### Community 183 - "bender_ir155.c"
+Cohesion: 0.12
+Nodes (15): IR155_MEASUREMENT_MODE_e, IR155_MEASUREMENT_s, DATA_BLOCK_INSULATION_s, IMD_FSM_STATES_e, float_t, IR155_CalculateResistance(), IR155_GetMeasurementMode(), IR155_GetMeasurementValues() (+7 more)
 
 ### Community 184 - "xIP_HEADER_IPv6"
-Cohesion: 0.07
-Nodes (28): IPv6_Address_t, xICMPPrefixOption_IPv6, ucFlags, ucLength, ucPrefix, ucPrefixLength, ucType, ulPreferredLifeTime (+20 more)
+Cohesion: 0.20
+Nodes (10): IPv6_Address_t, xIP_HEADER_IPv6, ucHopLimit, ucNextHeader, ucTrafficClassFlow, ucVersionTrafficClass, usFlowLabel, usPayloadLength (+2 more)
 
 ### Community 185 - "TestRunFrame"
 Cohesion: 0.07
@@ -1761,9 +1768,9 @@ Nodes (15): skipUnless, Test 'write_text' function when RunFrame is not selected
 Cohesion: 0.10
 Nodes (14): LicenseTypes, Test with an file that misses license information, Check src+tests/unit license headers when option is enabled., Fail when accompanying tests/unit C file has a different header., Do not fail if accompanying tests/unit file does not exist., Option should not trigger companion lookup for non-src C files., Check src+tests/unit wscript license headers when option is enabled., Fail when accompanying tests/unit wscript has a different header. (+6 more)
 
-### Community 187 - "SimulateBmsFrame"
-Cohesion: 0.11
-Nodes (16): Notebook, Text, Start or stop the simulation, Configure and send the selected message, Stop simulation if both threads are not alive, Writes the file content in the text box, SimulateBmsFrame, CanConfigWindow (+8 more)
+### Community 187 - ".__init__"
+Cohesion: 0.38
+Nodes (4): Event, Select the corresponding channel to the interface if possible, Read the CAN configuration and pass it to the 'SimulateBMS' frame, Misc
 
 ### Community 188 - "python_setup.py"
 Cohesion: 0.13
@@ -1777,9 +1784,9 @@ Nodes (26): 10. Required work products: software engineering, 11. Required work 
 Cohesion: 0.28
 Nodes (26): FS85_STATE_s, STD_RETURN_TYPE_e, FS85_CheckFaultErrorCounter(), FS85_CheckRegisterValues(), FS85_ClearRegisterFlags(), FS85_GoToStandby(), FS85_InitializeFsPhase(), FS85_InitializeNumberOfRequiredWatchdogRefreshes() (+18 more)
 
-### Community 191 - "can_cbs_tx_f_bms-state-details.c"
-Cohesion: 0.24
-Nodes (26): CAN_ConvertBooleanToInteger(), CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, SYSM_TIMING_VIOLATION_RESPONSE_s, CANTX_BmsStateDetails(), CANTX_SetTimingViolation100Ms(), CANTX_SetTimingViolation100MsAlgo(), CANTX_SetTimingViolation100MsAlgoRec() (+18 more)
+### Community 191 - "xEventGroupWaitBits"
+Cohesion: 0.18
+Nodes (24): PendedFunction_t, BaseType_t, EventBits_t, EventGroupHandle_t, StaticEventGroup_t, TickType_t, UBaseType_t, prvTestWaitCondition() (+16 more)
 
 ### Community 192 - "none_none.c"
 Cohesion: 0.14
@@ -1798,16 +1805,16 @@ Cohesion: 0.10
 Nodes (17): PlotConfigFrame, Entry, Notebook, Open the given Plot in the 'Plot Data' Frame, Delete the content of the object and insert the input, get_birthtime(), datetime, Path (+9 more)
 
 ### Community 196 - "foxBMS 2 — Software Requirements Specification"
-Cohesion: 0.08
-Nodes (25): `FB2-HW-TSR-000001` — TSR: AFE Cell Voltage Measurement Accuracy, `FB2-HW-TSR-000001` — TSR: AFE Cell Voltage Measurement Accuracy, `FB2-HW-TSR-000002` — TSR: AFE isoSPI Communication Integrity, `FB2-HW-TSR-000002` — TSR: AFE isoSPI Communication Integrity, `FB2-HW-TSR-000003` — TSR: Contactor Driver and Feedback, `FB2-HW-TSR-000003` — TSR: Contactor Driver and Feedback, `FB2-MAN-SCO-000001` — Project Scope: foxBMS 2 Reference BMS Development, `FB2-SW-SWR-000001` — SWR: AFE Driver - Cell Voltage Acquisition (+17 more)
+Cohesion: 0.06
+Nodes (33): Evidence limits, `FB2-HW-TSR-000001` — TSR: AFE Cell Voltage Measurement Accuracy, `FB2-HW-TSR-000001` — TSR: AFE Cell Voltage Measurement Accuracy, `FB2-HW-TSR-000002` — TSR: AFE isoSPI Communication Integrity, `FB2-HW-TSR-000002` — TSR: AFE isoSPI Communication Integrity, `FB2-HW-TSR-000003` — TSR: Contactor Driver and Feedback, `FB2-HW-TSR-000003` — TSR: Contactor Driver and Feedback, `FB2-HW-TSR-000004` — TSR: Independent Hardware Voltage Monitor (+25 more)
 
 ### Community 197 - "render_spec_documents.py"
 Cohesion: 0.24
 Nodes (23): check(), determinism(), emit_01(), emit_02(), emit_03(), emit_04(), emit_05(), emit_06() (+15 more)
 
 ### Community 198 - "debug_default.c"
-Cohesion: 0.24
-Nodes (24): FAKE_FSM_STATES_e, FAKE_FSM_SUBSTATES_e, FAKE_STATE_s, STD_RETURN_TYPE_e, FAKE_CheckMultipleCalls(), FAKE_Initialize(), FAKE_IsFirstMeasurementCycleFinished(), FAKE_ProcessInitializationState() (+16 more)
+Cohesion: 0.12
+Nodes (37): FAKE_FSM_STATES_e, FAKE_FSM_SUBSTATES_e, FAKE_STATE_s, STD_RETURN_TYPE_e, FAKE_CheckMultipleCalls(), FAKE_Initialize(), FAKE_IsFirstMeasurementCycleFinished(), FAKE_ProcessInitializationState() (+29 more)
 
 ### Community 199 - "ADDED Requirements"
 Cohesion: 0.08
@@ -1826,12 +1833,12 @@ Cohesion: 0.08
 Nodes (25): Purpose, Requirement: Assumption registry (synthetic_reference), Requirement: Functional safety requirements (synthetic_reference), Requirement: Hazard analysis (synthetic_reference), Requirement: Management artifacts (synthetic_reference), Requirement: Parameter registry (synthetic_reference), Requirement: Safety analyses (synthetic_reference), Requirement: Safety case skeleton (synthetic_reference) (+17 more)
 
 ### Community 203 - "prvAllowIPPacketIPv6"
-Cohesion: 0.14
+Cohesion: 0.16
 Nodes (24): BaseType_t, eFrameProcessingResult_t, IPHeader_IPv6_t, IPv6_Address_t, NetworkBufferDescriptor_t, UBaseType_t, eHandleIPv6ExtensionHeaders(), prvAllowIPPacketIPv6() (+16 more)
 
 ### Community 204 - "NetworkInterface.c"
-Cohesion: 0.15
-Nodes (22): BaseType_t, EMAC_PACKET_BUFFER_s, NetworkBufferDescriptor_t, NetworkInterface_t, NIC_FillInterfaceDescriptor(), NIC_FormatBuffer(), NIC_Receive(), pxFillInterfaceDescriptor() (+14 more)
+Cohesion: 0.11
+Nodes (29): BaseType_t, EMAC_PACKET_BUFFER_s, NetworkBufferDescriptor_t, NetworkInterface_t, NIC_FillInterfaceDescriptor(), NIC_FormatBuffer(), pxFillInterfaceDescriptor(), TEST_NIC_FormatBuffer() (+21 more)
 
 ### Community 205 - "test_check_test_files.py"
 Cohesion: 0.08
@@ -1853,9 +1860,9 @@ Nodes (24): Repo, get_git_root(), Helper function to find the repository root Ar
 Cohesion: 0.13
 Nodes (19): DATA_BLOCK_CELL_TEMPERATURE_s, DATA_BLOCK_CELL_VOLTAGE_s, DATA_BLOCK_MIN_MAX_s, STD_RETURN_TYPE_e, PL_CheckCellTemperature(), PL_CheckCellVoltage(), PL_CheckStringVoltage(), PL_CheckTemperatureSpread() (+11 more)
 
-### Community 211 - "temperature_sensor_defs.h"
-Cohesion: 0.09
-Nodes (11): TS_Epc00GetTemperatureFromLut(), TS_Epc00GetTemperatureFromPolynomial(), TSI_GetTemperature(), TSI_GetTemperature(), TSI_GetTemperature(), TS_Vis01GetTemperatureFromLut(), TS_Vis01GetTemperatureFromPolynomial(), testTS_Epc00GetTemperatureFromLutFixedValues() (+3 more)
+### Community 211 - "epcos_b57251v5103j060.c"
+Cohesion: 0.17
+Nodes (6): TS_Epc00GetTemperatureFromLut(), TS_Epc00GetTemperatureFromPolynomial(), TSI_GetTemperature(), TSI_GetTemperature(), testTS_Epc00GetTemperatureFromLutFixedValues(), testTS_Epc00GetTemperatureFromPolynomialFixedValues()
 
 ### Community 212 - "xEthernetPhy"
 Cohesion: 0.08
@@ -1865,37 +1872,37 @@ Nodes (24): BaseType_t, PhyProperties_t, TickType_t, TimeOut_t, xApplicationPhyR
 Cohesion: 0.10
 Nodes (13): patch, Test 'open_vs_code_app_unit_test_cb' function of FoxGui class, Test 'open_vs_code_bootloader_cb' function of FoxGui class, Test 'open_vs_code_bootloader_unit_test_cb' function of FoxGui class, Test 'create_new_file_cb' function of FoxGui class, Test 'view_licence_cb' function of FoxGui class, Test 'show_about_cb' function of FoxGui class, Test 'tab_changed_cb' function of FoxGui class (+5 more)
 
-### Community 214 - "app/driver/can/can.c"
-Cohesion: 0.17
-Nodes (22): CAN_NODE_s, canBASE_t, STD_RETURN_TYPE_e, uint32, CAN_ConfigureRxMailboxesForExtendedIdentifiers(), CAN_GetNodeConfigurationStructFromRegisterAddress(), CAN_IsCurrentSensorEcPresent(), CAN_IsMessagePeriodElapsed() (+14 more)
+### Community 214 - "CAN_RxInterrupt"
+Cohesion: 0.44
+Nodes (10): CAN_NODE_s, canBASE_t, uint32, CAN_GetNodeConfigurationStructFromRegisterAddress(), CAN_RxInterrupt(), CAN_TxInterrupt(), canMessageNotification(), TEST_CAN_GetNodeConfigurationStructFromRegisterAddress() (+2 more)
 
-### Community 215 - "emac.c"
-Cohesion: 0.11
-Nodes (19): EMAC_HDKIF_s, EMAC_AcknowledgeRxInterrupt(), EMAC_ConfigureInstance(), EMAC_InitializeDma(), EMAC_InitializeTxBufferDescriptors(), EMAC_RxInterruptServiceRoutine(), EMAC_TxInterruptHandler(), EMAC_TxInterruptServiceRoutine() (+11 more)
+### Community 215 - ".send_data_as_a_sector"
+Cohesion: 0.12
+Nodes (9): Send one sub-sector of data to bootloader. Args: i_loop_start: start index of…, Get the start and end loop number (i_loop) of one subsector. Args: idx: the…, Send data of one sector to the embedded bootloader. Args: i_loop: start loop…, Test 'send_data_as_a_sub_sector' method of the 'Bootloader' class., Function to test function send_data_as_a_sub_sector()., Test 'send_data_as_a_sector' method of the 'Bootloader' class., Function to test function send_data_as_a_sector()., TestBootloaderSendADataAsASector (+1 more)
 
-### Community 216 - "contactor.c"
-Cohesion: 0.13
-Nodes (19): CONT_ELECTRICAL_STATE_TYPE_e, CONT_TYPE_e, STD_RETURN_TYPE_e, CONT_CloseContactor(), CONT_ClosePrecharge(), CONT_GetContactorState(), CONT_InitializationCheckOfContactorRegistry(), CONT_Initialize() (+11 more)
+### Community 216 - "3. SYS.3 → SWE.1 → … → SWE.6 → SYS.4 → SYS.5 — artifact-level chains"
+Cohesion: 0.08
+Nodes (23): 1. Process Chain, 2. SYS.1 → SYS.2 → SYS.3 → SYS.4 → SYS.5 (system flow), 3.0 SYS.3 → SWE.1 — system requirements to software requirements, 3.1 SWE.1 → SWE.2 — requirements to architecture elements, 3.2 SWE.2 → SWE.2 — interface chains between architecture elements, 3.3 SWE.2 → SWE.3 — design elements to source symbols, 3.4 SWE.3 / SWE.1 → SWE.4 — source symbols and requirements to test measures, 3.5 SWE.4 → SWE.5 → SWE.6 → SYS.4 → SYS.5 — measures to executions to system closure (+15 more)
 
 ### Community 217 - "sys.c"
-Cohesion: 0.22
-Nodes (22): SYS_CheckMultipleCalls(), SYS_GeneralMacroBist(), SYS_ProcessErrorState(), SYS_ProcessInitializationState(), SYS_ProcessPreRunningState(), SYS_ProcessRunningState(), SYS_RunStateMachine(), SYS_SetState() (+14 more)
+Cohesion: 0.11
+Nodes (40): STD_RETURN_TYPE_e, SYS_CheckMultipleCalls(), SYS_CheckStateRequest(), SYS_GeneralMacroBist(), SYS_GetSystemState(), SYS_GetSystemSubstate(), SYS_ProcessErrorState(), SYS_ProcessInitializationState() (+32 more)
 
 ### Community 218 - "test_foxbms_version.py"
-Cohesion: 0.09
-Nodes (14): Testing file 'cli/__init__.py'., patch, Wscript file does not exist, Tests the 'get_numeric_version' function, Test converting from letters to numbers, Test function when version is given with numbers, Testing file 'cli/foxbms_version.py'., Tests the 'extract_version' function (+6 more)
+Cohesion: 0.13
+Nodes (11): patch, Wscript file does not exist, Tests the 'get_numeric_version' function, Test converting from letters to numbers, Test function when version is given with numbers, Testing file 'cli/foxbms_version.py'., Tests the 'extract_version' function, Tests the 'get_version' function (+3 more)
 
 ### Community 219 - "render_template"
 Cohesion: 0.11
 Nodes (13): Replace missing optional inline comment placeholders with empty text., Testing file 'tools/waf-tools/c_template.py'., Unit tests for string-level placeholder rendering., Replace placeholders delimited by /* @ and @ */., Raise KeyError when a required ${...} placeholder value is missing., Raise KeyError when required comment placeholder is missing., Raise KeyError for missing required comment placeholder used inline., Remove full placeholder-only lines when optional values are absent. (+5 more)
 
 ### Community 220 - "BootloaderBinaryFile"
-Cohesion: 0.10
-Nodes (15): BootloaderBinaryFile, Path, Get the CRC signature and data in 64 bits from the CRC table array based on the…, Implementation for handling and preparing an application binary for usage with…, Class to handle an application binary file and prepare the binary data for…, Path, Initialization function. Args: interface: the communication interface of the…, get_sha256_file_hash_str() (+7 more)
+Cohesion: 0.12
+Nodes (12): BootloaderBinaryFile, Path, Get the CRC signature and data in 64 bits from the CRC table array based on the…, Class to handle an application binary file and prepare the binary data for…, Path, Initialization function. Args: interface: the communication interface of the…, object, patch (+4 more)
 
 ### Community 221 - "xParseSet"
-Cohesion: 0.08
-Nodes (23): DNSMessage_t, xDNSMessage, usAdditionalRRs, usAnswers, usAuthorityRRs, usFlags, usIdentifier, usQuestions (+15 more)
+Cohesion: 0.12
+Nodes (16): DNSMessage_t, xParseSet, ppxLastAddress, pucByte, pucUDPPayloadBuffer, pxDNSMessageHeader, pxLastAddress, ulIPAddress (+8 more)
 
 ### Community 222 - "Final Acceptance Report"
 Cohesion: 0.09
@@ -1906,11 +1913,11 @@ Cohesion: 0.09
 Nodes (22): Communication Requirements, Diagnosis and Error Handling Requirements, `FB2-SAF-FSR-000001` — FSR: Cell Voltage Acquisition and Validation, `FB2-SAF-FSR-000001` — FSR: Cell Voltage Acquisition and Validation, `FB2-SAF-FSR-000002` — FSR: SOA Voltage Limit Monitoring with Debounce, `FB2-SAF-FSR-000002` — FSR: SOA Voltage Limit Monitoring with Debounce, `FB2-SAF-FSR-000003` — FSR: Contactor Opening on SOA Violation, `FB2-SAF-FSR-000003` — FSR: Contactor Opening on SOA Violation (+14 more)
 
 ### Community 224 - "test_sps.c"
-Cohesion: 0.16
-Nodes (20): SPS_CHANNEL_AFFILIATION_e, SPS_CHANNEL_FUNCTION_e, SPS_CHANNEL_INDEX, SPS_GetChannelAffiliation(), SPS_RequestChannelState(), SPS_RequestContactorState(), SPS_RequestGeneralIoState(), TEST_SPS_RequestChannelState() (+12 more)
+Cohesion: 0.06
+Nodes (64): SPS_ACTION_e, SPS_CHANNEL_AFFILIATION_e, SPS_CHANNEL_FUNCTION_e, SPS_CHANNEL_INDEX, SPS_READ_TYPE_e, SPS_STATE_e, SPS_WRITE_TYPE_e, CONT_ELECTRICAL_STATE_TYPE_e (+56 more)
 
-### Community 225 - "battery_system_cfg.h"
-Cohesion: 0.09
+### Community 225 - "DIAG_UpdateFlags"
+Cohesion: 0.13
 Nodes (7): DIAG_UpdateFlags(), SYSM_TASK_ID_e, SYSM_DummyCallback(), TEST_SYSM_DummyCallback(), testDIAG_UpdateFlagsInDatabase(), testSYSMDummyCallbackExists(), testDiag_UpdateFlags()
 
 ### Community 226 - "can_cbs_rx_cs_lem-cab500.c"
@@ -1929,9 +1936,9 @@ Nodes (19): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANTX_BuildP0Message(), CANTX_
 Cohesion: 0.13
 Nodes (22): construct_msg_define(), ExpectedCanMessageDefines, FoundCanMessageDefine, get_defines_from_file(), log_found(), log_found_msgs(), log_not_found(), main() (+14 more)
 
-### Community 230 - "patch"
+### Community 230 - "test_ltc_6813-1.c"
 Cohesion: 0.10
-Nodes (14): patch, Function to test the init function., Test invalid initialization due to wrong type of database file., Class to test BootloaderCanBasics object instantiation., DBC file needs to exist., Test invalid initialization due to wrong type of database file., Function to test the init function., DBC file needs to exist. (+6 more)
+Nodes (4): LTC_ConvertMuxVoltagesToTemperatures(), LTC_GetVoltageInputIndexFromCellBlockIndex(), testLTC_GetVoltageInputIndexFromCellBlockIndex(), testLTC_ConvertMuxVoltagesToTemperatures()
 
 ### Community 231 - "patch"
 Cohesion: 0.09
@@ -1946,8 +1953,8 @@ Cohesion: 0.13
 Nodes (13): Foo, This is the Foo class, Test 'print_attr' method of the 'Foo' class., The string-representation of the 'attr' attribute shall be printed to stdout., Testing file 'foo.py'., Test 'Foo'-object instantiation., The object can be instantiated., The object can not be instantiated because some reason. (+5 more)
 
 ### Community 234 - "OS_CheckTimeHasPassed"
-Cohesion: 0.14
-Nodes (19): OS_TIMER_s, RTC_IncrementSystemTime(), STD_RETURN_TYPE_e, OS_CheckTimeHasPassed(), OS_CheckTimeHasPassedSelfTest(), OS_CheckTimeHasPassedWithTimestamp(), OS_GetOsTimer(), OS_IncrementTimer() (+11 more)
+Cohesion: 0.13
+Nodes (21): OS_TIMER_s, RTC_IncrementSystemTime(), STD_RETURN_TYPE_e, OS_CheckTimeHasPassed(), OS_CheckTimeHasPassedSelfTest(), OS_CheckTimeHasPassedWithTimestamp(), OS_GetOsTimer(), OS_IncrementTimer() (+13 more)
 
 ### Community 235 - "can_cbs_rx_f_bms-state-request.c"
 Cohesion: 0.15
@@ -1958,12 +1965,12 @@ Cohesion: 0.19
 Nodes (18): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANTX_BuildStringTemperatureMessage(), CANTX_BuildStringVoltageMessage(), CANTX_CalculateStringMaximumTemperature(), CANTX_CalculateStringMinimumTemperature(), CANTX_StringMinimumMaximumTemp(), CANTX_StringMinimumMaximumVoltage() (+10 more)
 
 ### Community 237 - "test_meas.c"
-Cohesion: 0.15
-Nodes (17): STD_RETURN_TYPE_e, MEAS_Initialize(), MEAS_IsFirstMeasurementCycleFinished(), MEAS_RequestBalancingFeedbackRead(), MEAS_RequestEepromRead(), MEAS_RequestEepromWrite(), MEAS_RequestOpenWireCheck(), MEAS_RequestTemperatureRead() (+9 more)
+Cohesion: 0.13
+Nodes (19): STD_RETURN_TYPE_e, MEAS_Control(), MEAS_Initialize(), MEAS_IsFirstMeasurementCycleFinished(), MEAS_RequestBalancingFeedbackRead(), MEAS_RequestEepromRead(), MEAS_RequestEepromWrite(), MEAS_RequestOpenWireCheck() (+11 more)
 
 ### Community 238 - "CRC_CalculateCrc64"
-Cohesion: 0.11
-Nodes (12): crcBASE_t, uint32, CRC_CalculateCrc64(), CRC_SwapCrc64Bits(), crcNotification(), TEST_CRC_SwapCrc64Bits(), calc_crc64_user(), crc64_update_word() (+4 more)
+Cohesion: 0.19
+Nodes (8): crcBASE_t, uint32, CRC_CalculateCrc64(), CRC_SwapCrc64Bits(), crcNotification(), TEST_CRC_SwapCrc64Bits(), testCRC_CalculateCrc64(), testCRC_SwapCrc64Bits()
 
 ### Community 239 - "freertos_addrinfo"
 Cohesion: 0.09
@@ -1998,24 +2005,24 @@ Cohesion: 0.10
 Nodes (21): format, type, enum, type, $ref, default, type, properties (+13 more)
 
 ### Community 247 - "foxBMS 2 — Software Architecture Specification"
-Cohesion: 0.10
-Nodes (20): Data Exchange Viewpoint, Dynamic Viewpoint — `FB2-SW-DSN-000001`, Dynamic Viewpoint — `FB2-SW-DSN-000001`, Dynamic Viewpoint — `FB2-SW-DSN-000002`, Dynamic Viewpoint — `FB2-SW-DSN-000002`, Dynamic Viewpoint — `FB2-SW-DSN-000003`, Dynamic Viewpoint — `FB2-SW-DSN-000003`, Dynamic Viewpoint — Task Model (+12 more)
+Cohesion: 0.08
+Nodes (25): Data Exchange Viewpoint, Design-to-Implementation Allocation, Design Verification Coverage, Dynamic Viewpoint — `FB2-SW-DSN-000001`, Dynamic Viewpoint — `FB2-SW-DSN-000001`, Dynamic Viewpoint — `FB2-SW-DSN-000002`, Dynamic Viewpoint — `FB2-SW-DSN-000002`, Dynamic Viewpoint — `FB2-SW-DSN-000003` (+17 more)
 
 ### Community 248 - "RepoModel"
 Cohesion: 0.20
 Nodes (5): _hdr_field(), repo_model.py — Reverse-engineered repository model for foxBMS 2. Mines the…, Deterministic snapshot of reverse-engineered repository facts., _read(), RepoModel
 
-### Community 249 - "_runner"
-Cohesion: 0.10
-Nodes (21): gen_fox_cli_unittest_help(), gen_fox_com_mqtt_help(), gen_fox_etl_decode_help(), gen_fox_etl_help(), gen_fox_gui_help(), gen_fox_modbus_client_help(), gen_fox_mqtt(), gen_fox_pre_commit_help() (+13 more)
+### Community 249 - "conf.py"
+Cohesion: 0.05
+Nodes (68): Config, create_doc_sources(), create_version_info(), gen_fox_bms_help(), gen_fox_bootloader_help(), gen_fox_build_help(), gen_fox_cli_embedded_ut_help(), gen_fox_cli_unittest_help() (+60 more)
 
 ### Community 250 - "ADDED Requirements"
 Cohesion: 0.10
 Nodes (20): ADDED Requirements, MODIFIED Requirements, Purpose, REMOVED Requirements, Requirement: AST-derived source anchors, Requirement: Documentation source anchors, Requirement: Hardware source anchors, Requirement: Header vs implementation distinction (+12 more)
 
-### Community 251 - "sps.c"
-Cohesion: 0.15
-Nodes (20): SPS_ACTION_e, SPS_READ_TYPE_e, SPS_WRITE_TYPE_e, STD_RETURN_TYPE_e, SPS_GlobalReadCurrent(), SPS_GlobalRegisterRead(), SPS_GlobalRegisterWrite(), SPS_Initialize() (+12 more)
+### Community 251 - "validate_table_config"
+Cohesion: 0.14
+Nodes (12): Validates the configuration file of the table subcommand Args: config_dict:…, validate_table_config(), Tests validate_table_config method, Tests the validate_table_config with valid configuration, Tests the validate_table_config with config without start date, Tests the validate_table_config with config without start date, Tests the validate_table_config with the start date not as string, Tests the validate_table_config with join_on not as string (+4 more)
 
 ### Community 252 - "test_soc_lookup-table.c"
 Cohesion: 0.15
@@ -2023,7 +2030,7 @@ Nodes (11): DATA_BLOCK_SOC_s, float_t, SE_CalculateStateOfCharge(), SE_GetStateO
 
 ### Community 253 - "test_can_1.c"
 Cohesion: 0.11
-Nodes (18): CAN_SHIM_s, CAN_CalculateCounterResetValue(), CAN_CheckDatabaseNullPointer(), CAN_Initialize(), CAN_ValidateConfiguredTxMessagePhase(), TEST_CAN_CalculateCounterResetValue(), TEST_CAN_CheckDatabaseNullPointer(), TEST_CAN_ValidateConfiguredTxMessagePhase() (+10 more)
+Nodes (17): TEST_CAN_ValidateConfiguredTxMessagePeriod(), TEST_CAN_ValidateConfiguredTxMessagePhase(), CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, TEST_CANRX_DummyCallback(), TEST_CANTX_DummyCallback(), testCAN_CalculateCounterResetValue(), testCAN_ValidateConfiguredTxMessagePeriod() (+9 more)
 
 ### Community 254 - "TestBootloaderFrame"
 Cohesion: 0.10
@@ -2034,20 +2041,20 @@ Cohesion: 0.10
 Nodes (15): CreateAppBuildCfgCTests, _FakeNode, ImdTests, _make_ctx(), patch, Path, Tests for IMD identifier generation., Return manufacturer only when IMD model is configured as none. (+7 more)
 
 ### Community 256 - "CANTX_BuildBmsStateMessage"
-Cohesion: 0.16
-Nodes (15): BMS_FSM_STATES_e, BMS_GetState(), BMS_IsTransitionToErrorStateActive(), CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, STD_RETURN_TYPE_e, CANTX_AnySysMonTimingIssueDetected(), CANTX_BmsState() (+7 more)
+Cohesion: 0.18
+Nodes (13): BMS_IsTransitionToErrorStateActive(), CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, STD_RETURN_TYPE_e, CANTX_AnySysMonTimingIssueDetected(), CANTX_BmsState(), CANTX_BuildBmsStateMessage(), CANTX_TransmitBmsState() (+5 more)
 
 ### Community 257 - ".join"
-Cohesion: 0.14
-Nodes (15): Sort the columns of the table. Args: table: The table to be sorted Returns:…, Forward fill NULL with previous valid values in a column Args: table: table to…, The method join takes a list of tables and joins these tables based on the Date…, get_ppm_files(), main(), Path, Gets the macro values from the compiler output, Creates a generator for all relevant macro files in the build directory (+7 more)
+Cohesion: 0.13
+Nodes (16): The method _search_for_table searches in a list of tables the first table…, Sort the columns of the table. Args: table: The table to be sorted Returns:…, Forward fill NULL with previous valid values in a column Args: table: table to…, The method join takes a list of tables and joins these tables based on the Date…, get_ppm_files(), main(), Path, Gets the macro values from the compiler output (+8 more)
 
 ### Community 258 - ".get_selected_item"
 Cohesion: 0.10
 Nodes (10): Gets the selected item, Gets the selected item and removes it, Test 'remove_selected_item_cb' function when get_selected_item raises an Error, Test 'remove_selected_item_cb' function when get_selected_item returns None, Test 'remove_selected_item_cb' function when the item is a plot, Test 'remove_selected_item_cb' function when the item is a line, Test 'get_selected_item' function when no item is selected, Test 'get_selected_item' function when a plot is selected (+2 more)
 
-### Community 259 - ".get_tmp_data"
-Cohesion: 0.11
-Nodes (11): DataFrame, Path, Read the given file and returns the contained data., Return temporary data if available, Write a pandas Dataframe as parquet file into the temporary directory, Return None when FileTracker indicates the source file has changed., Return None when no cached parquet file is found., Log and exit when pyarrow raises ArrowInvalid while accessing parquet. (+3 more)
+### Community 259 - "FileTracker"
+Cohesion: 0.06
+Nodes (39): DataHandlerInterface, ABC, DataFrame, Path, Definition of the HandlerInterface, Interface defining methods to read a data file and return the data as…, Read the given file and returns the contained data., Return temporary data if available (+31 more)
 
 ### Community 260 - "Path"
 Cohesion: 0.15
@@ -2066,8 +2073,8 @@ Cohesion: 0.10
 Nodes (19): 1. Safety Engineering Artifacts, 2. System Engineering Artifacts, 3. Hardware Engineering Artifacts, 4. Software Engineering Artifacts, 5. Verification & Validation Artifacts, 6. Management & Supporting Process Artifacts, 7. Lifecycle Continuation Artifacts, For foxBMS Project (as_is improvements) (+11 more)
 
 ### Community 264 - "Corpus Implementation Mapping"
-Cohesion: 0.10
-Nodes (19): Corpus Implementation Mapping, Coverage Summary, `FB2-SW-DSN-000001` (as_is) — Design: AFE Driver Architecture (LTC Family), `FB2-SW-DSN-000001` (synthetic_reference) — Design: AFE Driver Architecture (LTC Family), `FB2-SW-DSN-000002` (as_is) — Design: SOA Voltage Monitoring Module, `FB2-SW-DSN-000002` (synthetic_reference) — Design: SOA Voltage Monitoring Module, `FB2-SW-DSN-000003` (as_is) — Design: Contactor State Machine, `FB2-SW-DSN-000003` (synthetic_reference) — Design: Contactor State Machine (+11 more)
+Cohesion: 0.12
+Nodes (16): Chains (`as_is`, test measures `source_grounded`), Chains (`synthetic_reference`, test measures `synthetic_assumption`, executions `synthetic_fixture`), Corpus Implementation Mapping, Coverage Summary, Evidence limits, `FB2-SW-DSN-000001` (as_is) — Design: AFE Driver Architecture (LTC Family), `FB2-SW-DSN-000001` (synthetic_reference) — Design: AFE Driver Architecture (LTC Family), `FB2-SW-DSN-000002` (as_is) — Design: SOA Voltage Monitoring Module (+8 more)
 
 ### Community 265 - "state-machine.c"
 Cohesion: 0.23
@@ -2149,17 +2156,17 @@ Nodes (18): ADDED Requirements, MODIFIED Requirements, Purpose, REMOVED Requirem
 Cohesion: 0.11
 Nodes (18): ADDED Requirements, Purpose, Requirement: Architecture and design diagrams with viewpoints, Requirement: Deterministic regeneration, Requirement: Document section coverage, Requirement: Implementation mapping presentation, Requirement: Single-file HTML engineering document, Requirement: Traceability linkages with rationale (+10 more)
 
-### Community 285 - "SPS_Ctrl"
-Cohesion: 0.29
-Nodes (19): SPS_STATE_e, SPS_Ctrl(), TEST_SPS_GetSpsState(), TEST_SPS_GlobalRegisterRead(), TEST_SPS_GlobalRegisterWrite(), TEST_SPS_SetSpsState(), testContactorSwitchOnAndOff(), testSPS_CtrlAssertOnIllegalState() (+11 more)
+### Community 285 - "test_can_decode_helper.py"
+Cohesion: 0.13
+Nodes (14): can_decode_setup(), Reads config file and creates the CANDecode object Args: config: Path to the…, Validates the configuration file of the decode subcommand Args: config:…, validate_decode_config(), patch, Tests that invalid 'dbc' configurations are catched., Tests for validate_decode_config method, Tests the validate_decode_config method with a valid config (+6 more)
 
 ### Community 286 - "test_diag_cbs_current.c"
 Cohesion: 0.20
 Nodes (15): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_ErrorCurrentMeasurement(), DIAG_ErrorCurrentOnOpenString(), DIAG_ErrorOvercurrentCharge(), DIAG_ErrorOvercurrentDischarge(), testDIAG_ErrorCurrentMeasurement() (+7 more)
 
-### Community 287 - "test_sys.c"
-Cohesion: 0.16
-Nodes (16): STD_RETURN_TYPE_e, SYS_CheckStateRequest(), SYS_SetStateRequest(), TEST_SYS_CheckStateRequest(), TEST_SYS_RunStateMachine(), SYS_RETURN_TYPE_e, SYS_STATE_REQUEST_e, testSYS_CheckStateRequest() (+8 more)
+### Community 287 - "test_adi_ades1830_gpio_voltages.c"
+Cohesion: 0.19
+Nodes (11): ADI_AUXILIARY_REGISTER_TYPE_e, ADI_AUXILIARY_STORE_LOCATION_e, ADI_GetGpioVoltages(), ADI_SaveRxToGpioVoltageBuffer(), ADI_STATE_s, TEST_ADI_SaveRxToGpioVoltageBuffer(), testADI_GetGpioVoltages(), testADI_SaveRxToGpioVoltageBufferAssertionTest() (+3 more)
 
 ### Community 288 - "test_run_gui.py"
 Cohesion: 0.14
@@ -2210,8 +2217,8 @@ Cohesion: 0.11
 Nodes (17): Chain 1: Cell Voltage Protection (Complete), Chain 2: Temperature Protection (Partial - Parameters Only), Chain 3: Current Protection (Partial - Parameters Only), Chain 4: Precharge/Contactor Control (Complete), Chain 5: Communication/Watchdog Fault Response (Partial), Change Impact Traceability, Change SCN-CHG-001 (Voltage Threshold 4.2V→4.15V), Change SCN-CHG-002 (LTC6811 → ADI ADES1830) (+9 more)
 
 ### Community 300 - "xTCP_UDP_HANDLER"
-Cohesion: 0.10
-Nodes (18): FOnConnected_t, FOnTCPReceive_t, FOnTCPSent_t, FOnUDPReceive_t, FOnUDPSent_t, freertos_sockaddr, sin_address, sin_family (+10 more)
+Cohesion: 0.18
+Nodes (11): FOnConnected_t, FOnTCPReceive_t, FOnTCPSent_t, FOnUDPReceive_t, FOnUDPSent_t, xTCP_UDP_HANDLER, pxOnTCPConnected, pxOnTCPReceive (+3 more)
 
 ### Community 301 - "ADDED Requirements"
 Cohesion: 0.11
@@ -2229,9 +2236,9 @@ Nodes (17): ADDED Requirements, MODIFIED Requirements, Purpose, REMOVED Requirem
 Cohesion: 0.11
 Nodes (17): assumption-registry Specification, Purpose, Requirement: Assumption registry structure, Requirement: Assumption review status tracking, Requirement: Assumption traceability to artifacts, Requirement: Chemistry and thermal assumptions, Requirement: Communication and timing assumptions, Requirement: Hardware independence assumptions (+9 more)
 
-### Community 305 - "test_nxp_mc33775a_alarm.c"
-Cohesion: 0.22
-Nodes (13): N77X_STATE_s, N77x_CheckAlarm(), N77x_ConfigureAlarmCellOvUv(), N77x_ConfigureAlarmFaults(), N77x_HandleAlarm(), N77x_InitializeAlarm(), TEST_N77x_ConfigureAlarmCellOvUv(), TEST_N77x_ConfigureAlarmFaults() (+5 more)
+### Community 305 - "N77x_CommunicationWrite"
+Cohesion: 0.10
+Nodes (25): SPI_INTERFACE_CONFIG_s, N77x_CommunicationWrite(), N77x_ConvertMessageToBuffer(), N77x_WaitForRxCompletedNotification(), N77x_WaitForTxCompletedNotification(), N77X_STATE_s, N77x_CheckAlarm(), N77x_ConfigureAlarmCellOvUv() (+17 more)
 
 ### Community 306 - "FreeRTOS_IPv6_Sockets.c"
 Cohesion: 0.19
@@ -2253,9 +2260,9 @@ Nodes (10): skipUnless, Test 'write_text' function when SimulateBmsFrame is not 
 Cohesion: 0.13
 Nodes (6): Testing file 'tools/waf-tools/vcs_git.py'., TestGetBareTag, TestGetRemote, TestGetRepo, TestGetTag, WarnPatchedTestCase
 
-### Community 311 - "get_prefixes"
-Cohesion: 0.15
-Nodes (10): get_prefixes(), Path, Return sorted ``@prefix`` markers found in C files. Args: project_root:…, Return an empty list if fixed roots do not exist., Ignore unsupported suffixes and files without @prefix marker., Testing file 'cli/cmd_misc/list_prefixes.py'., Test @prefix extraction for misc command., Collect prefixes from C files and return sorted result. (+2 more)
+### Community 311 - "c_misc.py"
+Cohesion: 0.04
+Nodes (47): _check_path_length(), check_repository_depth(), MaxConfigEntry, TypedDict, Check that file paths in the repository do not exceed maximum allowed lengths.…, Enforce repository file path length constraints. This module defines and…, Store the maximum allowed path length, Check if the given file path length exceeds the allowed maximum. Args: file:… (+39 more)
 
 ### Community 312 - "properties"
 Cohesion: 0.12
@@ -2283,7 +2290,7 @@ Nodes (16): 12 Cells LTC-based BMS-Slaves, 14 Cells NXP-based BMS-Slaves, 18 Cel
 
 ### Community 318 - "test_master_info.c"
 Cohesion: 0.15
-Nodes (12): MINFO_DEBUG_PROBE_CONNECTION_STATE_e, resetSource_t, MINFO_GetDebugProbeConnectionState(), MINFO_GetResetSource(), MINFO_SetDebugProbeConnectionState(), MINFO_SetResetSource(), STD_RETURN_TYPE_e, MockDATA_ReadBlock_Callback() (+4 more)
+Nodes (13): MINFO_DEBUG_PROBE_CONNECTION_STATE_e, resetSource_t, MINFO_CheckSupplyVoltageClamp30c(), MINFO_GetDebugProbeConnectionState(), MINFO_GetResetSource(), MINFO_SetDebugProbeConnectionState(), MINFO_SetResetSource(), STD_RETURN_TYPE_e (+5 more)
 
 ### Community 319 - "Decisions"
 Cohesion: 0.12
@@ -2293,9 +2300,13 @@ Nodes (16): 10. 15 separate completion dimensions, 1. Two-profile architecture (
 Cohesion: 0.29
 Nodes (13): SOF_CONFIG_s, SOF_CURRENT_LIMITS_s, SOF_CURVE_s, SOF_CalculateCurves(), SOF_CalculateTemperatureBasedCurrentLimit(), SOF_CalculateVoltageBasedCurrentLimit(), SOF_Calculation(), SOF_Init() (+5 more)
 
-### Community 321 - "can_cbs_tx_f_debug-identify-hardware.c"
-Cohesion: 0.23
-Nodes (13): STD_RETURN_TYPE_e, CANTX_DebugIdentifyHardware(), CANTX_DebugIdentifyHardwareMux(), CANTX_SendMasterIdentification(), CANTX_SendSlaveIdentification(), CANTX_SetSlaveSerialIdMessageData(), TEST_CANTX_DebugIdentifyHardwareMux(), TEST_CANTX_SendMasterIdentification() (+5 more)
+### Community 321 - "can_cfg_tx-async-message-definitions.h"
+Cohesion: 0.07
+Nodes (26): CANTX_FATAL_ERRORS_ACTIONS_e, CANTX_CrashDump(), STD_RETURN_TYPE_e, CANTX_DebugIdentifyHardware(), CANTX_DebugIdentifyHardwareMux(), CANTX_SendMasterIdentification(), CANTX_SendSlaveIdentification(), CANTX_SetSlaveSerialIdMessageData() (+18 more)
+
+### Community 322 - "spi.c"
+Cohesion: 0.07
+Nodes (16): SPI_CHIP_SELECT_TYPE_e, SPI_InitializeSpiInterfaces(), dmaInterrupt_t, uint32, dmaGroupANotification(), SPI_DmaSendLastByte(), SPI_GetChipSelectPin(), SPI_GetHardwareChipSelectPin() (+8 more)
 
 ### Community 323 - "app-hl_notification.c"
 Cohesion: 0.20
@@ -2306,12 +2317,12 @@ Cohesion: 0.16
 Nodes (9): CRC_SemiAutoCrcCalculation(), RTI_ConvertFrcDifferenceToTimespan_us(), RTI_GetFreeRunningCount(), RTI_IsTimeElapsed(), RTI_ResetFreeRunningCount(), testCRC_SemiAutoCrcCalculation(), testRTI_GetFreeRunningCount(), testRTI_IsTimeElapsed() (+1 more)
 
 ### Community 325 - "TestDataConfigFrame"
-Cohesion: 0.12
-Nodes (9): skipUnless, Test 'add_column_cb' function with valid input, Test 'remove_column_cb' function with no column selected, Test 'generate_data_config_cb' function with invalid file path, Test 'generate_data_config_cb' function when no columns have been given, Test of the DataConfigFrame class, Test 'add_column_cb' function if column_name is not valid, Test 'add_column_cb' function if column_type is not valid (+1 more)
+Cohesion: 0.04
+Nodes (42): Column, DataConfigFrame, Notebook, Remove column from List, Open filedialog and print it in Entry widget, Generate data configuration file, Container for a Column, Notebook (+34 more)
 
 ### Community 326 - "TestGetData"
-Cohesion: 0.12
-Nodes (10): patch, Tests the get_data with valid file, Tests the get_data with valid file, Tests the get_data with valid file, Tests the get_data column not matched, Tests the get_data with bad column type, Class to test the get_data method of the CSVHandler class, Creates the needed CSVHandler object for the later tests (+2 more)
+Cohesion: 0.11
+Nodes (11): patch, Tests the get_data with valid file, Tests the get_data with valid file, Tests the get_data with valid file, Tests the get_data column not matched, Tests the get_data with bad column type, Testing file 'cli/cmd_plot/data_handling/csv_handler.py'., Class to test the get_data method of the CSVHandler class (+3 more)
 
 ### Community 327 - "app/driver/can/test_can_can_message_notification.c"
 Cohesion: 0.20
@@ -2325,9 +2336,9 @@ Nodes (11): ADC_STATE_e, DATA_BLOCK_ADC_VOLTAGE_s, ADC_Control(), ADC_ConvertVol
 Cohesion: 0.14
 Nodes (8): Print feedback to the user about test file presence. Args: err: The number of…, Run all checks for Python test files. Args: verbose: Verbosity level. Returns:…, Check for missing test files for each Python source. Args: verbose: Verbosity…, Run all checks for C test files. Args: verbose: Verbosity level. Returns: The…, Check for missing test files for each C source. Args: verbose: Verbosity level.…, Run all checks for wscript test files. Args: verbose: Verbosity level. Returns:…, Check for missing tests/unit wscript files for each src wscript. Args: verbose:…, No style checks for wscript pairing checks. Args: verbose: Verbosity level.…
 
-### Community 330 - "create_doc_sources"
-Cohesion: 0.13
-Nodes (16): Config, create_doc_sources(), create_version_info(), gen_fox_bootloader_help(), gen_fox_com_can_help(), gen_fox_misc_help(), gen_fox_release_help(), Create the version macro replacement. (+8 more)
+### Community 330 - "BootloaderFrame"
+Cohesion: 0.14
+Nodes (11): BootloaderFrame, Entry, Event, Notebook, Path, Text, Open filedialog and print it in TextBox, Select the corresponding channel to the interface if possible (+3 more)
 
 ### Community 331 - "wscript"
 Cohesion: 0.15
@@ -2339,11 +2350,11 @@ Nodes (16): ASM, CFG, CHG, FND, HW, MAN, PRM, REV (+8 more)
 
 ### Community 333 - "Verification Evidence Report"
 Cohesion: 0.12
-Nodes (15): By Feature (as_is, real repository unit tests), By Requirement (synthetic_reference), Coverage Analysis, Evidence Classification Framework, Execution Records, Hardware-in-the-Loop (HIL) Disposition, Hardware TSRs, Oracle Basis Analysis (+7 more)
+Nodes (16): By Requirement (synthetic_reference), Coverage Analysis, Evidence Classification Framework, Execution Records, Hardware-in-the-Loop (HIL) Disposition, Hardware TSRs, Oracle Basis Analysis, Overview (+8 more)
 
 ### Community 334 - "log_err"
-Cohesion: 0.12
-Nodes (16): document_can_messages(), log_err(), main(), Print an erorr message to stderr, Validate that the DBC file and the source code are aligned with respect to the…, Remove the autodoc created summary to force a rebuild., Validate the documented Python version., Validate the platform/terminal specific wrapper invocation. (+8 more)
+Cohesion: 0.09
+Nodes (21): AppModule, document_can_messages(), log_err(), main(), Print an erorr message to stderr, Validate that the DBC file and the source code are aligned with respect to the…, Remove the autodoc created summary to force a rebuild., Validate the documented Python version. (+13 more)
 
 ### Community 335 - "hatch_build.py"
 Cohesion: 0.16
@@ -2385,17 +2396,17 @@ Nodes (8): Test 'write_text' function when BuildFrame is not selected, Test 'gen
 Cohesion: 0.12
 Nodes (8): Test of the BuildFrame class, Test 'check_thread' function when the Thread is still alive, Test 'check_thread' function when the Thread is not alive and the build was…, Test 'check_thread' function when the Thread is not alive and the build was not…, Test 'check_thread' function when generating the command list, Test 'run_command_cb' function, Test 'select_command_cb' function, TestBuildFrameNoUiTestableMethods
 
-### Community 345 - "test_setup.py"
-Cohesion: 0.12
-Nodes (10): Tests for read_json(). One TestCase per function., Should read JSON from a regular filesystem Path., Should read JSON from a zipfile.Path., Should call recho and sys.exit(1) when file is missing., Testing file 'cli/db/setup.py'., Tests for creates_models(). One TestCase per function., Test CurrentLimitModel instantiation Test details: 'current limits' and pass…, Should raise ValueError for an unknown model name. (+2 more)
+### Community 345 - "TestReadJson"
+Cohesion: 0.25
+Nodes (5): Tests for read_json(). One TestCase per function., Should read JSON from a regular filesystem Path., Should read JSON from a zipfile.Path., Should call recho and sys.exit(1) when file is missing., TestReadJson
 
-### Community 346 - "test_misc.py"
-Cohesion: 0.14
-Nodes (10): Testing file 'cli/helpers/__init__.py'., Testing file 'cli/helpers/host_platform.py'., Testing file 'cli/helpers/misc.py'., dummy_func(), Testing file 'cli/helpers/package_helpers.py'., Dummy function for testing, Test of 'check_project' function, Test function is executed when in the project (+2 more)
+### Community 346 - "test_package_helpers.py"
+Cohesion: 0.24
+Nodes (7): dummy_func(), Testing file 'cli/helpers/package_helpers.py'., Dummy function for testing, Test of 'check_project' function, Test function is executed when in the project, Test function is executed when in the package, TestCheckProject
 
-### Community 347 - "test_debug_default.c"
-Cohesion: 0.13
-Nodes (13): FAKE_STATE_s, TEST_assertEqualFakeState(), testFAKE_Initialize(), testFAKE_IsFirstMeasurementCycleFinished(), testFAKE_ProcessInitializationState(), testFAKE_ProcessRunningState(), testFAKE_RunStateMachine(), testFAKE_SaveFakeTemperatureMeasurementData() (+5 more)
+### Community 347 - "main"
+Cohesion: 0.18
+Nodes (10): TEST_BOOT_CleanUpRam(), TEST_BOOT_JumpInToLastFlashedProgram(), TEST_CRC_CalculateCrc64(), TEST_CRC_SemiAutoCrcCalculation(), TEST_FLASH_EraseFlashForApp(), TEST_FLASH_FlashProgramCheck(), TEST_FLASH_GetFlashSector(), TEST_FLASH_PrepareFlashBank() (+2 more)
 
 ### Community 348 - ".get_data"
 Cohesion: 0.16
@@ -2413,9 +2424,9 @@ Nodes (15): type, type, properties, date_format, end, start, start_date, time_fa
 Cohesion: 0.21
 Nodes (15): type, items, type, items, type, type, type, factor (+7 more)
 
-### Community 352 - "misc"
-Cohesion: 0.19
-Nodes (15): cmd_check_repository_depth(), cmd_uncrustify_freertos(), cmd_verify_checksum(), misc(), argument, command, Context, group (+7 more)
+### Community 352 - "BAL_Init"
+Cohesion: 0.13
+Nodes (5): BAL_Init(), DATA_BLOCK_BALANCING_CONTROL_s, STD_RETURN_TYPE_e, testCheckBalancingInitByDisablingBalancing(), testCheckBalancingInitByDisablingBalancing()
 
 ### Community 353 - "TestForTabs"
 Cohesion: 0.13
@@ -2438,11 +2449,11 @@ Cohesion: 0.13
 Nodes (15): GetPhyLinkStatusFunction_t, NetworkInterfaceInitialiseFunction_t, NetworkInterfaceMACFilterFunction_t, NetworkInterfaceOutputFunction_t, xNetworkInterface, bits, pcName, pfAddAllowedMAC (+7 more)
 
 ### Community 358 - "adi_ades183x_afe.c"
-Cohesion: 0.20
-Nodes (14): ADI_ActivateInterfaceBoard(), ADI_IdentifyAfes(), AFE_IdentifyAfes(), AFE_Initialize(), AFE_RequestBalancingFeedbackRead(), AFE_RequestEepromRead(), AFE_RequestEepromWrite(), AFE_RequestOpenWireCheck() (+6 more)
+Cohesion: 0.22
+Nodes (13): ADI_IdentifyAfes(), AFE_IdentifyAfes(), AFE_Initialize(), AFE_IsFirstMeasurementCycleFinished(), AFE_RequestBalancingFeedbackRead(), AFE_RequestEepromRead(), AFE_RequestEepromWrite(), AFE_RequestOpenWireCheck() (+5 more)
 
 ### Community 359 - "ADI_GetTemperatures"
-Cohesion: 0.17
+Cohesion: 0.16
 Nodes (8): ADI_GetMappedGpioIndex(), ADI_GetTemperatures(), ADI_STATE_s, TEST_ADI_GetMappedGpioIndex(), testADI_GetMappedGpioIndex(), testADI_GetTemperatures(), testADI_GetMappedGpioIndex(), testADI_GetTemperatures()
 
 ### Community 360 - "test_diag_cbs_temperature.c"
@@ -2457,9 +2468,9 @@ Nodes (3): spiBASE_t, spiEndNotification(), testspiEndNotification()
 Cohesion: 0.13
 Nodes (14): CBMC, Consume with CMake, Consuming stand-alone, FreeRTOS-Plus-TCP Library, Generating pre V3.0.0 folder structure for backward compatibility:, Getting help, Getting started, Kernel sources (+6 more)
 
-### Community 363 - "TestUnittestImpl"
-Cohesion: 0.18
-Nodes (9): patch, Test commands with coverage, Test command without coverage, Test command without coverage, Test commands with coverage, Test Unittest implementation script, Check unittest module runs with args, Test commands with coverage (+1 more)
+### Community 363 - "waf"
+Cohesion: 0.14
+Nodes (12): Path, Execute ``waf`` with the provided argument list. Args: args: Command-line…, run_waf(), Implements the functionalities behind the 'waf' command, argument, command, Context, option (+4 more)
 
 ### Community 364 - "Path"
 Cohesion: 0.13
@@ -2506,16 +2517,16 @@ Cohesion: 0.14
 Nodes (13): governance Specification, Purpose, Requirement: Corpus policy enforcement, Requirement: Coverage planning with process inventory, Requirement: Role and review policy, Requirement: Scope and applicability definition, Requirement: Standards baseline locking, Requirements (+5 more)
 
 ### Community 375 - "test_state_estimation.c"
-Cohesion: 0.21
-Nodes (9): SE_InitializeSoc(), SE_InitializeSoe(), SE_InitializeSoh(), SE_RunStateEstimations(), testInvalidInput(), testSE_InitializeSoc(), testSE_InitializeSoe(), testSE_InitializeSoh() (+1 more)
+Cohesion: 0.19
+Nodes (10): SE_InitializeSoc(), SE_InitializeSoe(), SE_InitializeSoh(), SE_RunStateEstimations(), FTSK_RunUserCodeCyclic100ms(), testInvalidInput(), testSE_InitializeSoc(), testSE_InitializeSoe() (+2 more)
 
 ### Community 376 - "test_can_cbs_tx_f_pack-values-p1.c"
 Cohesion: 0.25
 Nodes (10): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANTX_GetInsulationResistance(), CANTX_PackValuesP1(), CANTX_SetInsulationResistance(), TEST_CANTX_GetInsulationResistance(), TEST_CANTX_SetInsulationResistance(), testCANTX_GetInsulationResistance() (+2 more)
 
-### Community 377 - "test_can_cbs_tx_f_string-values-p1.c"
-Cohesion: 0.23
-Nodes (10): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, CANTX_SetStringEnergyCounter(), CANTX_SetStringP1Mux(), CANTX_StringValuesP1(), TEST_CANTX_SetStringEnergyCounter(), TEST_CANTX_SetStringP1Mux(), test_CANTX_StringValuesP1() (+2 more)
+### Community 377 - "get_cantools_database"
+Cohesion: 0.18
+Nodes (10): get_cantools_database(), Database, Path, Loads cantools database and returns it Args: dbc_path: Path to the dbc file…, Test exits on invalid dbc file., Tests the get_cantools_database with a valid .dbc file and returns a cantools…, Tests the get_cantools_database with an invalid .dbc file, Tests the get_cantools_database with a non-existing .dbc file (+2 more)
 
 ### Community 378 - "test_diag_cbs_contactor.c"
 Cohesion: 0.23
@@ -2525,9 +2536,9 @@ Nodes (10): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_PrechargeContact
 Cohesion: 0.14
 Nodes (8): Testing file 'cli/cmd_gui/frame_sim/__init__.py'., Testing file 'cli/cmd_gui/frame_sim/sim_bms_impl.py'., Testing file 'cli/cmd_gui/frame_sim/sim_unit_impl.py'., Test 'sim_unit' function, Starting communication raises OSError, Reading from communication raises RuntimeError, Read messages from communication while alive, TestSimUnit
 
-### Community 380 - "TestReadConfig"
-Cohesion: 0.14
-Nodes (8): Testing file 'cli/helpers/config.py'., Unit tests for the read_config function., Set up a temporary directory and create a valid YAML file for testing., Clean up the temporary directory after tests., Test that read_config correctly reads a valid YAML file and returns its…, Test that read_config raises FileNotFoundError if the file does not exist., Test that read_config raises yaml.YAMLError if the YAML file content is invalid., TestReadConfig
+### Community 380 - "c_gui.py"
+Cohesion: 0.15
+Nodes (11): gui_main(), run_gui(), Wrapper to run the GUI, Implements the functionalities behind the 'gui' command, gui(), command, Context, option (+3 more)
 
 ### Community 381 - "TestCheckerReadErrorHandling"
 Cohesion: 0.14
@@ -2614,12 +2625,12 @@ Cohesion: 0.15
 Nodes (7): patch, Test 'check_thread' function when the Thread is still alive, Test 'check_thread' function when the Thread is not alive and there is no…, Test 'check_thread' function when the Thread is not alive and the build was…, Test 'check_thread' function when the Thread is not alive and the build was not…, Test 'check_thread' function when generating the command list, Test 'run_command_cb' function
 
 ### Community 402 - "TestFoxCliMainCommandCliUnittest"
-Cohesion: 0.17
-Nodes (8): patch, Test of the 'cli-unittest' commands and options., Test 'fox.py cli-unittest --coverage-report' command., Test 'fox.py cli-unittest -s --coverage-report' command., Test 'fox.py cli-unittest' command., Test 'fox.py cli-unittest discover -s tests/cli' command, i.e. arbitrary…, Test 'fox.py cli-unittest' command., TestFoxCliMainCommandCliUnittest
+Cohesion: 0.14
+Nodes (9): patch, Testing file 'cli/commands/c_cli_unittest.py'., Test of the 'cli-unittest' commands and options., Test 'fox.py cli-unittest --coverage-report' command., Test 'fox.py cli-unittest -s --coverage-report' command., Test 'fox.py cli-unittest' command., Test 'fox.py cli-unittest discover -s tests/cli' command, i.e. arbitrary…, Test 'fox.py cli-unittest' command. (+1 more)
 
 ### Community 403 - "test_python_setup.py"
-Cohesion: 0.15
-Nodes (8): Test env creation command, Test packages installation (i.e., dependencies), Test fox_cli package installation, Testing file 'cli/helpers/python_setup.py'., Test main, 'no' choice, TestCreateEnv, TestInstallFoxCliPackage, TestInstallPackages
+Cohesion: 0.11
+Nodes (12): Test env creation command, Test packages installation (i.e., dependencies), Test fox_cli package installation, Testing file 'cli/helpers/python_setup.py'., Test main, 'no' choice, Test fox_cli package installation process, Test main, 'no' choice, Test main, 'no' choice (+4 more)
 
 ### Community 404 - "TestIncludeGuard"
 Cohesion: 0.15
@@ -2630,24 +2641,24 @@ Cohesion: 0.19
 Nodes (8): patch, Tests the 'CustomBuildHook' class, Tests the function 'initialize, Tests the function 'finalize' when the version file exists, Tests the function 'finalize' when the version file exists, Tests the 'get_version' function, TestCustomBuildHook, TestGetVersion
 
 ### Community 406 - "test_redundancy.c"
-Cohesion: 0.17
-Nodes (10): injectDatabaseEntries(), testMRC_AfeMeasurementValidationTickZeroNothingToDo(), testMRC_CalculateCellVoltageMinMaxAverageNullPointer(), testMRC_MeasurementUpdatedAtLeastOnce(), testMRC_MeasurementUpdatedRecently(), testMRC_UpdateCellTemperatureValidationNullPointer(), testMRC_UpdateCellVoltageValidationNullPointer(), testMRC_ValidateCellTemperatureNullPointer() (+2 more)
+Cohesion: 0.14
+Nodes (12): MRC_MeasurementUpdatedAtLeastOnce(), TEST_MRC_MeasurementUpdatedAtLeastOnce(), injectDatabaseEntries(), testMRC_AfeMeasurementValidationTickZeroNothingToDo(), testMRC_CalculateCellTemperatureMinMaxAverageNullPointer(), testMRC_CalculateCellVoltageMinMaxAverageNullPointer(), testMRC_MeasurementUpdatedAtLeastOnce(), testMRC_UpdateCellTemperatureValidationNullPointer() (+4 more)
 
 ### Community 411 - "bootloader/driver/config/test_can_cfg.c"
 Cohesion: 0.21
 Nodes (7): CAN_DATA_TRANSFER_INFO_s, CAN_CopyCanDataTransferInfo(), CAN_ResetCanCommunication(), CAN_ResetVectorTableRelevantVariables(), testCAN_CopyCanDataTransferInfo(), testCAN_ResetCanCommunication(), testCAN_ResetVectorTableRelevantVariables()
 
-### Community 412 - ".test_generate_data_config_cb"
-Cohesion: 0.17
-Nodes (7): Open filedialog and print it in Entry widget, patch, Path, Test 'open_file_cb' function, Test 'generate_data_config_cb' function with valid input, Test 'open_file_cb' function, Test 'generate_data_config_cb' function with valid input
+### Community 412 - "3. Direction-by-Direction Link Map"
+Cohesion: 0.14
+Nodes (13): 1. Purpose, 2. Cross-Domain Chain (synthetic_reference), 3.1 System → Software (downstream allocation), 3.2 Software → System (upstream refinement of implementation), 3.3 System → Hardware (downstream allocation), 3.4 Hardware → System (upstream verification closure), 3.5 System closure loop (system → system), 3. Direction-by-Direction Link Map (+5 more)
 
 ### Community 413 - "run_program"
-Cohesion: 0.17
-Nodes (12): Any, IO, Path, Execute an external program with the provided command-line arguments. Args:…, run_program(), argument, command, Context (+4 more)
+Cohesion: 0.12
+Nodes (14): Implements the functionalities behind the 'run-program' command., Any, IO, Path, Execute an external program with the provided command-line arguments. Args:…, run_program(), argument, command (+6 more)
 
 ### Community 414 - "run_script"
-Cohesion: 0.17
-Nodes (12): Any, IO, Path, Run a Python script with the active interpreter. Args: python_args: Script path…, run_python_script(), argument, command, Context (+4 more)
+Cohesion: 0.12
+Nodes (14): Implements the functionalities behind the 'run-script' command., Any, IO, Path, Run a Python script with the active interpreter. Args: python_args: Script path…, run_python_script(), argument, command (+6 more)
 
 ### Community 415 - "tests/cli/pre_commit_scripts/__init__.py"
 Cohesion: 0.17
@@ -2674,12 +2685,12 @@ Cohesion: 0.17
 Nodes (11): BMS State Machine (application core), Context Viewpoint, Dynamic Viewpoint, foxBMS 2 — System Architecture Specification, Functional Block Viewpoint, Profile: `as_is` — Traceability Viewpoint, Profile: `synthetic_reference` — Traceability Viewpoint, Protection Chain Sequence (cell voltage) (+3 more)
 
 ### Community 421 - "Detailed Design: `FB2-SW-DSN-000001` (as_is)"
-Cohesion: 0.17
-Nodes (11): Budgets, Constraints, Decomposition, Detailed Design: `FB2-SW-DSN-000001` (as_is), Dynamic Diagram, Failure Response, foxBMS 2 — Detailed Design Specification, Implementation Requirements (extracted) (+3 more)
+Cohesion: 0.22
+Nodes (9): Budgets, Constraints, Decomposition, Detailed Design: `FB2-SW-DSN-000001` (as_is), Dynamic Diagram, Failure Response, Implementation Requirements (extracted), Interfaces (+1 more)
 
-### Community 422 - "conf.py"
-Cohesion: 0.17
-Nodes (11): gen_fox_build_help(), gen_fox_etl_filter_help(), gen_fox_modbus_device_help(), gen_generic_help(), Create build usage file., Sphinx configuration file for the documentation, Create etl filter usage file., Create 'fox.py' and package usage files. (+3 more)
+### Community 422 - "soc_counting.c"
+Cohesion: 0.42
+Nodes (12): DATA_BLOCK_SOC_s, float_t, SE_CalculateStateOfCharge(), SE_GetStateOfChargeFromVoltage(), SE_InitializeStateOfCharge(), SOC_CheckDatabaseSocPercentageLimits(), SOC_GetStringSocPercentageFromCharge(), SOC_RecalibrateViaLookupTable() (+4 more)
 
 ### Community 423 - "soe_counting.c"
 Cohesion: 0.44
@@ -2713,16 +2724,12 @@ Nodes (7): BETA_GetTemperatureFromBeta(), BETA_ResistanceFromTemperature(), BETA
 Cohesion: 0.17
 Nodes (12): xNBNSRequest, ucName, ucNameSpace, ucNameZero, ulRequestCount, usAdditionalRSS, usAnswerRSS, usAuthRSS (+4 more)
 
-### Community 432 - "TestValidateConverterConfig"
-Cohesion: 0.17
-Nodes (7): Validation should pass when input/output formats are Enum members., Exit when input_format is not a supported Enum member., Exit when output_format is not a supported Enum member., Exit and log an error when a required configuration key is missing., Skip-footer type check is not applied when input_format is an Enum member., Tests for validate_converter_config., TestValidateConverterConfig
-
 ### Community 433 - "TestFoxGuiCloseWindow"
 Cohesion: 0.17
 Nodes (6): Test of the 'close_window' function, Test 'close_window' function when file_stream and file exist, Test 'close_window' function when only file_stream exists, Test 'close_window' function when only file exists, Test 'close_window' function when sim_active is True, TestFoxGuiCloseWindow
 
 ### Community 434 - "test_can_bootloader-version-info.c"
-Cohesion: 0.17
+Cohesion: 0.14
 Nodes (3): testCANTX_TransmitBootloaderVersionInfo(), testCANTX_VersionInfo(), testCANTX_VersionInfoSendMessage()
 
 ### Community 435 - ".agents/skills/openspec-explore/SKILL.md"
@@ -2741,17 +2748,17 @@ Nodes (10): Check for context, Ending Discovery, Guardrails, Handling Different 
 Cohesion: 0.20
 Nodes (7): initialize_logger(), SizedRotatingLogger, Creates a SizedRotatingLogger object., Test initialize_logger method, Creating SizedRotatingLogger object failed., SizedRotatingLogger object successfully created., TestInitializeLogger
 
-### Community 439 - "TestBootloaderSendAndValidateVectorTable"
-Cohesion: 0.25
-Nodes (4): Send vector table to the bootloader Returns: True if vector table has been…, Test 'send_and_validate_vector_table' method of the 'Bootloader' class., Function to test function send_and_validate_vector_table()., TestBootloaderSendAndValidateVectorTable
+### Community 439 - "patch"
+Cohesion: 0.15
+Nodes (7): patch, Tests the do_fram method, when the CAN bus is initialized., Tests the do_boottimestamp method, when the CAN bus is initialized., Tests the do_buildconfig method, when the CAN bus is initialized., Tests the do_commithash method, when the CAN bus is initialized., Tests the do_mcuwaferinfo method, when the CAN bus is initialized., Tests the do_softwareversion method, when the CAN bus is initialized.
 
 ### Community 440 - "OutputFormats"
-Cohesion: 0.20
-Nodes (9): OutputFormats, Enum, Implements the ETL functionalities, Definition of all supported output formats, TimestampScalar, TypedDict, Unpack, Typing checking helper (+1 more)
+Cohesion: 0.15
+Nodes (13): OutputFormats, Enum, Implements the ETL functionalities, Definition of all supported output formats, TimestampScalar, TypedDict, Unpack, Combine decoded CAN messages to a table (+5 more)
 
-### Community 441 - "TestDataConfigFrameNoUiTestableMethods"
-Cohesion: 0.22
-Nodes (5): Test of the DataConfigFrame class, Test 'add_column_cb' function if column_name is not valid, Test 'add_column_cb' function if column_type is not valid, Test 'add_column_cb' function with valid input, TestDataConfigFrameNoUiTestableMethods
+### Community 441 - "foxbms_version.py"
+Cohesion: 0.20
+Nodes (8): extract_version(), get_version(), Pattern, Utilities for retrieving and formatting the foxBMS version string., Extract a version string from text using the supplied regex pattern., Read the foxBMS version from the build file., Defines foxBMS application data and cache directory paths. This module uses the…, Testing file 'cli/pre_commit_scripts/check_doxygen.py'.
 
 ### Community 442 - "foxBMS 2 Lifecycle Artifact Corpus — Execution Plan"
 Cohesion: 0.18
@@ -2782,8 +2789,8 @@ Cohesion: 0.18
 Nodes (10): Check for context, Ending Discovery, Guardrails, Handling Different Entry Points, OpenSpec Awareness, The Stance, What You Don't Have To Do, What You Might Do (+2 more)
 
 ### Community 449 - "port.c"
-Cohesion: 0.22
-Nodes (10): __interrupt, BaseType_t, StackType_t, xMPU_SETTINGS, prvGetMPURegionSizeSetting(), prvSetupTimerInterrupt(), vPortEndScheduler(), vPortNonPreemptiveTick() (+2 more)
+Cohesion: 0.20
+Nodes (11): __interrupt, BaseType_t, StackType_t, xMPU_SETTINGS, prvGetMPURegionSizeSetting(), prvSetupTimerInterrupt(), vPortEndScheduler(), vPortNonPreemptiveTick() (+3 more)
 
 ### Community 450 - ".junie/skills/openspec-explore/SKILL.md"
 Cohesion: 0.18
@@ -2797,21 +2804,21 @@ Nodes (10): Check for context, Ending Discovery, Guardrails, Handling Different 
 Cohesion: 0.18
 Nodes (10): Check for context, Ending Discovery, Guardrails, Handling Different Entry Points, OpenSpec Awareness, The Stance, What You Don't Have To Do, What You Might Do (+2 more)
 
-### Community 453 - "test_can_2.c"
-Cohesion: 0.22
-Nodes (8): CAN_ValidateConfiguredTxMessagePeriod(), TEST_CAN_ValidateConfiguredTxMessagePeriod(), CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, TEST_CANRX_DummyCallback(), TEST_CANTX_DummyCallback(), testCAN_ValidateConfiguredTxMessagePeriod(), testCAN_ValidateConfiguredTxMessagePeriod()
+### Community 453 - "debug_can_afe.c"
+Cohesion: 0.27
+Nodes (9): AFE_Initialize(), AFE_RequestBalancingFeedbackRead(), AFE_RequestEepromRead(), AFE_RequestEepromWrite(), AFE_RequestOpenWireCheck(), AFE_RequestTemperatureRead(), AFE_StartMeasurement(), AFE_TriggerIc() (+1 more)
 
-### Community 454 - "test_semitec_103jt.c"
-Cohesion: 0.20
-Nodes (5): TSI_GetTemperature(), TS_Sem00GetTemperatureFromLut(), TS_Sem00GetTemperatureFromPolynomial(), testTS_Sem00GetTemperatureFromLutFixedValues(), testTS_Sem00GetTemperatureFromPolynomialFixedValues()
+### Community 454 - "test_diag_cbs_bms.c"
+Cohesion: 0.24
+Nodes (8): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_AlertFlag(), DIAG_PrechargeProcess(), testDIAG_AlertFlag(), testDIAG_AlertFlagInvalidInput(), testDIAG_PrechargeProcess()
 
 ### Community 455 - "test_tdk_ntcg163jx103dt1s.c"
 Cohesion: 0.20
 Nodes (5): TSI_GetTemperature(), TS_Tdk01GetTemperatureFromLut(), TS_Tdk01GetTemperatureFromPolynomial(), testTS_Sem00GetTemperatureFromPolynomialFixedValues(), testTS_Tdk00GetTemperatureFromLutFixedValues()
 
-### Community 456 - "test_tdk_ntcgs103jf103ft8.c"
-Cohesion: 0.20
-Nodes (5): TSI_GetTemperature(), TS_Tdk00GetTemperatureFromLut(), TS_Tdk00GetTemperatureFromPolynomial(), testTS_Sem00GetTemperatureFromPolynomialFixedValues(), testTS_Tdk00GetTemperatureFromLutFixedValues()
+### Community 456 - "temperature_sensor_defs.h"
+Cohesion: 0.09
+Nodes (10): TSI_GetTemperature(), TS_Tdk00GetTemperatureFromLut(), TS_Tdk00GetTemperatureFromPolynomial(), TSI_GetTemperature(), TS_Vis01GetTemperatureFromLut(), TS_Vis01GetTemperatureFromPolynomial(), testTS_Sem00GetTemperatureFromPolynomialFixedValues(), testTS_Tdk00GetTemperatureFromLutFixedValues() (+2 more)
 
 ### Community 457 - "test_vishay_ntcle413e2103f102l.c"
 Cohesion: 0.20
@@ -2825,9 +2832,9 @@ Nodes (7): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_FramError(), test
 Cohesion: 0.22
 Nodes (7): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_I2c(), testDIAG_I2cPexInvalidInput(), testDiagI2cPex(), testDiagI2cRtc()
 
-### Community 460 - "test_diag_cbs_insulation.c"
-Cohesion: 0.20
-Nodes (6): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_Insulation(), testDIAG_ErrorInsulationInvalidInput(), testDIAG_Insulation()
+### Community 460 - "TestAllSoftwareAvailable"
+Cohesion: 0.18
+Nodes (7): skipIf, Test function with only Python as required software, Test function with only Python as required software, Test invalid expected required software definition, Test of the function 'all_software_available, Test function with some unavailable software, TestAllSoftwareAvailable
 
 ### Community 461 - "DIAG_Rtc"
 Cohesion: 0.22
@@ -2845,9 +2852,9 @@ Nodes (7): Testing file 'cli/cmd_gui/frame_build/__init__.py'., get_birthtime(),
 Cohesion: 0.20
 Nodes (7): patch, Check that check_repository_depth returns correct error count for long paths., Test path length and repository depth checking functions., Verify that _check_path_length returns 0 when path is within limit., Verify that _check_path_length returns 1 and writes an error when path exceeds…, Ensure that check_repository_depth returns 0 when all paths are within limits., TestPathChecker
 
-### Community 465 - "patch"
-Cohesion: 0.20
-Nodes (7): patch, Test ROOT_IS_PROJECT is False, Test of 'initialize_path_variable_for_foxbms' function., Check path initialization when path does not exist., Check path initialization when path exists and is a directory., Check setting variables., TestInitializePathVariable
+### Community 465 - "run_decode2stdout"
+Cohesion: 0.22
+Nodes (7): Executes the can decode step Args: decode_obj: Object which handles the decoding, run_decode2stdout(), Tests for run_decode2stdout method, Tests the run_decode2stdout method with a valid txt as input, Tests the run_decode2stdout method with multiple incoming messages, Tests the run_decode2stdout method with an empty message, TestRunDecode2Stdout
 
 ### Community 466 - "TestGetProjectRoot"
 Cohesion: 0.18
@@ -2881,9 +2888,9 @@ Nodes (5): Send program info to bootloader and check its states. Args:…, Infor
 Cohesion: 0.20
 Nodes (5): Generate plot configuration file, Test 'generate_plot_config_cb' function when there are no plots, Test 'generate_plot_config_cb' function when there are no lines, Test 'generate_plot_config_cb' function when the file path is not valid, Test 'generate_plot_config_cb' function
 
-### Community 474 - "._handle_pyplot_warnings"
-Cohesion: 0.24
-Nodes (6): This method should handle all warning coming from pyplot, Class to test the handle_pyplot_warnings method of the Executor class, Tests the handle_pyplot_warnings method in case the warning_handle parameter is…, Tests the handle_pyplot_warnings method with known warning, Tests the handle_pyplot_warnings method with unknown warning, TestHandlePyplotWarnings
+### Community 474 - "._data_format"
+Cohesion: 0.18
+Nodes (6): Signal, Handles the decoding of the CAN message without exception handling Args: msg:…, Returns the decoded CAN data as comma separated string compatible to json…, Method to the decoded passed CAN messages. Args: msg: CAN message as string…, Tests the data_format method of the CANDecode class with units, Tests the data_format method of the CANDecode class without units
 
 ### Community 475 - "cmd_show"
 Cohesion: 0.29
@@ -2922,19 +2929,19 @@ Cohesion: 0.20
 Nodes (9): Check for context, Ending Discovery, Guardrails, OpenSpec Awareness, The Stance, What You Don't Have To Do, What You Might Do, When a change exists (+1 more)
 
 ### Community 484 - "adi_ades183x_diagnostic_w.c"
-Cohesion: 0.40
-Nodes (9): ADI_Diagnostic(), ADI_EvaluateDiagnosticCellVoltages(), ADI_EvaluateDiagnosticStringAndModuleVoltages(), ADI_InitializeDiagnosis(), ADI_IsFirstDiagnosticCycleFinished(), ADI_SetFirstDiagnosticCycleFinished(), ADI_STATE_s, TEST_ADI_IsFirstDiagnosticCycleFinished() (+1 more)
+Cohesion: 0.36
+Nodes (10): ADI_Diagnostic(), ADI_EvaluateDiagnosticCellVoltages(), ADI_EvaluateDiagnosticGpioVoltages(), ADI_EvaluateDiagnosticStringAndModuleVoltages(), ADI_InitializeDiagnosis(), ADI_IsFirstDiagnosticCycleFinished(), ADI_SetFirstDiagnosticCycleFinished(), ADI_STATE_s (+2 more)
 
-### Community 485 - "test_adi_ades1830_pec.c"
-Cohesion: 0.22
-Nodes (5): ADI_Pec10(), testAdiPec10(), testAdiPec10Asserts(), testAdiPec15(), testAdiPec15Asserts()
+### Community 485 - "test_cli.py"
+Cohesion: 0.20
+Nodes (5): Entry point for running the CLI package as a module., Testing file 'cli/__init__.py'., Testing file 'cli/cli.py'., Testing file 'cli/__main__.py'., TestMain
 
-### Community 486 - "SPS_GetChannelCurrentFeedback"
-Cohesion: 0.22
-Nodes (10): CONT_CheckFeedback(), CONT_GetFeedbackOfAllContactors(), CONT_ELECTRICAL_STATE_TYPE_e, SPS_GetChannelCurrentFeedback(), SPS_GetChannelPexFeedback(), testCONT_CheckFeedback(), testSPS_GetChannelFeedbackChannelHigh(), testSPS_GetChannelFeedbackChannelLow() (+2 more)
+### Community 486 - "OS_InitializeScheduler"
+Cohesion: 0.20
+Nodes (4): OS_InitializeScheduler(), testOS_InitializeScheduler(), testOS_InitializeScheduler(), testOS_InitializeScheduler()
 
 ### Community 487 - "app/driver/foxmath/test_utils.c"
-Cohesion: 0.24
+Cohesion: 0.22
 Nodes (5): UTIL_GetPseudoRandomNumber(), UTIL_GetSeed(), UTIL_SeedRandomNumber(), testUTIL_GetPseudoRandomNumber(), testUTIL_SeedRandomNumber()
 
 ### Community 488 - "DIAG_ErrorDeepDischarge"
@@ -2945,13 +2952,13 @@ Nodes (6): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_ErrorDeepDischarg
 Cohesion: 0.22
 Nodes (6): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_ErrorInterlock(), testDIAG_ErrorInterlockInvalidInput(), testDiagInterlock()
 
-### Community 490 - "DIAG_Sbc"
-Cohesion: 0.22
-Nodes (6): DIAG_DATABASE_SHIM_s, DIAG_EVENT_e, DIAG_ID_e, DIAG_Sbc(), testDIAG_Sbc(), testDIAG_SbcInvalidInput()
+### Community 490 - "cmd_update_version"
+Cohesion: 0.25
+Nodes (9): cmd_update_version(), command, Context, group, option, pass_context, Run the release command entry point., Update version information in release-managed project files (+1 more)
 
-### Community 491 - "TestRunWaf"
-Cohesion: 0.27
-Nodes (6): patch, Test the 'waf' wrapper., Test the 'run_waf' function., Test the 'run_waf' function., Test the 'run_waf' function on Linux., TestRunWaf
+### Community 491 - "calc_crc64_user"
+Cohesion: 0.28
+Nodes (4): calc_crc64_user(), crc64_update_word(), testcalc_crc64_user(), uint64
 
 ### Community 492 - "test_gui_impl.py"
 Cohesion: 0.27
@@ -2969,9 +2976,9 @@ Nodes (5): Test of the FoxGui class on Windows, Test when ROOT_IS_PROJECT is Tru
 Cohesion: 0.20
 Nodes (6): Log OSError errors and exit with SystemExit., Tests for the get_data method of PARQUETHandler., Create shared fixtures., Read from disk when no cached data is available and write tmp file., Log ArrowInvalid errors and exit with SystemExit., TestPARQUETHandlerGetData
 
-### Community 496 - "TestCreatePreCommitFile"
-Cohesion: 0.20
-Nodes (6): Test of 'create_pre_commit_file' function., Test directory .git/hooks does not exist., Test directory .git/hooks exists, but the .git/hooks/pre-commit file does not., Test .git/hooks/pre-commit has invalid text., Test .git/hooks/pre-commit exists and the text is as expected., TestCreatePreCommitFile
+### Community 496 - "test_misc.py"
+Cohesion: 0.07
+Nodes (22): patch, Path of the project root is not in the file path and 'fox.py' is not in the…, Test of 'create_pre_commit_file' function., Test directory .git/hooks does not exist., Test directory .git/hooks exists, but the .git/hooks/pre-commit file does not., Test .git/hooks/pre-commit has invalid text., Test .git/hooks/pre-commit exists and the text is as expected., Test ROOT_IS_PROJECT is False (+14 more)
 
 ### Community 497 - "TestFileNames"
 Cohesion: 0.20
@@ -3077,6 +3084,10 @@ Nodes (6): Testing file 'cli/cmd_gui/__init__.py'., patch, Testing file 'cli/cmd
 Cohesion: 0.22
 Nodes (5): Testing file 'cli/cmd_run_script/__init__.py'., patch, Testing file 'cli/cmd_run_script/run_script_impl.py'., Class to test the run precommit, TestRunProgram
 
+### Community 523 - "xICMPPrefixOption_IPv6"
+Cohesion: 0.22
+Nodes (9): xICMPPrefixOption_IPv6, ucFlags, ucLength, ucPrefix, ucPrefixLength, ucType, ulPreferredLifeTime, ulReserved (+1 more)
+
 ### Community 524 - "gen_hcg/wscript"
 Cohesion: 0.22
 Nodes (7): configure(), cont, options(), Helper class to create the build variant commands, Defines options that can be passed to waf, Configures the project, tmp_1
@@ -3089,9 +3100,9 @@ Nodes (6): BuildHookInterface, CustomBuildHook, Any, Manages the 'version.py' fi
 Cohesion: 0.25
 Nodes (4): Path, Extends the list with CAN ids with respect to the used abbreviations as…, Tests the static extend_ids function of the CANFilter class with a valid id…, Tests the static extend_ids function of the CANFilter class with overlapping ids
 
-### Community 527 - ".generate_data_config_cb"
-Cohesion: 0.25
-Nodes (4): Generate data configuration file, Test 'generate_data_config_cb' function with invalid file path, Test 'generate_data_config_cb' function when no columns have been given, Test 'generate_data_config_cb' function when input for 'precision' or 'skip'…
+### Community 527 - "xICMPRouterAdvertisement_IPv6"
+Cohesion: 0.22
+Nodes (9): xICMPRouterAdvertisement_IPv6, ucFlags, ucHopLimit, ucTypeOfMessage, ucTypeOfService, usChecksum, usLifetime, usReachableTime (+1 more)
 
 ### Community 528 - "approval_semantics"
 Cohesion: 0.43
@@ -3109,6 +3120,10 @@ Nodes (7): created_at, process_inventory, repository_commit, $schema, schema_ver
 Cohesion: 0.25
 Nodes (7): Phase 1: Source Registry Regeneration, Phase 2: Link Integrity Fixes, Phase 3: Mutation Scenarios (18 Missing), Phase 4: Evaluator Manifests for All Mutations (20), Phase 5: Evaluator Manifests for Existing Scenarios (5), Phase 6: Full Validation, Tasks: foxBMS 2 Lifecycle Artifact Corpus Fixes
 
+### Community 532 - "TestDoInit"
+Cohesion: 0.22
+Nodes (5): Class to test the BMSShell.do_init method, Shell has already been initialized., Initializing the CAN bus failed., Initializing the CAN bus was successful., TestDoInit
+
 ### Community 533 - "xLLMNRAnswer"
 Cohesion: 0.25
 Nodes (8): xLLMNRAnswer, ucNameCode, ucNameOffset, ulIPAddress, ulTTL, usClass, usDataLength, usType
@@ -3121,9 +3136,9 @@ Nodes (8): IPv6_Address_t, xIPV6Parameters, ucDNSIndex, uxPrefixLength, xDNSServ
 Cohesion: 0.25
 Nodes (5): Testing '_make_unit_test_dir' function., Test project dir creation for an invalid project type., Test project dir creation for 'app' project., Test project dir creation for 'bootloader' project., TestEmbeddedUTImplPrivateMakeUnitTestDir
 
-### Community 536 - "TestEmbeddedUTImplPrivatePrintresult"
-Cohesion: 0.25
-Nodes (5): Testing '_print_result' function., Unsuccessful unit test run, Unsuccessful unit test run, Unsuccessful unit test run, TestEmbeddedUTImplPrivatePrintresult
+### Community 536 - "TestBootloaderSendPreInfo"
+Cohesion: 0.22
+Nodes (5): Test 'send_pre_info' method of the 'Bootloader' class., Function to test function send_pre_info()., Function to test function send_pre_info()., Function to test function send_pre_info()., TestBootloaderSendPreInfo
 
 ### Community 537 - "TestSimBms"
 Cohesion: 0.25
@@ -3137,9 +3152,9 @@ Nodes (5): skipUnless, Test of the gui implementation., Test of the 'run_gui' fu
 Cohesion: 0.25
 Nodes (4): Test of the FoxGui class on linux, Test when ROOT_IS_PROJECT is True, Test when ROOT_IS_PROJECT is False, TestFoxGuiLinux
 
-### Community 540 - "TestIdeImpl"
-Cohesion: 0.32
-Nodes (5): patch, Test single file verification, Test multiple file verification, Test multiple file verification, TestIdeImpl
+### Community 540 - "plot"
+Cohesion: 0.25
+Nodes (8): plot(), argument, command, Context, option, pass_context, Path, Generate plots from input data files or directories. This command reads input…
 
 ### Community 541 - "Path"
 Cohesion: 0.25
@@ -3149,13 +3164,13 @@ Nodes (4): patch, Path, Test successful update-version workflow., Raise ValueErr
 Cohesion: 0.25
 Nodes (5): Testing file 'cli/cmd_run_program/__init__.py'., patch, Testing file 'cli/cmd_run_program/run_program_impl.py'., Class to test the run precommit, TestRunProgram
 
-### Community 543 - "TestDecode"
+### Community 543 - "N77x_ErrorHandling"
 Cohesion: 0.25
-Nodes (5): Test 'decode' command, Test help option Note: If you try to use this test locally, make sure no…, Tests the decode command line interface with output to stdout :param…, Tests the decode command line interface when no config file is given, TestDecode
+Nodes (5): N77X_COMMUNICATION_STATUS_e, N77X_STATE_s, N77x_ErrorHandling(), testN77x_ErrorHandling(), testN77x_Wait()
 
-### Community 544 - "TestGetEnv"
+### Community 544 - "xND_CACHE_TABLE_ROW"
 Cohesion: 0.25
-Nodes (5): Path of the project root is not in the file path and 'fox.py' is not in the…, Test of 'get_env' function., Path of the project root is in the file path, Path of the project root is not in the file path and 'fox.py' is in the root…, TestGetEnv
+Nodes (8): IPv6_Address_t, MACAddress_t, xND_CACHE_TABLE_ROW, pxEndPoint, ucAge, ucValid, xIPAddress, xMACAddress
 
 ### Community 545 - "TestGetFilePath"
 Cohesion: 0.25
@@ -3207,7 +3222,7 @@ Nodes (7): artifact_coverage_targets, design, process, requirements, safety, tra
 
 ### Community 558 - "Coverage Report"
 Cohesion: 0.29
-Nodes (6): Corpus Population (62 artifacts + 56 links), Coverage Report, Feature Coverage (from feature-inventory.json), Gaps and Limitations (honest), Summary (acceptance dimensions), Verification Planning Detail
+Nodes (6): Corpus Population (76 artifacts + 80 links), Coverage Report, Feature Coverage (from feature-inventory.json), Gaps and Limitations (honest), Summary (acceptance dimensions), Verification Planning Detail
 
 ### Community 559 - "assumption.schema.json"
 Cohesion: 0.29
@@ -3265,33 +3280,33 @@ Nodes (7): xNBNSAnswer, ulIPAddress, ulTTL, usClass, usDataLength, usNbFlags, us
 Cohesion: 0.29
 Nodes (5): skipUnless, Test import of build_gui, Test import when ROOT_IS_PROJECT is False, Test import when ROOT_IS_PROJECT is True, TestBuildImport
 
-### Community 576 - "test_frame_data_config.py"
-Cohesion: 0.43
-Nodes (6): get_birthtime(), datetime, Remove all data from the gui directory if it as been created after start_time, Return the birthtime of the given object, Testing file 'cli/cmd_gui/frame_plot/frame_data_config.py'., remove_data()
+### Community 576 - "xNetworkEndPoint"
+Cohesion: 0.25
+Nodes (8): MACAddress_t, NetworkInterface_t, xNetworkEndPoint, bits, pxNetworkInterface, pxNext, usDNSType, xMACAddress
 
 ### Community 577 - "test_line_graph_drawer.py"
 Cohesion: 0.33
 Nodes (5): datetime, Testing file 'cli/cmd_plot/drawer/line_graph_drawer.py'., Clean up the test files, Remove all data from the given directory except for the file "input_data.csv"., remove_test_files()
 
-### Community 578 - "TestFoxCliMainCommandWaf"
-Cohesion: 0.33
-Nodes (5): patch, Test of the 'waf' commands and options., Test 'fox.py waf --help' options., Test 'fox.py waf --cwd <option> --help' options., TestFoxCliMainCommandWaf
-
-### Community 579 - "TestFoxCliMainRunProgram"
+### Community 578 - "xDNSMessage"
 Cohesion: 0.29
-Nodes (5): patch, Test of the 'run-program' commands and options., Test 'fox.py run-program dummy-argument' command., Test 'fox.py run-program --help' command., TestFoxCliMainRunProgram
+Nodes (7): xDNSMessage, usAdditionalRRs, usAnswers, usAuthorityRRs, usFlags, usIdentifier, usQuestions
 
-### Community 580 - "TestFoxCliMainRunScript"
+### Community 579 - "xIPV4Parameters"
 Cohesion: 0.29
-Nodes (5): patch, Test of the 'run-script' commands and options., Test 'fox.py run-script dummy-argument' command., Test 'fox.py run-script --help' command., TestFoxCliMainRunScript
+Nodes (7): xIPV4Parameters, ucDNSIndex, ulBroadcastAddress, ulDNSServerAddresses, ulGatewayAddress, ulIPAddress, ulNetMask
 
-### Community 581 - "TestHostPlatform"
-Cohesion: 0.38
-Nodes (4): patch, Class to test the host platform script., Test for unsupported platform., TestHostPlatform
-
-### Community 582 - "TestVariables"
+### Community 580 - "freertos_sockaddr"
 Cohesion: 0.29
-Nodes (4): Test setting of 'PROJECT_BUILD_ROOT' and 'PATH_FILE' variables, ROOT_IS_PROJECT is False, ROOT_IS_PROJECT is True, TestVariables
+Nodes (7): freertos_sockaddr, sin_address, sin_family, sin_flowinfo, sin_len, sin_port, IP_Address_t
+
+### Community 581 - "tests/cli/helpers/__init__.py"
+Cohesion: 0.22
+Nodes (6): Testing file 'cli/helpers/__init__.py'., patch, Testing file 'cli/helpers/host_platform.py'., Class to test the host platform script., Test for unsupported platform., TestHostPlatform
+
+### Community 582 - "TestCANWrite"
+Cohesion: 0.29
+Nodes (4): Tests for CAN.write in isolation., Prepare a CAN instance with stubbed base and real ComControl., Raises RuntimeError if not alive; enqueues message when alive., TestCANWrite
 
 ### Community 583 - "MockTIMER_Create_Callback"
 Cohesion: 0.29
@@ -3325,13 +3340,13 @@ Nodes (6): load_cc_options(), options(), conf, Implements the compiler options f
 Cohesion: 0.38
 Nodes (6): get_defines(), conf, Wrapper function to get all predefined compiler defines. Based on…, A tool to write the ARM CGT compiler builtin defines (based on the given flags)…, Runs a build during configuration time. The build is based on…, run_build_for_defines()
 
-### Community 591 - "Column"
+### Community 591 - "set_logging_level_cb"
 Cohesion: 0.33
-Nodes (4): Column, Container for a Column, Test 'remove_column_cb' function, Test 'generate_data_config_cb' function when input for 'precision' or 'skip'…
+Nodes (6): Context, Parameter, Set the module logging level through a click option callback. Args: ctx: Click…, set_logging_level_cb(), Configure the logging level and format for the module. Sets the logger level…, set_logging_level()
 
-### Community 592 - ".remove_column_cb"
+### Community 592 - "ulTaskGetIdleRunTimeCounter"
 Cohesion: 0.33
-Nodes (3): Remove column from List, Test 'remove_column_cb' function with no column selected, Test 'remove_column_cb' function
+Nodes (6): configRUN_TIME_COUNTER_TYPE, MPU_ulTaskGetIdleRunTimeCounter(), MPU_ulTaskGetIdleRunTimePercent(), MPU_ulTaskGetIdleRunTimePercentImpl(), ulTaskGetIdleRunTimeCounter(), ulTaskGetIdleRunTimePercent()
 
 ### Community 593 - "Resume Checkpoint"
 Cohesion: 0.33
@@ -3377,9 +3392,9 @@ Nodes (5): allOf, description, $id, $schema, title
 Cohesion: 0.33
 Nodes (5): allOf, description, $id, $schema, title
 
-### Community 604 - "validate_app_modules"
+### Community 604 - "TestRunShell"
 Cohesion: 0.33
-Nodes (5): AppModule, Store the 'module' path and the expected docs, Derive relative document links., Validate every module has an accompanying documentation, validate_app_modules()
+Nodes (4): Class to test the run_shell method, Tests the method when the given file is a Database, Tests the method when the given file is not a Database, TestRunShell
 
 ### Community 605 - "misc/wscript"
 Cohesion: 0.33
@@ -3397,9 +3412,9 @@ Nodes (5): DATA_BLOCK_SOC_s, float_t, SE_CalculateStateOfCharge(), SE_GetStateOf
 Cohesion: 0.40
 Nodes (5): DATA_BLOCK_SOC_s, float_t, SE_CalculateStateOfCharge(), SE_GetStateOfChargeFromVoltage(), SE_InitializeStateOfCharge()
 
-### Community 609 - "EMAC_Transmit"
+### Community 609 - "TestCreatesModels"
 Cohesion: 0.33
-Nodes (6): EMAC_PACKET_BUFFER_s, EMAC_GetNextTxDescriptor(), EMAC_Transmit(), EMAC_WriteTxHeaderDescriptorPointer(), test_EMAC_GetNextTxDescriptor(), testEMAC_Transmit()
+Nodes (4): Tests for creates_models(). One TestCase per function., Test CurrentLimitModel instantiation Test details: 'current limits' and pass…, Should raise ValueError for an unknown model name., TestCreatesModels
 
 ### Community 610 - "CAN_InitializeTransceiver"
 Cohesion: 0.40
@@ -3417,21 +3432,17 @@ Nodes (5): get_git_root(), main(), Helper script to configure the CCS variants b
 Cohesion: 0.33
 Nodes (3): Function to test function test_wait_can_message()., Function to test function wait_can_ack_msg()., recv()
 
-### Community 614 - "TestEmbeddedUTImplModuleImport"
-Cohesion: 0.40
-Nodes (3): Testing 'embedded_ut_impl.py, Test dummy'PLATFORM' value., TestEmbeddedUTImplModuleImport
-
 ### Community 615 - "TestChangeInterfaceCb"
 Cohesion: 0.33
 Nodes (4): Test 'change_interface_cb' function, Interface is in 'DEFAULT_CHANNELS, Interface is not in 'DEFAULT_CHANNELS, TestChangeInterfaceCb
 
-### Community 616 - "test_release_impl.py"
-Cohesion: 0.33
-Nodes (3): Testing file 'cli/cmd_release/__init__.py'., Testing file 'cli/cmd_release/release_impl.py'., Testing file 'cli/cmd_release/update_version_core.py'.
+### Community 616 - "release_impl.py"
+Cohesion: 0.15
+Nodes (8): Implements the functionalities behind the 'release' command, Path, High-level release command helpers used by ``fox release`` commands., Run high-level update-version flow. Args: from_version: Previous version value.…, update_version(), Testing file 'cli/cmd_release/__init__.py'., Testing file 'cli/cmd_release/release_impl.py'., Testing file 'cli/cmd_release/update_version_core.py'.
 
 ### Community 617 - "TestMisc"
-Cohesion: 0.33
-Nodes (3): Test file hashing helper, Test file hashing helper, TestMisc
+Cohesion: 0.25
+Nodes (4): Test file hashing helper, Test file hashing helper, Check setting variables., TestMisc
 
 ### Community 618 - "TestCreateEnvProcess"
 Cohesion: 0.33
@@ -3441,9 +3452,9 @@ Nodes (4): Test venv creation process, Test main, 'no' choice, Test main, 'no' c
 Cohesion: 0.33
 Nodes (4): Test package installation process, Test main, 'no' choice, Test main, 'no' choice, TestInstallPackagesProcess
 
-### Community 620 - "TestInstallFoxCliPackageProcess"
-Cohesion: 0.33
-Nodes (4): Test fox_cli package installation process, Test main, 'no' choice, Test main, 'no' choice, TestInstallFoxCliPackageProcess
+### Community 620 - "xWIN_PROPS"
+Cohesion: 0.40
+Nodes (5): xWIN_PROPS, lRxBufSize, lRxWinSize, lTxBufSize, lTxWinSize
 
 ### Community 621 - "TestAsScript"
 Cohesion: 0.33
@@ -3517,10 +3528,6 @@ Nodes (4): Phase 1: Generator scaffolding, Phase 2: Content sections (data → H
 Cohesion: 0.40
 Nodes (4): Basis, Changes, FreeRTOS-Plus-TCP Library for TI TMS570LC43x in foxBMS, Further Reading
 
-### Community 645 - "xDNSAnswerRecord"
-Cohesion: 0.40
-Nodes (5): xDNSAnswerRecord, ulTTL, usClass, usDataLength, usType
-
 ### Community 646 - "FreeRTOS for TI TMS570LC43x  in foxBMS"
 Cohesion: 0.40
 Nodes (4): Basis, Changes, FreeRTOS for TI TMS570LC43x  in foxBMS, Further Reading
@@ -3561,13 +3568,9 @@ Nodes (3): patch, Run all low-level update steps in sequence with shared date va
 Cohesion: 0.40
 Nodes (3): Testing file 'cli/helpers/click_helpers.py'., Test of 'click_helpers.py, TestClickHelpers
 
-### Community 656 - ".test_adds_queue_handler"
-Cohesion: 0.40
-Nodes (4): patch, Unit tests for the add_queue_handler function., Test that add_queue_handler adds a QueueHandler to the patched logger., TestAddQueueHandler
-
-### Community 657 - "TestMisc"
-Cohesion: 0.40
-Nodes (3): Test logging level setter, Test ignore specific loggers., TestMisc
+### Community 656 - "get_listener"
+Cohesion: 0.09
+Nodes (17): Initializes the communication interface. Args: name (str): Name of the…, get_listener(), Queue, Creates and returns a QueueListener for handling log records from a queue.…, QueueListener, patch, Test that the listener has the correct handlers., Testing file 'cli/helpers/logger.py'. (+9 more)
 
 ### Community 658 - "TestPathOptions"
 Cohesion: 0.40
@@ -3773,9 +3776,9 @@ Nodes (3): Tests for repository-relative path normalization., Absolute path unde
 Cohesion: 0.50
 Nodes (3): main(), Verify the output of the 'fox etl' command., Verify the output of the 'fox etl' command.
 
-### Community 756 - "xSendEventStructToIPTask"
+### Community 756 - "foxBMS 2 — Detailed Design Specification"
 Cohesion: 0.50
-Nodes (4): BaseType_t, IPStackEvent_t, TickType_t, xSendEventStructToIPTask()
+Nodes (3): Design Traceability and Gaps, foxBMS 2 — Detailed Design Specification, Scope
 
 ### Community 758 - "AnalogFrontEnd"
 Cohesion: 0.50
@@ -3833,19 +3836,27 @@ Nodes (3): i2cBASE_t, i2cNotification(), testi2cNotification()
 Cohesion: 0.67
 Nodes (3): canBASE_t, uint32, canMessageNotification()
 
+### Community 994 - "TestConvertGroup"
+Cohesion: 0.50
+Nodes (3): Tests for the 'convert' group., Ensure help output is shown when calling '--help'., TestConvertGroup
+
+### Community 995 - "TEST_CANRX_DummyCallback"
+Cohesion: 0.67
+Nodes (4): CAN_MESSAGE_PROPERTIES_s, CAN_SHIM_s, TEST_CANRX_DummyCallback(), TEST_CANTX_DummyCallback()
+
 ## Knowledge Gaps
-- **1729 isolated node(s):** `SourceTargetPair`, `$schema`, `type`, `type`, `type` (+1724 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 7707 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **272 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **1780 isolated node(s):** `SourceTargetPair`, `$schema`, `type`, `type`, `type` (+1775 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 7760 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **283 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `recho()` connect `recho` to `bms_impl.py`, `ComControl`, `CanBusConfig`, `.join`, `misc.py`, `Table`, `.get_tmp_data`, `CANProcess`, `CANFilter`, `Converter`, `install_impl.py`, `c_etl.py`, `CSVHandler`, `test_can_filter_helper.py`, `.get_data`, `Cell`, `Executor`, `cli_unittest_impl.py`, `FileTracker`, `._draw_line`, `Mapping`, `initialization`, `FoxDB`, `embedded_ut_impl.py`, `log`, `._handle_pyplot_warnings`, `.get_data`, `line_graph_drawer.py`, `misc`, `run_filter`, `graph_drawer_factory.py`, `_sanitize_args`, `.get_object`?**
+- **Why does `recho()` connect `recho` to `bms_impl.py`, `.join`, `CanBusConfig`, `misc.py`, `FileTracker`, `Table`, `ComControl`, `CAN`, `CANFilter`, `patch`, `ComInterface`, `CANDecode`, `test_can_decode_helper.py`, `table_helper.py`, `test_can_filter_helper.py`, `CSVHandler`, `.get_data`, `run_process`, `Executor`, `c_etl.py`, `cli_unittest_impl.py`, `.check_file_changed`, `._draw_line`, `CellSpec`, `c_misc.py`, `OutputFormats`, `Mapping`, `BootloaderStatus`, `initialization`, `run_decode2stdout`, `embedded_ut_impl.py`, `log`, `.get_data`, `line_graph_drawer.py`, `run_filter`, `graph_drawer_factory.py`, `_sanitize_args`, `.get_object`, `run_decode2file`, `get_cantools_database`, `validate_table_config`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
-- **Why does `OS_GetTickCount()` connect `OS_GetTickCount` to `FreeRTOS_Sockets.c`, `nxp_mc33775a_measurement.c`, `ALGO_MainFunction`, `xTaskGetTickCount`, `mxm_battery_management.c`, `test_mxm_17841b.c`, `bms.c`, `OS_EnterTaskCritical`, `test_mxm_1785x.c`, `i2c.c`, `HTSEN_Trigger`, `os_freertos.c`, `can_cbs_rx_cs_isabellenhuette-ivt-s.c`, `redundancy.c`, `ADI_CopyCommandBytes`, `test_database_helper.c`, `database.c`, `can_cbs_rx_cs_lem-cab500.c`, `DIAG_Handler`, `afe.h`, `app/driver/foxmath/test_utils.c`, `OS_CheckTimeHasPassed`, `test_sys_mon.c`, `debug_can.c`?**
+- **Why does `OS_GetTickCount()` connect `OS_GetTickCount` to `FreeRTOS_Sockets.c`, `app/driver/can/can.c`, `ALGO_MainFunction`, `xTaskGetTickCount`, `mxm_battery_management.c`, `test_mxm_17841b.c`, `OS_ReceiveFromQueue`, `bms.c`, `OS_EnterTaskCritical`, `test_mxm_1785x.c`, `HTSEN_Trigger`, `os_freertos.c`, `redundancy.c`, `test_database_helper.c`, `database.c`, `can_cbs_rx_cs_lem-cab500.c`, `rtc.c`, `afe.h`, `app/driver/foxmath/test_utils.c`, `ftask_cfg.c`, `OS_CheckTimeHasPassed`, `test_sys_mon.c`, `OS_DelayTaskUntil`, `adi_ades183x.c`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `OS_EnterTaskCritical()` connect `OS_EnterTaskCritical` to `test_algorithm_cfg.c`, `state-machine.c`, `ILCK_SetStateRequest`, `test_bal.c`, `ALGO_MainFunction`, `ltc_6813-1.c`, `bms.c`, `test_sys.c`, `FRAM_WriteData`, `nxp_mc3377x.c`, `i2c.c`, `N77x_CommunicationWrite`, `mxm_afe.c`, `OS_GetTickCount`, `os_freertos.c`, `debug_default.c`, `ethernet.c`, `sys.c`, `test_sps.c`, `adi_ades183x_diagnostic_w.c`, `DIAG_Handler`, `SPS_GetChannelCurrentFeedback`, `ltc_6806.c`, `test_sys_mon.c`, `SBC_Trigger`, `test_can_cbs_tx_f_string-values-p1.c`, `imd.c`?**
+- **Why does `OS_EnterTaskCritical()` connect `OS_EnterTaskCritical` to `test_algorithm_cfg.c`, `state-machine.c`, `ILCK_SetStateRequest`, `test_bal.c`, `ALGO_MainFunction`, `ltc_6813-1.c`, `OS_ReceiveFromQueue`, `bms.c`, `FRAM_WriteData`, `nxp_mc3377x.c`, `i2c.c`, `bal_strategy_history.c`, `can_cbs_tx_cyclic.h`, `mxm_afe.c`, `os_freertos.c`, `N77x_CommunicationWrite`, `debug_default.c`, `ETH_CreateListeningTask`, `sys.c`, `test_sps.c`, `adi_ades183x_diagnostic_w.c`, `rtc.c`, `ltc_6806.c`, `test_sys_mon.c`, `SBC_Trigger`, `imd.c`, `adi_ades183x.c`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Are the 26 inferred relationships involving `SubprocessResult` (e.g. with `run_top_level_waf()` and `run_waf()`) actually correct?**
   _`SubprocessResult` has 26 INFERRED edges - model-reasoned connections that need verification._

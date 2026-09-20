@@ -1,6 +1,6 @@
 # Standards Mapping Report
 
-**Generated:** 2026-09-13  
+**Generated:** 2026-09-20  
 **Baseline:** BAS-REF-001  
 **Standards:** ISO 26262:2018, ASPICE PAM 4.1
 

@@ -1,6 +1,6 @@
 # Scenario Validation Report
 
-**Generated:** 2026-09-13  
+**Generated:** 2026-09-20  
 **Baseline:** BAS-REF-001  
 **Profile:** synthetic_reference
 

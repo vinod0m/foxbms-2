@@ -1,6 +1,6 @@
 # Source vs Synthetic Gap Report
 
-**Generated:** 2026-09-13  
+**Generated:** 2026-09-20  
 **Baseline:** BAS-REF-001  
 **Comparison:** as_is (source-grounded) vs synthetic_reference (hypothetical automotive project)
 
