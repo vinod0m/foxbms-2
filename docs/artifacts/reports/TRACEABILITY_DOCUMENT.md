@@ -537,8 +537,8 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 | Gate | Result |
 |---|---|
 | Schema validation (13 schemas, draft 2020-12) | ✅ all valid |
-| Artifact validation (91 artifacts) | ✅ 0 errors (validated run 2026-09-19: 100 artifacts, TMS-007..011 + EXE-000007..011 + LNK-039..057 included) |
-| Link validation (79 links, profile-aware) | ✅ 0 dangling (validated run 2026-09-19, LNK-039..057 included) |
+| Artifact validation (91 artifacts) | ✅ 0 errors (validated run 2026-09-19: 100 artifacts, TMS-007..011 + EXE-000007..011 + LNK-039..058 included) |
+| Link validation (80 links, profile-aware) | ✅ 0 dangling (validated run 2026-09-19, LNK-039..058 included) |
 | Provenance (source_refs → 43-anchor registry) | ✅ all resolve |
 | Provenance (assumption_refs → 12-assumption registry) | ✅ 12/12 resolve |
 | Identity uniqueness (per profile) | ✅ 0 duplicates within profile |
@@ -586,7 +586,7 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 
 Every requirement chain from hazard to test execution is traceable in both profiles via
 typed links with complete metadata (rationale, provenance, review_state, change_suspect_status).
-All 79 links resolve (validated run 2026-09-19, LNK-039..057 included); all source and assumption references resolve; identity is unique per
+All 80 links resolve (validated run 2026-09-19, LNK-039..058 included); all source and assumption references resolve; identity is unique per
 profile; the FTTI budget is coherent; 20/20 mutations and 3/3 change lifecycles are detected;
 and the acceptance suite passes all 8 gates.
 

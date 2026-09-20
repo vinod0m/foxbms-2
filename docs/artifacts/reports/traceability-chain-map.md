@@ -71,7 +71,7 @@ Software implements system requirements through DSNs; the DSN `implementation_ma
 | `FB2-SAF-FSR-000001` | `allocated_to` (reverse: TSR→FSR) | `FB2-HW-TSR-000001` | `FB2-LNK-SAF-000005` |
 | `FB2-SAF-FSR-000001` | `allocated_to` (reverse: TSR→FSR) | `FB2-HW-TSR-000002` | `FB2-LNK-SAF-000006` |
 | `FB2-SAF-FSR-000003` | `allocated_to` (reverse: TSR→FSR) | `FB2-HW-TSR-000003` | `FB2-LNK-SAF-000007` |
-| `FB2-SAF-FSR-000004` | (no `allocated_to` link — gap) | `FB2-HW-TSR-000004` | — (synthetic only; both verified by TMS-004) |
+| `FB2-SAF-FSR-000004` | `allocated_to` (reverse: TSR→FSR) | `FB2-HW-TSR-000004` | `LNK-058` (synthetic only) |
 
 ### 3.4 Hardware → System (upstream verification closure)
 

@@ -211,7 +211,7 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 
 | Work product | State | Artifact / links |
 |---|---|---|
-| HW requirements | ✅ linked | `FB2-HW-TSR-000001..000004` — `allocated_to` FSR (`LNK-005/006/007`); TSR-004 no allocation link (gap) |
+| HW requirements | ✅ linked | `FB2-HW-TSR-000001..000004` — `allocated_to` FSR (`LNK-005/006/007`, TSR-004 via `LNK-058`) |
 | HW architecture | ⚠️ partial | design packages inventoried (`source-registry.json` HW anchors); architecture extracted where readable |
 | HW detailed design | ⚠️ partial | Altium/schematic packages referenced; CAD-format limited analysis |
 | HW test specification | ✅ linked | as_is TMS-000004/000005 (LTC6813-1, contactor driver, `LNK-023/024`, `LNK-025`); synthetic TMS-000005/000006/000011 |

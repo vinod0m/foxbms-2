@@ -13,7 +13,7 @@
 | Artifact Population | 11 families | 10/11 populated | ✅ (management = process audit by nature) |
 | Standards Mapping | 44 items | 44/44 (ASPICE 32/32, ISO 12/12) | ✅ |
 | Source Grounding | all artifacts | 39/77 with source_refs (43 anchors) | ✅ (synthetic artifacts reference as_is twins) |
-| Traceability Integrity | 0 dangling | 79/79 links valid (validated run 2026-09-19, LNK-039..057 included) | ✅ |
+| Traceability Integrity | 0 dangling | 80/80 links valid (validated run 2026-09-19, LNK-039..058 included) | ✅ |
 | Semantic Consistency | all checks | 10/10 categories, 16 findings, 0 errors | ✅ |
 | Automated Review Coverage | all artifacts | 17/52 corpus artifacts | ⚠️ Partial (vertical-slice review by design) |
 | Verification Planning | test measures per FSR | 16 test measures / 21/21 requirements linked | ✅ |
@@ -26,7 +26,7 @@
 
 **Final status:** `synthetic_ready_with_limitations`
 
-## Corpus Population (76 artifacts + 79 links)
+## Corpus Population (76 artifacts + 80 links)
 
 | Family | as_is | synthetic_reference | Notes |
 |--------|-------|---------------------|-------|
@@ -45,7 +45,7 @@
 | Change lifecycle artifacts (SCN-CHG) | — | 3 | demo changes 001–003 (mirrored under `scenarios/`) |
 | Mutation scenario artifacts (SCN-MUT) | — | 2 | + 20 scenario files under `scenarios/mutations/` |
 | Management artifacts (MAN) | — | 2 | scope + plan |
-| Links | 25 | 54 | `traceability/link-registry/` |
+| Links | 25 | 55 | `traceability/link-registry/` |
 
 ## Verification Planning Detail
 

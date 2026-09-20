@@ -159,7 +159,7 @@ counts and host-run claims are therefore not inferred from source availability.
 4. **Timing verification** — no worst-case execution time analysis on target.
 5. **Management scope (SCO-001)** — verified by process audit only, no test measure (by nature of the artifact).
 6. **Component / qualification / validation / HIL executions** — planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation), `FB2-VER-TMS-000010` (component), `FB2-VER-TMS-000011` (HIL) exist as `draft` with `verifies`/`validates` links but no execution records; all such executions remain blocked, not fabricated.
-7. **TSR-004 allocation** — no `allocated_to` link from `FB2-HW-TSR-000004` to `FB2-SAF-FSR-000004`; both are verified by `FB2-VER-TMS-000004` without an allocated SWR or DSN.
+7. **TSR-004 allocation** — `allocated_to` link `FB2-LNK-SAF-000058` added (TSR-004 → FSR-004); no allocated SWR or DSN exists for the pair (both verified by `FB2-VER-TMS-000004`).
 
 Every gap above is tracked as a corpus limitation (`final_status:
 synthetic_ready_with_limitations`); no evidence is fabricated to close it.

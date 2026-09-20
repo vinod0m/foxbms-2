@@ -250,7 +250,8 @@ The implemented software directly satisfies the following software requirements.
   - Monitoring coverage: Cells monitored ≤ All cells (or representative subset >= 50%) %
   - Threshold accuracy: Overvoltage threshold accuracy ≤ 50 mV
 - **Assumption references**: `FB2-ASM-008`
-- **Note**: no `allocated_to` link from `FB2-HW-TSR-000004` to `FB2-SAF-FSR-000004` exists in the link registry; both are verified by `FB2-VER-TMS-000004` (links `FB2-LNK-SAF-000029`, `FB2-LNK-SAF-000030`).
+- **Allocated to**: `FB2-SAF-FSR-000004` (link `FB2-LNK-SAF-000058`, rationale: "Hardware requirement allocated from functional safety requirement")
+- **Note**: both are verified by `FB2-VER-TMS-000004` (links `FB2-LNK-SAF-000029`, `FB2-LNK-SAF-000030`).
 
 ### Software Requirements Without Parent FSR Link
 
@@ -297,7 +298,7 @@ Test-measure (`verifies`) and execution (`result_of`) links per profile. A linke
 | `FB2-SW-SWR-000003` | `FB2-SAF-FSR-000003` (`FB2-LNK-SAF-000010`) | `FB2-VER-TMS-000002` (`FB2-LNK-SAF-000024`, `FB2-LNK-SAF-000025`) | `FB2-VER-EXE-000002` (`FB2-LNK-SAF-000034`), `synthetic_fixture`, `pass` |
 | `FB2-HW-TSR-000002` | `FB2-SAF-FSR-000001` (`FB2-LNK-SAF-000006`) | `FB2-VER-TMS-000005` (`FB2-LNK-SAF-000031`) | `FB2-VER-EXE-000005` (`FB2-LNK-SAF-000037`), `synthetic_fixture`, `pass` |
 | `FB2-HW-TSR-000003` | `FB2-SAF-FSR-000003` (`FB2-LNK-SAF-000007`) | `FB2-VER-TMS-000006` (`FB2-LNK-SAF-000032`) | `FB2-VER-EXE-000006` (`FB2-LNK-SAF-000038`), `synthetic_fixture`, `pass` |
-| `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004` | refines `FB2-SAF-SGO-000001` (`FB2-LNK-SAF-000021`); no `allocated_to` link for TSR-004 | `FB2-VER-TMS-000004` (`FB2-LNK-SAF-000029`, `FB2-LNK-SAF-000030`) | `FB2-VER-EXE-000004` (`FB2-LNK-SAF-000036`), `synthetic_fixture`, `pass` |
+| `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004` | refines `FB2-SAF-SGO-000001` (`FB2-LNK-SAF-000021`); TSR-004 `allocated_to` FSR-004 (`FB2-LNK-SAF-000058`) | `FB2-VER-TMS-000004` (`FB2-LNK-SAF-000029`, `FB2-LNK-SAF-000030`) | `FB2-VER-EXE-000004` (`FB2-LNK-SAF-000036`), `synthetic_fixture`, `pass` |
 
 ### Evidence limits
 

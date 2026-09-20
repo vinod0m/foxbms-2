@@ -135,7 +135,7 @@ Complete mapping of every implemented module to its source files, configuration,
 - `FB2-SW-SWR-000002` ←implements— `FB2-SW-DSN-000002` (`FB2-LNK-SAF-000012`) → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c` — allocation (`LNK-009`); verified by `FB2-VER-TMS-000001` (`LNK-022/023`); execution `FB2-VER-EXE-000001` (`LNK-033`), `pass`.
 - `FB2-SW-SWR-000003` ←implements— `FB2-SW-DSN-000003` (`FB2-LNK-SAF-000013`) → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c` — allocation (`LNK-010`); verified by `FB2-VER-TMS-000002` (`LNK-024/025`); execution `FB2-VER-EXE-000002` (`LNK-034`), `pass`.
 - `FB2-HW-TSR-000002` verified by `FB2-VER-TMS-000005` (`LNK-031`) → `FB2-VER-EXE-000005` (`LNK-037`), `pass`; `FB2-HW-TSR-000003` verified by `FB2-VER-TMS-000006` (`LNK-032`) → `FB2-VER-EXE-000006` (`LNK-038`), `pass`.
-- `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004`: no allocated SWR or DSN exists; verified by `FB2-VER-TMS-000004` (`LNK-029/030`) → `FB2-VER-EXE-000004` (`LNK-036`), `pass`. No `allocated_to` link from `TSR-004` to `FSR-004` in registry.
+- `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004`: no allocated SWR or DSN exists; verified by `FB2-VER-TMS-000004` (`LNK-029/030`) → `FB2-VER-EXE-000004` (`LNK-036`), `pass`. TSR-004 `allocated_to` FSR-004 (`LNK-058`).
 
 ## Requirement-to-Test Coverage Matrix
 
