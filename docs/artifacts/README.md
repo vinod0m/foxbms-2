@@ -116,7 +116,16 @@ docs/artifacts/
 │   ├── scenario-validation-report.md + .json
 │   ├── reproducibility-report.md
 │   ├── final-acceptance-report.md + .json
-│   └── TRACEABILITY_DOCUMENT.md + .docx (end-to-end walkthrough)
+│   ├── TRACEABILITY_DOCUMENT.md + .docx (end-to-end walkthrough)
+│   ├── traceability-chain-map.md (system↔software↔hardware↔system)
+│   ├── aspice-process-map.md (SYS.1-5, SWE.1-6, artifact-level chains)
+│   └── aspice-mock-audit-report.md (PAM 4.1 per-process verdicts)
+└── diagrams/                           # Interactive diagrams (archify)
+    ├── foxbms-architecture.json + .html
+    ├── foxbms-dataflow.json + .html
+    ├── foxbms-lifecycle.json + .html
+    ├── foxbms-sequence.json + .html
+    └── foxbms-workflow.json + .html
 └── .work/                              # Temporary (gitignored)
 ```
 
@@ -358,6 +367,10 @@ cat docs/artifacts/_control/resume.md
 | `reports/scenario-validation-report.md` | Mutation scenarios, change lifecycles |
 | `reports/reproducibility-report.md` | Round-trip, determinism, tool versions |
 | `reports/final-acceptance-report.md` | All gates, final status, walkthroughs |
+| `reports/TRACEABILITY_DOCUMENT.md` (+ `.docx`) | End-to-end traceability, completeness review |
+| `reports/traceability-chain-map.md` | Cross-domain chain map (system↔software↔hardware↔system) |
+| `reports/aspice-process-map.md` | ASPICE process-to-artifact map (SYS.1-5, SWE.1-6, artifact-level chains) |
+| `reports/aspice-mock-audit-report.md` | ASPICE PAM 4.1 mock audit (per-process work-product verdicts) |
 
 ---
 

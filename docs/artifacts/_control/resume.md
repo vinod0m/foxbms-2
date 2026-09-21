@@ -1,8 +1,8 @@
 # Resume Checkpoint
 
-**Last session:** 2026-09-18
-**Stage:** corpus extended with planning stubs; validation/commit/push pending
-**Next action:** none pending — commit 78a2044f pushed to origin `foxbms-2-synthetic-data` 2026-09-18 (corpus check PASSED, coverage 65/65, DOCX 04-10 rebuilt)
+**Last session:** 2026-09-20
+**Stage:** corpus complete with recorded gaps; ASPICE mock audit delivered; all docs/diagrams/graphs current
+**Next action:** none pending — commits through a11afb6d pushed; gaps close only via documented unblocking conditions (real runs, hardware, harnesses, human review)
 
 ## Completed
 - WF-001..WF-096: ALL 96 work-queue entries completed and evidence-verified
@@ -22,14 +22,19 @@
   coverage-report.json generator now derives gaps fresh (no stale merge);
   spec docs re-rendered (integrity check PASSED, deterministic)
 
-## In Progress
-- 2026-09-18 follow-ups committed: component stub TMS-010 + HIL stub TMS-011 (LNK-048..052, 70/70 links), verification workflow diagram, reports/TRACEABILITY_DOCUMENT synced (67 artifacts, 16 measures, 21/21 linked, re-run caveats settled), DOCX rebuilt — commits 94a6e224, 1d5a1091 pushed
+## Completed (recent sessions)
+- 2026-09-19: blocked execution records EXE-000002..005 (as_is, origin derived) + EXE-000007..011 (synthetic) — result_of links LNK-000026..029 + LNK-000053..057 (80/80); TSR-004 allocation LNK-058; all report counts synced (76 artifacts, 16 measures, 16 executions, 100 validated/0 errors) — commits 3b448aeb, 278517f8, 84b67364, 3fbfd82d pushed
+- 2026-09-20: graphify refreshed (18086 nodes, 31372 edges, HEAD 3fbfd82d); 10 report dates refreshed; ASPICE map header synced; workflow diagram updated to recorded-blocked state (TMS/EXE-001..011, showcase 9/9 + visual pass); ASPICE PAM 4.1 mock audit report delivered (per-process verdicts, 7 findings, gap-to-audit-ready list) — commits 9179f7ff, 83d2381a, a13fdb94, a11afb6d pushed
 
-## Blocked
-- No shell in session: `corpus.py check/coverage`, `render_spec_documents.py`, DOCX rebuild, git commit/push all pending; subagent reviewers broken (`Model not found`), reviews done inline
+## In Progress
+- (none)
+
+## Blocked (real-environment only; unblocking conditions in verification-evidence-report.md)
+- Unit tests TMS-002..005: need Linux/Windows + HALCoGen codegen + gdb (macOS unsupported by fox.sh; Ceedling 1.1.8 confirmed failing config validation here) or upstream CI log capture
+- Integration/component harnesses; target + HIL bench; validation environment; real hardware CAD analysis; independent human review sign-off; tool qualification
 
 ## Environment State
 - Repository: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2
 - Artifacts root: docs/artifacts
 - Baseline: BAS-REF-001 (commit 308028fb, tag v1.11.0)
-- Validation: 91 artifacts, 0 errors; 70 links, 0 dangling (2026-09-18, LNK-039..052 included); all source/assumption refs resolve
+- Validation: 100 artifacts, 0 errors; 80 links, 0 dangling (2026-09-19, LNK-039..058 included); all source/assumption refs resolve
