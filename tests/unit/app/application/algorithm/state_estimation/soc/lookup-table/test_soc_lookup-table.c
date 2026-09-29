@@ -88,8 +88,67 @@ TEST_INCLUDE_PATH("../../src/app/task/config")
 /*========== Definitions and Implementations for Unit Test ==================*/
 FRAM_SOC_s fram_soc = {0};
 /**local copy of DATA_BLOCK_SOC_s table**/
-static DATA_BLOCK_SOC_s cp_pTableSoc    = {.header.uniqueId = DATA_BLOCK_ID_SOC};
-static DATA_BLOCK_SOC_s cp_pTableMinMax = {.header.uniqueId = DATA_BLOCK_ID_MIN_MAX};
+static DATA_BLOCK_SOC_s cp_pTableSoc = {.header.uniqueId = DATA_BLOCK_ID_SOC};
+
+/*========== Content check for the untyped `void *` data-block argument =====
+ *
+ * #DATA_Read1DataBlock takes an untyped `void *`. CMock cannot size a `void *`,
+ * so `:when_ptr: :compare_data` silently degrades to UNITY_TEST_ASSERT_EQUAL_PTR.
+ * The block read here is `soc_tableMinMax`, a file-scope static private to
+ * soc_lookup-table.c:85, so the test cannot address it and an address
+ * comparison can never hold.
+ *
+ * The fixture this test used, `cp_pTableMinMax`, was declared a
+ * #DATA_BLOCK_SOC_s even though the product reads a #DATA_BLOCK_MIN_MAX_s (32
+ * bytes vs 52 measured), so it could not be a content comparison of the right
+ * type either. The block identity in the header is the one property that an
+ * address comparison could ever have been about, and the one that is both
+ * meaningful and stable, so it is asserted explicitly. The injected fixture is
+ * given the correct #DATA_BLOCK_MIN_MAX_s type so the value written into the
+ * product's block is sized correctly.
+ *
+ * A CMock `_Stub` returns from the callback branch of the generated mock before
+ * CMock's own argument, call-count and ordering checks, and it also bypasses
+ * the `_ReturnThruPtr` chain, so all of that is put back explicitly:
+ *
+ *  - the call count is re-asserted by the `_CallCount()` assertion at the end
+ *    of the test (the original single `_ExpectAndReturn` pinned exactly one
+ *    read);
+ *  - the injection the `_ReturnThruPtr` call performed is performed by the
+ *    callback instead;
+ *  - the ordering is re-pinned by `FRAM_WriteData_AddCallback` below. The
+ *    original sequence was
+ *        DATA_Read1DataBlock_ExpectAndReturn(...), FRAM_WriteData_ExpectAndReturn(...)
+ *    and with `:enforce_strict_ordering` that fixed the read strictly before
+ *    the persist. `_Stub` takes the read out of CMock's global
+ *    `GlobalVerifyOrder` counter, so the two could be swapped. `_AddCallback`
+ *    is used rather than a second `_Stub` precisely because it sets
+ *    `CallbackBool`, which makes the generated mock run its ordering and
+ *    argument checks *before* calling back -- so the `FRAM_BLOCK_ID_SOC`
+ *    argument check and the once-only requirement on `FRAM_WriteData` are kept,
+ *    and read-before-write is restored on top.
+ */
+static DATA_BLOCK_MIN_MAX_s tableMinMaxInjected = {
+    .header.uniqueId = DATA_BLOCK_ID_MIN_MAX,
+    .header.timestamp = 10u};
+
+static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(void *pDataToReceiver0, int cmock_num_calls) {
+    (void)cmock_num_calls;
+    TEST_ASSERT_NOT_NULL(pDataToReceiver0);
+    DATA_BLOCK_MIN_MAX_s *pMinMax = (DATA_BLOCK_MIN_MAX_s *)pDataToReceiver0;
+    TEST_ASSERT_EQUAL(DATA_BLOCK_ID_MIN_MAX, pMinMax->header.uniqueId);
+    *pMinMax = tableMinMaxInjected;
+    return STD_OK;
+}
+
+/* observation-only: re-pins read-before-write, see the block comment */
+static FRAM_RETURN_TYPE_e FRAM_WriteDataCallback(FRAM_BLOCK_ID_e blockId, int cmock_num_calls) {
+    (void)cmock_num_calls;
+    (void)blockId; /* the argument is still checked by the _ExpectAndReturn */
+    /* the min/max block must have been read before the result is persisted */
+    TEST_ASSERT_EQUAL_INT(1, DATA_Read1DataBlock_CallCount());
+    return FRAM_ACCESS_OK;
+}
 /** Maximum SOC in percentage */
 #define SOC_MAXIMUM_SOC_perc (100.0f)
 /** Minimum SOC in percentage */
@@ -111,12 +170,11 @@ void testSE_InitializeStateOfCharge(void) {
 
 void testSE_CalculateStateOfCharge(void) {
 
-    DATA_Read1DataBlock_ExpectAndReturn(&cp_pTableMinMax, STD_OK);
-    static DATA_BLOCK_SOC_s tableMinMaxTimestampMismatch = {
-        .header.uniqueId = DATA_BLOCK_ID_MIN_MAX, .header.timestamp = 10};
-    DATA_Read1DataBlock_ReturnThruPtr_pDataToReceiver0(&tableMinMaxTimestampMismatch);
+    DATA_Read1DataBlock_Stub(DATA_Read1DataBlockCallback);
     FRAM_WriteData_ExpectAndReturn(FRAM_BLOCK_ID_SOC, FRAM_ACCESS_OK);
+    FRAM_WriteData_AddCallback(FRAM_WriteDataCallback);
     SE_CalculateStateOfCharge(&cp_pTableSoc);
+    TEST_ASSERT_EQUAL_INT(1, DATA_Read1DataBlock_CallCount());
 }
 void testSE_GetStateOfChargeFromVoltage(void) {
     /* LUT values*/

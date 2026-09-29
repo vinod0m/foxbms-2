@@ -1,0 +1,49 @@
+{
+  "id": "FB2-REV-FND-000036",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Finding FB2-REV-FND-000036: the 8 'CMock #if accounting' build failures are not a CMock bug; FreeRTOS compiles three queue-registry functions away with empty function-like macros that erase the generated mock's own definition",
+  "owner_role": "verification_engineer",
+  "origin": "source_observed",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': root cause isolated by preprocessor evidence, replacing a previously recorded but incorrect mechanism. Reported as a genuine pre-existing upstream defect. human approval remains 'pending'. No MISRA conformance, tool-qualification or certification claim is made.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "First record. Supersedes the 'CMock loses #if accounting against FreeRTOS' explanation recorded on FB2-VER-EXE-000015, which preprocessor output disproves."
+    }
+  ],
+  "subject_artifact_id": "FB2-VER-EXE-000015",
+  "severity": "low",
+  "category": "verification",
+  "evidence": "THE PREVIOUS MECHANISM IS WRONG AND IS DISPROVED BY THE PREPROCESSOR. The earlier record states: 'CMock's generated file loses #if accounting against FreeRTOS's conditional blocks in queue.h / event_groups.h, so the tail of the generated mock is swallowed and the tail of the generated mock does not parse.' That was inferred from the compiler message, not read. The generated mocks/test_os/Mockqueue.c contains NO preprocessor directive other than seven #include lines - verified by inspecting every line beginning with '#': lines 2-7 only. There is no unbalanced #if and nothing is swallowed. The three compiler errors are all 'expected identifier or '('' at a line containing a bare '{'. ISOLATED BY PREPROCESSING. Compiling the generated mock with -E and the project's own include set produces, for the function definition, the text 'void' followed by a newline followed by '{' - the function name and its parameter list have been REPLACED BY NOTHING. The mechanism, in FreeRTOS's own source: src/os/freertos/freertos/include/FreeRTOS.h:587-592 reads '#ifndef configQUEUE_REGISTRY_SIZE / #define configQUEUE_REGISTRY_SIZE 0U / #endif' followed by '#if ( configQUEUE_REGISTRY_SIZE < 1 )' and then '#define vQueueAddToRegistry( xQueue, pcName )', '#define vQueueUnregisterQueue( xQueue )', '#define pcQueueGetName( xQueue )' - three EMPTY FUNCTION-LIKE MACROS with no replacement text. The shipped FreeRTOSConfig.h:78 sets configQUEUE_REGISTRY_SIZE to 0, so all three are defined. CMock parses queue.h without evaluating the condition, so it dutifully generates mocks for all three - queue.h:1564-1567, :1579-1581 and :1594-1596 are each inside their own '#if ( configQUEUE_REGISTRY_SIZE > 0 )', and cmock_header_parser.rb:87-90 keeps BOTH branches of an unevaluable '#if' by design. When the generated Mockqueue.c is then COMPILED, the preprocessor applies the empty macros to the generated code itself: 'void vQueueAddToRegistry(QueueHandle_t xQueue, const char* pcQueueName)' becomes 'void' plus nothing, because the macro swallows its own two arguments. The result is a function definition with no name, which is exactly 'expected identifier or '(''. The same applies to 'void vQueueUnregisterQueue(QueueHandle_t xQueue)' and 'const char* pcQueueGetName(QueueHandle_t xQueue)'. THE TWO ERRORS ARE INDEPENDENT OF THE SIL HARNESS. The conflict is between the vendored FreeRTOS headers under src/os/freertos/ and CMock, and would occur identically under GNU gcc on Linux and on the project's own Windows environment. It was previously masked because the affected tests never reached the compile stage until the SIL harness brought them up. Note also that CMock's behaviour is defensible in isolation: it cannot evaluate a macro-valued preprocessor condition, and generating a mock for a function the product has compiled away is a harmless no-op in every other configuration. The defect is that the two tools disagree without either diagnosing the disagreement. AFFECTED: 8 tests - test_adi_ades1830.c, test_can.c, test_can_1.c, test_can_2.c, test_os_freertos.c, test_os_freertos_cache_disabled.c, test_os_freertos_cache_enabled.c, test_os.c. All fail with the identical three-line diagnostic and all are blocked on Mockqueue.c.",
+  "disposition": "deferred",
+  "impact": "Low, and honestly bounded: 8 tests cannot build, so they provide no verification coverage. Nothing is at risk in the product, and nothing that currently passes is affected. The cost of the previous, incorrect explanation is that it pointed remediation at the wrong component. 'CMock loses #if accounting' suggests a CMock upgrade or a Ceedling workaround; the actual defect is a three-line interaction between two vendored FreeRTOS macros and CMock's mock generation, and the natural fixes are all upstream-configuration decisions: set configQUEUE_REGISTRY_SIZE above 0, or teach CMock to honour the condition, or tell CMock not to mock those three functions. The first of those changes what the product's build actually compiles - the registry is deliberately disabled in the shipped configuration - so it is a product decision, not a harness one, and it is not taken here. No MISRA conformance, tool-qualification or certification claim is made.",
+  "root_cause": "FreeRTOS deliberately compiles away its queue-registry API when configQUEUE_REGISTRY_SIZE is 0, which the shipped configuration sets, by defining vQueueAddToRegistry, vQueueUnregisterQueue and pcQueueGetName as empty function-like macros (src/os/freertos/freertos/include/FreeRTOS.h:587-592). CMock, which cannot evaluate a macro-valued preprocessor condition, still generates mock definitions for all three from the guarded declarations in queue.h:1564, :1580 and :1595. The C preprocessor then applies those empty macros to CMock's own generated function definitions during compilation, consuming the function name and its parameter list and leaving a nameless function body, which does not parse. Neither component is individually faulty: CMock cannot know the condition is false, and FreeRTOS cannot know its macros will be applied to generated code. The two tools disagree and neither diagnoses the disagreement, which is why the failure surfaces as an opaque syntax error deep inside a generated file rather than as a clear diagnostic.",
+  "resolution": "NOT RESOLVED. Root cause isolated and the previously recorded mechanism corrected, which is the substantive outcome: the fix belongs to the project's Ceedling or FreeRTOS configuration, not to CMock and not to the SIL harness. Three candidate fixes were identified and none is applied here. (a) Set configQUEUE_REGISTRY_SIZE to a non-zero value so the macros are not defined and the guards become consistent. This changes what the product's build compiles - the queue registry is deliberately disabled in the shipped configuration, per src/os/freertos/freertos/include/FreeRTOSConfig.h:78 - so it is a product decision about the intended build, not a harness fix, and it is out of scope. (b) Teach or configure CMock to skip those three functions. CMock 2.7.2 offers no per-function ignore list for this case. (c) Patch the generated mock after generation. Rejected as fragile: it breaks on every regeneration and would mask the underlying disagreement. Recommendation to the product owner: decide whether the queue registry is meant to be enabled, then apply (a) or (b) accordingly. This finding changes no verdict: the 8 tests remain build failures, correctly classified, and the suite totals are unaffected."
+}

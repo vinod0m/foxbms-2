@@ -34,8 +34,8 @@ Recorded by `corpus.py check` gate `[8/8] final status recorded`.
 |---|---|---|
 | 1/8 | validate | PASS (246 artifacts, 0 findings, 0 errors) |
 | 2/8 | inventory | PASS (612/612 source files) |
-| 3/8 | negative_scenario_validation = 20/20 mutations | PASS (20/20 scenarios **present**) — see §2.1 |
-| 3/8 | change lifecycles = 3/3 | PASS (3/3 present) |
+| 3/8 | negative_scenario_validation = 20/20 mutations | PASS (measured: 20 scenarios executed, 20 passing) — see §2.1 |
+| 3/8 | change lifecycles = 3/3 | PASS (3/3 executed and structurally complete) |
 | 4/8 | hazard present (trace reachability) | PASS |
 | 5/8 | scenario-test | PASS (23/23 scenario lines; 20/20 mutations **detected on their own declared detector**) |
 | 6/8 | export | PASS |
@@ -51,16 +51,31 @@ plus 3 change lifecycles).
 
 ### 2.1 What the 20/20 in gate 3/8 means, and what it does not
 
-Gate `[3/8]` counts how many mutation scenarios **exist** (`numerator =
-len(mutations on disk)`). It is a coverage-of-scenarios figure and it is
-unaffected by whether those scenarios detect anything. It would have read
-`20/20` at the moment the mutation gate was discovered to be self-certifying,
-and it still reads `20/20`. It is not a detection claim and must not be read
-as one. The detection claim lives entirely in gate `[5/8]`.
+**As of 2026-09-29 it means that twenty mutation scenarios were executed and
+twenty of them passed.** The gate, the rules and the scenarios are unchanged;
+only the coverage dimension the gate reads was repaired.
 
-This distinction was not stated in earlier revisions of this report, which
-presented `20/20` from dimension 11 as though it were a detection result. It
-is not. The coverage dimension's computation is unchanged.
+Until then gate `[3/8]` counted how many mutation scenarios **exist**
+(`numerator = len(mutations on disk)`). It was a coverage-of-scenarios figure,
+unaffected by whether those scenarios detected anything, and it would have read
+`20/20` at the moment the mutation gate was discovered to be self-certifying —
+when 8 of the 20 were failing. That is a presence check published under the name
+of a detection measurement, and it is the defect finding `FB2-REV-FND-000032`
+exposed.
+
+`negative_scenario_validation` now executes the mutation and change-lifecycle
+scenarios through `_execute_scenarios`, the same path gate `[5/8]` uses, and
+reports the number that PASS. Both gates read one memoised measurement within a
+run, so the dimension and the gate cannot disagree about the same corpus. The
+proof that the figure is now a measurement and not a count: temporarily pointing
+one scenario's declared detector at a rule no detector implements moved the
+dimension to `19/20` and named `SCN-MUT-005` as the failure, where the old
+computation would still have printed `20/20`.
+
+What the figure still does **not** say is that the detector set is complete or
+that any rule is correct. A defect no scenario models is undetected by
+construction. That remains stated in
+`scenario-validation-report.md` §6.
 
 ### 2.2 The mutation gate was self-certifying until finding FB2-REV-FND-000032
 
@@ -171,19 +186,19 @@ score.
 
 | # | Dimension | Ratio | % | Status | Note |
 |---|---|---|---|---|---|
-| 1 | scope_accounting | 1/1 | 100% | complete | source/feature/variant inventories present |
+| 1 | scope_accounting | 1/1 | 100% | complete, **presence** | inventories present; the claim-vs-tree comparison is gate `[2/8]` |
 | 2 | artifact_population | 13/13 | 100% | complete | 13 families populated |
-| 3 | standards_mapping | 44/44 | 100% | complete | ASPICE 32/32, ISO parts 12/12 |
+| 3 | standards_mapping | 44/44 | 100% | complete as a **count** | ASPICE 32/32, ISO parts 12/12 *entries in the coverage plan*; read the disposition tally in the generated traceability document for how many are `mapped` |
 | 4 | source_grounding | 80/223 | 36% | **partial** | 102 source anchors available; 143 records carry no `source_refs` |
-| 5 | traceability_integrity | 460/460 | 100% | complete | 0 dangling links |
-| 6 | semantic_consistency_checks | 10/10 | 100% | complete | 10 check categories per run |
+| 5 | traceability_integrity | 460/460 | 100% | complete | 0 dangling links, from a link validation re-run for this figure (it used to read whatever findings were in memory) |
+| 6 | semantic_consistency_checks | 10/10 | 100% | complete, **declared** | 10 check categories per run — a declared constant, not a measured result |
 | 7 | automated_review_coverage | 144/187 | 77% | **partial** | 15 review records; `reviewed_by` links consistent with `reviewed_ids` |
 | 8 | verification_planning | 25/7 | 357% | over-covered | 25 test measures for 7 FSRs; a ratio, not a score |
 | 9 | actual_product_evidence | 0/25 | 0% | **blocked by policy** | 0 target-hardware executions; see §7 |
 | 10 | synthetic_fixture_coverage | 148/43 | 344% | over-covered | 148 `synthetic_reference` records against a target of 43 |
-| 11 | negative_scenario_validation | 20/20 | 100% | scenarios **present**; detection is gate 5/8, see §2.1 | plus 3/3 change lifecycles |
+| 11 | negative_scenario_validation | 20/20 | 100% | **measured** — 20 scenarios executed, 20 detected by their own declared rule; see §2.1 | plus 3/3 change lifecycles, executed |
 | 12 | final_status | `synthetic_ready_with_limitations` | — | — | recorded status |
-| 13 | export_reproducibility | 1/1 | 100% | complete | export manifest present |
+| 13 | export_reproducibility | 1/1 | 100% | complete, **presence** | export manifest present; hash stability is measured by gate `[6/8]` |
 | 14 | human_approval | 0/223 | 0% | **pending by policy** | every record pending; none performed |
 | 15 | production_authorization | 0/223 | 0% | **false by policy** | every record `production_authorized=false` |
 
@@ -452,14 +467,29 @@ file is corpus output rather than pinned upstream source.
 
 **The repository owner explicitly authorised amending the file** — it is outside the
 `docs/artifacts/` write boundary, and that authorisation is the sole authority for the
-out-of-boundary write. It was corrected on 2026-09-29 and is recorded as finding
-**`FB2-REV-FND-000022`** at revision 3,
+out-of-boundary write. It was corrected by hand on 2026-09-29 and is recorded as finding
+**`FB2-REV-FND-000022`**,
 `docs/artifacts/reviews/findings/finding-000022-root-traceability-document-conformity-claim.json`,
 with severity `high`, category `consistency`, disposition `accepted`.
 
-**Residual risk, not closed by that disposition:** the file is still hand-authored and
-outside the toolchain's reach, so nothing in CI will detect a regression. The
-authorisation did not extend to relocating or regenerating the file.
+**The durable fix has since been implemented, at revision 4 of that finding.** The
+document is now **generated**. `corpus.py render` emits
+`docs/artifacts/views/traceability/traceability-document.md` from the canonical
+records through the same view preamble as the other generated views, so it carries
+the identical "derived, not authored / regenerable / guard fields / not a
+conformity claim" contract. Every figure in it is computed at render time; none is
+transcribed from a report. Both hand-authored copies — the repository-root file and
+`docs/artifacts/reports/TRACEABILITY_DOCUMENT.md` — were reduced to short,
+content-free pointers to that one canonical document, and the `.docx` beside the
+reports pointer was regenerated from that pointer.
+
+**The residual risk is therefore closed by construction rather than by human
+discipline:** the earlier residual — a hand-authored file outside the toolchain's
+reach, in which nothing would detect a regression — no longer holds for these
+paths. The remaining residuals are recorded in the finding and are not this
+defect: the generated document is only as honest as the records it derives from,
+and four coverage dimensions remain presence checks or declared constants (now
+labelled as such in that document's own coverage table).
 
 ## 10. Cross-Domain Walkthroughs
 
@@ -678,7 +708,7 @@ tool qualification, certification, or target-hardware verification.
 | 313 / 136 / 177 / 34 headers | `.work/verification-env/logs/hcg-closure.json` |
 | 222 nodes, 460 edges | `exports/manifest.json` |
 | spec-document integrity and determinism | `render_spec_documents.py --check` |
-| conformity claim and fabricated approval sign-off in the hand-authored root document | `TRACEABILITY_DOCUMENT.md` at repository root, corrected under explicit owner authorisation; finding `FB2-REV-FND-000022` rev 3 |
+| conformity claim and fabricated approval sign-off in the hand-authored root document | `TRACEABILITY_DOCUMENT.md` at repository root, corrected under explicit owner authorisation, then made tool-owned: the document is now generated at `docs/artifacts/views/traceability/traceability-document.md` and the root path is a content-free pointer. Finding `FB2-REV-FND-000022` rev 4 |
 
 ## 16. Evidence Links
 

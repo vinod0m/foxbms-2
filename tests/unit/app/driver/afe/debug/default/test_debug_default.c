@@ -237,14 +237,19 @@ void testFAKE_SetFirstMeasurementCycleFinished(void) {
 
     OS_EnterTaskCritical_Expect();
     OS_ExitTaskCritical_Expect();
+    /* FAKE_SetFirstMeasurementCycleFinished publishes exactly the blocks that
+     * pFakeState points at (debug_default.c:335-340). This test passes
+     * &test_fake_state, so those are the pointers the code under test sends.
+     * test_fake_stateCompare is a separate set of blocks used only for the
+     * post-call content comparison below. */
     DATA_Write4DataBlocks_ExpectAndReturn(
-        test_fake_stateCompare.data.cellVoltage,
-        test_fake_stateCompare.data.cellTemperature,
-        test_fake_stateCompare.data.balancingFeedback,
-        test_fake_stateCompare.data.balancingControl,
+        test_fake_state.data.cellVoltage,
+        test_fake_state.data.cellTemperature,
+        test_fake_state.data.balancingFeedback,
+        test_fake_state.data.balancingControl,
         STD_OK);
     DATA_Write2DataBlocks_ExpectAndReturn(
-        test_fake_stateCompare.data.slaveControl, test_fake_stateCompare.data.openWire, STD_OK);
+        test_fake_state.data.slaveControl, test_fake_state.data.openWire, STD_OK);
 
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
         for (uint8_t m = 0u; m < BS_NR_OF_MODULES_PER_STRING; m++) {

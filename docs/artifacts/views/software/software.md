@@ -1,6 +1,6 @@
 # Software — requirements, design and deviations (generated view)
 
-Generated: 2026-09-29T17:37:21Z | Baseline: BAS-REF-001 | 223 artifacts, 460 links
+Generated: 2026-09-29T19:02:10Z | Baseline: BAS-REF-001 | 223 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -636,7 +636,7 @@ These 26 records are the largest single slice of the `as_is` profile. They are d
 
 ## Diagram validation
 
-Validator: mermaid-cli /opt/homebrew/bin/mmdc with Chrome; 8/8 diagrams parsed and rendered to SVG
+Validator: mermaid-cli /opt/homebrew/bin/mmdc with Chrome; 9/9 diagrams parsed and rendered to SVG
 
 | Diagram | Result |
 |---|---|

@@ -18,7 +18,7 @@
 | **AS_IS vs SYNTHETIC_REFERENCE** | Two profiles: `as_is` (faithful reconstruction of pinned sources, 71 records) and `synthetic_reference` (hypothetical automotive BMS project, 82 records). Field-level provenance distinguishes `source_observed` (57), `derived` (36) and `synthetic` (60). |
 | **NO NORMATIVE TEXT** | ISO 26262 and ASPICE PAM normative text NOT reproduced. Only metadata, methodology mappings and clause/process references are used, per rights policy. |
 | **KNOWN_GOVERNANCE_CORRECTIONS** | 15 status claims in `governance/coverage-plan.json` were verified against disk and corrected on 2026-09-29 (`CORR-COV-001` … `CORR-COV-015`). Two landed on a *different* status than first reported, because verification found evidence on both sides; both record the divergence. Every `expected_artifacts` list was retained unchanged and no artifact was fabricated to make a status true. |
-| **KNOWN_CORPUS_DEFECT_OUTSIDE_BOUNDARY** | `TRACEABILITY_DOCUMENT.md` at the **repository root** claimed ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability. The repository owner **explicitly authorised amending it**, and the file was corrected on 2026-09-29: conformity sentence removed, ASIL values relabelled hypothetical, non-conformity header added, standards table retitled a reference index, IEC 61508 rows removed with an explicit not-engaged note, and a fabricated `Status: APPROVED` sign-off block deleted. Recorded as finding `FB2-REV-FND-000022` (revision 3). The file is still **outside the write boundary and outside the toolchain's reach**, so it can drift; see that finding's `residual_risk`. |
+| **TRACEABILITY_DOCUMENT_IS_TOOL_OWNED** | `TRACEABILITY_DOCUMENT.md` at the **repository root** claimed ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability, and carried a fabricated `Status: APPROVED` sign-off block. The repository owner **explicitly authorised amending it**, and it was corrected by hand on 2026-09-29 (finding `FB2-REV-FND-000022` revision 3). **The durable fix has since been implemented, at revision 4 of that finding:** the document is now **generated** at `views/traceability/traceability-document.md` by `corpus.py render` from the canonical records, carrying the same provenance header and guard-field contract as every other generated view, with every figure computed at render time. The repository-root path and `reports/TRACEABILITY_DOCUMENT.md` are now content-free pointers to it. The drift risk is closed by construction rather than by human discipline. |
 
 ---
 
@@ -78,7 +78,7 @@ All figures from a live tool run on 2026-09-29.
 | verification_planning | 16/7 | 229% (ratio, not a score) |
 | actual_product_evidence | 0/16 | **0%** |
 | synthetic_fixture_coverage | 82/43 | 191% (ratio, not a score) |
-| negative_scenario_validation | 20/20 | 100% (scenarios present; detection is gate 5/8) |
+| negative_scenario_validation | 20/20 | 100% (measured: 20 scenarios executed, 20 detected by their own declared rule) |
 | export_reproducibility | 1/1 | 100% |
 | human_approval | 0/154 | **0%** |
 | production_authorization | 0/154 | **0%** (correctly false) |
@@ -172,7 +172,7 @@ docs/artifacts/
 │   ├── records/                        # 13 files → 12 unique review records
 │   ├── findings/                       # 22 finding artifacts
 │   └── closure/
-├── views/                              # Generated human-readable views — 10 files
+├── views/                              # Generated human-readable views — 11 files
 │   ├── management/management.md
 │   ├── concept-and-safety/concept-and-safety.md
 │   ├── system/system.md
@@ -182,7 +182,8 @@ docs/artifacts/
 │   ├── production-operation-service/lifecycle-continuation.md
 │   ├── supporting-processes/supporting-processes.md
 │   ├── standards-mapping/standards-mapping.md
-│   └── traceability/traceability.md
+│   ├── traceability/traceability.md
+│   └── traceability/traceability-document.md   # the canonical traceability doc
 ├── exports/                            # Portable exports — 4 files
 │   ├── manifest.json                   # content hashes
 │   ├── nodes.jsonl                     # 153 nodes
@@ -377,7 +378,8 @@ report JSONs is derived and regenerable. The canonical records are the JSON file
 under `corpus/`, `reviews/`, `traceability/` and `scenarios/`.
 
 ```bash
-# Regenerate all 10 views (~60 s; dominated by Mermaid validation)
+# Regenerate all 11 views, including the canonical traceability document
+# (~15 s; dominated by Mermaid validation)
 python3 docs/artifacts/tools/corpus.py render
 
 # Regenerate exports
@@ -491,7 +493,7 @@ an explicit disposition, **not** that the dispositions are favourable:
 
 | Defect | Severity | Disposition |
 |---|---|---|
-| `TRACEABILITY_DOCUMENT.md` at repository root claimed ISO 26262 + IEC 61508 compliance, an ASIL-D/ASIL-B capability, and carried a fabricated human-approval sign-off; outside the write boundary | high | **accepted** — `FB2-REV-FND-000022` rev 3; file corrected under explicit owner authorisation; still outside tool control, residual drift risk recorded |
+| `TRACEABILITY_DOCUMENT.md` at repository root claimed ISO 26262 + IEC 61508 compliance, an ASIL-D/ASIL-B capability, and carried a fabricated human-approval sign-off; outside the write boundary | high | **accepted** — `FB2-REV-FND-000022` rev 4; corrected under explicit owner authorisation, then made **tool-owned**: the document is generated at `views/traceability/traceability-document.md` and the root path is a content-free pointer, so the drift risk is closed by construction |
 | `FB2-REV-000001` exists in two files with identical content | medium | accepted, reported; index de-duplicates, validator does not flag it |
 | Redundant link-registry copy under `corpus/` (51 of 172 links) | low | accepted, reported; de-duplicated by the tool |
 | `feature-inventory.json` `summary.total_features` says 20, holds 22 | low | accepted, reported; the tool counts records and reports 22 |
@@ -516,17 +518,21 @@ an explicit disposition, **not** that the dispositions are favourable:
 | `reports/verification-evidence-report.md` | The real macOS host run, 5 failures root-caused, 177 blocked |
 | `reports/scenario-validation-report.md` + `.json` | 20 mutations, 3 change lifecycles, baseline-firing detectors |
 | `reports/reproducibility-report.md` | Determinism measured by rendering twice and diffing |
-| `reports/TRACEABILITY_DOCUMENT.md` + `.docx` | End-to-end traceability walkthrough, generated from the corpus. Carries no conformity claim. **Do not confuse it with the repository-root file** — see the note below |
+| `reports/TRACEABILITY_DOCUMENT.md` + `.docx` | **Pointer** to the generated traceability document, plus a pandoc conversion of that pointer. Neither carries engineering content |
 | `reports/traceability-chain-map.md` | Cross-domain chain map |
 | `reports/aspice-process-map.md` | ASPICE process-to-artifact map |
 | `reports/aspice-mock-audit-report.md` | ASPICE PAM 4.1 mock audit, per-process verdicts |
 
-> `reports/TRACEABILITY_DOCUMENT.md` is a *different file* from
-> `TRACEABILITY_DOCUMENT.md` at the **repository root**. The root file is
-> hand-authored, is **not** generated by any tool, and was the one that
-> carried the unsupported conformity and ASIL claim recorded as
-> `FB2-REV-FND-000022`. That file was corrected on 2026-09-29 under explicit
-> owner authorisation. The `reports/` copy never carried the claim.
+> There is exactly **one** traceability document with engineering content,
+> and it is generated: `views/traceability/traceability-document.md`, emitted by
+> `python3 docs/artifacts/tools/corpus.py render` from the canonical records
+> with the same provenance header and guard-field contract as every other
+> generated view. `TRACEABILITY_DOCUMENT.md` at the **repository root** and
+> `reports/TRACEABILITY_DOCUMENT.md` are short pointers to it and contain no
+> engineering content. The root file was the one that carried the unsupported
+> conformity and ASIL claim recorded as `FB2-REV-FND-000022`; it was corrected
+> by hand on 2026-09-29 under explicit owner authorisation and then made
+> tool-owned, so that condition cannot recur.
 
 ---
 

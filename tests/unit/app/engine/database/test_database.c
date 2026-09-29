@@ -102,6 +102,88 @@ DATA_QUEUE_MESSAGE_s data_sendMessage = {
     .accessType                   = DATA_WRITE_ACCESS,
 };
 
+/*========== Content check for the untyped `void *` queue item ==============
+ *
+ * #OS_SendToBackOfQueue takes an untyped `const void *const pvItemToQueue`.
+ * CMock cannot size a `void *`, so `:when_ptr: :compare_data` silently
+ * degrades to UNITY_TEST_ASSERT_EQUAL_PTR. The item the code under test sends
+ * is a function-local `data_sendMessage` built inside
+ * DATA_AccessDatabaseEntries (database.c:150), private to that translation
+ * unit, so the test cannot address it and an address comparison can never hold.
+ *
+ * This test populates `data_sendMessage` field by field immediately before each
+ * expectation, mirroring exactly what DATA_AccessDatabaseEntries builds at
+ * database.c:150-155. That is a content expectation, so it is made explicitly
+ * here, field by field over the real struct type.
+ *
+ * The queue handle and the timeout ARE checked, and by identity/equality, which
+ * is correct: `ftsk_databaseQueue` is the same extern object in both the test
+ * and the product. They are re-asserted here because a CMock `_Stub` returns
+ * from the callback branch of the generated mock *before* CMock's own argument,
+ * call-count and ordering assertions, so all three would otherwise be silently
+ * lost:
+ *
+ *  - the ARGUMENT checks are re-established by the three TEST_ASSERT_EQUAL
+ *    calls above;
+ *
+ *  - the CALL COUNT is re-established by the
+ *    `TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount())` assertion at
+ *    the end of every test that uses this callback. `_Stub` is idempotent: it
+ *    zeroes the counter and sets a function pointer, so the two registrations
+ *    that used to be two `_ExpectAndReturn` queue entries registered one stub,
+ *    and nothing would otherwise notice zero calls or five;
+ *
+ *  - the ORDER needs no separate mechanism here, and the claim is specific
+ *    rather than general. In each of the nine tests that use this callback,
+ *    `OS_SendToBackOfQueue` is the only mock the test drives -- the sole other
+ *    mock in this file, `OS_GetTickCount`, is used only by `testDATA_CopyData`,
+ *    which does not queue. With a single mock in play, CMock's global
+ *    `GlobalVerifyOrder` counter cannot distinguish "first call then second
+ *    call" from any other arrangement of two calls, so the count assertion
+ *    subsumes the ordering exactly. The one order-sensitive property the
+ *    original sequence really did pin -- the return values, OS_SUCCESS then
+ *    OS_FAIL -- is reproduced deterministically below by indexing
+ *    `osSendToBackOfQueueRetval` on the call counter, which the
+ *    `_CallCount()` assertion pins to exactly two.
+ *
+ * (The `_Stub` in `testDATA_ExecuteDataBist` is pre-existing and unrelated to
+ * this change: it was a `_Stub` at HEAD too, replaced no `_ExpectAndReturn`, and
+ * therefore lost no count or ordering guarantee.)
+ */
+static uint8_t osSendToBackOfQueueCalls = 0u;
+/* return value for the Nth OS_SendToBackOfQueue call, as the test declared it */
+static const OS_STD_RETURN_e osSendToBackOfQueueRetval[2] = {OS_SUCCESS, OS_FAIL};
+
+static OS_STD_RETURN_e OS_SendToBackOfQueueCallback(
+    OS_QUEUE xQueue,
+    const void *const pvItemToQueue,
+    uint32_t ticksToWait,
+    int cmock_num_calls) {
+    (void)cmock_num_calls;
+    /* the handle is the same extern object on both sides: identity is correct */
+    TEST_ASSERT_EQUAL(ftsk_databaseQueue, xQueue);
+    TEST_ASSERT_EQUAL(DATA_QUEUE_TIMEOUT_MS, ticksToWait);
+    TEST_ASSERT_NOT_NULL(pvItemToQueue);
+
+    /* Compare field by field rather than with TEST_ASSERT_EQUAL_MEMORY over the
+     * whole struct. #DATA_QUEUE_MESSAGE_s is
+     *   accessType      (enum, 4 bytes, offset 0)
+     *   <4 bytes of padding, offset 4, never written by either side>
+     *   pDatabaseEntry  (void *[4], offset 8)
+     * -- verified with offsetof() -- so a raw byte comparison would assert on
+     * padding that is indeterminate on the product side and would fail for a
+     * reason that has nothing to do with the data the queue actually carries. */
+    const DATA_QUEUE_MESSAGE_s *pSent = (const DATA_QUEUE_MESSAGE_s *)pvItemToQueue;
+    TEST_ASSERT_EQUAL(data_sendMessage.accessType, pSent->accessType);
+    for (uint8_t i = 0u; i < DATA_MAX_ENTRIES_PER_ACCESS; i++) {
+        TEST_ASSERT_EQUAL(data_sendMessage.pDatabaseEntry[i], pSent->pDatabaseEntry[i]);
+    }
+
+    const OS_STD_RETURN_e retval = osSendToBackOfQueueRetval[osSendToBackOfQueueCalls];
+    osSendToBackOfQueueCalls++;
+    return retval;
+}
+
 /** data block struct for the database built-in self-test */
 typedef struct {
     /* This struct needs to be at the beginning of every database entry. During
@@ -114,6 +196,7 @@ typedef struct {
 
 /*========== Setup and Teardown =============================================*/
 void setUp(void) {
+    osSendToBackOfQueueCalls = 0u;
 }
 
 void tearDown(void) {
@@ -156,8 +239,7 @@ void testDATA_AccessDatabaseEntries(void) {
     const DATA_BLOCK_ACCESS_TYPE_e readAccess  = DATA_WRITE_ACCESS;
     const DATA_BLOCK_ACCESS_TYPE_e writeAccess = DATA_READ_ACCESS;
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e readSuccessfully =
         TEST_DATA_AccessDatabaseEntries(readAccess, pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
@@ -166,12 +248,17 @@ void testDATA_AccessDatabaseEntries(void) {
 
     data_sendMessage.accessType = DATA_READ_ACCESS;
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e writeUnsuccessfully =
         TEST_DATA_AccessDatabaseEntries(writeAccess, pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -369,19 +456,23 @@ void testDATA_Read1DataBlock(void) {
     data_sendMessage.accessType                   = DATA_READ_ACCESS;
 
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e readSuccessfully = DATA_Read1DataBlock(pValidDummy0);
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read1DataBlock(pValidDummy0);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -413,19 +504,23 @@ void testDATA_Read2DataBlocks(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e readSuccessfully = DATA_Read2DataBlocks(pValidDummy0, pValidDummy1);
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read2DataBlocks(pValidDummy0, pValidDummy1);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -461,19 +556,23 @@ void testDATA_Read3DataBlocks(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e readSuccessfully = DATA_Read3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -513,8 +612,7 @@ void testDATA_Read4DataBlocks(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e readSuccessfully =
         DATA_Read4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
@@ -522,12 +620,17 @@ void testDATA_Read4DataBlocks(void) {
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e readUnsuccessfully =
         DATA_Read4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -555,19 +658,23 @@ void testDATA_Write1DataBlock(void) {
     data_sendMessage.accessType                   = DATA_WRITE_ACCESS;
 
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write1DataBlock(pValidDummy0);
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write1DataBlock(pValidDummy0);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -599,19 +706,23 @@ void testDATA_Write2DataBlocks(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write2DataBlocks(pValidDummy0, pValidDummy1);
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write2DataBlocks(pValidDummy0, pValidDummy1);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -647,19 +758,23 @@ void testDATA_Write3DataBlocks(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /**
@@ -699,8 +814,7 @@ void testDATA_Write4DataBlocks(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(
-        ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e writeSuccessfully =
         DATA_Write4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
@@ -708,12 +822,17 @@ void testDATA_Write4DataBlocks(void) {
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
     /* ======= RT2/2: Test implementation */
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS, OS_FAIL);
+    /* the stub installed for RT1/2 above is still in force. Re-registering it
+     * would be a no-op except that _Stub zeroes CMock's call counter, which
+     * would erase RT1/2's count and make the end-of-test _CallCount()
+     * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e writeUnsuccessfully =
         DATA_Write4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
+    /* RT1/2 and RT2/2 each queue exactly one message */
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 /** callback for #testDATA_ExecuteDataBist(); this not work for other instances */

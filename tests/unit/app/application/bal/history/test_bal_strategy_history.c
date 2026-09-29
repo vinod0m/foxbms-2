@@ -87,8 +87,6 @@ TEST_INCLUDE_PATH("../../src/app/task/config")
 
 /*========== Definitions and Implementations for Unit Test ==================*/
 
-static DATA_BLOCK_BALANCING_CONTROL_s bms_tableControl = {.header.uniqueId = DATA_BLOCK_ID_BALANCING_CONTROL};
-
 /*========== Setup and Teardown =============================================*/
 void setUp(void) {
 }
@@ -98,10 +96,15 @@ void tearDown(void) {
 
 /*========== Test Cases =====================================================*/
 void testCheckBalancingInitByDisablingBalancing(void) {
+    /* #BAL_Init passes its argument straight through to #DATA_Read1DataBlock
+     * and #DATA_Write1DataBlock, so the blocks it touches are exactly this
+     * pointer. Expect on that pointer, not on a private decoy: the decoy was
+     * never passed to the code under test, so comparing against it could only
+     * ever fail, and it asserted nothing about #BAL_Init at all. */
     DATA_BLOCK_BALANCING_CONTROL_s *pBalancing = TEST_BAL_GetBalancingControl();
     pBalancing->enableBalancing                = true;
-    DATA_Read1DataBlock_ExpectAndReturn(&bms_tableControl, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&bms_tableControl, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(pBalancing, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(pBalancing, STD_OK);
     BAL_Init(pBalancing);
     TEST_ASSERT_EQUAL(false, pBalancing->enableBalancing);
 }

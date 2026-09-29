@@ -711,11 +711,11 @@ void testCANTX_BuildPackMinimumMaximumTempMessage(void) {
     /* ======= RT1/1: Test implementation */
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxPrepareSignalData_Expect(&testMaximumTemperature0, cantx_testSignalMaximumTemperature);
-    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 47u, 8u, testMaximumTemperature0, CAN_BIG_ENDIAN);
+    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 47u, 8u, (int64_t)testMaximumTemperature0, CAN_BIG_ENDIAN);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[3u]);
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxPrepareSignalData_Expect(&testMinimumTemperature0, cantx_testSignalMinimumTemperature);
-    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[3u], 39u, 8u, testMinimumTemperature0, CAN_BIG_ENDIAN);
+    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[3u], 39u, 8u, (int64_t)testMinimumTemperature0, CAN_BIG_ENDIAN);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[4u]);
 
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
@@ -875,10 +875,10 @@ void testCANTX_PackMinimumMaximumTemp(void) {
     DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, STD_OK);
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxPrepareSignalData_Expect(&testMaximumTemperature0, cantx_testSignalMaximumTemperature);
-    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 47u, 8u, testMaximumTemperature0, CAN_BIG_ENDIAN);
+    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 47u, 8u, (int64_t)testMaximumTemperature0, CAN_BIG_ENDIAN);
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxPrepareSignalData_Expect(&testMinimumTemperature0, cantx_testSignalMinimumTemperature);
-    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 39u, 8u, testMinimumTemperature0, CAN_BIG_ENDIAN);
+    CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 39u, 8u, (int64_t)testMinimumTemperature0, CAN_BIG_ENDIAN);
 
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxSetMessageDataWithSignalData_Expect(

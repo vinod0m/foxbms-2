@@ -158,7 +158,7 @@ suite, and the export twice — comparing the two export manifests' content hash
 |---|---|
 | `[1/8] validate` | PASS |
 | `[2/8] inventory` | PASS |
-| `[3/8] negative_scenario_validation = 20/20 mutations` | PASS (20/20 scenarios present; detection is `[5/8]`) |
+| `[3/8] negative_scenario_validation = 20/20 mutations` | PASS (measured: 20 scenarios executed, 20 passing) |
 | `[3/8] change lifecycles = 3/3` | PASS |
 | `[4/8] hazard present` | PASS |
 | `[5/8] scenario-test` | PASS (23/23 lines; 20/20 mutations detected on their own declared detector) |

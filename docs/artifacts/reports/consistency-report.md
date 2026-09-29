@@ -266,8 +266,8 @@ a safety manager as approver. No approval of that kind ever existed, and no corp
 record was authored against IEC 61508. The file is outside the absolute
 `docs/artifacts/` write boundary, so the **repository owner explicitly authorised
 amending it**; it was corrected on 2026-09-29 and the finding is recorded at
-**`FB2-REV-FND-000022`** revision 3 (severity `high`, category `consistency`,
-disposition `accepted`).
+**`FB2-REV-FND-000022`** (severity `high`, category `consistency`, disposition
+`accepted`), now at revision 4.
 
 What was changed: the compliance sentence, the IEC 61508 clause rows and the
 fabricated sign-off block were removed; a non-conformity READ FIRST header was
@@ -277,9 +277,20 @@ index with a preamble corrected so it no longer implies the IEC rows are corpus
 references; and the false "automatically generated" provenance claim was replaced
 with the truth that the file is hand-authored and drift-prone.
 
-**Residual risk, not closed by this disposition:** the file is still outside the
-toolchain's reach, so nothing will detect a regression. That is recorded in the
-finding's `residual_risk`.
+**Finding revision 4, 2026-09-29: the durable fix is implemented and the drift
+risk is closed by construction.** The document is now generated —
+`corpus.py render` emits
+`docs/artifacts/views/traceability/traceability-document.md` from the canonical
+records through the same view preamble as the other generated views, with every
+figure computed at render time — and both hand-authored copies (the repository-root
+file and `docs/artifacts/reports/TRACEABILITY_DOCUMENT.md`) were reduced to
+short, content-free pointers to that single canonical document. A hand-maintained
+control was never a control; there is now nothing to hand-maintain.
+
+The same pass repaired a second instance of the same defect class:
+`negative_scenario_validation` counted scenario **files** rather than executing
+them, so it read 20/20 while the mutation gate was broken. It now runs the suite
+and reports passes (§5).
 
 ### 4.5 Fifteen governance overclaims corrected
 
@@ -295,18 +306,18 @@ fabricated to make a status true.
 
 | Dimension | Ratio | % | Reading |
 |---|---|---|---|
-| scope_accounting | 1/1 | 100% | complete |
+| scope_accounting | 1/1 | 100% | complete, **presence** check |
 | artifact_population | 13/13 | 100% | complete |
 | standards_mapping | 44/44 | 100% | every locked item has a disposition — but 6 processes and 2 ISO parts are `gap` |
 | source_grounding | 80/223 | 36% | 143 records carry no `source_refs`; mostly synthetic, which is expected |
-| traceability_integrity | 460/460 | 100% | 0 dangling |
-| semantic_consistency_checks | 10/10 | 100% | 0 findings, 0 errors |
+| traceability_integrity | 460/460 | 100% | 0 dangling, from a link validation re-run for this figure |
+| semantic_consistency_checks | 10/10 | 100% | 0 findings, 0 errors — **declared** count, not a measurement |
 | automated_review_coverage | 144/187 | 77% | 43 unique IDs uncovered |
 | verification_planning | 25/7 | 357% | over-covered; a ratio, not a score |
 | actual_product_evidence | 0/25 | 0% | blocked by policy; no target-hardware member in the enum |
 | synthetic_fixture_coverage | 148/43 | 344% | over-covered |
-| negative_scenario_validation | 20/20 | 100% | scenarios **present**; detection is gate 5/8 — plus 3/3 change lifecycles |
-| export_reproducibility | 1/1 | 100% | manifest present, hashes stable |
+| negative_scenario_validation | 20/20 | 100% | **measured** (2026-09-29): 20 scenarios executed, 20 detected by their own declared rule; plus 3/3 change lifecycles executed |
+| export_reproducibility | 1/1 | 100% | manifest present (**presence**); hash stability is measured by gate [6/8] |
 | human_approval | 0/223 | 0% | pending; none performed |
 | production_authorization | 0/223 | 0% | false; by policy |
 

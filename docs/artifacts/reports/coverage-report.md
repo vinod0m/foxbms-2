@@ -29,7 +29,7 @@ above 100% is an over-coverage count, not a score.
 | 8 | verification_planning | measures per FSR | 16/7 | 229% | over-covered |
 | 9 | actual_product_evidence | target executions | 0/16 | 0% | **blocked by policy** |
 | 10 | synthetic_fixture_coverage | 43 artifacts | 82/43 | 191% | over-covered |
-| 11 | negative_scenario_validation | 20 mutations | 20/20 | 100% | complete (scenarios present; detection measured by gate 5/8) |
+| 11 | negative_scenario_validation | 20 mutations | 20/20 | 100% | complete (measured: 20 scenarios executed, 20 detected by their own declared rule) |
 | 12 | final_status | — | `synthetic_ready_with_limitations` | — | recorded |
 | 13 | export_reproducibility | manifest | 1/1 | 100% | complete |
 | 14 | human_approval | — | 0/154 | 0% | **pending by policy** |
@@ -50,6 +50,17 @@ design.
 executions: execution_kind has no target-hardware member, so none can be claimed
 (blocked, not fabricated); of 25 execution records: 13 host/simulation (real
 product code, not target hardware), 12 synthetic_fixture/none, 0 undeclared.*
+
+**Two cautions on this table.** First, it is hand-authored and several of its
+figures (rows 4, 5, 7, 8, 10, 14, 15) predate the last corpus expansion and are
+stale; the live figures are `coverage-report.json` and the `coverage` command's
+own output. Second, four dimensions here are presence checks or declared
+constants rather than measurements — `scope_accounting` and
+`export_reproducibility` (presence), `semantic_consistency_checks` (a declared
+count of check categories) and `human_approval` / `production_authorization`
+(policy constants enforced by other rules and by gate `[7/8]`). `standards_mapping`
+counts entries in the coverage plan, not satisfied mappings. The generated
+traceability document labels each one; none keys off an acceptance gate.
 
 ## 2. Population Counts — and Why There Are Three of Them
 
@@ -175,7 +186,7 @@ field is stale; the record list is authoritative.
 | `FB2-REV-000001` in two files | medium | accepted, reported | The artifact index de-duplicates on `(profile, id)`; the validator does not raise a finding. Left in place rather than deleted unrecorded. |
 | Redundant link registry copy | low | accepted, reported | 51 links duplicated inside `corpus/`; de-duplicated by the tool. |
 | Stale `summary.total_features` | low | accepted, reported | Says 20, holds 22. |
-| Conformity claim in the hand-authored root document | high | **accepted** | `TRACEABILITY_DOCUMENT.md` at the repository root. Recorded as finding `FB2-REV-FND-000022`. The repository owner explicitly authorised amending that file, and it was corrected on 2026-09-29 (revision 3 of the finding): the conformity sentence, the IEC 61508 clause rows and a fabricated human-approval sign-off block were removed, and the ASIL values were relabelled hypothetical. The file remains outside the write boundary and outside the toolchain's reach, so it can drift — that residual risk is recorded in the finding. |
+| Conformity claim in the hand-authored root document | high | **accepted** | `TRACEABILITY_DOCUMENT.md` at the repository root, recorded as finding `FB2-REV-FND-000022`. Corrected by hand on 2026-09-29 (finding revision 3), then made **tool-owned** at revision 4: the document is now generated at `docs/artifacts/views/traceability/traceability-document.md` by `corpus.py render`, and both hand-authored copies — the root file and `docs/artifacts/reports/TRACEABILITY_DOCUMENT.md` — were reduced to content-free pointers. The drift risk is closed by construction rather than by human discipline. |
 
 ## 7. Feature Coverage
 
@@ -226,9 +237,32 @@ chains for two of them** and partial or parameter-level material for the rest.
 
 Negative-scenario coverage is **closed**: 20/20 mutations implemented, and 20/20
 detected by the rule each one declares, 3/3 change lifecycles structurally
-complete. The distinction matters and is stated in
-`final-acceptance-report.md` §2.1: the `20/20` this dimension reports counts
-scenarios **present**, while the detection measurement is acceptance gate
-`[5/8] scenario-test`. Before 2026-09-29 the gate accepted any finding of the
-expected severity on the scenario's affected artifact, so 8 of the 20 passed on
-standing defects; see finding `FB2-REV-FND-000032`.
+complete.
+
+**This dimension is now a measurement, not a count of files.** Until
+2026-09-29 `negative_scenario_validation` reported `len(mutation files on disk)`
+over a fixed denominator of 20, so it read `20/20` whether the scenarios
+detected anything or not — including while the mutation gate was broken and 8 of
+the 20 were failing (finding `FB2-REV-FND-000032`). It now executes the
+mutation and change-lifecycle scenarios through the same path acceptance gate
+`[5/8]` uses and reports how many PASS. `20/20` means twenty scenarios ran and
+twenty passed; the figure drops the moment one of them does not. Verified by
+temporarily breaking one scenario's declared detector: the dimension read
+`19/20` and named `SCN-MUT-005` as the failure. The gate, the rules and the
+scenarios are unchanged.
+
+A separate defect of the same class was found in the same pass:
+`traceability_integrity` counted its dangling links from whatever findings
+happened to be in memory, which was only the validate pass when the caller ran
+one. A bare `corpus.py coverage` therefore reported `0 dangling` without having
+checked a link. It now re-runs link validation for its own figure.
+
+Four further dimensions are presence checks or declared constants rather than
+measurements, and are labelled as such in the generated traceability document
+(`docs/artifacts/views/traceability/traceability-document.md`):
+`scope_accounting` and `export_reproducibility` (presence), `semantic_consistency_checks`
+(declared count), `human_approval` and `production_authorization` (policy
+constants, enforced elsewhere by the `human_approval_rejected` and
+`production_authorized_rejected` rules and by gate `[7/8]`), and
+`standards_mapping`, which counts entries in the coverage plan rather than
+satisfied mappings. None of them keys off a gate, and none is changed here.

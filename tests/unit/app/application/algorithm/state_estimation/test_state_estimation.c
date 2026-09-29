@@ -71,9 +71,91 @@ TEST_INCLUDE_PATH("../../src/app/application/algorithm/state_estimation")
 
 /*========== Definitions and Implementations for Unit Test ==================*/
 
-static DATA_BLOCK_SOC_s se_tableSocEstimation = {.header.uniqueId = DATA_BLOCK_ID_SOC};
-static DATA_BLOCK_SOH_s se_tableSohEstimation = {.header.uniqueId = DATA_BLOCK_ID_SOH};
-static DATA_BLOCK_SOE_s se_tableSoeEstimation = {.header.uniqueId = DATA_BLOCK_ID_SOE};
+
+/*========== Content check for the untyped `void *` data-block arguments ====
+ *
+ * #DATA_Write1DataBlock and #DATA_Write3DataBlocks take untyped `void *`
+ * pointers. CMock cannot size a `void *`, so `:when_ptr: :compare_data`
+ * silently degrades to UNITY_TEST_ASSERT_EQUAL_PTR. These blocks are file-scope
+ * statics of state_estimation.c:66-68, private to that translation unit, so the
+ * test cannot address them and an address comparison can never hold.
+ *
+ * A full content comparison is also impossible here, and would be wrong: each
+ * #SE_Initialize* / #SE_RunStateEstimations call *writes into* its block before
+ * publishing it (state_estimation.c:79-80, :85-86, :91-92, :96-100), so the
+ * published content legitimately differs from this file's pristine copies by
+ * construction. What is both meaningful and stable is the block identity in the
+ * header, which is what records *which* database entry was published.
+ *
+ * A CMock `_Stub` returns from the callback branch of the generated mock before
+ * CMock's own argument, call-count and ordering assertions, so what those
+ * provided is re-established explicitly:
+ *
+ *  - CALL COUNT, by the `_CallCount()` assertion at the end of each test. The
+ *    original registered exactly one expectation per test, so each pins 1.
+ *  - PUBLISH IDENTITY AND EXACTLY-ONCE, by the per-block step counters: each of
+ *    `DATA_BLOCK_ID_SOC`, `_SOH` and `_SOE` has its own counter that must be 0 on
+ *    arrival and is set to 1, and an unrecognised id fails the callback. So no
+ *    block may be published twice, none may be skipped, and no other block may
+ *    be published in its place.
+ *  - ARGUMENT ORDER, for the one call that carries three blocks:
+ *    `DATA_Write3DataBlocksCallback` asserts the SOC/SOH/SOE ids in the order
+ *    state_estimation.c:100 passes them.
+ *
+ * What is not restored, stated rather than glossed: the original
+ * `_ExpectAndReturn` registrations also took part in CMock's global
+ * `GlobalVerifyOrder` counter, so they additionally pinned the relative order of
+ * these publish calls against any other mock in the same test. Each of the four
+ * tests here drives exactly one of the four functions and no other mock, so
+ * with a single call in play a global order counter carries no information the
+ * assertions above do not already carry.
+ */
+static uint8_t stepSoc = 0u;
+static uint8_t stepSoh = 0u;
+static uint8_t stepSoe = 0u;
+
+static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(void *pDataFromSender0, int cmock_num_calls) {
+    (void)cmock_num_calls;
+    const DATA_BLOCK_HEADER_s *pHeader = (const DATA_BLOCK_HEADER_s *)pDataFromSender0;
+    TEST_ASSERT_NOT_NULL(pHeader);
+    switch (pHeader->uniqueId) {
+        case DATA_BLOCK_ID_SOC:
+            TEST_ASSERT_EQUAL_UINT8(0u, stepSoc);
+            stepSoc = 1u;
+            break;
+        case DATA_BLOCK_ID_SOH:
+            TEST_ASSERT_EQUAL_UINT8(0u, stepSoh);
+            stepSoh = 1u;
+            break;
+        case DATA_BLOCK_ID_SOE:
+            TEST_ASSERT_EQUAL_UINT8(0u, stepSoe);
+            stepSoe = 1u;
+            break;
+        default:
+            TEST_FAIL_MESSAGE("DATA_Write1DataBlock published an unexpected data block");
+            break;
+    }
+    return STD_OK;
+}
+
+static STD_RETURN_TYPE_e DATA_Write3DataBlocksCallback(
+    void *pDataFromSender0,
+    void *pDataFromSender1,
+    void *pDataFromSender2,
+    int cmock_num_calls) {
+    (void)cmock_num_calls;
+    const DATA_BLOCK_HEADER_s *pHeader0 = (const DATA_BLOCK_HEADER_s *)pDataFromSender0;
+    const DATA_BLOCK_HEADER_s *pHeader1 = (const DATA_BLOCK_HEADER_s *)pDataFromSender1;
+    const DATA_BLOCK_HEADER_s *pHeader2 = (const DATA_BLOCK_HEADER_s *)pDataFromSender2;
+    TEST_ASSERT_NOT_NULL(pHeader0);
+    TEST_ASSERT_NOT_NULL(pHeader1);
+    TEST_ASSERT_NOT_NULL(pHeader2);
+    /* published in the order state_estimation.c:100 passes them */
+    TEST_ASSERT_EQUAL(DATA_BLOCK_ID_SOC, pHeader0->uniqueId);
+    TEST_ASSERT_EQUAL(DATA_BLOCK_ID_SOH, pHeader1->uniqueId);
+    TEST_ASSERT_EQUAL(DATA_BLOCK_ID_SOE, pHeader2->uniqueId);
+    return STD_OK;
+}
 
 /*========== Setup and Teardown =============================================*/
 void setUp(void) {
@@ -113,25 +195,31 @@ void testInvalidInput(void) {
 void testSE_InitializeSoc(void) {
     bool ccPresent       = true;
     uint8_t stringNumber = 0u;
-    DATA_Write1DataBlock_ExpectAndReturn(&se_tableSocEstimation, STD_OK);
+    DATA_Write1DataBlock_Stub(DATA_Write1DataBlockCallback);
     SE_InitializeSoc(ccPresent, stringNumber);
+    TEST_ASSERT_EQUAL_UINT8(1u, stepSoc);
+    TEST_ASSERT_EQUAL_INT(1, DATA_Write1DataBlock_CallCount());
 }
 
 void testSE_InitializeSoe(void) {
     bool ecPresent       = true;
     uint8_t stringNumber = 0u;
-    DATA_Write1DataBlock_ExpectAndReturn(&se_tableSoeEstimation, STD_OK);
+    DATA_Write1DataBlock_Stub(DATA_Write1DataBlockCallback);
     SE_InitializeSoe(ecPresent, stringNumber);
+    TEST_ASSERT_EQUAL_UINT8(1u, stepSoe);
+    TEST_ASSERT_EQUAL_INT(1, DATA_Write1DataBlock_CallCount());
 }
 
 void testSE_InitializeSoh(void) {
     uint8_t stringNumber = 0u;
-    DATA_Write1DataBlock_ExpectAndReturn(&se_tableSohEstimation, STD_OK);
+    DATA_Write1DataBlock_Stub(DATA_Write1DataBlockCallback);
     SE_InitializeSoh(stringNumber);
+    TEST_ASSERT_EQUAL_UINT8(1u, stepSoh);
+    TEST_ASSERT_EQUAL_INT(1, DATA_Write1DataBlock_CallCount());
 }
 
 void testSE_RunStateEstimations(void) {
-    DATA_Write3DataBlocks_ExpectAndReturn(
-        &se_tableSocEstimation, &se_tableSohEstimation, &se_tableSoeEstimation, STD_OK);
+    DATA_Write3DataBlocks_Stub(DATA_Write3DataBlocksCallback);
     SE_RunStateEstimations();
+    TEST_ASSERT_EQUAL_INT(1, DATA_Write3DataBlocks_CallCount());
 }

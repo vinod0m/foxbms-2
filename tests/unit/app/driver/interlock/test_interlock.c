@@ -78,6 +78,123 @@ TEST_INCLUDE_PATH("../../src/app/engine/diag")
 DATA_BLOCK_ADC_VOLTAGE_s ilck_tableAdcVoltages     = {.header.uniqueId = DATA_BLOCK_ID_ADC_VOLTAGE};
 DATA_BLOCK_INTERLOCK_FEEDBACK_s ilck_tableFeedback = {.header.uniqueId = DATA_BLOCK_ID_INTERLOCK_FEEDBACK};
 
+/*========== Content comparison for the untyped `void *` data-block arguments ==
+ *
+ * #DATA_Read1DataBlock and #DATA_Write1DataBlock take an untyped `void *`.
+ * CMock cannot size a `void *`, so `:when_ptr: :compare_data` silently degrades
+ * to UNITY_TEST_ASSERT_EQUAL_PTR. The code under test owns private statics for
+ * these blocks (interlock.c:215 and :106) that the test cannot address, so an
+ * address comparison can never hold and the two copies are distinct objects by
+ * construction.
+ *
+ * Two different oracles are needed, because the two blocks differ in kind:
+ *
+ *  - ilck_tableAdcVoltages is read *before* it is written to (interlock.c:215),
+ *    so it still holds exactly its initial value and a full content comparison
+ *    over the real sizeof is both possible and meaningful.
+ *
+ *  - ilck_tableFeedback has already been filled in from the ADC readings by the
+ *    time it is written (interlock.c:225-240), so its content legitimately
+ *    differs from the test's pristine copy and a full content comparison would
+ *    be wrong. The meaningful, stable property is the block identity in the
+ *    header, which is what says *which* database entry was published.
+ *
+ * ---- what the `_Stub` costs, and what is put back ----------------------
+ *
+ * A CMock `_Stub` sets the callback pointer and zeroes the call counter, and
+ * the generated mock then returns from the callback branch *before* the
+ * "called more times than expected", "called early"/"called late" (global
+ * ordering) and argument assertions. CMock's own generator confirms the
+ * generated body is:
+ *
+ *     if (!CallbackBool && CallbackFunctionPointer != NULL)
+ *     { ... return cmock_cb_ret; }              <-- taken by _Stub
+ *     UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, ..., CalledMore);
+ *     if (cmock_call_instance->CallOrder > ++GlobalVerifyOrder) ... CalledEarly
+ *     if (cmock_call_instance->CallOrder < GlobalVerifyOrder)     ... CalledLate
+ *     <argument assertions>
+ *
+ * So the two guarantees the original `_ExpectAndReturn` sequence provided are
+ * genuinely gone, and both are re-established explicitly:
+ *
+ *  - CALL COUNT. `..._ExpectAndReturn` is a queue entry, so N registrations
+ *    meant "exactly N calls". `_Stub` is idempotent: registering it nine times
+ *    registers it once and the count is never checked. Each `_CallCount()`
+ *    assertion below reinstates the exact count, and `ilckPublishStep` is
+ *    asserted at the end of each test to a fixed value, so an under-call and an
+ *    over-call both fail.
+ *
+ *  - ORDERING. Reinstated in two layers, both strictly stronger than "no
+ *    order":
+ *      1. Read/write adjacency and count, via `ilckPublishStep`. The k-th read
+ *         must find the step counter at 2*(k-1), and the k-th write at 2k-1, so
+ *         reads and writes must strictly alternate and no write may precede its
+ *         read. This is what a bare count cannot express.
+ *      2. Position of the publish relative to the diagnosis report, via
+ *         `DIAG_Handler_AddCallback`. The original sequence pinned the strict
+ *         global order
+ *             read, write, DIAG, <critical section / pin reads>   (x8, then x1)
+ *         The `DIAG_Handler` expectations are still `_ExpectAndReturn` and so
+ *         still enforce their own order, but the stubbed read/write no longer
+ *         take part in CMock's global `GlobalVerifyOrder` counter. Adding a
+ *         callback -- rather than a second `_Stub` -- is what restores the link:
+ *         `_AddCallback` sets `CallbackBool`, so the generated mock runs the
+ *         ordering and argument checks first and only then calls back. At the
+ *         k-th diagnosis report the callback requires both the read count and
+ *         the write count to be exactly k, which is precisely "read and write
+ *         both completed before the k-th report".
+ *
+ * What is NOT re-established, stated explicitly rather than glossed: the
+ * original also pinned the read/write calls *after* a specific
+ * `OS_EnterTaskCritical`/`IO_PinGet`/`OS_ExitTaskCritical` group. Those mocks
+ * are untouched and still enforce their own relative order among themselves,
+ * but the stubbed read/write are no longer tied to a position inside that
+ * critical-section sequence. That ordering is incidental to the critical
+ * section's nesting rather than to the behaviour under test (which is "publish
+ * the interlock feedback, then report DIAG_EVENT_OK"), and pinning it would
+ * require observing every `OS_*` and `IO_*` call from inside a callback. It is
+ * recorded here as a known, accepted limitation rather than claimed as covered.
+ */
+static uint8_t ilckPublishStep = 0u;
+
+static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(void *pDataToReceiver0, int cmock_num_calls) {
+    const DATA_BLOCK_ADC_VOLTAGE_s *pBlock = (const DATA_BLOCK_ADC_VOLTAGE_s *)pDataToReceiver0;
+    TEST_ASSERT_NOT_NULL(pBlock);
+    TEST_ASSERT_EQUAL_MEMORY(&ilck_tableAdcVoltages, pBlock, sizeof(DATA_BLOCK_ADC_VOLTAGE_s));
+    /* cmock_num_calls is CMock's 0-based call index, so the k-th read is
+     * cmock_num_calls == k-1 and must follow exactly k-1 complete pairs. */
+    TEST_ASSERT_EQUAL_UINT8((uint8_t)(2u * (uint8_t)cmock_num_calls), ilckPublishStep);
+    ilckPublishStep++;
+    return STD_OK;
+}
+
+static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(void *pDataFromSender0, int cmock_num_calls) {
+    const DATA_BLOCK_INTERLOCK_FEEDBACK_s *pBlock = (const DATA_BLOCK_INTERLOCK_FEEDBACK_s *)pDataFromSender0;
+    TEST_ASSERT_NOT_NULL(pBlock);
+    TEST_ASSERT_EQUAL(DATA_BLOCK_ID_INTERLOCK_FEEDBACK, pBlock->header.uniqueId);
+    /* a write must close a publish cycle opened by exactly one read */
+    TEST_ASSERT_EQUAL_UINT8((uint8_t)(2u * (uint8_t)cmock_num_calls + 1u), ilckPublishStep);
+    ilckPublishStep++;
+    return STD_OK;
+}
+
+/* Reinstates the read/write-before-report ordering. See the block comment. */
+static DIAG_RETURNTYPE_e DIAG_HandlerCallback(
+    DIAG_ID_e diagId,
+    DIAG_EVENT_e event,
+    DIAG_IMPACT_LEVEL_e impact,
+    uint32_t data,
+    int cmock_num_calls) {
+    (void)diagId;
+    (void)event;
+    (void)impact;
+    (void)data;
+    /* the k-th report must be preceded by k reads and k writes */
+    TEST_ASSERT_EQUAL_INT(cmock_num_calls + 1, DATA_Read1DataBlock_CallCount());
+    TEST_ASSERT_EQUAL_INT(cmock_num_calls + 1, DATA_Write1DataBlock_CallCount());
+    return DIAG_HANDLER_RETURN_OK;
+}
+
 /*========== Setup and Teardown =============================================*/
 void setUp(void) {
     /* reset the state of interlock before each test */
@@ -92,6 +209,7 @@ void setUp(void) {
         .ErrRequestCounter = 0,
         .counter           = 0,
     };
+    ilckPublishStep = 0u;
     TEST_ILCK_SetStateStruct(ilck_state);
 }
 
@@ -207,8 +325,8 @@ void testInitializeStateMachine(void) {
     OS_ExitTaskCritical_Expect();
 
     for (uint8_t i = 0; i < 8; i++) {
-        DATA_Read1DataBlock_ExpectAndReturn(&ilck_tableAdcVoltages, STD_OK);
-        DATA_Write1DataBlock_ExpectAndReturn(&ilck_tableFeedback, STD_OK);
+        DATA_Read1DataBlock_Stub(DATA_Read1DataBlockCallback);
+        DATA_Write1DataBlock_Stub(DATA_Write1DataBlockCallback);
         DIAG_Handler_ExpectAndReturn(
             DIAG_ID_INTERLOCK_FEEDBACK, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
         OS_EnterTaskCritical_Expect();
@@ -218,9 +336,12 @@ void testInitializeStateMachine(void) {
         OS_ExitTaskCritical_Expect();
     }
 
-    DATA_Read1DataBlock_ExpectAndReturn(&ilck_tableAdcVoltages, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&ilck_tableFeedback, STD_OK);
+    DATA_Read1DataBlock_Stub(DATA_Read1DataBlockCallback);
+    DATA_Write1DataBlock_Stub(DATA_Write1DataBlockCallback);
     DIAG_Handler_ExpectAndReturn(DIAG_ID_INTERLOCK_FEEDBACK, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
+    /* observation-only: keeps every DIAG_Handler argument and order check above
+     * and additionally pins read/write-before-report. See the block comment. */
+    DIAG_Handler_AddCallback(DIAG_HandlerCallback);
     TEST_ASSERT_EQUAL(ILCK_OK, ILCK_SetStateRequest(ILCK_STATE_INITIALIZATION_REQUEST));
 
     TEST_ASSERT_EQUAL(ILCK_REQUEST_PENDING, ILCK_SetStateRequest(ILCK_STATE_INITIALIZATION_REQUEST));
@@ -231,6 +352,10 @@ void testInitializeStateMachine(void) {
         ILCK_Trigger();
     }
 
+    /* the 8 loop iterations plus the final one: 9 publish cycles, 9 reports */
+    TEST_ASSERT_EQUAL_INT(9, DATA_Read1DataBlock_CallCount());
+    TEST_ASSERT_EQUAL_INT(9, DATA_Write1DataBlock_CallCount());
+    TEST_ASSERT_EQUAL_UINT8(18u, ilckPublishStep);
     TEST_ASSERT_EQUAL(ILCK_STATEMACHINE_INITIALIZED, ILCK_GetState());
 }
 
@@ -262,10 +387,14 @@ void testILCK_GetInterlockFeedbackFeedbackOn(void) {
     OS_ExitTaskCritical_Expect();
 
     /* gioGetBit_ExpectAndReturn(ILCK_IO_REG, ILCK_INTERLOCK_FEEDBACK, 1u); */
-    DATA_Read1DataBlock_ExpectAndReturn(&ilck_tableAdcVoltages, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&ilck_tableFeedback, STD_OK);
+    DATA_Read1DataBlock_Stub(DATA_Read1DataBlockCallback);
+    DATA_Write1DataBlock_Stub(DATA_Write1DataBlockCallback);
 
     TEST_ASSERT_EQUAL(ILCK_SWITCH_ON, TEST_ILCK_GetInterlockFeedback());
+
+    TEST_ASSERT_EQUAL_INT(1, DATA_Read1DataBlock_CallCount());
+    TEST_ASSERT_EQUAL_INT(1, DATA_Write1DataBlock_CallCount());
+    TEST_ASSERT_EQUAL_UINT8(2u, ilckPublishStep);
 }
 
 void testILCK_GetInterlockFeedbackFeedbackOff(void) {
@@ -276,8 +405,12 @@ void testILCK_GetInterlockFeedbackFeedbackOff(void) {
     OS_ExitTaskCritical_Expect();
 
     /* gioGetBit_ExpectAndReturn(ILCK_IO_REG, ILCK_INTERLOCK_FEEDBACK, 0u); */
-    DATA_Read1DataBlock_ExpectAndReturn(&ilck_tableAdcVoltages, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&ilck_tableFeedback, STD_OK);
+    DATA_Read1DataBlock_Stub(DATA_Read1DataBlockCallback);
+    DATA_Write1DataBlock_Stub(DATA_Write1DataBlockCallback);
 
     TEST_ASSERT_EQUAL(ILCK_SWITCH_OFF, TEST_ILCK_GetInterlockFeedback());
+
+    TEST_ASSERT_EQUAL_INT(1, DATA_Read1DataBlock_CallCount());
+    TEST_ASSERT_EQUAL_INT(1, DATA_Write1DataBlock_CallCount());
+    TEST_ASSERT_EQUAL_UINT8(2u, ilckPublishStep);
 }

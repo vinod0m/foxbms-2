@@ -18,6 +18,7 @@ Run from repository root (or pass --root). All writes stay inside docs/artifacts
 """
 
 import argparse
+import contextlib
 import csv
 import hashlib
 import io
@@ -245,6 +246,10 @@ class CorpusTool:
         self.tests_dir = self.artifacts_dir / "tests"
         self.schemas = {}
         self.findings = Findings()
+        # One shared scenario measurement per process. cmd_coverage (step 3/8 of
+        # the acceptance suite) and cmd_scenario_test (step 5/8) both need it and
+        # must report the same number; see _execute_scenarios.
+        self._scenario_run_cache = None
         self.load_schemas()
 
     # ------------------------------------------------------------------ load
@@ -1231,8 +1236,57 @@ class CorpusTool:
 
     # ------------------------------------------------------------ 15.4 coverage
 
-    def cmd_coverage(self, quiet=False):
-        """Compute the 15 completion dimensions with numerators/denominators."""
+    def _negative_scenario_dimension(self):
+        """Build negative_scenario_validation from an EXECUTED scenario run.
+
+        MEASURED, not counted. This dimension used to report len(mutation files on
+        disk) over a fixed denominator of 20 - i.e. how many scenario FILES exist.
+        That is a presence check wearing the name of a detection measurement, and
+        it is exactly how this corpus published 20/20 while eight of the twenty
+        were failing: nothing in this dimension ever ran a scenario.
+
+        The scenarios are now executed through _execute_scenarios, the same path
+        acceptance gate [5/8] uses, and the numerator is the count that PASSES:
+        a mutation counts only when the rule it declares is implemented, is
+        silent on the unmutated corpus, and produces a finding the baseline did
+        not contain. The denominator is the number of scenarios actually
+        executed, so 20/20 means twenty scenarios ran and twenty passed, and the
+        figure drops the moment one does not.
+
+        This is a REPORTED dimension, not a gate: no acceptance check keys off it.
+        The scenario run rebuilds self.findings per scenario, so findings are
+        snapshotted and restored and this measurement cannot perturb the
+        dimensions computed before it, which read them.
+        """
+        saved_findings = self.findings
+        try:
+            scn = self._execute_scenarios()
+        finally:
+            self.findings = saved_findings
+        failed_mut = sorted(r["scenario_id"] for r in scn["results"]
+                            if r.get("type") == "mutation" and not r.get("passed"))
+        failed_chg = sorted(r["scenario_id"] for r in scn["results"]
+                            if r.get("type") == "change_lifecycle" and not r.get("passed"))
+        mut_detail = (f"{scn['passed_mutations']}/{scn['total_mutations']} mutations passed "
+                      f"(executed and detected by their own declared rule)")
+        if failed_mut:
+            mut_detail += f"; FAILING: {', '.join(failed_mut)}"
+        chg_detail = f"{scn['passed_changes']}/{scn['total_changes']} change lifecycles"
+        if failed_chg:
+            chg_detail += f" (FAILING: {', '.join(failed_chg)})"
+        return {"numerator": scn["passed_mutations"],
+                "denominator": scn["total_mutations"],
+                "detail": f"{mut_detail}; {chg_detail}"}
+
+    def _coverage_dimensions(self):
+        """Compute every completion dimension. Pure: no printing, no writes.
+
+        Split out of cmd_coverage so the renderer can derive the same numbers
+        into a generated view without a second, divergent implementation of
+        them. A view that transcribes a figure out of coverage-report.md would
+        be exactly the hand-maintained-drift defect this corpus has been
+        correcting; a view that calls this function cannot drift from it.
+        """
         dims = {}
         index = self.load_artifact_index()
         links = self.load_links()
@@ -1274,10 +1328,27 @@ class CorpusTool:
                                     "detail": f"artifacts with source_refs ({len(anchors)} anchors available)"}
 
         # traceability integrity
-        dangling = sum(1 for f in self.findings.items
-                       if f["category"] == "traceability" and "dangling" in f["description"])
+        #
+        # The dangling count is MEASURED HERE rather than read from self.findings.
+        # It used to be counted off whatever findings happened to be in memory,
+        # which is only the validate pass when the caller happened to run one:
+        # a bare `corpus.py coverage` started with an empty Findings object and
+        # therefore reported "0 dangling" without having checked a single link.
+        # A dimension that reads 100% because nothing checked it is the same
+        # defect class as counting scenario files. Link validation is re-run on
+        # a scratch Findings object and the caller's findings are left untouched.
+        probe = Findings()
+        saved_findings = self.findings
+        self.findings = probe
+        try:
+            self._validate_links(links, index)
+            dangling = sum(1 for f in probe.items
+                           if f["category"] == "traceability" and "dangling" in f["description"])
+        finally:
+            self.findings = saved_findings
         dims["traceability_integrity"] = {"numerator": len(links) - dangling, "denominator": len(links),
-                                          "detail": f"{len(links)} links, {dangling} dangling"}
+                                          "detail": f"{len(links)} links, {dangling} dangling "
+                                                    f"(link validation re-run for this figure)"}
 
         # semantic consistency checks executed
         dims["semantic_consistency_checks"] = {"numerator": 10, "denominator": 10,
@@ -1372,10 +1443,7 @@ class CorpusTool:
                                               "detail": f"{synth} synthetic_reference artifacts (target 43)"}
 
         # negative scenario validation
-        muts = list((self.scenarios_dir / "mutations").glob("mutation-*.json"))
-        chgs = list((self.scenarios_dir / "change-lifecycles").glob("change-*.json"))
-        dims["negative_scenario_validation"] = {"numerator": len(muts), "denominator": 20,
-                                               "detail": f"{len(muts)}/20 mutations; {len(chgs)}/3 change lifecycles"}
+        dims["negative_scenario_validation"] = self._negative_scenario_dimension()
 
         dims["final_status"] = FINAL_STATUS
 
@@ -1392,6 +1460,12 @@ class CorpusTool:
         dims["production_authorization"] = {"numerator": 0, "denominator": total_art,
                                             "detail": "production_authorized=false for all artifacts (by policy)"}
 
+        return dims
+
+    def cmd_coverage(self, quiet=False):
+        """Compute the 15 completion dimensions with numerators/denominators."""
+        dims = self._coverage_dimensions()
+
         if not quiet:
             print("Coverage dimensions (numerator/denominator):")
             for k, v in dims.items():
@@ -1403,9 +1477,11 @@ class CorpusTool:
         # stale legacy keys from earlier hand-maintained runs are dropped)
         out = self.reports_dir / "coverage-report.json"
         self.reports_dir.mkdir(parents=True, exist_ok=True)
+        nsv = dims["negative_scenario_validation"]
         gap_list = [
-            f"Negative scenario coverage: {len(muts)}/20 mutations"
-            f"{' (closed)' if len(muts) >= 20 else ''}",
+            f"Negative scenario validation: {nsv['numerator']}/{nsv['denominator']} mutations executed "
+            f"and passing; {nsv['detail'].rsplit('; ', 1)[-1]} "
+            f"(measured by running the suite, not by counting files)",
             "Feature completeness: 1/20 features fully generated (vertical slice by design)",
             "as_is verification evidence: 1 actual execution (host), 5 more unit-test measures extracted",
             "Human approval: all pending",
@@ -1584,8 +1660,11 @@ class CorpusTool:
     # exists" is a fact about the corpus records, not a fact about the plan,
     # and it does not drift when the plan is corrected.
 
+    # 'referenced' is a token the coverage plan actually uses for ISO parts 1 and
+    # 10. Without it those two parts classified as 'unrecorded', which is a false
+    # statement about the plan: the plan records them, as 'referenced'.
     _PLAN_DISPOSITION_TOKENS = ("not_applicable", "partially_mapped",
-                                 "unverified_reference", "mapped", "gap")
+                                 "unverified_reference", "referenced", "mapped", "gap")
 
     def _plan(self):
         """Load the coverage plan at call time.
@@ -1705,6 +1784,32 @@ class CorpusTool:
         if isinstance(v, dict):
             return ", ".join(f"{k}={v[k]}" for k in sorted(v) if not isinstance(v[k], (dict, list)))
         s = str(v).replace("\n", " ").replace("|", "\\|").strip()
+        return s if len(s) <= limit else s[: limit - 1] + "…"
+
+    @staticmethod
+    def _stable_text(v, limit=300):
+        """Deterministic one-cell rendering of a free-text value.
+
+        A rule message may interpolate a Python set, whose repr order changes
+        with PYTHONHASHSEED. Left alone that makes the generated document differ
+        between two runs of the same corpus, which breaks the byte-identical
+        regeneration contract. Members of any {...} or [...] group are therefore
+        sorted here, in the presentation layer only: the rule that produced the
+        message is not touched.
+        """
+        s = str(v).replace("\n", " ").replace("|", "\\|").strip()
+
+        def _sort_group(m):
+            inner = m.group(1)
+            if "," not in inner:
+                return m.group(0)
+            return m.group(0)[0] + ", ".join(sorted(x.strip() for x in inner.split(","))) \
+                + m.group(0)[-1]
+
+        for open_c, close_c in (("{", "}"), ("[", "]")):
+            pattern = re.escape(open_c) + r"([^" + re.escape(open_c + close_c) + r"]*)" \
+                      + re.escape(close_c)
+            s = re.sub(pattern, _sort_group, s)
         return s if len(s) <= limit else s[: limit - 1] + "…"
 
     @staticmethod
@@ -2954,6 +3059,308 @@ class CorpusTool:
              "The canonical link registries: link-type statistics, vertical chains, lateral "
              "links, and the requirement-to-test coverage matrix.", b)
 
+        # ------------------------------------------- traceability document (owned)
+        #
+        # The single generated traceability document. It exists because the file
+        # that used to carry this name at the repository root was hand-authored:
+        # no validator read it, no renderer regenerated it, and the guard-field
+        # discipline that governs every generated surface had no authority over
+        # it, so it could drift back toward claiming ISO 26262 conformity and an
+        # ASIL capability (finding FB2-REV-FND-000022). It is generated here, from
+        # the canonical records, so it carries the same provenance header and
+        # guard-field contract as every other view and cannot be edited into an
+        # overclaim. Every figure below is computed at render time; none is
+        # transcribed from a report, from coverage-report.json or from prose.
+        b = ["## What this document is", ""]
+        b.append("This is the traceability document for the foxBMS 2 lifecycle artifact corpus. "
+                 "It is a derived work product: a census of the records the corpus actually "
+                 "holds, of the links between them, and of what the corpus's own checkers "
+                 "measure about them. It is regenerated from the canonical JSON records by "
+                 f"`{self.VIEW_TOOL_REF}`, and the repository-root path "
+                 "`TRACEABILITY_DOCUMENT.md` is a pointer to this file rather than a second copy.")
+        b.append("")
+        b.append("It reports three different populations and does not merge them:")
+        b.append("")
+        b.append(f"- **{counts}** — records and links in the tool's index, the population every "
+                 "count below is drawn from.")
+        b.append("- Records that exist in both profiles appear once per profile. The same "
+                 "identifier in `as_is` and in `synthetic_reference` is two different records by "
+                 "design, and are counted separately.")
+        b.append("- A coverage ratio is a ratio, not a score. Where the denominator is a target "
+                 "rather than a population, the table says so in its own column.")
+        b.append("")
+
+        # ---- artifact census, by profile and type
+        b.append("## Artifact census")
+        b.append("")
+        b.append("Computed from the artifact index at render time.")
+        b.append("")
+        art_rows = {}
+        profs_all = sorted({k[0] for k in m["index"]
+                            if isinstance(k, tuple) and len(k) >= 2 and k[0] != "_registry"})
+        for aid, p, d in select():
+            key = (d.get("profile"), d.get("artifact_type"))
+            art_rows[key] = art_rows.get(key, 0) + 1
+        types = sorted({t for _, t in art_rows})
+        self._table(b, ["Artifact type"] + profs_all + ["Total"],
+                    [[f"`{t}`"] + [art_rows.get((p, t), 0) for p in profs_all]
+                     + [sum(art_rows.get((p, t), 0) for p in profs_all)] for t in types]
+                    + [["**Total**"] + [sum(art_rows.get((p, t), 0) for t in types) for p in profs_all]
+                       + [sum(art_rows.values())]])
+        total_records = sum(art_rows.values())
+        b.append(f"{total_records} records carry an `id` and are therefore countable. Registry "
+                 "container files (parameter and assumption registries) carry no top-level `id` "
+                 "and are counted separately below; they are not lifecycle artifacts.")
+        b.append("")
+        b.append("### Non-record registries")
+        b.append("")
+        reg_rows = []
+        for label, relpath in (("source anchors", "sources/source-registry.json"),
+                               ("assumption registry", "shared/assumption-registry.json"),
+                               ("parameter registry", "shared/parameter-registry.json")):
+            rp = self.artifacts_dir / relpath
+            n = 0
+            if rp.exists():
+                d = load_json(rp)
+                for key in ("anchors", "assumptions", "parameters"):
+                    if isinstance(d.get(key), list):
+                        n = len(d[key])
+                        break
+            reg_rows.append([label, f"`{relpath}`", n if rp.exists() else "**absent**"])
+        self._table(b, ["Registry", "Canonical file", "Entries"], reg_rows)
+        b.append("")
+
+        # ---- guard-field census
+        b.append("## Guard-field census")
+        b.append("")
+        b.append("Counted from the index. This is the population-wide position of the four "
+                 "guard fields, not a claim about any one record.")
+        b.append("")
+        gvals = {}
+        for aid, p, d in select():
+            g = (str(d.get("human_approval_status")), str(d.get("production_authorized")).lower(),
+                 str(d.get("product_verification_credit")).lower())
+            gvals[g] = gvals.get(g, 0) + 1
+        self._table(b, ["`human_approval_status`", "`production_authorized`",
+                        "`product_verification_credit`", "Records"],
+                    [[a, b_, c, n] for (a, b_, c), n in sorted(gvals.items())])
+        b.append("")
+        approvals = sum(n for (a, _, _), n in gvals.items() if a != "pending")
+        auths = sum(n for (_, x, _), n in gvals.items() if x != "false")
+        b.append(f"No record in this corpus carries a human approval: "
+                 f"{approvals} records are in any state other than `pending`. "
+                 f"No record is authorized for production: {auths} records are in any state "
+                 f"other than `false`. Automated review performed by this toolchain is not "
+                 f"organizational independence and is not a human confirmation. Nothing in this "
+                 f"document can change those two numbers.")
+        b.append("")
+        b.append("### ASIL field values — hypothetical only")
+        b.append("")
+        asil_recs = [(aid, d) for aid, p, d in select() if d.get("asil")]
+        justified = sum(1 for _, d in asil_recs if d.get("asil_justification"))
+        b.append(f"{len(asil_recs)} records carry an `asil` field and {justified} of them carry an "
+                 f"`asil_justification` block. `ASIL` in this corpus is a field value on a synthetic "
+                 f"record in a fictional reference project, used to exercise how allocation is "
+                 f"expressed. It is **not** an ASIL assigned to any real product, it is **not** a "
+                 f"determination of any kind, and no HARA has been performed for any real product. "
+                 f"This document states no capability level and asserts none.")
+        b.append("")
+
+        # ---- link registry census
+        b.append("## Link registry census")
+        b.append("")
+        b.append("Computed from the canonical link registries at render time.")
+        b.append("")
+        lstats = {}
+        for l in m["links"]:
+            lstats[(l.get("_profile", "unknown"), l.get("relation_type"))] = \
+                lstats.get((l.get("_profile", "unknown"), l.get("relation_type")), 0) + 1
+        lprofiles = sorted({k[0] for k in lstats})
+        lrels = sorted({k[1] for k in lstats})
+        self._table(b, ["Relation type"] + lprofiles + ["Total"],
+                    [[f"`{r}`"] + [lstats.get((p, r), 0) for p in lprofiles]
+                     + [sum(lstats.get((p, r), 0) for p in lprofiles)] for r in lrels]
+                    + [["**Total**"] + [sum(lstats.get((p, r), 0) for r in lrels) for p in lprofiles]
+                       + [sum(lstats.values())]])
+        b.append("Link metadata completeness, counted over the same links:")
+        b.append("")
+        meta_rows = []
+        for field in ("rationale", "provenance", "review_state", "change_suspect_status"):
+            present = sum(1 for l in m["links"] if field in l and l.get(field) is not None)
+            meta_rows.append([f"`{field}`", present, len(m["links"]),
+                              f"{round(100.0 * present / max(len(m['links']), 1))}%"])
+        self._table(b, ["Link field", "Links carrying it", "Links total", "Share"], meta_rows)
+        suspect = sum(1 for l in m["links"] if l.get("change_suspect_status"))
+        unreviewed = sum(1 for l in m["links"]
+                         if l.get("review_state") not in ("reviewed",))
+        b.append(f"{suspect} links are marked change-suspect and {unreviewed} links are not in "
+                 f"`review_state: reviewed`. Neither number is a defect count: both are the state "
+                 f"the registries record.")
+        b.append("")
+
+        # ---- verification reachability
+        b.append("## Verification reachability")
+        b.append("")
+        b.append("Built from `verifies` and `validates` links in the canonical registries, counted "
+                 "per profile. A requirement with no verification link is a gap and is named, not "
+                 "hidden.")
+        b.append("")
+        vrows = []
+        for prof in lprofiles:
+            reqs = [aid for aid, p, d in select(profile=prof, atype="requirement")]
+            covered = set()
+            for l in m["links"]:
+                if l.get("_profile") == prof and l.get("relation_type") in ("verifies", "validates"):
+                    covered.add(l.get("target_id"))
+            gap = sorted(r for r in reqs if r not in covered)
+            vrows.append([prof, len(reqs), len(covered & set(reqs)), len(gap),
+                          "; ".join(f"`{g}`" for g in gap) if gap else "—"])
+        self._table(b, ["Profile", "Requirements", "With a verification link",
+                        "Without one", "Ids without one"], vrows)
+        b.append("")
+
+        # ---- standards dispositions, read live
+        b.append("## Standards dispositions")
+        b.append("")
+        b.append("Read from `governance/coverage-plan.json` and `governance/standards-lock.json` "
+                 "at render time. These are the corpus's own recorded dispositions against the "
+                 "two standards it has locked. A recorded disposition is a statement about work "
+                 "booked in this corpus; it is not a statement that the work satisfies the "
+                 "standard, and this corpus is not assessed against any standard by anyone.")
+        b.append("")
+        procs = self._plan().get("process_inventory", [])
+        tally = {}
+        for p_ in procs:
+            st = self._plan_status(p_.get("disposition"))
+            tally[st] = tally.get(st, 0) + 1
+        self._table(b, ["ASPICE process disposition", "Processes"],
+                    [[f"`{k}`", v] for k, v in sorted(tally.items())]
+                    + [["**Total**", len(procs)]])
+        b.append(f"{self._plan_quote(processes=('SYS.1', 'SYS.2', 'SUP.9'))}")
+        b.append("")
+        iso_keys = sorted(self._plan().get("iso26262_coverage", {}))
+        iso_tally = {}
+        for k in iso_keys:
+            st = self._plan_iso_status(k)
+            iso_tally[st] = iso_tally.get(st, 0) + 1
+        self._table(b, ["ISO 26262 part disposition", "Parts"],
+                    [[f"`{k}`", v] for k, v in sorted(iso_tally.items())]
+                    + [["**Total**", len(iso_keys)]])
+        sl = load_json(self.governance_dir / "standards-lock.json")
+        locked = sl.get("standards", [])
+        if isinstance(locked, list) and locked:
+            self._table(b, ["Locked standard", "Title", "Edition", "Locked by"],
+                        [[f"`{s.get('id')}`", self._cell(s.get("title"), 70),
+                          s.get("edition"), sl.get("locked_by")] for s in locked])
+        b.append("A standard that is not in the lock has no records mapped to it in this corpus "
+                 "and cannot have any disposition shown above. Its absence is a fact about the "
+                 "corpus, not about the standard.")
+        b.append("")
+
+        # ---- coverage dimensions, recomputed
+        b.append("## Coverage dimensions")
+        b.append("")
+        b.append("Recomputed by the same function `corpus.py coverage` prints, at render time. "
+                 "Nothing here is copied out of a report. The last column states what each "
+                 "numerator actually counts, because a dimension whose name implies a measurement "
+                 "and whose numerator is a presence check or a constant would otherwise read as "
+                 "stronger than it is. Such dimensions are marked **presence** or **constant**; "
+                 "the rest are measured from the records on this run.")
+        b.append("")
+        basis = {
+            "scope_accounting": ("presence", "1 if the source inventory file carries a claimed "
+                                 "file count; it does not compare that claim against the tree, "
+                                 "which acceptance gate [2/8] inventory does"),
+            "artifact_population": ("measured", "artifact families that hold at least one record"),
+            "standards_mapping": ("counted", "ASPICE processes and ISO parts that carry a recorded "
+                                  "disposition in the coverage plan; it is a count of plan entries, "
+                                  "not a count of satisfied mappings — read the disposition tally "
+                                  "above for that"),
+            "source_grounding": ("measured", "records carrying at least one `source_refs` entry"),
+            "traceability_integrity": ("measured", "links that are not dangling, from a link "
+                                       "validation re-run for this figure"),
+            "semantic_consistency_checks": ("constant", "10 by declaration in the tool; it states "
+                                            "how many categories the tool runs, not a measured result"),
+            "automated_review_coverage": ("measured", "unique indexed ids covered by a review "
+                                          "record or a `reviewed_by` link"),
+            "verification_planning": ("measured", "test measures per safety requirement; a ratio, "
+                                      "not a score, and over 100% means over-covered"),
+            "actual_product_evidence": ("measured", "test measures backed by an execution whose "
+                                         "`execution_kind` names the product's own hardware"),
+            "synthetic_fixture_coverage": ("counted", "`synthetic_reference` records against a "
+                                           "fixed target of 43, so a ratio above 100% is "
+                                           "over-coverage, not a score"),
+            "negative_scenario_validation": ("measured", "mutation scenarios that PASS when "
+                                              "executed: the rule each declares is implemented, is "
+                                              "silent on the unmutated corpus, and produces a "
+                                              "finding the baseline did not contain"),
+            "export_reproducibility": ("presence", "1 if the export manifest file exists; the hash "
+                                       "stability is measured separately by acceptance gate [6/8]"),
+            "human_approval": ("constant", "0 by corpus policy; every record is `pending`. The "
+                               "policy is enforced by the `human_approval_rejected` rule, not "
+                               "measured by this dimension"),
+            "production_authorization": ("constant", "0 by corpus policy; every record is `false`. "
+                                        "The policy is enforced by the "
+                                        "`production_authorized_rejected` rule and by acceptance "
+                                        "gate [7/8]"),
+        }
+        dims_doc = self._coverage_dimensions()
+        rows = []
+        for k, v in dims_doc.items():
+            if not isinstance(v, dict):
+                rows.append([f"`{k}`", f"`{v}`", "—", "recorded status"])
+                continue
+            kind, what = basis.get(k, ("measured", ""))
+            rows.append([f"`{k}`", f"{v['numerator']}/{v['denominator']}",
+                         f"**{kind}**", f"{self._stable_text(v['detail'], 150)} — {what}"])
+        self._table(b, ["Dimension", "Value", "Numerator basis", "What it counts"], rows)
+        b.append("")
+
+        # ---- scenario validation, measured on this run
+        b.append("## Negative-scenario validation")
+        b.append("")
+        scn = self._execute_scenarios()
+        b.append(f"Measured by executing the suite on this run: "
+                 f"{scn['passed_mutations']}/{scn['total_mutations']} mutation scenarios passed and "
+                 f"{scn['passed_changes']}/{scn['total_changes']} change lifecycles are structurally "
+                 f"complete. A mutation scenario counts as passing only when the rule it declares "
+                 f"detects the defect the mutation injects.")
+        b.append("")
+        rows = []
+        for r in scn["results"]:
+            if r.get("type") == "mutation":
+                rows.append([f"`{r['scenario_id']}`", f"`{r.get('declared_detector')}`",
+                             "implemented" if r.get("detector_implemented") else "**not implemented**",
+                             "PASS" if r.get("passed") else "**FAIL**",
+                             self._stable_text(r.get("reason"), 120)])
+            else:
+                rows.append([f"`{r['scenario_id']}`", "structural completeness",
+                             "9 required elements", "PASS" if r.get("passed") else "**FAIL**",
+                             "structure complete" if r.get("passed")
+                             else "missing " + ", ".join(r.get("missing") or [])])
+        self._table(b, ["Scenario", "Declared detector", "Detector state", "Result",
+                        "Why"], rows)
+        b.append("The scenario suite establishes that the corpus's own detectors fire on defects "
+                 "this corpus has modelled. It does not establish that the detector set is "
+                 "complete, that any rule is correct, or that the corpus is free of defects: a "
+                 "defect no scenario models is undetected by construction.")
+        b.append("")
+        b.append("### Chain diagram")
+        b.append("")
+        b += self._mermaid("traceability.document-chain", [
+            "flowchart LR",
+            '  HAZ["FB2-SAF-HAZ-000001<br/>hazard"] -->|mitigates| SGO["FB2-SAF-SGO-000001<br/>safety goal"]',
+            '  SGO -->|refines| REQ["safety requirements"]',
+            '  REQ -->|verifies| TMS["test measures"]',
+            '  TMS -->|result_of| EXE["executions"]',
+            '  EXE --> GUARD["human_approval_status=pending<br/>production_authorized=false"]',
+        ])
+        emit("traceability/traceability-document.md",
+             "Traceability — the corpus traceability document (generated)",
+             "The whole corpus in one derived document: artifact and link census, guard-field "
+             "census, verification reachability, standards dispositions, the coverage dimensions "
+             "recomputed live, and the measured negative-scenario result.", b)
+
         # ------------------------------------------------ diagram validation pass
         lines_by_path = {}
         for vp in written:
@@ -3299,7 +3706,40 @@ class CorpusTool:
         self._run_detectors(index, links)
         return list(self.findings.items)
 
-    def cmd_scenario_test(self, scenario_id=None):
+    def _execute_scenarios(self, scenario_id=None):
+        """Run the mutation and change-lifecycle scenarios; return the measured result.
+
+        This is the single place the scenario suite is executed. Two callers need
+        it and they must not be able to disagree:
+
+          * cmd_scenario_test, which is acceptance gate [5/8] and prints one line
+            per scenario;
+          * cmd_coverage, whose negative_scenario_validation dimension reports
+            how many of them PASS.
+
+        The full run is memoised on the instance, so cmd_check - which calls
+        cmd_coverage first and cmd_scenario_test second - executes the suite
+        once and both read the same measurement. Memoising inside one process
+        cannot go stale: a scenario patch is applied to an in-memory copy of the
+        index (see _apply_mutation_and_detect) and no scenario run writes to the
+        corpus, so a second execution in the same process could only reproduce
+        the first. A new process always re-measures from disk.
+
+        Nothing is printed and nothing is persisted here; the caller decides.
+        Returns:
+            not_found         - the requested scenario_id does not exist
+            lines             - the exact console lines cmd_scenario_test prints
+            results           - per-scenario structured results (unchanged shape)
+            passed_mutations  - mutations whose declared detector detected the
+                                injected defect
+            total_mutations   - mutation scenarios executed
+            passed_changes    - change lifecycles with a complete structure
+            total_changes     - change lifecycles executed
+            all_ok            - every executed scenario passed
+        """
+        if scenario_id is None and self._scenario_run_cache is not None:
+            return self._scenario_run_cache
+
         muts = sorted((self.scenarios_dir / "mutations").glob("mutation-*.json"))
         chgs = sorted((self.scenarios_dir / "change-lifecycles").glob("change-*.json"))
         all_scn = [(p, load_json(p)) for p in list(muts) + list(chgs)]
@@ -3308,12 +3748,13 @@ class CorpusTool:
                        if d.get("scenario_id") == scenario_id or d.get("id") == scenario_id
                        or p.stem == scenario_id]
             if not all_scn:
-                print(f"Scenario {scenario_id} not found")
-                return False
+                return {"not_found": True}
 
         all_ok = True
         passed_mutations = 0
+        passed_changes = 0
         results = []
+        lines = []
         # Standing defects are computed once. A scenario may only be satisfied by
         # a finding that this mutation caused; see _match_scenario_finding.
         baseline = self._baseline_findings()
@@ -3346,19 +3787,19 @@ class CorpusTool:
                     exp_sev, exp_cat = expected.get("severity"), expected.get("category")
                     if (exp_sev and exp_sev != emitted["severity"]) or \
                        (exp_cat and exp_cat != emitted["category"]):
-                        print(f"  {status} {sid}: declared detector '{detector}' -> detected on its "
-                              f"own rule; {len(actual)} finding(s) total after mutation")
-                        print(f"       FIXTURE MISMATCH: expectation says {exp_sev}/{exp_cat}, the rule "
-                              f"emits {emitted['severity']}/{emitted['category']}. The rule is authoritative; "
-                              f"the expectation must be corrected to state it.")
+                        lines.append(f"  {status} {sid}: declared detector '{detector}' -> detected on its "
+                                     f"own rule; {len(actual)} finding(s) total after mutation")
+                        lines.append(f"       FIXTURE MISMATCH: expectation says {exp_sev}/{exp_cat}, the rule "
+                                     f"emits {emitted['severity']}/{emitted['category']}. The rule is authoritative; "
+                                     f"the expectation must be corrected to state it.")
                     else:
-                        print(f"  {status} {sid}: declared detector '{detector}' -> detected on its "
-                              f"own rule ({emitted['severity']}/{emitted['category']} on "
-                              f"{emitted['artifact_id']}); {len(actual)} finding(s) total after mutation")
+                        lines.append(f"  {status} {sid}: declared detector '{detector}' -> detected on its "
+                                     f"own rule ({emitted['severity']}/{emitted['category']} on "
+                                     f"{emitted['artifact_id']}); {len(actual)} finding(s) total after mutation")
                 else:
-                    print(f"  {status} {sid}: declared detector '{detector}' ({detector_source}): {reason}")
-                    print(f"       {len(actual)} finding(s) total after mutation: "
-                          + (", ".join(sorted({f.get('rule', '?') for f in actual})) or "none"))
+                    lines.append(f"  {status} {sid}: declared detector '{detector}' ({detector_source}): {reason}")
+                    lines.append(f"       {len(actual)} finding(s) total after mutation: "
+                                 + (", ".join(sorted({f.get('rule', '?') for f in actual})) or "none"))
                 results.append({"scenario_id": sid, "type": "mutation",
                                 "declared_detector": detector,
                                 "detector_declared_in": detector_source,
@@ -3372,19 +3813,39 @@ class CorpusTool:
                             "reverification_selection", "post_change_baseline"]
                 missing = [k for k in required if k not in d]
                 passed = not missing
-                if not passed:
+                if passed:
+                    passed_changes += 1
+                else:
                     all_ok = False
-                print(f"  {'PASS' if passed else 'FAIL'} {sid}: "
-                      f"{'structure complete' if passed else 'missing ' + str(missing)}")
+                lines.append(f"  {'PASS' if passed else 'FAIL'} {sid}: "
+                             f"{'structure complete' if passed else 'missing ' + str(missing)}")
                 results.append({"scenario_id": sid, "type": "change_lifecycle",
                                 "passed": passed, "missing": missing})
 
+        run = {"not_found": False, "lines": lines, "results": results,
+               "passed_mutations": passed_mutations, "total_mutations": len(muts),
+               "passed_changes": passed_changes, "total_changes": len(chgs),
+               "all_ok": all_ok}
+        if scenario_id is None:
+            self._scenario_run_cache = run
+        return run
+
+    def cmd_scenario_test(self, scenario_id=None):
+        run = self._execute_scenarios(scenario_id)
+        if run.get("not_found"):
+            print(f"Scenario {scenario_id} not found")
+            return False
+        for line in run["lines"]:
+            print(line)
+
         # persist machine-readable results
+        muts = sorted((self.scenarios_dir / "mutations").glob("mutation-*.json"))
+        chgs = sorted((self.scenarios_dir / "change-lifecycles").glob("change-*.json"))
         out = self.reports_dir / "scenario-validation-report.json"
         self.reports_dir.mkdir(parents=True, exist_ok=True)
         payload = {"schema_version": "1.0.0", "generated_at": utcnow(),
                    "mutation_total_required": 20, "mutations_present": len(muts),
-                   "change_lifecycles": len(chgs), "results": results}
+                   "change_lifecycles": len(chgs), "results": run["results"]}
         if out.exists():
             existing = load_json(out)
             if isinstance(existing, dict):
@@ -3392,7 +3853,7 @@ class CorpusTool:
                 payload = existing
         with open(out, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=1, sort_keys=True)
-        return passed_mutations >= 20  # all 20 mutations implemented and passing
+        return run["passed_mutations"] >= 20  # all 20 mutations implemented and passing
 
     # ------------------------------------------------------------ 15.10 check
 
@@ -3811,6 +4272,47 @@ class CorpusTool:
             return bool(mine) and all("revision 99 not found in revision_history" == f["description"]
                                       for f in mine)
 
+        def t_negative_scenario_dimension_is_a_pass_count_not_a_file_count():
+            # The coverage dimension must report how many scenarios PASSED, not
+            # how many scenario files exist. Proven two ways:
+            #   1. the numerator equals the number of executed mutation results
+            #      that actually passed, and equals the suite's own pass count;
+            #   2. with one mutation's declared detector made unimplementable,
+            #      the dimension drops by exactly one and names the failure.
+            # Under the previous file-count computation both assertions held
+            # vacuously, which is how the dimension read 20/20 while the gate
+            # was failing.
+            dim = self._negative_scenario_dimension()
+            run = self._execute_scenarios()
+            passed = sum(1 for r in run["results"]
+                         if r.get("type") == "mutation" and r.get("passed"))
+            self._scenario_run_cache = None
+            with self._suppress_rule("hsi_interface_consistency"):
+                degraded = self._negative_scenario_dimension()
+            self._scenario_run_cache = None
+            return (dim["numerator"] == passed == run["passed_mutations"]
+                    and dim["denominator"] == run["total_mutations"]
+                    and degraded["numerator"] == passed - 1
+                    and "SCN-MUT-005" in degraded["detail"])
+
+        def t_scenario_run_is_shared_between_gate_and_coverage():
+            # cmd_check calls cmd_coverage (step 3/8) and cmd_scenario_test
+            # (step 5/8). Both must read ONE measurement, otherwise the
+            # dimension and the gate could report different verdicts for the
+            # same corpus. The shared cache is what makes that true.
+            self._scenario_run_cache = None
+            dim = self._negative_scenario_dimension()
+            first = self._scenario_run_cache
+            ok = first is not None
+            ok &= (self._execute_scenarios() is first)   # second reader reuses it
+            buf = io.StringIO()                        # gate path, output swallowed
+            with contextlib.redirect_stdout(buf):
+                gate_ok = self.cmd_scenario_test()
+            ok &= gate_ok and (self._scenario_run_cache is first)
+            ok &= dim["numerator"] == first["passed_mutations"]
+            ok &= len(buf.getvalue().strip().splitlines()) == len(first["lines"])
+            return ok
+
         print("Running corpus toolchain self-tests...")
         check("valid schema accepted", t_valid_schema)
         check("invalid schema rejected", t_invalid_schema)
@@ -3844,6 +4346,10 @@ class CorpusTool:
               t_ftti_resolved_from_bound_parameter_and_scatter_reported)
         check("revision rule reachable from the scenario harness",
               t_revision_rule_reachable_from_scenario_path)
+        check("negative_scenario_validation measures passes, not scenario files",
+              t_negative_scenario_dimension_is_a_pass_count_not_a_file_count)
+        check("coverage dimension and acceptance gate share one scenario measurement",
+              t_scenario_run_is_shared_between_gate_and_coverage)
         return all(passed for _, passed in tests)
 
 

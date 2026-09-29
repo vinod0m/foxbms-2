@@ -136,6 +136,63 @@ void setUp(void) {
 void tearDown(void) {
 }
 
+/*========== Content check for the untyped `void *` queue item ================
+ *
+ * The product builds the queue item itself as a function-local
+ * #CAN_BUFFER_ELEMENT_s in its own translation unit, so the test cannot address
+ * it and an address comparison can never hold. The `canMessage` fixture in the
+ * test below mirrors that item field for field, which is a content expectation,
+ * so it is asserted explicitly here over the real sizeof.
+ *
+ * The queue handle is the same extern object on both sides and is checked by
+ * identity, which is correct. A CMock `_Stub` returns from the callback branch
+ * of the generated mock before CMock's own argument, call-count and ordering
+ * assertions, so all three are put back:
+ *
+ *  - the ARGUMENT checks (queue handle, timeout, item content) are the
+ *    TEST_ASSERT_* calls above;
+ *  - the CALL COUNT is the `_CallCount()` assertion at the end of the test,
+ *    which the two original `_ExpectAndReturn` registrations pinned at 2;
+ *  - the ORDER is re-pinned by `MATH_MinimumOfTwoUint8_t_AddCallback` below.
+ *    The original sequence was
+ *        MATH(1), OS(1), MATH(2), OS(2)
+ *    and with `:enforce_strict_ordering` that fixed the exact interleave. The
+ *    `_Stub` takes the queue send out of CMock's global `GlobalVerifyOrder`
+ *    counter, so afterwards nothing stopped the two sends from collapsing into
+ *    one block followed by two maths. `_AddCallback` is used rather than a
+ *    second `_Stub` because it sets `CallbackBool`, which makes the generated
+ *    mock run its ordering and argument checks *before* calling back: the
+ *    `MATH_MinimumOfTwoUint8_t` argument checks and its once-per-call
+ *    requirement are kept, and the interleave is restored on top.
+ */
+static CAN_BUFFER_ELEMENT_s osSendExpectedItem;
+static uint8_t                 osSendCalls      = 0u;
+static const OS_STD_RETURN_e   osSendRetval[2]  = {OS_SUCCESS, OS_FAIL};
+
+static OS_STD_RETURN_e OS_SendToBackOfQueueCallback(
+    OS_QUEUE xQueue,
+    const void *const pvItemToQueue,
+    uint32_t ticksToWait,
+    int cmock_num_calls) {
+    (void)cmock_num_calls;
+    TEST_ASSERT_EQUAL(*(can_kShim.pQueueImd), xQueue);
+    TEST_ASSERT_EQUAL(0u, ticksToWait);
+    TEST_ASSERT_NOT_NULL(pvItemToQueue);
+    TEST_ASSERT_EQUAL_MEMORY(&osSendExpectedItem, pvItemToQueue, sizeof(CAN_BUFFER_ELEMENT_s));
+    const OS_STD_RETURN_e retval = osSendRetval[osSendCalls];
+    osSendCalls++;
+    return retval;
+}
+
+/* observation-only: re-pins MATH/OS/MATH/OS, see the block comment */
+static uint8_t MATH_MinimumOfTwoUint8_tCallback(uint8_t value1, uint8_t value2, int cmock_num_calls) {
+    /* the k-th minimum must follow exactly k-1 completed queue sends, so each
+     * minimum is immediately followed by its own send */
+    TEST_ASSERT_EQUAL_UINT8((uint8_t)cmock_num_calls, osSendCalls);
+    TEST_ASSERT_TRUE(value1 <= value2); /* value1 is the minimum the mock returns */
+    return value1;
+}
+
 /*========== Test Cases =====================================================*/
 /* test assertion */
 void testAssertion_CANRX_ImdBenderIso165cResponse(void) {
@@ -238,14 +295,21 @@ void test_CANRX_ImdBenderIso165cResponse(void) {
         .id      = testMessage.id,
         .idType  = testMessage.idType,
         .data    = {0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u}};
+    osSendExpectedItem = canMessage;
+    osSendCalls        = 0u;
+    /* re-pins the MATH/OS/MATH/OS interleave the _ExpectAndReturn sequence
+     * fixed; see the block comment. The _AddCallback keeps the MATH argument
+     * and once-per-call checks, so nothing is given up to get the order back. */
+    MATH_MinimumOfTwoUint8_t_AddCallback(MATH_MinimumOfTwoUint8_tCallback);
     MATH_MinimumOfTwoUint8_t_ExpectAndReturn(testMessage.dlc, CAN_MAX_DLC, testMessage.dlc);
-    OS_SendToBackOfQueue_ExpectAndReturn(*(can_kShim.pQueueImd), (void *)&canMessage, 0u, OS_SUCCESS);
+    OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     CANRX_ImdBenderIso165cResponse(testMessage, testCanDataZeroArray, &can_kShim);
 
     /* Test 2 */
     MATH_MinimumOfTwoUint8_t_ExpectAndReturn(testMessage.dlc, CAN_MAX_DLC, testMessage.dlc);
-    OS_SendToBackOfQueue_ExpectAndReturn(*(can_kShim.pQueueImd), (void *)&canMessage, 0u, OS_FAIL);
     CANRX_ImdBenderIso165cResponse(testMessage, testCanDataZeroArray, &can_kShim);
+    TEST_ASSERT_EQUAL_UINT8(2u, osSendCalls);
+    TEST_ASSERT_EQUAL_INT(2, OS_SendToBackOfQueue_CallCount());
 }
 
 void test_CANRX_TransferImdResponseMessageToCanBuffer(void) {

@@ -1,6 +1,6 @@
 # Traceability — links, chains and coverage (generated view)
 
-Generated: 2026-09-29T17:37:21Z | Baseline: BAS-REF-001 | 223 artifacts, 460 links
+Generated: 2026-09-29T19:02:11Z | Baseline: BAS-REF-001 | 223 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -459,10 +459,11 @@ flowchart LR
 
 ## Diagram validation
 
-Validator: mermaid-cli /opt/homebrew/bin/mmdc with Chrome; 8/8 diagrams parsed and rendered to SVG
+Validator: mermaid-cli /opt/homebrew/bin/mmdc with Chrome; 9/9 diagrams parsed and rendered to SVG
 
 | Diagram | Result |
 |---|---|
 | `traceability.coverage-matrix` | validated |
+| `traceability.document-chain` | validated |
 | `traceability.vertical-chain` | validated |
 

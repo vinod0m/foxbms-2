@@ -42,11 +42,19 @@ applied in-memory by the harness.
 | Lines failing | **0** |
 | Findings on the unmutated corpus (baseline) | **0** |
 
-The `negative_scenario_validation` coverage dimension reads **20/20** and its
-detail string is `20/20 mutations; 3/3 change lifecycles`. That dimension counts
-scenarios **present on disk**; it is not a detection measurement and is
-unaffected by whether the scenarios detect anything. The detection measurement
-is gate `[5/8] scenario-test`.
+The `negative_scenario_validation` coverage dimension reads **20/20**. **Since
+2026-09-29 that figure is a measurement, not a file count.** The dimension used
+to report `len(mutation files on disk)` over a fixed denominator of 20, so it
+read `20/20` whether the scenarios detected anything or not — including while
+the mutation gate was self-certifying and 8 of the 20 were failing. It now
+executes this same suite and reports how many scenarios PASS, reading one
+memoised measurement shared with gate `[5/8]`. Proof: temporarily pointing one
+scenario's declared detector at a rule no detector implements moved the dimension
+to `19/20` and named `SCN-MUT-005`; the old computation would still have printed
+`20/20`.
+
+The figure still does not mean the detector set is complete or that any rule is
+correct. §6 states what the suite does and does not establish.
 
 ## 2. How a Scenario Is Decided
 
