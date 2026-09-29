@@ -1,0 +1,119 @@
+{
+  "id": "FB2-REV-000006",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "review",
+  "engineering_domain": "verification",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Review: as_is verification planning (3 test measures)",
+  "owner_role": "verification_engineer",
+  "origin": "derived",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Domain review of the as_is test measures for oracle independence, measurable expected outcomes and honest objective statements."
+    }
+  ],
+  "review_type": "domain",
+  "reviewed_ids": [
+    {
+      "artifact_id": "FB2-VER-TMS-000003",
+      "revision": "1",
+      "digest": "0886f3cdabed3c1c6fd934a23d6877516b378042cdeb614ac4966cde7b04c0b2"
+    },
+    {
+      "artifact_id": "FB2-VER-TMS-000004",
+      "revision": "1",
+      "digest": "ffecfa1e78d998d759c90807c4e05114dd26306f0865a8930b301ff4c923a318"
+    },
+    {
+      "artifact_id": "FB2-VER-TMS-000005",
+      "revision": "1",
+      "digest": "780bea972791e49a0944035bf0cc8127517c928e4fc7a548bbe72fb3ee4ec45d"
+    }
+  ],
+  "reviewer_identity": {
+    "role": "verification_engineer",
+    "session_id": "opencode-2026-09-29-artifact-review-pass",
+    "model": "openrouter/stealth/space-bunny-alpha",
+    "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. Per master-prompt clause 2.9 this is an automated review: it is NOT organizational independence, NOT human confirmation, and NOT a qualified-checker result. No human reviewer, independent party, or separate agent session participated."
+  },
+  "checklist_version": "CHKL-VERIF-PLAN-1.0.0",
+  "scope": "PARTIAL SCOPE, AND THE EXCLUSION IS THE POINT. CONCURRENT MODIFICATION, MATERIAL: during this review pass a second session rewrote the as_is execution population. FB2-VER-EXE-000001..000005 moved to revision 2 with different content and eight further as_is execution records (FB2-VER-EXE-000006..000014) were created; the corpus artifact index grew from 87 to 131 entries. This record therefore EXCLUDES all as_is execution artifacts and states that exclusion instead of asserting findings against content that was in motion. This record covers only the three as_is test measures FB2-VER-TMS-000003..000005, all of which are at revision 1 and were re-hashed after the concurrent writes and confirmed byte-stable at the digests recorded here. FB2-VER-EXE-000001..000005 and the synthetic_reference verification population are NOT covered by this record; the latter are covered by FB2-REV-000007. This record is not a universal review of verification planning.",
+  "findings": [
+    {
+      "finding_id": "FB2-REV-FND-000141",
+      "artifact_id": "FB2-VER-TMS-000003",
+      "severity": "medium",
+      "category": "verification",
+      "description": "Oracle independence is asserted by category label, not demonstrated by construction. All three in-scope test measures declare oracle_basis 'source_grounded' and specify expected values such as cell_voltage_mv = 3300 with tolerance +/- 1.5 mV, but none states where that expected value came from or how it was derived independently of the implementation under test. 'source_grounded' names the provenance class of the oracle without supplying the derivation, so a reader cannot distinguish an independently derived datasheet-nominal value from a value read out of the implementation. The master prompt forbids using implementation output as a verification basis; this review cannot confirm compliance, because the information needed to confirm it is not in the records. This is a missing-documentation finding, not an allegation that any oracle is in fact self-referential. The same condition affects all five as_is test measures corpus-wide, including the two outside this record's scope.",
+      "evidence": "test_measure.schema.json defines oracle_basis as an enum of {source_grounded, analytical_model, synthetic_assumption, measured_reference} and defines no companion field for the derivation. FB2-VER-TMS-000003, -000004 and -000005 each carry the bare string 'source_grounded' with no derivation, reference anchor or method note. FB2-VER-TMS-000004 expected_outcomes: cell_voltage_mv expected '3300' tolerance '+/-1.5 mV', pec_error expected 'true'; neither cites a datasheet value, a calibration record or a design anchor."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000175",
+      "artifact_id": "FB2-VER-TMS-000005",
+      "severity": "info",
+      "category": "verification",
+      "description": "Clean result on expected-outcome measurability for the three in-scope test measures: every expected outcome names a concrete signal with an explicit expected value, a tolerance and a unit, and none is a tautological restatement of the test passing. This distinguishes the as_is measures from the five synthetic planning stubs, whose expected outcomes are single boolean signals that merely restate success - recorded separately as FB2-REV-FND-000144. Recorded as a performed check.",
+      "evidence": "FB2-VER-TMS-000003: plausibility_result expected 'pass' unit 'enum', flagged_cell expected 'true' unit 'bool'. FB2-VER-TMS-000004: cell_voltage_mv expected '3300' tolerance '+/-1.5 mV', pec_error expected 'true'. FB2-VER-TMS-000005: contactor_state expected 'on' unit 'enum', all_off expected 'true'. All carry tolerance and unit."
+    }
+  ],
+  "dispositions": [
+    {
+      "finding_id": "FB2-REV-FND-000141",
+      "disposition": "accepted",
+      "action": "Accepted. Adding an oracle-derivation field is a schema and authoring change outside this review's write scope. No test measure was edited. Referred to the verification owner: each expected value should cite the anchor or derivation it comes from so that independence is auditable rather than asserted.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000175",
+      "disposition": "accepted",
+      "action": "No action required. Recorded as a verified-clean criterion.",
+      "resolved_artifact_id": null
+    }
+  ],
+  "limitations": [
+    "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+    "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+    "No artifact covered by this review carries production authority or product verification credit.",
+    "PARTIAL SCOPE. 3 artifacts. The as_is execution population and the synthetic_reference verification population are outside this record.",
+    "CONCURRENT MODIFICATION, MATERIAL: during this review pass a second session rewrote the as_is execution population. FB2-VER-EXE-000001..000005 moved to revision 2 with different content and eight further as_is execution records (FB2-VER-EXE-000006..000014) were created; the corpus artifact index grew from 87 to 131 entries. This record therefore EXCLUDES all as_is execution artifacts and states that exclusion instead of asserting findings against content that was in motion.",
+    "No test was executed by this review. Nothing here constitutes a verification result, and no target hardware was used, powered, or commanded.",
+    "Verification performed: (a) oracle_basis presence and allowed value checked for all five as_is test measures, not only the three in scope; (b) expected_outcomes read for measurability for the three in scope; (c) all three re-hashed after the concurrent writes. (b) and (c) clean; (a) produced FB2-REV-FND-000141.",
+    "Whether any individual expected value is in fact self-referential was NOT determined. This review establishes only that the records do not permit the question to be answered.",
+    "The three in-scope measures are unit-level measures configured for conf/unit/app_project_posix.yml. No target-hardware equivalence is claimed or checked.",
+    "An earlier draft of this record covered FB2-VER-EXE-000002..000005 and recorded them as execution_kind 'none' with outcome 'blocked'. That is no longer true of the current files and those findings were REMOVED rather than left standing, because a review record that keeps a finding the evidence has since invalidated is itself a false assurance."
+  ],
+  "review_method": "Schema-enum conformance check of oracle_basis across the as_is test-measure population, measurability read of expected outcomes, and post-write re-hashing of the in-scope artifacts.",
+  "results_summary": {
+    "artifacts_reviewed": 3,
+    "as_is_test_measures_checked_for_oracle_basis": 5,
+    "test_measures_with_oracle_derivation_recorded": 0,
+    "test_measures_with_non_measurable_expected_outcome": 0,
+    "as_is_execution_artifacts_excluded_due_to_concurrent_rewrite": 5
+  }
+}

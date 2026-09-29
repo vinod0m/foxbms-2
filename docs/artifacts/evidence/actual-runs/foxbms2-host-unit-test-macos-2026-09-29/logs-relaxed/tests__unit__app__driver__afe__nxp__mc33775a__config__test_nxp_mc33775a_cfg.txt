@@ -1,0 +1,55 @@
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/build/app_host_unit_test
+
+Ceedling set up completed in 330 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_nxp_mc33775a_cfg.c for user & system #includes...
+Parsing test_nxp_mc33775a_cfg.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_nxp_mc33775a_cfg.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+
+👟 Test Runners
+---------------
+Generating runner for test_nxp_mc33775a_cfg.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_nxp_mc33775a_cfg.c...
+Compiling test_nxp_mc33775a_cfg::nxp_mc33775a_cfg.c...
+Compiling test_nxp_mc33775a_cfg::unity.c...
+Compiling test_nxp_mc33775a_cfg::CException.c...
+Compiling test_nxp_mc33775a_cfg::struct_helper.c...
+Compiling test_nxp_mc33775a_cfg::test_fake_functions.c...
+Compiling test_nxp_mc33775a_cfg::test_nxp_mc33775a_cfg_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+In file included from ../../src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.c:56:
+In file included from ../../src/app/driver/afe/nxp/common/mc3377x/nxp_mc3377x_cfg.h:64:
+In file included from ../../src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.h:62:
+In file included from ../../src/app/driver/spi/spi.h:59:
+../../src/app/driver/config/spi_cfg.h:65:10: fatal error: 'HL_het.h' file not found
+   65 | #include "HL_het.h"
+      |          ^~~~~~~~~~
+1 error generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Wno-enum-conversion -Wno-array-bounds -Wno-parentheses-equality -Werror -I"./mocks/test_nxp_mc33775a_cfg" -I"../../src/app/driver/afe/api" -I"../../src/app/driver/afe/nxp/common/mc3377x" -I"../../src/app/driver/afe/nxp/mc33775a" -I"../../src/app/driver/afe/nxp/mc33775a/config" -I"../../src/app/driver/config" -I"../../src/app/driver/spi" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"." -I"include" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"FOXBMS_AFE_DRIVER_TYPE_NO_FSM=1" -D"FOXBMS_AFE_DRIVER_NXP=1u" -D"FOXBMS_AFE_DRIVER_NXP_MC33775A" -D"TEST_BS_NR_OF_CELL_BLOCKS_PER_MODULE=14u" -D"TEST_BS_NR_OF_TEMP_SENSORS_PER_MODULE=16u" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.c" -o "./test/out/test_nxp_mc33775a_cfg/nxp_mc33775a_cfg.o" -MMD -MF "./test/dependencies/test_nxp_mc33775a_cfg/nxp_mc33775a_cfg.d"
+🌱 Ceedling could not complete operations because of errors

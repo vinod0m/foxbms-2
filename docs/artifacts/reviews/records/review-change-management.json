@@ -1,0 +1,117 @@
+{
+  "id": "FB2-REV-000004",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "review",
+  "engineering_domain": "management",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Review: change management records CR-001..CR-003",
+  "owner_role": "configuration_manager",
+  "origin": "derived",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "configuration_manager",
+      "description": "Domain review of the three canonical change records for id resolution, decision authority and absence of any real-change claim."
+    }
+  ],
+  "review_type": "domain",
+  "reviewed_ids": [
+    {
+      "artifact_id": "FB2-MAN-CHG-000001",
+      "revision": "1",
+      "digest": "fbac6174f91644d8f6c014f7c210b6760b6bd1a1fc4421410ca4104c1191400d"
+    },
+    {
+      "artifact_id": "FB2-MAN-CHG-000002",
+      "revision": "1",
+      "digest": "fed963350022756641232e8c91a09bff154ff2baef9dcf291e808d2a3a962345"
+    },
+    {
+      "artifact_id": "FB2-MAN-CHG-000003",
+      "revision": "1",
+      "digest": "468f43dc167e46de12b81a376ce873fac379031c0a7b146ed9d3f83fed2a593a"
+    }
+  ],
+  "reviewer_identity": {
+    "role": "configuration_manager",
+    "session_id": "opencode-2026-09-29-artifact-review-pass",
+    "model": "openrouter/stealth/space-bunny-alpha",
+    "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. Per master-prompt clause 2.9 this is an automated review: it is NOT organizational independence, NOT human confirmation, and NOT a qualified-checker result. No human reviewer, independent party, or separate agent session participated."
+  },
+  "checklist_version": "CHKL-CHANGE-CTL-1.0.0",
+  "scope": "Full scope over all 3 synthetic_reference change records (FB2-MAN-CHG-000001..000003). Every record carries profile 'synthetic_reference', so every reviewed_id below resolves unambiguously in that profile.",
+  "findings": [
+    {
+      "finding_id": "FB2-REV-FND-000120",
+      "artifact_id": "FB2-MAN-CHG-000002",
+      "severity": "info",
+      "category": "provenance",
+      "description": "All 16 artifact ids named across the three records' impact_analysis.affected_artifacts resolve to an existing artifact. The records also disclose, per record, that they differ from the corresponding change-lifecycle scenario fixture (relationship_to_scenario_fixture.same_subject_different_artifact = true, with a differences_that_matter list). Checked and correct: a reader who assumed the canonical record and the fixture were the same artifact, or that the fixture's 'approved in full' disposition governed the canonical record, would be wrong. This finding records the verified distinction.",
+      "evidence": "FB2-MAN-CHG-000001 affected_artifacts [FSR-000002, HAZ-000001, HW-TSR-000001, SW-DSN-000002, VER-TMS-000001]; CHG-000002 [SYS-HSI-000001, HW-TSR-000001, HW-TSR-000002, SW-SWR-000001, SW-DSN-000001, VER-TMS-000003, VER-TMS-000005]; CHG-000003 [FSR-000002, SW-DSN-000002, SW-SWR-000002, VER-TMS-000001]. All 16 resolve. All three records carry implementation_status 'not_in_source' and a corpus_boundaries block with asserts_real_project_change=false and asserts_real_approval=false."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000121",
+      "artifact_id": "FB2-MAN-CHG-000003",
+      "severity": "info",
+      "category": "process",
+      "description": "Each record's decision is labelled synthetic and names a fictional decision maker with an explicit disclaimer ('fictional role identity A. Renner; synthetic scenario character; not a foxBMS maintainer, not SoftwareDevLabs staff, not a real person'). This satisfies the master-prompt requirement that fictitious workflow approvals be separately labelled synthetic_decision. Checked and correct. Recorded because a reader scanning only the decision_maker field could otherwise mistake a fictional change-control-board decision for a real one.",
+      "evidence": "Each of the three records carries a synthetic_decision object; decision.decision_maker carries the fictional-identity disclaimer verbatim; corpus_boundaries asserts asserts_real_approval=false and human_approval_status stays 'pending'; implementation_status is 'not_in_source' in all three."
+    }
+  ],
+  "dispositions": [
+    {
+      "finding_id": "FB2-REV-FND-000120",
+      "disposition": "accepted",
+      "action": "No record change required. Id resolution and the canonical-record / fixture distinction are correct and disclosed. No change record is rewritten by this review.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000121",
+      "disposition": "accepted",
+      "action": "No record change required. Decision labelling satisfies master-prompt clause 2.9 for synthetic workflow decisions. Retained as a positive check result so the absence of a finding is attributable to a check rather than to a skipped check.",
+      "resolved_artifact_id": null
+    }
+  ],
+  "limitations": [
+    "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+    "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+    "No artifact covered by this review carries production authority or product verification credit.",
+    "No change was enacted in the foxBMS source by this review or by any record it covers. All three records state implementation_status 'not_in_source'; this was confirmed by reading the field and not by inspecting a diff, because no diff exists to inspect for these changes.",
+    "Verification performed: (a) all 16 affected_artifacts ids resolved against the artifact index; (b) decision authority checked for synthetic labelling and fictional-identity disclosure in all three; (c) every record scanned for a real-change claim; (d) implementation_status and corpus_boundaries read in all three. All four checks passed with no exceptions.",
+    "This review did not re-derive the change impact analyses. It confirmed that the named artifacts exist and that the decision labelling is honest; it did not independently re-compute which artifacts a voltage-limit change, an AFE front-end migration or a debounce defect would actually affect.",
+    "The three scenario fixtures under docs/artifacts/scenarios/change-lifecycles/ were read for comparison only and were not modified by this review."
+  ],
+  "review_method": "Record inspection plus index resolution. Every id named in impact_analysis was resolved against the corpus artifact index. Decision and boundary fields were read directly and cross-checked against master-prompt clause 2.9 and the corpus-boundary policy.",
+  "results_summary": {
+    "records_reviewed": 3,
+    "affected_artifact_ids_named": 16,
+    "affected_artifact_ids_resolved": 16,
+    "records_with_synthetic_decision_label": 3,
+    "records_asserting_a_real_change": 0,
+    "records_asserting_real_approval": 0
+  }
+}

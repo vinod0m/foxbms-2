@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-13T15:17:46Z |
+| Generated | 2026-09-29T10:08:35Z |
 
 ## Scope
 
@@ -36,27 +36,6 @@ Every diagnosis entry is verifiable through the built-in reaction chain: `DIAG_*
 Cell measurements are validated continuously at runtime: plausibility checks (`PL_CheckEvent*`), redundancy validation (`MRC_ValidateAfeMeasurement` every 50 ms), AFE communication integrity diagnosis entries — i.e. the system verifies its own measurement path as part of operation.
 
 ## Test Specification
-
-Upstream `verifies` links per test measure. Full requirement chain above each measure: `HAZ-000001` ← `SGO-000001` (`LNK-001`) ← FSR (`LNK-002/003/004`, `LNK-021` synthetic FSR-004) ← TSR/SWR allocation (`LNK-005..010`). All corpus test measures below are `unit`, `robustness`, or `fault_injection` type — no system-qualification test measures exist in either profile.
-
-| Test measure | Verifies (`verifies` links) |
-|---|---|
-| `FB2-VER-TMS-000001` (as_is) | `FSR-000002` + `SWR-000002` (`LNK-014/015`) |
-| `FB2-VER-TMS-000002` (as_is) | `FSR-000003` + `SWR-000003` (`LNK-016/017`) |
-| `FB2-VER-TMS-000003` (as_is) | `FSR-000001` + `SWR-000001` (`LNK-021/022`) |
-| `FB2-VER-TMS-000004` (as_is) | `TSR-000001` + `TSR-000002` (`LNK-023/024`) |
-| `FB2-VER-TMS-000005` (as_is) | `TSR-000003` (`LNK-025`) |
-| `FB2-VER-TMS-000001` (synthetic) | `FSR-000002` + `SWR-000002` (`LNK-022/023`) |
-| `FB2-VER-TMS-000002` (synthetic) | `FSR-000003` + `SWR-000003` (`LNK-024/025`) |
-| `FB2-VER-TMS-000003` (synthetic) | `FSR-000001` + `SWR-000001` + `TSR-000001` (`LNK-026/027/028`) |
-| `FB2-VER-TMS-000004` (synthetic) | `FSR-000004` + `TSR-000004` (`LNK-029/030`) |
-| `FB2-VER-TMS-000005` (synthetic) | `TSR-000002` (`LNK-031`) |
-| `FB2-VER-TMS-000006` (synthetic) | `TSR-000003` (`LNK-032`) |
-| `FB2-VER-TMS-000007` (synthetic, draft stub) | `SWR-000001/002/003` (`LNK-039/040/041`) |
-| `FB2-VER-TMS-000008` (synthetic, draft stub) | `FSR-000001/002/003/004` (`LNK-042/043/044/045`) |
-| `FB2-VER-TMS-000009` (synthetic, draft stub) | `SGO-000001` + `SCO-000001` (`LNK-046/047`, `validates`) |
-| `FB2-VER-TMS-000010` (synthetic, draft stub) | `SWR-000002` (`LNK-048`) |
-| `FB2-VER-TMS-000011` (synthetic, draft stub) | `FSR-000001/002/003/004` (`LNK-049/050/051/052`) |
 
 #### `FB2-VER-TMS-000001` — Test: SOA Voltage Limit Detection (as_is)
 
@@ -215,12 +194,12 @@ Upstream `verifies` links per test measure. Full requirement chain above each me
 - **Expected outcomes**:
   - `all_off` = true (tolerance exact)
 
-#### `FB2-VER-TMS-000007` — Test: Software Integration Chain (synthetic_reference, draft planning stub)
+#### `FB2-VER-TMS-000007` — Test: Software Integration Chain (SOA-Database-Contactor) (synthetic_reference)
 
 - **Test type**: `integration` | **Oracle basis**: `synthetic_assumption`
-- **Objective**: Define the software integration verification intent for the SOA-database-contactor chain; no execution performed (harness blocked)
-- **Preconditions**: SOA, database and contactor units available as host builds; integration harness defined (blocked)
-- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Objective**: Define the software integration verification intent for the SOA-database-contactor chain; PLANNING STUB — no execution performed, execution blocked (no integration harness in corpus scope)
+- **Preconditions**: SOA, database and contactor units available as host builds, Integration harness defined (blocked — not in corpus scope)
+- **Environment**: POSIX host (Linux) — harness blocked; Unity/CMock; config `conf/unit/app_project_posix.yml`
 - **Test cases (steps)**:
   1. **Publish violated cell voltage set to database via MEAS path** → expected: SOA reads violated set within task cycle
   2. **Confirm SOA fault request propagates to BMS state machine** → expected: FAULT state entered
@@ -228,12 +207,12 @@ Upstream `verifies` links per test measure. Full requirement chain above each me
 - **Expected outcomes**:
   - `chain_fault_to_open_verified` = true (tolerance exact)
 
-#### `FB2-VER-TMS-000008` — Test: System Qualification (synthetic_reference, draft planning stub)
+#### `FB2-VER-TMS-000008` — Test: System Qualification (Cell-Voltage Safety Chain) (synthetic_reference)
 
 - **Test type**: `qualification` | **Oracle basis**: `synthetic_assumption`
-- **Objective**: Define the system/software qualification verification intent against FSR-001..004 end to end; no execution performed (harness/target blocked)
-- **Preconditions**: Integrated system build available (blocked); qualification environment defined (blocked)
-- **Environment**: Target + HIL bench (blocked — unpublished); Unity/CMock
+- **Objective**: Define the system/software qualification verification intent against FSR-001..004 end to end; PLANNING STUB — no execution performed, execution blocked (no qualification harness or target hardware in corpus scope)
+- **Preconditions**: Integrated system build available (blocked — not in corpus scope), Qualification environment defined (blocked)
+- **Environment**: Target + HIL bench (blocked — unpublished); Unity/CMock; config `conf/unit/app_project_posix.yml`
 - **Test cases (steps)**:
   1. **Drive cell-voltage limit violation at system boundary** → expected: FAULT state reached end to end
   2. **Confirm contactor open within FTTI budget** → expected: Timing within 100 ms FTTI
@@ -241,24 +220,24 @@ Upstream `verifies` links per test measure. Full requirement chain above each me
 - **Expected outcomes**:
   - `qual_chain_pass` = true (tolerance exact)
 
-#### `FB2-VER-TMS-000009` — Test: Stakeholder Validation (synthetic_reference, draft planning stub)
+#### `FB2-VER-TMS-000009` — Test: Stakeholder Validation (Cell-Voltage Use Cases) (synthetic_reference)
 
 - **Test type**: `validation` | **Oracle basis**: `synthetic_assumption`
-- **Objective**: Define the validation intent of cell-voltage stakeholder use cases; no execution performed (environment blocked)
-- **Preconditions**: Stakeholder use cases baselined; validation environment defined (blocked)
-- **Environment**: Operational target vehicle/bench (blocked)
+- **Objective**: Define the validation intent of cell-voltage stakeholder use cases on the integrated system; PLANNING STUB — no execution performed, execution blocked (no validation environment or operational data in corpus scope)
+- **Preconditions**: Stakeholder use cases baselined, Validation environment defined (blocked — not in corpus scope)
+- **Environment**: Operational target vehicle/bench (blocked); N/A — operational use; config `conf/unit/app_project_posix.yml`
 - **Test cases (steps)**:
   1. **Execute normal-operation charging use case** → expected: No spurious safety reaction
   2. **Execute overvoltage field scenario** → expected: System reaches safe state, stakeholder acceptance criteria met
 - **Expected outcomes**:
   - `validation_accepted` = true (tolerance exact)
 
-#### `FB2-VER-TMS-000010` — Test: Component Verification (synthetic_reference, draft planning stub)
+#### `FB2-VER-TMS-000010` — Test: Component Verification (SOA Monitor + DIAG Callbacks) (synthetic_reference)
 
-- **Test type**: `unit` (component level) | **Oracle basis**: `synthetic_assumption`
-- **Objective**: Define the component-level verification intent for the SOA monitor plus DIAG callback chain; no execution performed (harness blocked)
-- **Preconditions**: SOA and DIAG units available as host builds; component harness defined (blocked)
-- **Environment**: POSIX host (Linux); Unity/CMock; config `conf/unit/app_project_posix.yml`
+- **Test type**: `unit` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Define the component-level verification intent for the SOA monitor plus DIAG callback chain; PLANNING STUB — no execution performed, execution blocked (no component harness in corpus scope)
+- **Preconditions**: SOA and DIAG units available as host builds, Component harness defined (blocked — not in corpus scope)
+- **Environment**: POSIX host (Linux) — component harness blocked; Unity/CMock; config `conf/unit/app_project_posix.yml`
 - **Test cases (steps)**:
   1. **Drive SOA limit violation at component boundary** → expected: DIAG callback invoked with severity
   2. **Confirm occurrence counter and latency fields** → expected: Counter increments within debounce window
@@ -266,12 +245,12 @@ Upstream `verifies` links per test measure. Full requirement chain above each me
 - **Expected outcomes**:
   - `component_reaction_verified` = true (tolerance exact)
 
-#### `FB2-VER-TMS-000011` — Test: HIL Fault Reaction (synthetic_reference, draft planning stub)
+#### `FB2-VER-TMS-000011` — Test: HIL Fault Reaction (Target) (synthetic_reference)
 
-- **Test type**: `system` (HIL) | **Oracle basis**: `synthetic_assumption`
-- **Objective**: Define the HIL verification intent for the cell-voltage safety chain on target hardware; no execution performed (`tests/hil` placeholder only)
-- **Preconditions**: HIL bench available (blocked — unpublished upstream); target program built with coverage instrumentation (blocked)
-- **Environment**: Target TMS570LC4357 + HIL bench (blocked — unpublished)
+- **Test type**: `system` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Define the HIL verification intent for the cell-voltage safety chain on target hardware; PLANNING STUB — no execution performed, execution blocked (tests/hil placeholder only, no target hardware in corpus scope)
+- **Preconditions**: HIL bench available (blocked — unpublished upstream), Target program built with coverage instrumentation (blocked)
+- **Environment**: Target TMS570LC4357 + HIL bench (blocked — unpublished); Linked target program; config `tests/hil placeholder (unpublished upstream)`
 - **Test cases (steps)**:
   1. **Apply overvoltage stimulus on HIL cell emulator** → expected: AFE path acquires violated sample
   2. **Observe contactor command on target I/O** → expected: Coils de-energized within FTTI
@@ -292,21 +271,99 @@ Upstream `verifies` links per test measure. Full requirement chain above each me
 - `FB2-VER-TMS-000004` (synthetic_reference): 3 test case(s)
 - `FB2-VER-TMS-000005` (synthetic_reference): 3 test case(s)
 - `FB2-VER-TMS-000006` (synthetic_reference): 2 test case(s)
-- `FB2-VER-TMS-000007` (synthetic_reference, draft stub): 3 test case(s)
-- `FB2-VER-TMS-000008` (synthetic_reference, draft stub): 3 test case(s)
-- `FB2-VER-TMS-000009` (synthetic_reference, draft stub): 2 test case(s)
-- `FB2-VER-TMS-000010` (synthetic_reference, draft stub): 3 test case(s)
-- `FB2-VER-TMS-000011` (synthetic_reference, draft stub): 3 test case(s)
+- `FB2-VER-TMS-000007` (synthetic_reference): 3 test case(s)
+- `FB2-VER-TMS-000008` (synthetic_reference): 3 test case(s)
+- `FB2-VER-TMS-000009` (synthetic_reference): 2 test case(s)
+- `FB2-VER-TMS-000010` (synthetic_reference): 3 test case(s)
+- `FB2-VER-TMS-000011` (synthetic_reference): 3 test case(s)
 
-**Total test cases across unit-level measures**: 49 (no system-qualification executions exist in the corpus; TMS-007/008/009/010/011 are unexecuted planning stubs)
+**Total system-level test cases**: 49
 
 ## Execution Report
 
-##### Execution `FB2-VER-EXE-000001` — Execution: SOA Voltage Limit Test
+##### Execution `FB2-VER-EXE-000001` — Execution: SOA Voltage Limit Test (real macOS host run)
 
 - **Test measure**: `FB2-VER-TMS-000001` | **Execution kind**: `actual_host_run` | **Outcome**: **PASS**
-- **Environment**: x86_64 Linux host; Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
 - **Evidence refs**: `FB2-VER-TMS-000001`, `tests/unit/app/application/soa/test_soa.c`
+
+##### Execution `FB2-VER-EXE-000002` — Execution: FB2-VER-TMS-000002 (real macOS host run)
+
+- **Test measure**: `FB2-VER-TMS-000002` | **Execution kind**: `actual_host_run` | **Outcome**: **PASS**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `FB2-VER-TMS-000002`, `tests/unit/app/driver/contactor/test_contactor.c`
+
+##### Execution `FB2-VER-EXE-000003` — Execution: FB2-VER-TMS-000003 (real macOS host run)
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **PASS**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `FB2-VER-TMS-000003`, `tests/unit/app/driver/afe/api/test_afe_plausibility.c`
+
+##### Execution `FB2-VER-EXE-000004` — Execution: FB2-VER-TMS-000004 (still blocked: HALCoGen unavailable)
+
+- **Test measure**: `FB2-VER-TMS-000004` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `FB2-VER-TMS-000004`, `tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c`
+
+##### Execution `FB2-VER-EXE-000005` — Execution: FB2-VER-TMS-000005 (real macOS host run)
+
+- **Test measure**: `FB2-VER-TMS-000005` | **Execution kind**: `actual_host_run` | **Outcome**: **PASS**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `FB2-VER-TMS-000005`, `tests/unit/app/driver/contactor/test_contactor.c`
+
+##### Execution `FB2-VER-EXE-000006` — Execution: foxBMS 2 host unit test sweep, strict shipped flag set (136 tests, macOS arm64)
+
+- **Test measure**: `FB2-VER-TMS-000001..000005` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/driver/foxmath/test_foxmath.c`, `src/app/engine/database/database.h`, `src/os/freertos/freertos/include/mpu_wrappers.h`
+
+##### Execution `FB2-VER-EXE-000007` — Execution: foxBMS 2 host unit test sweep, extended clang diagnostic set (136 tests, macOS arm64)
+
+- **Test measure**: `FB2-VER-TMS-000001..000005` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/driver/foxmath/test_foxmath.c`, `src/app/engine/database/database.h`, `src/os/freertos/freertos/include/mpu_wrappers.h`
+
+##### Execution `FB2-VER-EXE-000008` — Execution: ALGO moving average (tests/unit/app/application/algorithm/moving_average/test_moving_average.c) - real macOS host run, FAILING
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/application/algorithm/moving_average/test_moving_average.c`
+
+##### Execution `FB2-VER-EXE-000009` — Execution: SOC lookup-table state estimation (tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c) - real macOS host run, FAILING
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c`
+
+##### Execution `FB2-VER-EXE-000010` — Execution: State estimation initialisation (tests/unit/app/application/algorithm/state_estimation/test_state_estimation.c) - real macOS host run, FAILING
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/application/algorithm/state_estimation/test_state_estimation.c`
+
+##### Execution `FB2-VER-EXE-000011` — Execution: Debug AFE default driver (tests/unit/app/driver/afe/debug/default/test_debug_default.c) - real macOS host run, FAILING
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/driver/afe/debug/default/test_debug_default.c`
+
+##### Execution `FB2-VER-EXE-000012` — Execution: DIAG flag table update (tests/unit/app/engine/config/test_diag_cfg.c) - real macOS host run, FAILING
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/engine/config/test_diag_cfg.c`
+
+##### Execution `FB2-VER-EXE-000013` — Execution: Redundancy layer (tests/unit/app/application/redundancy/test_redundancy.c) - real macOS host run, FAILING
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/application/redundancy/test_redundancy.c`
+
+##### Execution `FB2-VER-EXE-000014` — Execution: DIAG engine (tests/unit/app/engine/diag/test_diag.c) - real macOS host run, FAILING
+
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/engine/diag/test_diag.c`
 
 ##### Execution `FB2-VER-EXE-000001` — Execution: FB2-VER-TMS-000001 (synthetic_fixture)
 
@@ -344,18 +401,38 @@ Upstream `verifies` links per test measure. Full requirement chain above each me
 - **Environment**: x86_64 Linux host (simulated); Unity 2.5.2, CMock 2.4.0; tools: cmake 3.22.1, cmock 2.4.0, gcc 11.4.0, unity 2.5.2
 - **Evidence refs**: `FB2-VER-TMS-000006`
 
+##### Execution `FB2-VER-EXE-000007` — Execution: FB2-VER-TMS-000007 (blocked)
+
+- **Test measure**: `FB2-VER-TMS-000007` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: POSIX host (Linux) — harness blocked; Unity/CMock; tools: GCC
+- **Evidence refs**: `FB2-VER-TMS-000007`
+
+##### Execution `FB2-VER-EXE-000008` — Execution: FB2-VER-TMS-000008 (blocked)
+
+- **Test measure**: `FB2-VER-TMS-000008` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: Target + HIL bench (blocked); Unity/CMock; tools: GCC
+- **Evidence refs**: `FB2-VER-TMS-000008`
+
+##### Execution `FB2-VER-EXE-000009` — Execution: FB2-VER-TMS-000009 (blocked)
+
+- **Test measure**: `FB2-VER-TMS-000009` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: Operational target vehicle/bench (blocked); N/A — operational use; tools: 
+- **Evidence refs**: `FB2-VER-TMS-000009`
+
+##### Execution `FB2-VER-EXE-000010` — Execution: FB2-VER-TMS-000010 (blocked)
+
+- **Test measure**: `FB2-VER-TMS-000010` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: POSIX host (Linux) — component harness blocked; Unity/CMock; tools: GCC
+- **Evidence refs**: `FB2-VER-TMS-000010`
+
+##### Execution `FB2-VER-EXE-000011` — Execution: FB2-VER-TMS-000011 (blocked)
+
+- **Test measure**: `FB2-VER-TMS-000011` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: Target TMS570LC4357 + HIL bench (blocked — unpublished upstream); Linked target program; tools: GCC
+- **Evidence refs**: `FB2-VER-TMS-000011`
 
 
-## Execution Traceability and Evidence Limits
-
-`result_of` links (execution → test measure): as_is `FB2-VER-EXE-000001` → `FB2-VER-TMS-000001` (`FB2-LNK-SAF-000018`); synthetic `FB2-VER-EXE-000001..000006` → `FB2-VER-TMS-000001..000006` (`FB2-LNK-SAF-000033..038`).
-
-- as_is `actual_host_run` PASS (`FB2-VER-EXE-000001`) is not independently substantiated: log/coverage hashes are `sha256:placeholder`, `output_hashes` empty, per-run logs not retained. `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have no execution records.
-- All synthetic executions are `synthetic_fixture` PASS results demonstrating corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
-- Planning stubs `FB2-VER-TMS-000007` (integration), `FB2-VER-TMS-000008` (qualification), `FB2-VER-TMS-000009` (validation), `FB2-VER-TMS-000010` (component), `FB2-VER-TMS-000011` (HIL) have `verifies`/`validates` links but no execution records.
-- No system-qualification, integration, component, or HIL executions exist in either profile — system verification rests on unit-level measures plus reverse-engineered repository evidence above.
 
 ---
 
-*Generated: 2026-09-13T15:17:46Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
-
+*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

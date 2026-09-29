@@ -1,144 +1,195 @@
 # Reproducibility Report
 
-**Generated:** 2026-09-20  
-**Baseline:** BAS-REF-001  
-**Profile:** synthetic_reference (primary), as_is (comparison)
+**Generated:** 2026-09-29
+**Baseline:** BAS-REF-001 (pinned source commit `308028fb`)
+**Profiles:** `synthetic_reference` (primary), `as_is` (comparison)
 
-## Overview
+> Reproducibility and determinism results only. Nothing here asserts ISO 26262
+> conformity, ASIL capability, ASPICE capability level, certification, human
+> approval or tool qualification. All 153 indexed records are
+> `human_approval_status: pending` and `production_authorized: false`.
+>
+> Every claim in this report was measured on 2026-09-29 by running the tool
+> twice and diffing.
 
-This report documents the reproducibility of the corpus generation, export, and validation processes per master prompt Section 18.
+## 1. Summary
 
-## Corpus Generation Reproducibility
+| Property | Mechanism | Measured result |
+|---|---|---|
+| View rendering | `corpus.py render` | **byte-identical across two runs** once the `Generated:` timestamp line is excluded (10 files) |
+| Graph export | `corpus.py export` | **byte-identical** across two runs apart from the `generated_at` field (4 files) |
+| Export content hashes | SHA-256 in `exports/manifest.json` | **all 3 hashes identical** across two runs |
+| Spec documents | `render_spec_documents.py` | `INTEGRITY CHECK PASSED`; `DETERMINISM: byte-identical across runs`; 10/10 documents converted |
+| Source registry pinning | baseline commit check | pinned to `308028fb` |
+| Acceptance suite | `corpus.py check` | `Acceptance suite: PASSED`, 10 gate lines PASS, 0 FAIL |
+| Toolchain self-tests | `corpus.py selftest` | 11 PASS, 0 FAIL |
+| Scenario suite | `corpus.py scenario-test` | 20/20 mutations, 3/3 change lifecycles |
 
-### Deterministic Generation
+## 2. How Determinism Was Measured
 
-| Aspect | Mechanism | Status |
-|--------|-----------|--------|
-| Schema validation | JSON Schema (draft 2020-12) | ✅ Deterministic |
-| ID generation | Fixed pattern FB2-<DOMAIN>-<TYPE>-<NNNNNN> | ✅ Deterministic |
-| Link generation | Explicit link registry with fixed IDs | ✅ Deterministic |
-| Parameter values | Single parameter registry | ✅ Deterministic |
-| Assumption values | Fixed assumption registry | ✅ Deterministic |
-| Timing budgets | Arithmetic from parameter registry | ✅ Deterministic |
+The measurement is the point of this section, because "deterministic" is a claim
+that is easy to assert and easy to get wrong.
 
-### Content Hash Stability
+```
+$ python3 docs/artifacts/tools/corpus.py render      # run 1
+$ python3 docs/artifacts/tools/corpus.py export      # run 1
+$ cp -R docs/artifacts/views    /tmp/r1 ; cp -R docs/artifacts/exports /tmp/e1
 
-| Artifact Type | Hash Algorithm | Stable Across Runs |
-|---------------|----------------|---------------------|
-| Requirements | SHA-256 of canonical JSON | ✅ |
-| Designs | SHA-256 of canonical JSON | ✅ |
-| Test Measures | SHA-256 of canonical JSON | ✅ |
-| Reviews | SHA-256 of canonical JSON | ✅ |
-| Links | SHA-256 of canonical JSON | ✅ |
-| Parameters | SHA-256 of canonical JSON | ✅ |
+$ python3 docs/artifacts/tools/corpus.py render      # run 2
+$ python3 docs/artifacts/tools/corpus.py export      # run 2
+$ cp -R docs/artifacts/views    /tmp/r2 ; cp -R docs/artifacts/exports /tmp/e2
 
-**Note:** Run metadata (timestamps, session IDs) excluded from content hashes per corpus policy.
+$ diff -r -I '^Generated:'      /tmp/r1 /tmp/r2     # views
+$ diff -r -I '"generated_at"'   /tmp/e1 /tmp/e2     # exports
+```
 
-## Export Reproducibility
+### Views: 10 files, byte-identical
 
-### Export Formats
+The only difference between the two runs is the timestamp in the preamble:
 
-| Format | Tool | Deterministic | Notes |
-|--------|------|---------------|-------|
-| JSONL nodes/edges | Custom Python (`corpus.py export`) | ✅ | Sorted by ID |
-| CSV trace-matrix | Custom Python | ✅ | Sorted by ID |
-| Markdown reports | Hand-maintained, data-verified | ✅ | Content derived from canonical corpus |
-| Link registry | JSON partition | ✅ | Sorted by link_id |
+```
+run 1: Generated: 2026-09-29T09:53:47Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+run 2: Generated: 2026-09-29T09:55:06Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+```
 
-### Round-Trip / Determinism Verification
+`diff -r -I '^Generated:'` reports **no differences across all 10 view files**.
+The exclusion is narrowly scoped to that one line and nothing else; no other
+line of any view is excluded from the comparison.
 
-| Test | synthetic_reference | as_is | Status |
-|------|---------------------|-------|--------|
-| Re-export → byte-identical nodes/edges/manifest | ✅ Identical | ✅ Identical | Pass (acceptance gate 6: `deterministic export hashes`) |
-| Content hash preservation | ✅ | ✅ | Pass |
-| Link integrity (0 dangling) | ✅ | ✅ | Pass |
-| Profile isolation | ✅ | ✅ | Pass |
-| Variant filtering | ✅ | ✅ | Pass |
+### Exports: 4 files, byte-identical apart from `generated_at`
 
-## Validation Tool Reproducibility
+```
+$ diff -r /tmp/e1 /tmp/e2
+9c9
+<   "generated_at": "2026-09-29T09:54:57Z",
+---
+>   "generated_at": "2026-09-29T09:55:27Z",
+```
 
-### Schema Validation
+That single line in `manifest.json` is the only difference. `nodes.jsonl`,
+`edges.jsonl` and `trace-matrix.csv` are byte-identical with no exclusions at
+all.
 
-| Schema | Tool | Deterministic | Notes |
-|-------|------|---------------|-------|
-| artifact-base | Python jsonschema (Draft 2020-12) | ✅ | 13 schemas, `check_schema` + instance validation |
-| requirement | Python jsonschema | ✅ | see `corpus.py validate` |
-| design | Python jsonschema | ✅ | |
-| test_measure | Python jsonschema | ✅ | |
-| execution | Python jsonschema | ✅ | |
-| review | Python jsonschema | ✅ | |
-| link | Python jsonschema | ✅ | Strict mode |
+### Export content hashes
 
-### Consistency Checks
+`exports/manifest.json` carries a `content_hashes` map. Across the two runs the
+key sets are identical and **all 3 hashes match**. This is the same property the
+acceptance gate `[6/8] deterministic export hashes` asserts, and it is what makes
+the export usable as a change-detection baseline.
 
-| Check | Tool | Deterministic | Notes |
-|-------|------|---------------|-------|
-| ID uniqueness | Python set | ✅ | O(n) |
-| Link endpoint existence | Python dict lookup | ✅ | O(n) |
-| Link type validity | Python enum | ✅ | O(n) |
-| Parameter cross-ref | Python dict | ✅ | O(n) |
-| Timing budget arithmetic | Python int/float | ✅ | Checked against FTTI parameter |
-| Profile isolation | Python set | ✅ | O(n) |
+## 3. What Is Deterministic and Why
 
-### Mutation Scenario Validation
+| Element | Mechanism |
+|---|---|
+| Record ordering | The renderer sorts every record collection by ID, and the index is keyed on `(profile, id)` |
+| Identifier scheme | Fixed pattern `FB2-<DOMAIN>-<TYPE>-<NNNNNN>`, never generated from a counter or a clock |
+| Table rendering | Fixed column sets per view; cells escaped through one helper (`_cell`) |
+| Coverage-plan quoting | Read live from `governance/coverage-plan.json` at render time, so a corrected plan changes the view and an unchanged plan cannot |
+| Guard fields | Computed from the indexed records at render time, never asserted in prose |
+| Graph export | Nodes and edges emitted from the link registry in stable order; `trace-matrix.csv` sorted |
+| Source registry | Pinned to baseline commit `308028fb`; drift is a validation finding, not a silent re-read |
 
-| Scenario | Deterministic | Notes |
-|----------|---------------|-------|
-| SCN-MUT-001 .. SCN-MUT-020 | ✅ (20/20) | In-memory patch, fixed expected finding (severity+category); acceptance gate requires 20/20 |
-| SCN-CHG-001 .. SCN-CHG-003 | ✅ (3/3) | Fixed lifecycle structure checks |
+### The anti-drift property
 
-## Offline Determinism
+The renderer was changed on 2026-09-29 so that generated prose can no longer
+quote a frozen copy of the coverage plan. Previously two generated views embedded
+literal strings describing what the coverage plan *used to claim*; when the plan
+was corrected, those views kept asserting the superseded claim.
 
-### No External Dependencies
+The property was verified empirically, not just by inspection:
 
-| Dependency | Status | Notes |
-|------------|--------|-------|
-| Network access | None required | All sources local |
-| Cloud services | None required | All processing local |
-| Random seeds | Fixed | Python hash seed fixed |
-| Timestamps | Excluded from content | Run metadata separated |
-| External APIs | Not used | All data in corpus |
+1. Set `SYS.2`'s disposition to `mapped` in the coverage plan.
+2. Re-render.
+3. `views/system/system.md` immediately read
+   ``SYS.2` (System Requirements Analysis) is recorded `mapped``.
+4. Restore the corrected plan (`gap`) and re-render.
+5. The view reads ``is recorded `gap``` again.
 
-### Idempotent Regeneration
+The generated text now tracks the governance file in both directions, so a
+future correction cannot leave a stale claim behind.
 
-| Operation | Idempotent | Notes |
-|-----------|------------|-------|
-| Full corpus generation | ✅ | Same inputs → same outputs |
-| Incremental update | ✅ | Deterministic diff |
-| Export generation | ✅ | Same canonical → same exports |
-| Validation | ✅ | Same corpus → same results |
-| Report generation | ✅ | Same data → same reports |
+## 4. Source Registry Pinning
 
-## Tool Versioning
+The source registry is pinned to baseline commit **`308028fb`**. A dedicated
+self-test asserts the pinning and passes.
 
-| Tool | Version | Pinned | Notes |
-|------|---------|--------|-------|
-| Python | 3.12.x (system) | ✅ | stdlib + jsonschema only |
-| jsonschema | 4.x | ✅ | Draft 2020-12 validators |
-| Git | 2.x | ✅ | For commit hashes |
-| SHA-256 | Built-in | ✅ | hashlib |
+This is what makes `as_is` records auditable: a record marked `source_observed`
+points at a specific blob at a specific commit, so a later drift in the working
+tree is a detectable event rather than a silent change of meaning.
 
-No Jinja2, LLM, or network dependencies in the validation/export pipeline (`docs/artifacts/tools/` contains only stdlib-Python tools).
+## 5. What Is Deliberately *Not* Deterministic
 
-## Reproducibility Test Results
+Two timestamps are excluded from the determinism comparison, and only these two:
 
-| Test | synthetic_reference | as_is | Status |
-|------|---------------------|-------|--------|
-| Deterministic re-export (byte-identical) | ✅ Identical | ✅ Identical | Pass (acceptance gate) |
-| Validation on current corpus | ✅ 0 errors | ✅ 0 errors | Pass (16 findings, 0 errors) |
-| Spec-doc regeneration | ⚠️ Overlays diverge by design | — | `render_spec_documents.py --check`: integrity PASSED; docs 04–10 carry hand-maintained traceability/evidence overlays (link-ID tables, FSR-004 section, stub specs) that the renderer does not emit, so byte-determinism vs fresh render intentionally fails on those files; corpus JSON remains the stable source of truth |
-| Mutation detection on clean corpus | ✅ No mutation-specific findings | ✅ | Pass (validate runs in every acceptance pass) |
-| Mutation detection on mutated | ✅ Finds expected (20/20) | ✅ | Pass |
-| Change lifecycle structure | ✅ 3/3 complete | N/A | Pass |
+| Field | File | Why |
+|---|---|---|
+| `Generated:` | preamble of each of the 10 views | A report that never says when it was made is less useful, not more |
+| `generated_at` | `exports/manifest.json` | Same reason |
 
-## Limitations
+Everything else in both trees is byte-identical. No content, no ordering, no
+guard field, no count and no prose varies between runs.
 
-1. **AI-generated content** - LLM output not deterministic across runs; canonical JSON is the stable artifact
-2. **Timestamps in metadata** - Run metadata (not content) varies; excluded from content hashes
-3. **Session IDs in reviews** - Unique per run; excluded from content comparison
-4. **Git commit hashes** - Depend on repository state; pinned to 308028fb
-5. **File system ordering** - JSON key ordering standardized; array sorting by ID
+## 6. Verification Toolchain Self-Tests
 
-## Machine-Readable Data
+`corpus.py selftest` → **11 PASS, 0 FAIL**:
 
-See: `docs/artifacts/reports/reproducibility-report.json`
+| # | Test | What it proves |
+|---|---|---|
+| 1 | dangling link detected | the link validator catches an unresolvable target |
+| 2 | invalid link type detected | the validator rejects a relation type outside the allowed set |
+| 3 | invalid evidence state detected | `execution_kind` / `outcome` enums are enforced |
+| 4 | FTTI budget violation detected | timing-budget arithmetic is checked, not assumed |
+| 5 | profile contamination detected | a record cannot import a fact across profiles |
+| 6 | `production_authorized=true` rejected | the guard cannot be set to true |
+| 7 | invalid schema rejected | a malformed schema is refused by the validator itself |
+| 8 | duplicate ID detection | the duplicate detector fires |
+| 9 | invalid state change rejected | illegal lifecycle transitions are caught |
+| 10 | export round-trip deterministic | export → re-read → re-export is stable |
+| 11 | source registry pinned to baseline commit | the baseline pin is asserted, not assumed |
+
+## 7. Acceptance Suite Reproducibility
+
+`corpus.py check` is itself reproducible and internally cross-checking. It runs
+`validate`, `inventory`, `coverage`, a trace reachability check, the scenario
+suite, and the export twice — comparing the two export manifests' content hashes
+— before the governance-semantics and final-status gates.
+
+| Gate | Result |
+|---|---|
+| `[1/8] validate` | PASS |
+| `[2/8] inventory` | PASS |
+| `[3/8] negative_scenario_validation = 20/20 mutations` | PASS (20/20) |
+| `[3/8] change lifecycles = 3/3` | PASS |
+| `[4/8] hazard present` | PASS |
+| `[5/8] scenario-test` | PASS (23/23 lines) |
+| `[6/8] export` | PASS |
+| `[6/8] deterministic export hashes` | PASS |
+| `[7/8] no production_authorized/approved artifacts` | PASS (0 violations this run) |
+| `[8/8] final status recorded` | PASS (`synthetic_ready_with_limitations`) |
+
+**`Acceptance suite: PASSED`**
+
+Note that gate `[7/8]` re-runs the validators with a **fresh** findings set
+rather than reusing an earlier one, so a governance violation cannot be masked
+by a stale findings list from a previous stage.
+
+## 8. Reproducibility Limitations
+
+1. **One Python interpreter and one host.** Determinism is verified on a single
+   machine with a single `python3`. Cross-platform and cross-version
+   reproducibility of the tool itself is not demonstrated.
+2. **The verification environment is not fully reproducible.** The macOS host
+   test run in `verification-evidence-report.md` depends on the host's Ruby,
+   the shipped Ceedling configuration, and the local HALCoGen stub set under
+   `.work/verification-env/`. The 177 blocked tests remain blocked on any host.
+3. **Mermaid diagram validation depends on the host.** The renderer checks
+   Mermaid blocks with `mermaid-cli` when it is available and states plainly in
+   each view whether that check ran. On a host without `mermaid-cli` the
+   diagrams are emitted unvalidated, and the view says so rather than claiming
+   validation.
+4. **`render` is slow** — roughly 60 s on this host, dominated by Mermaid
+   validation. This does not affect determinism, only turnaround.
+5. **A redundant link registry copy** exists under `corpus/`; it is
+   de-duplicated by the tool, so it does not affect any output, but a future
+   change to the de-duplication rule would change the export. Reported, not
+   deleted.

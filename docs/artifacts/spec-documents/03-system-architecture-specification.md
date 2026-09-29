@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-13T15:17:46Z |
+| Generated | 2026-09-29T10:08:35Z |
 
 ## Scope
 
@@ -175,6 +175,12 @@ flowchart TD
     "FB2-SAF-FSR-000001" --- "FB2-SAF-SGO-000001"
     "FB2-SAF-FSR-000002" --- "FB2-SAF-SGO-000001"
     "FB2-SAF-FSR-000003" --- "FB2-SAF-SGO-000001"
+    "FB2-SW-DEV-000002" --- "FB2-SW-DSN-000001"
+    "FB2-SW-DEV-000003" --- "FB2-SW-DSN-000001"
+    "FB2-SW-DEV-000004" --- "FB2-SW-DSN-000001"
+    "FB2-SW-DEV-000005" --- "FB2-SW-DSN-000001"
+    "FB2-SW-DEV-000006" --- "FB2-SW-DSN-000001"
+    "FB2-SW-DEV-000016" --- "FB2-SW-DSN-000001"
     "FB2-HW-TSR-000001" -.allocated_to.-> "FB2-SAF-FSR-000001"
     "FB2-HW-TSR-000002" -.allocated_to.-> "FB2-SAF-FSR-000001"
     "FB2-HW-TSR-000003" -.allocated_to.-> "FB2-SAF-FSR-000003"
@@ -203,6 +209,7 @@ flowchart TD
     "FB2-HW-TSR-000001" -.allocated_to.-> "FB2-SAF-FSR-000001"
     "FB2-HW-TSR-000002" -.allocated_to.-> "FB2-SAF-FSR-000001"
     "FB2-HW-TSR-000003" -.allocated_to.-> "FB2-SAF-FSR-000003"
+    "FB2-HW-TSR-000004" -.allocated_to.-> "FB2-SAF-FSR-000004"
     "FB2-SW-SWR-000001" -.allocated_to.-> "FB2-SAF-FSR-000001"
     "FB2-SW-SWR-000002" -.allocated_to.-> "FB2-SAF-FSR-000002"
     "FB2-SW-SWR-000003" -.allocated_to.-> "FB2-SAF-FSR-000003"
@@ -215,4 +222,4 @@ flowchart TD
 
 ---
 
-*Generated: 2026-09-13T15:17:46Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

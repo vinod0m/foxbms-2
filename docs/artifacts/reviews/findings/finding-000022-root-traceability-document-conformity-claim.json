@@ -1,0 +1,59 @@
+{
+ "id": "FB2-REV-FND-000022",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000022: repository-root TRACEABILITY_DOCUMENT.md states ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability, and lies outside the corpus write boundary",
+ "owner_role": "quality_engineer",
+ "origin": "derived",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2",
+   "status": "unverified",
+   "rationale": "The claim of compliance evidence is recorded here as an unverified reference. No corpus artifact supports it, and the corpus does not claim conformity anywhere."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "'draft': this record makes the condition legible and dispositioned. It does not close it, because the subject file cannot be edited from inside the corpus write boundary. No human reviewer has confirmed this finding, and the human approval status of every artifact it concerns remains 'pending'.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "First-class record of a conformity and ASIL-capability claim made by TRACEABILITY_DOCUMENT.md at the repository root, which is outside the docs/artifacts write boundary and therefore reported rather than corrected."
+  }
+ ],
+ "subject_artifact_id": null,
+ "subject_file": "TRACEABILITY_DOCUMENT.md",
+ "subject_file_location": "repository root, one level above docs/artifacts/",
+ "subject_file_is_corpus_output": true,
+ "severity": "high",
+ "category": "consistency",
+ "evidence": "Direct read of the file on 2026-09-29, lines as numbered in the file. Line 19, under '1.1 Purpose', states verbatim: 'Provides evidence for compliance with ISO 26262, IEC 61508, and other applicable safety standards'. Line 23, under '1.2 Scope', states verbatim: 'Safety Requirements (ASIL-D, ASIL-B)'. Line 7 attributes the document to baseline commit 308028fb and line 8 states 'Document Version: 1.0' dated 2026-09-11. Three independent checks contradict or fail to support the claim. First, conformity: the string 'compliance' appears in that Purpose sentence and the corpus asserts no conformity anywhere. Every one of the 153 artifact records carries human_approval_status 'pending', production_authorized false and product_verification_credit false, and the acceptance suite's own gate 'no production_authorized/approved artifacts' passes precisely because nothing is approved. No certification, no tool qualification and no third-party assessment record exists in the corpus. Second, IEC 61508: a recursive search for the string '61508' across the whole of docs/artifacts returns no match. The only two standards in governance/standards-lock.json are ISO_26262_2018 (edition 2018) and ASPICE_PAM_41 (edition 4.1), locked_by 'safety'. There is no IEC 61508 requirement, mapping, analysis or normative reference anywhere in the corpus, so the document claims compliance evidence for a standard the corpus has never ingested or referenced. Third, ASIL: the corpus does carry ASIL field values, FB2-SAF-SGO-000001 with asil 'ASIL_D' and FB2-SAF-FSR-000004 with safety_allocation.asil 'ASIL_B', so the letters are not invented. But the derivation that an ASIL classification requires is absent from the corpus: there is no functional safety concept and no technical safety concept record in either profile, as recorded under correction CORR-COV-010 in governance/coverage-plan.json, and therefore no hazard-analysis-and-risk-assessment to technical-safety-concept chain from which an ASIL D determination could follow. The values are field entries on synthetic records, not a determined classification, and the document escalates them into a scope-level statement about the corpus's safety requirements. Finally, provenance: 'git ls-tree -r 308028fb --name-only' returns no entry matching TRACEABILITY, so the file is not in the pinned source baseline and is corpus output rather than upstream foxBMS material. The file is 17102 bytes, dated 2026-09-11.",
+ "disposition": "in_progress",
+ "impact": "Three distinct harms, in increasing order of seriousness. First, an internal contradiction: the document claims compliance evidence while the corpus it describes is uniformly unapproved and unauthorized, so a reader who trusts the document will draw the opposite conclusion from the one the guard fields support. Second, a claim against a standard the corpus never engaged: naming IEC 61508 implies the lifecycle work was performed against a standard that was never locked, never mapped and never analysed in this corpus, which would misdirect any subsequent assessment activity toward work that has not been done. Note carefully what is and is not being alleged. foxBMS's own pinned documentation does list IEC 61508 as a candidate standard and cites IEC 61508-3:2010, so the standard is a legitimate consideration for the product and its removal from the sentence is not the remedy. The remedy is that the corpus performed no IEC 61508 work, so it cannot supply compliance evidence for it; if IEC 61508 engagement is wanted, the standard must first be added to the lock and the referenced records produced. Third, and most serious for a safety corpus, an ASIL capability statement. Presenting 'ASIL-D' as an established characteristic of the corpus's safety requirements, when the concept-phase records that would justify an ASIL D determination are absent and the value is a field on a synthetic record with no derivation, is a safety-capability claim of exactly the kind this corpus exists to avoid making. The file also sits at the repository root rather than under docs/artifacts, so it is the most prominent document in the tree and is the one most likely to be read first by a person who has not seen the generated views that carry the guard fields and the non-conformity disclaimer. No artifact was relabelled and no acceptance check was altered to accommodate this finding.",
+ "root_cause": "The document was authored at the repository root on 2026-09-11, during the period before the corpus had a generated view layer, and it was written as a summary of the corpus's ID scheme and link structure rather than as a governance-controlled document. It therefore never passed through the corpus's guard-field discipline: it carries no 'Derived, not authored' provenance header, no human_approval_status, no production_authorized field, and no statement of what the corpus does not claim, all of which the generated views carry. Two habits produced the specific overclaims. The first is conflating a standards MAPPING with a standards CONFORMITY claim: the corpus deliberately holds a mapping from artifacts to ISO 26262 clause references, and somewhere in drafting, 'maps to ISO 26262 Part 2' was written up as 'provides evidence for compliance with ISO 26262'. Structural mapping is not conformity, and the corpus states this explicitly in the standards-mapping view. The second is conflating a field VALUE with a DETERMINATION: FB2-SAF-SGO-000001 carries asil 'ASIL_D', and the document read that as evidence of an established ASIL D capability. The value is real and traceable to that record; what is missing is the concept-phase derivation, because no functional safety concept or technical safety concept record exists, as recorded under CORR-COV-010. The IEC 61508 reference has no traceable origin in any corpus record. It was most plausibly carried over from the pinned source's own safety documentation, which does list IEC 61508 as an example standard that might suit foxBMS users, and then converted from a candidate-standard mention into an asserted compliance claim during drafting. That conversion from 'a standard we might apply' to 'evidence for compliance' is the same category of error as the ISO 26262 claim, and it is the specific step that is unsupportable. Finally, the file's location is the proximate cause of it surviving. Because it was written outside docs/artifacts, it fell outside every control this corpus applies: the validator does not read it, the renderer does not regenerate it, and the guard-field and non-conformity rules that govern every generated surface have no reach over it.",
+ "resolution": "NOT RESOLVED, AND NOT RESOLVABLE FROM INSIDE THE WRITE BOUNDARY. The subject file is TRACEABILITY_DOCUMENT.md at the repository root, which is one level above docs/artifacts/. The absolute write boundary for this effort permits writes only under docs/artifacts/, and expressly forbids modifying the root file, so the claim was reported rather than corrected. This is a deliberate choice, not an oversight: silently editing a file outside the boundary to make a corpus task look tidier would be exactly the kind of untracked change that makes a corpus untrustworthy, and leaving the file edited-but-unrecorded would be worse than leaving the defect visible. Remediation therefore belongs to whoever owns the repository root, and the specific changes required are: (1) remove or restate the line 19 compliance claim, replacing it with a statement that the corpus holds a structural mapping to ISO 26262 clause references and asserts no conformity; (2) remove the IEC 61508 reference from the compliance sentence, or, if IEC 61508 engagement is genuinely intended, add it to governance/standards-lock.json and produce the referenced records first, so that any claim is backed by a locked standard and real work products rather than by prose. Do not simply delete the standard from the project's consideration: the pinned source already lists it as a candidate, so the correct action is either to do the work or to state plainly that it has not been done; (3) restate the line 23 ASIL line to distinguish an ASIL field value recorded on a synthetic record from an ASIL determination, and state that no functional safety concept or technical safety concept record exists to support a determination, citing CORR-COV-010; (4) bring the file inside the controlled area, either by relocating it under docs/artifacts/reports/ or by regenerating it from the canonical records through corpus.py, so that it acquires the provenance header, the guard fields and the non-conformity disclaimer that the generated views carry; and (5) if it is to remain a hand-authored document at the repository root, place it under the same document-control regime as the rest of the tree, because nothing in the current toolchain will keep it honest. Until the repository owner acts, the honest reading for any reader who encounters this file is: the corpus holds a structural mapping to ISO 26262 clause references, it holds no IEC 61508 record of any kind, its ASIL values are field entries on synthetic records with no concept-phase derivation, and no artifact in it is human-approved, production-authorized, certified or assessed."
+}

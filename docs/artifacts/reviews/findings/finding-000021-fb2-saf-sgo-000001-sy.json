@@ -1,0 +1,51 @@
+{
+  "id": "FB2-REV-FND-000021",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Finding FB2-REV-FND-000021: safety goal ASIL_D lacks justification (FB2-SAF-SGO-000001, profile synthetic_reference)",
+  "owner_role": "quality_engineer",
+  "origin": "derived",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': this record makes the validator's standing finding legible and dispositioned. It does not close the condition. No human reviewer has confirmed it, and human approval of the artifact it describes remains 'pending'.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "First-class record of the standing validator finding 'safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification' raised against FB2-SAF-SGO-000001 in profile synthetic_reference. Transcribed from the validator, not paraphrased."
+    }
+  ],
+  "subject_artifact_id": "FB2-SAF-SGO-000001",
+  "validator_rule": "corpus.py semantic rule 'ASIL assignment validator (MUT-009)': raise if a safety_goal with a truthy asil lacks a truthy asil_justification.",
+  "validator_finding_verbatim": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
+  "severity": "medium",
+  "category": "domain",
+  "evidence": "Validator finding verbatim: 'safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification'. Confirmed by direct inspection: the safety goal carries asil 'ASIL_D' and the key 'asil_justification' is absent from the document. The same absence holds in both profiles, which is why the validator reports this finding twice. The goal is the root of the whole cell-voltage chain: the hazard, the functional safety requirements, the hardware and software requirements, the designs, the test measures and the safety case all inherit their rigour from this one undeclared assignment.",
+  "disposition": "accepted",
+  "impact": "An ASIL classification determines the required rigor of everything derived from it, so an underived ASIL_D means the corpus cannot demonstrate that it applied the correct rigor at any point in the chain, even where it did apply it. The gap is load-bearing rather than cosmetic here, because the chain does not meet its own FTTI: the main path's worst-case acquisition, debounce and contactor legs do not fit inside 100 ms, and the corpus relies on a separate ASIL_B hardware path to cover that. Deciding which ASIL the cell-voltage acquisition function actually needs is exactly the decision an asil_justification would record, and it has not been recorded.",
+  "root_cause": "The safety goal records were authored with asil set and asil_justification simply not written. The MUT-009 mutation detector was added to catch unsupported ASIL downgrades, and it correctly fires here: the corpus does carry an ASIL assignment for which no supporting argument exists. There is no tooling defect and no authoring rule was violated; the argument is simply missing.",
+  "resolution": "NOT RESOLVED. Writing the justification requires an engineering determination - hazard exposure, system-level integrity, and the aggregate ASIL of the cell-voltage chain - which this corpus has no basis to assert on its own, and inventing one would be worse than the gap. No ASIL was changed and no justification text was fabricated. The finding stands, and every downstream artifact in the chain inherits this undemonstrated classification."
+}

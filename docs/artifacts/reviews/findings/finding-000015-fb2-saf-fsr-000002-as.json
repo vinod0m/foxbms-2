@@ -1,0 +1,51 @@
+{
+  "id": "FB2-REV-FND-000015",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Finding FB2-REV-FND-000015: safety requirement has no fault_reaction defined (FB2-SAF-FSR-000002, profile as_is)",
+  "owner_role": "quality_engineer",
+  "origin": "derived",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': this record makes the validator's standing finding legible and dispositioned. It does not close the condition. No human reviewer has confirmed it, and human approval of the artifact it describes remains 'pending'.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "First-class record of the standing validator finding 'safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined' raised against FB2-SAF-FSR-000002 in profile as_is. Transcribed from the validator, not paraphrased."
+    }
+  ],
+  "subject_artifact_id": "FB2-SAF-FSR-000002",
+  "validator_rule": "corpus.py semantic rule 'Safety requirement completeness checker (MUT-008)': raise if 'fault_reaction' is absent from, or falsy in, any safety-domain FSR artifact.",
+  "validator_finding_verbatim": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
+  "severity": "medium",
+  "category": "verification",
+  "evidence": "Validator finding verbatim: 'safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined'. Confirmed by direct inspection: the key 'fault_reaction' is absent from the whole document of FB2-SAF-FSR-000002 in profile as_is, so the rule's condition is exactly met. The requirement text is (SOA limit monitoring, debounce 2-in-100 ms, classify within 5 ms), and it states the detection or actuation bound in prose inside 'statement' rather than in a structured field. A corpus-wide recursive check found the key absent from all seven FSR instances across both profiles.",
+  "disposition": "accepted",
+  "impact": "The corpus holds no machine-readable record of what the system must DO on detection of any of its safety faults: no reaction time, no reaction target, and no degraded-mode statement per requirement. The information exists only as prose. That has a concrete consequence beyond tidiness: a checker cannot compare a stated reaction time against a requirement, which is precisely how an incorrect timing claim survived into the safety case. FB2-SAF-SCS-000001 asserts a 70 ms chain that is both arithmetically wrong and inconsistent with the requirements it cites, and with no structured reaction-time field there is nothing for a validator to contradict it with.",
+  "root_cause": "The requirement schema never made fault_reaction a required field, so the records are schema-valid and no author was ever asked to populate it. The field was added to the tooling as a mutation detector (MUT-008) without a matching authoring requirement, so the detector fires on the baseline by construction. This is a tooling-ahead-of-specification gap rather than an authoring lapse by any individual.",
+  "resolution": "NOT RESOLVED. Resolving it means adding a fault_reaction field to the requirement schema and populating it across all seven FSR instances from the existing requirement prose. That is a schema change plus authoring work, both outside the scope of a finding record. The check was NOT weakened and no requirement was relabelled or reclassified to dodge it. The finding stands as a real gap in machine-checkable safety content."
+}

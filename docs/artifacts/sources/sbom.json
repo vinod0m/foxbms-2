@@ -1,0 +1,1321 @@
+{
+ "schema_version": "1.0.0",
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "repository": {
+  "path": "/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2",
+  "commit": "308028fb",
+  "tag": "v1.11.0",
+  "branch": "master"
+ },
+ "artifact_type": "sbom",
+ "title": "Software Bill of Materials - foxBMS 2 (vendored firmware components and host Python dependency set)",
+ "purpose": "An inventory of the third-party components present in this repository, each entry carrying the evidence by which its presence and version were established. The purpose is to make the inventory checkable, not to assert anything about the components' security state. See the explicit_limits section: no vulnerability adjudication was performed and no advisory source was consulted.",
+ "method": {
+  "name": "Repository self-evidence enumeration",
+  "description": "Every component was located by searching the pinned tree, and its version was taken only from a version macro, a header statement, a copyright/origin note, or a pinned dependency line in requirements.txt. Where no such evidence exists, version is null and the reason is stated in the evidence field of that entry. No version was inferred, interpolated, or guessed.",
+  "inputs": [
+   "src/os/freertos/ (vendored RTOS trees)",
+   "src/bootloader/driver/crc/vendor/ (vendored TI CRC primitive)",
+   "src/os/safertos/ (empty placeholder)",
+   "conf/hcg (HALCoGen configuration referenced by the port documentation)",
+   "src/app/driver/phy/dp83869.c and .h (in-tree PHY driver derived from a TI HALCoGen generated file)",
+   "requirements.txt (pinned Python dependency set)"
+  ]
+ },
+  "summary": {
+   "firmware_component_count": 6,
+   "firmware_components_with_evidenced_version": 2,
+   "firmware_components_with_null_version": 4,
+   "python_dependency_count": 114,
+   "python_dependencies_with_evidenced_version": 114,
+   "components_with_adjudicated_vulnerability_status": 0,
+   "note": "Zero components have an adjudicated vulnerability status. That is the accurate count, not an omission."
+  },
+ "components": [
+  {
+   "component_id": "CMP-0001",
+   "name": "FreeRTOS Kernel",
+   "role": "Real-time operating system kernel of the BMS master and bootloader",
+   "category": "firmware_runtime",
+   "version": "V11.1.0",
+   "evidence": "Compile-time macro tskKERNEL_VERSION_NUMBER is defined as the string \"V11.1.0\" at src/os/freertos/freertos/include/task.h:56, with matching tskKERNEL_VERSION_MAJOR 11 (:57) and tskKERNEL_VERSION_MINOR 1 (:58).",
+   "vendor": "Amazon Web Services (FreeRTOS project)",
+   "licence": "MIT",
+   "licence_evidence": "src/os/freertos/freertos/LICENSE.md ships with the vendored tree. The licence text was not transcribed into this corpus; this field records the file that carries it, not a legal determination.",
+   "modifications": "Locally modified. src/os/freertos/freertos/README.foxbms.md states the TI HALCoGen Cortex-R5 MPU port changes were merged into the upstream sources and that the vendored sources are not up to date with current kernel releases. The vendored copy is therefore NOT a pristine upstream release, and an upstream version string of V11.1.0 does not mean the tree is byte-identical to upstream V11.1.0.",
+   "location": "src/os/freertos/freertos/",
+   "content_hash_sha256": "cf3d69ca84dff742c89579760a16684fe59df212d0819d886711dbe0c3ccb8f6",
+   "content_hash_note": "Hash of src/os/freertos/freertos/README.foxbms.md, the file that documents the vendoring decision. A single file hash is not a hash of the whole tree; no per-tree digest was computed for this SBOM.",
+   "source_refs": [
+    "FB2-SRC-COD-000073",
+    "FB2-SRC-COD-000076"
+   ],
+   "vulnerability_status": "not_adjudicated"
+  },
+  {
+   "component_id": "CMP-0002",
+   "name": "FreeRTOS-Plus-TCP",
+   "role": "TCP/IP stack of the BMS master Ethernet interface",
+   "category": "firmware_runtime",
+   "version": "V4.3.999",
+   "evidence": "Compile-time macros at src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOS_IP.h:47-51: ipFR_TCP_VERSION_NUMBER \"V4.3.999\", ipFR_TCP_VERSION_MAJOR 4, ipFR_TCP_VERSION_MINOR 3, ipFR_TCP_VERSION_BUILD 999.",
+   "version_caveat": "Build number 999 is the FreeRTOS project's own placeholder for a development / not-yet-released build. The evidenced string is therefore 'V4.3.999', which is NOT evidence of a released upstream V4.3.999 artefact. It is recorded verbatim as found, with no attempt to map it onto a release.",
+   "vendor": "Amazon Web Services (FreeRTOS project)",
+   "licence": null,
+   "licence_evidence": "No licence file was located under src/os/freertos/freertos-plus/. The licence of this component is therefore UNKNOWN from the repository and is not asserted here.",
+   "modifications": "Configured through src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h. Whether upstream sources were locally modified was not established for this SBOM.",
+   "location": "src/os/freertos/freertos-plus/freertos-plus-tcp/",
+   "content_hash_sha256": "624072983ee96a078cf56260e4d1b66295d1e4bc4852f7aabc449c4809d40862",
+   "content_hash_note": "Hash of the file that carries the version macros, not of the whole tree.",
+   "source_refs": [
+    "FB2-SRC-COD-000064",
+    "FB2-SRC-COD-000074",
+    "FB2-SRC-COD-000075"
+   ],
+   "vulnerability_status": "not_adjudicated"
+  },
+  {
+   "component_id": "CMP-0003",
+   "name": "Texas Instruments CRC-64 supporting function (calc_crc64)",
+   "role": "CRC-64 integrity primitive used by the bootloader CRC driver",
+   "category": "firmware_runtime",
+   "version": null,
+   "evidence": "NO VERSION IS EVIDENCED. The source header records 'Copyright (C) 2016 Texas Instruments Incorporated' and states the code is based on a file extracted from the TI downloadable archive http://www.ti.com/lit/zip/spna235, referenced by the application report SPNA235. No version, revision or release identifier appears in either the .c or the .h file. The year 2016 in the copyright line is a copyright year, NOT a version, and is not used as one.",
+   "vendor": "Texas Instruments Incorporated",
+   "licence": "BSD-3-Clause",
+   "licence_evidence": "The BSD-3-Clause text is present in the file header of src/bootloader/driver/crc/vendor/crc64_calc.c:6-37 and crc64_calc.h.",
+   "modifications": "Yes, and recorded by the upstream file itself: the header notes added Doxygen comments, a foxBMS-style include guard, and a user function 'modified based on calc_crc64'. This is a modified TI work, not an unmodified TI work.",
+   "location": "src/bootloader/driver/crc/vendor/",
+   "content_hash_sha256": "3128d308a8994083a2fcaff88fa9d50955772a45ca7ce7cb963a226eefa563a8",
+   "content_hash_note": "Hash of crc64_calc.c. crc64_calc.h hashes to sha256:b041c09fd0f8d50add3e391cf561a8f102ae51918a95406d60870cc93f0d42b3.",
+   "source_refs": [],
+   "vulnerability_status": "not_adjudicated"
+  },
+  {
+   "component_id": "CMP-0004",
+   "name": "SafeRTOS (placeholder directory only)",
+   "role": "Named in the source tree as a safety-certified RTOS alternative; no code is vendored",
+   "category": "presence_only",
+   "version": null,
+   "evidence": "NO CODE AND NO VERSION EVIDENCED. The directory src/os/safertos/include/ exists but contains only a zero-byte file named .dummy. A repository-wide search for the identifiers 'safertos' and 'SafeRTOS' under src/ returned no match, so nothing in the built firmware depends on it.",
+   "vendor": null,
+   "vendor_evidence": "Not determinable; no file in the tree names a vendor.",
+   "licence": null,
+   "licence_evidence": "No licence file exists because no source exists.",
+   "modifications": "Not applicable.",
+   "location": "src/os/safertos/",
+   "content_hash_sha256": null,
+   "content_hash_note": "No hash recorded: the only file in the tree is a zero-byte .dummy placeholder, whose hash carries no information about a component.",
+   "source_refs": [],
+   "vulnerability_status": "not_applicable_no_code_present"
+  },
+  {
+   "component_id": "CMP-0005",
+   "name": "TI HALCoGen generated code (TI TMS570LC43x)",
+   "role": "Vendor-generated peripheral and RTOS-port sources that the foxBMS port is merged with",
+   "category": "code_generator",
+   "version": null,
+   "evidence": "NO VERSION IS EVIDENCED. The generator's version is not recorded in any file inspected for this SBOM. src/os/freertos/freertos/README.foxbms.md references the configuration directory conf/hcg and states that HALCoGen provides an option to generate FreeRTOS sources, but records no generator version.",
+   "vendor": "Texas Instruments Incorporated",
+   "licence": null,
+   "licence_evidence": "Not determined for this SBOM.",
+   "modifications": "By construction: generated code is emitted from a configuration, so the tree is reproducible only if the generator version and the conf/hcg configuration are both archived. Neither is evidenced here. This is a supply-chain observation, not a defect finding.",
+   "location": "conf/hcg (configuration), generated sources merged into src/os/freertos/",
+   "content_hash_sha256": null,
+   "content_hash_note": "No hash recorded: the generator configuration was not digested for this SBOM.",
+   "source_refs": [
+    "FB2-SRC-COD-000076"
+   ],
+   "vulnerability_status": "not_adjudicated"
+  },
+  {
+   "component_id": "CMP-0006",
+   "name": "DP83869-class Ethernet PHY driver (src/app/driver/phy/dp83869.c)",
+   "role": "In-tree driver for the physical-layer transceiver on the BMS master's Ethernet link. It is the first software-controlled element on the wire: PHY_Initialize powers the PHY up, identifies it over MDIO, selects MII mode and starts autonegotiation; PHY_AutoNegotiate and PHY_GetLinkStatus drive and poll the link; PHY_ResetHardware pulses the reset line. It is the code covered by TARA asset AST-009.",
+   "category": "phy_driver",
+   "version": null,
+   "evidence": "NO COMPONENT VERSION IS EVIDENCED, and the three version-like facts present in this file are deliberately kept distinct so that they are not conflated. (1) The file header at src/app/driver/phy/dp83869.c:39 states '@version v1.11.0'. That is the foxBMS file version, matching the release tag of this repository. It is NOT a version of this driver and NOT a version of the PHY. (2) The origin statement at :47-50 records that the file derives from 'HL_phy_dp83640.c' created by HALCoGen 04.07.01, and the modification list at :51-58 records that Fraunhofer IISB changed it to support the DP83869 PHY, for MISRA-C conformance and foxBMS naming. HALCoGen 04.07.01 is therefore the version of the CODE GENERATOR that produced the ancestor file. That is a real and citable provenance fact, but it is not a released version of any component, and this file has been substantially rewritten since. It is recorded here as file-scoped evidence about THIS file only and does not establish the generator version for the conf/hcg FreeRTOS sources of CMP-0005, whose own evidence field remains as stated there. (3) The transceiver is identified only as a DP83869-class device: the header states 'Implements the driver for the DP83869HM PHY' at :44, and the expected identifier PHY_PHY_ID (0x2000A0F1) at src/app/driver/phy/dp83869.h:74 is compared with the low revision nibble masked off (:277). The silicon revision is therefore deliberately not pinned by this driver, and no silicon revision is claimed here either. Because the driver has no upstream release identity of its own, version is null. No version was inferred, interpolated or guessed.",
+   "vendor": "Texas Instruments Incorporated for the original file ('Copyright (C) 2009-2018 Texas Instruments Incorporated', src/app/driver/phy/dp83869.c:2). Modified by Fraunhofer IISB (:51).",
+   "licence": "BSD-3-Clause, as evidenced by the notice shipped in the file header; see licence_evidence for the limit of that claim",
+   "licence_evidence": "src/app/driver/phy/dp83869.c:1-31 carries a three-clause BSD-style notice: redistribution in source and binary form with retention of the notice, reproduction of the notice in documentation, and a no-endorsement clause at :18-19. That no-endorsement clause is what distinguishes BSD-3-Clause from BSD-2-Clause. The licence text was not transcribed into this corpus; this field records the notice found in the file, not a legal determination, and no separate licence file for this component was located.",
+   "modifications": "Substantially modified from the generator output. The origin and modification statement at src/app/driver/phy/dp83869.c:47-58 records that the file began as HALCoGen 04.07.01 output 'HL_phy_dp83640.c', generated for the DP83640 PHY option, and was changed by Fraunhofer IISB to support the DP83869 PHY, to conform types to MISRA-C, and to adopt foxBMS naming, doxygen and prefixes. The file is therefore NOT a pristine generator output and NOT a stock TI driver, and no upstream release identifier applies to it.",
+   "location": "src/app/driver/phy/dp83869.c and src/app/driver/phy/dp83869.h",
+   "content_hash_sha256": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+   "content_hash_note": "Hash of src/app/driver/phy/dp83869.c only. The paired header src/app/driver/phy/dp83869.h is hashed separately as sha256:84d43d426a37d49cac9b45db71cf53339b0b90cbf7258b47857020b4188cf458. No digest over the directory was computed for this SBOM.",
+   "source_refs": [
+    "FB2-SRC-COD-000084",
+    "FB2-SRC-COD-000085",
+    "FB2-SRC-COD-000086",
+    "FB2-SRC-COD-000087",
+    "FB2-SRC-COD-000088",
+    "FB2-SRC-COD-000089"
+   ],
+   "vulnerability_status": "not_adjudicated"
+  }
+ ],
+ "python_dependency_set": {
+  "declared_in": "requirements.txt",
+  "declared_in_sha256": "5cf497cfd3011396b25073ff84ac652fe382510aa5ad3c29975d3e0642714f00",
+  "entry_count": 114,
+  "scope": "These are DEVELOPMENT, TEST, BENCH and TOOLING dependencies. They are not linked into the BMS master or bootloader firmware image; the firmware build uses the C toolchain and the vendored trees listed under 'components'. This set is in scope for the SBOM because tooling in this list can write to the target (see FB2-SAF-TAR-000001 threat THR-008 and asset AST-006), not because it ships in the product.",
+  "entries": [
+   {
+    "name": "alabaster",
+    "pinned_version": "1.0.0",
+    "evidence": "requirements.txt line 1: \"alabaster==1.0.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "argparse-addons",
+    "pinned_version": "0.12.0",
+    "evidence": "requirements.txt line 2: \"argparse-addons==0.12.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "astroid",
+    "pinned_version": "3.3.11",
+    "evidence": "requirements.txt line 3: \"astroid==3.3.11\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "static analysis / lint / type check",
+    "install_marker": null
+   },
+   {
+    "name": "attrs",
+    "pinned_version": "25.3.0",
+    "evidence": "requirements.txt line 4: \"attrs==25.3.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "babel",
+    "pinned_version": "2.17.0",
+    "evidence": "requirements.txt line 5: \"babel==2.17.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "bitstruct",
+    "pinned_version": "8.21.0",
+    "evidence": "requirements.txt line 6: \"bitstruct==8.21.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "build",
+    "pinned_version": "1.3.0",
+    "evidence": "requirements.txt line 7: \"build==1.3.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "cantools",
+    "pinned_version": "40.6.0",
+    "evidence": "requirements.txt line 8: \"cantools==40.6.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "CAN database / CAN message tooling",
+    "install_marker": null
+   },
+   {
+    "name": "certifi",
+    "pinned_version": "2025.8.3",
+    "evidence": "requirements.txt line 9: \"certifi==2025.8.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "cfgv",
+    "pinned_version": "3.4.0",
+    "evidence": "requirements.txt line 10: \"cfgv==3.4.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "charset-normalizer",
+    "pinned_version": "3.4.3",
+    "evidence": "requirements.txt line 11: \"charset-normalizer==3.4.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "clang-format",
+    "pinned_version": "21.1.1",
+    "evidence": "requirements.txt line 12: \"clang-format==21.1.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "click",
+    "pinned_version": "8.3.0",
+    "evidence": "requirements.txt line 13: \"click==8.3.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "colorama",
+    "pinned_version": "0.4.6",
+    "evidence": "requirements.txt line 14: \"colorama==0.4.6\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "colorlog",
+    "pinned_version": "6.9.0",
+    "evidence": "requirements.txt line 15: \"colorlog==6.9.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "contourpy",
+    "pinned_version": "1.3.3",
+    "evidence": "requirements.txt line 16: \"contourpy==1.3.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "coverage",
+    "pinned_version": "7.10.7",
+    "evidence": "requirements.txt line 17: \"coverage==7.10.7\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "test and coverage measurement",
+    "install_marker": null
+   },
+   {
+    "name": "crccheck",
+    "pinned_version": "1.3.1",
+    "evidence": "requirements.txt line 18: \"crccheck==1.3.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "CAN database / CAN message tooling",
+    "install_marker": null
+   },
+   {
+    "name": "cycler",
+    "pinned_version": "0.12.1",
+    "evidence": "requirements.txt line 19: \"cycler==0.12.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "dill",
+    "pinned_version": "0.4.0",
+    "evidence": "requirements.txt line 20: \"dill==0.4.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "diskcache",
+    "pinned_version": "5.6.3",
+    "evidence": "requirements.txt line 21: \"diskcache==5.6.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "distlib",
+    "pinned_version": "0.4.0",
+    "evidence": "requirements.txt line 22: \"distlib==0.4.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "docopt",
+    "pinned_version": "0.6.2",
+    "evidence": "requirements.txt line 23: \"docopt==0.6.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "docutils",
+    "pinned_version": "0.21.2",
+    "evidence": "requirements.txt line 24: \"docutils==0.21.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "filelock",
+    "pinned_version": "3.19.1",
+    "evidence": "requirements.txt line 25: \"filelock==3.19.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "fonttools",
+    "pinned_version": "4.60.0",
+    "evidence": "requirements.txt line 26: \"fonttools==4.60.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "gcovr",
+    "pinned_version": "8.4",
+    "evidence": "requirements.txt line 27: \"gcovr==8.4\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "test and coverage measurement",
+    "install_marker": null
+   },
+   {
+    "name": "gitdb",
+    "pinned_version": "4.0.12",
+    "evidence": "requirements.txt line 28: \"gitdb==4.0.12\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "GitPython",
+    "pinned_version": "3.1.45",
+    "evidence": "requirements.txt line 29: \"GitPython==3.1.45\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "hatchling",
+    "pinned_version": "1.27.0",
+    "evidence": "requirements.txt line 30: \"hatchling==1.27.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "identify",
+    "pinned_version": "2.6.14",
+    "evidence": "requirements.txt line 31: \"identify==2.6.14\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "idna",
+    "pinned_version": "3.10",
+    "evidence": "requirements.txt line 32: \"idna==3.10\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "imagesize",
+    "pinned_version": "1.4.1",
+    "evidence": "requirements.txt line 33: \"imagesize==1.4.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "isort",
+    "pinned_version": "6.0.1",
+    "evidence": "requirements.txt line 34: \"isort==6.0.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "Jinja2",
+    "pinned_version": "3.1.6",
+    "evidence": "requirements.txt line 35: \"Jinja2==3.1.6\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "joblib",
+    "pinned_version": "1.5.2",
+    "evidence": "requirements.txt line 36: \"joblib==1.5.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "jsonschema",
+    "pinned_version": "4.25.1",
+    "evidence": "requirements.txt line 37: \"jsonschema==4.25.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "jsonschema-specifications",
+    "pinned_version": "2025.9.1",
+    "evidence": "requirements.txt line 38: \"jsonschema-specifications==2025.9.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "kiwisolver",
+    "pinned_version": "1.4.9",
+    "evidence": "requirements.txt line 39: \"kiwisolver==1.4.9\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "latexcodec",
+    "pinned_version": "3.0.1",
+    "evidence": "requirements.txt line 40: \"latexcodec==3.0.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "lauterbach-trace32-rcl",
+    "pinned_version": "1.1.4",
+    "evidence": "requirements.txt line 41: \"lauterbach-trace32-rcl==1.1.4\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "host-side interface with access to the target or to bench equipment",
+    "install_marker": null
+   },
+   {
+    "name": "lxml",
+    "pinned_version": "6.0.2",
+    "evidence": "requirements.txt line 42: \"lxml==6.0.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "MarkupSafe",
+    "pinned_version": "3.0.2",
+    "evidence": "requirements.txt line 43: \"MarkupSafe==3.0.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "matplotlib",
+    "pinned_version": "3.10.6",
+    "evidence": "requirements.txt line 44: \"matplotlib==3.10.6\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "mccabe",
+    "pinned_version": "0.7.0",
+    "evidence": "requirements.txt line 45: \"mccabe==0.7.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "mypy",
+    "pinned_version": "1.18.2",
+    "evidence": "requirements.txt line 46: \"mypy==1.18.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "static analysis / lint / type check",
+    "install_marker": null
+   },
+   {
+    "name": "mypy_extensions",
+    "pinned_version": "1.1.0",
+    "evidence": "requirements.txt line 47: \"mypy_extensions==1.1.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "nodeenv",
+    "pinned_version": "1.9.1",
+    "evidence": "requirements.txt line 48: \"nodeenv==1.9.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "numpy",
+    "pinned_version": "2.3.3",
+    "evidence": "requirements.txt line 49: \"numpy==2.3.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "packaging",
+    "pinned_version": "25.0",
+    "evidence": "requirements.txt line 50: \"packaging==25.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "paho-mqtt",
+    "pinned_version": "2.1.0",
+    "evidence": "requirements.txt line 51: \"paho-mqtt==2.1.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pandas",
+    "pinned_version": "2.3.2",
+    "evidence": "requirements.txt line 52: \"pandas==2.3.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pandas-stubs",
+    "pinned_version": "2.3.2.250827",
+    "evidence": "requirements.txt line 53: \"pandas-stubs==2.3.2.250827\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pathspec",
+    "pinned_version": "0.12.1",
+    "evidence": "requirements.txt line 54: \"pathspec==0.12.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pillow",
+    "pinned_version": "11.3.0",
+    "evidence": "requirements.txt line 55: \"pillow==11.3.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pipdeptree",
+    "pinned_version": "2.28.0",
+    "evidence": "requirements.txt line 56: \"pipdeptree==2.28.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "platformdirs",
+    "pinned_version": "4.4.0",
+    "evidence": "requirements.txt line 57: \"platformdirs==4.4.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pre_commit",
+    "pinned_version": "4.3.0",
+    "evidence": "requirements.txt line 58: \"pre_commit==4.3.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pyarrow",
+    "pinned_version": "21.0.0",
+    "evidence": "requirements.txt line 59: \"pyarrow==21.0.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pybtex",
+    "pinned_version": "0.25.1",
+    "evidence": "requirements.txt line 60: \"pybtex==0.25.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pybtex-docutils",
+    "pinned_version": "1.0.3",
+    "evidence": "requirements.txt line 61: \"pybtex-docutils==1.0.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "Pygments",
+    "pinned_version": "2.19.2",
+    "evidence": "requirements.txt line 62: \"Pygments==2.19.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pykwalify",
+    "pinned_version": "1.8.0",
+    "evidence": "requirements.txt line 63: \"pykwalify==1.8.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pylint",
+    "pinned_version": "3.3.8",
+    "evidence": "requirements.txt line 64: \"pylint==3.3.8\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "static analysis / lint / type check",
+    "install_marker": null
+   },
+   {
+    "name": "pymodbus",
+    "pinned_version": "3.4.0",
+    "evidence": "requirements.txt line 65: \"pymodbus==3.4.0 # HIL\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "host-side interface with access to the target or to bench equipment",
+    "trailing_comment": "HIL",
+    "install_marker": null
+   },
+   {
+    "name": "pyparsing",
+    "pinned_version": "3.2.5",
+    "evidence": "requirements.txt line 66: \"pyparsing==3.2.5\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pyproject_hooks",
+    "pinned_version": "1.2.0",
+    "evidence": "requirements.txt line 67: \"pyproject_hooks==1.2.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pyright",
+    "pinned_version": "1.1.405",
+    "evidence": "requirements.txt line 68: \"pyright==1.1.405\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "static analysis / lint / type check",
+    "install_marker": null
+   },
+   {
+    "name": "pyrsistent",
+    "pinned_version": "0.20.0",
+    "evidence": "requirements.txt line 69: \"pyrsistent==0.20.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pyserial",
+    "pinned_version": "3.5",
+    "evidence": "requirements.txt line 70: \"pyserial==3.5\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "python-can",
+    "pinned_version": "4.6.1",
+    "evidence": "requirements.txt line 71: \"python-can==4.6.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "host-side interface with access to the target or to bench equipment",
+    "install_marker": null
+   },
+   {
+    "name": "python-dateutil",
+    "pinned_version": "2.9.0.post0",
+    "evidence": "requirements.txt line 72: \"python-dateutil==2.9.0.post0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "pytz",
+    "pinned_version": "2025.2",
+    "evidence": "requirements.txt line 73: \"pytz==2025.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "PyVISA",
+    "pinned_version": "1.15.0",
+    "evidence": "requirements.txt line 74: \"PyVISA==1.15.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "host-side interface with access to the target or to bench equipment",
+    "install_marker": null
+   },
+   {
+    "name": "pywin32",
+    "pinned_version": "311",
+    "evidence": "requirements.txt line 75: \"pywin32==311; platform_system == \"Windows\"\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": "platform_system == \"Windows\""
+   },
+   {
+    "name": "PyYAML",
+    "pinned_version": "6.0.2",
+    "evidence": "requirements.txt line 76: \"PyYAML==6.0.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "referencing",
+    "pinned_version": "0.36.2",
+    "evidence": "requirements.txt line 77: \"referencing==0.36.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "requests",
+    "pinned_version": "2.32.5",
+    "evidence": "requirements.txt line 78: \"requests==2.32.5\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "roman-numerals-py",
+    "pinned_version": "3.1.0",
+    "evidence": "requirements.txt line 79: \"roman-numerals-py==3.1.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "rpds-py",
+    "pinned_version": "0.27.1",
+    "evidence": "requirements.txt line 80: \"rpds-py==0.27.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "RsInstrument",
+    "pinned_version": "1.102.0",
+    "evidence": "requirements.txt line 81: \"RsInstrument==1.102.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "host-side interface with access to the target or to bench equipment",
+    "install_marker": null
+   },
+   {
+    "name": "ruamel.yaml",
+    "pinned_version": "0.18.15",
+    "evidence": "requirements.txt line 82: \"ruamel.yaml==0.18.15\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "ruamel.yaml.clib",
+    "pinned_version": "0.2.14",
+    "evidence": "requirements.txt line 83: \"ruamel.yaml.clib==0.2.14\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "ruff",
+    "pinned_version": "0.13.2",
+    "evidence": "requirements.txt line 84: \"ruff==0.13.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": "static analysis / lint / type check",
+    "install_marker": null
+   },
+   {
+    "name": "SciencePlots",
+    "pinned_version": "2.1.1",
+    "evidence": "requirements.txt line 85: \"SciencePlots==2.1.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "scipy",
+    "pinned_version": "1.16.2",
+    "evidence": "requirements.txt line 86: \"scipy==1.16.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "setuptools",
+    "pinned_version": "80.9.0",
+    "evidence": "requirements.txt line 87: \"setuptools==80.9.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "six",
+    "pinned_version": "1.17.0",
+    "evidence": "requirements.txt line 88: \"six==1.17.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "smmap",
+    "pinned_version": "5.0.2",
+    "evidence": "requirements.txt line 89: \"smmap==5.0.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "snowballstemmer",
+    "pinned_version": "3.0.1",
+    "evidence": "requirements.txt line 90: \"snowballstemmer==3.0.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "Sphinx",
+    "pinned_version": "8.2.3",
+    "evidence": "requirements.txt line 91: \"Sphinx==8.2.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinx-rtd-theme",
+    "pinned_version": "3.0.2",
+    "evidence": "requirements.txt line 92: \"sphinx-rtd-theme==3.0.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinx-tabs",
+    "pinned_version": "3.4.7",
+    "evidence": "requirements.txt line 93: \"sphinx-tabs==3.4.7\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-applehelp",
+    "pinned_version": "2.0.0",
+    "evidence": "requirements.txt line 94: \"sphinxcontrib-applehelp==2.0.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-bibtex",
+    "pinned_version": "2.6.5",
+    "evidence": "requirements.txt line 95: \"sphinxcontrib-bibtex==2.6.5\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-devhelp",
+    "pinned_version": "2.0.0",
+    "evidence": "requirements.txt line 96: \"sphinxcontrib-devhelp==2.0.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-drawio",
+    "pinned_version": "0.0.17",
+    "evidence": "requirements.txt line 97: \"sphinxcontrib-drawio==0.0.17\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-htmlhelp",
+    "pinned_version": "2.1.0",
+    "evidence": "requirements.txt line 98: \"sphinxcontrib-htmlhelp==2.1.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-jquery",
+    "pinned_version": "4.1",
+    "evidence": "requirements.txt line 99: \"sphinxcontrib-jquery==4.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-jsmath",
+    "pinned_version": "1.0.1",
+    "evidence": "requirements.txt line 100: \"sphinxcontrib-jsmath==1.0.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-qthelp",
+    "pinned_version": "2.0.0",
+    "evidence": "requirements.txt line 101: \"sphinxcontrib-qthelp==2.0.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "sphinxcontrib-serializinghtml",
+    "pinned_version": "2.0.0",
+    "evidence": "requirements.txt line 102: \"sphinxcontrib-serializinghtml==2.0.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "textparser",
+    "pinned_version": "0.24.0",
+    "evidence": "requirements.txt line 103: \"textparser==0.24.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "tomlkit",
+    "pinned_version": "0.13.3",
+    "evidence": "requirements.txt line 104: \"tomlkit==0.13.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "types-colorama",
+    "pinned_version": "0.4.15.20250801",
+    "evidence": "requirements.txt line 105: \"types-colorama==0.4.15.20250801\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "types-jsonschema",
+    "pinned_version": "4.25.1.20250822",
+    "evidence": "requirements.txt line 106: \"types-jsonschema==4.25.1.20250822\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "types-pytz",
+    "pinned_version": "2025.2.0.20250809",
+    "evidence": "requirements.txt line 107: \"types-pytz==2025.2.0.20250809\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "types-PyYAML",
+    "pinned_version": "6.0.12.20250915",
+    "evidence": "requirements.txt line 108: \"types-PyYAML==6.0.12.20250915\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "typing_extensions",
+    "pinned_version": "4.15.0",
+    "evidence": "requirements.txt line 109: \"typing_extensions==4.15.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "tzdata",
+    "pinned_version": "2025.2",
+    "evidence": "requirements.txt line 110: \"tzdata==2025.2\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "uptime",
+    "pinned_version": "3.0.1",
+    "evidence": "requirements.txt line 111: \"uptime==3.0.1\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "urllib3",
+    "pinned_version": "2.5.0",
+    "evidence": "requirements.txt line 112: \"urllib3==2.5.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "virtualenv",
+    "pinned_version": "20.34.0",
+    "evidence": "requirements.txt line 113: \"virtualenv==20.34.0\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   },
+   {
+    "name": "wrapt",
+    "pinned_version": "1.17.3",
+    "evidence": "requirements.txt line 114: \"wrapt==1.17.3\"",
+    "licence": null,
+    "licence_evidence": "NOT DETERMINED. requirements.txt declares no licences and the packages are not installed in the analysis environment, so no licence metadata was read. The licence of this component is UNKNOWN from this repository and is not asserted.",
+    "vulnerability_status": "not_adjudicated",
+    "evidenced_role": null,
+    "install_marker": null
+   }
+  ]
+ },
+ "explicit_limits": [
+  "NO VULNERABILITY ADJUDICATION WAS PERFORMED. No CVE identifier, CVSS score, affected-version range, exploitability statement or vendor advisory status is recorded for any component in this document, because no vulnerability database, advisory source or package metadata was consulted. Every component entry carries vulnerability_status 'not_adjudicated' or 'not_applicable_no_code_present'.",
+  "NOTHING IN THIS DOCUMENT MAY BE READ AS A STATEMENT THAT ANY COMPONENT IS FREE OF KNOWN VULNERABILITIES. Absence of an advisory here means the question was not asked, not that the answer is negative.",
+  "No penetration test, no exploit development, no fuzzing and no attack was performed in the production of this SBOM.",
+  "Component licences are recorded only where a licence text or licence file was located in the tree. For the Python dependency set and for FreeRTOS-Plus-TCP the licence is unknown and is recorded as null; a null licence is an open question, not a permissive grant.",
+  "The inventory is not a dependency-resolution result. It is what requirements.txt declares and what the source tree contains. Whether the declared pins match what is actually installed in any developer or CI environment was not verified.",
+  "Version evidence for the vendored C components is a version STRING found in the tree, not a verified comparison against an upstream release. The FreeRTOS kernel tree in particular carries documented local modifications, so 'V11.1.0' describes the base the tree was taken from, not an identity claim about the tree's contents.",
+  "No per-tree cryptographic digest was computed for the vendored C components. The content_hash_sha256 field names a specific file that carries the version evidence, and content_hash_note says so explicitly. A tree-level digest would be the correct control and is not provided here.",
+  "This SBOM is not an SPDX or CycloneDX document and claims no conformance to either format. Its structure follows the register style of the other documents in docs/artifacts/sources/.",
+  "Scope excludes: the hardware bill of materials, the AFE vendor libraries reached over the SPI daisy chain, the FreeRTOS port layer for other MCU families if any are vendored, and the host-side CLI's own runtime dependencies beyond requirements.txt."
+ ],
+ "related_artifacts": [
+  "FB2-SAF-TAR-000001",
+  "FB2-SAF-SEC-000005"
+ ]
+}

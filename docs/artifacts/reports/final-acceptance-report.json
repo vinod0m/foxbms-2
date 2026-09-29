@@ -1,86 +1,450 @@
 {
- "artifact_counts": {
-  "as_is": {
-   "config_files": 60,
-   "corpus_artifacts": {
-    "executions": 1,
-    "links": 25,
-    "requirements": 7,
-    "reviews": 1,
-    "test_measures": 5
-   },
-   "doc_pages": 35,
-   "hardware_boards": 8,
-   "source_files": 612,
-   "unit_tests": 80
+ "acceptance_suite": {
+  "gates_fail": 0,
+  "gates_pass": 10,
+  "result": "PASSED",
+  "scenario_lines_fail": 0,
+  "scenario_lines_pass": 23,
+  "selftest_fail": 0,
+  "selftest_pass": 11,
+  "stages": [
+   "validate",
+   "inventory",
+   "negative_scenario_validation",
+   "change_lifecycles",
+   "trace_hazard_present",
+   "scenario_test",
+   "export",
+   "deterministic_export_hashes",
+   "no_production_authorized",
+   "final_status_recorded"
+  ]
+ },
+ "all_numbers_from_live_tool_run": true,
+ "baseline_id": "BAS-REF-001",
+ "census": {
+  "by_domain": {
+   "hardware": 7,
+   "management": 7,
+   "safety": 30,
+   "software": 40,
+   "supporting": 2,
+   "system": 3,
+   "verification": 64
   },
-  "synthetic_reference": {
-   "assumptions": 12,
-   "change_lifecycles": 3,
-   "designs": 3,
-   "executions": 6,
-   "findings": 5,
-   "hsi": 1,
-   "links": 31,
-   "management": 2,
-   "mutation_artifacts": 2,
-   "parameters": 10,
-   "requirements": 17,
-   "reviews": 0,
-   "safety_analyses": 4,
+  "by_lifecycle": {
+   "baselined": 29,
+   "draft": 73,
+   "reviewed": 51
+  },
+  "by_origin": {
+   "derived": 36,
+   "source_observed": 57,
+   "synthetic": 60
+  },
+  "by_profile": {
+   "as_is": 71,
+   "synthetic_reference": 82
+  },
+  "by_type": {
+   "change": 3,
+   "design": 8,
+   "deviation": 26,
+   "execution": 25,
+   "finding": 22,
+   "hazard": 2,
+   "requirement": 26,
+   "review": 12,
+   "safety_analysis": 4,
    "safety_case": 1,
-   "test_measures": 6
+   "safety_goal": 2,
+   "scenario": 5,
+   "tara": 1,
+   "test_measure": 16
+  },
+  "guard": {
+   "human_approval_status": {
+    "pending": 153
+   },
+   "product_verification_credit": {
+    "False": 153
+   },
+   "production_authorized": {
+    "False": 153
+   }
   }
  },
- "baseline": "BAS-REF-001",
- "corpus_status": "synthetic_ready_with_limitations",
- "dimension_scores": {
-  "actual_product_evidence": 0,
-  "artifact_population": 60,
-  "automated_review_coverage": 39,
-  "export_reproducibility": 100,
-  "negative_scenario_validation": 100,
-  "scope_accounting": 100,
-  "semantic_consistency_checks": 80,
-  "source_grounding": 100,
-  "standards_mapping": 100,
-  "synthetic_fixture_coverage": 100,
-  "traceability_integrity": 95,
-  "verification_planning": 95
+ "claims_asil_capability": false,
+ "claims_aspice_capability_level": false,
+ "claims_iec_61508_conformity": false,
+ "conforms_to_iso26262": false,
+ "coverage_dimensions": {
+  "actual_product_evidence": {
+   "denominator": 16,
+   "detail": "0 target-hardware executions: execution_kind has no target-hardware member, so none can be claimed (blocked, not fabricated); of 25 execution records: 13 host/simulation (real product code, not target hardware), 12 synthetic_fixture/none, 0 undeclared",
+   "numerator": 0,
+   "percent": 0
+  },
+  "artifact_population": {
+   "denominator": 13,
+   "detail": "families populated: ['change', 'design', 'deviation', 'execution', 'hazard', 'requirement', 'review', 'safety_analysis', 'safety_case', 'safety_goal', 'scenario', 'tara', 'test_measure']",
+   "numerator": 13,
+   "percent": 100
+  },
+  "automated_review_coverage": {
+   "denominator": 123,
+   "detail": "82/123 artifacts covered by 12 review records; reviewed_by links consistent with reviewed_ids",
+   "numerator": 82,
+   "percent": 67
+  },
+  "export_reproducibility": {
+   "denominator": 1,
+   "detail": "export manifest present",
+   "numerator": 1,
+   "percent": 100
+  },
+  "human_approval": {
+   "denominator": 154,
+   "detail": "all artifacts pending human approval (none performed)",
+   "numerator": 0,
+   "percent": 0
+  },
+  "negative_scenario_validation": {
+   "denominator": 20,
+   "detail": "20/20 mutations; 3/3 change lifecycles",
+   "numerator": 20,
+   "percent": 100
+  },
+  "production_authorization": {
+   "denominator": 154,
+   "detail": "production_authorized=false for all artifacts (by policy)",
+   "numerator": 0,
+   "percent": 0
+  },
+  "scope_accounting": {
+   "denominator": 1,
+   "detail": "source/feature/variant inventories present",
+   "numerator": 1,
+   "percent": 100
+  },
+  "semantic_consistency_checks": {
+   "denominator": 10,
+   "detail": "10 check categories executed per run",
+   "numerator": 10,
+   "percent": 100
+  },
+  "source_grounding": {
+   "denominator": 154,
+   "detail": "artifacts with source_refs (102 anchors available)",
+   "numerator": 76,
+   "percent": 49
+  },
+  "standards_mapping": {
+   "denominator": 44,
+   "detail": "ASPICE processes 32/32, ISO parts 12/12",
+   "numerator": 44,
+   "percent": 100
+  },
+  "synthetic_fixture_coverage": {
+   "denominator": 43,
+   "detail": "82 synthetic_reference artifacts (target 43)",
+   "numerator": 82,
+   "percent": 191
+  },
+  "traceability_integrity": {
+   "denominator": 283,
+   "detail": "283 links, 0 dangling",
+   "numerator": 283,
+   "percent": 100
+  },
+  "verification_planning": {
+   "denominator": 7,
+   "detail": "16 test measures for 7 FSRs",
+   "numerator": 16,
+   "percent": 229
+  }
  },
- "gate_results": {
-  "actual_product_evidence": "fail",
-  "artifact_population": "partial",
-  "automated_review_coverage": "partial",
-  "export_reproducibility": "pass",
-  "human_approval": "pending",
-  "negative_scenario_validation": "pass",
-  "production_authorization": "confirmed_false",
-  "scope_accounting": "pass",
-  "semantic_consistency_checks": "partial",
-  "source_grounding": "pass",
-  "standards_mapping": "pass",
-  "synthetic_fixture_coverage": "pass",
-  "traceability_integrity": "pass",
-  "verification_planning": "pass"
+ "final_status": "synthetic_ready_with_limitations",
+ "generated_at": "2026-09-29T00:00:00Z",
+ "governance": {
+  "applicable_by_disposition": {
+   "gap": 6,
+   "mapped": 12,
+   "not_applicable": 4,
+   "partially_mapped": 10
+  },
+  "correction_ids": [
+   "CORR-COV-001",
+   "CORR-COV-002",
+   "CORR-COV-003",
+   "CORR-COV-004",
+   "CORR-COV-005",
+   "CORR-COV-006",
+   "CORR-COV-007",
+   "CORR-COV-008",
+   "CORR-COV-009",
+   "CORR-COV-010",
+   "CORR-COV-011",
+   "CORR-COV-012",
+   "CORR-COV-013",
+   "CORR-COV-014",
+   "CORR-COV-015"
+  ],
+  "corrections_recorded": 15,
+  "iec_61508_note": "No corpus record was authored against IEC 61508; it is absent from standards-lock.json. The pinned source lists it as a candidate standard (docs/general/safety/safety.rst:60) and cites IEC 61508-3:2010, so it is a legitimate consideration for the product; the corpus never engaged it.",
+  "iec_61508_records_in_corpus": 0,
+  "process_inventory_total": 32,
+  "processes_applicable": 28,
+  "processes_not_applicable": 4,
+  "residual_internal_disagreements": [
+   "SUP.1, SUP.8, SUP.9, SUP.10 still read mapped in process_inventory while the generated supporting-processes view reports no process-definition record for those families; both readings are recorded in the plan",
+   "sources/feature-inventory.json summary.total_features is 20 while the file holds 22 feature records and corpus.py inventory reports 22"
+  ],
+  "standards_locked": [
+   {
+    "edition": "2018",
+    "id": "ISO_26262_2018"
+   },
+   {
+    "edition": "4.1",
+    "id": "ASPICE_PAM_41"
+   }
+  ],
+  "standards_locked_by": "safety",
+  "zero_record_processes": [
+   "SYS.1",
+   "SYS.2",
+   "MAN.3",
+   "MAN.5",
+   "MAN.6",
+   "PIM.3"
+  ]
  },
- "generated_at": "2026-09-13T00:00:00Z",
+ "human_approval_status": "pending",
  "limitations": [
-  "Only 1/20 feature chains fully generated by design (vertical slice)",
-   "Review coverage 38% (17/45 corpus artifacts)",
-  "No target hardware evidence; HIL setup unpublished upstream (blocked, not fabricated)",
-  "Human approval pending for all artifacts",
-  "Management scope (SCO-001) linked via TMS-009 validates stub (draft, no execution)"
+  "No target-hardware verification evidence: 0 of 16; execution_kind has no target-hardware member so none can be claimed",
+  "177 of 313 repository tests blocked on proprietary TI HALCoGen output across 34 distinct headers",
+  "5 genuine test failures caused by untyped void* database API parameters interacting with the shipped CMock configuration",
+  "Automated review coverage 82/123 (67%): 41 unique ids uncovered",
+  "Six applicable processes hold no record of any kind: SYS.1, SYS.2, MAN.3, MAN.5, MAN.6, PIM.3",
+  "No functional safety concept or technical safety concept record in either profile",
+  "No system or stakeholder requirement record in either profile",
+  "HWE.2 and HWE.3 limited by unreadable CAD formats",
+  "Duplicated review record FB2-REV-000001",
+  "Stale feature-inventory summary count",
+  "A conformity claim exists outside the corpus write boundary",
+  "Human approval pending for all records; none is production-authorized"
  ],
- "next_required_inputs": [
-  "Human review by independent reviewers",
-  "Target hardware testing on TMS570LC4357 with AFE hardware",
-  "Complete remaining feature vertical slices",
-  "Multi-defect interaction scenarios",
-  "Integration-level test measures",
-  "Stakeholder validation test specs"
+ "populations": {
+  "artifact_files_with_id": 154,
+  "duplicate_profile_id": [
+   [
+    "as_is",
+    "FB2-REV-000001"
+   ]
+  ],
+  "indexed_unique_records": 153,
+  "note": "validate counts 154 corpus/review files plus 23 scenario files. The artifact index de-duplicates on (profile,id) and holds 153. Unique ids across both profiles number 123 because most requirement, design and verification ids exist in both profiles by design.",
+  "unique_artifact_ids_across_profiles": 123,
+  "validated_artifact_files": 177
+ },
+ "production_authorized": false,
+ "provenance": {
+  "check": "python3 docs/artifacts/tools/corpus.py check",
+  "coverage": "python3 docs/artifacts/tools/corpus.py coverage",
+  "halcogen_closure": "docs/artifacts/.work/verification-env/logs/hcg-closure.json",
+  "host_run": "docs/artifacts/.work/verification-env/logs/results-strict.json",
+  "inventory": "python3 docs/artifacts/tools/corpus.py inventory",
+  "selftest": "python3 docs/artifacts/tools/corpus.py selftest",
+  "spec_docs": "python3 docs/artifacts/tools/render_spec_documents.py --check",
+  "validate": "python3 docs/artifacts/tools/corpus.py validate"
+ },
+ "reported_defects": [
+  {
+   "category": "consistency",
+   "disposition": "in_progress",
+   "id": "FB2-REV-FND-000022",
+   "severity": "high",
+   "subject": "TRACEABILITY_DOCUMENT.md at repository root",
+   "summary": "States ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability. No corpus record was authored against IEC 61508 and the standard is absent from the standards lock, though the pinned source lists it as a candidate standard and cites IEC 61508-3:2010. The ASIL derivation has no functional or technical safety concept record. The file is outside the docs/artifacts write boundary, so it was reported and NOT modified."
+  },
+  {
+   "category": "consistency",
+   "disposition": "accepted",
+   "id": null,
+   "severity": "medium",
+   "subject": "FB2-REV-000001 duplicated across two files",
+   "summary": "corpus/as_is/reviews/records/review-vertical-slice.json and reviews/records/review-vertical-slice.json hold identical content. The artifact index de-duplicates on (profile,id); the validator does not raise a finding. Left in place and reported rather than deleted."
+  },
+  {
+   "category": "consistency",
+   "disposition": "accepted",
+   "id": null,
+   "severity": "low",
+   "subject": "sources/feature-inventory.json summary.total_features",
+   "summary": "States 20 while the file holds 22 feature records and corpus.py inventory reports 22. The summary field is stale."
+  }
  ],
  "repository_commit": "308028fb",
+ "reviews": {
+  "change_lifecycle_scenarios": 3,
+  "change_records": 3,
+  "finding_artifacts": 22,
+  "findings_by_profile": {
+   "as_is": {
+    "high": 1,
+    "low": 3,
+    "medium": 9
+   },
+   "synthetic_reference": {
+    "high": 3,
+    "low": 2,
+    "medium": 8
+   }
+  },
+  "note": "The generated supporting-processes table has no info severity column, so its visible columns do not sum to its Total; 10 review findings are at severity info.",
+  "review_record_files": 13,
+  "review_records_indexed": 12
+ },
  "schema_version": "1.0.0",
- "walkthroughs": 5
+ "traceability": {
+  "by_profile": {
+   "as_is": 111,
+   "synthetic_reference": 172
+  },
+  "by_relation": {
+   "allocated_to": 13,
+   "changes": 16,
+   "implements": 6,
+   "mitigates": 2,
+   "refines": 13,
+   "result_of": 16,
+   "reviewed_by": 167,
+   "supports": 16,
+   "validates": 2,
+   "verifies": 32
+  },
+  "by_review_state": {
+   "pending": 52,
+   "reviewed": 231
+  },
+  "dangling": 0,
+  "links": 283
+ },
+ "verification": {
+  "blocked": {
+   "blocked_on_halcogen": 177,
+   "distinct_halcogen_headers": 34,
+   "in_scope": 136,
+   "total_repository_tests": 313,
+   "unblocking_requires": "a real HALCoGen run on conf/hcg/app.hcg under a TI licence, or a Linux host (the 177 remaining tests still need the same HALCoGen output)"
+  },
+  "execution_records": 25,
+  "host_run": {
+   "assertions_failed": 8,
+   "assertions_passed": 323,
+   "assertions_tested": 332,
+   "build_failures": 37,
+   "failed": 5,
+   "failure_root_cause": "src/app/engine/database/database.h:209 declares the database access API with untyped void* parameters. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, so CMock cannot learn the pointed-to size and emits UNITY_TEST_ASSERT_EQUAL_PTR, a pointer-identity check. The tests pass a pointer to their own static copy while the code under test passes a different static copy, so the identity check can never succeed. Compiler- and platform-independent: a real defect in the product test setup, not a harness artefact.",
+   "host": "Darwin vinods-mbp-14.localdomain 27.0.0 Darwin Kernel Version 27.0.0: ",
+   "passed": 94,
+   "platform_support": "macOS is not an upstream-supported foxBMS platform; this is a host run, not target-hardware evidence",
+   "results_adjusted": false,
+   "run_timestamp": "2026-09-29T10:30:52+0200",
+   "selection": "no_halcogen_dependency",
+   "tests_in_scope": 136,
+   "toolchain": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]"
+  },
+  "product_verification_credit_granted": false,
+  "target_hardware_executions": 0
+ },
+ "walkthroughs": [
+  {
+   "gap": "no functional safety concept or technical safety concept record; no target-hardware execution in the chain",
+   "id": 1,
+   "ids": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-HW-TSR-000001",
+    "FB2-HW-TSR-000002",
+    "FB2-HW-TSR-000003",
+    "FB2-HW-TSR-000004",
+    "FB2-SW-SWR-000001",
+    "FB2-SW-SWR-000002",
+    "FB2-SW-SWR-000003",
+    "FB2-SW-DSN-000001",
+    "FB2-SW-DSN-000002",
+    "FB2-SW-DSN-000003",
+    "FB2-SAF-ANL-000001",
+    "FB2-SAF-ANL-000002",
+    "FB2-SAF-ANL-000003",
+    "FB2-SAF-ANL-000004",
+    "FB2-VER-TMS-000001",
+    "FB2-VER-TMS-000002",
+    "FB2-VER-TMS-000003",
+    "FB2-VER-TMS-000004",
+    "FB2-MAN-CHG-000001",
+    "FB2-MAN-CHG-000002"
+   ],
+   "name": "Cell Voltage Protection",
+   "state": "complete_chain"
+  },
+  {
+   "gap": "no hazard, safety goal, requirement, design, test measure or execution record",
+   "id": 2,
+   "ids": [
+    "FB2-SYS-HSI-000001"
+   ],
+   "name": "Temperature Measurement",
+   "state": "parameters_only"
+  },
+  {
+   "gap": "no hazard, safety goal, requirement, design, test measure or execution record",
+   "id": 3,
+   "ids": [],
+   "name": "Current Measurement",
+   "state": "parameters_only"
+  },
+  {
+   "gap": "no target-hardware execution; new since the previous revision is the TARA support link",
+   "id": 4,
+   "ids": [
+    "FB2-SAF-FSR-000003",
+    "FB2-HW-TSR-000003",
+    "FB2-SW-SWR-000003",
+    "FB2-SW-DSN-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-HW-TSR-000004",
+    "FB2-SW-DSN-000004",
+    "FB2-VER-TMS-000002",
+    "FB2-VER-TMS-000004",
+    "FB2-VER-TMS-000008",
+    "FB2-VER-TMS-000011",
+    "FB2-SAF-TAR-000001"
+   ],
+   "name": "Precharge and Contactor Control",
+   "state": "complete_chain"
+  },
+  {
+   "gap": "no communication-specific hazard, safety goal or FSR; no design, test measure or execution for the security requirements",
+   "id": 5,
+   "ids": [
+    "FB2-SAF-TAR-000001",
+    "FB2-SAF-SEC-000001",
+    "FB2-SAF-SEC-000002",
+    "FB2-SAF-SEC-000003",
+    "FB2-SAF-SEC-000004",
+    "FB2-SAF-SEC-000005",
+    "FB2-REV-000003",
+    "FB2-SAF-SCS-000001"
+   ],
+   "name": "Communication and Watchdog Fault Response",
+   "state": "partial_tara_and_security_requirements"
+  }
+ ]
 }

@@ -4,8 +4,9 @@
     "commit": "308028fb",
     "tag": "v1.11.0",
     "branch": "master",
-    "dirty": false,
-    "recorded_at": "2026-09-08T00:00:00Z"
+    "dirty": true,
+    "recorded_at": "2026-09-29T00:00:00Z",
+    "dirty_note": "Working tree is dirty by design: this corpus is developed as uncommitted work under docs/artifacts/. No foxBMS source file is modified; see operating rules in _control/resume.md."
   },
   "runtime": {
     "platform": "OpenCode",
@@ -15,12 +16,13 @@
   },
   "stage": "complete",
   "phase": "final_assessment",
-  "overall_status": "completed",
+  "overall_status": "completed_with_recorded_gaps",
   "artifacts": {
     "total_planned": 96,
     "completed": 96,
     "in_progress": 0,
-    "blocked": 0
+    "blocked": 0,
+    "note": "96 work-queue entries are complete. 'blocked: 0' refers to work-queue entries only; substantive engineering gaps remain open and are listed under current_state.blocked."
   },
   "work_queue": [
     {
@@ -1127,19 +1129,324 @@
     }
   ],
   "findings": [
-    "5 semantic consistency findings (1 resolved, 4 open, tracked)",
-    "18 features parameters-only (by design of vertical slice)",
-    "2/20 mutation scenarios implemented at time of gate assessment"
+    "21 validator findings, 0 errors (live run 2026-09-29); 22 finding artifacts recorded under reviews/findings/",
+    "finding FB2-REV-FND-000022 (high): root TRACEABILITY_DOCUMENT.md claims ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability; file is outside the docs/artifacts write boundary and was NOT modified, only reported. No corpus record was authored against IEC 61508 and it is absent from the standards lock, though the pinned source lists it as a candidate standard and cites IEC 61508-3:2010.",
+    "FB2-REV-FND-000008..000012: 5 security requirements genuinely unverified (no link in either direction)",
+    "FB2-REV-FND-000013..000019: 7 FSRs carry no fault_reaction field; schema change required",
+    "FB2-REV-FND-000020/000021: ASIL_D assignment on FB2-SAF-SGO-000001 has no justification and no FSC/TSC derivation",
+    "FB2-REV-FND-000001..000007: verifies-direction rule fires on correctly verified requirements; convention decision owed",
+    "FB2-REV-000001 duplicated across two files; index de-duplicates on (profile,id) - reported, not deleted",
+    "redundant link-registry copy under corpus/ (51 of 172 links) - de-duplicated, reported, not deleted",
+    "feature-inventory.json summary.total_features states 20 while the file holds 22 records - reported, not edited",
+    "target-hardware evidence 0/16; 177 of 313 repository tests blocked on proprietary TI HALCoGen output (34 distinct headers)"
   ],
   "decisions": [
     "DEC-001..DEC-005 accepted; see decisions.jsonl",
     "Final status: synthetic_ready_with_limitations",
-    "All 96 work-queue entries completed 2026-09-11"
+    "All 96 work-queue entries completed 2026-09-11",
+    "2026-09-29: 15 coverage-plan corrections applied (CORR-COV-001..015); every expected_artifacts and capability_attributes list retained unchanged; no artifact fabricated to make a status true",
+    "2026-09-29: two corrections (CORR-COV-008 MAN.6, CORR-COV-011 ISO Part 6) landed on a different status than first reported because verification found evidence on both sides; divergence recorded rather than resolved",
+    "2026-09-29: generated views now read coverage-plan.json live at render time instead of quoting a frozen literal; no acceptance gate, check, scenario-test logic, validator rule or previously-fixed coverage computation was altered",
+    "2026-09-29: macOS is not an upstream-supported foxBMS platform; the 94/136 host run is NOT target-hardware evidence and carries no verification credit; the 5 failures are a real product defect, not a harness artefact",
+    "2026-09-29: root TRACEABILITY_DOCUMENT.md left unmodified - outside the write boundary, reported as FB2-REV-FND-000022 Scoped the IEC 61508 point precisely after discovering the pinned source itself references the standard."
   ],
-  "last_updated": "2026-09-13T15:30:00Z",
+  "last_updated": "2026-09-29T00:00:00Z",
   "completed": 96,
   "total": 96,
   "status": "completed",
   "final_status": "synthetic_ready_with_limitations",
-  "completed_at": "2026-09-11T00:00:00Z"
+  "completed_at": "2026-09-11T00:00:00Z",
+  "current_state": {
+    "measured_at": "2026-09-29T00:00:00Z",
+    "source": "live runs of docs/artifacts/tools/corpus.py on 2026-09-29",
+    "acceptance_suite": {
+      "result": "PASSED",
+      "stages": 8,
+      "gate_lines_pass": 10,
+      "gate_lines_fail": 0,
+      "scenario_lines_pass": 23,
+      "scenario_lines_fail": 0,
+      "selftest_pass": 11,
+      "selftest_fail": 0
+    },
+    "populations": {
+      "validated_artifact_files": 177,
+      "artifact_files_with_id": 154,
+      "indexed_unique_records": 153,
+      "unique_artifact_ids_across_profiles": 123,
+      "duplicate_profile_id": [
+        [
+          "as_is",
+          "FB2-REV-000001"
+        ]
+      ],
+      "note": "177 = 154 corpus/review files + 23 scenario files. 153 = unique (profile,id) records in the index. 123 = unique ids across both profiles; 30 ids exist in both by design (profile isolation)."
+    },
+    "census": {
+      "by_type": {
+        "requirement": 26,
+        "deviation": 26,
+        "execution": 25,
+        "finding": 22,
+        "test_measure": 16,
+        "review": 12,
+        "design": 8,
+        "scenario": 5,
+        "safety_analysis": 4,
+        "change": 3,
+        "hazard": 2,
+        "safety_goal": 2,
+        "safety_case": 1,
+        "tara": 1
+      },
+      "by_domain": {
+        "verification": 64,
+        "software": 40,
+        "safety": 30,
+        "management": 7,
+        "hardware": 7,
+        "system": 3,
+        "supporting": 2
+      },
+      "by_profile": {
+        "synthetic_reference": 82,
+        "as_is": 71
+      },
+      "by_lifecycle": {
+        "draft": 73,
+        "reviewed": 51,
+        "baselined": 29
+      },
+      "by_origin": {
+        "synthetic": 60,
+        "source_observed": 57,
+        "derived": 36
+      },
+      "guard": {
+        "human_approval_status": {
+          "pending": 153
+        },
+        "production_authorized": {
+          "false": 153
+        },
+        "product_verification_credit": {
+          "false": 153
+        }
+      }
+    },
+    "traceability": {
+      "links": 283,
+      "dangling": 0,
+      "by_relation": {
+        "reviewed_by": 167,
+        "verifies": 32,
+        "result_of": 16,
+        "supports": 16,
+        "changes": 16,
+        "refines": 13,
+        "allocated_to": 13,
+        "implements": 6,
+        "mitigates": 2,
+        "validates": 2
+      },
+      "by_profile": {
+        "as_is": 111,
+        "synthetic_reference": 172
+      },
+      "by_review_state": {
+        "reviewed": 231,
+        "pending": 52
+      }
+    },
+    "coverage_dimensions": {
+      "scope_accounting": "1/1",
+      "artifact_population": "13/13",
+      "standards_mapping": "44/44",
+      "source_grounding": "76/154",
+      "traceability_integrity": "283/283",
+      "semantic_consistency_checks": "10/10",
+      "automated_review_coverage": "82/123",
+      "verification_planning": "16/7",
+      "actual_product_evidence": "0/16",
+      "synthetic_fixture_coverage": "82/43",
+      "negative_scenario_validation": "20/20",
+      "export_reproducibility": "1/1",
+      "human_approval": "0/154",
+      "production_authorization": "0/154",
+      "final_status": "synthetic_ready_with_limitations"
+    },
+    "governance": {
+      "process_inventory_total": 32,
+      "processes_applicable": 28,
+      "processes_not_applicable": 4,
+      "applicable_by_disposition": {
+        "mapped": 12,
+        "partially_mapped": 10,
+        "gap": 6
+      },
+      "corrections_recorded": 15,
+      "iso_parts": {
+        "mapped": 2,
+        "partially_mapped": 4,
+        "gap": 2,
+        "referenced": 2,
+        "not_applicable": 2
+      },
+      "zero_record_processes": [
+        "SYS.1",
+        "SYS.2",
+        "MAN.3",
+        "MAN.5",
+        "MAN.6",
+        "PIM.3"
+      ],
+      "standards_locked": [
+        {
+          "id": "ISO_26262_2018",
+          "edition": "2018"
+        },
+        {
+          "id": "ASPICE_PAM_41",
+          "edition": "4.1"
+        }
+      ],
+      "iec_61508_records_in_corpus": 0,
+      "iec_61508_note": "No corpus record was authored against IEC 61508. It is absent from standards-lock.json, which locks only ISO_26262_2018 and ASPICE_PAM_41. The pinned source nonetheless lists it as a candidate standard (docs/general/safety/safety.rst:60) and cites IEC 61508-3:2010 in docs/references.bib, so the standard is a legitimate consideration for the product; the corpus simply never engaged it."
+    },
+    "reviews": {
+      "review_records_indexed": 12,
+      "review_record_files": 13,
+      "unique_ids_covered": 82,
+      "unique_ids_total": 123,
+      "coverage_percent": 67,
+      "review_embedded_findings": 36,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 4,
+        "medium": 17,
+        "low": 5,
+        "info": 10
+      },
+      "review_records_at_reviewed": 1,
+      "review_records_at_draft": 11
+    },
+    "verification": {
+      "host_run_platform": "macOS arm64, Darwin kernel 27.0.0 (NOT an upstream-supported foxBMS platform)",
+      "host_run_is_target_hardware": false,
+      "host_run_credit": false,
+      "tests_in_scope": 136,
+      "passed": 94,
+      "failed": 5,
+      "build_failures": 37,
+      "assertions_tested": 332,
+      "assertions_passed": 323,
+      "assertions_failed": 8,
+      "repository_tests_total": 313,
+      "blocked_on_halcogen": 177,
+      "distinct_halcogen_headers": 34,
+      "target_hardware_executions": 0,
+      "execution_records": 25,
+      "as_is_outcomes": {
+        "pass": 4,
+        "fail": 9,
+        "blocked": 1
+      },
+      "failure_root_cause": "src/app/engine/database/database.h:209 declares the database access API with untyped void* parameters; the shipped Ceedling config sets :cmock: :when_ptr: :compare_data, so CMock cannot learn the pointed-to size and emits a pointer-identity check that can never succeed. Compiler- and platform-independent: a real defect in the product test setup, not a harness artefact. No result adjusted.",
+      "results_adjusted": false
+    },
+    "scenarios": {
+      "mutations_required": 20,
+      "mutations_present": 20,
+      "mutations_detected": 20,
+      "change_lifecycles": 3,
+      "change_lifecycles_complete": 3,
+      "lines_pass": 23,
+      "lines_fail": 0
+    },
+    "determinism": {
+      "views_files": 10,
+      "views_byte_identical_ignoring_Generated_line": true,
+      "exports_files": 4,
+      "exports_byte_identical_ignoring_generated_at": true,
+      "export_content_hashes_identical": true,
+      "export_content_hashes": 3,
+      "spec_documents": "INTEGRITY CHECK PASSED; DETERMINISM: byte-identical across runs; 10/10 converted",
+      "excluded_from_comparison": [
+        "views preamble 'Generated:' line",
+        "exports/manifest.json 'generated_at'"
+      ]
+    },
+    "blocked": [
+      {
+        "id": "B-01",
+        "item": "target-hardware verification",
+        "state": "0/16",
+        "reason": "execution_kind has no target-hardware member; recording one would fabricate it",
+        "unblocks_with": "test suite executed on TMS570LC4357 with AFE hardware"
+      },
+      {
+        "id": "B-02",
+        "item": "177 of 313 repository tests",
+        "state": "blocked",
+        "reason": "reached 34 distinct proprietary HL_*.h headers; reconstructing them would fabricate what the tests verify",
+        "unblocks_with": "a real HALCoGen run on conf/hcg/app.hcg under a TI licence, or a Linux host (which still needs the same HALCoGen output for these 177)"
+      },
+      {
+        "id": "B-03",
+        "item": "5 failing tests",
+        "state": "open product defect",
+        "reason": "void* database API parameters vs :when_ptr: :compare_data in the shipped Ceedling config",
+        "unblocks_with": "a product-owner decision: type the parameters, add :treat_as entries, or register CMock callbacks. Not a corpus action."
+      },
+      {
+        "id": "B-04",
+        "item": "human approval",
+        "state": "0/153 pending",
+        "reason": "requires human reviewers; AI sessions are not organisational independence",
+        "unblocks_with": "independent human review and sign-off"
+      },
+      {
+        "id": "B-05",
+        "item": "HWE.2 / HWE.3 hardware design",
+        "state": "format-limited",
+        "reason": "Altium and other CAD binaries are not readable by the corpus tooling",
+        "unblocks_with": "real hardware design analysis"
+      },
+      {
+        "id": "B-06",
+        "item": "6 applicable processes with no record",
+        "state": "gap",
+        "reason": "SYS.1, SYS.2, MAN.3, MAN.5, MAN.6, PIM.3 require authoring stakeholder needs, system requirements, a project plan, a risk register, a measurement plan and improvement records",
+        "unblocks_with": "authoring those artifacts, or an explicit scope decision"
+      },
+      {
+        "id": "B-07",
+        "item": "no FSC / TSC record",
+        "state": "gap",
+        "reason": "ISO 26262 Part 3 concept phase incomplete, so the ASIL assignment on FB2-SAF-SGO-000001 has no derivation",
+        "unblocks_with": "author the functional and technical safety concepts, then the ASIL justification - an engineering judgement the corpus cannot assert"
+      },
+      {
+        "id": "B-08",
+        "item": "5 security requirements unverified",
+        "state": "gap",
+        "reason": "verification planning never covered the security requirement set",
+        "unblocks_with": "author security verification measures and executions"
+      },
+      {
+        "id": "B-09",
+        "item": "conformity claim in root TRACEABILITY_DOCUMENT.md",
+        "state": "in_progress",
+        "reason": "file is outside the docs/artifacts write boundary and could not be corrected from inside it",
+        "unblocks_with": "a repository owner making the five corrections named in FB2-REV-FND-000022"
+      },
+      {
+        "id": "B-10",
+        "item": "review coverage 67% and 11 of 12 records draft",
+        "state": "partial",
+        "reason": "41 unique artifact ids uncovered; 11 review records still draft",
+        "unblocks_with": "additional review records and progression of the draft ones"
+      }
+    ]
+  }
 }

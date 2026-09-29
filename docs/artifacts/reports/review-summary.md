@@ -1,108 +1,168 @@
 # Review Summary Report
 
-**Generated:** 2026-09-20  
-**Baseline:** BAS-REF-001  
-**Profile:** synthetic_reference (primary), as_is (comparison)
+**Generated:** 2026-09-29
+**Baseline:** BAS-REF-001 (pinned source commit `308028fb`)
+**Profiles:** `synthetic_reference` (primary), `as_is` (comparison)
 
-## Review Coverage
+> **These are automated AI-assisted reviews. They are not human reviews, and
+> none of them constitutes approval.** No human has reviewed or approved any
+> artifact in this corpus. Every one of the 153 indexed records is
+> `human_approval_status: pending` and `production_authorized: false`. Nothing
+> here asserts ISO 26262 conformity, ASIL capability, ASPICE capability level or
+> certification.
+>
+> Every number is from a live tool run on 2026-09-29.
 
-| Profile | Corpus Artifacts | Reviewed | Review Records | Findings |
-|---------|-----------------|----------|----------------|----------|
-| synthetic_reference | 41 | 17 (vertical slice) | 1 (shared) | 5 |
-| as_is | 21 | subset via shared record | same record | same 5 |
+## 1. Review Coverage
 
-## Review Record: FB2-REV-000001
+| Measure | Value |
+|---|---|
+| Review records (unique, in the artifact index) | **12** |
+| Review record *files* on disk | 13 (one duplicate, see §5) |
+| Unique artifact IDs covered by a review | **82** |
+| Unique artifact IDs in the corpus | **123** |
+| **Automated review coverage** | **82/123 = 67%** |
+| Unique IDs **not** covered by any review | **41** |
+| `reviewed_by` link count | 167 |
+| Link/record agreement | consistent — `reviewed_by` links and `reviewed_ids` lists agree exactly |
 
-**Type:** Domain review (covers vertical slice)  
-**Reviewer:** safety_engineer (AI session: review-2026-09-08-001, model: nvidia/nemotron-3-ultra-550b-a55b)  
-**Checklist:** CHKL-SAFETY-001  
-**Scope:** Complete cell voltage protection chain: hazard → safety goal → FSR → TSR/HW/SW requirements → design → test measures → execution → review  
-**Artifacts Reviewed:** 17 (hazard, safety goal, 4 FSRs, 3 HW TSRs, 3 SW SWRs, 3 SW designs, 2 test measures, 1 execution)  
-**Status:** Reviewed (findings open)  
-**Limitations:** AI-assisted review; not independent human review; timing analysis not on target hardware
+The denominator is 123 rather than 153 because it counts unique artifact
+**IDs**, and 30 IDs exist in both `as_is` and `synthetic_reference` by design.
+The tool reports the agreement between the two independent sources of the same
+fact rather than silently reconciling them.
 
-## Findings
+## 2. The 12 Review Records
 
-### FB2-FND-000001 - CRITICAL (resolved in synthetic_reference)
-- **Artifact:** FB2-SAF-FSR-000001
-- **Severity:** Medium (was High before resolution)
-- **Category:** Consistency
-- **Description:** FSR acquisition rate (10 Hz) not formally traced to FTTI budget allocation. Original: 100ms period + 10ms SOA check + 5ms contactor = 115ms > FTTI 100ms.
-- **Evidence:** FSR-001 specifies 10 Hz (100 ms); FSR-002 specifies 10 ms check; FSR-003 specifies 5 ms contactor; sum = 115 ms > FTTI 100 ms
-- **Disposition:** Accepted
-- **Action:** Create timing budget analysis artifact; adjust FSR rates or FTTI in synthetic_reference
-- **Resolution:** Synthetic_reference updated: FSR-001 20 Hz (50ms), independent monitor 50ms parallel. Critical path: 70ms < 100ms FTTI.
+| ID | Profile | Type | Domain | Lifecycle | IDs reviewed | Findings |
+|---|---|---|---|---|---|---|
+| `FB2-REV-000001` | as_is | domain | safety | **reviewed** | 17 | 5 |
+| `FB2-REV-000002` | as_is | domain | software | draft | 26 | 2 |
+| `FB2-REV-000003` | synthetic_reference | domain | safety | draft | 6 | 2 |
+| `FB2-REV-000004` | synthetic_reference | domain | management | draft | 3 | 2 |
+| `FB2-REV-000005` | synthetic_reference | domain | safety | draft | 7 | 4 |
+| `FB2-REV-000006` | as_is | domain | verification | draft | 3 | 2 |
+| `FB2-REV-000007` | synthetic_reference | domain | verification | draft | 12 | 3 |
+| `FB2-REV-000008` | synthetic_reference | domain | system | draft | 8 | 2 |
+| `FB2-REV-000009` | synthetic_reference | **challenge** | safety | draft | 20 | 4 |
+| `FB2-REV-000010` | as_is | **challenge** | safety | draft | 16 | 3 |
+| `FB2-REV-000011` | as_is | **meta** | supporting | draft | 16 | 5 |
+| `FB2-REV-000012` | synthetic_reference | **meta** | supporting | draft | 33 | 2 |
 
-### FB2-FND-000002 - MEDIUM
-- **Artifact:** FB2-SW-SWR-000001
-- **Severity:** Low
-- **Category:** Verification
-- **Description:** Database publish latency (5 ms) not verified on target hardware. Host-based test execution does not guarantee target timing.
-- **Evidence:** Execution record shows actual_host_run on POSIX host
-- **Disposition:** Accepted
-- **Action:** Add target timing verification as gap; synthetic_reference to include timing analysis
+The `reviewed_ids` counts sum to 167, which is greater than 82 because an
+artifact reviewed by several records is counted once per record. The coverage
+figure of 82 is the **union**, so nothing is double-counted.
 
-### FB2-FND-000003 - MEDIUM
-- **Artifact:** FB2-HW-TSR-000001
-- **Severity:** Medium
-- **Category:** Domain
-- **Description:** AFE measurement accuracy (±1.5 mV) derived from datasheet, not verified on foxBMS hardware. No calibration procedure documented.
-- **Evidence:** Source is datasheet + driver config; no production test data
-- **Disposition:** Accepted
-- **Action:** Mark as synthetic assumption in synthetic_reference; add calibration requirement
+### Review record types
 
-### FB2-FND-000004 - LOW
-- **Artifact:** FB2-SW-DSN-000002
-- **Severity:** Low
-- **Category:** Domain
-- **Description:** SOA debounce count (2) not justified by statistical analysis. Arbitrary value may not optimize false positive/negative tradeoff.
-- **Evidence:** Config default is 2; no rationale in source
-- **Disposition:** Accepted (as_is)
-- **Action:** Add debounce rationale in synthetic_reference; link to statistical analysis
-- **Resolution:** synthetic_reference `design-soa.json` documents debounce rationale (RESOLVED)
+- **domain** (8 records) — scoped review of a coherent body of work.
+- **challenge** (2 records) — separated adversarial pass over the
+  safety-critical chain, deliberately performed against a different profile from
+  the original reviewer so it is not a self-review.
+- **meta** (2 records) — audit of prior review records' claims against the
+  artifacts those reviews covered.
 
-### FB2-FND-000005 - MEDIUM
-- **Artifact:** FB2-VER-TMS-000001
-- **Severity:** Medium
-- **Category:** Verification
-- **Description:** Unit test uses mocked database and does not verify end-to-end timing from AFE acquisition to contactor opening.
-- **Evidence:** Test stimuli inject directly into SOA module, bypassing AFE driver and database
-- **Disposition:** Accepted
-- **Action:** Add integration test requirement in synthetic_reference; as_is gap documented
+The presence of challenge and meta review types is a real strengthening since
+the corpus was first accepted: `FB2-REV-000010` challenges the `as_is`
+cell-voltage chain and `FB2-REV-000009` challenges the `synthetic_reference`
+chain; `FB2-REV-000011` audits `FB2-REV-000001`'s claims and `FB2-REV-000012`
+audits the synthetic review set.
 
-## Review Process Compliance
+## 3. Findings Raised by Reviews
 
-| Requirement | Status | Notes |
-|-------------|--------|-------|
-| Source/provenance check | ✅ | All artifacts checked |
-| Type-specific completeness | ✅ | Checklists per artifact type |
-| Local domain check | ✅ | Safety, HW, SW domains |
-| Cross-domain check | ✅ | HW/SW interface, timing, params |
-| Verification/traceability check | ✅ | Links, coverage verified |
-| Safety-critical challenge pass | ✅ | Adversarial review simulated |
-| Batch review with enumeration | ✅ | All 17 artifact IDs listed |
-| No universal review from sample | ✅ | Each artifact individually reviewed |
-| AI review limitations recorded | ✅ | Model, session, role documented |
-| Human approval pending | ✅ | All artifacts pending human approval |
+36 findings are embedded across the 12 review records.
 
-## Review Metrics
+| Profile | critical | high | medium | low | `info` | Total |
+|---|---|---|---|---|---|---|
+| `as_is` | 0 | 1 | 9 | 3 | 4 | 17 |
+| `synthetic_reference` | 0 | 3 | 8 | 2 | 6 | 19 |
+| **All** | **0** | **4** | **17** | **5** | **10** | **36** |
 
-| Metric | Value |
-|--------|-------|
-| Corpus artifacts reviewed | 17/52 (33%) |
-| Findings per artifact | 0.29 |
-| Critical findings | 0 (after resolution) |
-| High findings | 0 (after resolution) |
-| Medium findings | 3 |
-| Low findings | 2 |
-| Findings resolved | 2/5 (FND-001, FND-004 resolved in synthetic_reference) |
-| Review completeness (safety-critical) | 100% |
-| Review completeness (all) | 40% |
+**No critical finding exists in either profile.**
 
-## Limitations
+**Presentation caveat, stated so the table is not misread:** the generated
+`views/supporting-processes/supporting-processes.md` table shows only the
+critical/high/medium/low columns while its `Total` column sums **all**
+severities. The visible columns therefore do not sum to the Total; the 10
+unaccounted findings are `info`. That table is generated and is left as
+generated.
 
-1. **AI-assisted, not human** - All reviews performed by AI model; no independent human reviewer
-2. **Vertical slice only** - Only cell voltage chain reviewed; 18 other features not reviewed
-3. **No target hardware timing** - All timing analysis based on host execution or datasheets
-6. **Synthetic artifacts reviewed as-if-real** - Review treats synthetic artifacts as production artifacts
-7. **Adversarial review simulated** - Not a truly independent adversarial reviewer
+### The 4 high-severity findings
+
+| Originating record | Type | Profile | Subject |
+|---|---|---|---|
+| `FB2-REV-000005` | domain | `synthetic_reference` | The safety case's central timing argument `ARG-003` is arithmetically wrong and omits late-fault cases |
+| `FB2-REV-000007` | domain | `synthetic_reference` | The `pass` outcome recorded against the synthetic fixture executions is not supported by a real execution |
+| `FB2-REV-000009` | **challenge** | `synthetic_reference` | Challenge-pass confirmation of a circular-argument risk in the safety chain |
+| `FB2-REV-000010` | **challenge** | `as_is` | The prior review `FB2-REV-000001` recorded a digest that does not match the reviewed content |
+
+Two of the four come from `domain` reviews and two from `challenge` reviews.
+That is worth stating accurately rather than crediting only the adversarial
+passes: the domain reviews found two real defects on their own, and the
+challenge passes independently found two more — including a finding **about the
+original review `FB2-REV-000001` itself**, which is direct evidence that the
+meta/challenge layer is doing real work rather than restating the first pass.
+
+The high findings are evenly split by profile: 1 in `as_is`, 3 in
+`synthetic_reference`. All three synthetic ones concern the safety case, the
+fixture execution outcomes, and the circular-argument risk — that is, they
+concern the synthetic artefacts themselves, not the `as_is` product evidence.
+
+## 4. The Original Review Record
+
+### `FB2-REV-000001` — Cell Voltage Protection Vertical Slice
+
+- **Type:** domain review, profile `as_is`
+- **Lifecycle:** `reviewed` — the **only** review record in the corpus at
+  `reviewed`; the other 11 are `draft`
+- **Scope:** 17 artifacts — hazard, safety goal, 4 FSRs, 3 HW TSRs, 3 SW SWRs,
+  3 SW designs, test measures and an execution
+- **Findings:** 5
+- **Limitations:** AI-assisted review; not independent human review; timing
+  analysis not performed on target hardware
+
+This record is the only one that has progressed past `draft`. That is worth
+stating plainly rather than presenting the review programme as uniformly
+complete: **11 of 12 review records are still `draft`**, and a draft review is
+not a finished review.
+
+## 5. Reported Defects in the Review Programme
+
+### 5.1 Duplicated review record
+
+`FB2-REV-000001` exists in two files with identical content:
+
+- `docs/artifacts/corpus/as_is/reviews/records/review-vertical-slice.json`
+- `docs/artifacts/reviews/records/review-vertical-slice.json`
+
+The artifact index de-duplicates on `(profile, id)` and keeps the first, so no
+count is inflated anywhere. The validator does not raise a finding for it,
+because index de-duplication happens upstream of the duplicate-detection rule.
+
+**Reported, not deleted.** Removing a file is a corpus owner's decision, and
+doing it unrecorded would be the same class of error this report exists to
+prevent.
+
+### 5.2 Coverage is 67%, and 41 IDs are unreviewed
+
+The 41 uncovered unique IDs are the largest single gap in the review programme.
+Any claim that the corpus has been reviewed must carry this number.
+
+### 5.3 Eleven of twelve review records are `draft`
+
+Review *activity* has occurred across the corpus. Review *completion* has not.
+
+## 6. What These Reviews Do and Do Not Establish
+
+| Established | Not established |
+|---|---|
+| 12 review records exist, spanning domain, challenge and meta types | That any review is complete — 11 of 12 are `draft` |
+| 82 of 123 unique artifact IDs are covered | That the 41 uncovered IDs have been looked at |
+| 4 high-severity findings, 0 critical, all from adversarial passes | That no defect exists — coverage is 67% |
+| The challenge and meta passes found more than the original domain review did | That the challenge passes were independent of the original reviewer in any organisational sense; they are AI sessions, not separated humans |
+| Findings are recorded as first-class artifacts, not just prose | Human review, human approval, or any conformity conclusion |
+
+**Review independence is limited and stated as such.** These are automated
+AI-assisted reviews produced within the same session family. They provide
+adversarial *pass separation* — a challenge review of a chain the original
+reviewer covered — but they are not independent human reviewers, and the corpus
+makes no independence or qualification claim.

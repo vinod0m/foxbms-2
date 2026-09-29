@@ -1,182 +1,267 @@
 # Verification Evidence Report
 
-**Generated:** 2026-09-20  
-**Baseline:** BAS-REF-001  
-**Profile:** synthetic_reference (primary), as_is (comparison)
+**Generated:** 2026-09-29
+**Baseline:** BAS-REF-001 (pinned source commit `308028fb`)
+**Primary evidence:** `docs/artifacts/.work/verification-env/logs/results-strict.json`
 
-## Overview
+> **This run is not target-hardware evidence, and it is not credited as such.**
+> macOS is **not an upstream-supported foxBMS platform**. foxBMS 2 targets a
+> Texas Instruments TMS570-family MCU with a proprietary HALCoGen code-generation
+> step. The run described below is a **host run on a development machine**. It
+> exercises real product source code, which makes it genuine evidence about the
+> code, but it says nothing about timing on the target, about the AFE drivers, or
+> about the closed-loop control behaviour. `actual_product_evidence` remains
+> **0/16** and `product_verification_credit` is `false` on all 153 records.
+>
+> Nothing here asserts ISO 26262 conformity, ASIL capability, ASPICE capability
+> level, certification, human approval or tool qualification. No human has
+> approved anything in this corpus.
 
-This report documents the verification evidence for all requirements in the corpus, distinguishing between execution kinds and evidence classifications per corpus policy. With the test-measure expansion all FSRs, SWRs and hardware TSRs in the synthetic_reference profile now have dedicated test measures and (synthetic fixture) executions; the as_is profile carries the source-grounded unit-test measures extracted from the real foxBMS 2 test suite.
+## 1. The Run
 
-## Evidence Classification Framework
-
-| Execution Kind | Description | Examples |
-|----------------|-------------|---------|
-| `none` | No execution planned or performed | Planned test measures not yet executed |
-| `actual_host_run` | Executed on development host (x86_64 Linux) | Unity/CMock unit tests |
-| `actual_simulation_run` | Executed on simulator with captured logs | Not used |
-| `synthetic_fixture` | Synthetic test data/fixture for corpus validation | Synthetic execution set EXE-001..006 |
-
-| Outcome | Description |
-|---------|-------------|
-| `pass` | All acceptance criteria met |
-| `fail` | One or more acceptance criteria not met |
-| `inconclusive` | Execution incomplete or ambiguous |
-| `not_run` | Planned but not executed |
-| `blocked` | Cannot execute (missing hardware, tools, etc.) |
-
-## Verification Evidence by Requirement
-
-### Safety Goal: FB2-SAF-SGO-000001 (Cell Voltage)
-
-| FSR | Verification Approach | Test Measure | Execution | Outcome | Evidence Class |
-|-----|----------------------|--------------|-----------|---------|----------------|
-| FSR-001: Cell Voltage Acquisition | test | TMS-003 | EXE-003 (synthetic_fixture) | pass | synthetic_fixture |
-| FSR-002: SOA Voltage Monitoring | test | TMS-001 | EXE-001 (synthetic_fixture; as_is: actual_host_run) | pass | synthetic_fixture / actual_host_run (as_is) |
-| FSR-003: Contactor Opening | test | TMS-002 | EXE-002 (synthetic_fixture) | pass | synthetic_fixture |
-| FSR-004: Independent Monitor | test (fault_injection) | TMS-004 | EXE-004 (synthetic_fixture) | pass | synthetic_fixture |
-
-### Hardware TSRs
-
-| TSR | Verification Approach | Test Measure | Execution | Outcome | Evidence Class |
-|-----|----------------------|--------------|-----------|---------|----------------|
-| TSR-001: AFE Accuracy | test | TMS-003 | EXE-003 (synthetic_fixture) | pass | synthetic_fixture (unit-level model; target measurement blocked) |
-| TSR-002: isoSPI Integrity | test (robustness) | TMS-005 | EXE-005 (synthetic_fixture) | pass | synthetic_fixture (unit-level model; target measurement blocked) |
-| TSR-003: Contactor Driver | test | TMS-006 | EXE-006 (synthetic_fixture) | pass | synthetic_fixture (unit-level model; target measurement blocked) |
-| TSR-004: Independent Monitor HW | test (fault_injection) | TMS-004 | EXE-004 (synthetic_fixture) | pass | synthetic_fixture |
-
-### Software SWRs
-
-| SWR | Verification Approach | Test Measure | Execution | Outcome | Evidence Class |
-|-----|----------------------|--------------|-----------|---------|----------------|
-| SWR-001: AFE Driver | test | TMS-003 | EXE-003 | pass | synthetic_fixture |
-| SWR-002: SOA Monitor | test | TMS-001 | EXE-001 | pass | synthetic_fixture |
-| SWR-003: Contactor SM | test | TMS-002 | EXE-002 | pass | synthetic_fixture |
-
-## Test Measures Detail
-
-| ID | Title | Type | Requirements | Oracle Basis | Profile | `verifies` links |
-|----|-------|------|--------------|--------------|---------|------------------|
-| FB2-VER-TMS-000001 | SOA Voltage Limit Detection | unit | FSR-002, SWR-002 | source_grounded (as_is: test_soa.c) / synthetic_assumption (synthetic mirror) | both | as_is `LNK-014/015`; synthetic `LNK-022/023` |
-| FB2-VER-TMS-000002 | Contactor State Machine Fault Response | unit | FSR-003, SWR-003 | source_grounded (as_is: test_contactor.c) / synthetic_assumption (synthetic mirror) | both | as_is `LNK-016/017`; synthetic `LNK-024/025` |
-| FB2-VER-TMS-000003 | AFE Cell Voltage Plausibility Checks | unit | FSR-001, SWR-001, TSR-001 | source_grounded (as_is: test_afe_plausibility.c) / synthetic_assumption (synthetic mirror) | both | as_is `LNK-021/022`; synthetic `LNK-026/027/028` |
-| FB2-VER-TMS-000004 | Independent Voltage Monitor Reaction | fault_injection | FSR-004, TSR-004 | synthetic_assumption (no upstream test; documented gap) | synthetic_reference | `LNK-029/030` |
-| FB2-VER-TMS-000004 | LTC6813-1 AFE Driver Communication and Measurement | unit | TSR-001, TSR-002 | source_grounded (test_ltc_6813-1.c) | as_is | `LNK-023/024` |
-| FB2-VER-TMS-000005 | Contactor Driver Configuration and Control | unit | TSR-003 | source_grounded (test_contactor.c) | as_is | `LNK-025` |
-| FB2-VER-TMS-000005 | AFE Communication Integrity | robustness | TSR-002 | synthetic_assumption | synthetic_reference | `LNK-031` |
-| FB2-VER-TMS-000006 | Contactor Driver Configuration and Control | unit | TSR-003 | synthetic_assumption | synthetic_reference | `LNK-032` |
-| FB2-VER-TMS-000007 | Software Integration Chain (SOA-Database-Contactor) | integration | SWR-001, SWR-002, SWR-003 | synthetic_assumption | synthetic_reference | `LNK-039/040/041` |
-| FB2-VER-TMS-000008 | System Qualification (Cell-Voltage Safety Chain) | qualification | FSR-001, FSR-002, FSR-003, FSR-004 | synthetic_assumption | synthetic_reference | `LNK-042/043/044/045` |
-| FB2-VER-TMS-000009 | Stakeholder Validation (Cell-Voltage Use Cases) | validation | SGO-001, SCO-001 | synthetic_assumption | synthetic_reference | `LNK-046/047` (`validates`) |
-| FB2-VER-TMS-000010 | Component Verification (SOA Monitor + DIAG Callbacks) | unit | SWR-002 | synthetic_assumption | synthetic_reference | `LNK-048` |
-| FB2-VER-TMS-000011 | HIL Fault Reaction (Target) | system | FSR-001, FSR-002, FSR-003, FSR-004 | synthetic_assumption | synthetic_reference | `LNK-049/050/051/052` |
-
-## Execution Records
-
-| ID | Test Measure | Kind | Outcome | Duration | Limitations | `result_of` link |
-|----|--------------|------|---------|----------|-------------|------------------|
-| FB2-VER-EXE-000001 | TMS-001 | synthetic_fixture (as_is twin: actual_host_run) | pass | 5000 ms | Mocked database; no target timing; as_is twin hashes `sha256:placeholder`, `output_hashes` empty | synthetic `LNK-033`; as_is twin `LNK-018` |
-| FB2-VER-EXE-000002 | TMS-002 | synthetic_fixture | pass | 5000 ms | Mocked SBC/GPIO; no HW-in-loop | `LNK-034` |
-| FB2-VER-EXE-000003 | TMS-003 | synthetic_fixture | pass | 5000 ms | Mocked AFE; no target measurement | `LNK-035` |
-| FB2-VER-EXE-000004 | TMS-004 | synthetic_fixture | pass | 5000 ms | Fault injection on model, not diverse hardware path | `LNK-036` |
-| FB2-VER-EXE-000005 | TMS-005 | synthetic_fixture | pass | 5000 ms | PEC corruption simulated at driver API level | `LNK-037` |
-| FB2-VER-EXE-000006 | TMS-006 | synthetic_fixture | pass | 5000 ms | GPIO mocked; no contactor hardware | `LNK-038` |
-
-## Hardware-in-the-Loop (HIL) Disposition
-
-The upstream foxBMS 2 repository prescribes HIL testing with **100% line and branch
-coverage** for the linked program on target hardware
-(`docs/developer-manual/software/software-testing.rst`,
-`docs/developer-manual/software/software-verification.rst`), but the HIL test setup
-itself is **not published** in the repository (`tests/hil` contains a placeholder only).
-
-Corpus disposition for this gap:
-
-1. **as_is profile** — the gap is *documented, not bridged*: no HIL artifacts are
-   fabricated. Unit-test coverage (313 C test files under `tests/unit/app/`) is the
-   observable evidence; HIL evidence is explicitly classified `blocked`
-   (missing target hardware and test setup).
-2. **synthetic_reference profile** — hardware TSR verification planning uses
-   *host-based models with mocked hardware boundaries* (TMS-003/004/005/006).
-   The associated `synthetic_fixture` records demonstrate corpus structure, not
-   independently verified test execution or target measurement. `product_verification_credit` remains `false` for every
-   artifact by governance policy.
-3. **No execution claims HIL.** The `execution_kind` vocabulary contains no HIL entry;
-   target-hardware verification would require `actual_hardware_run` evidence (logs,
-   hashes, tool versions) that does not exist and is therefore not invented.
-
-## Coverage Analysis
-
-### By Requirement (synthetic_reference)
-
-This table shows test-measure and synthetic-fixture coverage, not verified product
-behavior. A fixture `pass` does not establish that the requirement was satisfied
-on a host or target; product verification credit remains false.
-
-| Requirement | Test Measure / Fixture Present? | Evidence Class | Notes |
-|-------------|-----------|----------------|-------|
-| FSR-001 | Yes | synthetic_fixture | TMS-003/EXE-003 |
-| FSR-002 | Yes | synthetic_fixture | TMS-001/EXE-001 |
-| FSR-003 | Yes | synthetic_fixture | TMS-002/EXE-002 |
-| FSR-004 | Yes | synthetic_fixture | TMS-004/EXE-004 |
-| TSR-001 | Yes (unit-level) | synthetic_fixture | TMS-003/EXE-003; target measurement blocked |
-| TSR-002 | Yes (unit-level) | synthetic_fixture | TMS-005/EXE-005; target measurement blocked |
-| TSR-003 | Yes (unit-level) | synthetic_fixture | TMS-006/EXE-006; target measurement blocked |
-| TSR-004 | Yes (unit-level) | synthetic_fixture | TMS-004/EXE-004; target measurement blocked |
-| SWR-001 | Yes | synthetic_fixture | TMS-003/EXE-003 |
-| SWR-002 | Yes | synthetic_fixture | TMS-001/EXE-001 |
-| SWR-003 | Yes | synthetic_fixture | TMS-002/EXE-002 |
-| SCO-001 (management) | Planning stub only | synthetic_assumption | TMS-009 (`validates`, `LNK-047`), draft, no execution |
-
-### Recorded Execution Coverage (as_is)
-
-| Scope | Test Measure | Execution Record | Evidence Status |
-|-------|--------------|------------------|-----------------|
-| SOA voltage limits | FB2-VER-TMS-000001 | FB2-VER-EXE-000001 | Recorded as actual_host_run/pass; execution evidence not independently verified |
-| Contactor state machine, AFE plausibility, LTC6813-1 driver, contactor driver | FB2-VER-TMS-000002..000005 | No corresponding execution records in as_is/verification | Test planning/source references only; no execution credit inferred |
-
-The SOA execution record contains `sha256:placeholder` log and coverage hashes,
-empty `output_hashes`, and a note that per-run logs were not retained. Its recorded
-`pass` is not independently substantiated by those fields. Source test files and
-`source_grounded` oracle labels do not establish that tests ran. Feature-wide test
-counts and host-run claims are therefore not inferred from source availability.
-
-## Oracle Basis Analysis
-
-| Oracle Basis | Count | Notes |
-|--------------|-------|-------|
-| source_grounded | 5 (as_is test measures) | Grounded in existing foxBMS unit tests (TMS-001..005, test_soa.c / test_contactor.c / test_afe_plausibility.c / test_ltc_6813-1.c) |
-| synthetic_assumption | 11 (synthetic_reference test measures) | Synthetic mirrors of the as_is tests (TMS-001/002/003/005/006) plus fault-injection monitor (TMS-004), integration stub (TMS-007), qualification stub (TMS-008), validation stub (TMS-009), component stub (TMS-010), HIL stub (TMS-011) |
-| analytical_model | 0 | Not used |
-| measured_reference | 0 | No HW testing |
-
-## Verification Gaps (remaining, honest)
-
-1. **Target hardware measurement** — TSR-001..004 have test measures and recorded blocked executions only;
-   actual hardware measurements remain blocked (no target hardware in corpus scope).
-2. **HIL execution** — `FB2-VER-EXE-000011` recorded `blocked` (`outcome: blocked`, `execution_kind: none`); upstream test setup unpublished (`tests/hil` placeholder).
-3. **Integration executions** — stub `FB2-VER-TMS-000007` linked; `FB2-VER-EXE-000007` recorded `blocked` (integration harness not in corpus scope).
-4. **Timing verification** — no worst-case execution time analysis on target.
-5. **Management scope (SCO-001)** — `validates` via TMS-009 stub (`LNK-047`), `FB2-VER-EXE-000009` recorded `blocked`.
-6. **Component / qualification / validation / HIL executions** — all recorded as blocked execution records (`FB2-VER-EXE-000007..000011`, `outcome: blocked`, `execution_kind: none`); dependency failures documented per record, not fabricated.
-7. **TSR-004 allocation** — `allocated_to` link `FB2-LNK-SAF-000058` added (TSR-004 → FSR-004); no allocated SWR or DSN exists for the pair (both verified by `FB2-VER-TMS-000004`).
-8. **as_is unit-test executions (TMS-002..005)** — recorded `blocked` (`FB2-VER-EXE-000002..000005`, `outcome: blocked`): upstream CI enforces these tests every revision, but per-run logs are not captured in the corpus; local execution confirmed infeasible (macOS unsupported by `fox.sh`; direct Ceedling 1.1.8 fails on missing HALCoGen codegen `./include` headers and `gdb`).
-9. **as_is host-run substantiation (TMS-001/EXE-001)** — recorded `actual_host_run`/`pass` with `sha256:placeholder` hashes and empty `output_hashes`; not independently substantiated.
-10. **HWE.2/HWE.3 hardware architecture and detailed design** — `partially_mapped`: design packages inventoried (43-anchor registry), but Altium/CAD binaries are unreadable to the corpus tooling — a format limit, only real hardware analysis closes it.
-
-Every gap above is tracked as a corpus limitation (`final_status:
-synthetic_ready_with_limitations`); no evidence is fabricated to close it.
-
-### Unblocking conditions (what would close each gap)
-
-| Gap | Unblocked by |
+| Measure | Value |
 |---|---|
-| as_is unit executions (TMS-002..005) | Running Ceedling on Linux/Windows with HALCoGen codegen (`./include`) + `gdb`, or capturing upstream CI per-run logs |
-| Integration executions (TMS-007/EXE-007) | Defining an integration harness in corpus scope |
-| Component executions (TMS-010/EXE-010) | Defining a component harness in corpus scope |
-| Qualification executions (TMS-008/EXE-008) | A qualification environment |
-| HIL executions (TMS-011/EXE-011) | Publishing the HIL test setup upstream (`tests/hil`) + target hardware |
-| Validation executions (TMS-009/EXE-009) | A validation environment with operational data |
-| Timing verification | WCET analysis on target |
-| Host-run substantiation (EXE-001) | Re-running the SOA test with retained logs/coverage hashes |
-| HWE.2/HWE.3 partial | Real hardware architecture/design analysis of the CAD packages |
+| Host | `Darwin vinods-mbp-14.localdomain 27.0.0 Darwin Kernel Version 27.0.0` (arm64) |
+| Toolchain | `ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]` |
+| Run timestamp | 2026-09-29T10:30:52+0200 |
+| Selection | `no_halcogen_dependency` |
+| **Tests in scope** | **136** |
+| **Passed** | **94** |
+| **Failed** | **5** |
+| Build failures | 37 |
+| Assertions tested | 332 |
+| Assertions passed | 323 |
+| Assertions failed | 8 |
+
+Raw data: `docs/artifacts/.work/verification-env/logs/results-strict.json`.
+Run procedure and full account: `docs/artifacts/.work/verification-env/RUNBOOK.md`.
+
+## 2. The Five Failures Are a Real Product Defect
+
+All five fail with the same message shape:
+
+```
+At line (90): "Expected 0x…C000 Was 0x…C098:Function DATA_Write4DataBlocks
+Argument pDataFromSender0:Function called with unexpected argument value."
+```
+
+### Root cause
+
+`src/app/engine/database/database.h:209` declares the database access API with
+**untyped `void *` parameters**:
+
+```c
+extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(
+    void *pDataFromSender0, void *pDataFromSender1, ...);
+```
+
+The shipped Ceedling configuration sets `:cmock: :when_ptr: :compare_data`.
+`compare_data` requires CMock to know the **size** of the pointed-to type so it
+can `memcmp`. Given `void *` it cannot, so CMock emits
+`UNITY_TEST_ASSERT_EQUAL_PTR` — a pointer-**identity** check. The generated mock
+confirms it:
+
+```c
+UNITY_TEST_ASSERT_EQUAL_PTR(cmock_call_instance->Expected_pDataFromSender0,
+                            pDataFromSender0, cmock_line, CMockStringMismatch);
+```
+
+The tests then pass a pointer to their own `static` copy of the table:
+
+```c
+static DATA_BLOCK_ERROR_STATE_s diag_tableErrorFlags = {...};
+DATA_Write4DataBlocks_ExpectAndReturn(&diag_tableErrorFlags, ..., STD_OK);
+```
+
+while the code under test passes a pointer to *its own different* `static`
+copy. The identity check can therefore never succeed.
+
+### This is not a harness artefact
+
+This matters enough to state plainly. The failure depends **only** on the
+`void *` declaration and on the CMock configuration. It does not depend on the
+host, the compiler, the architecture or any adaptation made to run on macOS. The
+same five tests are expected to fail under GNU gcc on Linux. The macOS
+environment surfaced a defect that was already there.
+
+The one environment-dependent finding in the whole run is the opposite of an
+artefact: the Apple-clang-only `-Werror` diagnostics promoted to errors **hide
+real failures** (§5.3 of the RUNBOOK), which is why the extended sweep finds two
+*more* failures with the identical root cause rather than fewer.
+
+**No result was adjusted to make any test pass.**
+
+### Affected tests
+
+| Test | Assertions tested | Assertions failed |
+|---|---|---|
+| `tests/unit/app/application/algorithm/moving_average/test_moving_average.c` | 1 | 1 |
+| `tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c` | 6 | 1 |
+| `tests/unit/app/application/algorithm/state_estimation/test_state_estimation.c` | 5 | 4 |
+| `tests/unit/app/driver/afe/debug/default/test_debug_default.c` | 11 | 1 |
+| `tests/unit/app/engine/config/test_diag_cfg.c` | 1 | 1 |
+| **Total** | **24** | **8** |
+
+The extended sweep adds two more with the identical root cause:
+`tests/unit/app/application/redundancy/test_redundancy.c` (10 tested, 1 failed)
+and `tests/unit/app/engine/diag/test_diag.c` (18 tested, 1 failed).
+
+### Fix direction
+
+A decision for the product owner, not for this run. Either:
+
+1. type the `database.h` parameters so `:when_ptr: :compare_data` works as
+   intended, or
+2. add explicit `:treat_as` entries, or
+3. have the affected tests register a CMock callback and compare contents in the
+   callback.
+
+Each defect has a first-class execution record in the corpus:
+`FB2-VER-EXE-000008` … `FB2-VER-EXE-000014`, one per genuine failure.
+
+## 3. The 37 Build Failures
+
+| Cause | Count | Actionable? |
+|---|---|---|
+| Excluded by the shipped Ceedling `:paths:` configuration — `tests/unit/app/driver/afe/adi/common/ades183x/**`, `tests/unit/app/driver/afe/nxp/common/mc3377x/**`, `tests/unit/support` | 21 | No. Upstream excludes these deliberately; see the `README.md` in each excluded AFE directory. |
+| Requires a HALCoGen-generated TI header — `HL_het.h`, `HL_reg_system.h`, `HL_sys_common.h`, `HL_sys_dma.h` | 10 | Only with HALCoGen. |
+| Apple-clang-only diagnostic promoted by `-Werror` | 6 | Yes, but two of them hide real failures. |
+
+A build failure is not a test failure and is not counted as one. The 5 failures
+in §2 are tests that **ran and failed**; the 37 did not run at all.
+
+## 4. The 177 Blocked Tests
+
+Of **313** repository tests, **136** were in scope and **177 are blocked** on
+HALCoGen (`docs/artifacts/.work/verification-env/logs/hcg-closure.json`).
+
+The blocked tests reach **34 distinct `HL_*.h` headers**, including
+`HL_adc.h`, `HL_can.h`, `HL_crc.h`, `HL_dcc.h`, `HL_ecap.h`, `HL_epc.h`,
+`HL_eqep.h`, `HL_errata_SSWF021_45.h`, `HL_esm.h`, `HL_etpwm.h`, `HL_gio.h`,
+`HL_hal_stdtypes.h`, `HL_het.h`, `HL_i2c.h`, `HL_lin.h`, `HL_mdio.h`,
+`HL_pinmux.h` and `HL_reg_adc.h` among them.
+
+**Reconstructing 34 proprietary TI register maps and driver APIs from memory
+would fabricate the very thing these tests exist to verify, so it was not done.**
+The blocker is instead characterised precisely: `analyze_hcg_closure.py` records,
+for every one of the 313 tests, exactly which HALCoGen headers it needs.
+
+### To unblock
+
+- **(a)** a real HALCoGen run on `conf/hcg/app.hcg` — requires a TI licence; or
+- **(b)** a Linux host, where the ELF compiler accepts the TI section attributes
+  unchanged. This is the path upstream already documents, and the
+  reconstruction in §5.2 of the RUNBOOK would not be needed there.
+
+Docker is available (`Docker version 29.8.0`), so option (b) is viable. It was
+**not** built, because native macOS succeeded and the deliverable priority puts
+native first. A Linux container would in any case need the same HALCoGen output
+for the 177 remaining tests, so it would not unblock them by itself.
+
+## 5. The Two Sweeps
+
+| Sweep | Corpus record | Tests | Passed | Failed | Build failures | Assertions (tested/passed/failed) |
+|---|---|---|---|---|---|---|
+| strict | `FB2-VER-EXE-000006` | 136 | 94 | 5 | 37 | 332 / 323 / 8 |
+| extended | `FB2-VER-EXE-000007` | 136 | 98 | 7 | 31 | 391 / 380 / 10 |
+
+The extended sweep relaxes the Apple-clang-only `-Werror` promotions, which lets
+6 more tests build. It finds **2 more** failures, both with the identical
+`DATA_Write4DataBlocks` root cause. That is the diagnostic signature of a real
+defect: relaxing a warning reveals more instances of the same problem rather
+than hiding them.
+
+An earlier first run is preserved at `logs/results.json` with identical strict
+figures (136 / 94 / 5 / 37), which is the reproducibility check.
+
+## 6. Execution Evidence Classes
+
+The corpus separates evidence classes explicitly so that a blocked result is
+never mistaken for a pass. The `actual_product_evidence` coverage dimension
+reads **0/16**, and the tool's own detail string states the reason: *execution_kind
+has no target-hardware member, so none can be claimed (blocked, not fabricated)*.
+
+Of **25** execution records:
+
+| Class | Count | Credit |
+|---|---|---|
+| host / simulation | 13 | Real product code on a development host. **Not** target hardware. |
+| `synthetic_fixture` or `none` | 12 | Synthetic or blocked. No product credit. |
+| undeclared | **0** | — |
+| **target hardware** | **0** | — |
+
+### Records created and corrected by this run
+
+Fourteen `execution` artifacts now sit under `corpus/as_is/verification/`: five
+were **revised from placeholder values** to real measurements (rev 1 → 2), and
+nine are **new**.
+
+| Record | Change |
+|---|---|
+| `FB2-VER-EXE-000001` (SOA voltage) | rev 1 → 2. Revision 1 claimed `actual_host_run` / `pass` with `"hash": "sha256:placeholder"` and an unverifiable `x86_64 Linux host / gcc 11.4.0` environment. Superseded with a real arm64 macOS run and real sha256 values. |
+| `FB2-VER-EXE-000002`, `-000003`, `-000005` | rev 1 → 2. `execution_kind: none` / `outcome: blocked` → `actual_host_run` with real results. Records 000002 and 000005 both name `test_contactor.c`; one execution evidences both, which is noted in each record. |
+| `FB2-VER-EXE-000004` (AFE LTC driver) | rev 1 → 2. Still `none` / `blocked`, but the blocker is now precise: the include closure needs exactly `HL_het.h`, `HL_spi.h`, `HL_sys_dma.h`. Revision 1's evidence path was **wrong** (missing the `afe/` segment) and has been corrected. |
+| `FB2-VER-EXE-000006`, `-000007` | new; the two bulk sweeps. |
+| `FB2-VER-EXE-000008` … `-000014` | new; one record per genuine test failure. |
+
+Current `as_is` execution outcomes: **4 `pass`**, **9 `fail`**, **1 `blocked`**.
+
+Both bulk sweeps are recorded as `outcome: fail`, not `pass`, because each sweep
+contains failing tests. Recording a partially-failing sweep as a pass would be
+the same class of error as the `sha256:placeholder` value described above.
+
+Removing a fabricated `sha256:placeholder` and an unverifiable environment
+string is the point of this section: a placeholder that looks like evidence is
+worse than an honest gap, because it survives review.
+
+## 7. Verification Planning
+
+16 test measures cover 7 distinct FSRs (`verification_planning` = 16/7, a ratio
+rather than a score).
+
+- **`as_is`:** 5 test measures, 14 execution records.
+- **`synthetic_reference`:** 11 test measures, 11 execution records.
+
+### The `verifies` direction convention
+
+The **test measure is the source** and the **requirement is the target**. A
+verified requirement therefore appears as a link *target*, never as a source.
+The corpus validator's rule inspects only the source side, so it fires on
+correctly verified requirements. This is recorded as `FB2-REV-FND-000001`, whose
+honest reading is: **examine verification links on both sides before concluding
+a safety requirement is unverified.** The check was deliberately left unchanged
+because it is the detector the mutation scenarios depend on.
+
+### Security requirements are genuinely unverified
+
+Unlike the direction artefact above, `FB2-SAF-SEC-000001` … `-000005` have **no
+verification link in either direction** (`FB2-REV-FND-000008` … `-000012`).
+Verification planning concentrated on the cell-voltage chain and never covered
+the security set. The chain runs threat → security requirement → safety goal and
+stops: there is no design, test measure or execution for any security
+requirement.
+
+## 8. Negative Scenario Validation
+
+20 mutation scenarios, **20/20 detected**, and **3/3** change lifecycles
+structurally complete. Recorded in `reports/scenario-validation-report.json`.
+
+Each mutation injects a specific defect and asserts the validator catches it, so
+the detectors the corpus relies on — including the `verifies`-direction rule —
+are shown to be live rather than dormant.
+
+## 9. What This Report Does and Does Not Establish
+
+| Established | Not established |
+|---|---|
+| 94 of 136 in-scope tests pass on a real host | Anything about behaviour on the TMS570 target |
+| 5 tests fail, root-caused to a `void *` / CMock interaction | That the 94 passes are sufficient |
+| The failure is compiler- and platform-independent | That macOS is a supported foxBMS platform — it is not |
+| 177 tests are blocked on proprietary HALCoGen output | Anything about those 177 tests, which did not run |
+| 0 target-hardware executions exist | Any target-hardware claim |
+| Blocked and failed results are recorded, not hidden | That any verification has been approved by a human |
+
+`human_approval_status` is `pending` and `production_authorized` is `false` for
+all 153 records. This run is evidence about the product's source code on a
+development host, and about the honesty of the corpus recording it — nothing
+more.

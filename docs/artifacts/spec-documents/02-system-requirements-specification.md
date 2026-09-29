@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-13T15:17:46Z |
+| Generated | 2026-09-29T10:08:35Z |
 
 ## Scope
 
@@ -212,7 +212,73 @@ MSL violations set fatal-error-linked diagnosis entries that force the BMS state
 - **Source references**: —
 - **Assumption references**: `FB2-ASM-008` (Independent hardware voltage monitor (ASIL B) can be impleme...)
 
+## Cybersecurity Work Products (Threat Analysis and Derived Security Requirements)
+
+This section carries the corpus' cybersecurity work products. They are placed in the System Requirements Specification rather than in the Software Requirements Specification because they are system-level work products: the threat set is drawn from system-level assets (CAN bus, Ethernet interface, serial link, commissioning toolchain), and the mitigations they carry protect system-level safety goals. Both are `synthetic_reference` artifacts; the `as_is` profile contains none, because the real foxBMS 2 project holds no threat analysis and no cybersecurity work product.
+
+**Guard flags — read before using anything in this section:**
+
+- The threat analysis below is a **corpus-local simplified threat and risk analysis**. Its `method.is_iso_21434_tara` field is machine-pinned to `false` by schema. It is **not** an ISO/SAE 21434 TARA and no ISO/SAE 21434 work product exists in this corpus.
+- No TARA in this corpus has been **reviewed or approved** by any cybersecurity, functional-safety or vehicle-level authority. `human_approval_status` is `pending` and `production_authorized` is `false` on every record below.
+- **No residual risk is accepted.** `residual_risk_acceptance.acceptance_exists` is machine-pinned to `false` and `accepted_by` to `none` on the TARA record.
+- No **penetration test, exploit, fuzzing campaign or CVSS assessment** was performed in producing any record below. A threat listed here is a static reading of code, not a demonstrated exploitable weakness.
+- A requirement marked *control absent* below means the corresponding control is **not present in the real foxBMS 2 source at commit 308028fb**. It does not mean the control is absent from any hypothetical product, and no statement here should be read as a claim that the real foxBMS product is secure or insecure in absolute terms.
+
+### `FB2-SAF-TAR-000001` — TARA: foxBMS 2 master external communication attack surface (CAN, Ethernet/TCP, RS485/UART)
+
+- **Profile**: `synthetic_reference` · **Origin**: `synthetic` · **Owner role**: `cybersecurity_engineer` · **Lifecycle**: `draft` · **Human approval**: `pending` · **Production authorized**: `false` · **Product verification credit**: `false`
+- **Method**: Corpus-local asset-driven threat enumeration and risk tabulation (source-evidence-first)
+- **Is an ISO/SAE 21434 TARA**: `false` (schema-pinned to `false`)
+- **Residual risk accepted**: `false` by `none`
+- **Item under analysis**: foxBMS 2 BMS master communication stack: the CAN interface, the FreeRTOS-Plus-TCP Ethernet/TCP application layer (EMAC + PHY + FreeRTOS_Sockets), and the SCI/UART serial interface, together with the host-side engineering toolchain that can write to the target.
+- **Declared limitations of the analysis**: 9 — see the record for the full list
+
+**Threats (8 total, 6 evidenced in the pinned source, 2 hypothetical-project judgements):**
+
+| Threat | Origin | Observed in source | Target assets | Residual risk | Mitigations |
+|---|---|---|---|---|---|
+| `THR-001` | `source_observed` | yes | `AST-001`, `AST-002`, `AST-009` | `medium` | `MIT-001`, `MIT-002` |
+| `THR-002` | `source_observed` | yes | `AST-002` | `low` | `MIT-001`, `MIT-002` |
+| `THR-003` | `source_observed` | yes | `AST-001`, `AST-002` | `low` | `MIT-002`, `MIT-008` |
+| `THR-004` | `source_observed` | yes | `AST-005` | `medium` | `MIT-006` |
+| `THR-005` | `source_observed` | yes | `AST-003` | `medium` | `MIT-004`, `MIT-007` |
+| `THR-006` | `source_observed` | yes | `AST-004`, `AST-007` | `low` | `MIT-005`, `MIT-008` |
+| `THR-007` | `synthetic` | no | `AST-008` | `not_rated` | `MIT-001`, `MIT-002` |
+| `THR-008` | `synthetic` | no | `AST-006` | `not_rated` | `MIT-009` |
+
+**Mitigations (9 total, 3 present or partially present in the pinned source, 6 absent or forward-engineered):**
+
+| Mitigation | Type | Status | Verification status | Maps to |
+|---|---|---|---|---|
+| `MIT-001` | preventive | `absent_in_source` | `not_verified` | `FB2-SAF-SEC-000001` |
+| `MIT-002` | preventive | `absent_in_source` | `not_verified` | `FB2-SAF-SEC-000002` |
+| `MIT-003` | preventive | `present_in_source` | `verified_by_inspection_of_source` | `FB2-SAF-SEC-000002` |
+| `MIT-004` | preventive | `absent_in_source` | `not_verified` | `FB2-SAF-SEC-000003` |
+| `MIT-005` | preventive | `absent_in_source` | `not_verified` | `FB2-SAF-SEC-000004` |
+| `MIT-006` | preventive | `absent_in_source` | `not_verified` | `FB2-SAF-SEC-000005` |
+| `MIT-007` | detective | `present_in_source` | `verified_by_inspection_of_source` | `FB2-SAF-SEC-000003` |
+| `MIT-008` | reactive | `absent_in_source` | `not_verified` | `FB2-SAF-SEC-000002`, `FB2-SAF-SEC-000004` |
+| `MIT-009` | preventive | `partially_present_in_source` | `not_verified` | `FB2-SAF-SEC-000005` |
+
+Mitigation status is the load-bearing column. `present_in_source` means the mechanism was read out of the pinned source; `absent_in_source` means the record establishes by reading the source that the mechanism is **not** there; `forward_engineered_synthetic` means the mitigation is a proposal of the hypothetical project with no verification evidence.
+
+### Derived Security Requirements
+
+5 security requirement artifacts, all `origin: synthetic` and all `verification_status: not_verified`. Each states in its own `real_source_presence` field whether the corresponding control exists in the real foxBMS 2 source.
+
+| Requirement | Title | Class | Control present in the real foxBMS 2 source? | Verification |
+|---|---|---|---|---|
+| `FB2-SAF-SEC-000001` | SEC-000001: Authenticated and confidential transport for externally reachable network serv... | `security` | **NO — absent** | `not_verified` |
+| `FB2-SAF-SEC-000002` | SEC-000002: Bounded connection admission and per-service resource budget | `security` | **PARTIAL** — see record | `not_verified` |
+| `FB2-SAF-SEC-000003` | SEC-000003: Message-level integrity and freshness for safety-relevant CAN messages | `security` | **NO — absent** | `not_verified` |
+| `FB2-SAF-SEC-000004` | SEC-000004: Framing, integrity and authorisation on the serial link, and demotion of the X... | `security` | **NO — absent** | `not_verified` |
+| `FB2-SAF-SEC-000005` | SEC-000005: Cryptographically strong entropy for network security parameters, and governed... | `security` | **PARTIAL** — see record | `not_verified` |
+
+The *control present* column is read from the machine-readable `real_source_control_status` field of each record, not inferred from prose. `absent` means the record establishes by reading the pinned source that the control is not there. `partially_present` means part of the capability is there and part is not, and the record's `real_source_presence` field gives the itemised split.
+
+Every requirement above carries `human_approval_status: pending`, `production_authorized: false` and `product_verification_credit: false`. No requirement has verification evidence in this corpus, and none has been approved. The related third-party component inventory is `docs/artifacts/sources/sbom.json`; it deliberately records **no** vulnerability status for any component, because no advisory source was consulted. Absence of an advisory there means the question was not asked, not that the answer is negative.
+
 
 ---
 
-*Generated: 2026-09-13T15:17:46Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

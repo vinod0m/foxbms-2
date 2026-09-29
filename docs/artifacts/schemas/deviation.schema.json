@@ -1,0 +1,572 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/deviation.schema.json",
+  "$comment": "Domain: https://foxbms2.softwaredevlabs.org/schemas/deviation.schema.json",
+  "title": "Deviation Artifact Schema",
+  "description": "Schema for static-analysis / coding-guideline deviation records mined from in-source suppression annotations, extending artifact-base.schema.json. A deviation record is an observed, in-source justified deviation from a coding-guideline rule. It is NOT evidence of conformance, tool qualification, or a completed ISO 26262 / ASPICE assessment.",
+  "allOf": [
+    {
+      "$ref": "./artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "guideline_id",
+        "rule_reference",
+        "rule_category",
+        "deviation_rationale",
+        "deviation_type",
+        "affected_file",
+        "affected_symbol",
+        "affected_lines",
+        "review_disposition",
+        "reanalysis_justification",
+        "suppression_form",
+        "tool_reference",
+        "evidence_quote",
+        "normative_verification",
+        "design_traceability",
+        "corpus_scope"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "deviation"
+        },
+        "guideline_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Coding-guideline / rule-set identifier the deviation is taken against, as written in the source annotation"
+        },
+        "rule_reference": {
+          "type": "string",
+          "pattern": "^(Directive-)?[0-9]+(\\.[0-9]+)?$",
+          "description": "Rule or directive number exactly as written in the source annotation (e.g. 'Directive-4.1', '1.2', '20.10'). The rule-set prefix is carried by guideline_id and tool_reference.annotation, not repeated here: only the bare form is accepted, so a single site cannot be written two ways. Proprietary rule text is not reproduced."
+        },
+        "rule_category": {
+          "type": "string",
+          "enum": [
+            "advisory_directive",
+            "rule"
+          ],
+          "description": "Category label derived strictly from the source annotation token: 'MisraC2012Directive-x.y' -> advisory_directive, 'MisraC2012-x.y' -> rule. This is a corpus-local label and is NOT a claim about the proprietary MISRA severity classification. The derivation is machine-enforced by the allOf if/then blocks below: rule_reference must carry the 'Directive-' prefix if and only if rule_category is advisory_directive."
+        },
+        "deviation_rationale": {
+          "type": "string",
+          "minLength": 5,
+          "description": "Verbatim developer rationale text as written in the in-source suppression annotation (comment markers stripped, internal line breaks flattened)"
+        },
+        "deviation_type": {
+          "type": "string",
+          "enum": [
+            "toolchain_or_compiler_extension",
+            "memory_section_placement",
+            "generated_code_vendor_pattern",
+            "readability_vs_redundancy",
+            "completeness_of_interface_definitions",
+            "type_conversion_for_hardware_register_access",
+            "deliberate_truncation_of_wider_value",
+            "standard_library_dependency",
+            "preprocessor_macro_required_by_language_subset",
+            "static_assert_on_predefined_macro_values",
+            "base_address_as_integer_literal"
+          ],
+          "description": "Corpus-local classification of the engineering reason for the deviation, derived from the recorded rationale"
+        },
+        "affected_file": {
+          "type": "string",
+          "pattern": "^(src|tests|conf)/.+\\.(c|h)$",
+          "description": "Repository-relative path of the file carrying the suppression annotation"
+        },
+        "affected_symbol": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Enclosing C function, macro, object or 'module level' scope that the suppression annotation encloses"
+        },
+        "affected_lines": {
+          "type": "string",
+          "pattern": "^[0-9]+(-[0-9]+)?(,[0-9]+(-[0-9]+)?)*$",
+          "description": "One or more line ranges in the pinned source, from the Disable/Next annotation to the matching Enable annotation (comma separated)"
+        },
+        "review_disposition": {
+          "type": "string",
+          "enum": [
+            "recorded_inline_no_governance_evidence",
+            "recorded_inline_ambiguous_rule_scope"
+          ],
+          "description": "What the pinned source evidences about governance of this deviation. 'recorded_inline_no_governance_evidence' = rationale present in source but no approval/deviance-log artifact found in the repository. 'recorded_inline_ambiguous_rule_scope' = the Disable and matching Enable annotations name different rule sets for the same region."
+        },
+        "review_disposition_note": {
+          "type": "string",
+          "minLength": 5,
+          "description": "Evidence trail for the review_disposition value, including what governance artifact was searched for and not found"
+        },
+        "reanalysis_justification": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Why the deviation must be re-analysed (next static-analysis run, tool change, compiler/ABI change, rule-set revision, or refactor of the affected construct)"
+        },
+        "suppression_form": {
+          "type": "string",
+          "enum": [
+            "disable_enable_block",
+            "next_codeline",
+            "disable_only_no_matching_enable"
+          ],
+          "description": "Axivion annotation form used in the source"
+        },
+        "suppression_scope": {
+          "type": "string",
+          "enum": [
+            "block",
+            "next_codeline"
+          ],
+          "description": "Scope the suppressed check applies to in the source"
+        },
+        "tool_reference": {
+          "type": "object",
+          "required": [
+            "tool",
+            "check_family",
+            "annotation"
+          ],
+          "properties": {
+            "tool": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Static-analysis tool named by the annotation family"
+            },
+            "check_family": {
+              "type": "string",
+              "enum": [
+                "Style MisraC2012",
+                "Style MisraC2012Directive"
+              ],
+              "description": "Axivion check family as written in the source. Machine-enforced against tool_reference.annotation by the allOf if/then block below: the family suffix must be the same token the annotation uses."
+            },
+            "annotation": {
+              "type": "string",
+              "pattern": "^MisraC2012(Directive)?-[0-9]+(\\.[0-9]+)?$",
+              "description": "Full check identifier as written in the source, e.g. 'MisraC2012Directive-4.1' or 'MisraC2012-1.2'. The MisraC2012 annotation form is enforced so a non-MISRA identifier cannot be recorded as this record's own check; co-located non-MISRA families belong in co_located_non_misra_checks."
+            },
+            "co_located_non_misra_checks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "Other Axivion check families suppressed on the same line or in the same annotation block, outside the MISRA rule set"
+            }
+          }
+        },
+        "evidence_quote": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Verbatim source excerpt carrying the annotation, so a reviewer can locate and check the record against the pinned source"
+        },
+        "normative_verification": {
+          "type": "object",
+          "required": [
+            "rule_text_reproduced",
+            "rule_severity_asserted",
+            "conformance_claimed",
+            "status"
+          ],
+          "properties": {
+            "rule_text_reproduced": {
+              "const": false,
+              "description": "Always false. MISRA C:2012 rule text is proprietary and is not reproduced in this corpus."
+            },
+            "rule_severity_asserted": {
+              "const": false,
+              "description": "Always false. No claim is made about the proprietary MISRA severity/classification of the referenced rule."
+            },
+            "conformance_claimed": {
+              "const": false,
+              "description": "Always false. The record documents an observed deviation; it does not assert MISRA conformance."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "rule_reference_unverified_against_proprietary_source"
+              ],
+              "description": "Normative verification status. Rule numbers are reproduced exactly as written in the source comment only."
+            }
+          }
+        },
+        "deviations": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Complete enumeration of every suppressed annotation site on this symbol, including the primary rule repeated in the top-level typed fields. Each entry names its own site by affected_lines; two entries may carry the same rule_reference when they are distinct sites of the same rule (for example two Disable annotations of one rule inside a single block, or a block site plus an out-of-query 'Next Codeline' site on the same symbol). Each entry repeats the typed shape so no information is lost to prose.",
+          "items": {
+            "$ref": "#/$defs/deviation_entry"
+          }
+        },
+        "design_traceability": {
+          "type": "object",
+          "required": [
+            "coverage_status",
+            "coverage_note"
+          ],
+          "properties": {
+            "design_artifact_id": {
+              "type": ["string", "null"],
+              "pattern": "^FB2-SW-DSN-[0-9]{6}$",
+              "description": "as_is software design artifact that owns the affected code, or null when the as_is profile has no design artifact for it. The value is bound to coverage_status by the allOf if/then block below: a declared coverage_status requires a design-artifact id, and a declared gap requires null."
+            },
+            "coverage_status": {
+              "type": "string",
+              "enum": [
+                "traced_via_link",
+                "partial_scope_sibling_module",
+                "gap_no_design_artifact_in_profile"
+              ]
+            },
+            "coverage_note": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "impact_notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "aspect",
+              "note"
+            ],
+            "properties": {
+              "aspect": {
+                "type": "string",
+                "enum": [
+                  "runtime_behavior",
+                  "memory_placement",
+                  "timing",
+                  "type_safety",
+                  "portability",
+                  "maintainability",
+                  "verification_coverage",
+                  "safety_argument"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 10,
+                "description": "Impact note supported by the observed source, stated as an observation rather than an assessment"
+              }
+            }
+          }
+        },
+        "project_process_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "document_path",
+              "what_it_states"
+            ],
+            "properties": {
+              "document_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "line": {
+                "type": "string"
+              },
+              "what_it_states": {
+                "type": "string",
+                "minLength": 10
+              }
+            }
+          },
+          "description": "The project's own written statements that the deviation is taken against, quoted from the pinned documentation"
+        },
+        "corpus_scope": {
+          "type": "object",
+          "required": [
+            "query",
+            "hit_count",
+            "scope_note"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1
+            },
+            "hit_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "scope_note": {
+              "type": "string",
+              "minLength": 20,
+              "description": "Statement of what this record set does and does not cover. Any count it states must be derivable by re-running corpus_scope.query against the pinned source."
+            }
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "rule_reference": {
+            "pattern": "^Directive-"
+          }
+        },
+        "required": [
+          "rule_reference"
+        ]
+      },
+      "then": {
+        "properties": {
+          "rule_category": {
+            "const": "advisory_directive"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "rule_category": {
+            "const": "rule"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rule_category": {
+            "const": "advisory_directive"
+          }
+        },
+        "required": [
+          "rule_category"
+        ]
+      },
+      "then": {
+        "properties": {
+          "rule_reference": {
+            "pattern": "^Directive-"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "design_traceability": {
+            "properties": {
+              "coverage_status": {
+                "const": "gap_no_design_artifact_in_profile"
+              }
+            },
+            "required": [
+              "coverage_status"
+            ]
+          }
+        },
+        "required": [
+          "design_traceability"
+        ]
+      },
+      "then": {
+        "properties": {
+          "design_traceability": {
+            "properties": {
+              "design_artifact_id": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        "required": [
+          "design_traceability"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "design_traceability": {
+            "properties": {
+              "coverage_status": {
+                "enum": [
+                  "traced_via_link",
+                  "partial_scope_sibling_module"
+                ]
+              }
+            },
+            "required": [
+              "coverage_status"
+            ]
+          }
+        },
+        "required": [
+          "design_traceability"
+        ]
+      },
+      "then": {
+        "properties": {
+          "design_traceability": {
+            "properties": {
+              "design_artifact_id": {
+                "type": "string",
+                "pattern": "^FB2-SW-DSN-[0-9]{6}$"
+              }
+            },
+            "required": [
+              "design_artifact_id"
+            ]
+          }
+        },
+        "required": [
+          "design_traceability"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tool_reference": {
+            "properties": {
+              "check_family": {
+                "const": "Style MisraC2012Directive"
+              }
+            },
+            "required": [
+              "check_family"
+            ]
+          }
+        },
+        "required": [
+          "tool_reference"
+        ]
+      },
+      "then": {
+        "properties": {
+          "tool_reference": {
+            "properties": {
+              "annotation": {
+                "pattern": "^MisraC2012Directive-[0-9]+(\\.[0-9]+)?$"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "tool_reference": {
+            "properties": {
+              "check_family": {
+                "const": "Style MisraC2012"
+              },
+              "annotation": {
+                "pattern": "^MisraC2012-[0-9]+(\\.[0-9]+)?$"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "The if/then/else blocks above constrain existing field pairs only. This subschema still admits any other property a record carries, so those constraints close specific gaps without narrowing the record shape.",
+      "type": "object",
+      "additionalProperties": true
+    }
+  ],
+  "$defs": {
+    "deviation_entry": {
+      "type": "object",
+      "required": [
+        "rule_reference",
+        "rule_category",
+        "deviation_rationale",
+        "deviation_type",
+        "affected_lines",
+        "suppression_form"
+      ],
+      "properties": {
+        "rule_reference": {
+          "type": "string",
+          "pattern": "^(Directive-)?[0-9]+(\\.[0-9]+)?$",
+          "description": "Bare form only, matching the top-level rule_reference: the rule-set prefix is not repeated here, so the same site cannot be written two ways."
+        },
+        "rule_category": {
+          "type": "string",
+          "enum": [
+            "advisory_directive",
+            "rule"
+          ],
+          "description": "Derived from rule_reference exactly as at the top level: the 'Directive-' prefix is present if and only if this is advisory_directive."
+        },
+        "deviation_rationale": {
+          "type": "string",
+          "minLength": 5
+        },
+        "deviation_type": {
+          "type": "string",
+          "enum": [
+            "toolchain_or_compiler_extension",
+            "memory_section_placement",
+            "generated_code_vendor_pattern",
+            "readability_vs_redundancy",
+            "completeness_of_interface_definitions",
+            "type_conversion_for_hardware_register_access",
+            "deliberate_truncation_of_wider_value",
+            "standard_library_dependency",
+            "preprocessor_macro_required_by_language_subset",
+            "static_assert_on_predefined_macro_values",
+            "base_address_as_integer_literal"
+          ]
+        },
+        "affected_lines": {
+          "type": "string",
+          "pattern": "^[0-9]+(-[0-9]+)?(,[0-9]+(-[0-9]+)?)*$"
+        },
+        "suppression_form": {
+          "type": "string",
+          "enum": [
+            "disable_enable_block",
+            "next_codeline",
+            "disable_only_no_matching_enable"
+          ]
+        },
+        "co_located_non_misra_checks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "if": {
+        "properties": {
+          "rule_reference": {
+            "pattern": "^Directive-"
+          }
+        },
+        "required": [
+          "rule_reference"
+        ]
+      },
+      "then": {
+        "properties": {
+          "rule_category": {
+            "const": "advisory_directive"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "rule_category": {
+            "const": "rule"
+          }
+        }
+      }
+    }
+  }
+}

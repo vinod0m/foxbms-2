@@ -1,0 +1,127 @@
+{
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "classification": "security",
+ "conditions_modes": [
+  "NORMAL",
+  "CHARGING",
+  "DISCHARGE",
+  "PRECHARGE",
+  "DEGRADED",
+  "COMMISSIONING"
+ ],
+ "feasibility_dependencies": [
+  "FB2-SAF-TAR-000001",
+  "FB2-SAF-SEC-000001"
+ ],
+ "id": "FB2-SAF-SEC-000002",
+ "title": "SEC-000002: Bounded connection admission and per-service resource budget",
+ "statement": "The BMS master software shall bound the resources consumed by any network service by enforcing, for every service, a hard cap on concurrently serviced connections, a finite receive timeout, a per-connection byte budget, and a deterministic close of any connection that exceeds its budget, and shall raise a diagnosis entry on every admission refusal and every budget breach.",
+ "rationale": "A service with unbounded connection resources can be made to stop serving legitimate peers by a peer that requires no special capability. In the real source the relevant conditions are present in combination: the listen backlog is a compile-time constant of 1, the accept loop hands every accepted socket to a single-deep queue with a zero block time and discards the enqueue result, and the receive timeout is portMAX_DELAY, so a connected peer that sends nothing blocks its service task indefinitely. The requirement also requires the refusal to be diagnosable, because a silently discarded overflow cannot be distinguished from normal operation during field analysis (TARA threats THR-001, THR-003).",
+ "acceptance_criteria": [
+  {
+   "criterion": "Concurrent connection cap",
+   "measure": "Connections simultaneously serviced by one service instance",
+   "threshold": "4",
+   "unit": "connections"
+  },
+  {
+   "criterion": "Receive timeout",
+   "measure": "Maximum time a service task may block in a receive call waiting for a peer that has sent nothing",
+   "threshold": "2000",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Per-connection byte budget",
+   "measure": "Bytes a single connection may cause to be buffered before the connection is closed",
+   "threshold": "65536",
+   "unit": "bytes"
+  },
+  {
+   "criterion": "Budget-breach response time",
+   "measure": "Time from budget breach to the connection being closed and its resources released",
+   "threshold": "100",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Service availability under exhaustion",
+   "measure": "Successful authenticated connections served per hour while a hostile peer holds the maximum permitted concurrent connections open and silent",
+   "threshold": ">= 1",
+   "unit": "connections/hour"
+  },
+  {
+   "criterion": "Admission-refusal diagnosability",
+   "measure": "Diagnosis entries raised per refused admission and per detected budget breach",
+   "threshold": "1",
+   "unit": "entry per event"
+  }
+ ],
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "FB2-SAF-SGO-000001",
+  "mitigation": "Availability mitigation. The recorded impact of TARA threat THR-003 is currently bounded because the affected service is not on a safety path in the real source; this requirement exists so that the hypothetical project does not rely on that boundary once it adds a safety-relevant service."
+ },
+ "assumptions": [
+  "FB2-ASM-011"
+ ],
+ "verification_approach": "test",
+ "source_refs": [
+  "FB2-SRC-COD-000057",
+  "FB2-SRC-COD-000058",
+  "FB2-SRC-COD-000062"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_SAE_21434_2021",
+   "reference": "Clause 15.4 (mitigation concept), resource-exhaustion threat category",
+   "status": "unverified",
+   "rationale": "Named for traceability of intent only; no ISO/SAE 21434 work product exists and no conformance is claimed."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7 (availability of technical safety requirements)",
+   "status": "gap",
+   "rationale": "The hypothetical project has no resource-budget concept for communication services. This requirement is the proposed closure and it is unverified."
+  }
+ ],
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "First issue. Forward-engineered security requirement 'bounded-connection-admission-resource-budget' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001."
+  }
+ ],
+ "real_source_presence": "Control PARTIALLY PRESENT, and the partial presence is stated explicitly. Present: the receive into the service buffer is length-bounded \u2014 src/app/application/ethernet/ethernet.c:157 declares uint8_t rxBuffer[ipconfigTCP_MSS] and :175 passes ipconfigTCP_MSS as the receive length, and :224 does the same on the drain path, so no read can exceed the array (TARA mitigation MIT-003, present_in_source). ABSENT: every admission control. src/app/application/config/ethernet_cfg.h:85 sets the backlog to 1, :94 sets the receive timeout to portMAX_DELAY, src/app/application/ethernet/ethernet.c:292 discards the return value of the queue send, and no per-connection cap, idle timeout or deterministic close exists. Anchors FB2-SRC-COD-000058, FB2-SRC-COD-000062.",
+ "real_source_control_status": "partially_present",
+ "real_source_control_status_note": "Part of the capability this requirement specifies is present in the real foxBMS 2 source and part is not; see real_source_presence for the itemised split.",
+ "derived_from": "FB2-SAF-TAR-000001",
+ "verification_status": "not_verified",
+ "latent_defect_note": "A separate, configuration-dependent latent defect is recorded in the TARA and is NOT addressed by this requirement: at src/app/application/ethernet/ethernet.c:189 the receive buffer is printed with a %s conversion although the buffer is not guaranteed to be NUL-terminated when a receive fills all ipconfigTCP_MSS bytes. Under the evidenced configuration this code is compiled out, because ipconfigHAS_DEBUG_PRINTF is not defined in the project's FreeRTOSIPConfig.h and therefore takes the default ipconfigDISABLE, which reduces FreeRTOS_debug_printf to a no-op (src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfigDefaults.h:3162-3176). No out-of-bounds read is therefore claimed to be reachable, and this requirement does not claim to fix it. Anchor FB2-SRC-COD-000075."
+}

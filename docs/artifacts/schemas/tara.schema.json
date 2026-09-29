@@ -1,0 +1,493 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/tara.schema.json",
+  "$comment": "Domain: https://foxbms2.softwaredevlabs.org/schemas/tara.schema.json",
+  "title": "TARA Artifact Schema",
+  "description": "Schema for Threat Analysis and Risk Assessment records, extending artifact-base.schema.json. A TARA record in this corpus is a corpus-local simplified threat-and-risk analysis. It is NOT an ISO/SAE 21434 work product, it has NOT been reviewed or approved by any cybersecurity or functional-safety authority, and it asserts no compliance with ISO/SAE 21434, ISO 26262 or any other standard. Every threat that rests on a code fact must carry source_refs; every threat that is a project judgement must declare origin 'synthetic'.",
+  "allOf": [
+    {
+      "$ref": "./artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "item_and_scope",
+        "assets_or_entry_points",
+        "threats",
+        "mitigations",
+        "security_requirements_refs",
+        "residual_risk_acceptance",
+        "assumptions",
+        "out_of_scope",
+        "method"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "tara"
+        },
+        "item_and_scope": {
+          "type": "object",
+          "required": [
+            "item_under_analysis",
+            "scope_included",
+            "scope_basis",
+            "profile_relationship"
+          ],
+          "properties": {
+            "item_under_analysis": {
+              "type": "string",
+              "minLength": 5,
+              "description": "The item (product, ECU, subsystem or software element) this analysis covers"
+            },
+            "scope_included": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 3
+              },
+              "description": "Interfaces, modules or data flows explicitly inside the analysis boundary"
+            },
+            "scope_basis": {
+              "type": "string",
+              "minLength": 5,
+              "description": "How the scope boundary was drawn and what evidence supports it"
+            },
+            "profile_relationship": {
+              "type": "string",
+              "minLength": 5,
+              "description": "Statement of the relationship between this TARA and the as_is / synthetic_reference corpus profiles, including who owns and who accepts the residual risk"
+            }
+          },
+          "additionalProperties": false
+        },
+        "method": {
+          "type": "object",
+          "required": [
+            "method_name",
+            "is_iso_21434_tara",
+            "method_description",
+            "limitations"
+          ],
+          "properties": {
+            "method_name": {
+              "type": "string",
+              "minLength": 3,
+              "description": "Name of the analysis method actually applied"
+            },
+            "is_iso_21434_tara": {
+              "const": false,
+              "description": "Machine-enforced: a record in this corpus may never declare itself an ISO/SAE 21434 TARA. The corpus-local method is explicitly not that process."
+            },
+            "method_description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Description of the steps actually performed"
+            },
+            "limitations": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 5
+              },
+              "description": "Explicit, enumerated limitations of this analysis: what was not done, what is unknown, and what must not be inferred from it"
+            }
+          },
+          "additionalProperties": false
+        },
+        "assets_or_entry_points": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Assets and externally reachable entry points of the item",
+          "items": {
+            "type": "object",
+            "required": [
+              "asset_id",
+              "name",
+              "location",
+              "interface",
+              "exposure",
+              "evidence_basis"
+            ],
+            "properties": {
+              "asset_id": {
+                "type": "string",
+                "pattern": "^AST-[0-9]{3}$",
+                "description": "Stable identifier for the asset or entry point"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 3
+              },
+              "location": {
+                "type": "string",
+                "minLength": 3,
+                "description": "File, module or interface location of the asset"
+              },
+              "interface": {
+                "type": "string",
+                "minLength": 3,
+                "description": "Communication or access interface the asset is exposed on"
+              },
+              "evidence_basis": {
+                "type": "string",
+                "enum": [
+                  "source_observed",
+                  "synthetic"
+                ],
+                "description": "Whether the existence of this asset was read out of the pinned source or assumed by the hypothetical project"
+              },
+              "exposure": {
+                "type": "string",
+                "minLength": 5,
+                "description": "Who or what can reach this asset and over which boundary"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Source anchors proving the asset exists at the stated location. Required for every evidence_basis='source_observed' asset."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "evidence_basis": {
+                      "const": "source_observed"
+                    }
+                  },
+                  "required": [
+                    "evidence_basis"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "source_refs"
+                  ],
+                  "properties": {
+                    "source_refs": {
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "threats": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Identified threats against the assets. Each threat must state its origin: a threat evidenced in the pinned source, a threat that is a hypothetical-project judgement, or a threat that is derived from a threat scenario stated in the relevant standard.",
+          "items": {
+            "type": "object",
+            "required": [
+              "threat_id",
+              "description",
+              "target_asset_ids",
+              "attack_vector",
+              "impact",
+              "likelihood_impact_reasoning",
+              "mitigation_ids",
+              "residual_risk",
+              "residual_risk_justification",
+              "origin"
+            ],
+            "properties": {
+              "threat_id": {
+                "type": "string",
+                "pattern": "^THR-[0-9]{3}$"
+              },
+              "description": {
+                "type": "string",
+                "minLength": 15
+              },
+              "target_asset_ids": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "pattern": "^AST-[0-9]{3}$"
+                }
+              },
+              "attack_vector": {
+                "type": "string",
+                "minLength": 5,
+                "description": "How an attacker would reach the target"
+              },
+              "impact": {
+                "type": "string",
+                "minLength": 5,
+                "description": "Consequence if the threat is realised, bounded by what is actually reachable in the code"
+              },
+              "affected_safety_goals_or_requirements": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Safety goals or requirements in this corpus whose assurance could be undermined by the threat"
+              },
+              "likelihood_impact_reasoning": {
+                "type": "string",
+                "minLength": 15,
+                "description": "Explicit reasoning, and the limits of that reasoning, for the assigned rating"
+              },
+              "mitigation_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^MIT-[0-9]{3}$"
+                }
+              },
+              "residual_risk": {
+                "type": "string",
+                "minLength": 3
+              },
+              "residual_risk_justification": {
+                "type": "string",
+                "minLength": 15
+              },
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "source_observed",
+                  "synthetic"
+                ],
+                "description": "source_observed = the exposure is read directly out of the pinned source. synthetic = a hypothetical-project judgement that was NOT observed in the pinned source."
+              },
+              "observed_in_pinned_source": {
+                "type": "boolean",
+                "description": "True only when the exposure was read directly out of the pinned foxBMS source at commit 308028fb."
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Source anchors for the code facts this threat rests on. Required when origin is source_observed."
+              },
+              "honest_unknowns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "What is genuinely unknown about this threat and must not be asserted"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "origin": {
+                      "const": "source_observed"
+                    }
+                  },
+                  "required": [
+                    "origin"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "source_refs",
+                    "observed_in_pinned_source"
+                  ],
+                  "properties": {
+                    "source_refs": {
+                      "minItems": 1
+                    },
+                    "observed_in_pinned_source": {
+                      "const": true
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "origin": {
+                      "const": "synthetic"
+                    }
+                  },
+                  "required": [
+                    "origin"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "observed_in_pinned_source"
+                  ],
+                  "properties": {
+                    "observed_in_pinned_source": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "mitigations": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Mitigations, whether present in the pinned source or forward-engineered for the hypothetical project",
+          "items": {
+            "type": "object",
+            "required": [
+              "mitigation_id",
+              "type",
+              "description",
+              "mechanism",
+              "status",
+              "maps_to_requirements",
+              "verification_approach",
+              "verification_status"
+            ],
+            "properties": {
+              "mitigation_id": {
+                "type": "string",
+                "pattern": "^MIT-[0-9]{3}$"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "preventive",
+                  "detective",
+                  "reactive"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "minLength": 10
+              },
+              "mechanism": {
+                "type": "string",
+                "minLength": 5,
+                "description": "Concrete mechanism by which the mitigation acts, or the concrete mechanism that is missing"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "present_in_source",
+                  "absent_in_source",
+                  "partially_present_in_source",
+                  "forward_engineered_synthetic"
+                ],
+                "description": "Whether the mitigation exists in the pinned foxBMS source or is a forward-engineered requirement of the hypothetical project"
+              },
+              "maps_to_requirements": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "verification_approach": {
+                "type": "string",
+                "enum": [
+                  "test",
+                  "analysis",
+                  "inspection",
+                  "demonstration",
+                  "review"
+                ]
+              },
+              "verification_status": {
+                "type": "string",
+                "enum": [
+                  "not_verified",
+                  "verified_by_inspection_of_source"
+                ],
+                "description": "not_verified = no verification evidence exists in this corpus. verified_by_inspection_of_source = the presence or absence of the mechanism was established by reading the pinned source; this is an inspection result, not a test result."
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Source anchors for mitigations whose status was established by reading the pinned source"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "forward_engineered_synthetic"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "verification_status": {
+                      "const": "not_verified"
+                    }
+                  }
+                }
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "security_requirements_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          },
+          "description": "Requirement artifact ids in this corpus that carry the mitigations of this TARA"
+        },
+        "residual_risk_acceptance": {
+          "type": "object",
+          "required": [
+            "acceptance_exists",
+            "accepted_by",
+            "statement"
+          ],
+          "properties": {
+            "acceptance_exists": {
+              "const": false,
+              "description": "Machine-enforced: this corpus holds no accepted residual risk for any record. Any record claiming a real acceptance would be false."
+            },
+            "accepted_by": {
+              "const": "none",
+              "description": "Machine-enforced: no person or body has accepted any residual risk in this corpus"
+            },
+            "statement": {
+              "type": "string",
+              "minLength": 20,
+              "description": "Plain statement of who would have to accept the residual risk in the hypothetical project, and that no such acceptance exists in reality"
+            }
+          },
+          "additionalProperties": false
+        },
+        "assumptions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          },
+          "description": "Assumptions this analysis depends on, stated as prose. An assumption that fails invalidates the corresponding threats. Note for consumers: this property holds assumption STATEMENTS, not assumption identifiers. Requirement artifacts carry assumption identifiers in their own 'assumptions' property, defined in requirement.schema.json as an array of assumption IDs; the two properties share a name by design, because both answer 'what does this record assume', but they hold different value types and are validated by different schemas. Neither property $refs the other."
+        },
+        "out_of_scope": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          },
+          "description": "Explicitly excluded from this analysis. Anything listed here has NOT been assessed and must not be assumed safe."
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

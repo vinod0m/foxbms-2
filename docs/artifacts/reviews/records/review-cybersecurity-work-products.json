@@ -1,0 +1,139 @@
+{
+  "id": "FB2-REV-000003",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "review",
+  "engineering_domain": "safety",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Review: cybersecurity work products (TARA and SEC-000001..SEC-000005)",
+  "owner_role": "safety_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000057",
+    "FB2-SRC-COD-000059",
+    "FB2-SRC-COD-000065",
+    "FB2-SRC-COD-000067"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Domain review of the TARA and the five derived security requirements for threat-to-source fidelity, overclaim risk and absence of fabricated vulnerability data."
+    }
+  ],
+  "review_type": "domain",
+  "reviewed_ids": [
+    {
+      "artifact_id": "FB2-SAF-TAR-000001",
+      "revision": "1",
+      "digest": "5473b36724edb0d88aef7b5c94524c1db852c56223e0261fb314b118a4e4dbb8"
+    },
+    {
+      "artifact_id": "FB2-SAF-SEC-000001",
+      "revision": "1",
+      "digest": "412a76d530977c4911f3bfa18df18e20ef1b1b24f469102dbcdc7e58c7837d86"
+    },
+    {
+      "artifact_id": "FB2-SAF-SEC-000002",
+      "revision": "1",
+      "digest": "536b0d8c2c2e818319dc5db755e521865f6ada84b72510728bfc27c5a370f39e"
+    },
+    {
+      "artifact_id": "FB2-SAF-SEC-000003",
+      "revision": "1",
+      "digest": "bb735f6ca5898b43815c2b84dbabf2b9cc8db99a6e0aca64c335f9233de6bc9c"
+    },
+    {
+      "artifact_id": "FB2-SAF-SEC-000004",
+      "revision": "1",
+      "digest": "847420e2c97e873b1a7f89c15f7a9e00f0bc0385f102f749572a4676572ccb95"
+    },
+    {
+      "artifact_id": "FB2-SAF-SEC-000005",
+      "revision": "1",
+      "digest": "61e8e8f640f8ea713d7a24271501f97d47f32a0d6c9e82be31c48c05d4526cbb"
+    }
+  ],
+  "reviewer_identity": {
+    "role": "safety_engineer",
+    "session_id": "opencode-2026-09-29-artifact-review-pass",
+    "model": "openrouter/stealth/space-bunny-alpha",
+    "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. Per master-prompt clause 2.9 this is an automated review: it is NOT organizational independence, NOT human confirmation, and NOT a qualified-checker result. No human reviewer, independent party, or separate agent session participated."
+  },
+  "checklist_version": "CHKL-CYBERSEC-SRC-1.0.0",
+  "scope": "Full scope over all 6 synthetic_reference cybersecurity artifacts (FB2-SAF-TAR-000001 and FB2-SAF-SEC-000001..000005). Every artifact carries profile 'synthetic_reference', so every reviewed_id below resolves unambiguously in that profile. The HSI design was examined only for the purpose of FB2-REV-FND-000111 and is reviewed in full by FB2-REV-000008.",
+  "findings": [
+    {
+      "finding_id": "FB2-REV-FND-000110",
+      "artifact_id": "FB2-SAF-SEC-000001",
+      "severity": "medium",
+      "category": "verification",
+      "description": "No test measure, execution record or verification link of any kind exists for FB2-SAF-SEC-000001, or for SEC-000002..SEC-000005. All five carry verification_status 'not_verified' and all five are absent from both the source and the target sets of any verifies/validates link in the link registry. The acceptance criteria are specified and measurable, but nothing in the corpus plans, performs or evidences them. This is a real, open verification gap, not a documentation defect, and it is carried as a standing medium-severity validator finding as well.",
+      "evidence": "Link registry relation census: verifies links run TMS->FSR (15), TMS->SWR (10) and TMS->TSR (7); validates links run TMS->SCO (1) and TMS->SGO (1). No verifies or validates link has any FB2-SAF-SEC-* artifact as source or target. The 16 test measures in the corpus reference no SEC artifact."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000111",
+      "artifact_id": "FB2-SAF-SEC-000003",
+      "severity": "medium",
+      "category": "traceability",
+      "description": "No corpus artifact connects the interface design FB2-SYS-HSI-000001 to the security requirement set. HSI-000001 contains no reference to any FB2-SAF-SEC-* artifact and none to FB2-SAF-TAR-000001. Whether such a trace is required is an open interface-coverage question and is NOT asserted here as a confirmed gap: the SEC requirements concern the network, CAN and serial paths, while HSI-000001 describes the cell-voltage AFE SPI interface, so an absence of reference may be correct. Recorded so the question is visible to the interface owner rather than silently absent.",
+      "evidence": "docs/artifacts/corpus/synthetic_reference/system/hsi-cell-voltage.json contains no occurrence of the substrings 'SEC-000', 'TAR-000001', 'FB2-SAF-SEC' or 'FB2-SAF-TAR' in any field, including its interfaces, decisions and responsibilities blocks."
+    }
+  ],
+  "dispositions": [
+    {
+      "finding_id": "FB2-REV-FND-000110",
+      "disposition": "accepted",
+      "action": "Accepted as a real and currently unresolvable-in-this-revision gap. Authoring security verification measures is outside the scope of a review and no such measure exists in the corpus. No finding is weakened and no artifact is relabelled to make the gap disappear. Carried forward as a standing finding.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000111",
+      "disposition": "deferred",
+      "action": "Referred to the interface owner as an open question, not a defect. Whether FB2-SYS-HSI-000001 must carry a trace to the security requirement set is a design-ownership decision this automated pass is not entitled to make. No change made to either artifact by this review.",
+      "resolved_artifact_id": null
+    }
+  ],
+  "limitations": [
+    "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+    "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+    "No artifact covered by this review carries production authority or product verification credit.",
+    "No penetration test, no exploit, no attack and no exploitability assessment was performed or is claimed by this review or by any artifact it covers. The TARA's own threat descriptions were checked for fabricated vulnerability data and none was found.",
+    "Verification performed: (a) every file:line assertion in the real_source_presence fields of SEC-000001..SEC-000005 was spot-checked against the real source and all sampled assertions matched exactly; (b) the TARA was searched for CVE identifiers, CVSS scores and exploit claims - none present, and an explicit 'No exploitability assessment of any kind was performed' statement is present; (c) the TARA declares is_iso_21434_tara=false and lists its own limitations including the absence of damage scenarios, attack-path analysis and TARA review; (d) every artifact was scanned for certification, tool-qualification, human-approval and ASPICE-capability claims - none present.",
+    "The file:line check was a spot check of the highest-consequence assertions (ethernet accept and queue hand-off, backlog and receive-timeout constants, UART XOFF/XON gating, CAN dispatch match, TCP initial-sequence-number generator and its seed). It was not an exhaustive check of every line reference in every record, and a residual possibility of an unchecked but incorrect line reference remains.",
+    "This review does not assess whether the threat enumeration is complete. Completeness of a TARA is a specialist activity and is not claimed here."
+  ],
+  "review_method": "Direct source verification. Each concrete claim of presence or absence in the real_source_presence fields was checked by reading the cited source line. Absence claims were checked by confirming that the claimed control does not exist on the path. Fabricated-data screening was a pattern search over the serialized record for CVE and CVSS identifiers and for exploit language.",
+  "results_summary": {
+    "artifacts_reviewed": 6,
+    "line_level_claims_spot_checked": 15,
+    "line_level_claims_matched": 15,
+    "cve_or_cvss_claims_found": 0,
+    "exploitability_claims_found": 0,
+    "certification_or_aspice_claims_found": 0,
+    "requirements_with_verification_evidence": 0,
+    "requirements_without_verification_evidence": 5
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "id": "FB2-VER-EXE-000013",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Execution: Redundancy layer (tests/unit/app/application/redundancy/test_redundancy.c) - real macOS host run, FAILING",
+  "owner_role": "verification_engineer",
+  "origin": "source_observed",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "reviewed",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T08:15:33Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T08:15:33Z",
+  "updated_at": "2026-09-29T08:15:33Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T08:15:33Z",
+      "author": "verification_engineer",
+      "description": "New artifact: a real, reproduced test failure. The corpus had no record of this test at all. Recorded as a failure, not suppressed."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000003",
+  "test_measure_revision": "1",
+  "execution_kind": "actual_host_run",
+  "outcome": "fail",
+  "environment": {
+    "hardware": "arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)",
+    "software": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]",
+    "tools": [
+      "ceedling",
+      "cmock",
+      "unity",
+      "cexception",
+      "gcc (Apple clang driver)"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml",
+    "tool_versions": {
+      "ceedling": "1.1.9-2209dc2",
+      "cmock": "2.7.2",
+      "unity": "2.7.2",
+      "cexception": "1.3.5",
+      "gcc": "17.0.0",
+      "clang": "17.0.0",
+      "ruby": "4.0.7"
+    }
+  },
+  "input_hashes": {
+    "test_source": "sha256:348a12b4f93f7b9a93e562939f647d498a3d226d2a35cb132f16731d5de37ae2",
+    "ceedling_project_file_shipped": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f",
+    "database_header": "sha256:291456ed775a3505abc613d4fd1291bce83d77d1041e8b7947a8488f459566fc"
+  },
+  "output_hashes": {
+    "test_log": "sha256:cca268d9fef07bdb2566437c5f30f7ae34f9359892d103faf51bf4eb0c64865a"
+  },
+  "logs": [
+    {
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed/tests__unit__app__application__redundancy__test_redundancy.txt",
+      "hash": "sha256:cca268d9fef07bdb2566437c5f30f7ae34f9359892d103faf51bf4eb0c64865a",
+      "type": "stdout"
+    }
+  ],
+  "timestamps": {
+    "start": "2026-09-29T10:31:27+0200",
+    "end": "2026-09-29T10:31:27+0200",
+    "duration_ms": 1110
+  },
+  "anomalies": [
+    {
+      "description": "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.",
+      "severity": "high",
+      "disposition": "accepted"
+    },
+    {
+      "description": "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.",
+      "severity": "high",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(\".kernelTEXT\") and similar), because Mach-O requires a 'SEGMENT,SECTION' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.",
+      "severity": "medium",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor's directive-only pass with \"Failed to read './test/preprocess/files/<test>/directives_only/raw/ftask.h' for comment stripping ... No such file or directory\". The value was set to :none, which selects Ceedling's own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.",
+      "severity": "medium",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Unity assertion failure, verbatim: At line (101): \"Expected 0x0000000102758000 Was 0x00000001027581C4:Function DATA_Read4DataBlocks Argument pDataToReceiver0:Function called with unexpected argument value.\"",
+      "severity": "high",
+      "disposition": "investigating"
+    },
+    {
+      "description": "Probable root cause, established from the sources and NOT from the host environment: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.",
+      "severity": "high",
+      "disposition": "investigating"
+    },
+    {
+      "description": "This test does not compile under the shipped strict flag set on Apple clang. The recorded result is from the extended run that adds -Wno-enum-conversion, -Wno-array-bounds and -Wno-parentheses-equality. Under the strict run it is a build failure and this defect would have been invisible.",
+      "severity": "medium",
+      "disposition": "investigating"
+    }
+  ],
+  "evidence_refs": [
+    "tests/unit/app/engine/database/database.h",
+    "tests/unit/app/application/redundancy/test_redundancy.c"
+  ],
+  "evidence_files": [
+    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json",
+    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed/tests__unit__app__application__redundancy__test_redundancy.txt"
+  ],
+  "assertions": {
+    "tested": 10,
+    "passed": 9,
+    "failed": 1,
+    "ignored": 0
+  },
+  "verbatim_unity_failures": [
+    "At line (101): \"Expected 0x0000000102758000 Was 0x00000001027581C4:Function DATA_Read4DataBlocks Argument pDataToReceiver0:Function called with unexpected argument value.\""
+  ],
+  "limitations": [
+    "Host execution on Apple Silicon macOS",
+    "Root cause attribution to the void*-typed database API is an analysis of the sources, not a fix; it has not been re-run under GNU gcc to confirm the same failure occurs there"
+  ],
+  "notes": "Real, reproduced failure. Ceedling target 'test:../../tests/unit/app/application/redundancy/test_redundancy.c', exit code 1, 10 assertions tested, 1 failed. Recorded verbatim. No result was adjusted."
+}

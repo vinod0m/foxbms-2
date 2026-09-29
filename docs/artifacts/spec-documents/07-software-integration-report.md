@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-13T15:17:46Z |
+| Generated | 2026-09-29T10:08:35Z |
 
 ## Scope
 
@@ -52,13 +52,26 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 ### Integration Evidence
 
-- `FB2-VER-EXE-000001` (`result_of` → `FB2-VER-TMS-000001`, `FB2-LNK-SAF-000018`): kind=`actual_host_run`, outcome=`pass` — unit-level execution only (SOA voltage test); hashes `sha256:placeholder`, `output_hashes` empty, not independently substantiated. No component/integration-level executions exist in `as_is`.
+- `FB2-VER-EXE-000001`: kind=`actual_host_run`, outcome=`pass`
+- `FB2-VER-EXE-000002`: kind=`actual_host_run`, outcome=`pass`
+- `FB2-VER-EXE-000003`: kind=`actual_host_run`, outcome=`pass`
+- `FB2-VER-EXE-000004`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000005`: kind=`actual_host_run`, outcome=`pass`
+- `FB2-VER-EXE-000006`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000007`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000008`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000009`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000010`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000011`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000012`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000013`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000014`: kind=`actual_host_run`, outcome=`fail`
 
 ### Integration Gaps
 
 | Gap | Disposition |
 |---|---|
-| No component/integration-level executions (planning stubs TMS-007/010 only) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
+| No component-level test measures | Gap documented; synthetic_reference to add per review disposition FB2-FND-000005 |
 | No integration-level executions (only unit `actual_host_run` exists) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
 | No target-hardware integration runs | as_is gap documented in review `FB2-REV-000001` (finding FB2-FND-000002) |
 
@@ -74,24 +87,27 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 ### Integration Evidence
 
-All six executions are unit-level `synthetic_fixture` results (`result_of` links `FB2-LNK-SAF-000033..038`), demonstrating corpus structure only — no component/integration-level test measures exist in `synthetic_reference`.
-
 - `FB2-VER-EXE-000001`: kind=`synthetic_fixture`, outcome=`pass`
 - `FB2-VER-EXE-000002`: kind=`synthetic_fixture`, outcome=`pass`
 - `FB2-VER-EXE-000003`: kind=`synthetic_fixture`, outcome=`pass`
 - `FB2-VER-EXE-000004`: kind=`synthetic_fixture`, outcome=`pass`
 - `FB2-VER-EXE-000005`: kind=`synthetic_fixture`, outcome=`pass`
 - `FB2-VER-EXE-000006`: kind=`synthetic_fixture`, outcome=`pass`
+- `FB2-VER-EXE-000007`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000008`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000009`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000010`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000011`: kind=`none`, outcome=`blocked`
 
 ### Integration Gaps
 
 | Gap | Disposition |
 |---|---|
-| No component/integration-level executions (planning stubs TMS-007/010 only) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
+| No component-level test measures | Gap documented; synthetic_reference to add per review disposition FB2-FND-000005 |
 | No integration-level executions (only unit `actual_host_run` exists) | Per governance policy: actual product evidence = 0 — blocked, not fabricated |
 | No target-hardware integration runs | as_is gap documented in review `FB2-REV-000001` (finding FB2-FND-000002) |
 
 
 ---
 
-*Generated: 2026-09-13T15:17:46Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

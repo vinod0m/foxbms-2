@@ -1,0 +1,178 @@
+{
+  "id": "FB2-REV-000005",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "review",
+  "engineering_domain": "safety",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Review: safety analyses, safety case and the independent-monitor requirement chain",
+  "owner_role": "safety_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000001",
+    "FB2-SRC-COD-000004",
+    "FB2-SRC-HW-000002"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Domain review of the four safety analyses, the safety case skeleton and the two requirements that carry the independent hardware monitor, for analysis-to-element linkage, empty-gate detection and absence of unsupported claims."
+    }
+  ],
+  "review_type": "domain",
+  "reviewed_ids": [
+    {
+      "artifact_id": "FB2-SAF-ANL-000001",
+      "revision": "1",
+      "digest": "469b46e506d3c8e29e0372b00dbd7aad55d03c19aae7188ef5477aca54483ba5"
+    },
+    {
+      "artifact_id": "FB2-SAF-ANL-000002",
+      "revision": "1",
+      "digest": "cb9b3ffbf449892135240def20cbaaf00f0c53e2bb84747971225c4a40c88e66"
+    },
+    {
+      "artifact_id": "FB2-SAF-ANL-000003",
+      "revision": "1",
+      "digest": "8dcce66d79df1cb40daf2cae7340fba4d3854670e3930ce7bbca06704562029a"
+    },
+    {
+      "artifact_id": "FB2-SAF-ANL-000004",
+      "revision": "1",
+      "digest": "3422d99ddf908a45f6cf172b5cf003aa6847877dc3d736582ab46db05f0d6be8"
+    },
+    {
+      "artifact_id": "FB2-SAF-SCS-000001",
+      "revision": "1",
+      "digest": "34285806b426fcce9fe8b89af6431c911ded3ab72a49b1b26fb27793246b06af"
+    },
+    {
+      "artifact_id": "FB2-SAF-FSR-000004",
+      "revision": "1",
+      "digest": "49cad9b91812f0f6c4c1d8507fe88e5f2f943462c951463edceab525d68aa534"
+    },
+    {
+      "artifact_id": "FB2-HW-TSR-000004",
+      "revision": "1",
+      "digest": "22f3a9e36ddd65035f0a970d61c8775337e2b9aff7b84ad85183bb84b835a21f"
+    }
+  ],
+  "reviewer_identity": {
+    "role": "safety_engineer",
+    "session_id": "opencode-2026-09-29-artifact-review-pass",
+    "model": "openrouter/stealth/space-bunny-alpha",
+    "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. Per master-prompt clause 2.9 this is an automated review: it is NOT organizational independence, NOT human confirmation, and NOT a qualified-checker result. No human reviewer, independent party, or separate agent session participated."
+  },
+  "checklist_version": "CHKL-SAFETY-CHAIN-1.0.0",
+  "scope": "Full scope over all 7 synthetic_reference artifacts named in reviewed_ids, covering the four safety analyses (FMEA, FTA, dependent-failure and freedom-from-interference), the safety case skeleton, and the FSR and hardware TSR that allocate the independent monitor. Every record carries profile 'synthetic_reference', so every reviewed_id resolves unambiguously in that profile. This is a complete review of these 7 artifacts and is not a sample of the safety chain.",
+  "findings": [
+    {
+      "finding_id": "FB2-REV-FND-000131",
+      "artifact_id": "FB2-SAF-SCS-000001",
+      "severity": "high",
+      "category": "consistency",
+      "description": "The safety case's central timing argument, ARG-003, is arithmetically wrong and omits latency terms imposed by the very requirements it cites. ARG-003 reads 'acquisition (25ms) + SOA check (5ms) + contactor (30ms) + independent monitor (50ms parallel) = 70ms < 100ms FTTI'. The three serial terms sum to 60 ms, not 70 ms. Worse, the argument quotes only the publish latency from FB2-SAF-FSR-000001, which also mandates a minimum acquisition rate of 20 Hz; a 20 Hz period is 50 ms, so worst-case time to first sample of a newly-violating cell is up to 50 ms of sampling wait plus 25 ms of publish. It also quotes only the 5 ms classification latency from FB2-SAF-FSR-000002, which additionally mandates a debounce of 2 consecutive violations within 100 ms; classification cannot complete until a second sample confirms, which is a further ~50 ms. Using the requirements' own numbers the main path is approximately 50+25+50+5+30 = 160 ms, not 70 ms and not 60 ms. The argument also contradicts its own cited evidence: FB2-SAF-FSR-000004's rationale states the main path has a 'timing budget violation in main path (115 ms > 100 ms FTTI)' and that the independent monitor was introduced to provide a parallel channel for exactly that reason. A parallel channel does not reduce the serial main-path chain to 70 ms. This is an unsupported and internally inconsistent claim inside the safety argument, and it is the claim on which the 70 ms < 100 ms conclusion of the only claim in the record rests.",
+      "evidence": "FB2-SAF-SCS-000001 claims[0].arguments[2]: 'FSR chain: acquisition (25ms) + SOA check (5ms) + contactor (30ms) + independent monitor (50ms parallel) = 70ms < 100ms FTTI', evidence [FSR-000001..FSR-000004]. FB2-SAF-FSR-000001 statement: 'acquire all cell voltages ... at a minimum rate of 20 Hz ... and publish validated data to the database within 25 ms of acquisition trigger'. FB2-SAF-FSR-000002 statement: 'debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability'. FB2-SAF-FSR-000004 rationale: 'addresses timing budget violation in main path (115 ms > 100 ms FTTI) by providing parallel safety channel'. Arithmetic: 25+5+30=60."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000132",
+      "artifact_id": "FB2-SAF-SCS-000001",
+      "severity": "medium",
+      "category": "provenance",
+      "description": "The safety case carries an empty source_refs array and an empty assumption_refs array. Every other artifact in the corpus carries at least one provenance anchor, and the safety case is the artifact that most needs one, because its arguments rest on numeric timing claims taken from other artifacts (see FB2-REV-FND-000131). Its argument-level 'evidence' arrays do name the contributing artifact ids, which is why the chain is traceable at all, but the record itself declares no source anchor and no assumption dependency, so it is invisible to the corpus source-grounding dimension and to any assumption-invalidation check. This is why the timing error in ARG-003 was not caught by automation.",
+      "evidence": "FB2-SAF-SCS-000001: source_refs = [], assumption_refs = []. Corpus coverage reports source_grounding 71/112, and this record contributes to the ungrounded remainder. Compare FB2-SAF-SEC-000001 which carries source_refs [FB2-SRC-COD-000057, FB2-SRC-COD-000062, FB2-SRC-COD-000063] and assumption_refs [FB2-ASM-011]."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000133",
+      "artifact_id": "FB2-SAF-ANL-000004",
+      "severity": "medium",
+      "category": "traceability",
+      "description": "The freedom-from-interference analysis cites source anchor 'SRC-HW-000001' in the memory-interference mitigation, but no such anchor exists. The source registry holds 102 anchors, all named FB2-SRC-*, and none begins 'SRC-HW'. The citation is therefore dangling. It survives validation because corpus.py's provenance check only inspects the top-level source_refs field of each artifact and does not descend into nested mitigation objects, so a nested reference to a non-existent anchor is invisible to the gate. This review did not modify either the analysis or the tool; both are outside the write scope of this pass.",
+      "evidence": "FB2-SAF-ANL-000004 interference_categories[1] (category 'memory').mitigations[1] carries source_refs: ['SRC-HW-000001']. Source registry contains 102 anchors; the set of anchor_ids contains no id starting 'SRC-HW'. A recursive scan of every artifact in the corpus found exactly one unresolved nested source reference, and it is this one."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000134",
+      "artifact_id": "FB2-HW-TSR-000004",
+      "severity": "low",
+      "category": "consistency",
+      "description": "FB2-HW-TSR-000004 and FB2-SAF-FSR-000004 carry byte-identical statement text under two different artifact ids in the same profile, and both are lifecycle_status 'baselined'. Duplication is defensible here because a hardware TSR and a safety FSR legitimately allocate the same capability at different levels, and the records agree today. The risk is that a later revision of one will silently leave the other stale, because nothing in the corpus ties the two texts together. Recorded as an observation, not as a confirmed divergence; the two records are consistent at revision 1.",
+      "evidence": "Both records state: 'The BMS shall include an independent hardware voltage monitor (ASIL B) that continuously monitors cell voltages and can open HV contactors independently of the main MCU within 50 ms of overvoltage detection.' Both are lifecycle_status 'baselined' in profile synthetic_reference. A corpus-wide scan of statement fields found this as the only duplicate text across distinct artifact ids."
+    }
+  ],
+  "dispositions": [
+    {
+      "finding_id": "FB2-REV-FND-000131",
+      "disposition": "accepted",
+      "action": "Accepted. The timing argument is wrong and the record must not be relied on for a 70 ms conclusion. The safety case is a synthetic_reference skeleton with lifecycle_status 'draft', 'release for development use only' and production_authorized false, so the defect does not propagate into any production claim; it is nevertheless a real defect in a safety argument. Correcting the argument requires re-deriving the worst-case timing chain from the FSR statements, which is an authoring task outside the write scope of this review. Referred to the safety owner as the highest-priority item from this pass. The artifact was NOT edited by this review.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000132",
+      "disposition": "accepted",
+      "action": "Accepted. A safety case with no provenance anchors is invisible to the source-grounding dimension and to assumption-invalidation checks. Adding anchors is an authoring change to an artifact outside this review's write scope; referred to the safety owner.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000133",
+      "disposition": "accepted",
+      "action": "Accepted, and escalated as a tool-coverage gap as well as an artifact defect. The dangling anchor is a defect in FB2-SAF-ANL-000004 and the blind spot is that corpus.py's provenance check is shallow. Neither the analysis nor corpus.py was modified by this review: the analysis is outside the permitted write scope and the tool must not be edited to make a finding disappear. Recorded so that a future tool improvement deepens the check rather than removing it.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000134",
+      "disposition": "accepted",
+      "action": "Accepted as a divergence risk, not a present defect. The two records agree at revision 1. No change made; recorded so that a future revision of either record is checked against its twin.",
+      "resolved_artifact_id": null
+    }
+  ],
+  "limitations": [
+    "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+    "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+    "No artifact covered by this review carries production authority or product verification credit.",
+    "Empty-gate detection was performed and is a clean result, not a skipped check: every list- or map-valued field in all four safety analyses and the safety case was enumerated for length. The only two empty containers found in the whole set were the safety case's own source_refs and assumption_refs, which are the subject of FB2-REV-FND-000132. The FTA tree, the FMEA failure-mode list, the dependent-failure coupling list and the interference-category list are all populated (TE-01 tree with 5 basic events, 5 failure modes, 3 coupling categories, 3 interference categories).",
+    "This review did not re-derive the FMEA severity, occurrence, detection or RPN ratings, did not re-verify the FTA gate logic, and did not re-check whether the dependent-failure coupling list is complete. It checked that the listed elements and requirement references exist and that the containers are non-empty.",
+    "Requirement references inside the analyses were checked for resolvability only. Whether each reference is the *correct* requirement is a specialist judgement not made here.",
+    "No safety case adequacy claim is made. 'No unresolved contradiction detected under the checks stated here' is the strongest statement this review supports, and it is contradicted by FB2-REV-FND-000131.",
+    "The severity of FB2-REV-FND-000131 is recorded as high because the defect is in the central argument of a safety artifact. It is NOT raised to critical because the artifact is a synthetic_reference skeleton, is lifecycle_status 'draft', is released for development use only, and carries production_authorized false and product_verification_credit false."
+  ],
+  "review_method": "Field enumeration for empty-gate detection; requirement and element reference resolution against the artifact index; arithmetic re-derivation of every numeric claim in the safety case against the statements of the requirements it cites.",
+  "results_summary": {
+    "artifacts_reviewed": 7,
+    "analyses_reviewed": 4,
+    "empty_containers_found": 2,
+    "empty_gate_lists_found": 0,
+    "populated_containers": {
+      "fta_tree_basic_events": 5,
+      "fmea_failure_modes": 5,
+      "dependent_failure_couplings": 3,
+      "interference_categories": 3
+    },
+    "numeric_claims_re_derived": 1,
+    "numeric_claims_correct": 0,
+    "dangling_nested_source_refs": 1,
+    "duplicate_statement_texts_across_ids": 1
+  }
+}

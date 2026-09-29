@@ -1,129 +1,197 @@
 # Traceability Report
 
-**Generated:** 2026-09-20  
-**Baseline:** BAS-REF-001  
-**Profile:** synthetic_reference (primary), as_is (comparison)
+**Generated:** 2026-09-29
+**Baseline:** BAS-REF-001 (pinned source commit `308028fb`)
+**Profiles:** `synthetic_reference` (primary), `as_is` (comparison)
 
-## Overview
+> Structural traceability integrity only. Nothing here asserts ISO 26262
+> conformity, ASIL capability, ASPICE capability level, certification, human
+> approval or tool qualification. All 153 indexed records are
+> `human_approval_status: pending` and `production_authorized: false`.
+>
+> Every number is from a live tool run on 2026-09-29.
 
-This report documents the traceability integrity of the foxBMS 2 lifecycle artifact corpus. The traceability graph implements 17 relation types supporting vertical, reverse, lateral, and lifecycle traversal.
+## 1. Overview
 
-## Link Registry Statistics
+The corpus implements bidirectional traceability as a set of canonical link
+registries. Ten relation types are in use. All **283 links resolve, 0 dangling**.
 
-| Profile | Total Links | Link Types Used | Orphaned Links | Dangling Links |
-|---------|-------------|-----------------|----------------|----------------|
-| synthetic_reference | 45 | 7/17 | 0 | 0 |
-| as_is | 25 | 7/17 | 0 | 0 |
+## 2. Link Registry Statistics
 
-## Link Type Coverage
+| Profile | Links | Share |
+|---|---|---|
+| `synthetic_reference` | 172 | 61% |
+| `as_is` | 111 | 39% |
+| **Total** | **283** | **100%** |
 
-| Relation Type | synthetic_reference | as_is | Required |
-|---------------|---------------------|-------|----------|
-| refines | 4 | 3 | ✅ |
-| allocated_to | 6 | 6 | ✅ |
-| implements | 3 | 3 | ✅ |
-| verifies | 23 | 9 | ✅ |
-| validates | 2 | 0 | ✅ |
-| result_of | 6 | 1 | ✅ |
-| supports | 0 | 0 | ❌ |
-| mitigates | 1 | 1 | ✅ |
-| specified_by | 0 | 0 | ❌ |
-| consumes | 0 | 0 | ❌ |
-| produces | 0 | 0 | ❌ |
-| depends_on | 0 | 0 | ❌ |
-| constrained_by | 0 | 0 | ❌ |
-| reviewed_by | 0 | 2 | ✅ |
-| changes | 0 | 0 | ⚠️ |
-| supersedes | 0 | 0 | ❌ |
+Links are de-duplicated by `(profile, link_id)`, so the same `link_id` in two
+profiles is two intentional links, not one.
 
-## Vertical Traceability Chains
+### Redundant registry copy (reported, not deleted)
 
-### Chain 1: Cell Voltage Protection (Complete)
+`corpus/synthetic_reference/traceability/link-registry/synthetic_reference/links-cell-voltage.json`
+holds 51 links that are a **strict subset** of the 172 in the canonical
+`traceability/link-registry/synthetic_reference/links-cell-voltage.json`. The
+tool de-duplicates on `(profile, link_id)`, so no count is inflated anywhere.
+The redundant copy is left in place and reported rather than removed
+unrecorded.
+
+## 3. Link Type Coverage
+
+| Relation type | Total | `synthetic_reference` | `as_is` | Role |
+|---|---|---|---|---|
+| `reviewed_by` | 167 | 89 | 78 | review record → artifact under review |
+| `verifies` | 32 | 23 | 9 | test measure → requirement (test measure is the **source**) |
+| `result_of` | 16 | 11 | 5 | execution → the measure it resulted from |
+| `supports` | 16 | 16 | 0 | analysis / TARA → requirement or goal it supports |
+| `changes` | 16 | 16 | 0 | change record → artifact it revises |
+| `refines` | 13 | 4 | 9 | FSR → safety goal; scenario → parent scenario |
+| `allocated_to` | 13 | 7 | 6 | HW/SW requirement → FSR it satisfies |
+| `implements` | 6 | 3 | 3 | design → requirement it implements |
+| `mitigates` | 2 | 1 | 1 | safety goal → hazard |
+| `validates` | 2 | 2 | 0 | test measure → requirement (validation direction) |
+| **Total** | **283** | **172** | **111** | |
+
+`reviewed_by` dominates at 167 of 283 links, because every artifact covered by a
+review record receives one. That is a direct consequence of automated review
+coverage, which is currently 82/123 unique IDs.
+
+`supports` and `changes` are entirely `synthetic_reference`: the TARA, the safety
+case, the analyses and the three change records exist only in that profile, so
+there is no `as_is` artifact for them to link to. `validates` is entirely
+`synthetic_reference` for the same reason — the only two validating links are
+both from `FB2-VER-TMS-000009`, to `FB2-SAF-SGO-000001` and to the project scope
+record `FB2-MAN-SCO-000001`, and that test measure is synthetic.
+
+### Link review state
+
+| State | Count | Share |
+|---|---|---|
+| reviewed | 231 | 82% |
+| pending | 52 | 18% |
+
+## 4. The `verifies` / `validates` Direction Convention
+
+**The test measure is the source; the requirement is the target.** A
+well-verified requirement therefore appears as a link **target**, never as a
+source.
+
+This is not a stylistic choice — it is load-bearing, and getting it backwards
+produces a false conclusion. The corpus validator's rule inspects only the
+**source** side of a `verifies`/`validates` relation, because it is the missing
+verification-link detector used by mutation scenario `SCN-MUT-*`. Under the
+corpus's own convention that rule can never be satisfied by a requirement that
+*is* verified, so it fires on every verified safety requirement.
+
+This is recorded as finding **`FB2-REV-FND-000001`**, which states the honest
+reading for a reviewer:
+
+> Verification links must be examined on **both** sides before concluding that
+> a safety requirement is unverified.
+
+The check was deliberately left unchanged. Relaxing it would suppress a genuine
+detector the corpus needs for its mutation scenarios. The correct fix is a
+joint decision about link-direction convention between the corpus owner and the
+schema owner, not something a finding record can settle.
+
+## 5. Worked Trace: Cell Voltage Protection Chain
+
+Reproduce with `python3 docs/artifacts/tools/corpus.py trace <ID>`.
 
 ```
-Operational scenario → Hazardous event → Safety goal
-  → Functional safety requirement (FSR-001..004)
-    → Technical safety requirement (HW TSR-001..003, SW SWR-001..003)
-      → System architecture/allocation (HSI-001)
-        → HW requirement (TSR-001..003) & SW requirement (SWR-001..003)
-          → HW/SW architecture (HSI-001, SW-DSN-001..003)
-            → Detailed design (HW-TSR-001..003, SW-DSN-001..003)
-              → Implementation (AFE driver, SOA, Contactor, etc.)
-                → Verification (TMS-001, TMS-002)
-                  → Execution (EXE-001)
-                    → Review (REV-001)
-                      → Safety argument
+FB2-SAF-HAZ-000001  (hazard, as_is + synthetic_reference)
+  <-mitigates- FB2-SAF-SGO-000001  (safety goal, FTTI 100 ms, asil ASIL_D)
+      <-refines- FB2-SAF-FSR-000001  cell voltage acquisition and validation
+      <-refines- FB2-SAF-FSR-000002  SOA voltage limit monitoring with debounce
+      <-refines- FB2-SAF-FSR-000003  contactor opening on SOA violation
+      <-refines- FB2-SAF-FSR-000004  independent hardware voltage monitor
+
+  FB2-SAF-FSR-000001 <-allocated_to- FB2-HW-TSR-000001, FB2-HW-TSR-000002
+  FB2-SAF-FSR-000001 <-allocated_to- FB2-SW-SWR-000001
+  FB2-SAF-FSR-000002 <-allocated_to- FB2-SW-SWR-000002
+  FB2-SAF-FSR-000003 <-allocated_to- FB2-HW-TSR-000003, FB2-SW-SWR-000003
+  FB2-SAF-FSR-000004 <-allocated_to- FB2-HW-TSR-000004
+
+  FB2-SAF-FSR-000001 <-verifies-    FB2-VER-TMS-000003
+  FB2-SAF-FSR-000002 <-verifies-    FB2-VER-TMS-000001, -000008, -000011
+  FB2-SAF-FSR-000003 <-verifies-    FB2-VER-TMS-000002, -000008, -000011
+  FB2-SAF-FSR-000004 <-verifies-    FB2-VER-TMS-000004, -000008, -000011
+
+  FB2-SAF-FSR-000002 <-supports-    FB2-SAF-SEC-000003
+  FB2-SAF-FSR-000003 <-supports-    FB2-SAF-TAR-000001
+  FB2-SAF-HAZ-000001 <-changes-     FB2-MAN-CHG-000001
+  FB2-SYS-HSI-000001 <-changes-     FB2-MAN-CHG-000002
 ```
 
-### Chain 2: Temperature Protection (Partial - Parameters Only)
+Both profiles carry the chain. `FB2-SAF-FSR-000004` additionally has
+lateral peers, being the shared refinement target of `FB2-REV-000001`,
+`FB2-REV-000009` and `FB2-REV-000010`.
+
+### Where this chain stops
+
+- There is **no functional safety concept or technical safety concept record**
+  anywhere above the safety goal.
+- The **highest-level unmet link is the system requirements layer**: no system
+  requirement record exists in either profile, so the chain cannot be extended
+  from FSR to a system requirement. This is `SYS.2`, recorded `gap` under
+  `CORR-COV-002`.
+- No execution in this chain is target-hardware evidence.
+
+## 6. Cybersecurity Chain
+
+New since the previous revision of this report and fully resolvable:
 
 ```
-Hazard → Safety Goal → FSR (params) → TSR (params) → SWR (params)
+FB2-SAF-TAR-000001  (tara: 8 threats, 9 mitigations, item_and_scope defined)
+  -supports-> FB2-SAF-SEC-000001  authenticated/confidential transport
+  -supports-> FB2-SAF-SEC-000002  bounded connection admission, resource budget
+  -supports-> FB2-SAF-SEC-000003  message integrity and freshness (CAN)
+  -supports-> FB2-SAF-SEC-000004  framing, integrity, authorisation (serial)
+  -supports-> FB2-SAF-SEC-000005  strong entropy for security parameters
+  -supports-> FB2-SAF-SGO-000001, FB2-SAF-FSR-000001, -000002, -000003
+  -supports-> FB2-SAF-SCS-000001  (safety case skeleton)
+  -supports-> FB2-SAF-SEC-000001 -supports-> FB2-SAF-SGO-000001
+
+  each of SEC-000001..000005 <-reviewed_by- FB2-REV-000003, FB2-REV-000009, FB2-REV-000012
 ```
 
-### Chain 3: Current Protection (Partial - Parameters Only)
+The chain runs threat → security requirement → safety goal and **stops**. There
+is no communication-specific hazard, safety goal or FSR, and no design, test
+measure or execution for any of the five security requirements.
 
-### Chain 4: Precharge/Contactor Control (Complete)
+## 7. Change Lifecycle Traceability
 
-```
-Hazard (weld) → SG → FSR-003 → TSR-003 → SWR-003 → DSN-003 → TMS-002 → EXE-002 → REV-001
-```
+Three change records, each with a full lifecycle scenario:
 
-### Chain 5: Communication/Watchdog Fault Response (Partial)
+| Change record | Target | Scenario |
+|---|---|---|
+| `FB2-MAN-CHG-000001` | `FB2-SAF-HAZ-000001` (cell voltage max limit 4200 → 4150 mV) | `FB2-SCN-CHG-000001` |
+| `FB2-MAN-CHG-000002` | `FB2-SYS-HSI-000001` (AFE front-end migration LTC6811 → ADI) | `FB2-SCN-CHG-000002` |
+| `FB2-MAN-CHG-000003` | SOA debounce counter defect | `FB2-SCN-CHG-000003` |
 
-## Lateral Traceability
+All 3 change-lifecycle scenarios validate structurally complete
+(`scenario-test` gate: 3/3).
 
-### HW/SW Interface Consistency (HSI Authority)
+## 8. Mutation Scenario Traceability
 
-| HSI Signal | HW Spec | SW Spec | Status |
-|------------|---------|---------|--------|
-| SPI_CLK | 1 MHz max | 1 MHz configured | ✅ |
-| SPI_MOSI/MISO | MSB first | MSB first | ✅ |
-| PEC | CRC-15 | CRC-15 validated | ✅ |
-| cell_voltage[mV] | 0-5000 mV | uint16_t[] mV | ✅ |
-| Freshness | < 30 ms | < 25 ms publish | ✅ |
+20 mutation scenarios under `corpus/scenarios/mutations/`, each injecting a
+specific defect and asserting that the validator detects it. All 20 pass. Two
+mutation artifacts (`FB2-SCN-MUT-000001`, `FB2-SCN-MUT-000002`) record the first
+two as corpus records.
 
-### Parameter Consistency
+Coverage: **20/20 mutations; 3/3 change lifecycles.**
 
-| Parameter | Safety Goal | FSR | TSR/SWR | Design | Test | Status |
-|-----------|-------------|-----|---------|--------|------|--------|
-| cell_voltage_max | 4200 mV | 4200 mV | 4200 mV | 4200 mV | 4200 mV | ✅ |
-| ftti_ms | 100 ms | 100 ms budget | 100 ms | 100 ms | 100 ms | ✅ |
-| contactor_mechanical_time_ms | 30 ms | 30 ms | 30 ms | 30 ms | 30 ms | ✅ |
-| soa_debounce_count | 2 | 2 | 2 | 2 | 2 | ✅ |
+## 9. Traceability Limitations
 
-## Change Impact Traceability
-
-### Change SCN-CHG-001 (Voltage Threshold 4.2V→4.15V)
-
-| Affected Artifact | Old Value | New Value | Link Impact |
-|-------------------|-----------|-----------|-------------|
-| FB2-PRM-000001 | 4200 mV | 4150 mV | - |
-| FB2-SAF-FSR-000002 | 4200 mV | 4150 mV | Allocation valid |
-| FB2-SW-DSN-000002 | 4200 mV | 4150 mV | Implements valid |
-| FB2-HW-TSR-000001 | 4200 mV | 4150 mV | Allocation valid |
-| FB2-VER-TMS-000001 | 4300/4200 | 4250/4150 | Test valid |
-| FB2-LNK-SAF-000014 | verifies | verifies | Suspect → re-verify |
-
-### Change SCN-CHG-002 (LTC6811 → ADI ADES1830)
-
-| Affected Artifact | Change Type | Link Impact |
-|-------------------|-------------|-------------|
-| FB2-SYS-HSI-000001 | New interface spec | All HSI links suspect |
-| FB2-HW-TSR-000001 | New accuracy | Allocation suspect |
-| FB2-HW-TSR-000002 | SPI vs isoSPI | Link type may change |
-| FB2-SW-SWR-000001 | New driver reqs | Allocation suspect |
-| FB2-SW-DSN-000001 | New architecture | Implements suspect |
-| FB2-VER-TMS-000001 | New test | Verifies suspect |
-
-## Traceability Integrity Checks
-
-| Check | synthetic_reference | as_is | Status |
-|-------|---------------------|-------|--------|
-| No duplicate IDs | ✅ | ✅ | Pass |
-| No dangling links | ✅ | ✅ | Pass |
-| All link types valid | ✅ | ✅ | Pass |
-| All endpoints exist | ✅ | ✅ | Pass |
-| Baseline consistency | ✅ | ✅ | Pass |
-| Profile isolation | ✅ | ✅ | Pass |
-| Variant applicability | ✅ | ✅ | Pass |
+1. **System requirements layer absent.** `SYS.1` and `SYS.2` are `gap`. No
+   vertical chain can reach above the functional safety requirement level.
+2. **`verifies` direction convention** is documented in `FB2-REV-FND-000001` and
+   will mislead a reader who inspects only the source side.
+3. **52 links are `pending` review state** (18%).
+4. **41 unique artifact IDs are covered by no review record**, so their
+   `reviewed_by` links do not exist and automated review coverage is 67%
+   (82/123).
+5. **The link-direction convention question is unresolved** and belongs jointly
+   to the corpus owner and the schema owner.
+6. **A redundant link registry copy** exists under `corpus/`; it is
+   de-duplicated by the tool and inflates nothing.

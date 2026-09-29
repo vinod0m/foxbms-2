@@ -1,0 +1,125 @@
+{
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "classification": "security",
+ "conditions_modes": [
+  "NORMAL",
+  "CHARGING",
+  "DISCHARGE",
+  "PRECHARGE",
+  "DEGRADED",
+  "COMMISSIONING"
+ ],
+ "feasibility_dependencies": [
+  "FB2-SAF-TAR-000001"
+ ],
+ "id": "FB2-SAF-SEC-000001",
+ "title": "SEC-000001: Authenticated and confidential transport for externally reachable network services",
+ "statement": "The BMS master software shall not service any externally reachable network session until the peer has been authenticated by a cryptographically sound mechanism, and shall protect the confidentiality and integrity of all session data after authentication.",
+ "rationale": "A network service that accepts an unauthenticated peer is exposed to anyone who can route a packet to its interface, and every later control in the security concept is then built on an unauthenticated channel. The requirement is written ahead of the hypothetical project's planned diagnostic and configuration service (TARA threat THR-007) as well as the service that exists today, so that the higher-consequence service is not designed without authentication. confidentiality is required in addition to authentication because a reflecting service on a fixed interface is usable by a third party as a stable traffic-reflection endpoint even when it grants the peer no access to internal data (TARA threat THR-002).",
+ "acceptance_criteria": [
+  {
+   "criterion": "Unauthenticated session admission",
+   "measure": "TCP connections completed against the service port from a peer that fails authentication, counted over a 24 h window",
+   "threshold": "0",
+   "unit": "connections"
+  },
+  {
+   "criterion": "Authentication latency",
+   "measure": "Time from TCP handshake completion to first application data accepted from the peer",
+   "threshold": "100",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Session data confidentiality",
+   "measure": "Plaintext bytes of application payload recoverable from a captured session by a passive observer on the segment",
+   "threshold": "0",
+   "unit": "bytes"
+  },
+  {
+   "criterion": "Session data integrity",
+   "measure": "Payload bytes altered in transit that are accepted by the receiver",
+   "threshold": "0",
+   "unit": "bytes"
+  },
+  {
+   "criterion": "Failed-authentication diagnosability",
+   "measure": "Diagnosis entries raised per failed authentication attempt",
+   "threshold": "1",
+   "unit": "entry per attempt"
+  }
+ ],
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "FB2-SAF-SGO-000001",
+  "mitigation": "Security mitigation for the freedom-from-interference assumption of the safety requirements. This requirement is classified as a security requirement, not an ASIL allocation; asil is recorded as not_applicable because ISO 26262 does not allocate ASIL to a security requirement. It is traced to FB2-SAF-SGO-000001 because a compromised communication path can undermine the assurance of the requirements derived from that goal."
+ },
+ "assumptions": [
+  "FB2-ASM-011"
+ ],
+ "verification_approach": "test",
+ "source_refs": [
+  "FB2-SRC-COD-000057",
+  "FB2-SRC-COD-000062",
+  "FB2-SRC-COD-000063"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_SAE_21434_2021",
+   "reference": "Clause 8.5 (security requirements) derived from the Clause 15 mitigation concept; communication protection concept per Clause 10",
+   "status": "unverified",
+   "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists in this corpus, clause conformance is not claimed, and the mapping has not been reviewed by any authority."
+  },
+  {
+   "standard_id": "ISO_SAE_21434_2021",
+   "reference": "Clause 8.6 / Clause 10.3 (communication protection)",
+   "status": "gap",
+   "rationale": "The hypothetical project has no communication protection concept. The gap is deliberate and is what this requirement is intended to close."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7 (technical safety requirements, freedom from interference)",
+   "status": "partially_mapped",
+   "rationale": "Only the identification of the communication path as an interference vector is mapped. The freedom-from-interference analysis itself is not part of this corpus."
+  }
+ ],
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "First issue. Forward-engineered security requirement 'authenticated-transport-network-service' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001."
+  }
+ ],
+ "real_source_presence": "Control ABSENT. The real foxBMS 2 master's only network service is a plain-TCP echo server: src/app/application/ethernet/ethernet.c:255 creates an AF_INET/SOCK_STREAM/IPPROTO_TCP socket, :276-281 binds it, :288 calls FreeRTOS_accept, and the accepted socket is handed to a task at :292 with no credential exchange, no peer-address check and no cryptographic handshake. The peer address is captured by accept as an output parameter and never inspected, and the endpoint parameter is explicitly discarded at :248. No TLS or equivalent cryptographic library is present in the master communication stack. Anchor FB2-SRC-COD-000057.",
+ "real_source_control_status": "absent",
+ "real_source_control_status_note": "The control this requirement specifies is NOT present in the real foxBMS 2 source at commit 308028fb.",
+ "derived_from": "FB2-SAF-TAR-000001",
+ "verification_status": "not_verified"
+}

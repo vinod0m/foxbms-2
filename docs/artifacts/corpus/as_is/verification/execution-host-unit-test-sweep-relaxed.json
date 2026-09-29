@@ -1,0 +1,216 @@
+{
+  "id": "FB2-VER-EXE-000007",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Execution: foxBMS 2 host unit test sweep, extended clang diagnostic set (136 tests, macOS arm64)",
+  "owner_role": "verification_engineer",
+  "origin": "source_observed",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "reviewed",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T08:15:33Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T08:15:33Z",
+  "updated_at": "2026-09-29T08:15:33Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T08:15:33Z",
+      "author": "verification_engineer",
+      "description": "New artifact: bulk host unit test sweep executed on macOS arm64. No prior record existed for the sweep."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000001..000005",
+  "test_measure_revision": "1",
+  "execution_kind": "actual_host_run",
+  "outcome": "fail",
+  "aggregate_outcome": "partial",
+  "environment": {
+    "hardware": "arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)",
+    "software": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]",
+    "tools": [
+      "ceedling",
+      "cmock",
+      "unity",
+      "cexception",
+      "gcc (Apple clang driver)"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml",
+    "tool_versions": {
+      "ceedling": "1.1.9-2209dc2",
+      "cmock": "2.7.2",
+      "unity": "2.7.2",
+      "cexception": "1.3.5",
+      "gcc": "17.0.0",
+      "clang": "17.0.0",
+      "ruby": "4.0.7"
+    }
+  },
+  "input_hashes": {
+    "ceedling_project_file_shipped": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f",
+    "halcogen_dil_input": "sha256:c9be5d9bb068ef95a1e26bfe22e29aa142a03c53e1e354ac2ac55672180cf3ac",
+    "halcogen_hcg_input": "sha256:8118efee47afdaf389a455f86f70cb6eb0ba60b94a852a510ffeac8dba778b79",
+    "repository_head": "sha256:27418be73b0d10701cf8f1fba917456fe2e53833c8b300e0d92a84617fc93259"
+  },
+  "output_hashes": {
+    "results": "sha256:b6e5322b58af2451dae2dfe9fabc7ed3fea5776780072fe69cd62f741dcfd9b7",
+    "per_test_log_manifest_relaxed": "sha256:c9ee0687d4a0af02c561e8c22db28959be975438a1e4809fb6dd3c306c06a341",
+    "halcogen_dependency_closure": "sha256:df51a921954ace7f5d3f897dea1ff595cf675d6fd09629cdeda6deb65dc0f7a3"
+  },
+  "logs": [
+    {
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json",
+      "hash": "sha256:b6e5322b58af2451dae2dfe9fabc7ed3fea5776780072fe69cd62f741dcfd9b7",
+      "type": "custom"
+    },
+    {
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed (one .txt per test, 136 files)",
+      "hash": "sha256:c9ee0687d4a0af02c561e8c22db28959be975438a1e4809fb6dd3c306c06a341",
+      "type": "stdout"
+    }
+  ],
+  "timestamps": {
+    "start": "2026-09-29T10:33:16+0200",
+    "end": "2026-09-29T10:33:16+0200",
+    "duration_ms": 137200
+  },
+  "anomalies": [
+    {
+      "description": "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.",
+      "severity": "high",
+      "disposition": "accepted"
+    },
+    {
+      "description": "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.",
+      "severity": "high",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(\".kernelTEXT\") and similar), because Mach-O requires a 'SEGMENT,SECTION' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.",
+      "severity": "medium",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor's directive-only pass with \"Failed to read './test/preprocess/files/<test>/directives_only/raw/ftask.h' for comment stripping ... No such file or directory\". The value was set to :none, which selects Ceedling's own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.",
+      "severity": "medium",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "This run additionally suppresses -Wno-enum-conversion, -Wno-array-bounds and -Wno-parentheses-equality, which unblocks six further tests relative to the strict run: four now pass (test_contactor, test_diag_cbs_current, test_diag_cbs_deep-discharge, test_sys_mon) and two now run and FAIL (test_redundancy, test_diag). Relaxing the diagnostics did not merely unlock more passes, it exposed two previously hidden test failures. The strict run remains the primary result.",
+      "severity": "high",
+      "disposition": "investigating"
+    },
+    {
+      "description": "The 136 tests in scope are those whose quoted-#include closure reaches no HALCoGen-generated header. Of the repository's 313 test_*.c files, 177 are outside that scope and were not run here. 34 distinct HL_*.h headers are required by the remainder, which cannot be honestly stubbed.",
+      "severity": "high",
+      "disposition": "deferred"
+    }
+  ],
+  "scope": {
+    "tests_in_repository": 313,
+    "tests_selected": 136,
+    "selection_rule": "quoted-#include closure contains no HALCoGen-generated header (analyze_hcg_closure.py)",
+    "tests_passed": 98,
+    "tests_failed": 7,
+    "tests_build_failed": 31,
+    "assertions_tested": 391,
+    "assertions_passed": 380,
+    "assertions_failed": 10
+  },
+  "build_failure_breakdown": [
+    {
+      "cause": "Excluded by the shipped Ceedling :paths: configuration",
+      "count": 21,
+      "tests": [
+        "tests/unit/app/driver/afe/adi/common/ades183x/api/test_adi_ades183x_afe.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/api/test_adi_ades183x_afe_dma.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/config/test_adi_ades183x_cfg.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/pec/test_adi_ades183x_pec.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_buffers.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_commands.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_commands_voltages.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_diagnostic_w.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_helpers.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_initialization.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_temperatures.c",
+        "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_voltages.c",
+        "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x-ll.c",
+        "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x.c",
+        "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_afe_dma.c",
+        "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_database.c",
+        "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_helpers.c",
+        "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_mux.c",
+        "tests/unit/bootloader/engine/boot/test_boot_cfg.c",
+        "tests/unit/support/test_fake_functions.c"
+      ]
+    },
+    {
+      "cause": "Requires a HALCoGen-generated TI header (not stubbed)",
+      "count": 10,
+      "tests": [
+        "tests/unit/app/driver/afe/adi/ades1830/pec/test_adi_ades1830_pec.c",
+        "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_buffers.c",
+        "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_commands.c",
+        "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_commands_voltages.c",
+        "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_diagnostic_w.c",
+        "tests/unit/app/driver/afe/nxp/mc33775a/config/test_nxp_mc33775a_cfg.c",
+        "tests/unit/app/driver/afe/ti/api/test_ti_afe.c",
+        "tests/unit/app/driver/afe/ti/dummy/api/test_ti_dummy_afe.c",
+        "tests/unit/app/driver/emac/test_emac-low-level.c",
+        "tests/unit/app/driver/mcu/test_mcu.c"
+      ]
+    }
+  ],
+  "evidence_refs": [
+    "tests/unit/app/driver/foxmath/test_foxmath.c",
+    "src/app/engine/database/database.h",
+    "src/os/freertos/freertos/include/mpu_wrappers.h"
+  ],
+  "evidence_files": [
+    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json",
+    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json",
+    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict",
+    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed",
+    "docs/artifacts/.work/verification-env/RUNBOOK.md"
+  ],
+  "limitations": [
+    "Apple Silicon macOS host; upstream develops and runs this suite on Windows and Linux",
+    "Not target hardware: no TMS570 execution, no timing, no interrupts",
+    "HALCoGen absent; see the per-run anomalies",
+    "177 of 313 repository tests not in scope because they need HALCoGen output"
+  ],
+  "notes": "Real sweep. 98 of 136 tests pass, 7 fail, 31 do not build. 380 of 391 assertions pass. Each test was run in its own Ceedling invocation so every verdict is attributable and every log is retained."
+}

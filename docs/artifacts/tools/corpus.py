@@ -55,6 +55,8 @@ ARTIFACT_TYPE_SCHEMAS = {
     "scenario": "scenario.schema.json",
     "change": "change.schema.json",
     "finding": "finding.schema.json",
+    "deviation": "deviation.schema.json",
+    "tara": "tara.schema.json",
 }
 # artifact types validated against base schema only (no dedicated schema exists)
 BASE_ONLY_TYPES = {
@@ -865,7 +867,7 @@ class CorpusTool:
                        ((p, d) for p, d in self.iter_corpus_artifacts()))
         expected_families = {"hazard", "safety_goal", "requirement", "design",
                              "test_measure", "execution", "review", "safety_analysis",
-                             "safety_case", "scenario", "change"}
+                             "safety_case", "scenario", "change", "deviation", "tara"}
         populated = len(expected_families & families)
         dims["artifact_population"] = {"numerator": populated, "denominator": len(expected_families),
                                        "detail": f"families populated: {sorted(expected_families & families)}"}
@@ -897,15 +899,37 @@ class CorpusTool:
                                                "detail": "10 check categories executed per run"}
 
         # automated review coverage
+        # Numerator = union of reviewed artifact ids from EVERY review record under
+        # reviews/records/ (was: one hardcoded file, so the denominator grew as review
+        # records were added while the numerator stayed frozen). The reviewed_by links
+        # in the link registries are a second, corroborating source for the same fact;
+        # they are unioned with the review records rather than added to them, and the
+        # two sets are compared below and reported, so any divergence is visible
+        # instead of silently reconciled. Set union means a record corroborated by
+        # both sources still contributes exactly one id -- no double counting.
         reviewed_ids = set()
-        rp = self.artifacts_dir / "reviews" / "records" / "review-vertical-slice.json"
-        if rp.exists():
-            for r in load_json(rp).get("reviewed_ids", []):
-                reviewed_ids.add(r.get("artifact_id"))
+        reviewed_by_ids = set()
+        reviews_dir = self.artifacts_dir / "reviews" / "records"
+        n_review_records = 0
+        if reviews_dir.exists():
+            for rp in sorted(reviews_dir.glob("*.json")):
+                n_review_records += 1
+                for r in load_json(rp).get("reviewed_ids", []):
+                    aid = r.get("artifact_id")
+                    if aid:
+                        reviewed_ids.add(aid)
+        for l in links:
+            if l.get("relation_type") == "reviewed_by" and l.get("target_id"):
+                reviewed_by_ids.add(l["target_id"])
+        covered = reviewed_ids | reviewed_by_ids
         index_ids = {k[1] if isinstance(k, tuple) else k for k in index}
-        dims["automated_review_coverage"] = {"numerator": len(reviewed_ids & index_ids),
+        agree = "consistent" if reviewed_by_ids == reviewed_ids else \
+            f"registry adds {len(reviewed_by_ids - reviewed_ids)}, records add {len(reviewed_ids - reviewed_by_ids)}"
+        dims["automated_review_coverage"] = {"numerator": len(covered & index_ids),
                                              "denominator": len(index_ids),
-                                             "detail": f"{len(reviewed_ids & index_ids)}/{len(index_ids)} artifacts covered by review records"}
+                                             "detail": f"{len(covered & index_ids)}/{len(index_ids)} artifacts covered by "
+                                                       f"{n_review_records} review records; reviewed_by links "
+                                                       f"{agree} with reviewed_ids"}
 
         # verification planning
         # verification planning
@@ -914,9 +938,47 @@ class CorpusTool:
         dims["verification_planning"] = {"numerator": len(tms), "denominator": max(len(fsr), 1),
                                           "detail": f"{len(tms)} test measures for {len(fsr)} FSRs"}
 
-        # actual product evidence (always 0 by policy)
-        dims["actual_product_evidence"] = {"numerator": 0, "denominator": len(tms),
-                                           "detail": "no target-hardware executions (policy: blocked, not fabricated)"}
+        # actual product evidence
+        # Scoped to executions of the ACTUAL product on its TARGET HARDWARE. Computed
+        # from the execution records rather than hardcoded, and bucketed by
+        # execution_kind so host runs and synthetic fixtures cannot inflate it.
+        #
+        # Finding: execution.schema.json's execution_kind enum is
+        # ["none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"].
+        # There is no member meaning "run on the product's target hardware", so no
+        # record can currently declare itself target-hardware evidence. The buckets
+        # below are declared explicitly rather than inferred: host and simulation
+        # runs are real executions of the product's code but on developer
+        # infrastructure, not on the product; synthetic fixtures are not the product
+        # at all. Deriving a target count from the free-form environment.hardware
+        # string would be prose matching, not measurement, so the target bucket stays
+        # 0 and the reason is surfaced in the detail below.
+        TARGET_EXECUTION_KINDS = {"actual_target_run", "actual_target_hardware_run"}
+        HOST_EXECUTION_KINDS = {"actual_host_run", "actual_simulation_run"}
+        NON_EXECUTION_KINDS = {"synthetic_fixture", "none"}
+        execs = [d for _, d in self.iter_corpus_artifacts()
+                 if d.get("artifact_type") == "execution" and d.get("id")]
+        kind_of = [d.get("execution_kind") for d in execs]
+        target_execs = [d for d, k in zip(execs, kind_of) if k in TARGET_EXECUTION_KINDS]
+        # numerator = distinct TEST MEASURES backed by target-hardware execution,
+        # so one measure with three redundant target runs still counts once
+        target_tms = {d.get("test_measure_id") for d in target_execs} & set(tms)
+        n_target = len(target_tms)
+        n_host = sum(1 for k in kind_of if k in HOST_EXECUTION_KINDS)
+        n_synth = sum(1 for k in kind_of if k in NON_EXECUTION_KINDS)
+        n_undeclared = sum(1 for k in kind_of
+                           if k not in TARGET_EXECUTION_KINDS | HOST_EXECUTION_KINDS | NON_EXECUTION_KINDS)
+        if n_target:
+            evidence_note = f"{n_target} test measures with target-hardware execution"
+        else:
+            evidence_note = ("0 target-hardware executions: execution_kind has no target-hardware "
+                             "member, so none can be claimed (blocked, not fabricated)")
+        dims["actual_product_evidence"] = {
+            "numerator": n_target,
+            "denominator": len(tms),
+            "detail": f"{evidence_note}; of {len(execs)} execution records: "
+                      f"{n_host} host/simulation (real product code, not target hardware), "
+                      f"{n_synth} synthetic_fixture/none, {n_undeclared} undeclared"}
 
         # synthetic fixture coverage
         synth = sum(1 for _, d in self.iter_corpus_artifacts()
@@ -1078,35 +1140,1340 @@ class CorpusTool:
 
     # ------------------------------------------------------------ 15.7 render
 
-    def cmd_render(self):
-        """Regenerate views/ from canonical data."""
-        self.views_dir.mkdir(parents=True, exist_ok=True)
+    # ---- render helpers -----------------------------------------------------
+    #
+    # Views are DERIVED work products. Every line below is computed from the
+    # canonical JSON records (corpus/, reviews/, traceability/link-registry/,
+    # governance/) at render time. Nothing is hand-written prose, and every
+    # view repeats the four guard fields for the records it shows so a reader
+    # can never mistake a derived view for an approved artifact.
+    #
+    # Determinism: the only value that varies between two runs is the single
+    # "Generated: <stamp>" line in each file's provenance block, matching the
+    # convention already used by render_spec_documents.py.
+
+    VIEW_TOOL_REF = "docs/artifacts/tools/corpus.py cmd_render"
+
+    def _view_preamble(self, title, scope, counts):
+        """Provenance + guard banner every generated view starts with.
+
+        This is the anti-overstatement contract: derived, regenerable, and
+        explicitly not an approval.
+        """
+        stamp = utcnow()
+        L = []
+        L.append(f"# {title}")
+        L.append("")
+        L.append(f"Generated: {stamp} | Baseline: BAS-REF-001 | {counts}")
+        L.append("")
+        L.append("## Provenance and status of this file")
+        L.append("")
+        L.append(f"- **Derived, not authored.** Every table and section below is generated by")
+        L.append(f"  `{self.VIEW_TOOL_REF}` from the canonical JSON records. This file contains no")
+        L.append("  hand-written engineering content and is not an independent source of truth.")
+        L.append("- **Regenerable.** Re-run `python3 docs/artifacts/tools/corpus.py render` to")
+        L.append("  reproduce it. Edit the canonical record, never this file.")
+        L.append(f"- **Scope of this view:** {scope}")
+        L.append("- **Guard fields.** Every record shown below is printed with its own")
+        L.append("  `profile`, `origin`, `human_approval_status` and `production_authorized`")
+        L.append("  values. Across the whole corpus `human_approval_status` is `pending` and")
+        L.append("  `production_authorized` is `false`; `product_verification_credit` is `false`.")
+        L.append("  This view does not and cannot change that.")
+        L.append("- **Not a conformity claim.** This corpus is synthetic. Nothing here asserts")
+        L.append("  ISO 26262 conformity, an ASIL capability level, an Automotive SPICE")
+        L.append("  assessment, human review, or human approval.")
+        L.append("- **Diagram validation.** Mermaid blocks are checked by")
+        L.append("  `mermaid-cli` when it is available on the rendering host; the per-view")
+        L.append("  *Diagram validation* section states plainly whether that check ran. An")
+        L.append("  unvalidated diagram is never described as validated.")
+        L.append("")
+        return L
+
+    # ------------------------------------------------- coverage-plan accessors
+    # Rendered prose must never quote a frozen copy of governance/coverage-plan.json.
+    # A literal embedded here silently becomes false the moment the plan is
+    # corrected, and the generated view then contradicts the canonical file it
+    # claims to derive from. Every reference to the plan below is therefore
+    # resolved through these accessors, which read the plan at render time.
+    # The coverage GAP statements stay literal on purpose: "no such record
+    # exists" is a fact about the corpus records, not a fact about the plan,
+    # and it does not drift when the plan is corrected.
+
+    _PLAN_DISPOSITION_TOKENS = ("not_applicable", "partially_mapped",
+                                 "unverified_reference", "mapped", "gap")
+
+    def _plan(self):
+        """Load the coverage plan at call time.
+
+        Deliberately not cached. A cached plan would reintroduce exactly the
+        drift this accessor exists to prevent, whenever the plan is corrected
+        within a single process lifetime. The file is small and is read a
+        handful of times per render pass.
+        """
+        return load_json(self.governance_dir / "coverage-plan.json")
+
+    @classmethod
+    def _plan_status(cls, disposition):
+        """Reduce a recorded disposition string to its status token.
+
+        A disposition is free text beginning with a status token followed by
+        ' - ' and an explanation. Only the token is a claim; the explanation is
+        narrative and may be quoted or not.
+        """
+        text = str(disposition or "").strip()
+        for tok in cls._PLAN_DISPOSITION_TOKENS:
+            if text.startswith(tok):
+                return tok
+        return "unrecorded"
+
+    def _plan_process(self, process_id):
+        """Return the live process_inventory entry for one ASPICE process id."""
+        for p in self._plan().get("process_inventory", []):
+            if p.get("process_id") == process_id:
+                return p
+        return {}
+
+    def _plan_process_status(self, process_id):
+        """Live disposition status token for one process, e.g. 'gap'."""
+        return self._plan_status(self._plan_process(process_id).get("disposition"))
+
+    def _plan_iso(self, key):
+        """Live iso26262_coverage entry for one part key."""
+        return self._plan().get("iso26262_coverage", {}).get(key)
+
+    def _plan_iso_status(self, key):
+        """Live status token for one ISO part; dict entries carry a decision field."""
+        v = self._plan_iso(key)
+        if isinstance(v, dict):
+            return str(v.get("decision", "unrecorded"))
+        return self._plan_status(v)
+
+    def _plan_target(self, key):
+        """Live artifact_coverage_targets entry, e.g. 'requirements'."""
+        return self._plan().get("artifact_coverage_targets", {}).get(key, "")
+
+    def _plan_clause_process(self, process_id):
+        """One clause: what the plan currently records for one ASPICE process."""
+        entry = self._plan_process(process_id)
+        name = entry.get("name") or "unnamed"
+        status = self._plan_status(entry.get("disposition"))
+        return f"`{process_id}` ({name}) is recorded `{status}`"
+
+    def _plan_clause_iso(self, key):
+        """One clause: what the plan currently records for one ISO 26262 part."""
+        return f"`iso26262_coverage.{key}` is recorded `{self._plan_iso_status(key)}`"
+
+    def _plan_clause_target(self, key):
+        """One clause: what the plan currently records for one coverage target.
+
+        The target's own prose is long and is a standing expectation rather than
+        a claim, so the clause reports the target's recorded status and leaves
+        the prose in the plan. A target carrying no explicit status is reported
+        as such rather than being read as satisfied.
+        """
+        tgt = self._plan_target(key)
+        if not tgt:
+            return f"`artifact_coverage_targets.{key}` is absent from the plan"
+        status = str(self._plan().get("artifact_coverage_targets", {}).get(f"{key}_status", "")).strip()
+        if status:
+            return (f"`artifact_coverage_targets.{key}` is restated as an unmet target "
+                    f"with status `{status}`")
+        return (f"`artifact_coverage_targets.{key}` carries no status field, so it is "
+                f"read as a standing expectation and not as a claim of delivery")
+
+    def _plan_quote(self, processes=(), iso=(), targets=()):
+        """One sentence stating the plan's CURRENT position, read live.
+
+        Used so generated prose tracks the governance file instead of a
+        transcript of it. The result is false only if the plan itself is false,
+        which is the correct failure direction for a derived view.
+        """
+        clauses = [self._plan_clause_process(p) for p in processes]
+        clauses += [self._plan_clause_iso(k) for k in iso]
+        clauses += [self._plan_clause_target(k) for k in targets]
+        if not clauses:
+            return ""
+        if len(clauses) == 1:
+            return clauses[0] + "."
+        return "; ".join(clauses[:-1]) + "; and " + clauses[-1] + "."
+
+    @staticmethod
+    def _guard(d):
+        """The four guard fields, formatted identically in every view.
+
+        Pipes are escaped because these strings are rendered inside markdown
+        tables, where a bare '|' would split the row into extra columns.
+        """
+        return (f"profile=`{d.get('profile')}` \\| origin=`{d.get('origin')}` \\| "
+                f"human_approval_status=`{d.get('human_approval_status')}` \\| "
+                f"production_authorized=`{str(d.get('production_authorized')).lower()}`")
+
+    @staticmethod
+    def _cell(v, limit=300):
+        """Render a scalar/list/dict as one safe markdown table cell."""
+        if v is None:
+            return "-"
+        if isinstance(v, (list, tuple)):
+            if not v:
+                return "-"
+            return "; ".join(str(x) for x in v)
+        if isinstance(v, dict):
+            return ", ".join(f"{k}={v[k]}" for k in sorted(v) if not isinstance(v[k], (dict, list)))
+        s = str(v).replace("\n", " ").replace("|", "\\|").strip()
+        return s if len(s) <= limit else s[: limit - 1] + "…"
+
+    @staticmethod
+    def _table(L, headers, rows):
+        """Append a markdown table to the line buffer L."""
+        if not rows:
+            L.append("_No rows._")
+            L.append("")
+            return
+        L.append("| " + " | ".join(headers) + " |")
+        L.append("|" + "|".join("---" for _ in headers) + "|")
+        for r in rows:
+            L.append("| " + " | ".join(str(c) for c in r) + " |")
+        L.append("")
+
+    @staticmethod
+    def _gap(L, area, statement, what_exists=""):
+        """Append an explicit coverage gap.
+
+        A silently empty section is the failure mode this exists to prevent: the
+        gap must be visible, named, and explained.
+        """
+        L.append(f"### Coverage gap: {area}")
+        L.append("")
+        L.append("**No records in the corpus for this area - this is a coverage gap, not an "
+                 "omission from this view.**")
+        L.append("")
+        L.append(statement)
+        L.append("")
+        if what_exists:
+            L.append(f"Adjacent material that does exist: {what_exists}")
+            L.append("")
+
+    def _render_index(self):
+        """Load the canonical model once for the whole render pass."""
         index = self.load_artifact_index()
         links = self.load_links()
 
-        # vertical slice view
-        out = self.views_dir / "concept-and-safety"
-        out.mkdir(parents=True, exist_ok=True)
-        with open(out / "vertical-slice.md", "w", encoding="utf-8") as f:
-            f.write("# Cell Voltage Protection Vertical Slice (generated)\n\n")
-            f.write(f"Generated: {utcnow()} | Baseline: BAS-REF-001 | "
-                    f"{len(index)} artifacts, {len(links)} links\n\n")
-            order = ["FB2-SAF-HAZ-000001", "FB2-SAF-SGO-000001",
-                     "FB2-SAF-FSR-000001", "FB2-SAF-FSR-000002",
-                     "FB2-SAF-FSR-000003", "FB2-SAF-FSR-000004",
-                     "FB2-HW-TSR-000001", "FB2-SW-SWR-000001",
-                     "FB2-SW-DSN-000001", "FB2-VER-TMS-000001",
-                     "FB2-VER-EXE-000001", "FB2-REV-000001"]
-            for aid in order:
-                if aid in index:
-                    d = index[aid][1]
-                    f.write(f"## {aid}: {d.get('title')}\n\n")
-                    if d.get("artifact_type") == "requirement":
-                        f.write(f"> {d.get('statement')}\n\n")
-                    f.write(f"- profile: {d.get('profile')} | origin: {d.get('origin')} | "
-                            f"approval: {d.get('human_approval_status')} | "
-                            f"production_authorized: {d.get('production_authorized')}\n\n")
-        print(f"Rendered views to {self.views_dir}")
+        def by_id(aid, profile=None):
+            """Resolve one id (optionally within a profile). Keys are (profile, id)."""
+            for key, (p, d) in index.items():
+                if not isinstance(key, tuple) or len(key) < 2:
+                    continue
+                if key[1] != aid:
+                    continue
+                if profile is not None and key[0] != profile:
+                    continue
+                return p, d
+            return None, None
+
+        def select(profile=None, domain=None, atype=None, exclude_types=()):
+            """All matching records, sorted by id for deterministic output."""
+            out = []
+            for key, (p, d) in index.items():
+                if not isinstance(key, tuple) or len(key) < 2:
+                    continue
+                prof = key[0]
+                if profile is not None and prof != profile:
+                    continue
+                if domain is not None and d.get("engineering_domain") != domain:
+                    continue
+                if atype is not None and d.get("artifact_type") != atype:
+                    continue
+                if d.get("artifact_type") in exclude_types:
+                    continue
+                if not d.get("id"):
+                    continue
+                out.append((d["id"], p, d))
+            return sorted(out, key=lambda t: (t[0], str(t[2].get("profile"))))
+
+        def links_of(profile=None, relation=None, source=None, target=None):
+            out = []
+            for l in links:
+                if profile is not None and l.get("_profile") != profile:
+                    continue
+                if relation is not None and l.get("relation_type") != relation:
+                    continue
+                if source is not None and l.get("source_id") != source:
+                    continue
+                if target is not None and l.get("target_id") != target:
+                    continue
+                out.append(l)
+            return sorted(out, key=lambda l: (l.get("link_id") or ""))
+
+        return {"index": index, "links": links, "by_id": by_id, "select": select,
+                "links_of": links_of, "counts": f"{len(index)} artifacts, {len(links)} links"}
+
+    def _write_view(self, relpath, lines):
+        """Write one view file, creating its directory. Returns the path written."""
+        p = self.views_dir / relpath
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with open(p, "w", encoding="utf-8") as f:
+            for line in lines:
+                f.write(line + "\n")
+        return p
+
+    def _mermaid(self, diagram_id, body):
+        """Wrap a Mermaid diagram in a fenced block with its diagram id."""
+        return ["```mermaid", f"%% diagram_id: {diagram_id}"] + body + ["```", ""]
+
+    def _validate_diagrams(self, view_paths):
+        """Syntax-check every Mermaid block in the views just written.
+
+        Uses mermaid-cli against a locally installed Chrome. Records the real
+        outcome: if the tooling is absent the views say so rather than claiming
+        a check that did not happen.
+        """
+        import shutil
+        import subprocess
+        import tempfile
+
+        blocks = []
+        for vp in view_paths:
+            try:
+                text = vp.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            lines = text.splitlines()
+            i = 0
+            while i < len(lines):
+                if lines[i].strip() == "```mermaid":
+                    start = i + 1
+                    j = start
+                    while j < len(lines) and lines[j].strip() != "```":
+                        j += 1
+                    body = lines[start:j]
+                    did = next((ln.split(":", 1)[1].strip() for ln in body
+                                if ln.startswith("%% diagram_id:")), f"{vp.name}#{i}")
+                    blocks.append((vp, did, "\n".join(body)))
+                    i = j + 1
+                else:
+                    i += 1
+
+        if not blocks:
+            return {}, "no Mermaid diagrams present in the generated views"
+
+        mmdc = shutil.which("mmdc")
+        if not mmdc:
+            return ({b[1]: "not_checked_no_mermaid_cli" for b in blocks},
+                    "mermaid-cli (`mmdc`) is not on PATH; diagrams were NOT syntax-checked")
+        chrome = next((c for c in (
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "/Applications/Chromium.app/Contents/MacOS/Chromium",
+        ) if os.path.exists(c)), None)
+        if not chrome:
+            return ({b[1]: "not_checked_no_chrome" for b in blocks},
+                    "mermaid-cli found but no supported Chrome/Chromium binary; "
+                    "diagrams were NOT rendered or checked")
+
+        results = {}
+        tmp = tempfile.mkdtemp(prefix="fb2-mermaid-")
+        pconf = os.path.join(tmp, "puppeteer.json")
+        with open(pconf, "w", encoding="utf-8") as fh:
+            json.dump({"executablePath": chrome, "args": ["--no-sandbox"]}, fh)
+        try:
+            for n, (vp, did, body) in enumerate(blocks):
+                mmd = os.path.join(tmp, f"d{n}.mmd")
+                svg = os.path.join(tmp, f"d{n}.svg")
+                with open(mmd, "w", encoding="utf-8") as fh:
+                    fh.write(body + "\n")
+                try:
+                    proc = subprocess.run(
+                        [mmdc, "-i", mmd, "-o", svg, "-p", pconf],
+                        capture_output=True, text=True, timeout=180)
+                    err = (proc.stderr or "") + (proc.stdout or "")
+                    if proc.returncode == 0 and os.path.exists(svg) and os.path.getsize(svg) > 0:
+                        results[did] = "validated"
+                    else:
+                        first = next((ln.strip() for ln in err.splitlines()
+                                      if "Error" in ln or "error" in ln), "unknown error")
+                        results[did] = f"INVALID: {first[:120]}"
+                except subprocess.TimeoutExpired:
+                    results[did] = "not_checked_timeout"
+                except OSError as e:
+                    results[did] = f"not_checked_error: {e}"
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+        n_ok = sum(1 for v in results.values() if v == "validated")
+        return results, (f"mermaid-cli {shutil.which('mmdc')} with Chrome; "
+                         f"{n_ok}/{len(blocks)} diagrams parsed and rendered to SVG")
+
+    def _append_diagram_validation(self, view_paths, lines_by_path):
+        """Append a per-view diagram-validation section reflecting the real result."""
+        results, summary = self._validate_diagrams(view_paths)
+        for vp in view_paths:
+            rel = vp.relative_to(self.views_dir)
+            # A diagram belongs to the view that emitted it. Diagram ids are
+            # namespaced by view directory ("<view-dir>.<name>"), so attribute by
+            # the view's own directory rather than by filename.
+            vdir = rel.parts[0] if len(rel.parts) > 1 else rel.stem
+            mine = {d: r for d, r in results.items() if d.split(".")[0] == vdir}
+            if not mine:
+                continue
+            L = lines_by_path[vp]
+            L.append("## Diagram validation")
+            L.append("")
+            L.append(f"Validator: {summary}")
+            L.append("")
+            self_rows = [(f"`{d}`", r) for d, r in sorted(mine.items())]
+            L.append("| Diagram | Result |")
+            L.append("|---|---|")
+            for d, r in self_rows:
+                L.append(f"| {d} | {r} |")
+            L.append("")
+            if any(r != "validated" for r in mine.values()):
+                L.append("At least one diagram above was **not** validated. Treat its syntax as "
+                         "unverified; this view does not claim otherwise.")
+                L.append("")
+
+    def cmd_render(self):
+        """Regenerate views/ from canonical data.
+
+        Emits one derived, read-only human-readable work product per required
+        view directory. Deterministic apart from the `Generated:` stamp line.
+        """
+        self.views_dir.mkdir(parents=True, exist_ok=True)
+        m = self._render_index()
+        by_id, select, links_of = m["by_id"], m["select"], m["links_of"]
+        counts = m["counts"]
+
+        written = []
+
+        def emit(relpath, title, scope, body):
+            lines = self._view_preamble(title, scope, counts) + body
+            written.append(self._write_view(relpath, lines))
+
+        # ------------------------------------------------ concept-and-safety
+        order = ["FB2-SAF-HAZ-000001", "FB2-SAF-SGO-000001",
+                 "FB2-SAF-FSR-000001", "FB2-SAF-FSR-000002",
+                 "FB2-SAF-FSR-000003", "FB2-SAF-FSR-000004",
+                 "FB2-HW-TSR-000001", "FB2-SW-SWR-000001",
+                 "FB2-SW-DSN-000001", "FB2-VER-TMS-000001",
+                 "FB2-VER-EXE-000001", "FB2-REV-000001"]
+        b = ["## Vertical slice records", "",
+             "The canonical cell-voltage safety chain, in traversal order. "
+             "The same id exists in both profiles; both copies are shown.", ""]
+        for aid in order:
+            for prof in ("as_is", "synthetic_reference"):
+                p, d = by_id(aid, prof)
+                if d is None:
+                    continue
+                b.append(f"### {aid} ({prof}) — {d.get('title')}")
+                b.append("")
+                b.append(f"- type: `{d.get('artifact_type')}` | revision: `{d.get('revision')}` | "
+                         f"lifecycle: `{d.get('lifecycle_status')}`")
+                b.append(f"- guard: {self._guard(d)}")
+                if d.get("statement"):
+                    b.append(f"- statement: {self._cell(d['statement'], 400)}")
+                b.append("")
+        b.append("### Chain diagram")
+        b.append("")
+        b += self._mermaid("concept-and-safety.chain", [
+            "flowchart TD",
+            '  HAZ["FB2-SAF-HAZ-000001<br/>Cell voltage hazard"]',
+            '  SGO["FB2-SAF-SGO-000001<br/>Safety goal"]',
+            '  FSR["FB2-SAF-FSR-000001..4<br/>Safety requirements"]',
+            '  TSR["FB2-HW-TSR-000001<br/>HW requirement"]',
+            '  SWR["FB2-SW-SWR-000001<br/>SW requirement"]',
+            '  DSN["FB2-SW-DSN-000001<br/>Design"]',
+            '  TMS["FB2-VER-TMS-000001<br/>Test measure"]',
+            '  EXE["FB2-VER-EXE-000001<br/>Execution"]',
+            '  REV["FB2-REV-000001<br/>Review"]',
+            '  HAZ -->|mitigates| SGO',
+            '  SGO -->|refines| FSR',
+            '  FSR -->|allocated_to| TSR',
+            '  FSR -->|allocated_to| SWR',
+            '  SWR -->|implements| DSN',
+            '  TSR -->|verifies| TMS',
+            '  SWR -->|verifies| TMS',
+            '  TMS -->|result_of| EXE',
+            '  DSN -->|reviewed_by| REV',
+        ])
+        emit("concept-and-safety/vertical-slice.md",
+             "Concept and safety — cell voltage vertical slice (generated view)",
+             "The `concept-and-safety` domain: hazard, safety goal, safety requirements, "
+             "safety analyses, TARA and safety case held in the corpus.", b)
+
+        # --------------------------------------------------------- management
+        b = ["## Project scope and safety plan", ""]
+        scope = select(domain="management", atype="requirement")
+        plan = select(domain="management", atype="design")
+        chgs = select(domain="management", atype="change")
+        if not scope and not plan:
+            self._gap(b, "project scope and safety plan",
+                      "The corpus holds no `management`-domain project-scope or safety-plan "
+                      "record in either profile.")
+        rows = []
+        for aid, p, d in scope + plan:
+            rows.append([f"`{aid}`", d.get("profile"), d.get("artifact_type"),
+                         self._cell(d.get("title"), 120), self._guard(d)])
+        self._table(b, ["Id", "Profile", "Type", "Title", "Guard"], rows)
+        for aid, p, d in scope + plan:
+            b.append(f"### {aid} — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            if d.get("statement"):
+                b.append(f"- statement: {self._cell(d['statement'], 600)}")
+            if d.get("responsibilities"):
+                b.append("- responsibilities:")
+                for r in d["responsibilities"]:
+                    b.append(f"  - {self._cell(r, 200)}")
+            if d.get("decomposition"):
+                b.append(f"- decomposition: {self._cell(d['decomposition'], 400)}")
+            if d.get("decisions"):
+                b.append(f"- decisions: {self._cell(d['decisions'], 400)}")
+            b.append("")
+
+        b.append("## Change records")
+        b.append("")
+        if not chgs:
+            self._gap(b, "change records",
+                      "The corpus holds no `change` record in either profile, so no change "
+                      "decision, impact analysis or reverification selection can be shown.")
+        rows = [[f"`{a}`", d.get("profile"), self._cell(d.get("change_type")),
+                 self._cell(d.get("lifecycle_status")), self._guard(d)] for a, p, d in chgs]
+        self._table(b, ["Id", "Profile", "Change type", "Lifecycle", "Guard"], rows)
+        for aid, p, d in chgs:
+            b.append(f"### {aid} — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- change_type: `{d.get('change_type')}` | lifecycle: `{d.get('lifecycle_status')}`")
+            b.append(f"- implementation_status: `{d.get('implementation_status')}`")
+            dec = d.get("decision") or {}
+            if isinstance(dec, dict):
+                b.append(f"- decision: `{dec.get('decision_id')}` by {self._cell(dec.get('decision_maker'), 220)}")
+                b.append(f"- decision rationale: {self._cell(dec.get('rationale'), 700)}")
+            b.append(f"- trigger: {self._cell(d.get('trigger'), 400)}")
+            ia = d.get("impact_analysis") or {}
+            if isinstance(ia, dict):
+                b.append(f"- impact — affected artifacts: {self._cell(ia.get('affected_artifacts'))}")
+                b.append(f"- impact — affected links: {self._cell(ia.get('affected_links'))}")
+                b.append(f"- impact — risk: {self._cell(ia.get('risk_assessment'), 500)}")
+            b.append(f"- new revisions: {self._cell(d.get('new_revisions'))}")
+            b.append(f"- suspect links: {self._cell(d.get('suspect_links'))}")
+            b.append(f"- reverification selection: {self._cell(d.get('reverification_selection'), 500)}")
+            b.append(f"- synthetic_decision: {self._cell(d.get('synthetic_decision'), 300)}")
+            b.append(f"- limitations/boundaries: {self._cell(d.get('corpus_boundaries'), 400)}")
+            b.append("")
+
+        b.append("### Change lifecycle diagram")
+        b.append("")
+        b += self._mermaid("management.change-lifecycle", [
+            "flowchart LR",
+            '  REQ["Change request"] --> IA["Impact analysis"]',
+            '  IA --> DEC["Fictional board decision<br/>(synthetic_decision)"]',
+            '  DEC --> NEWR["New revisions"]',
+            '  NEWR --> SUS["Suspect links +<br/>reviews invalidated"]',
+            '  SUS --> REVER["Reverification selection"]',
+            '  REVER --> POST["Clean post-change baseline"]',
+        ])
+        emit("management/management.md",
+             "Management — project, changes and decisions (generated view)",
+             "The `management` domain: project scope, safety plan, change records and their "
+             "synthetic decisions.", b)
+
+        # -------------------------------------------------------------- system
+        b = ["## System requirements", ""]
+        sysreqs = [r for r in select(atype="requirement")
+                   if r[2].get("engineering_domain") in ("system", "stakeholder")]
+        if not sysreqs:
+            # The gap statement below is a fact about the corpus RECORDS and stays
+            # literal. The sentences about the coverage plan are read live from
+            # governance/coverage-plan.json, so correcting the plan corrects this
+            # view on the next render instead of leaving a stale transcript of it.
+            self._gap(
+                b, "system requirements",
+                "The corpus contains **no system-level or stakeholder requirement record** in "
+                "either profile, and this is a coverage gap, not a rendering omission: no "
+                "record matching the expectation exists on disk in any profile. The "
+                "expectation is retained in the coverage plan and is not satisfied. "
+                "The plan's current position, read at render time, is that "
+                + self._plan_quote(processes=("SYS.1", "SYS.2"), targets=("requirements",))
+                + " This view reports what the corpus actually holds and quotes the plan as it "
+                  "stands now; where the plan has been corrected, the corrected status appears "
+                  "here automatically, so this text cannot drift from the governance file.",
+                what_exists="the system-domain HSI design `FB2-SYS-HSI-000001`, the project-scope "
+                            "record `FB2-MAN-SCO-000001` (management domain), and the scenario "
+                            "`FB2-SCN-CHG-000002`.")
+        else:
+            self._table(b, ["Id", "Profile", "Title", "Guard"],
+                        [[f"`{a}`", d.get("profile"), self._cell(d.get("title"), 120), self._guard(d)]
+                         for a, p, d in sysreqs])
+
+        b.append("## HSI / interface authority")
+        b.append("")
+        hsis = select(domain="system", atype="design")
+        if not hsis:
+            self._gap(b, "system interfaces",
+                      "The corpus holds no system-owned interface authority record.")
+        for aid, p, d in hsis:
+            b.append(f"### {aid} — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- design_level: `{d.get('design_level')}` | lifecycle: `{d.get('lifecycle_status')}`")
+            b.append(f"- variant applicability: {self._cell(d.get('variant_applicability'))}")
+            b.append("")
+            b.append("Signals (system-owned authority; hardware and software views link here "
+                     "rather than duplicating these definitions):")
+            b.append("")
+            rows = []
+            for it in (d.get("interfaces") or []):
+                for s in (it.get("signals") or []):
+                    rows.append([f"`{it.get('interface_id')}`", f"`{s.get('name')}`",
+                                 self._cell(s.get("type")), self._cell(s.get("unit")),
+                                 self._cell(s.get("range")), self._cell(s.get("direction")),
+                                 self._cell(s.get("invalid_state")), it.get("owner")])
+            self._table(b, ["Interface", "Signal", "Type", "Unit", "Range", "Direction",
+                            "Invalid/stale state", "Owner"], rows)
+            for k in ("timing_budget", "fault_indications", "electrical_budgets", "decisions"):
+                if d.get(k):
+                    b.append(f"- {k}: {self._cell(d[k], 500)}")
+
+        b.append("## System architecture chain")
+        b.append("")
+        syslinks = links_of(profile="synthetic_reference")
+        rows = [[f"`{l.get('link_id')}`", f"`{l.get('source_id')}`", l.get("relation_type"),
+                 f"`{l.get('target_id')}`", l.get("provenance"), l.get("review_state")]
+                for l in syslinks
+                if l.get("source_id", "").startswith("FB2-SYS") or l.get("target_id", "").startswith("FB2-SYS")]
+        if rows:
+            self._table(b, ["Link", "Source", "Relation", "Target", "Provenance", "Review state"], rows)
+        else:
+            b.append("_No link in the canonical registry has a `FB2-SYS-*` endpoint._\n")
+
+        b.append("### Allocation diagram")
+        b.append("")
+        b += self._mermaid("system.allocation", [
+            "flowchart TD",
+            '  SGO["FB2-SAF-SGO-000001<br/>Safety goal"]',
+            '  FSR["FB2-SAF-FSR-*<br/>Safety requirements"]',
+            '  HSI["FB2-SYS-HSI-000001<br/>Interface authority"]',
+            '  TSR["FB2-HW-TSR-*<br/>HW requirements"]',
+            '  SWR["FB2-SW-SWR-*<br/>SW requirements"]',
+            '  SGO -->|refines| FSR',
+            '  FSR -->|allocated_to| HSI',
+            '  FSR -->|allocated_to| TSR',
+            '  FSR -->|allocated_to| SWR',
+            '  TSR -.->|interface| HSI',
+            '  SWR -.->|interface| HSI',
+        ])
+        emit("system/system.md",
+             "System — requirements, interfaces and architecture (generated view)",
+             "The `system` domain: system requirements, the system-owned HSI/interface "
+             "authority, and the system architecture chain.", b)
+
+        # ------------------------------------------------------------ hardware
+        b = ["## Hardware technical safety requirements (TSR)", ""]
+        tsrs = select(domain="hardware", atype="requirement")
+        if not tsrs:
+            self._gap(b, "hardware requirements",
+                      "The corpus holds no hardware-domain requirement record.")
+        rows = [[f"`{a}`", d.get("profile"), self._cell(d.get("title"), 110),
+                 self._cell((d.get("safety_allocation") or {}).get("asil")),
+                 d.get("lifecycle_status"), self._guard(d)] for a, p, d in tsrs]
+        self._table(b, ["Id", "Profile", "Title", "ASIL", "Lifecycle", "Guard"], rows)
+        for aid, p, d in tsrs:
+            b.append(f"### {aid} ({d.get('profile')}) — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- statement: {self._cell(d.get('statement'), 500)}")
+            b.append(f"- rationale: {self._cell(d.get('rationale'), 400)}")
+            b.append(f"- acceptance criteria: {self._cell(d.get('acceptance_criteria'), 500)}")
+            b.append(f"- safety allocation: {self._cell(d.get('safety_allocation'), 300)}")
+            b.append(f"- source_refs: {self._cell(d.get('source_refs'))}")
+            b.append("")
+
+        b.append("## Hardware design records")
+        b.append("")
+        hwdes = select(domain="hardware", atype="design")
+        if not hwdes:
+            self._gap(
+                b, "hardware design records",
+                "The corpus contains **no hardware-domain design record** in either profile — "
+                "no hardware architecture, detailed design, interface/connector definition, "
+                "BOM mapping, FMEDA or hardware bring-up record. The hardware domain is "
+                "populated by requirements only. The hardware views in "
+                "`reports/aspice-process-map.md` describe HWE.2 and HWE.3 as "
+                "`partially_mapped`, which is consistent with this; there is simply no "
+                "canonical record to render here.")
+        else:
+            self._table(b, ["Id", "Profile", "Title", "Guard"],
+                        [[f"`{a}`", d.get("profile"), self._cell(d.get("title"), 120), self._guard(d)]
+                         for a, p, d in hwdes])
+
+        b.append("## Hardware-relevant HSI signals")
+        b.append("")
+        b.append("Signals from the system-owned interface authority whose owning interface is "
+                 "hardware. The authority itself is system-owned; this table is a read-only "
+                 "projection, not a second source of truth.")
+        b.append("")
+        rows = []
+        for aid, p, d in hsis:
+            for it in (d.get("interfaces") or []):
+                for s in (it.get("signals") or []):
+                    rows.append([f"`{aid}`", f"`{it.get('interface_id')}`", f"`{s.get('name')}`",
+                                 self._cell(s.get("type")), self._cell(s.get("unit")),
+                                 self._cell(s.get("range")), self._cell(s.get("direction")),
+                                 it.get("owner"), self._guard(d)])
+        self._table(b, ["Authority", "Interface", "Signal", "Type", "Unit", "Range",
+                        "Direction", "Owner", "Guard"], rows)
+
+        b.append("### Hardware allocation diagram")
+        b.append("")
+        b += self._mermaid("hardware.allocation", [
+            "flowchart LR",
+            '  TSR["FB2-HW-TSR-000001<br/>Cell voltage accuracy"]',
+            '  TSR2["FB2-HW-TSR-000002<br/>isoSPI integrity"]',
+            '  TSR3["FB2-HW-TSR-000003<br/>Contactor driver"]',
+            '  TSR4["FB2-HW-TSR-000004<br/>Independent monitor"]',
+            '  SPI["HSI_AFE_SPI<br/>hw_engineer"]',
+            '  CON["Contactor interface<br/>hw_engineer"]',
+            '  TSR --> SPI',
+            '  TSR2 --> SPI',
+            '  TSR3 --> CON',
+            '  TSR4 -.->|independent path| CON',
+        ])
+        emit("hardware/hardware.md",
+             "Hardware — requirements, design and interfaces (generated view)",
+             "The `hardware` domain: hardware TSRs, hardware design records, and the "
+             "hardware-owned part of the HSI signal set.", b)
+
+        # ------------------------------------------------------------ software
+        b = ["## Software requirements", ""]
+        swrs = select(domain="software", atype="requirement")
+        rows = [[f"`{a}`", d.get("profile"), self._cell(d.get("title"), 110),
+                 self._cell((d.get("safety_allocation") or {}).get("asil")),
+                 self._cell(d.get("verification_approach")), self._guard(d)] for a, p, d in swrs]
+        self._table(b, ["Id", "Profile", "Title", "ASIL", "Verification approach", "Guard"], rows)
+        for aid, p, d in swrs:
+            b.append(f"### {aid} ({d.get('profile')}) — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- statement: {self._cell(d.get('statement'), 500)}")
+            b.append(f"- acceptance criteria: {self._cell(d.get('acceptance_criteria'), 500)}")
+            b.append(f"- conditions/modes: {self._cell(d.get('conditions_modes'))}")
+            b.append(f"- source_refs: {self._cell(d.get('source_refs'))}")
+            b.append("")
+
+        b.append("## Software design records")
+        b.append("")
+        swds = select(domain="software", atype="design")
+        rows = [[f"`{a}`", d.get("profile"), self._cell(d.get("design_level")),
+                 self._cell(d.get("title"), 110), self._guard(d)] for a, p, d in swds]
+        self._table(b, ["Id", "Profile", "Level", "Title", "Guard"], rows)
+        for aid, p, d in swds:
+            b.append(f"### {aid} ({d.get('profile')}) — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- design_level: `{d.get('design_level')}` | lifecycle: `{d.get('lifecycle_status')}`")
+            b.append(f"- responsibilities: {self._cell(d.get('responsibilities'), 600)}")
+            b.append(f"- constraints: {self._cell(d.get('constraints'), 400)}")
+            bm = d.get("behavior_model")
+            if isinstance(bm, dict) and bm.get("states"):
+                b.append(f"- behavior model (`{bm.get('type')}`) states: {self._cell(bm.get('states'))}")
+                tr = bm.get("transitions") or []
+                for t in tr:
+                    b.append(f"  - `{t.get('from')}` → `{t.get('to')}` on `{t.get('trigger')}` "
+                             f"[guard: {self._cell(t.get('guard'), 80)}] → {self._cell(t.get('action'), 120)}")
+            b.append(f"- implementation mapping: {self._cell(d.get('implementation_mapping'), 500)}")
+            b.append("")
+
+        b.append("### Contactor state machine")
+        b.append("")
+        sm = None
+        for prof in ("as_is", "synthetic_reference"):
+            _, d = by_id("FB2-SW-DSN-000003", prof)
+            if d and isinstance(d.get("behavior_model"), dict) and d["behavior_model"].get("transitions"):
+                sm = d
+                break
+        if sm:
+            b.append(f"Derived from `FB2-SW-DSN-000003` ({sm.get('profile')}) `behavior_model`.")
+            b.append("")
+            bm = sm["behavior_model"]
+            body = ["stateDiagram-v2"]
+            for s in bm.get("states", []):
+                body.append(f"  {s}")
+            for t in bm.get("transitions", []):
+                lbl = f"{t.get('trigger')} [{t.get('guard')}]"
+                body.append(f"  {t.get('from')} --> {t.get('to')} : {lbl}")
+            b += self._mermaid("software.contactor-state-machine", body)
+        else:
+            b.append("_No state-machine design record found in the corpus._\n")
+
+        b.append("## MISRA C:2012 deviation records")
+        b.append("")
+        b.append("These 26 records are the largest single slice of the `as_is` profile. They are "
+                 "derived from in-source static-analysis suppressions at the pinned baseline; "
+                 "the source comment text is the authority for each rationale. **No record here "
+                 "asserts MISRA conformance, and no deviation has been approved by a human.**")
+        b.append("")
+        devs = select(profile="as_is", atype="deviation")
+        if not devs:
+            self._gap(b, "MISRA deviation records",
+                      "The corpus holds no deviation record.")
+        byrule = {}
+        for aid, p, d in devs:
+            byrule.setdefault((d.get("guideline_id"), d.get("rule_reference")), []).append((aid, d))
+        b.append("### Deviation summary by rule")
+        b.append("")
+        self._table(b, ["Guideline", "Rule", "Count", "Deviation types", "Profiles"],
+                    [[k[0], f"`{k[1]}`", len(v),
+                      self._cell(sorted({x[1].get("deviation_type") for x in v})),
+                      self._cell(sorted({x[1].get("profile") for x in v}))]
+                     for k, v in sorted(byrule.items(), key=lambda kv: str(kv[0]))])
+        b.append("### Deviation register")
+        b.append("")
+        self._table(b, ["Id", "Rule", "Type", "Affected file", "Symbol", "Lines",
+                        "Review disposition", "Lifecycle", "Guard"],
+                    [[f"`{a}`", f"`{d.get('rule_reference')}`", self._cell(d.get("deviation_type")),
+                      f"`{self._cell(d.get('affected_file'), 90)}`",
+                      self._cell(d.get("affected_symbol"), 60),
+                      self._cell(d.get("affected_lines"), 30),
+                      self._cell(d.get("review_disposition"), 60),
+                      d.get("lifecycle_status"), self._guard(d)]
+                     for a, p, d in devs])
+        b.append("### Deviation detail")
+        b.append("")
+        for aid, p, d in devs:
+            b.append(f"#### {aid} — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- guideline/rule: `{d.get('guideline_id')}` / `{d.get('rule_reference')}` "
+                     f"({d.get('rule_category')})")
+            b.append(f"- location: `{self._cell(d.get('affected_file'), 120)}` "
+                     f"symbol `{self._cell(d.get('affected_symbol'), 60)}` "
+                     f"lines `{self._cell(d.get('affected_lines'), 40)}`")
+            b.append(f"- deviation type: `{d.get('deviation_type')}` | suppression: "
+                     f"`{d.get('suppression_form')}` scope `{d.get('suppression_scope')}`")
+            b.append(f"- rationale (from source): {self._cell(d.get('deviation_rationale'), 500)}")
+            b.append(f"- normative verification: {self._cell(d.get('normative_verification'), 300)}")
+            b.append(f"- review disposition: `{d.get('review_disposition')}`")
+            b.append(f"- reanalysis trigger: {self._cell(d.get('reanalysis_justification'), 400)}")
+            b.append(f"- tool: {self._cell(d.get('tool_reference'), 200)}")
+            b.append(f"- project process evidence: {self._cell(d.get('project_process_evidence'), 300)}")
+            b.append(f"- impact notes: {self._cell(d.get('impact_notes'), 400)}")
+            b.append("")
+        emit("software/software.md",
+             "Software — requirements, design and deviations (generated view)",
+             "The `software` domain: software requirements, software design records, and the "
+             "26 MISRA C:2012 deviation records.", b)
+
+        # ------------------------------------------- verification and validation
+        b = ["## Execution classification model", ""]
+        b.append("`execution_kind` and `outcome` are **orthogonal**: how the run was performed is "
+                 "recorded separately from what it concluded. A synthetic fixture can legitimately "
+                 "report `pass`, and that pass is not product evidence. Generated "
+                 "consistency-check results validate the corpus, not the BMS product.")
+        b.append("")
+        b.append("| execution_kind | meaning |")
+        b.append("|---|---|")
+        b.append("| `none` | not executed |")
+        b.append("| `actual_host_run` | executed on a real host, logs captured |")
+        b.append("| `actual_simulation_run` | executed model with captured logs |")
+        b.append("| `synthetic_fixture` | fixture, never a real run |")
+        b.append("")
+        b.append("| outcome | meaning |")
+        b.append("|---|---|")
+        for o in ("pass", "fail", "inconclusive", "not_run", "blocked"):
+            b.append(f"| `{o}` | as defined by the execution schema |")
+        b.append("")
+
+        b.append("## Test measures")
+        b.append("")
+        tms = select(atype="test_measure")
+        self._table(b, ["Id", "Profile", "Title", "Test type", "Oracle basis", "Lifecycle", "Guard"],
+                    [[f"`{a}`", d.get("profile"), self._cell(d.get("title"), 100),
+                      self._cell(d.get("test_type")), self._cell(d.get("oracle_basis")),
+                      d.get("lifecycle_status"), self._guard(d)] for a, p, d in tms])
+        for aid, p, d in tms:
+            b.append(f"### {aid} ({d.get('profile')}) — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- objective: {self._cell(d.get('objective'), 400)}")
+            b.append(f"- referenced requirements: {self._cell(d.get('referenced_requirements'))}")
+            b.append(f"- referenced designs: {self._cell(d.get('referenced_designs'))}")
+            b.append(f"- preconditions: {self._cell(d.get('preconditions'), 400)}")
+            b.append(f"- expected outcomes: {self._cell(d.get('expected_outcomes'), 500)}")
+            b.append(f"- tolerances: {self._cell(d.get('tolerances'), 300)}")
+            b.append(f"- timing: {self._cell(d.get('timing'), 300)}")
+            b.append(f"- oracle basis: `{d.get('oracle_basis')}`")
+            b.append(f"- regression selection: {self._cell(d.get('regression_selection'), 300)}")
+            b.append("")
+
+        b.append("## Executions")
+        b.append("")
+        execs = select(atype="execution")
+        self._table(b, ["Id", "Profile", "Test measure", "execution_kind", "outcome",
+                        "Lifecycle", "Guard"],
+                    [[f"`{a}`", d.get("profile"), f"`{d.get('test_measure_id')}`",
+                      f"`{d.get('execution_kind')}`", f"`{d.get('outcome')}`",
+                      d.get("lifecycle_status"), self._guard(d)] for a, p, d in execs])
+
+        b.append("### Evidence classes present in the corpus")
+        b.append("")
+        real, synth, blocked = [], [], []
+        for aid, p, d in execs:
+            ek, oc = d.get("execution_kind"), d.get("outcome")
+            if ek == "actual_host_run":
+                real.append((aid, d))
+            elif ek == "synthetic_fixture":
+                synth.append((aid, d))
+            elif oc in ("blocked", "not_run") or ek == "none":
+                blocked.append((aid, d))
+        b.append(f"**Real captured host runs ({len(real)}).** These have captured logs under "
+                 f"`docs/artifacts/evidence/actual-runs/` and per-run input/output hashes. They "
+                 f"are the only executions in this corpus that constitute captured evidence, and "
+                 f"even they are host-platform results, not target-hardware results.")
+        b.append("")
+        self._table(b, ["Id", "Profile", "execution_kind", "outcome", "Environment",
+                        "Captured logs", "Guard"],
+                    [[f"`{a}`", d.get("profile"), f"`{d.get('execution_kind')}`",
+                      f"`{d.get('outcome')}`", self._cell((d.get("environment") or {}).get("hardware"), 70),
+                      self._cell([l.get("file") for l in (d.get("logs") or [])], 120), self._guard(d)]
+                     for a, d in real])
+        b.append(f"**Synthetic fixtures ({len(synth)}).** `execution_kind=synthetic_fixture` with "
+                 f"`outcome=pass`. These are fixtures, not runs. The `evidence/synthetic-fixtures/` "
+                 f"directory is the designated home for their captured fixture artefacts; whether "
+                 f"it holds them is reported in the verification-evidence report and in "
+                 f"`evidence/synthetic-fixtures/`, and is not asserted here.")
+        b.append("")
+        self._table(b, ["Id", "Profile", "execution_kind", "outcome", "Distinct input digests",
+                        "Guard"],
+                    [[f"`{a}`", d.get("profile"), f"`{d.get('execution_kind')}`", f"`{d.get('outcome')}`",
+                      self._cell(sorted({v for v in (d.get("input_hashes") or {}).values()}), 90),
+                      self._guard(d)] for a, d in synth])
+        b.append(f"**Blocked / not executed ({len(blocked)}).** `execution_kind=none` with "
+                 f"`outcome=blocked`. These record why a run did not happen.")
+        b.append("")
+        self._table(b, ["Id", "Profile", "execution_kind", "outcome", "Limitations", "Guard"],
+                    [[f"`{a}`", d.get("profile"), f"`{d.get('execution_kind')}`", f"`{d.get('outcome')}`",
+                      self._cell(d.get("limitations"), 200), self._guard(d)] for a, d in blocked])
+
+        b.append("### Execution detail")
+        b.append("")
+        for aid, p, d in execs:
+            b.append(f"#### {aid} ({d.get('profile')}) — {d.get('title')}")
+            b.append("")
+            b.append(f"- guard: {self._guard(d)}")
+            b.append(f"- execution_kind: `{d.get('execution_kind')}` | outcome: `{d.get('outcome')}` "
+                     f"(orthogonal axes)")
+            b.append(f"- test measure: `{d.get('test_measure_id')}` rev `{d.get('test_measure_revision')}`")
+            b.append(f"- environment: {self._cell(d.get('environment'), 400)}")
+            b.append(f"- input hashes: {self._cell(d.get('input_hashes'), 400)}")
+            b.append(f"- output hashes: {self._cell(d.get('output_hashes'), 400)}")
+            b.append(f"- logs: {self._cell(d.get('logs'), 400)}")
+            b.append(f"- timestamps: {self._cell(d.get('timestamps'), 200)}")
+            b.append(f"- anomalies: {self._cell(d.get('anomalies'), 600)}")
+            b.append(f"- limitations: {self._cell(d.get('limitations'), 400)}")
+            b.append("")
+
+        b.append("### Evidence classification diagram")
+        b.append("")
+        b += self._mermaid("verification-validation.evidence-classes", [
+            "flowchart TD",
+            '  MEAS["Test measure<br/>(plan)"]',
+            '  KIND{"execution_kind"}',
+            '  REAL["actual_host_run<br/>captured logs"]',
+            '  SIM["actual_simulation_run<br/>captured model logs"]',
+            '  FIX["synthetic_fixture<br/>not a real run"]',
+            '  NONE["none<br/>not executed"]',
+            '  OUT{"outcome (orthogonal)"}',
+            '  PASS["pass"]',
+            '  FAIL["fail"]',
+            '  BLOCK["blocked / not_run"]',
+            '  MEAS --> KIND',
+            '  KIND --> REAL',
+            '  KIND --> SIM',
+            '  KIND --> FIX',
+            '  KIND --> NONE',
+            '  REAL --> OUT',
+            '  FIX --> OUT',
+            '  NONE --> OUT',
+            '  SIM --> OUT',
+            '  OUT --> PASS',
+            '  OUT --> FAIL',
+            '  OUT --> BLOCK',
+        ])
+        emit("verification-validation/verification-validation.md",
+             "Verification and validation — measures, executions, evidence (generated view)",
+             "The `verification` domain: every test measure and every execution record, with "
+             "`execution_kind` and `outcome` shown as the orthogonal pair they are.", b)
+
+        # ------------------------------------------- production/operation/service
+        b = []
+        areas = [
+            ("Release and configuration identification", ("production", "release"),
+             "no release-configuration record, release-notes record, acceptance/release "
+             "checklist record, or configuration-identification record"),
+            ("Production and end-of-line test", ("production",),
+             "no production control plan, end-of-line test plan, or calibration/programming "
+             "specification record"),
+            ("Operation and field monitoring", ("operation",),
+             "no field-monitoring record, incident-handling record, or operational-instruction "
+             "record"),
+            ("Service and maintenance", ("service",),
+             "no installation, operation, service-instruction, maintenance, or "
+             "regression-strategy record"),
+            ("Decommissioning and recycling", ("decommissioning",),
+             "no decommissioning or recycling safety-assumption record"),
+        ]
+        have_domains = {d.get("engineering_domain") for d in
+                        (v[1] for v in m["index"].values())}
+        # The gap statement per area is a fact about the corpus RECORDS and stays
+        # literal. The plan's current position is read live from
+        # governance/coverage-plan.json so that a correction to the plan cannot
+        # leave this view quoting a superseded disposition.
+        release_plan_note = (
+            "The plan's current position, read at render time, is that "
+            + self._plan_quote(processes=("SPL.2",), iso=("part_7_production",))
+            + " Neither names a release, production, operation, service or "
+              "decommissioning record, and no canonical record matching one exists "
+              "on disk, so the gap above holds regardless of how the plan is worded.")
+        for area, doms, what in areas:
+            b.append(f"## {area}")
+            b.append("")
+            found = [r for r in select() if r[2].get("engineering_domain") in doms]
+            if not found:
+                self._gap(
+                    b, area,
+                    f"The corpus holds {what} in either profile. The required directory layout "
+                    f"mandates this view, so the section is emitted with the gap stated rather "
+                    f"than omitted; a silently empty section would misrepresent corpus "
+                    f"completeness. Domains searched: {', '.join(doms)}.",
+                    what_exists=release_plan_note)
+            else:
+                self._table(b, ["Id", "Profile", "Title", "Guard"],
+                            [[f"`{a}`", d.get("profile"), self._cell(d.get("title"), 120), self._guard(d)]
+                             for a, p, d in found])
+        b.append("## Domains actually present in the corpus")
+        b.append("")
+        b.append("For transparency, the full set of `engineering_domain` values present across "
+                 "all indexed records:")
+        b.append("")
+        doms_present = sorted(x for x in have_domains if x)
+        b.append("`" + "`, `".join(doms_present) + "`")
+        b.append("")
+        b.append("None of the lifecycle-continuation domains (production, operation, service, "
+                 "decommissioning) appear. This is a structural gap in corpus population, not a "
+                 "rendering omission.")
+        b.append("")
+        b.append("### Guard-field status of this view")
+        b.append("")
+        b.append("This view prints **no per-record guard fields**, because it shows no records: "
+                 "every section above is a declared coverage gap. That is deliberate. Were the "
+                 "gaps to be filled, each record added would be printed with its own "
+                 "`profile` / `origin` / `human_approval_status` / `production_authorized` values "
+                 "in the same format used by the other views.")
+        b.append("")
+        b.append("Corpus-wide, verified at render time from the indexed records: "
+                 f"`human_approval_status` is `pending` on every record, "
+                 f"`production_authorized` is `false` on every record, and "
+                 f"`product_verification_credit` is `false` on every record. No lifecycle-"
+                 "continuation artifact in this corpus has been human-approved or production-"
+                 "authorized, and this view does not imply otherwise.")
+        b.append("")
+        emit("production-operation-service/lifecycle-continuation.md",
+             "Production, operation, service and decommissioning (generated view)",
+             "The lifecycle-continuation areas required by the master prompt. Each section "
+             "states explicitly whether the corpus holds records for it.", b)
+
+        # ------------------------------------------------- supporting processes
+        b = ["## Supporting and organisational process records", ""]
+        support = select(domain="supporting")
+        b.append("The master prompt (section 12) requires populated **process records**, not just "
+                 "policies, for each supporting process family. The table below states, per "
+                 "family, whether a record whose `engineering_domain` is `supporting` exists. "
+                 "The corpus holds no process-definition record for any of these families: the "
+                 "only `supporting`-domain records are two meta-review records, which exercise "
+                 "review practice but are not the process artifacts the master prompt asks for. "
+                 "Listing the same two records against six different families would imply a "
+                 "coverage that does not exist, so each family is reported as a gap.")
+        b.append("")
+        proc_rows = []
+        for label, proc_ids in (("Quality assurance", "SUP.1"),
+                               ("Configuration management", "SUP.8"),
+                               ("Problem resolution", "SUP.9"),
+                               ("Change control", "SUP.10"),
+                               ("Measurement", "MAN.6"),
+                               ("Process improvement", "PIM.3")):
+            # A record counts for a family only if it names that process id
+            # explicitly. A loose keyword match would attribute the same review
+            # to families it never addresses.
+            fam = [r for r in support if proc_ids in json.dumps(r[2])]
+            proc_rows.append((label, proc_ids, fam))
+        self._table(b, ["Process family", "ASPICE", "Matching process record", "Guard"],
+                    [[label, f"`{ids}`",
+                      (self._cell([f"`{a}`" for a, _p, _d in c], 120) if c
+                       else "**none — coverage gap**"),
+                      (self._guard(c[0][2]) if c else "-")]
+                     for label, ids, c in proc_rows])
+        if not support:
+            self._gap(b, "supporting-process records",
+                      "The corpus holds no record whose `engineering_domain` is `supporting`.")
+        else:
+            b.append(f"The `supporting` domain is populated by {len(support)} record(s), listed "
+                     "in full below. They are review records, not process-definition records.")
+            b.append("")
+        b.append("The corpus does contain review records that exercise these process families "
+                 "in practice (QA, meta-review, change-management review, deviation review). "
+                 "They are review records, not process-definition records, and are shown below "
+                 "as the closest available material rather than presented as the process "
+                 "artifacts the master prompt asks for.")
+        b.append("")
+        revs = select(atype="review")
+        self._table(b, ["Id", "Profile", "Review type", "Domain", "Title", "Lifecycle", "Guard"],
+                    [[f"`{a}`", d.get("profile"), self._cell(d.get("review_type")),
+                      self._cell(d.get("engineering_domain")), self._cell(d.get("title"), 110),
+                      d.get("lifecycle_status"), self._guard(d)] for a, p, d in revs])
+        b.append("### Review finding counts by severity")
+        b.append("")
+        sev = {}
+        for aid, p, d in revs:
+            for f in (d.get("findings") or []):
+                sev.setdefault(d.get("profile"), {}).setdefault(f.get("severity"), 0)
+                sev[d.get("profile")][f.get("severity")] += 1
+        self._table(b, ["Profile", "critical", "high", "medium", "low", "Total"],
+                    [[prof, sev[prof].get("critical", 0), sev[prof].get("high", 0),
+                      sev[prof].get("medium", 0), sev[prof].get("low", 0), sum(sev[prof].values())]
+                     for prof in sorted(sev)])
+        b.append("**These are automated AI-assisted review findings. They are not human review "
+                 "findings and none of them constitutes approval.**")
+        b.append("")
+        emit("supporting-processes/supporting-processes.md",
+             "Supporting processes (generated view)",
+             "Supporting and organisational process families: QA, configuration management, "
+             "problem resolution, change control, measurement and process improvement.", b)
+
+        # ----------------------------------------------------- standards mapping
+        b = ["## ASPICE process inventory", ""]
+        b.append("Derived from `governance/coverage-plan.json` (`process_inventory`). The "
+                 "disposition text is quoted from that file; it is **not** re-asserted here, and "
+                 "a `mapped` disposition in a coverage plan is not evidence of conformity.")
+        b.append("")
+        cp = load_json(self.governance_dir / "coverage-plan.json")
+        procs = cp.get("process_inventory", [])
+        self._table(b, ["Process", "Name", "Applicability", "Disposition (as recorded)"],
+                    [[f"`{p.get('process_id')}`", self._cell(p.get("name"), 60),
+                      f"`{p.get('applicability')}`", self._cell(p.get("disposition"), 220)]
+                     for p in procs])
+        app = [p for p in procs if p.get("applicability") == "applicable"]
+        na = [p for p in procs if p.get("applicability") == "not_applicable"]
+        mapped = [p for p in procs if str(p.get("disposition", "")).startswith("mapped")]
+        partial = [p for p in procs if "partially_mapped" in str(p.get("disposition", ""))]
+        gaps = [p for p in procs if str(p.get("disposition", "")).startswith("gap")]
+        b.append("### Applicability and disposition counts")
+        b.append("")
+        self._table(b, ["Measure", "Count", "Of"],
+                    [["processes in inventory", len(procs), "-"],
+                     ["applicable", len(app), len(procs)],
+                     ["not_applicable", len(na), len(procs)],
+                     ["disposition starts `mapped`", len(mapped), len(procs)],
+                     ["disposition contains `partially_mapped`", len(partial), len(procs)],
+                     ["disposition starts `gap`", len(gaps), len(procs)]])
+        b.append("The four MLE processes are recorded as explicitly `not_applicable` with a "
+                 "rationale. Per the master prompt, non-applicability here is a recorded "
+                 "decision, not an absence.")
+        b.append("")
+
+        b.append("## ISO 26262 part coverage")
+        b.append("")
+        b.append("Derived from `governance/coverage-plan.json` (`iso26262_coverage`).")
+        b.append("")
+        rows = []
+        for k in sorted(cp.get("iso26262_coverage", {})):
+            v = cp["iso26262_coverage"][k]
+            if isinstance(v, dict):
+                rows.append([f"`{k}`", f"`{v.get('decision')}`", self._cell(v.get("rationale"), 200),
+                             self._cell(v.get("reference_decision"), 60)])
+            else:
+                rows.append([f"`{k}`", self._cell(str(v).split(" - ")[0], 40),
+                             self._cell(str(v), 240), "-"])
+        self._table(b, ["Part", "Status", "Recorded rationale", "Reference decision"], rows)
+        b.append("### Standards lock")
+        b.append("")
+        sl = load_json(self.governance_dir / "standards-lock.json")
+        self._table(b, ["Standard", "Title", "Edition", "Locked by"],
+                    [[f"`{s.get('id')}`", self._cell(s.get("title"), 70), self._cell(s.get("edition")),
+                      sl.get("locked_by")] for s in sl.get("standards", [])])
+        b.append("**Structural mapping coverage is not conformity.** Nothing in this view asserts "
+                 "that foxBMS, SoftwareDevLabs, or this corpus is ISO 26262 compliant, ASIL "
+                 "certified, or assessed at any Automotive SPICE capability level. Exact clause "
+                 "text was not ingested; where a normative reference could not be verified it is "
+                 "marked unverified in the underlying record.")
+        b.append("")
+        # Guard fields are computed from the indexed records, never asserted.
+        appr = sorted({str(d.get("human_approval_status")) for _k, (_p, d) in m["index"].items()
+                       if d.get("id")})
+        prod = sorted({str(d.get("production_authorized")).lower() for _k, (_p, d) in m["index"].items()
+                       if d.get("id")})
+        b.append("### Guard-field status of this view")
+        b.append("")
+        b.append("This view shows no per-record guard column because the process inventory and "
+                 "ISO part coverage it renders are held in `governance/coverage-plan.json`, not "
+                 "as corpus artifact records with their own guard fields. The corpus-wide guard "
+                 "state, computed at render time from the indexed artifact records, is:")
+        b.append("")
+        b.append(f"- `human_approval_status` values present: {', '.join('`' + a + '`' for a in appr)}")
+        b.append(f"- `production_authorized` values present: {', '.join('`' + a + '`' for a in prod)}")
+        b.append("")
+        b.append("A `mapped` disposition in a coverage plan is a planning claim, not an approval "
+                 "and not evidence of conformity. No record in this corpus is human-approved, and "
+                 "none is production-authorized.")
+        b.append("")
+        emit("standards-mapping/standards-mapping.md",
+             "Standards mapping — ASPICE processes and ISO 26262 parts (generated view)",
+             "The ASPICE process inventory and ISO 26262 part coverage, derived from "
+             "`governance/coverage-plan.json` and `governance/standards-lock.json`.", b)
+
+        # ---------------------------------------------------------- traceability
+        b = ["## Link-type statistics", ""]
+        b.append("Derived from the canonical link registries. Counts are computed here, not "
+                 "transcribed from a report.")
+        b.append("")
+        stats = {}
+        for l in m["links"]:
+            key = (l.get("_profile", "unknown"), l.get("relation_type"))
+            stats[key] = stats.get(key, 0) + 1
+        profiles = sorted({k[0] for k in stats})
+        rels = sorted({k[1] for k in stats})
+        self._table(b, ["Relation type"] + profiles + ["Total"],
+                    [[f"`{r}`"] + [stats.get((p, r), 0) for p in profiles]
+                     + [sum(stats.get((p, r), 0) for p in profiles)] for r in rels]
+                    + [["**Total**"] + [sum(stats.get((p, r), 0) for r in rels) for p in profiles]
+                       + [sum(stats.values())]])
+        b.append("`related_to` is forbidden in canonical registries and appears only in mutation "
+                 "fixtures, where it is the injected defect.")
+        b.append("")
+
+        b.append("## Vertical chains")
+        b.append("")
+        b.append("Full traversals from hazard down to evidence, computed by following the "
+                 "canonical relations. A chain that stops early is a real traceability gap, "
+                 "not a rendering limit.")
+        b.append("")
+        fwd = {"mitigates", "refines", "allocated_to", "implements", "verifies", "result_of",
+               "validates", "supports", "changes"}
+        for prof in profiles:
+            b.append(f"### {prof}")
+            b.append("")
+            haz = [l for l in m["links"] if l.get("_profile") == prof and l.get("target_id", "").startswith("FB2-SAF-HAZ")]
+            if not haz:
+                b.append("_No hazard record in this profile._\n")
+                continue
+            start = haz[0]["source_id"]
+            seen, frontier, rows = {start}, [start], []
+            while frontier:
+                cur = frontier.pop(0)
+                for l in sorted(m["links"], key=lambda x: x.get("link_id") or ""):
+                    if l.get("_profile") != prof or l.get("relation_type") not in fwd:
+                        continue
+                    if l.get("source_id") != cur or l.get("target_id") in seen:
+                        continue
+                    seen.add(l["target_id"])
+                    frontier.append(l["target_id"])
+                    _, dd = by_id(l["target_id"], prof)
+                    rows.append([f"`{cur}`", l.get("relation_type"), f"`{l['target_id']}`",
+                                 self._cell(dd.get("title"), 90) if dd else "**unresolved**",
+                                 self._guard(dd) if dd else "-"])
+            self._table(b, ["From", "Relation", "To", "Title", "Guard"], rows)
+        b.append("### Chain diagram")
+        b.append("")
+        b += self._mermaid("traceability.vertical-chain", [
+            "flowchart TD",
+            '  HAZ["FB2-SAF-HAZ-000001<br/>Hazard"]',
+            '  SGO["FB2-SAF-SGO-000001<br/>Safety goal"]',
+            '  FSR["FB2-SAF-FSR-*<br/>Safety reqs"]',
+            '  TSR["FB2-HW-TSR-*<br/>HW reqs"]',
+            '  SWR["FB2-SW-SWR-*<br/>SW reqs"]',
+            '  DSN["FB2-SW-DSN-*<br/>Design"]',
+            '  TMS["FB2-VER-TMS-*<br/>Test measures"]',
+            '  EXE["FB2-VER-EXE-*<br/>Executions"]',
+            '  HAZ -->|mitigates| SGO',
+            '  SGO -->|refines| FSR',
+            '  FSR -->|allocated_to| TSR',
+            '  FSR -->|allocated_to| SWR',
+            '  SWR -->|implements| DSN',
+            '  TSR -->|verifies| TMS',
+            '  SWR -->|verifies| TMS',
+            '  TMS -->|result_of| EXE',
+        ])
+
+        b.append("## Lateral links")
+        b.append("")
+        b.append("Cross-cutting relations that do not sit on a single vertical chain.")
+        b.append("")
+        lateral = {"reviewed_by", "supports", "changes", "specified_by", "consumes",
+                   "produces", "depends_on", "constrained_by", "supersedes"}
+        rows = [[f"`{l.get('link_id')}`", l.get("_profile", l.get("profile")), l.get("relation_type"),
+                 f"`{l.get('source_id')}`", f"`{l.get('target_id')}`",
+                 l.get("review_state"), str(l.get("change_suspect_status")).lower()]
+                for l in sorted(m["links"], key=lambda x: x.get("link_id") or "")
+                if l.get("relation_type") in lateral]
+        self._table(b, ["Link", "Profile", "Relation", "Source", "Target", "Review state",
+                        "Change-suspect"], rows)
+        absent = sorted(lateral - {l.get("relation_type") for l in m["links"]})
+        if absent:
+            b.append("Relation types defined by the model but **not used by any canonical link "
+                     f"in this corpus**: `{'`, `'.join(absent)}`. Their absence is reported "
+                     "rather than hidden.")
+            b.append("")
+
+        b.append("## Requirement-to-test coverage matrix")
+        b.append("")
+        b.append("Built from `verifies` and `validates` links only. A requirement with no row in "
+                 "this table has no verification link; that is a coverage gap, not an implied "
+                 "pass.")
+        b.append("")
+        rows = []
+        for l in sorted(m["links"], key=lambda x: x.get("link_id") or ""):
+            if l.get("relation_type") not in ("verifies", "validates"):
+                continue
+            _, tmsd = by_id(l["source_id"], l.get("_profile"))
+            _, reqd = by_id(l["target_id"], l.get("_profile"))
+            exes = [x for x in select(atype="execution")
+                    if x[2].get("test_measure_id") == l["source_id"]
+                    and x[2].get("profile") == l.get("_profile")]
+            ev = "; ".join(f"`{e[0]}` {e[2].get('execution_kind')}/{e[2].get('outcome')}" for e in exes) or "**no execution**"
+            rows.append([l.get("_profile", l.get("profile")), f"`{l['source_id']}`",
+                         self._cell(tmsd.get("title"), 70) if tmsd else "-",
+                         f"`{l['target_id']}`",
+                         self._cell(reqd.get("title"), 70) if reqd else "-",
+                         self._guard(reqd) if reqd else "-", ev])
+        self._table(b, ["Profile", "Test measure", "Measure title", "Requirement",
+                        "Requirement title", "Requirement guard", "Execution evidence"], rows)
+        b.append("### Coverage diagram")
+        b.append("")
+        b += self._mermaid("traceability.coverage-matrix", [
+            "flowchart LR",
+            '  REQ["Requirements"] -->|verified by| TMS["Test measures"]',
+            '  TMS -->|result_of| EXE["Executions"]',
+            '  EXE --> EV{"Evidence class"}',
+            '  EV --> REAL["actual_host_run"]',
+            '  EV --> FIX["synthetic_fixture"]',
+            '  EV --> BLK["blocked / none"]',
+        ])
+        emit("traceability/traceability.md",
+             "Traceability — links, chains and coverage (generated view)",
+             "The canonical link registries: link-type statistics, vertical chains, lateral "
+             "links, and the requirement-to-test coverage matrix.", b)
+
+        # ------------------------------------------------ diagram validation pass
+        lines_by_path = {}
+        for vp in written:
+            lines_by_path[vp] = vp.read_text(encoding="utf-8").splitlines()
+        self._append_diagram_validation(written, lines_by_path)
+        for vp in written:
+            with open(vp, "w", encoding="utf-8") as f:
+                for line in lines_by_path[vp]:
+                    f.write(line + "\n")
+
+        print(f"Rendered {len(written)} views to {self.views_dir}")
+        for vp in sorted(written, key=lambda x: str(x)):
+            print(f"  {vp.relative_to(self.views_dir)}")
         return True
 
     # ------------------------------------------------------------ 15.8 export

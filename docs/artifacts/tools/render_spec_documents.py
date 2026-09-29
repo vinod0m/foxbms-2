@@ -72,13 +72,36 @@ def _owns(doc, d):
     at = d.get("artifact_type", "")
     aid = d.get("id", "")
     if doc == "02-system-requirements-specification":
-        return at in ("safety_goal",) or (at == "requirement" and "-FSR-" in aid)
+        # A TARA and the security requirements derived from it are SYSTEM-level work
+        # products: ISO/SAE 21434 operates on the item, the threat set is drawn from
+        # system-level assets (CAN bus, Ethernet interface, serial link), and the
+        # mitigations protect system-level safety goals. The Software Requirements
+        # Specification stays the home of the -SWR-/-MAN- requirements; the TARA and the
+        # security requirements belong here, next to the goals they bound.
+        return (at in ("safety_goal", "tara")
+                or (at == "requirement" and ("-FSR-" in aid or "-SEC-" in aid)))
     if doc == "04-software-requirements-specification":
         return at == "requirement" and ("-SWR-" in aid or "-MAN-" in aid)
     if doc == "05-software-architecture-specification":
         return at == "design" and d.get("engineering_domain") == "software"
     if doc == "06-detailed-design-specification":
         return at == "design" and d.get("engineering_domain") == "software"
+    if doc == "09-software-verification-report":
+        # deviation records are the SWE.4 static-analysis deviance evidence for the
+        # implementation: they belong in the software verification report, not in a
+        # design or requirements document.
+        return at == "deviation"
+    if doc == "10-implementation-mapping-document":
+        # change records belong here rather than in the Software Integration Report
+        # (07) because of what they contain: a change record is a cross-artifact
+        # statement of which artifacts move to a new revision, which links go under
+        # suspicion, and which measures are re-run. That is the mapping question this
+        # document already answers for requirements, designs, sources and tests, and
+        # it needs the same view to stay useful. Document 07 is scoped to integration
+        # *results* for the reconstructed implementation; a change record carries no
+        # integration evidence, and placing it there would imply the change had been
+        # integrated into the real product.
+        return at == "change"
     return False
 
 OWNERSHIP = {doc: _owns for doc in DOC_ORDER}
@@ -672,6 +695,135 @@ def emit_02(v, out):
             L.append(f"- **Source references**: " + (", ".join(f"`{r}`" for r in d.get("source_refs", [])) or "—"))
             L.append(f"- **Assumption references**: " + (", ".join(f"`{r}` ({esc(v.asm_stmt(r),60)})" for r in d.get("assumption_refs", [])) or "—"))
             L.append("")
+
+    # ---- cybersecurity work products (TARA + derived security requirements) ----
+    taras = []
+    secs = []
+    for profile in PROFILES:
+        for tid in v.of_profile(profile, lambda d: d.get("artifact_type") == "tara"):
+            taras.append((profile, tid))
+        for sid in v.of_profile(profile, lambda d: d.get("artifact_type") == "requirement"
+                                and "-SEC-" in d.get("id", "")):
+            secs.append((profile, sid))
+
+    if taras or secs:
+        L.append("## Cybersecurity Work Products (Threat Analysis and Derived Security Requirements)")
+        L.append("")
+        L.append("This section carries the corpus' cybersecurity work products. They are placed in the System "
+                 "Requirements Specification rather than in the Software Requirements Specification because "
+                 "they are system-level work products: the threat set is drawn from system-level assets (CAN "
+                 "bus, Ethernet interface, serial link, commissioning toolchain), and the mitigations they "
+                 "carry protect system-level safety goals. Both are `synthetic_reference` artifacts; the "
+                 "`as_is` profile contains none, because the real foxBMS 2 project holds no threat analysis "
+                 "and no cybersecurity work product.")
+        L.append("")
+        L.append("**Guard flags — read before using anything in this section:**")
+        L.append("")
+        L.append("- The threat analysis below is a **corpus-local simplified threat and risk analysis**. "
+                 "Its `method.is_iso_21434_tara` field is machine-pinned to `false` by schema. It is **not** "
+                 "an ISO/SAE 21434 TARA and no ISO/SAE 21434 work product exists in this corpus.")
+        L.append("- No TARA in this corpus has been **reviewed or approved** by any cybersecurity, "
+                 "functional-safety or vehicle-level authority. `human_approval_status` is `pending` and "
+                 "`production_authorized` is `false` on every record below.")
+        L.append("- **No residual risk is accepted.** `residual_risk_acceptance.acceptance_exists` is "
+                 "machine-pinned to `false` and `accepted_by` to `none` on the TARA record.")
+        L.append("- No **penetration test, exploit, fuzzing campaign or CVSS assessment** was performed in "
+                 "producing any record below. A threat listed here is a static reading of code, not a "
+                 "demonstrated exploitable weakness.")
+        L.append("- A requirement marked *control absent* below means the corresponding control is **not "
+                 "present in the real foxBMS 2 source at commit 308028fb**. It does not mean the control is "
+                 "absent from any hypothetical product, and no statement here should be read as a claim that "
+                 "the real foxBMS product is secure or insecure in absolute terms.")
+        L.append("")
+
+    for profile, tid in sorted(taras, key=lambda t: t[1]):
+        t = v.get(profile, tid)
+        m = t.get("method", {}) or {}
+        L.append(f"### `{tid}` — {esc(t.get('title',''))}")
+        L.append("")
+        L.append(f"- **Profile**: `{profile}` · **Origin**: `{t.get('origin')}` · **Owner role**: "
+                 f"`{t.get('owner_role')}` · **Lifecycle**: `{t.get('lifecycle_status')}` · "
+                 f"**Human approval**: `{t.get('human_approval_status')}` · "
+                 f"**Production authorized**: `{str(t.get('production_authorized')).lower()}` · "
+                 f"**Product verification credit**: `{str(t.get('product_verification_credit')).lower()}`")
+        L.append(f"- **Method**: {esc(m.get('method_name','?'))}")
+        L.append(f"- **Is an ISO/SAE 21434 TARA**: `{str(m.get('is_iso_21434_tara')).lower()}` "
+                 f"(schema-pinned to `false`)")
+        L.append(f"- **Residual risk accepted**: "
+                 f"`{str(t.get('residual_risk_acceptance',{}).get('acceptance_exists')).lower()}` "
+                 f"by `{t.get('residual_risk_acceptance',{}).get('accepted_by')}`")
+        scope = t.get("item_and_scope", {}) or {}
+        L.append(f"- **Item under analysis**: {esc(scope.get('item_under_analysis','?'), 400)}")
+        L.append(f"- **Declared limitations of the analysis**: "
+                 f"{len(m.get('limitations', []))} — see the record for the full list")
+        L.append("")
+        th = t.get("threats", []) or []
+        obs = sum(1 for x in th if x.get("observed_in_pinned_source"))
+        L.append(f"**Threats ({len(th)} total, {obs} evidenced in the pinned source, "
+                 f"{len(th) - obs} hypothetical-project judgements):**")
+        L.append("")
+        L.append("| Threat | Origin | Observed in source | Target assets | Residual risk | Mitigations |")
+        L.append("|---|---|---|---|---|---|")
+        for x in th:
+            L.append(f"| `{x.get('threat_id')}` | `{x.get('origin')}` | "
+                     f"{'yes' if x.get('observed_in_pinned_source') else 'no'} | "
+                     + ", ".join(f"`{a}`" for a in x.get("target_asset_ids", [])) + " | "
+                     f"`{x.get('residual_risk')}` | "
+                     + (", ".join(f"`{m2}`" for m2 in x.get("mitigation_ids", [])) or "—") + " |")
+        L.append("")
+        mit = t.get("mitigations", []) or []
+        present = sum(1 for x in mit if x.get("status") in ("present_in_source", "partially_present_in_source"))
+        L.append(f"**Mitigations ({len(mit)} total, {present} present or partially present in the pinned "
+                 f"source, {len(mit) - present} absent or forward-engineered):**")
+        L.append("")
+        L.append("| Mitigation | Type | Status | Verification status | Maps to |")
+        L.append("|---|---|---|---|---|")
+        for x in mit:
+            L.append(f"| `{x.get('mitigation_id')}` | {x.get('type')} | `{x.get('status')}` | "
+                     f"`{x.get('verification_status')}` | "
+                     + (", ".join(f"`{r}`" for r in x.get("maps_to_requirements", [])) or "—") + " |")
+        L.append("")
+        L.append("Mitigation status is the load-bearing column. `present_in_source` means the mechanism was "
+                 "read out of the pinned source; `absent_in_source` means the record establishes by reading "
+                 "the source that the mechanism is **not** there; `forward_engineered_synthetic` means the "
+                 "mitigation is a proposal of the hypothetical project with no verification evidence.")
+        L.append("")
+
+    if secs:
+        L.append("### Derived Security Requirements")
+        L.append("")
+        L.append(f"{len(secs)} security requirement artifacts, all `origin: synthetic` and all "
+                 f"`verification_status: not_verified`. Each states in its own `real_source_presence` field "
+                 f"whether the corresponding control exists in the real foxBMS 2 source.")
+        L.append("")
+        L.append(f"| Requirement | Title | Class | Control present in the real foxBMS 2 source? | Verification |")
+        L.append("|---|---|---|---|---|")
+        VERDICT = {
+            "absent": "**NO — absent**",
+            "partially_present": "**PARTIAL** — see record",
+            "present": "yes",
+        }
+        for profile, sid in sorted(secs, key=lambda t: t[1]):
+            s = v.get(profile, sid)
+            L.append(f"| `{sid}` | {esc(s.get('title',''), 90)} | "
+                     f"`{s.get('classification')}` | "
+                     f"{VERDICT.get(s.get('real_source_control_status'), 'not stated')} | "
+                     f"`{s.get('verification_status')}` |")
+        L.append("")
+        L.append("The *control present* column is read from the machine-readable `real_source_control_status` "
+                 "field of each record, not inferred from prose. `absent` means the record establishes by "
+                 "reading the pinned source that the control is not there. `partially_present` means part of "
+                 "the capability is there and part is not, and the record's `real_source_presence` field gives "
+                 "the itemised split.")
+        L.append("")
+        L.append("Every requirement above carries `human_approval_status: pending`, "
+                 "`production_authorized: false` and `product_verification_credit: false`. No requirement "
+                 "has verification evidence in this corpus, and none has been approved. The related third-party "
+                 "component inventory is `docs/artifacts/sources/sbom.json`; it deliberately records **no** "
+                 "vulnerability status for any component, because no advisory source was consulted. Absence "
+                 "of an advisory there means the question was not asked, not that the answer is negative.")
+        L.append("")
+
     (out / "02-system-requirements-specification.md").write_text(finish(L))
 
 
@@ -1607,6 +1759,33 @@ def emit_09(v, out):
                     else f"No `{key}` execution artifacts in the corpus — gap (blocked, not fabricated).")
             L.append(note)
             L.append("")
+
+    # ---- static-analysis deviation records (SWE.4 deviance evidence) -----
+    devs = []
+    for profile in PROFILES:
+        for did in v.of_profile(profile, lambda d: d.get("artifact_type") == "deviation"):
+            devs.append((profile, did))
+    L.append("## Static-Analysis Deviance Evidence")
+    L.append("")
+    L.append(f"The corpus holds **{len(devs)} deviation records** (`FB2-SW-DEV-*`) mined from in-source "
+             "Axivion `Style MisraC2012*` suppression annotations. They are the coding-guideline deviance "
+             "evidence a software verification report is expected to hold. They are **not** verification "
+             "results: each record documents an observed, in-source justified exception in the pinned "
+             "implementation, and none of them is a test, a test result, or a coverage claim.")
+    L.append("")
+    L.append("| Record | Rule | Suppression | Affected lines | File | Symbol |")
+    L.append("|---|---|---|---|---|---|")
+    for profile, did in sorted(devs, key=lambda t: t[1]):
+        d = v.get(profile, did)
+        L.append(f"| `{did}` | {d.get('rule_reference')} ({d.get('rule_category')}) | "
+                 f"{d.get('suppression_form')} | `{d.get('affected_lines')}` | "
+                 f"`{d.get('affected_file')}` | {d.get('affected_symbol')} |")
+    L.append("")
+    L.append("Every record carries `lifecycle_status: draft`, `human_approval_status: pending`, "
+             "`production_authorized: false` and `product_verification_credit: false`; the table above "
+             "records their existence and location only and asserts no conformance, no tool qualification "
+             "and no completed ISO 26262 or ASPICE assessment.")
+    L.append("")
     (out / "09-software-verification-report.md").write_text(finish(L))
 
 
@@ -1690,7 +1869,7 @@ def emit_10(v, out):
         d = v.artifacts[(profile, rid)]
         cov = v.coverage(profile, rid)
         rtype = ("FSR" if "-FSR-" in rid else "TSR" if "-TSR-" in rid
-                 else "SWR" if "-SWR-" in rid else "MGT")
+                 else "SWR" if "-SWR-" in rid else "SEC" if "-SEC-" in rid else "MGT")
         direct = ", ".join(f"`{x}`" for x in cov["direct"]) or "—"
         indirect = ", ".join(f"`{c}`←{','.join(t)}" for c, t in sorted(cov["indirect"].items())) or "—"
         tests = ", ".join(f"`{x}`" for x in cov["tests"]) or "—"
@@ -1714,6 +1893,116 @@ def emit_10(v, out):
     L.append("")
     L.append("UNCOVERED requirements are the honest corpus state; the gaps are tracked by review "
              "dispositions in `FB2-REV-000001` and the gap report. No coverage is fabricated.")
+    L.append("")
+
+    # ---- change impact mapping (canonical change records, SUP.10) --------
+    chgs = [(p, cid) for p in PROFILES
+            for cid in v.of_profile(p, lambda d: d.get("artifact_type") == "change")]
+    L.append("## Change Impact Mapping")
+    L.append("")
+    L.append(f"The corpus holds **{len(chgs)} canonical change records** (`FB2-MAN-CHG-*`) for the "
+             "synthetic-reference project. Each is the change-management record of record for one "
+             "change request and carries the full chain: trigger, impact analysis, decision, the "
+             "artifacts moved to a new revision, the links placed under suspicion, the required "
+             "updates, the re-verification selection, and the planned post-change baseline.")
+    L.append("")
+    L.append("They are **change-management records, not verification results**. None of the three "
+             "has been executed, none of the revisions it names has been raised, and none of the "
+             "post-change baselines it names exists. A row below is a statement of intended work, "
+             "not a report of work done.")
+    L.append("")
+    L.append("These are not the change-lifecycle *demonstrations*. The demonstrations are "
+             "`FB2-SCN-CHG-000001`, `FB2-SCN-CHG-000002` and `FB2-SCN-CHG-000003` under "
+             "`docs/artifacts/scenarios/change-lifecycles/`, which exist to exercise the corpus "
+             "scenario gate and are checked for structural completeness only. The records below "
+             "describe the same three subjects as engineering work; the two sets are deliberately "
+             "separate artifacts with different jobs, and each record states its own relationship "
+             "to its demonstration in its `relationship_to_scenario_fixture` field.")
+    L.append("")
+    L.append("| Record | Change type | Trigger class | Affected artifacts | New revisions | Suspect links | Re-verification | Post-change baseline |")
+    L.append("|---|---|---|---|---|---|---|---|")
+    for p, cid in chgs:
+        d = v.get(p, cid)
+        ia = d.get("impact_analysis", {}) or {}
+        tc = esc((d.get("trigger") or {}).get("trigger_class", "N/A"), 40)
+        aa = ", ".join(f"`{x}`" for x in ia.get("affected_artifacts", [])) or "—"
+        nr = ", ".join(f"`{r.get('artifact_id')}` {r.get('old_revision')}→{r.get('new_revision')}"
+                       for r in d.get("new_revisions", [])) or "—"
+        sl = ", ".join(f"`{x}`" for x in d.get("suspect_links", [])) or "—"
+        rv = ", ".join(f"`{x}`" for x in d.get("reverification_selection", [])) or "—"
+        L.append(f"| `{cid}` ({p}) | `{d.get('change_type')}` | {tc} | {esc(aa)} | {esc(nr)} | "
+                 f"{esc(sl)} | {esc(rv)} | `{d.get('post_change_baseline')}` |")
+    L.append("")
+
+    L.append("### Suspect Links")
+    L.append("")
+    L.append("`suspect_links` names links whose endpoint revisions or whose claims the change puts "
+             "in question. The baseline link registry still records `change_suspect_status: false` "
+             "on every one of them, and that is the correct state: the decisions below are fictional "
+             "workflow outcomes, no affected artifact has been revised, and no post-change baseline "
+             "exists. The flag becomes true as part of establishing the post-change baseline, at "
+             "which point the registry flag and the record's suspect list must agree. Note that all "
+             "of these links have existing endpoints at existing revisions, so no dangling-endpoint "
+             "check will ever flag them - they are the links that survive a change unnoticed.")
+    L.append("")
+    L.append("| Record | Link | Relation | Endpoints | Why it is suspect |")
+    L.append("|---|---|---|---|---|")
+    for p, cid in chgs:
+        d = v.get(p, cid)
+        for s in d.get("suspect_link_rationale", []) or []:
+            L.append(f"| `{cid}` | `{s.get('link_id')}` | `{s.get('relation_type')}` | "
+                     f"{esc(s.get('endpoints', ''), 90)} | {esc(s.get('why_suspect', ''), 320)} |")
+    L.append("")
+
+    L.append("### Decision and Approval State")
+    L.append("")
+    L.append("| Record | Decision id | Decision maker | Disposition | Approvals recorded | Re-verification executed |")
+    L.append("|---|---|---|---|---|---|")
+    for p, cid in chgs:
+        d = v.get(p, cid)
+        dec = d.get("decision", {}) or {}
+        cc = d.get("change_control", {}) or {}
+        need = len(cc.get("required_approvals", []) or [])
+        L.append(f"| `{cid}` | `{dec.get('decision_id')}` | {esc(dec.get('decision_maker', ''), 100)} | "
+                 f"`{dec.get('disposition')}` | {cc.get('approvals_recorded', 0)} of {need} | no |")
+    L.append("")
+    L.append("Every record carries `profile: synthetic_reference`, `origin: synthetic`, "
+             "`human_approval_status: pending`, `production_authorized: false` and "
+             "`product_verification_credit: false`. Each `decision_maker` is a fictional role "
+             "identity in the synthetic project and each `disposition` is a `synthetic_decision` in "
+             "the sense of `governance/corpus-policy.json` "
+             "(`synthetic_decision:{fictional_role}:{decision_id}`): not a human approval, not a "
+             "foxBMS maintainer decision, and not a SoftwareDevLabs decision. All three records "
+             "are `implementation_status: not_in_source`, and no file under `src/`, `tests/`, "
+             "`conf/` or `wscript` is touched by them. No row in this section asserts that any "
+             "change was made, approved or verified in any real project, and no row asserts a "
+             "measured test result.")
+    L.append("")
+    L.append("### Corpus-Consistency Notes")
+    L.append("")
+    L.append("Three slots in these records are empty by schema rather than by omission, and the "
+             "reasoning is recorded in the records themselves so the emptiness is not read as an "
+             "incomplete analysis:")
+    L.append("")
+    L.append("- `impact_analysis.affected_reviews` is empty in all three. The change schema admits "
+             "only ids matching `^FB2-REV-[A-Z]{2,4}-[0-9]{6}$`, i.e. a review id carrying a "
+             "two-to-four letter type segment. The corpus contains exactly one review artifact, "
+             "`FB2-REV-000001`, which has no such segment and belongs to the `as_is` profile as an "
+             "automated review of the reconstructed foxBMS artifacts. There is therefore no review "
+             "in the `synthetic_reference` profile for these changes to invalidate, and the review "
+             "work they do require is enumerated in each record's `re_review_scope` field.")
+    L.append("- `impact_analysis.affected_evidence` is empty in all three, for the same shape of "
+             "reason: the schema admits only `^FB2-EVD-[A-Z]{2,4}-[0-9]{6}$` and no `FB2-EVD-` "
+             "artifact exists in either profile. The executions these changes really do invalidate "
+             "(`FB2-VER-EXE-000001`, and for `FB2-MAN-CHG-000002` also `FB2-VER-EXE-000003` and "
+             "`FB2-VER-EXE-000005`) do exist in `synthetic_reference` and are named in each record's "
+             "`evidence_invalidation` field instead.")
+    L.append("- `FB2-PRM-000001` (parameter-registry entry), the `FB2-SRC-*` identifiers (source "
+             "anchors) and `VAR-AFE-ADI-1830` (a variant-matrix row) all resolve, but as rows of "
+             "registries rather than as artifacts with revisions and lifecycle states. A `changes` "
+             "link pointed at any of them would dangle, so each is recorded in a typed sibling "
+             "field of the record that concerns it. Several of them even satisfy the change schema's "
+             "id pattern, which makes this the easiest category error in the corpus to commit.")
     L.append("")
     (out / "10-implementation-mapping-document.md").write_text(finish(L))
 

@@ -1,0 +1,143 @@
+{
+  "id": "FB2-SW-DEV-000010",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "deviation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Deviation: MisraC2012-1.2 toolchain ISR registration pragmas on EMAC_RxInterruptServiceRoutine (emac.c)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000040"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "MISRA_C_2012",
+      "reference": "Rule/directive 1.2 as written in the source annotation; normative rule text is proprietary and is not reproduced or verified by this corpus.",
+      "status": "unverified",
+      "rationale": "The rule number is reproduced exactly as written in the in-source Axivion annotation at commit 308028fb. The severity classification and the normative wording of the rule are proprietary and are deliberately not asserted here."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 Software Verification (static analysis evidence and justified deviance)",
+      "status": "partially_mapped",
+      "rationale": "The record is the in-source static-analysis deviance evidence for one rule set, which is part of what SWE.4 expects a project to hold. It is only partial: the repository holds no deviance log, no approval trail, no tool criticality entry for the analysing tool, and no re-analysis trigger register, so the surrounding SWE.4 evidence a qualified project would need is not evidenced at this commit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6 Clause 8 / Part 11 Clause 8 (coding guidelines and their justified deviations)",
+      "status": "partially_mapped",
+      "rationale": "The project states a MUST for MISRA C:2012 compatibility (docs/developer-manual/software/software-programming-language.rst:22), so these suppressions are deviations from a stated coding-guideline expectation. No ISO 26262 safety classification is claimed for any of them, and no argument is made here that the residual risk of any deviation is acceptable."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed': the record was mined mechanically from source and no human review of the deviation has taken place. human_approval_status is 'pending' for the same reason. automated_review_status below refers to the corpus automation gates only and is not a statement about the engineering validity of the deviation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "Mined from the in-source Axivion MISRA C:2012 style-check suppression at commit 308028fb. Rationale text is verbatim from the source comment."
+    }
+  ],
+  "guideline_id": "MisraC2012",
+  "rule_reference": "1.2",
+  "rule_category": "rule",
+  "deviation_rationale": "Register ISR",
+  "deviation_type": "toolchain_or_compiler_extension",
+  "affected_file": "src/app/driver/emac/emac.c",
+  "affected_symbol": "EMAC_RxInterruptServiceRoutine",
+  "affected_lines": "597-600",
+  "suppression_form": "disable_enable_block",
+  "suppression_scope": "block",
+  "review_disposition": "recorded_inline_no_governance_evidence",
+  "review_disposition_note": "Governance evidence search at the pinned baseline: no deviance log, deviation log, suppression register, waiver file or review record for the MisraC2012 style checks exists anywhere in the repository (searched for *deviance*, *deviation*, *misra*, *axivion* file names and for 'AXIVION' across docs/). docs/tools/static-analysis/ and conf/spa/ do not exist at this commit. The rationale text below is therefore the only recorded justification.",
+  "reanalysis_justification": "Same re-analysis triggers as the transmit ISR (FB2-SW-DEV-000009): vector table, priority configuration, FreeRTOS port, compiler version. The receive ISR additionally contains the descriptor traversal and PHY-link polling loops (lines 601-660) whose interrupt-context execution time is not bounded anywhere in the record, so a change to the buffer descriptor handling must re-trigger the analysis.",
+  "tool_reference": {
+    "tool": "Axivion",
+    "check_family": "Style MisraC2012",
+    "annotation": "MisraC2012-1.2"
+  },
+  "evidence_quote": "/* AXIVION Disable Style MisraC2012-1.2: Register ISR */\n#pragma CODE_STATE(EMAC_RxInterruptServiceRoutine, 32)\n#pragma INTERRUPT(EMAC_RxInterruptServiceRoutine, IRQ)\n/* AXIVION Enable Style MisraC2012-1.2: */\nvoid EMAC_RxInterruptServiceRoutine(void) {",
+  "normative_verification": {
+    "rule_text_reproduced": false,
+    "rule_severity_asserted": false,
+    "conformance_claimed": false,
+    "status": "rule_reference_unverified_against_proprietary_source"
+  },
+  "design_traceability": {
+    "design_artifact_id": null,
+    "coverage_status": "gap_no_design_artifact_in_profile",
+    "coverage_note": "emac.c is not in the implementation_mapping of any as_is software design artifact; the as_is profile has no Ethernet design element. Recorded as a coverage gap."
+  },
+  "impact_notes": [
+    {
+      "aspect": "runtime_behavior",
+      "note": "The pragmas are what make the receive ISR reachable; without them no Ethernet frame is ever processed."
+    },
+    {
+      "aspect": "timing",
+      "note": "The ISR body spins on buffer-descriptor ownership (while (emacIsOwner == true)) inside interrupt context; the suppression is unrelated to that pattern but the same function."
+    },
+    {
+      "aspect": "portability",
+      "note": "TI ARM CGT extension pragmas, no ISO C11 equivalent."
+    }
+  ],
+  "project_process_evidence": [
+    {
+      "document_path": "docs/developer-manual/software/software-programming-language.rst",
+      "line": "22",
+      "what_it_states": "Project-level MUST: 'Code contributed to this project **MUST** be compatible with MISRA C:2012 which is described in :cite:`MISRA-C:2012`.' This is the only occurrence of 'MISRA' in the whole pinned docs/ tree and is the statement every suppression in this record set is a deviation from."
+    },
+    {
+      "document_path": "docs/developer-manual/style-guide/guidelines_c.rst",
+      "line": "540-545",
+      "what_it_states": "C:015 defines the project's only documented in-source deviation annotation syntax: 'If no assertion can be made for the parameter ... the parameter **MUST** be marked like this at the start of the function context: /* AXIVION Routine Generic-MissingParameterAssert: *ENTITY_NAME*: *RATIONALE* */.' The written guideline therefore mandates the '<ENTITY>: <RATIONALE>' annotation shape for one Axivion check family only; the MisraC2012 style-check family follows the same shape in practice but is not covered by any C:001..C:033 rule."
+    },
+    {
+      "document_path": "docs/developer-manual/style-guide/guidelines_overview_c.csv",
+      "line": "1-34",
+      "what_it_states": "The project's own C coding guideline is a 33-rule set (C:001..C:033) with an 'Automated Check' column. Only C:002, C:004, C:005, C:006 and C:029 are marked 'Yes'; no rule in the set corresponds to a MisraC2012 style check, so the guideline set does not govern the rules these suppressions waive."
+    },
+    {
+      "document_path": "docs/developer-manual/software/criticality-mapping-of-third-party-tools.csv",
+      "line": "1-11",
+      "what_it_states": "The third-party tool criticality table classifies git, TI ARM CGT, gcc, vs-code, waf, sphinx, ceedling and a custom HIL runner. No static-analysis tool (Axivion, cppcheck or equivalent) is classified, so no tool criticality or qualification basis for the tool that produced these suppressions is recorded in the repository."
+    }
+  ],
+  "corpus_scope": {
+    "query": "graft grep \"AXIVION Disable Style MisraC2012\" -i (repo root)",
+    "hit_count": 43,
+    "scope_note": "This set is 26 deviation records, one per (file, symbol) group, and covers all 43 'AXIVION Disable Style MisraC2012*' annotation lines found under src/ at commit 308028fb. Those 43 annotation lines fall in 20 files, and every one of the 43 is represented in the affected_lines of a record. 26 records cover 43 annotation lines over 26 distinct (file, symbol) groups because, where one symbol carries more than one MisraC2012 rule, the additional Disable lines appear as further entries in the same record's deviations array instead of as separate records. Axivion annotations outside this query are not mined by this set, and their absence must not be read as 'no deviation': 'AXIVION Routine Generic-MissingParameterAssert', 'AXIVION Next Codeline Style MisraC2012*', 'AXIVION Next Codeline Generic-LocalInclude', 'AXIVION Next Codeline CodingStyle-Naming.*', 'AXIVION Next Codeline IISB-LiteralSuffixesCheck', 'AXIVION Next Codeline Generic-NoEllipsis', 'AXIVION Next Codeline Generic-ForbiddenFunctions', 'AXIVION Routine FaultDetection-DivisionByZero', and the 'AXIVION Routine MisraC2012Directive-4.1' / 'AXIVION Routine MisraC2012-2.7' annotations. Non-MISRA families that share one of the 43 mined annotation lines ARE recorded, per record, in tool_reference.co_located_non_misra_checks and in the corresponding deviations entry (for example Generic-NoUnsafeMacro, CertC-PRE01, Generic-NoEmptyLoops, Generic-DoxygenCommentInHeader, Generic-NoMagicNumbers, IISB-LiteralSuffixesCheck); out-of-query suppression sites on the same symbol are likewise listed in the record's deviations array with a note, so that each record's rule exposure is complete for the symbol it names."
+  },
+  "deviations": [
+    {
+      "rule_reference": "1.2",
+      "rule_category": "rule",
+      "deviation_rationale": "Register ISR",
+      "deviation_type": "toolchain_or_compiler_extension",
+      "affected_lines": "597-600",
+      "suppression_form": "disable_enable_block"
+    }
+  ]
+}

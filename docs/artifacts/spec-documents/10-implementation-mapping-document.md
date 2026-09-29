@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-13T15:17:46Z |
+| Generated | 2026-09-29T10:08:35Z |
 
 ## Scope
 
@@ -120,22 +120,35 @@ Complete mapping of every implemented module to its source files, configuration,
 
 ### Requirement → Design → Source → Test Chains
 
-`implements` / `verifies` / `result_of` link IDs in parentheses. `verifies` links target requirements, never DSNs. Upstream parent chain shared by all rows: `SGO-000001` `mitigates` `HAZ-000001` (`LNK-001`); `FSR-000001/002/003` `refines` `SGO-000001` (`LNK-002/003/004`); `FSR-000004` `refines` `SGO-000001` (`LNK-021`, `synthetic_reference` only).
+#### `FB2-SW-SWR-000001` (as_is)
 
-#### Chains (`as_is`, test measures `source_grounded`)
+- Design `FB2-SW-DSN-000001` implements `FB2-SW-SWR-000001` → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c`
+- Verifying test measures: `FB2-VER-TMS-000003`
 
-- `FB2-SW-SWR-000001` ←implements— `FB2-SW-DSN-000001` (`FB2-LNK-SAF-000011`) → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c` — allocation `SWR-000001` → `FSR-000001` (`LNK-008`); verified by `FB2-VER-TMS-000003` (`LNK-021/022`); execution: none recorded.
-- `FB2-SW-SWR-000002` ←implements— `FB2-SW-DSN-000002` (`FB2-LNK-SAF-000012`) → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c` — allocation `SWR-000002` → `FSR-000002` (`LNK-009`); verified by `FB2-VER-TMS-000001` (`LNK-014/015`); execution `FB2-VER-EXE-000001` (`LNK-018`), `actual_host_run`, `pass` — hashes `sha256:placeholder`, `output_hashes` empty.
-- `FB2-SW-SWR-000003` ←implements— `FB2-SW-DSN-000003` (`FB2-LNK-SAF-000013`) → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c` — allocation `SWR-000003` → `FSR-000003` (`LNK-010`); verified by `FB2-VER-TMS-000002` (`LNK-016/017`); execution: none recorded.
-- `FB2-HW-TSR-000001` / `FB2-HW-TSR-000002` (allocation `LNK-005/006`) verified by `FB2-VER-TMS-000004` (`LNK-023/024`); `FB2-HW-TSR-000003` (allocation `LNK-007`) verified by `FB2-VER-TMS-000005` (`LNK-025`); execution: none recorded.
+#### `FB2-SW-SWR-000002` (as_is)
 
-#### Chains (`synthetic_reference`, test measures `synthetic_assumption`, executions `synthetic_fixture`)
+- Design `FB2-SW-DSN-000002` implements `FB2-SW-SWR-000002` → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c`
+- Verifying test measures: `FB2-VER-TMS-000001`
 
-- `FB2-SW-SWR-000001` ←implements— `FB2-SW-DSN-000001` (`FB2-LNK-SAF-000011`) → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c` — allocation (`LNK-008`); verified by `FB2-VER-TMS-000003` (`LNK-026/027/028`); execution `FB2-VER-EXE-000003` (`LNK-035`), `pass`.
-- `FB2-SW-SWR-000002` ←implements— `FB2-SW-DSN-000002` (`FB2-LNK-SAF-000012`) → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c` — allocation (`LNK-009`); verified by `FB2-VER-TMS-000001` (`LNK-022/023`); execution `FB2-VER-EXE-000001` (`LNK-033`), `pass`.
-- `FB2-SW-SWR-000003` ←implements— `FB2-SW-DSN-000003` (`FB2-LNK-SAF-000013`) → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c` — allocation (`LNK-010`); verified by `FB2-VER-TMS-000002` (`LNK-024/025`); execution `FB2-VER-EXE-000002` (`LNK-034`), `pass`.
-- `FB2-HW-TSR-000002` verified by `FB2-VER-TMS-000005` (`LNK-031`) → `FB2-VER-EXE-000005` (`LNK-037`), `pass`; `FB2-HW-TSR-000003` verified by `FB2-VER-TMS-000006` (`LNK-032`) → `FB2-VER-EXE-000006` (`LNK-038`), `pass`.
-- `FB2-SAF-FSR-000004` / `FB2-HW-TSR-000004`: no allocated SWR or DSN exists; verified by `FB2-VER-TMS-000004` (`LNK-029/030`) → `FB2-VER-EXE-000004` (`LNK-036`), `pass`. TSR-004 `allocated_to` FSR-004 (`LNK-058`).
+#### `FB2-SW-SWR-000003` (as_is)
+
+- Design `FB2-SW-DSN-000003` implements `FB2-SW-SWR-000003` → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c`
+- Verifying test measures: `FB2-VER-TMS-000002`
+
+#### `FB2-SW-SWR-000001` (synthetic_reference)
+
+- Design `FB2-SW-DSN-000001` implements `FB2-SW-SWR-000001` → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c`
+- Verifying test measures: `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007`
+
+#### `FB2-SW-SWR-000002` (synthetic_reference)
+
+- Design `FB2-SW-DSN-000002` implements `FB2-SW-SWR-000002` → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c`
+- Verifying test measures: `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010`
+
+#### `FB2-SW-SWR-000003` (synthetic_reference)
+
+- Design `FB2-SW-DSN-000003` implements `FB2-SW-SWR-000003` → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c`
+- Verifying test measures: `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007`
 
 ## Requirement-to-Test Coverage Matrix
 
@@ -156,31 +169,92 @@ One row per requirement artifact across FSR/TSR/SWR/management classes, both pro
 | `synthetic_reference` | `FB2-HW-TSR-000002` | TSR | **COVERED-DIRECT** | `FB2-VER-TMS-000005` | — | `FB2-VER-TMS-000005` |  |
 | `synthetic_reference` | `FB2-HW-TSR-000003` | TSR | **COVERED-DIRECT** | `FB2-VER-TMS-000006` | — | `FB2-VER-TMS-000006` |  |
 | `synthetic_reference` | `FB2-HW-TSR-000004` | TSR | **COVERED-DIRECT** | `FB2-VER-TMS-000004` | — | `FB2-VER-TMS-000004` |  |
-| `synthetic_reference` | `FB2-MAN-SCO-000001` | MGT | **COVERED-DIRECT** | `FB2-VER-TMS-000009` (`validates`, `LNK-047`) | — | `FB2-VER-TMS-000009` | Draft planning stub; no execution |
-| `synthetic_reference` | `FB2-SAF-FSR-000001` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000003` | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005` |  |
-| `synthetic_reference` | `FB2-SAF-FSR-000002` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000001` | `FB2-SW-SWR-000002`←FB2-VER-TMS-000001 | `FB2-VER-TMS-000001` |  |
-| `synthetic_reference` | `FB2-SAF-FSR-000003` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000002` | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000006` |  |
-| `synthetic_reference` | `FB2-SAF-FSR-000004` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000004` | — | `FB2-VER-TMS-000004` |  |
-| `synthetic_reference` | `FB2-SW-SWR-000001` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000003` | — | `FB2-VER-TMS-000003` |  |
-| `synthetic_reference` | `FB2-SW-SWR-000002` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000001` | — | `FB2-VER-TMS-000001` |  |
-| `synthetic_reference` | `FB2-SW-SWR-000003` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000002` | — | `FB2-VER-TMS-000002` |  |
+| `synthetic_reference` | `FB2-MAN-SCO-000001` | MGT | **COVERED-DIRECT** | `FB2-VER-TMS-000009` | — | `FB2-VER-TMS-000009` |  |
+| `synthetic_reference` | `FB2-SAF-FSR-000001` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` |  |
+| `synthetic_reference` | `FB2-SAF-FSR-000002` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` | `FB2-SW-SWR-000002`←FB2-VER-TMS-000001,FB2-VER-TMS-000007,FB2-VER-TMS-000010 | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000010`, `FB2-VER-TMS-000011` |  |
+| `synthetic_reference` | `FB2-SAF-FSR-000003` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` |  |
+| `synthetic_reference` | `FB2-SAF-FSR-000004` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000004`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` | `FB2-HW-TSR-000004`←FB2-VER-TMS-000004 | `FB2-VER-TMS-000004`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` |  |
+| `synthetic_reference` | `FB2-SAF-SEC-000001` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SAF-SEC-000002` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SAF-SEC-000003` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SAF-SEC-000004` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SAF-SEC-000005` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SW-SWR-000001` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` | — | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` |  |
+| `synthetic_reference` | `FB2-SW-SWR-000002` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` | — | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` |  |
+| `synthetic_reference` | `FB2-SW-SWR-000003` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` | — | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` |  |
 
 ### Coverage Summary
 
-- **Total requirement artifacts**: 21
-- **Covered (any status)**: 21 (100%)
-- **UNCOVERED**: 0
-
-Statuses above mean test-measure linkage only (see Evidence limits); execution coverage is tracked separately per test measure.
+- **Total requirement artifacts**: 26
+- **Covered (any status)**: 21 (80%)
+- **UNCOVERED**: 5
+  - `FB2-SAF-SEC-000001` (`synthetic_reference`)
+  - `FB2-SAF-SEC-000002` (`synthetic_reference`)
+  - `FB2-SAF-SEC-000003` (`synthetic_reference`)
+  - `FB2-SAF-SEC-000004` (`synthetic_reference`)
+  - `FB2-SAF-SEC-000005` (`synthetic_reference`)
 
 UNCOVERED requirements are the honest corpus state; the gaps are tracked by review dispositions in `FB2-REV-000001` and the gap report. No coverage is fabricated.
 
-### Evidence limits
+## Change Impact Mapping
 
-- COVERED in the matrix above means test-measure linkage (`verifies`), not execution evidence. Execution credit requires a `result_of`-linked execution record with retained, checkable evidence.
-- In `as_is`, only `FB2-VER-TMS-000001` has an execution record (`actual_host_run`, `pass`), which is not independently substantiated (hashes `sha256:placeholder`, `output_hashes` empty, no retained per-run logs); `FB2-VER-TMS-000002` through `FB2-VER-TMS-000005` have no execution records.
-- In `synthetic_reference`, all executions are `synthetic_fixture` `pass` results demonstrating corpus structure only (`product_verification_credit: false`, `human_approval_status: pending`).
+The corpus holds **3 canonical change records** (`FB2-MAN-CHG-*`) for the synthetic-reference project. Each is the change-management record of record for one change request and carries the full chain: trigger, impact analysis, decision, the artifacts moved to a new revision, the links placed under suspicion, the required updates, the re-verification selection, and the planned post-change baseline.
+
+They are **change-management records, not verification results**. None of the three has been executed, none of the revisions it names has been raised, and none of the post-change baselines it names exists. A row below is a statement of intended work, not a report of work done.
+
+These are not the change-lifecycle *demonstrations*. The demonstrations are `FB2-SCN-CHG-000001`, `FB2-SCN-CHG-000002` and `FB2-SCN-CHG-000003` under `docs/artifacts/scenarios/change-lifecycles/`, which exist to exercise the corpus scenario gate and are checked for structural completeness only. The records below describe the same three subjects as engineering work; the two sets are deliberately separate artifacts with different jobs, and each record states its own relationship to its demonstration in its `relationship_to_scenario_fixture` field.
+
+| Record | Change type | Trigger class | Affected artifacts | New revisions | Suspect links | Re-verification | Post-change baseline |
+|---|---|---|---|---|---|---|---|
+| `FB2-MAN-CHG-000001` (synthetic_reference) | `safety_threshold` | external_mandatory | `FB2-SAF-FSR-000002`, `FB2-SAF-HAZ-000001`, `FB2-HW-TSR-000001`, `FB2-SW-DSN-000002`, `FB2-VER-TMS-000001` | `FB2-SAF-FSR-000002` 1→2, `FB2-SAF-HAZ-000001` 1→2, `FB2-HW-TSR-000001` 1→2, `FB2-SW-DSN-000002` 1→2, `FB2-VER-TMS-000001` 1→2 | `FB2-LNK-SAF-000001`, `FB2-LNK-SAF-000003`, `FB2-LNK-SAF-000009`, `FB2-LNK-SAF-000012`, `FB2-LNK-SAF-000022`, `FB2-LNK-SAF-000023`, `FB2-LNK-SAF-000033` | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000002`, `FB2-VER-TMS-000003` | `BAS-REF-002` |
+| `FB2-MAN-CHG-000002` (synthetic_reference) | `hsi_interface` | external_mandatory | `FB2-SYS-HSI-000001`, `FB2-HW-TSR-000001`, `FB2-HW-TSR-000002`, `FB2-SW-SWR-000001`, `FB2-SW-DSN-000001`, `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005` | `FB2-SYS-HSI-000001` 1→2, `FB2-HW-TSR-000001` 1→2, `FB2-HW-TSR-000002` 1→2, `FB2-SW-SWR-000001` 1→2, `FB2-SW-DSN-000001` 1→2, `FB2-VER-TMS-000003` 1→2, `FB2-VER-TMS-000005` 1→2 | `FB2-LNK-SAF-000005`, `FB2-LNK-SAF-000006`, `FB2-LNK-SAF-000008`, `FB2-LNK-SAF-000011`, `FB2-LNK-SAF-000027`, `FB2-LNK-SAF-000028`, `FB2-LNK-SAF-000031` | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005`, `FB2-VER-TMS-000001`, `FB2-VER-TMS-000002` | `BAS-REF-003` |
+| `FB2-MAN-CHG-000003` (synthetic_reference) | `software_behavior` | internal_defect | `FB2-SAF-FSR-000002`, `FB2-SW-DSN-000002`, `FB2-SW-SWR-000002`, `FB2-VER-TMS-000001` | `FB2-SAF-FSR-000002` 1→2, `FB2-SW-SWR-000002` 1→2, `FB2-VER-TMS-000001` 1→2 | `FB2-LNK-SAF-000009`, `FB2-LNK-SAF-000012`, `FB2-LNK-SAF-000022`, `FB2-LNK-SAF-000023`, `FB2-LNK-SAF-000033` | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000002` | `BAS-REF-004` |
+
+### Suspect Links
+
+`suspect_links` names links whose endpoint revisions or whose claims the change puts in question. The baseline link registry still records `change_suspect_status: false` on every one of them, and that is the correct state: the decisions below are fictional workflow outcomes, no affected artifact has been revised, and no post-change baseline exists. The flag becomes true as part of establishing the post-change baseline, at which point the registry flag and the record's suspect list must agree. Note that all of these links have existing endpoints at existing revisions, so no dangling-endpoint check will ever flag them - they are the links that survive a change unnoticed.
+
+| Record | Link | Relation | Endpoints | Why it is suspect |
+|---|---|---|---|---|
+| `FB2-MAN-CHG-000001` | `FB2-LNK-SAF-000001` | `mitigates` | FB2-SAF-SGO-000001 -> FB2-SAF-HAZ-000001 | The goal mitigates the hazard by making contactors open on a confirmed limit violation. The mechanism is unchanged, but the value at which it fires moves, so the goal's adequacy argument is re-argued at the new margin (150 mV instead of 100 mV to the FB2-ASM-002 boundary). Suspect means 'the reasoning must be re-shown'... |
+| `FB2-MAN-CHG-000001` | `FB2-LNK-SAF-000003` | `refines` | FB2-SAF-FSR-000002 -> FB2-SAF-SGO-000001 | The FSR's derivation from the goal rests on detecting an overvoltage within the hazard's operational situation. The FSR statement changes (debounce count), so the refinement must be re-derived rather than inherited. |
+| `FB2-MAN-CHG-000001` | `FB2-LNK-SAF-000009` | `allocated_to` | FB2-SW-SWR-000002 -> FB2-SAF-FSR-000002 | The software requirement hard-codes both the 4.2 V ceiling and the 2-consecutive debounce in its own statement. The allocation is by statement, so once the FSR says 3, this link asserts an allocation to text that no longer says what the FSR says. The link's endpoints are both unchanged, which is exactly why it is easy ... |
+| `FB2-MAN-CHG-000001` | `FB2-LNK-SAF-000012` | `implements` | FB2-SW-DSN-000002 -> FB2-SW-SWR-000002 | The design's default debounce count is the number this change moves. An implements link whose design still says 2 while the requirement says 3 is a live claim that the design does not satisfy the requirement. |
+| `FB2-MAN-CHG-000001` | `FB2-LNK-SAF-000022` | `verifies` | FB2-VER-TMS-000001 -> FB2-SAF-FSR-000002 | The only direct verifies link to the ASIL D limit-monitoring requirement, and the test stimulus names the old ceiling. The link currently asserts coverage that the stimulus no longer provides. |
+| `FB2-MAN-CHG-000001` | `FB2-LNK-SAF-000023` | `verifies` | FB2-VER-TMS-000001 -> FB2-SW-SWR-000002 | Same test, second target. The software requirement duplicates the ceiling and debounce count in its own text, so the test must be re-checked against both targets, not one. |
+| `FB2-MAN-CHG-000001` | `FB2-LNK-SAF-000033` | `result_of` | FB2-VER-EXE-000001 -> FB2-VER-TMS-000001 | The execution record is the evidence that the verifies links above rested on. If the measure changes, the result is no longer a result of the new measure; this is the link that carries the evidence invalidation. |
+| `FB2-MAN-CHG-000002` | `FB2-LNK-SAF-000005` | `allocated_to` | FB2-HW-TSR-000001 -> FB2-SAF-FSR-000001 | The accuracy requirement is the hardware element that carries the ASIL D acquisition requirement. After the migration the FSR is satisfied by two requirements rather than one, and the link asserts that one requirement is its allocation. The allocation is incomplete, not wrong, and incompleteness in an allocation is the... |
+| `FB2-MAN-CHG-000002` | `FB2-LNK-SAF-000006` | `allocated_to` | FB2-HW-TSR-000002 -> FB2-SAF-FSR-000001 | Same incompleteness, and more sharply: the requirement being allocated is entirely about an isoSPI link that the new front end does not have. After this change, asserting that HW-TSR-000002 alone covers the ASIL D acquisition requirement would be false for the new configuration. |
+| `FB2-MAN-CHG-000002` | `FB2-LNK-SAF-000008` | `allocated_to` | FB2-SW-SWR-000001 -> FB2-SAF-FSR-000001 | The software requirement is the element that actually enforces 'no database write without validation' for the acquisition path. Two drivers means two enforcement points, and a single allocated_to link does not say which driver enforces it in which configuration. |
+| `FB2-MAN-CHG-000002` | `FB2-LNK-SAF-000011` | `implements` | FB2-SW-DSN-000001 -> FB2-SW-SWR-000001 | An implements link asserts that this design satisfies this requirement. After a second driver is raised, this link is only true of one of them, and a reader of the link alone cannot tell which. The corpus validator's dangling-endpoint check will not catch this: both endpoints still exist. |
+| `FB2-MAN-CHG-000002` | `FB2-LNK-SAF-000027` | `verifies` | FB2-VER-TMS-000003 -> FB2-SW-SWR-000001 | The plausibility test verifies the driver requirement. Its stimulus was derived from the retained front end's error budget, so after the migration it verifies the requirement for a configuration it no longer represents. |
+| `FB2-MAN-CHG-000002` | `FB2-LNK-SAF-000028` | `verifies` | FB2-VER-TMS-000003 -> FB2-HW-TSR-000001 | Same test, hardware target. The 4900 mV implausibility case sits far outside both devices' ranges, so this link can be satisfied by a test that discriminates nothing between them. |
+| `FB2-MAN-CHG-000002` | `FB2-LNK-SAF-000031` | `verifies` | FB2-VER-TMS-000005 -> FB2-HW-TSR-000002 | The only direct verification of the communication-integrity requirement, and the injection mechanism is tied to the isolated link's framing. A pass after the migration would be evidence about the harness. |
+| `FB2-MAN-CHG-000003` | `FB2-LNK-SAF-000009` | `allocated_to` | FB2-SW-SWR-000002 -> FB2-SAF-FSR-000002 | The allocation is between two requirements that are both being clarified in the same way, and today they are clear in the same way: neither mentions the reset. An allocation between two identically incomplete requirements is internally consistent and externally wrong, which is the hardest kind of traceability defect to... |
+| `FB2-MAN-CHG-000003` | `FB2-LNK-SAF-000012` | `implements` | FB2-SW-DSN-000002 -> FB2-SW-SWR-000002 | This is the link that should have caught the defect and did not. The design specifies the reset action; the requirement does not mention it; the implementation does not perform it. The link asserts the design implements the requirement, which was true, while the design also specified something the requirement never ask... |
+| `FB2-MAN-CHG-000003` | `FB2-LNK-SAF-000022` | `verifies` | FB2-VER-TMS-000001 -> FB2-SAF-FSR-000002 | The link asserts that the requirement is verified. It was verified only on the confirmation path, and the requirement's acceptance criteria contain nothing about recovery, so the link asserted more coverage than the test provided. This is the specific reason a behavioural defect reached a baselined design: the link exi... |
+| `FB2-MAN-CHG-000003` | `FB2-LNK-SAF-000023` | `verifies` | FB2-VER-TMS-000001 -> FB2-SW-SWR-000002 | The same measure against the software requirement, and therefore the same overstatement of coverage. Both verifies links must be re-affirmed together or the requirement is left half-verified, which is worse than leaving both suspect. |
+| `FB2-MAN-CHG-000003` | `FB2-LNK-SAF-000033` | `result_of` | FB2-VER-EXE-000001 -> FB2-VER-TMS-000001 | The execution evidence rests on a measure that cannot express the defect. It is therefore not evidence that the behaviour is correct; it is evidence that the measure was run. Keeping it as live coverage is how a defect survives a passing test suite. |
+
+### Decision and Approval State
+
+| Record | Decision id | Decision maker | Disposition | Approvals recorded | Re-verification executed |
+|---|---|---|---|---|---|
+| `FB2-MAN-CHG-000001` | `FB2-CHG-REF-000001` | change_control_board chair, fictional role identity 'A. Renner' (synthetic scenario character; not a... | `approved` | 0 of 5 | no |
+| `FB2-MAN-CHG-000002` | `FB2-CHG-REF-000002` | change_control_board chair, fictional role identity 'A. Renner' (synthetic scenario character; not a... | `partial` | 0 of 7 | no |
+| `FB2-MAN-CHG-000003` | `FB2-CHG-REF-000003` | change_control_board chair, fictional role identity 'A. Renner' (synthetic scenario character; not a... | `approved` | 0 of 4 | no |
+
+Every record carries `profile: synthetic_reference`, `origin: synthetic`, `human_approval_status: pending`, `production_authorized: false` and `product_verification_credit: false`. Each `decision_maker` is a fictional role identity in the synthetic project and each `disposition` is a `synthetic_decision` in the sense of `governance/corpus-policy.json` (`synthetic_decision:{fictional_role}:{decision_id}`): not a human approval, not a foxBMS maintainer decision, and not a SoftwareDevLabs decision. All three records are `implementation_status: not_in_source`, and no file under `src/`, `tests/`, `conf/` or `wscript` is touched by them. No row in this section asserts that any change was made, approved or verified in any real project, and no row asserts a measured test result.
+
+### Corpus-Consistency Notes
+
+Three slots in these records are empty by schema rather than by omission, and the reasoning is recorded in the records themselves so the emptiness is not read as an incomplete analysis:
+
+- `impact_analysis.affected_reviews` is empty in all three. The change schema admits only ids matching `^FB2-REV-[A-Z]{2,4}-[0-9]{6}$`, i.e. a review id carrying a two-to-four letter type segment. The corpus contains exactly one review artifact, `FB2-REV-000001`, which has no such segment and belongs to the `as_is` profile as an automated review of the reconstructed foxBMS artifacts. There is therefore no review in the `synthetic_reference` profile for these changes to invalidate, and the review work they do require is enumerated in each record's `re_review_scope` field.
+- `impact_analysis.affected_evidence` is empty in all three, for the same shape of reason: the schema admits only `^FB2-EVD-[A-Z]{2,4}-[0-9]{6}$` and no `FB2-EVD-` artifact exists in either profile. The executions these changes really do invalidate (`FB2-VER-EXE-000001`, and for `FB2-MAN-CHG-000002` also `FB2-VER-EXE-000003` and `FB2-VER-EXE-000005`) do exist in `synthetic_reference` and are named in each record's `evidence_invalidation` field instead.
+- `FB2-PRM-000001` (parameter-registry entry), the `FB2-SRC-*` identifiers (source anchors) and `VAR-AFE-ADI-1830` (a variant-matrix row) all resolve, but as rows of registries rather than as artifacts with revisions and lifecycle states. A `changes` link pointed at any of them would dangle, so each is recorded in a typed sibling field of the record that concerns it. Several of them even satisfy the change schema's id pattern, which makes this the easiest category error in the corpus to commit.
+
 
 ---
 
-*Generated: 2026-09-13T15:17:46Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

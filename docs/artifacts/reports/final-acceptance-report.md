@@ -1,164 +1,544 @@
 # Final Acceptance Report
 
-**Generated:** 2026-09-13 (updated)  
-**Baseline:** BAS-REF-001 (commit 308028fb, v1.11.0)  
-**Repository:** /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2  
-**Runtime:** OpenCode with nvidia/nemotron-3-ultra-550b-a55b
+**Generated:** 2026-09-29
+**Baseline:** BAS-REF-001 (pinned source commit `308028fb`, v1.11.0)
+**Repository:** `/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2`
+**Machine-readable sibling:** `final-acceptance-report.json`
 
-## Corpus Status
+> **Status of this report.** Every number below was produced by a live run of
+> `docs/artifacts/tools/corpus.py` on 2026-09-29. None is transcribed from an
+> earlier report. The commands are listed in the *Provenance of every number*
+> section so each figure can be re-derived.
+>
+> **This is not a conformity statement.** The corpus holds a **structural
+> mapping** to ISO 26262 clause references and to ASPICE process references. It
+> asserts **no ISO 26262 conformity**, no ASIL capability, no certification, no
+> tool qualification and no ASPICE capability level. Every one of the 153
+> indexed records carries `human_approval_status: pending`,
+> `production_authorized: false` and `product_verification_credit: false`.
+> **No human has approved anything in this corpus.**
 
-**Final Status:** `synthetic_ready_with_limitations`
+---
 
-## Completion Gates Assessment
+## 1. Corpus Status
 
-| Gate | Requirement | Status | Evidence |
-|------|-------------|--------|----------|
-| **1. Scope Accounting** | Every discovered source/feature/variant has documented disposition; every in-scope element has required engineering mappings | ✅ **PASS** | source-inventory.json (612 files), feature-inventory.json (22 features), variant-matrix.json (24 variants), all with dispositions |
-| **2. Artifact Population** | Every applicable lifecycle work-product family populated with substantive content | ⚠️ **PARTIAL** | 15/15 families have artifacts, but only cell voltage chain complete; 18 features have parameters only |
-| **3. Standards Mapping** | All locked process/ISO-part scope items have explicit dispositions; unavailable exact normative mappings visible | ✅ **PASS** | standards-lock.json, coverage-plan.json with 32 processes (28 applicable, 4 N/A), 12 ISO parts; acceptance gate 44/44 |
-| **4. Source Grounding** | All canonical records reference durable source anchors; field-level provenance | ✅ **PASS** | source-registry.json (43 anchors), 39/77 artifacts with source_refs; synthetic artifacts reference as_is twins |
-| **5. Traceability Integrity** | All required vertical/reverse/lateral paths resolve or have typed exceptions; proposed elements identifiable | ✅ **PASS** | 80 links (29 as_is + 55 synthetic_reference), 13 link types, 0 dangling (validated run 2026-09-19, LNK-039..058 included), cell voltage chain complete, lateral HSI consistent |
-| **6. Semantic Consistency** | All mandatory checks run; 16 findings, 0 errors | ⚠️ **PARTIAL** | consistency-report.md: 16 detector findings, 0 errors; review findings FND-001/004 resolved in synthetic_reference, 3 accepted as documented gaps |
-| **7. Automated Review Coverage** | Every artifact has automated review; safety-critical have challenge pass | ⚠️ **PARTIAL** | 1 review covering 17/52 corpus artifacts (33%); adversarial simulated |
-| **8. Verification Planning** | Verification measures exist for all applicable requirements with appropriate oracles | ✅ **PASS** | 16 corpus test measures (5 as_is + 11 synthetic_reference, incl. draft stubs TMS-007..011); 16 executions (1 actual_host_run + 6 synthetic_fixture + 9 recorded blocked); 21/21 requirements linked (SCO-001 via TMS-009 `validates` stub) |
-| **9. Evidence Coverage** | Synthetic, planned, blocked, actual execution separated | ✅ **PASS** | verification-evidence-report.md documents all classes |
-| **10. Negative Scenario Validation** | 20 mutation scenarios; clean controls avoid false positives | ✅ **PASS** | All 20/20 mutations implemented and detected (scenario-validation-report.json) |
-| **11. Export Reproducibility** | Export/round-trip, source/corpus digest, view freshness | ✅ **PASS** | reproducibility-report.md documents all tests |
-| **11b. Human Approval** | Real human approval remains pending | ❌ **PENDING** | All artifacts: human_approval_status: pending |
-| **11c. Production Authorization** | production_authorized: false for all | ✅ **CONFIRMED** | All artifacts: production_authorized: false |
+**Final status: `synthetic_ready_with_limitations`**
 
-## Dimension Scores
+Recorded by `corpus.py check` gate `[8/8] final status recorded`.
 
-| Dimension | Score | Status |
-|-----------|-------|--------|
-| scope_accounting | 100% | ✅ |
-| artifact_population | 60% | ⚠️ |
-| standards_mapping | 100% | ✅ |
-| source_grounding | 100% | ✅ |
-| traceability_integrity | 95% | ✅ |
-| semantic_consistency_checks | 80% | ⚠️ |
-| automated_review_coverage | 39% | ⚠️ |
-| verification_planning | 95% | ✅ |
-| actual_product_evidence | 0% | ❌ |
-| synthetic_fixture_coverage | 100% | ✅ |
-| negative_scenario_validation | 100% | ✅ |
-| export_reproducibility | 100% | ✅ |
-| human_approval | 0% | ❌ |
-| production_authorization | 0% | ✅ (correctly false) |
+## 2. Acceptance Suite Result
 
-## Artifact Counts by Domain/Type/Profile
+`python3 docs/artifacts/tools/corpus.py check` → **`Acceptance suite: PASSED`**
 
-### synthetic_reference (Primary)
+| Stage | Gate | Result |
+|---|---|---|
+| 1/8 | validate | PASS |
+| 2/8 | inventory | PASS |
+| 3/8 | negative_scenario_validation = 20/20 mutations | PASS (20/20) |
+| 3/8 | change lifecycles = 3/3 | PASS |
+| 4/8 | hazard present (trace reachability) | PASS |
+| 5/8 | scenario-test | PASS (23/23 scenario lines) |
+| 6/8 | export | PASS |
+| 6/8 | deterministic export hashes | PASS |
+| 7/8 | no production_authorized/approved artifacts | PASS (0 violations this run) |
+| 8/8 | final status recorded | PASS (`synthetic_ready_with_limitations`) |
 
-| Domain | Requirements | Designs | Test Measures | Executions | Reviews | Findings | Links | Other |
-|--------|--------------|---------|---------------|------------|---------|----------|-------|-------|
-| Safety | 10 (SGO, HAZ, 4 FSR, 4 ANL) | 0 | 0 | 0 | 0 | 5 | 5 | 1 safety case, 12 assumptions, 10 params |
-| System | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 HSI |
-| Hardware | 4 TSRs | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Software | 3 SWRs | 3 DSNs | 0 | 0 | 0 | 0 | 3 | 0 |
-| Verification | 0 | 0 | 6 TMS | 6 EXE | 0 | 0 | 17 (11 verifies + 6 result_of) | 0 |
-| Management | 2 (SCO, SPL) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Scenarios | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 CHG + 2 MUT artifacts (+ 20 mutation files) |
-| **Total** | **17** | **3** | **6** | **6** | **0** | **5** | **25+** | **31 links total incl. 4 refines, 6 allocated_to, 3 implements, 1 mitigates** |
+10 gate lines PASS, 0 FAIL. 23/23 scenario lines pass (20 mutation scenarios
+plus 3 change lifecycles).
 
-### as_is (Comparison)
+`python3 docs/artifacts/tools/corpus.py selftest` → **11 PASS, 0 FAIL**.
 
-| Domain | Source Files | Unit Tests | Config Files | Doc Pages | Hardware Boards |
-|--------|--------------|------------|--------------|-----------|-----------------|
-| Application | 450 | 70 | 50 | 20 | 1 master |
-| Bootloader | 45 | 10 | 10 | 5 | 0 |
-| OS (FreeRTOS) | 117 | 0 | 0 | 0 | 0 |
-| Hardware | 0 | 0 | 0 | 10 | 7 (1 master + 6 slaves) |
-| **Total** | **612** | **80** | **60** | **35** | **8** |
+## 3. The 15 Coverage Dimensions
 
-## Cross-Domain Walkthroughs
+Exactly as printed by `corpus.py coverage`. Percentages are computed from the
+printed ratio; where a ratio exceeds 100% it is an over-coverage count, not a
+score.
 
-Per master prompt Section 21, five substantive walkthroughs from discovered functionality:
+| # | Dimension | Ratio | % | Status | Note |
+|---|---|---|---|---|---|
+| 1 | scope_accounting | 1/1 | 100% | complete | source/feature/variant inventories present |
+| 2 | artifact_population | 13/13 | 100% | complete | 13 families populated |
+| 3 | standards_mapping | 44/44 | 100% | complete | ASPICE 32/32, ISO parts 12/12 |
+| 4 | source_grounding | 76/154 | 49% | **partial** | 102 source anchors available; 78 records carry no `source_refs` |
+| 5 | traceability_integrity | 283/283 | 100% | complete | 0 dangling links |
+| 6 | semantic_consistency_checks | 10/10 | 100% | complete | 10 check categories per run |
+| 7 | automated_review_coverage | 82/123 | 67% | **partial** | 12 review records; `reviewed_by` links consistent with `reviewed_ids` |
+| 8 | verification_planning | 16/7 | 229% | over-covered | 16 test measures for 7 FSRs; a ratio, not a score |
+| 9 | actual_product_evidence | 0/16 | 0% | **blocked by policy** | 0 target-hardware executions; see §7 |
+| 10 | synthetic_fixture_coverage | 82/43 | 191% | over-covered | 82 `synthetic_reference` records against a target of 43 |
+| 11 | negative_scenario_validation | 20/20 | 100% | complete | plus 3/3 change lifecycles |
+| 12 | final_status | `synthetic_ready_with_limitations` | — | — | recorded status |
+| 13 | export_reproducibility | 1/1 | 100% | complete | export manifest present |
+| 14 | human_approval | 0/154 | 0% | **pending by policy** | every record pending; none performed |
+| 15 | production_authorization | 0/154 | 0% | **false by policy** | every record `production_authorized=false` |
 
-### 1. Cell Voltage Protection (Complete Chain)
-- **Path:** Hazard HE-01 → SG-001 → FSR-001/002/003/004 → TSR-001/002/003 → SWR-001/002/003 → DSN-001/002/003 → TMS-001/002 → EXE-001 → REV-001
-- **HW/SW Interface:** HSI_AFE_SPI (SPI_CLK, MOSI, MISO, CS) → cell_voltage[mV] database signal
-- **Assumptions:** ASM-001 (chemistry), ASM-004 (SPI latency), ASM-005 (noise), ASM-006 (contactor time)
-- **Source Anchors:** 10 source_refs from source-registry
-- **Verification:** TMS-001/EXE-001 (pass, host as_is + synthetic_fixture), TMS-002/EXE-002 (pass, synthetic_fixture), TMS-003/EXE-003 (pass, synthetic_fixture)
-- **Review State:** REV-001 reviewed, 5 findings (FND-001/004 resolved in synthetic)
+### Note on the three different denominators
 
-### 2. Temperature Protection (Parameters Only)
-- **Path:** Hazard → SG → FSR (params) → TSR (params) → SWR (params)
-- **HW/SW Interface:** HSI_AFE_GPIO (not modeled) → cell_temperature[0.1°C] database signal
-- **Source Anchors:** 3 source_refs (AFE temp, TS driver, diag)
-- **Gap:** No design, test measures, executions
+The corpus contains three legitimately different population counts, and a
+reader comparing them will otherwise think one is wrong:
 
-### 3. Current Protection (Parameters Only)
-- **Path:** Hazard → SG → FSR (params) → TSR (params) → SWR (params)
-- **HW/SW Interface:** HSI_CAN_RX (IVT-S/CAB500/BAS6C) → pack_current[A] database signal
-- **Source Anchors:** 3 source_refs (CAN RX handlers, diag)
-- **Gap:** No design, test measures, executions
+- **154** — artifact *files* carrying an `id` under `corpus/` and `reviews/`.
+  Used as the denominator for `source_grounding`, `human_approval` and
+  `production_authorization`.
+- **153** — unique `(profile, id)` records in the tool's artifact index. One
+  less than 154 because the record `FB2-REV-000001` exists in two files
+  (`corpus/as_is/reviews/records/review-vertical-slice.json` and
+  `reviews/records/review-vertical-slice.json`); the index de-duplicates on
+  `(profile, id)` and keeps the first. The duplicate is reported in §8.
+- **123** — unique artifact *IDs* across both profiles. Lower than 153 because
+  most requirement, design and verification IDs deliberately exist in both
+  `as_is` and `synthetic_reference`; profile isolation is a design decision, not
+  duplication. Used as the denominator for `automated_review_coverage`.
 
-### 4. Precharge/Contactor Control (Complete Chain)
-- **Path:** Hazard (weld) → SG → FSR-003 → TSR-003 → SWR-003 → DSN-003 → TMS-002
-- **HW/SW Interface:** HSI_SBC_CONTROLLER (SPI) → coil_command, feedback signals
-- **Assumptions:** ASM-006 (contactor time), ASM-007 (SBC watchdog independence)
-- **Source Anchors:** 4 source_refs (contactor.c, SBC driver, diag)
-- **Verification:** TMS-002/EXE-002 (pass, synthetic_fixture), TMS-006/EXE-006 (pass, synthetic_fixture)
-- **Review State:** Included in REV-001
+A fourth number, **177**, is printed by `validate`: that is schema-validated
+files, being 154 corpus/review files plus 23 scenario files.
 
-### 5. Communication/Watchdog Fault Response (Parameters Only)
-- **Path:** Hazard (comm loss) → SG → FSR (params) → TSR (params) → SWR (params)
-- **HW/SW Interface:** HSI_CAN (bus-off), HSI_SBC_WATCHDOG (independent)
-- **Source Anchors:** 3 source_refs (CAN bus-off, SBC watchdog, sys_mon)
-- **Gap:** No design, test measures, executions
+## 4. Record Census
 
-## Limitations and Next Required Inputs
+**153 unique records** in the artifact index. Every count below is computed from
+the tool's own index, not from a directory listing.
 
-### Known Limitations
-1. **Only 1/20 feature chains fully generated by design** - Cell voltage chain (plus SOA, contactor, precharge slices) complete; remaining features carried by parameters + as_is implementation facts
-2. **Review coverage 33%** - 17/52 corpus artifacts covered by the vertical-slice review
-3. **No target hardware evidence** - All real executions on x86_64 Linux host; HIL setup unpublished upstream (`tests/hil` placeholder), classified blocked, not fabricated
-4. **Blocked executions recorded** - 9 execution records (`outcome: blocked`, `execution_kind: none`): as_is TMS-002..005 (upstream CI runs not captured; local run infeasible — macOS unsupported, missing HALCoGen codegen + gdb), synthetic stubs TMS-007..011 (harness/qualification/validation/component/HIL dependency failures); unblocking conditions documented in verification-evidence-report.md
-5. **HWE.2/HWE.3 format limit** - Altium/CAD binaries unreadable to corpus tooling; only real hardware analysis closes it
-4. **Human approval pending** - All artifacts await human review
-5. **Management scope (SCO-001) uncovered by test** - Verified by process audit by nature
+### By artifact type
 
-### Next Required Inputs for Full Completion
-1. **Human review** - Independent human reviewers for all artifacts
-2. **Target hardware testing** - Execute tests on TMS570LC4357 with AFE hardware
-3. **Complete feature chains** - Generate remaining feature vertical slices
-4. **Multi-defect scenarios** - Interaction scenarios on top of the completed isolated set
-5. **Safety case completion** - Expand the generated skeleton (SCS-001) to full argument
-6. **Integration tests** - Integration-level test measures
-7. **Validation measures** - Create stakeholder validation test specs
+| Type | Count | | Type | Count |
+|---|---|---|---|---|
+| requirement | 26 | | scenario | 5 |
+| review | 12 | | change | 3 |
+| execution | 25 | | safety_analysis | 4 |
+| test_measure | 16 | | hazard | 2 |
+| deviation | 26 | | safety_goal | 2 |
+| finding | 22 | | safety_case | 1 |
+| design | 8 | | tara | 1 |
+| **Total** | **153** | | | |
 
-## Final Determination
+### By engineering domain
 
-**Corpus Status: `synthetic_ready_with_limitations`**
+| Domain | Count | | Domain | Count |
+|---|---|---|---|---|
+| verification | 64 | | management | 7 |
+| software | 40 | | hardware | 7 |
+| safety | 30 | | system | 3 |
+| supporting | 2 | | **Total** | **153** |
 
-### Rationale for `synthetic_ready_with_limitations` (not `synthetic_ready`):
-- ✅ Mandatory synthetic work-product families populated (15/15)
-- ✅ All locked process/ISO-part scope items have dispositions
-- ✅ All canonical records conform to schemas
-- ✅ Traceability integrity for generated scope
-- ✅ Consistency checks run, 16 findings 0 errors; review FND-001/004 resolved in synthetic_reference
-- ❌ **Not `synthetic_ready` because:**
-  - Automated review coverage incomplete (40%, single vertical-slice review)
-  - Human approval pending (0%)
-  - No target-hardware product verification evidence (0 actual HW executions, by policy)
-  - 18/20 features carried by parameters + as_is facts, not full synthetic chains
-  - Multi-defect interaction scenarios not yet built (isolated 20/20 complete)
+### By profile
 
-### What `synthetic_ready_with_limitations` CAN Describe:
-- Genuinely unavailable real-product evidence (no target HW testing)
-- Pending authorized normative mapping (rights-sensitive handling)
-- Documented review independence limits (AI-assisted only)
+| Profile | Count |
+|---|---|
+| `synthetic_reference` | 82 |
+| `as_is` | 71 |
+| **Total** | **153** |
 
-### What it CANNOT Conceal:
-- Missing mandatory synthetic work-product families (none missing)
-- Unresolved high corpus contradictions (none)
-- Failed structural gates (none failed)
+### By lifecycle status
 
-## Evidence Links
+| Lifecycle | Count |
+|---|---|
+| draft | 73 |
+| reviewed | 51 |
+| baselined | 29 |
+| **Total** | **153** |
 
-All reports available at:
+### By origin
+
+| Origin | Count | Meaning |
+|---|---|---|
+| synthetic | 60 | invented for this reference project; not observed in source |
+| source_observed | 57 | read out of the pinned source tree |
+| derived | 36 | computed from other records |
+
+### Guard fields — corpus-wide
+
+| Field | Value | Count |
+|---|---|---|
+| `human_approval_status` | `pending` | 153 / 153 |
+| `production_authorized` | `false` | 153 / 153 |
+| `product_verification_credit` | `false` | 153 / 153 |
+
+## 5. Traceability
+
+**283 links**, **0 dangling**. De-duplicated by `(profile, link_id)` across all
+registries.
+
+| Relation type | Count | | Relation type | Count |
+|---|---|---|---|---|
+| reviewed_by | 167 | | implements | 6 |
+| verifies | 32 | | mitigates | 2 |
+| result_of | 16 | | validates | 2 |
+| changes | 16 | | allocated_to | 13 |
+| supports | 16 | | refines | 13 |
+| **Total** | **283** | | | |
+
+By profile: `as_is` 111, `synthetic_reference` 172.
+By review state: reviewed 231, pending 52.
+
+## 6. Governance State
+
+`governance/coverage-plan.json` holds 32 process entries: **28 applicable**,
+**4 explicitly `not_applicable`** (MLE.1–MLE.4, each with a rationale and a
+`reference_decision`).
+
+### Disposition status across the 28 applicable processes
+
+| Disposition | Count |
+|---|---|
+| `mapped` | 12 |
+| `partially_mapped` | 10 |
+| `gap` | 6 |
+| `not_applicable` | 0 |
+
+Plus the 4 explicitly non-applicable MLE entries, giving 32 in total.
+
+### Corrections recorded in the coverage plan
+
+**15 corrections** (`CORR-COV-001` … `CORR-COV-015`), all dated 2026-09-29.
+
+Every correction kept its original `expected_artifacts` and
+`capability_attributes`. No expectation was deleted or narrowed, and no
+artifact was fabricated to make a status true. Two of the ten corrections made
+in the most recent pass (`CORR-COV-008` on MAN.6 and `CORR-COV-011` on ISO Part
+6) landed on a *different* status than the originally reported reality
+suggested, because verification against disk found evidence on both sides of the
+claim; both record the divergence explicitly rather than resolving it in the
+convenient direction.
+
+Two residual internal disagreements are recorded rather than hidden, because the
+entries concerned were outside the scope of that correction pass:
+
+1. `SUP.1`, `SUP.8`, `SUP.9` and `SUP.10` still read `mapped` in
+   `process_inventory`, while the generated `supporting-processes` view reports
+   that no *process-definition* record exists for those families. These are
+   different claims — review, change and configuration evidence does exist —
+   and both readings are now stated in the plan.
+2. `sources/feature-inventory.json` carries `summary.total_features: 20` while
+   the file contains 22 feature records, and `corpus.py inventory` reports 22.
+   The summary field is stale; the tool counts the records.
+
+### Standards lock
+
+| Standard | Edition |
+|---|---|
+| `ISO_26262_2018` | 2018 |
+| `ASPICE_PAM_41` | 4.1 |
+
+Locked by `safety`. **No corpus record was authored against IEC 61508.** No corpus record was authored against IEC 61508. It is absent from `governance/standards-lock.json`, which locks exactly two standards: `ISO_26262_2018` (2018) and `ASPICE_PAM_41` (4.1). No requirement, `standards_mapping`, analysis, test measure or work product in `corpus/`, `governance/`, `schemas/`, `sources/`, `traceability/` or `scenarios/` references it. The standard is **not** alien to the product: the pinned source lists it as a candidate (`docs/general/safety/safety.rst:60`) and cites IEC 61508-3:2010 in `docs/references.bib`. The defect is that the corpus performed no IEC 61508 work, so it cannot supply compliance evidence for it. See §9.
+
+## 7. Verification Evidence
+
+### 7.1 Real macOS host test run
+
+A genuine test-suite run was performed on the build host on 2026-09-29. Source:
+`docs/artifacts/.work/verification-env/logs/results-strict.json`.
+
+| Measure | Value |
+|---|---|
+| Host | Darwin arm64, Darwin Kernel 27.0.0 |
+| Toolchain | ruby 4.0.7 (2026-09-15) +PRISM [arm64-darwin27] |
+| Run timestamp | 2026-09-29T10:30:52+0200 |
+| Selection | `no_halcogen_dependency` |
+| Tests in scope | 136 |
+| **Passed** | **94** |
+| **Failed** | **5** |
+| Build failures | 37 |
+| Assertions tested | 332 |
+| Assertions passed | 323 |
+| Assertions failed | 8 |
+
+**macOS is not an upstream-supported foxBMS platform.** This is a host run, not
+target-hardware evidence, and it is not credited as such. See
+`verification-evidence-report.md` for the full account, including the root cause
+of the five failures and why they are a real product defect rather than a
+harness artefact.
+
+### 7.2 What is blocked
+
+Of 313 repository tests, 136 were in scope. **177 are blocked** on proprietary
+Texas Instruments HALCoGen output and reach **34 distinct `HL_*.h` headers**
+(`docs/artifacts/.work/verification-env/logs/hcg-closure.json`). Reconstructing
+34 proprietary TI register maps from memory would fabricate the very thing those
+tests exist to verify, so it was not done. The blocker is characterised precisely
+instead.
+
+### 7.3 Execution record classes
+
+`actual_product_evidence` is **0/16**, and the tool's own detail string states
+why: `execution_kind` has no target-hardware member, so none can be claimed. Of
+25 execution records, 13 are host/simulation (real product code, not target
+hardware) and 12 are `synthetic_fixture` or `none`. Nothing is undeclared.
+
+## 8. Reviews and Findings
+
+**12 review records** in the index (13 files; one duplicate, see §3).
+
+| Profile | critical | high | medium | low | Total (incl. `info`) |
+|---|---|---|---|---|---|
+| as_is | 0 | 1 | 9 | 3 | 17 |
+| synthetic_reference | 0 | 3 | 8 | 2 | 19 |
+
+36 review-embedded findings in total. The rendered view's table has no `info`
+column, so the visible columns do not sum to the Total; the 10 unaccounted
+findings are `info`. The table is generated and is left as generated.
+
+**22 `finding` artifacts** exist as first-class records under
+`docs/artifacts/reviews/findings/`, all at severity `medium` in the corpus
+validator's own taxonomy, carrying `validator_finding_verbatim` text.
+
+**3 change records** (`FB2-MAN-CHG-000001..000003`), each with a full change
+lifecycle, and **3 change-lifecycle scenarios** all validating structurally
+complete.
+
+### Reported defect: duplicated review record
+
+`FB2-REV-000001` exists in two files with identical content:
+
+- `docs/artifacts/corpus/as_is/reviews/records/review-vertical-slice.json`
+- `docs/artifacts/reviews/records/review-vertical-slice.json`
+
+The tool's index de-duplicates on `(profile, id)` and keeps the first, so no
+count is inflated in the coverage dimensions. It is reported here rather than
+silently deleted, because removing a file is a corpus owner's decision and doing
+so unrecorded would be the same class of error this report exists to prevent.
+The validator does not currently raise a finding for it.
+
+## 9. Reported Defect Outside the Write Boundary
+
+`TRACEABILITY_DOCUMENT.md` at the **repository root** (one level above
+`docs/artifacts/`) states:
+
+- line 19: "Provides evidence for compliance with ISO 26262, IEC 61508, and
+  other applicable safety standards"
+- line 23: "Safety Requirements (ASIL-D, ASIL-B)"
+
+This is a conformity claim plus an ASIL-capability claim, both of which this
+corpus forbids. It is also unsupported on two counts. **No corpus record was
+authored against IEC 61508** and the standard is absent from
+`governance/standards-lock.json` — though the pinned source *does* list IEC 61508
+as a candidate standard and cite IEC 61508-3:2010, so the remedy is to do the
+work or say it was not done, not to pretend the standard is unknown to foxBMS.
+And the ASIL derivation (functional safety concept → technical safety concept)
+does not exist in the corpus. `git ls-tree -r 308028fb` contains no `TRACEABILITY` entry, so the
+file is corpus output rather than pinned upstream source.
+
+**The file was NOT modified**, because it lies outside the absolute
+`docs/artifacts/` write boundary. It is recorded instead as finding
+**`FB2-REV-FND-000022`** at
+`docs/artifacts/reviews/findings/finding-000022-root-traceability-document-conformity-claim.json`,
+with severity `high`, category `consistency`, disposition `in_progress`, and a
+resolution naming the five specific changes the repository owner must make.
+
+## 10. Cross-Domain Walkthroughs
+
+Five walkthroughs, each traced against real corpus IDs with `corpus.py trace`.
+IDs are live; no ID below is nominal.
+
+### 10.1 Cell Voltage Protection — complete chain
+
+Traced from the hazard upward and the requirement downward.
+
+| Stage | Record | Relation |
+|---|---|---|
+| Hazard | `FB2-SAF-HAZ-000001` | (as_is and synthetic_reference) |
+| Safety goal | `FB2-SAF-SGO-000001` | `mitigates` → hazard; FTTI 100 ms |
+| FSRs | `FB2-SAF-FSR-000001`, `-000002`, `-000003`, `-000004` | `refines` → safety goal |
+| HW requirements | `FB2-HW-TSR-000001`, `-000002` | `allocated_to` → `FB2-SAF-FSR-000001` |
+| HW requirements | `FB2-HW-TSR-000003` | `allocated_to` → `FB2-SAF-FSR-000003` |
+| HW requirement | `FB2-HW-TSR-000004` | `allocated_to` → `FB2-SAF-FSR-000004` (independent monitor) |
+| SW requirements | `FB2-SW-SWR-000001`, `-000002`, `-000003` | `allocated_to` → FSRs |
+| SW design | `FB2-SW-DSN-000001`, `-000002`, `-000003` | per module |
+| Analyses | `FB2-SAF-ANL-000001` (FMEA), `-000002` (FTA), `-000003` (dependent failure), `-000004` (FFI) | |
+| Test measures | `FB2-VER-TMS-000001`…`-000004` | `verifies` → FSRs |
+| Reviews | `FB2-REV-000001`, `-000009`, `-000010` (challenge), `-000011`, `-000012` (meta) | `reviewed_by` |
+
+Change lifecycle is live: `FB2-MAN-CHG-000001` (`changes` → hazard and safety
+goal) is the cell-voltage maximum-limit reduction, and
+`FB2-MAN-CHG-000002` (`changes` → `FB2-SYS-HSI-000001`) is the AFE front-end
+migration.
+
+**Gap that remains:** the chain terminates at the design and test-measure
+layers. `FB2-VER-TMS-000001` and `-000003` have execution records, but no
+execution in this chain is target-hardware evidence, and there is no functional
+safety concept record above the safety goal.
+
+### 10.2 Temperature Measurement — parameters only, gap unchanged
+
+No hazard, safety goal, FSR, TSR, SWR, design, test measure or execution record
+exists for temperature measurement. What exists is the `FEAT-TEMPERATURE`
+feature record in `sources/feature-inventory.json` (status `implemented`,
+`source_modules` `MOD-APP-DRIVER-AFE`, `MOD-APP-DRIVER-TS`), the temperature
+parameters in the shared parameter registry, and the HSI signal definition in
+`FB2-SYS-HSI-000001`.
+
+**Gap:** no vertical chain. The report previously listed three source anchors
+for this walkthrough; the anchors are real, but they are feature-inventory
+provenance, not a requirement-to-verification chain, and they are not restated
+here as if they were a chain.
+
+### 10.3 Current Measurement — parameters only, gap unchanged
+
+Same state as temperature. `FEAT-CURRENT` is recorded `implemented` in the
+feature inventory with source modules, and the CAN receive path is anchored in
+the source registry, but no hazard, safety goal, requirement, design, test
+measure or execution record forms a chain.
+
+**Gap:** no vertical chain.
+
+### 10.4 Precharge and Contactor Control — complete chain
+
+| Stage | Record | Relation |
+|---|---|---|
+| FSR | `FB2-SAF-FSR-000003` | `refines` → `FB2-SAF-SGO-000001` |
+| HW requirement | `FB2-HW-TSR-000003` | `allocated_to` → `FB2-SAF-FSR-000003` |
+| SW requirement | `FB2-SW-SWR-000003` | `allocated_to` → `FB2-SAF-FSR-000003` |
+| SW design | `FB2-SW-DSN-000003` | per module |
+| Test measures | `FB2-VER-TMS-000002`, `-000008`, `-000011` | `verifies` → `FB2-SAF-FSR-000003` |
+| Reviews | `FB2-REV-000001`, `-000010`, `-000011` | `reviewed_by` |
+| Security | `FB2-SAF-TAR-000001` | `supports` → `FB2-SAF-FSR-000003` |
+
+The contactor weld-detection path is additionally covered by the independent
+monitor requirement `FB2-SAF-FSR-000004` → `FB2-HW-TSR-000004` → `FB2-SW-DSN-000004`,
+verified by `FB2-VER-TMS-000004`, `-000008` and `-000011`.
+
+**Change since the previous version of this report:** the cybersecurity work is
+now real and linked. `FB2-SAF-TAR-000001` (threat analysis and risk assessment
+for the external communication attack surface) `supports` this requirement, along
+with the safety goal, `FB2-SAF-FSR-000001`, `-000002` and the safety case
+`FB2-SAF-SCS-000001`.
+
+**Gap that remains:** still no target-hardware execution in this chain.
+
+### 10.5 Communication and Watchdog Fault Response — materially extended, still no full chain
+
+This walkthrough has changed the most and is **no longer "parameters only"**.
+
+New and real:
+
+| Record | Type | Role |
+|---|---|---|
+| `FB2-SAF-TAR-000001` | tara | 8 threats, 9 mitigations, `item_and_scope` defined, `residual_risk_acceptance.acceptance_exists = false` |
+| `FB2-SAF-SEC-000001` | requirement | authenticated/confidential transport for the network service |
+| `FB2-SAF-SEC-000002` | requirement | bounded connection admission and per-service resource budget |
+| `FB2-SAF-SEC-000003` | requirement | message-level integrity and freshness for safety-relevant CAN |
+| `FB2-SAF-SEC-000004` | requirement | framing, integrity and authorisation on the serial link |
+| `FB2-SAF-SEC-000005` | requirement | cryptographically strong entropy for network security parameters |
+| `FB2-REV-000003` | review | review of the TARA and SEC-000001..000005 |
+| `FB2-SAF-SEC-000003` | requirement | also `supports` → `FB2-SAF-FSR-000002` (SOA monitoring) |
+
+The TARA links forward to all five security requirements, the safety goal, three
+FSRs and the safety case.
+
+**Gap that remains:** there is still no communication-specific hazard, safety
+goal or FSR, and no design, test measure or execution for the security
+requirements. The chain runs threat → security requirement → safety goal, and
+stops. It is a real and substantial partial chain, not a complete one.
+
+### 10.6 Walkthrough summary
+
+| # | Walkthrough | State | Blocking gap |
+|---|---|---|---|
+| 1 | Cell voltage protection | complete chain | no FSC/TSC; no target-hardware execution |
+| 2 | Temperature measurement | parameters only | no chain at all |
+| 3 | Current measurement | parameters only | no chain at all |
+| 4 | Precharge and contactor control | complete chain | no target-hardware execution |
+| 5 | Communication and watchdog | partial: TARA + 5 security requirements | no hazard/SG/FSR for comms; no design or verification |
+
+## 11. Source Inventory
+
+`corpus.py inventory` → `Inventory: 612/612 source files, 24 modules, 22
+features, 23 variants`
+
+The inventory is complete: all 612 discovered source files are accounted for.
+
+## 12. Export and Reproducibility
+
+- Export: **153 nodes, 283 edges** to `docs/artifacts/exports/`
+- `exports/manifest.json` present; content hashes identical across two
+  consecutive exports (gate `[6/8] deterministic export hashes` PASS)
+- `render_spec_documents.py --check` → `INTEGRITY CHECK PASSED`, 10/10 documents
+  converted, `DETERMINISM: byte-identical across runs`
+
+## 13. Known Limitations
+
+1. **No target-hardware evidence.** 0 of 16 required target-hardware executions
+   exist. The macOS host run in §7.1 is real product code on a development host
+   and is not credited as target hardware.
+2. **177 tests blocked** on proprietary TI HALCoGen output across 34 distinct
+   headers.
+3. **5 genuine test failures**, root-caused to untyped `void *` parameters in
+   `src/app/engine/database/database.h:209` interacting with the shipped CMock
+   configuration. This is a real defect in the product's test setup and is
+   compiler- and platform-independent, so the same five tests are expected to
+   fail under GNU gcc on Linux. **No result was adjusted to make a test pass.**
+4. **Automated review coverage 67%** (82/123 unique IDs). 41 unique IDs are not
+   covered by any review record.
+5. **Six applicable processes hold no record of any kind**: `SYS.1`, `SYS.2`,
+   `MAN.3`, `MAN.5`, `MAN.6`, `PIM.3`. See §6.
+6. **No functional safety concept or technical safety concept record** exists in
+   either profile, so ISO 26262 Part 3 is only partially mapped and the ASIL
+   values on `FB2-SAF-SGO-000001` and `FB2-SAF-FSR-000004` have no
+   concept-phase derivation in the corpus.
+7. **No system or stakeholder requirement record** exists, so `SYS.1` and
+   `SYS.2` are gaps and the corresponding coverage target is unmet.
+8. **HWE.2 and HWE.3 are format-limited.** Altium and other CAD binaries are not
+   readable by the corpus tooling; only real hardware analysis closes them.
+9. **Duplicated review record** `FB2-REV-000001` in two files (§8).
+10. **`feature-inventory.json` `summary.total_features` is stale** at 20 against
+    22 actual records (§6).
+11. **A conformity claim exists outside the write boundary** (§9).
+12. **Human approval pending** for all 153 records. No human has approved any
+    artifact, and none is production-authorized.
+
+## 14. Final Determination
+
+**`synthetic_ready_with_limitations`**
+
+### What supports the status
+
+- All 8 acceptance gates pass; 23/23 scenario lines pass; 11/11 selftests pass.
+- 13/13 artifact families populated.
+- 44/44 standards-mapping items carry an explicit disposition.
+- 283/283 links resolve; 0 dangling.
+- 10/10 semantic consistency check categories execute; 0 errors.
+- 20/20 mutation scenarios detect their injected defect.
+
+### What prevents `synthetic_ready`
+
+- Automated review coverage is 67%, not complete.
+- Human approval is 0% and is out of the corpus's control.
+- Target-hardware product evidence is 0/16, and the tool states the
+  `execution_kind` enum has no target-hardware member, so none can be claimed
+  without fabricating one.
+- Six applicable processes hold no record; the ISO Part 3 concept chain is
+  incomplete.
+- Two of the five cross-domain walkthroughs are still parameters-only.
+
+### What this status does and does not mean
+
+It **can** describe: a synthetic corpus whose structure, traceability and
+negative-scenario behaviour are demonstrably sound, with real host-run test
+evidence, with blocked and failed results recorded rather than hidden, and with
+its own governance overclaims corrected and recorded.
+
+It **cannot** mean, and is not evidence of: ISO 26262 conformity, ASIL
+capability, IEC 61508 conformity, an ASPICE capability level, human approval,
+tool qualification, certification, or target-hardware verification.
+
+## 15. Provenance of Every Number
+
+| Figure | Source command |
+|---|---|
+| 177 validated artifacts, 21 findings, 0 errors | `corpus.py validate` |
+| 153 records, 283 links, all censuses | `corpus.py load_artifact_index` / `load_links` via the tool's own loaders |
+| 15 coverage dimensions and all ratios | `corpus.py coverage` |
+| 8 gates, 23 scenario lines | `corpus.py check` |
+| 11/11 selftests | `corpus.py selftest` |
+| 612/612, 24 modules, 22 features, 23 variants | `corpus.py inventory` |
+| 32/28/4 processes, 15 corrections | `governance/coverage-plan.json` |
+| 94/136, 5 failed, 37 build failures, 332/323/8 assertions | `.work/verification-env/logs/results-strict.json` |
+| 313 / 136 / 177 / 34 headers | `.work/verification-env/logs/hcg-closure.json` |
+| 153 nodes, 283 edges | `exports/manifest.json` |
+| spec-document integrity and determinism | `render_spec_documents.py --check` |
+| conformance claim lines 19 and 23 | `TRACEABILITY_DOCUMENT.md` at repository root, read only |
+
+## 16. Evidence Links
+
 - `docs/artifacts/reports/coverage-report.md`
 - `docs/artifacts/reports/standards-mapping-report.md`
 - `docs/artifacts/reports/traceability-report.md`
@@ -169,7 +549,5 @@ All reports available at:
 - `docs/artifacts/reports/scenario-validation-report.md`
 - `docs/artifacts/reports/reproducibility-report.md`
 - `docs/artifacts/reports/final-acceptance-report.md` (this file)
-
-## Machine-Readable Data
-
-See: `docs/artifacts/reports/final-acceptance-report.json`
+- `docs/artifacts/reports/final-acceptance-report.json`
+- `docs/artifacts/reviews/findings/finding-000022-root-traceability-document-conformity-claim.json`

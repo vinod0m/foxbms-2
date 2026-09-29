@@ -1,0 +1,490 @@
+{
+  "id": "FB2-MAN-CHG-000002",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "change",
+  "engineering_domain": "management",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Change Record CR-002: AFE Front-End Migration from LTC6811 (isoSPI) to ADI ADES1830 (SPI/DMA)",
+  "owner_role": "change_manager",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [
+    "FB2-ASM-004",
+    "FB2-ASM-005"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SUP.10 (Change Request Management), SUP.8 (Configuration Management), SUP.11 (Traceability Management), SYS.2 (system requirements allocation), HWE.1 (hardware requirements) as inventoried in governance/coverage-plan.json",
+      "status": "mapped",
+      "rationale": "A change to a hardware interface authority re-opens the system allocation, the hardware requirements, and the architecture traceability in one request."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 2, Clause 8 (management of change); Part 4, Clause 7 (technical safety requirements); Part 8, Clause 7 (configuration management)",
+      "status": "partially_mapped",
+      "rationale": "Process-level mapping only. Clause titles are taken from the edition metadata already locked in governance/standards-lock.json; no normative ISO text is reproduced or verified by this corpus (rights-sensitive handling)."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-21T00:00:00Z",
+  "updated_at": "2026-09-21T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-21T00:00:00Z",
+      "author": "change_manager",
+      "description": "Canonical change record raised for the synthetic-reference project. No product change is effected by this record."
+    }
+  ],
+  "record_kind": "canonical_change_record",
+  "record_purpose": "This is the change-management record of record for the synthetic-reference project. It is not a test fixture: the change-lifecycle demonstration of the same subject (docs/artifacts/scenarios/change-lifecycles/change-002-hsi-interface.json, FB2-SCN-CHG-000002) exists separately to exercise the corpus scenario gate, and the two are intentionally different artifacts with different jobs.",
+  "change_type": "hsi_interface",
+  "change_control": {
+    "change_request_id": "CR-002",
+    "change_class": "planned",
+    "raised_by_role": "procurement_engineer",
+    "raised_on": "2026-10-01T00:00:00Z",
+    "change_control_board": "synthetic project change control board (fictional body, see governance/role-and-review-policy.json)",
+    "required_approvals": [
+      "system_architect",
+      "hw_engineer",
+      "safety_manager",
+      "sw_architect",
+      "cybersecurity_engineer",
+      "verification_lead",
+      "change_manager"
+    ],
+    "approvals_recorded": 0,
+    "approval_note": "No approval of any kind has been recorded. human_approval_status stays pending; decision.disposition below is a fictional workflow outcome, not a human sign-off."
+  },
+  "trigger": {
+    "source": "Synthetic semiconductor supplier obsolescence notice (LTC6811 entering NRND; hypothetical project)",
+    "description": "The selected AFE, LTC6811, is announced as not recommended for new designs. For the synthetic reference project the migration target is fixed by the parameter set already present in the corpus: VAR-AFE-ADI-1830 is inventoried in sources/variant-matrix.json and FB2-SYS-HSI-000001 already records that this variant needs a different interface, 'HSI_AFE_SPI_ADI', rather than a re-parameterisation of the existing one. The migration therefore adds a second AFE front end to the reference configuration; it does not re-point the existing one.",
+    "date": "2026-10-01T00:00:00Z",
+    "trigger_class": "external_mandatory",
+    "external_to_corpus": true
+  },
+  "impact_analysis": {
+    "affected_artifacts": [
+      "FB2-SYS-HSI-000001",
+      "FB2-HW-TSR-000001",
+      "FB2-HW-TSR-000002",
+      "FB2-SW-SWR-000001",
+      "FB2-SW-DSN-000001",
+      "FB2-VER-TMS-000003",
+      "FB2-VER-TMS-000005"
+    ],
+    "affected_links": [
+      "FB2-LNK-SAF-000005",
+      "FB2-LNK-SAF-000006",
+      "FB2-LNK-SAF-000008",
+      "FB2-LNK-SAF-000011",
+      "FB2-LNK-SAF-000027",
+      "FB2-LNK-SAF-000028",
+      "FB2-LNK-SAF-000031"
+    ],
+    "affected_reviews": [],
+    "affected_evidence": [],
+    "risk_assessment": "This is the highest-exposure change of the three, because the migration removes a safety barrier rather than moving a threshold. (1) The galvanic barrier disappears. FB2-SYS-HSI-000001 specifies iso_spi_transformer_isolation_vrms of 2500, so today the MCU-to-slave monitoring link is a transformer-isolated bus; a direct SPI/DMA link to an ADES1830 sitting at pack potential has no such barrier, and the cell-voltage acquisition path that feeds the ASIL D FB2-SAF-FSR-000001 therefore becomes reachable across a potential difference that the present design deliberately avoids. (2) The communication-integrity requirement becomes about a different failure physics. FB2-HW-TSR-000002 specifies BER < 1E-9, failure detection within 5 ms and 100% CRC coverage for isoSPI; a transformer-isolated differential pair and a direct single-ended SPI bus do not have the same common-mode immunity, and the 5 ms detection time was a property of the isolated link's framing, not of the AFE. (3) The accuracy premise is device-specific. FB2-ASM-005 derives the 5 mV noise sigma from the +/-1.5 mV accuracy that FB2-HW-TSR-000001 states over a 2.5 V-4.2 V range; a different AFE has a different error budget, and that sigma is the entire basis of the false-positive criterion in FB2-SAF-FSR-000002. (4) The driver architecture is device-bound. FB2-SW-DSN-000001 carries the constraint 'SPI clock <= 1 MHz (LTC6811 spec)' and maps four LTC-family translation units; the PEC mechanism, the DMA buffer size of 256 bytes per slave and the state machine are all written against one device family. (5) Timing assumptions with a named premise lapse. FB2-ASM-004 states the < 5 ms SPI-plus-DMA-plus-PEC latency and attributes it to the LTC6811/6813 datasheet at 1 MHz, so the premise of a reissued assumption is required before the latency claim can stand. (6) A new, unanalysed attack surface appears. Replacing an isolated bus with a physically probeable direct bus changes what an attacker can reach; the corpus TARA FB2-SAF-TAR-000001 covers network, serial and diagnostic-write threats and contains nothing that depends on the AFE link's galvanic isolation, so this is recorded as a gap in the threat analysis rather than as a claim that a threat has been assessed. No residual risk is accepted by this record: the isolation loss is dispositioned as deferred-to-a-follow-up rather than as accepted, because a compensating barrier is an architecture decision, not a change-control decision."
+  },
+  "decision": {
+    "decision_id": "FB2-CHG-REF-000002",
+    "decision_maker": "change_control_board chair, fictional role identity 'A. Renner' (synthetic scenario character; not a foxBMS maintainer, not SoftwareDevLabs staff, not a real person)",
+    "date": "2026-10-15T00:00:00Z",
+    "rationale": "Obsolescence is mandatory, so the request cannot be rejected. The board dispositions it as approved for the front-end migration and, in the same decision, records two things it is NOT approving. First, it does not accept the loss of the 2500 Vrms galvanic barrier as residual risk: an independent monitoring path that crosses the pack potential is an architecture question, and the corpus has no artifact that currently provides a second monitoring route, so the loss is dispositioned 'deferred to a follow-up architecture change' rather than 'accepted'. Second, it does not approve reusing the existing HSI record by re-parameterising it. FB2-SYS-HSI-000001 already says in its own variant_applicability_table that VAR-AFE-ADI-1830 needs a distinct interface, 'HSI_AFE_SPI_ADI'; overwriting the LTC interface in place would destroy the record for the variant that remains the reference front end. The approved work is therefore additive: a new interface authority, a new set of hardware requirements, a new driver requirement and design, and a new verification selection - with the LTC path retained and still baselined at BAS-REF-003.",
+    "disposition": "partial"
+  },
+  "synthetic_decision": {
+    "label": "synthetic_decision:change_control_board_chair:FB2-CHG-REF-000002",
+    "is_synthetic": true,
+    "is_human_approval": false,
+    "statement": "decision.disposition 'partial' is a fictional workflow outcome of the synthetic-reference project's change control board. It is NOT a human approval, NOT a foxBMS maintainer decision, NOT a SoftwareDevLabs decision, and NOT a statement that any change was made to any real project. human_approval_status remains 'pending' and production_authorized remains false."
+  },
+  "decision_disposition_scope": "Approved in part means: the synthetic project proceeds to raise the revisions listed in new_revisions, and the loss of galvanic isolation is separately referred to a follow-up architecture change. It does not mean the revisions have been raised, that a new AFE driver exists, that the new variant has been verified, or that the isolation question has been answered.",
+  "new_revisions": [
+    {
+      "artifact_id": "FB2-SYS-HSI-000001",
+      "old_revision": "1",
+      "new_revision": "2"
+    },
+    {
+      "artifact_id": "FB2-HW-TSR-000001",
+      "old_revision": "1",
+      "new_revision": "2"
+    },
+    {
+      "artifact_id": "FB2-HW-TSR-000002",
+      "old_revision": "1",
+      "new_revision": "2"
+    },
+    {
+      "artifact_id": "FB2-SW-SWR-000001",
+      "old_revision": "1",
+      "new_revision": "2"
+    },
+    {
+      "artifact_id": "FB2-SW-DSN-000001",
+      "old_revision": "1",
+      "new_revision": "2"
+    },
+    {
+      "artifact_id": "FB2-VER-TMS-000003",
+      "old_revision": "1",
+      "new_revision": "2"
+    },
+    {
+      "artifact_id": "FB2-VER-TMS-000005",
+      "old_revision": "1",
+      "new_revision": "2"
+    }
+  ],
+  "suspect_links": [
+    "FB2-LNK-SAF-000005",
+    "FB2-LNK-SAF-000006",
+    "FB2-LNK-SAF-000008",
+    "FB2-LNK-SAF-000011",
+    "FB2-LNK-SAF-000027",
+    "FB2-LNK-SAF-000028",
+    "FB2-LNK-SAF-000031"
+  ],
+  "required_updates": [
+    "FB2-SYS-HSI-000001",
+    "FB2-HW-TSR-000001",
+    "FB2-HW-TSR-000002",
+    "FB2-SW-SWR-000001",
+    "FB2-SW-DSN-000001",
+    "FB2-VER-TMS-000003",
+    "FB2-VER-TMS-000005"
+  ],
+  "reverification_selection": [
+    "FB2-VER-TMS-000003",
+    "FB2-VER-TMS-000005",
+    "FB2-VER-TMS-000001",
+    "FB2-VER-TMS-000002"
+  ],
+  "post_change_baseline": "BAS-REF-003",
+  "affected_artifact_rationale": [
+    {
+      "artifact_id": "FB2-SYS-HSI-000001",
+      "type": "design (interface authority)",
+      "revision_required": true,
+      "current_text_binding": "Interface HSI_AFE_SPI with SPI_CLK (CPOL=0, CPHA=1, 0.5-1.0 MHz, t_clk_high/low > 250 ns), SPI_MOSI/SPI_MISO at 1 Mbps with t_setup/t_hold > 50 ns, SPI_CS[n] with t_cs_setup > 100 ns; electrical_budgets carry iso_spi_transformer_isolation_vrms = 2500; timing_budget carries total_acquisition_to_db_ms = 25; variant_applicability_table already assigns VAR-AFE-ADI-1830 a distinct interface 'HSI_AFE_SPI_ADI'.",
+      "why_re_review": "This is the interface authority of record. Its electrical budget states a 2500 Vrms isolation barrier that the new front end does not have, and its timing budget of 25 ms acquisition-to-database is spent against a device whose SPI/PEC timing is not the one the budget was derived for.",
+      "what_changes": "A second interface, HSI_AFE_SPI_ADI, is added with its own polarity, setup/hold, chip-select and data-valid constraints derived from the new device; the isolation entry is re-scoped from a single front end to a property of the retained LTC path only, so that the barrier is never asserted of a configuration that does not have it; the 25 ms acquisition-to-database budget is re-allocated per front end rather than held as one number for both.",
+      "not_changed": "Interface HSI_AFE_DATABASE is unaffected: the database-side signals (cell_voltage[mV], cell_temperature, balancing_status, communication_error_count) are front-end independent, which is precisely why the migration can be additive instead of a rewrite. The two HSI decisions DEC-HSI-001 (DMA plus callback) and DEC-HSI-002 (packed array) also survive the migration unchanged, because neither depends on the physical layer."
+    },
+    {
+      "artifact_id": "FB2-HW-TSR-000001",
+      "type": "requirement",
+      "revision_required": true,
+      "current_text_binding": "+/-1.5 mV total accuracy including calibration over -40 C to +85 C for the 2.5 V-4.2 V range; total error (offset + gain + temperature drift) 1.5 mV; LSB 0.5 mV; single-bit PEC error detection 100%.",
+      "why_re_review": "The accuracy budget is a property of the front-end silicon. Its acceptance criteria cannot be copied to a different AFE, and copying them would be the specific error this record has to prevent: a requirement that keeps its numbers after the device behind it has been replaced is a requirement that is no longer verified by anything.",
+      "what_changes": "A second accuracy requirement is raised for the new front end with a device-specific error budget, and the noise sigma implied by it is carried into the reissued FB2-ASM-005; the calibration reference point and gain/offset split are re-allocated for the new device rather than inherited.",
+      "not_changed": "The temperature range of the requirement (-40 C to +85 C) is a pack-level environmental requirement and is common to both front ends."
+    },
+    {
+      "artifact_id": "FB2-HW-TSR-000002",
+      "type": "requirement",
+      "revision_required": true,
+      "current_text_binding": "isoSPI BER < 1E-9 under EMC conditions, failure detection within 5 ms from communication loss to software notification, CRC coverage 100%.",
+      "why_re_review": "All three acceptance criteria describe an isolated differential link. A single-ended direct SPI bus at pack potential has a different common-mode environment, a different error-detection mechanism (the new device's internal CRC rather than a transformer-coupled link's framing), and therefore a different detection latency. The requirement as written is about a link the new configuration does not have.",
+      "what_changes": "A communication-integrity requirement is raised for the new link with re-derived BER, detection time and coverage; the 5 ms figure is re-derived rather than carried over, because it was a property of the isolated link's framing and the new framing is not the same mechanism.",
+      "not_changed": "The requirement to detect a loss of communication at all, and the principle that detection must precede any use of the affected data, are common to both front ends and are retained."
+    },
+    {
+      "artifact_id": "FB2-SW-SWR-000001",
+      "type": "requirement",
+      "revision_required": true,
+      "current_text_binding": "SPI/DMA acquisition of all cell voltages at 20 Hz, PEC/CRC validation, publish to database within 5 ms of acquisition complete; acquisition period 50 ms, PEC/CRC validation before database write 100%, database publish latency 25 ms.",
+      "why_re_review": "The software requirement is written against a driver family whose validation mechanism and DMA shape are fixed. Two of its three acceptance criteria (validation coverage, publish latency) are the same quantities whose feasibility changes with the front end, and the 5 ms claim traces to FB2-ASM-004, whose premise is explicitly a particular device family.",
+      "what_changes": "A second AFE driver requirement is raised for the new device, with the validation and latency criteria re-derived; the shared requirements (20 Hz acquisition, publish-before-use, no database write without validation) are stated once and allocated to both drivers rather than duplicated with two sets of numbers that can drift apart.",
+      "not_changed": "The 50 ms acquisition period and the 20 Hz rate are driven by the pack-level freshness budget, not by the AFE, and are unchanged."
+    },
+    {
+      "artifact_id": "FB2-SW-DSN-000001",
+      "type": "design",
+      "revision_required": true,
+      "current_text_binding": "State machine INIT, WAKEUP, READ_VOLTAGES, READ_TEMPERATURES, BALANCING, ERROR, SLEEP with PEC-driven retry and reinit; constraints 'SPI clock <= 1 MHz (LTC6811 spec)', 'DMA buffer size: 256 bytes per slave', 'Task period: 100 ms', 'Stack usage: < 2 KB'; implementation_mapping lists four LTC-family translation units (ltc_afe.c, ltc_afe_dma.c, ltc_pec.c, ltc_6813-1.c).",
+      "why_re_review": "The design is bound to one device in three separate places: an explicit part-number constraint, a DMA buffer size that follows from the LTC frame length, and an implementation mapping whose every row is an LTC path. It also claims an 'implements' relationship to the software requirement that stops being true the moment a second driver exists.",
+      "what_changes": "A second driver architecture is raised for the new device with its own state machine, buffer size and frame handling; the part-number constraint is scoped to the retained LTC path instead of applying to the module; the two drivers share the database-facing contract and the retry/timeout policy, which is where a divergence would create a real hazard.",
+      "not_changed": "The database-facing contract (AFE_DATABASE signals) and the error-reporting semantics are kept identical across both drivers precisely so that the SOA, diagnostic and plausibility logic above the driver does not have to know which front end is fitted."
+    },
+    {
+      "artifact_id": "FB2-VER-TMS-000003",
+      "type": "test_measure",
+      "revision_required": true,
+      "current_text_binding": "Step 1 injects 3300 mV expecting a pass, step 2 injects 4900 mV expecting an implausible flag. referenced_requirements: FB2-SAF-FSR-000001, FB2-SW-SWR-000001, FB2-HW-TSR-000001.",
+      "why_re_review": "This is the plausibility test, and plausibility bounds are the direct product of the front end's error budget and full-scale range. Its 4900 mV stimulus is well outside any plausible cell range, so it would pass unchanged against either device while verifying nothing about the new one - the classic false-green that a device swap produces.",
+      "what_changes": "Stimulus bounds are re-derived from the new device's range and resolution; a case is added that sits between the two devices' inaccuracy figures, so the test discriminates the front end rather than merely passing on both; the 3300 mV nominal point is re-checked against the new conversion and calibration path.",
+      "not_changed": "Test level (unit), method (injected values against the driver and plausibility logic) and its three referenced requirements are unchanged."
+    },
+    {
+      "artifact_id": "FB2-VER-TMS-000005",
+      "type": "test_measure",
+      "revision_required": true,
+      "current_text_binding": "Step 1 corrupts the PEC of an AFE response frame expecting a communication error, step 2 checks the retry counter increments, step 3 corrupts beyond tolerance expecting a diagnosis entry. referenced_requirements: FB2-HW-TSR-000002.",
+      "why_re_review": "This is the only test that exercises communication integrity, and it injects faults into the isolated link's framing. Against a direct SPI link the same injections may not produce the same mechanism, so a passing result would be a property of the harness rather than of the design.",
+      "what_changes": "Fault injection is re-specified for the new link's frame and error-detection mechanism; a case is added for the failure mode the migration actually introduces, which is loss of the isolation barrier and the resulting common-mode behaviour, so that the new physical risk is exercised rather than assumed away.",
+      "not_changed": "Test level (robustness), the retry-counter expectation, and the requirement that a diagnosis entry is raised remain common to both front ends."
+    }
+  ],
+  "suspect_link_rationale": [
+    {
+      "link_id": "FB2-LNK-SAF-000005",
+      "relation_type": "allocated_to",
+      "endpoints": "FB2-HW-TSR-000001 -> FB2-SAF-FSR-000001",
+      "why_suspect": "The accuracy requirement is the hardware element that carries the ASIL D acquisition requirement. After the migration the FSR is satisfied by two requirements rather than one, and the link asserts that one requirement is its allocation. The allocation is incomplete, not wrong, and incompleteness in an allocation is the failure mode that survives review unnoticed.",
+      "resolution": "re-affirm against a requirement set that enumerates both front ends; the link's target stays FB2-SAF-FSR-000001 and the completeness argument is what changes."
+    },
+    {
+      "link_id": "FB2-LNK-SAF-000006",
+      "relation_type": "allocated_to",
+      "endpoints": "FB2-HW-TSR-000002 -> FB2-SAF-FSR-000001",
+      "why_suspect": "Same incompleteness, and more sharply: the requirement being allocated is entirely about an isoSPI link that the new front end does not have. After this change, asserting that HW-TSR-000002 alone covers the ASIL D acquisition requirement would be false for the new configuration.",
+      "resolution": "a second communication-integrity requirement is allocated to the same FSR; both links must be present and each must name the configuration it covers."
+    },
+    {
+      "link_id": "FB2-LNK-SAF-000008",
+      "relation_type": "allocated_to",
+      "endpoints": "FB2-SW-SWR-000001 -> FB2-SAF-FSR-000001",
+      "why_suspect": "The software requirement is the element that actually enforces 'no database write without validation' for the acquisition path. Two drivers means two enforcement points, and a single allocated_to link does not say which driver enforces it in which configuration.",
+      "resolution": "a second software driver requirement is allocated; the link set must cover both configurations explicitly."
+    },
+    {
+      "link_id": "FB2-LNK-SAF-000011",
+      "relation_type": "implements",
+      "endpoints": "FB2-SW-DSN-000001 -> FB2-SW-SWR-000001",
+      "why_suspect": "An implements link asserts that this design satisfies this requirement. After a second driver is raised, this link is only true of one of them, and a reader of the link alone cannot tell which. The corpus validator's dangling-endpoint check will not catch this: both endpoints still exist.",
+      "resolution": "re-affirm with the configuration named in the rationale, and add the corresponding link for the new design and requirement pair."
+    },
+    {
+      "link_id": "FB2-LNK-SAF-000027",
+      "relation_type": "verifies",
+      "endpoints": "FB2-VER-TMS-000003 -> FB2-SW-SWR-000001",
+      "why_suspect": "The plausibility test verifies the driver requirement. Its stimulus was derived from the retained front end's error budget, so after the migration it verifies the requirement for a configuration it no longer represents.",
+      "resolution": "re-execute against the revised stimulus for each front end; a single pass no longer covers both."
+    },
+    {
+      "link_id": "FB2-LNK-SAF-000028",
+      "relation_type": "verifies",
+      "endpoints": "FB2-VER-TMS-000003 -> FB2-HW-TSR-000001",
+      "why_suspect": "Same test, hardware target. The 4900 mV implausibility case sits far outside both devices' ranges, so this link can be satisfied by a test that discriminates nothing between them.",
+      "resolution": "add a stimulus case between the two devices' inaccuracy figures; only then does the link carry evidence."
+    },
+    {
+      "link_id": "FB2-LNK-SAF-000031",
+      "relation_type": "verifies",
+      "endpoints": "FB2-VER-TMS-000005 -> FB2-HW-TSR-000002",
+      "why_suspect": "The only direct verification of the communication-integrity requirement, and the injection mechanism is tied to the isolated link's framing. A pass after the migration would be evidence about the harness.",
+      "resolution": "re-specify the injection for the new link and add a case for the common-mode behaviour that the loss of isolation introduces."
+    }
+  ],
+  "suspect_link_registry_state": "The baseline link registry (traceability/link-registry/synthetic_reference/links-cell-voltage.json) still records change_suspect_status=false on all seven links above. That is the correct state today: the change is approved only in the fictional workflow sense, no affected artifact has been revised, and no revision has been baselined. change_suspect_status becomes true for these links as part of establishing BAS-REF-003. This record deliberately does not pre-flip the baseline flags, because doing so would assert a change state that has not occurred.",
+  "new_links_required": [
+    {
+      "pattern": "one 'implements' link per (new driver design, new driver requirement) pair",
+      "count_expected": 1,
+      "state": "not created by this record - both endpoints do not exist yet at BAS-REF-001",
+      "note": "Creating a link to an artifact that has not been created would be a dangling link. The requirement is recorded here so the post-change baseline does not forget it."
+    },
+    {
+      "pattern": "one 'verifies' link per (new test measure, new requirement) pair",
+      "count_expected": 2,
+      "state": "not created by this record - endpoints do not exist yet at BAS-REF-001",
+      "note": "The revised FB2-VER-TMS-000003 and FB2-VER-TMS-000005 re-affirm against the revised requirements; the new front-end-specific test measures and their links are part of the work this change commissions."
+    }
+  ],
+  "assumptions_invalidated": [
+    {
+      "assumption_id": "FB2-ASM-004",
+      "current_statement": "AFE SPI communication latency < 5 ms (including DMA transfer and PEC validation), attributed to the LTC6811/6813 datasheet at 1 MHz",
+      "why": "The assumption states its own premise, and that premise is a device family. The claim cannot be extended to a front end it was not derived from.",
+      "action": "reissue per front end, each with its own named datasheet premise; do not extend the existing record to the new device"
+    },
+    {
+      "assumption_id": "FB2-ASM-005",
+      "current_statement": "Cell voltage measurement noise follows Gaussian distribution with sigma <= 5 mV",
+      "why": "The sigma is derived from the +/-1.5 mV accuracy in FB2-HW-TSR-000001. A different AFE has a different error budget, and this sigma is the whole basis of the false-positive criterion in FB2-SAF-FSR-000002 and of the debounce configuration commissioned by CR-001.",
+      "action": "reissue per front end, then re-run the debounce false-positive analysis before either front end's SOA configuration is baselined"
+    }
+  ],
+  "assumptions_reconfirmed": [
+    {
+      "assumption_id": "FB2-ASM-001",
+      "statement": "Lithium-ion cell chemistry with nominal voltage 3.7V, operating range 2.5V-4.2V",
+      "why_reconfirmed": "The migration changes how voltages are read, not what the cells can tolerate. The cell chemistry premise is unaffected, and it is unaffected only for the retained LTC configuration: if CR-001 is applied first, this assumption is superseded by its reissued form."
+    }
+  ],
+  "evidence_invalidation": [
+    {
+      "execution_id": "FB2-VER-EXE-000003",
+      "test_measure_id": "FB2-VER-TMS-000003",
+      "current_state": "synthetic_fixture result at BAS-REF-001",
+      "action": "supersede, do not overwrite",
+      "why": "The result was obtained against a plausibility stimulus derived from the retained front end. It remains a true record of what the old measure did, which is why it is superseded rather than edited."
+    },
+    {
+      "execution_id": "FB2-VER-EXE-000005",
+      "test_measure_id": "FB2-VER-TMS-000005",
+      "current_state": "synthetic_fixture result at BAS-REF-001",
+      "action": "supersede, do not overwrite",
+      "why": "The fault injection targeted the isolated link's framing; after the migration it is evidence about a link the new configuration does not have."
+    }
+  ],
+  "evidence_reference_note": "impact_analysis.affected_evidence is empty by schema, not by omission. The change schema admits only ids matching ^FB2-EVD-[A-Z]{2,4}-[0-9]{6}$, and no artifact with an FB2-EVD- prefix exists in either profile. The executions this change invalidates are FB2-VER-EXE-000003 and FB2-VER-EXE-000005, which do exist in synthetic_reference; they are named in evidence_invalidation above rather than forced into a slot whose id scheme does not admit them.",
+  "reviews_note": "impact_analysis.affected_reviews is empty by schema, not by omission. The change schema admits only ids matching ^FB2-REV-[A-Z]{2,4}-[0-9]{6}$, i.e. a review id with a two-to-four letter type segment. The corpus contains exactly one review artifact, FB2-REV-000001, which has no such segment, belongs to the as_is profile, and is an automated review of the reconstructed foxBMS artifacts rather than a review of the synthetic-reference change. There is therefore no review in the synthetic_reference profile for this change to invalidate. The review work this change requires is listed as re_review_scope below, and it cannot be discharged by this record.",
+  "re_review_scope": [
+    {
+      "target": "FB2-SYS-HSI-000001",
+      "review_type_needed": "interface_review (system) with cybersecurity_engineer participation",
+      "why": "A new electrical interface is introduced and a safety barrier is removed from one configuration. The isolation re-scoping is the single most consequential edit in this change and must not be reviewed without the security role present."
+    },
+    {
+      "target": "FB2-HW-TSR-000001, FB2-HW-TSR-000002",
+      "review_type_needed": "hardware_requirement_review",
+      "why": "Both requirements are re-derived from a new device's error budget and link physics. The review must confirm no number was inherited from the retained front end."
+    },
+    {
+      "target": "FB2-SW-SWR-000001, FB2-SW-DSN-000001",
+      "review_type_needed": "software_requirement_review and software_design_review",
+      "why": "Two drivers with a shared database contract. The hazard being managed is a silent divergence between them above the driver layer."
+    },
+    {
+      "target": "FB2-VER-TMS-000003, FB2-VER-TMS-000005",
+      "review_type_needed": "verification_review",
+      "why": "Both stimuli are re-derived. The review must confirm the revised stimuli discriminate the two front ends rather than passing on both."
+    },
+    {
+      "target": "FB2-SAF-TAR-000001",
+      "review_type_needed": "cybersecurity_review - GAP, not currently satisfiable",
+      "why": "The TARA's threat set contains nothing that depends on the AFE link's galvanic isolation, so there is no existing threat to re-review against the new direct bus. This is a new analysis item, and it is named here so the gap is visible rather than absorbed."
+    }
+  ],
+  "reverification_criterion": {
+    "selection_rule": "Select every test measure whose stimulus is derived from the front end's error budget or whose fault injection is tied to the physical link, plus the two regression measures on the consumer side of the driver (the limit monitor and the contactor reaction), because those are what a driver-contract divergence would show up in.",
+    "selected": [
+      {
+        "test_measure_id": "FB2-VER-TMS-000003",
+        "basis": "direct - plausibility stimulus is derived from the front-end accuracy and full-scale range"
+      },
+      {
+        "test_measure_id": "FB2-VER-TMS-000005",
+        "basis": "direct - the only test exercising communication integrity, and its injection mechanism is link-specific"
+      },
+      {
+        "test_measure_id": "FB2-VER-TMS-000001",
+        "basis": "regression - the limit monitor consumes driver output; a changed error budget moves the noise sigma that its false-positive criterion rests on, and CR-001 commissions a debounce change on the same assumption"
+      },
+      {
+        "test_measure_id": "FB2-VER-TMS-000002",
+        "basis": "regression - contactor reaction on a confirmed violation; it is the end-to-end detector of a driver-contract divergence"
+      }
+    ],
+    "excluded": [
+      {
+        "test_measure_id": "FB2-VER-TMS-000009",
+        "basis": "validation measure against stakeholder needs; no path from the AFE front end to the stakeholder need it validates"
+      }
+    ],
+    "acceptance_condition": "Re-verification is complete per front end, not once. Each front end must have its own revised stimulus, its own re-derived accuracy and communication-integrity results, and its own pass against the limit-monitor regression. A single pass covering the retained LTC path does not satisfy this condition, because the retained path is not what this change commissions.",
+    "not_yet_executed": true
+  },
+  "variant_impact": [
+    {
+      "variant_id": "VAR-AFE-ADI-1830",
+      "registry": "docs/artifacts/sources/variant-matrix.json",
+      "effect": "The variant this change commissions. It already exists in the variant matrix and is already named in FB2-SYS-HSI-000001's variant_applicability_table as needing a distinct interface.",
+      "modelled_status": "must be raised to modelled at BAS-REF-003; it is not modelled today",
+      "why_not_in_affected_artifacts": "A variant is a row in a registry, not a corpus artifact. It has no id, no revision and no lifecycle_status, so a 'changes' link pointed at it would dangle. The variant-level consequence is recorded here instead."
+    },
+    {
+      "variant_id": "VAR-REF-001",
+      "effect": "Unchanged. The reference configuration remains the retained LTC front end at BAS-REF-003. This change adds a variant; it does not re-point the reference configuration, which is the concrete reason the decision disposition is 'partial'."
+    }
+  ],
+  "hardware_source_anchors_re_reviewed": [
+    {
+      "anchor_id": "FB2-SRC-HW-000002",
+      "resolves_to": "board 12-ltc-ltc6811-1-vx.x.x, Schematics/foxBMS_Slave.SchDoc, sheets 1-3, U1-U3 (LTC6811-1), nets isoSPI_A, isoSPI_B, CELL_1-12, GPIO_1-5",
+      "relevance": "The retained front end's schematic. It is the artifact that documents the 2500 Vrms isolation and the isoSPI nets, so it is the record that must be preserved rather than superseded when the new front end is added.",
+      "modification": "none - no hardware file is modified by this record and none may be"
+    }
+  ],
+  "software_source_anchors_re_reviewed": [
+    {
+      "anchor_id": "FB2-SRC-COD-000001",
+      "resolves_to": "src/app/driver/afe/api/afe.h, symbol AFE_GetCellVoltages, lines 45-52, at commit 308028fb",
+      "relevance": "The AFE API through which both drivers must publish. The migration is additive only if this API is front-end independent, which is the single most important design question raised by the change and is not answered by any artifact in the corpus today.",
+      "modification": "none - no file under src/ is modified by this record and none may be"
+    },
+    {
+      "anchor_id": "FB2-SRC-COD-000002",
+      "resolves_to": "src/app/driver/afe/api/afe.h, symbol AFE_GetCellTemperatures, lines 55-62, at commit 308028fb",
+      "relevance": "As above for the temperature channel; the new front end must satisfy the same API for both channels or the migration stops being additive.",
+      "modification": "none - no file under src/ is modified by this record and none may be"
+    }
+  ],
+  "not_included_and_why": [
+    {
+      "reference": "FB2-SRC-COD-000001, FB2-SRC-COD-000002, FB2-SRC-COD-000004, FB2-SRC-HW-000002",
+      "referenced_by": "this scenario's fixture FB2-SCN-CHG-000002, in impact_analysis.affected_artifacts",
+      "status": "resolves, but as the wrong kind of object: source anchors in docs/artifacts/sources/source-registry.json, not corpus artifacts",
+      "decision": "not used in affected_artifacts; recorded instead in hardware_source_anchors_re_reviewed and software_source_anchors_re_reviewed",
+      "justification": "These ids are real and they resolve - they are durable source anchors for the AFE API and the LTC6811 slave schematic, and they are the reason the fixture can name code and hardware at all. But an anchor is not an artifact: it has no revision, no lifecycle_status and no entry in the artifact index, so a 'changes' link pointed at one would dangle. Their id shape even matches the change schema's affected_artifacts pattern (FB2-SRC-COD-000001 fits ^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$), which makes the error easy to commit: a schema-valid id that still points at nothing of the required kind."
+    },
+    {
+      "reference": "VAR-AFE-ADI-1830",
+      "referenced_by": "this scenario's fixture, in impact_analysis.affected_artifacts and required_updates",
+      "status": "resolves, but as a variant-matrix row, not an artifact",
+      "decision": "not used in affected_artifacts or required_updates; recorded in variant_impact",
+      "justification": "A variant is a configuration row. It carries no artifact id, so it belongs in the variant inventory and not in a change record's artifact lists. The fixture's use of it there is a category error that its schema does not catch; the change schema's id pattern would have rejected it."
+    },
+    {
+      "reference": "FB2-VER-TMS-000001 as an affected artifact",
+      "referenced_by": "this scenario's fixture, in impact_analysis.affected_artifacts and new_revisions",
+      "status": "resolves in synthetic_reference as a test_measure",
+      "decision": "kept in reverification_selection but NOT in affected_artifacts or new_revisions",
+      "justification": "The limit-monitor test's stimulus is not written in terms of the AFE front end, so this change does not require it to be revised; it is a regression to re-run, which is a weaker and more accurate claim than requiring a revision. Demoting it from 'revise' to 're-run' is the difference between an accurate change record and a padded one."
+    }
+  ],
+  "relationship_to_scenario_fixture": {
+    "scenario_fixture_id": "FB2-SCN-CHG-000002",
+    "scenario_path": "docs/artifacts/scenarios/change-lifecycles/change-002-hsi-interface.json",
+    "same_subject_different_artifact": true,
+    "differences_that_matter": [
+      "The fixture dispositions the request as approved in full. This record dispositions it 'partial', because the loss of the 2500 Vrms isolation barrier is referred out rather than accepted, and because the retained LTC front end stays baselined while the new one is added alongside it.",
+      "The fixture treats the migration as a replacement. This record treats it as an addition, on the authority of FB2-SYS-HSI-000001's own variant_applicability_table, which already assigns VAR-AFE-ADI-1830 a distinct interface rather than a re-parameterisation of the existing one.",
+      "The fixture lists a new variant among affected artifacts and a set of code ids in the same list, mixing three different kinds of object. This record separates them into affected_artifacts, variant_impact and source-anchor fields.",
+      "This record adds the per-artifact and per-link re-review rationale, the two assumption reissues, the new links that the post-change baseline must create, and the cybersecurity gap that the migration opens."
+    ],
+    "fixture_is_unmodified": true
+  },
+  "implementation_status": "not_in_source",
+  "implementation_note": "No foxBMS source, test, configuration or build file is modified by this record, and none may be. The pinned foxBMS sources at commit 308028fb are untouched; the change described here exists only in the synthetic_reference profile. No ADI ADES1830 driver, no new slave board and no HSI_AFE_SPI_ADI interface exists in this repository, and none is created by this record. The LTC-family translation units named in FB2-SW-DSN-000001's implementation_mapping are the synthetic project's mapping; that mapping is a property of the fictional project, not a claim about the pinned tree.",
+  "corpus_boundaries": {
+    "production_authorized": false,
+    "product_verification_credit": false,
+    "human_approval_status": "pending",
+    "asserts_real_project_change": false,
+    "asserts_real_approval": false,
+    "asserts_measured_test_result": false,
+    "asserts_real_hardware_variant_available": false
+  }
+}

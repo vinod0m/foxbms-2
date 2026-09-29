@@ -1,0 +1,51 @@
+{
+  "id": "FB2-REV-FND-000009",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Finding FB2-REV-FND-000009: safety requirement has no verifies/validates link (FB2-SAF-SEC-000002, profile synthetic_reference)",
+  "owner_role": "quality_engineer",
+  "origin": "derived",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': this record makes the validator's standing finding legible and dispositioned. It does not close the condition. No human reviewer has confirmed it, and human approval of the artifact it describes remains 'pending'.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "First-class record of the standing validator finding 'safety requirement has no verifies/validates link' raised against FB2-SAF-SEC-000002 in profile synthetic_reference. Transcribed from the validator, not paraphrased."
+    }
+  ],
+  "subject_artifact_id": "FB2-SAF-SEC-000002",
+  "validator_rule": "corpus.py _validate_links semantic pass: verified = {l['source_id'] for l in links if l.get('relation_type') in ('verifies','validates')}; raise if a safety-domain requirement's id is absent from that set.",
+  "validator_finding_verbatim": "safety requirement has no verifies/validates link",
+  "severity": "medium",
+  "category": "verification",
+  "evidence": "Validator finding verbatim: 'safety requirement has no verifies/validates link'. Measured against the registry: Link census measured on the registry: verifies links run TMS->FSR (15), TMS->SWR (10), TMS->TSR (7); validates links run TMS->SCO (1), TMS->SGO (1). In the corpus's own convention a test measure is the SOURCE and the requirement is the TARGET, so a well-verified requirement appears as a link TARGET, never as a source. FB2-SAF-SEC-000002 in profile synthetic_reference is neither the SOURCE nor the TARGET of any verifies or validates link anywhere in the corpus. No test measure in the corpus references any FB2-SAF-SEC-* artifact. The requirement itself declares verification_status 'not_verified', and it specifies acceptance criteria that have no measure, execution or evidence behind them.",
+  "disposition": "accepted",
+  "impact": "This is a real and open verification gap, not a rule artefact. Five security requirements - authenticated transport, bounded connection admission, CAN message integrity and freshness, serial-link framing and authorisation, and strong entropy plus component governance - carry the entire cybersecurity concept and none of them is verified by anything in the corpus. The security case in this corpus therefore rests on requirements that have no verification evidence at all, and the acceptance criteria that would make them verifiable were written but never turned into a measure.",
+  "root_cause": "The five security requirements were authored as a derived set from the TARA (derived_from FB2-SAF-TAR-000001) and each one states its own verification_approach, but no verification planning pass was ever run against the security requirement set. The verification planning in the corpus concentrates on the cell-voltage safety chain (FSR/TMS/EXE) and the security set was outside that plan's scope when it was written.",
+  "resolution": "NOT RESOLVED, and it cannot honestly be resolved in this revision. Closing it requires authoring security verification measures and executions, which is engineering work outside the scope of a finding record, and the underlying control does not exist in the real source to be verified against yet. No finding was weakened, no check was relaxed, and no artifact was relabelled to make this disappear. The finding stands, and the security concept should be read as unverified until measures exist."
+}

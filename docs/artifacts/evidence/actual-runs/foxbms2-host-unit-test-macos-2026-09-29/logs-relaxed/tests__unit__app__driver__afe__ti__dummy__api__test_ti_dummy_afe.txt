@@ -1,0 +1,54 @@
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/build/app_host_unit_test
+
+Ceedling set up completed in 327 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_ti_dummy_afe.c for user & system #includes...
+Parsing test_ti_dummy_afe.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_ti_dummy_afe.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+
+👟 Test Runners
+---------------
+Generating runner for test_ti_dummy_afe.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_ti_dummy_afe.c...
+Compiling test_ti_dummy_afe::ti_dummy.c...
+Compiling test_ti_dummy_afe::ti_dummy_afe.c...
+Compiling test_ti_dummy_afe::unity.c...
+Compiling test_ti_dummy_afe::CException.c...
+Compiling test_ti_dummy_afe::struct_helper.c...
+Compiling test_ti_dummy_afe::test_fake_functions.c...
+Compiling test_ti_dummy_afe::test_ti_dummy_afe_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+In file included from ../../src/app/driver/afe/ti/dummy/api/ti_dummy_afe.c:59:
+In file included from ../../src/app/driver/afe/api/afe_dma.h:59:
+../../src/app/driver/config/dma_cfg.h:63:10: fatal error: 'HL_sys_dma.h' file not found
+   63 | #include "HL_sys_dma.h"
+      |          ^~~~~~~~~~~~~~
+1 error generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Wno-enum-conversion -Wno-array-bounds -Wno-parentheses-equality -Werror -I"./mocks/test_ti_dummy_afe" -I"../../src/app/driver/afe/api" -I"../../src/app/driver/afe/ti/api" -I"../../src/app/driver/afe/ti/dummy" -I"../../src/app/driver/config" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"." -I"include" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"FOXBMS_AFE_DRIVER_TI=1u" -D"TEST_BS_NR_OF_CELL_BLOCKS_PER_MODULE=18u" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../src/app/driver/afe/ti/dummy/api/ti_dummy_afe.c" -o "./test/out/test_ti_dummy_afe/ti_dummy_afe.o" -MMD -MF "./test/dependencies/test_ti_dummy_afe/ti_dummy_afe.d"
+🌱 Ceedling could not complete operations because of errors

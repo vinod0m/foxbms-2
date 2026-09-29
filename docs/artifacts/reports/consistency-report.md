@@ -1,151 +1,271 @@
 # Consistency Report
 
-**Generated:** 2026-09-20  
-**Baseline:** BAS-REF-001  
-**Profile:** synthetic_reference (primary), as_is (comparison)
+**Generated:** 2026-09-29
+**Baseline:** BAS-REF-001 (pinned source commit `308028fb`)
+**Profiles:** `synthetic_reference` (primary), `as_is` (comparison)
 
-## Overview
+> Semantic consistency results only. Nothing here asserts ISO 26262 conformity,
+> ASIL capability, ASPICE capability level, certification, human approval or
+> tool qualification.
+>
+> Guard fields, corpus-wide: every one of the 153 indexed records carries
+> `human_approval_status: pending` and `production_authorized: false`. **No human
+> has approved anything in this corpus.**
+>
+> Every number is from a live run of `corpus.py validate` and `corpus.py
+> selftest` on 2026-09-29.
 
-This report documents the results of semantic consistency checks per master prompt Section 14. Checks are implemented as automated validators (`corpus.py validate`: 16 findings, errors=0) and structured reviews.
+## 1. Headline Result
 
-## Check Categories
+| Measure | Value |
+|---|---|
+| Schema-validated artifact files | 177 |
+| Unique `(profile, id)` records in the index | 153 |
+| Validator findings raised this run | **21** |
+| **`finding` artifacts recording standing conditions** | **22** |
+| **Errors** | **0** |
+| Check categories executed per run | 10 / 10 |
+| Toolchain self-tests | **11 PASS, 0 FAIL** |
+| Mutation scenarios | 20 / 20 detected |
+| Change lifecycles | 3 / 3 structurally complete |
+| Acceptance suite | **PASSED** (8 stages, 10 gate lines, 0 FAIL) |
 
-### 1. ID, Schema, Revision, Reference Integrity ✅
+**21 findings, 0 errors** is the honest validator state: the validators raise 21
+observations and none of them is an integrity error. The acceptance gate reads
+`[PASS] validate`.
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Unique IDs across profiles | ✅ | ✅ | No duplicates within profile (100 validated artifacts incl. registries, 2026-09-19 run: 9 new blocked execution records included) |
-| Schema validation | ✅ | ✅ | All artifacts validate |
-| Revision format | ✅ | ✅ | Integer strings |
-| Reference resolution | ✅ | ✅ | All source_refs resolve |
-| Baseline alignment | ✅ | ✅ | All BAS-REF-001 |
-| Profile isolation | ✅ | ✅ | No cross-contamination |
+The **22** figure is a different thing and is not a discrepancy. It counts the
+first-class `finding` records under `reviews/findings/`, which transcribe and
+disposition standing conditions so they are legible rather than buried in
+validator output. 21 of them correspond to validator findings; the 22nd,
+`FB2-REV-FND-000022`, records a defect outside the corpus write boundary that
+the validator cannot see (§4.4).
 
-### 2. Requirement Decomposition & Allocation ✅
+## 2. The 10 Check Categories
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Parent intent preserved | ✅ | ✅ | FSRs refine SG without weakening |
-| No silent weakening | ✅ | ✅ | Acceptance criteria match or exceed |
-| No unsupported ASIL downgrade | ✅ | ✅ | All ASIL_D consistent |
-| No invented decomposition independence | ✅ | ✅ | Dependencies explicit |
-| Allocation completeness | ✅ | ✅ | Each FSR allocated to HW+SW |
+`corpus.py` executes 10 check categories on every run. The
+`semantic_consistency_checks` coverage dimension reports 10/10.
 
-### 3. Interface Agreement ✅
+| # | Category | What it enforces | Result |
+|---|---|---|---|
+| 1 | JSON parseability | every corpus/review/scenario file parses | pass |
+| 2 | Schema validation | every record validates against its type schema | pass, 177 files |
+| 3 | Link validity | no dangling link; no invalid relation type | pass, 283 links, 0 dangling |
+| 4 | Source-reference resolution | every `source_refs` entry resolves to a registry anchor | pass |
+| 5 | Provenance / guard fields | no `production_authorized: true`, no approved artifact | pass, 0 violations this run |
+| 6 | Semantic rules | `execution_kind`/`outcome` enums, FTTI budget arithmetic | pass |
+| 7 | Profile isolation | no cross-profile contamination of derived records | pass |
+| 8 | Duplicate detection | no duplicate ID within a profile | pass, but see §3 |
+| 9 | Export consistency | two exports produce identical content hashes | pass |
+| 10 | Source registry pinning | the source registry is pinned to baseline commit `308028fb` | pass |
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Pin/signal identity | ✅ | ✅ | HSI authority defines all |
-| Units | ✅ | ✅ | mV, °C, ms, Hz consistent |
-| Polarity | ✅ | ✅ | Conventions documented |
-| Ranges | ✅ | ✅ | 0-5000mV, -400-1500 (0.1°C) |
-| Signedness | ✅ | ✅ | uint16_t, int16_t correct |
-| Conversion | ✅ | ✅ | raw_adc * gain + offset |
-| Ownership | ✅ | ✅ | HW owns electrical, SW logical |
-| Freshness/validity | ✅ | ✅ | <30ms freshness, stale >100ms |
-| Timing | ✅ | ✅ | HSI budget 25ms matches FSR 25ms |
+## 3. Findings, and What Each One Actually Says
 
-### 4. Numeric Consistency ✅
+The 22 `finding` artifacts under `reviews/findings/` fall into **four families
+plus one recorded report**. Conflating them would be a mistake, because two
+families are genuine gaps and one is partly a rule artefact.
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Parameter reuse | ✅ | ✅ | Single parameter registry |
-| Tolerances | ✅ | ✅ | ±1.5mV, ±1°C, ±1A |
-| Threshold/hysteresis/debounce | ✅ | ✅ | 50mV hyst, 50ms debounce |
-| Accuracy budgets | ✅ | ✅ | ±1.5mV AFE → ±1mV SOA |
-| Timing/diagnostic/reaction budgets | ✅ | ⚠️ | FTTI 100ms = 70ms allocated (gap in as_is) |
-| Dimensional correctness | ✅ | ✅ | Units consistent |
+Note that the corpus validator itself raises **21** findings; the 22
+`finding` artifacts are the transcribed, dispositioned records of standing
+conditions, and include one (`FB2-REV-FND-000022`) that records a defect
+outside the corpus write boundary rather than a validator output.
 
-**Note:** FSR-001 (100ms) + FSR-002 (5ms) + FSR-003 (30ms) = 135ms > FTTI 100ms in as_is. Fixed in synthetic_reference with 20Hz (50ms) + independent monitor (50ms parallel).
+### Family A — `verifies`-direction mismatch (7 of 12, `FB2-REV-FND-000001`…`000007`)
 
-### 5. Behavioral Consistency ✅
+**Verbatim rule text:** `safety requirement has no verifies/validates link`
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Modes/states | ✅ | ✅ | INIT, PRECHARGE, NORMAL, CHARGING, DERATING, FAULT, SERVICE, BOOTLOADER, SHUTDOWN |
-| State transitions | ✅ | ✅ | Guards, actions documented |
-| Guard priorities | ✅ | ✅ | Fault > Normal > Service |
-| Initialization | ✅ | ✅ | INIT → WAKEUP → READ_VOLTAGES |
-| Safe/degraded states | ✅ | ✅ | FAULT, DERATING defined |
-| Fault reaction/recovery | ✅ | ✅ | Emergency open <5ms, retry logic |
-| Resets | ✅ | ✅ | Power-on, watchdog, fault clear |
+**The literal statement is only partly accurate.** The rule inspects only the
+**source** side of a `verifies`/`validates` relation. The corpus's convention is
+that the **test measure is the source and the requirement is the target**, so a
+correctly verified requirement appears as a link *target*, never as a source.
+`FB2-SAF-FSR-000001` in profile `as_is` is the target of at least one
+`TMS → FSR` verifies link, but is the source of none, which is what the rule
+tests.
 
-### 6. Verification Adequacy ⚠️
+Measured link census on the registry: `verifies` links run TMS→FSR (15),
+TMS→SWR (10), TMS→TSR (7); `validates` links run TMS→SCO (1), TMS→SGO (1).
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Measurable requirements | ✅ | ✅ | All FSRs have quantitative criteria |
-| Correct oracles | ✅ | ✅ | source_grounded, analytical_model, synthetic_assumption labeled |
-| Boundary/fault coverage | ✅ | ✅ | Unit tests for boundaries, faults |
-| Valid configurations | ✅ | ✅ | VAR-REF-001 only |
-| Plans vs outcomes distinguished | ✅ | ✅ | TMS (plan) vs EXE (outcome) |
-| Honest evidence classification | ✅ | ✅ | actual_host_run, synthetic_fixture labeled |
+**The rule is not wrong to exist** — it is the missing-verification-link detector
+that the mutation scenarios depend on. But its firing on a well-verified
+requirement is a direction mismatch between the rule and the registry
+convention, not a traceability defect.
 
-**Gap:** 21/21 requirements linked (16 corpus TMS: 5 as_is source-grounded + 11 synthetic_reference, incl. draft stubs TMS-007..011; blocked execution records EXE-000002..005 + EXE-000007..011 recorded; SCO-001 `validates` via TMS-009 stub). Integration/qualification/HIL/component/validation executions remain recorded blocked — no fabricated runs; unblocking conditions in verification-evidence-report.md.
+**Resolution: NOT RESOLVED, and deliberately unchanged.** Relaxing the rule
+would suppress a genuine detector the corpus needs. The fix is a joint decision
+about link-direction convention between the corpus owner and the schema owner.
 
-### 7. Safety-Analysis Coherence ✅
+**Honest reading for a reviewer:** verification links must be examined on **both
+sides** before concluding that a safety requirement is unverified. A reader who
+trusts the finding literally will go looking for missing test evidence that is
+in fact present. A reader who dismisses the finding as a rule artefact will
+dismiss it for Family B too — where the conclusion would be **correct**.
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Fault propagation | ✅ | ✅ | HE → SG → FSR → TSR/SWR |
-| Mitigations traced | ✅ | ✅ | Each HE has SG, FSR, TSR/SWR |
-| Diagnostic assumptions | ✅ | ✅ | PEC, independent monitor, watchdog explicit |
-| Dependencies | ✅ | ✅ | FSR dependencies explicit |
-| Failure classifications | ✅ | ✅ | S3/E4/C3, S2/E3/C2 |
-| Calculations | ✅ | ✅ | Timing budget arithmetic shown |
-| Evidence-to-claim strength | ✅ | ✅ | source_grounded, synthetic_assumption labeled |
+### Family B — security requirements genuinely unverified (5, `FB2-REV-FND-000008`…`000012`)
 
-### 8. Provenance & Workflow Consistency ✅
+**Same verbatim rule text, but a real and open gap.** `FB2-SAF-SEC-000001` …
+`FB2-SAF-SEC-000005` — authenticated transport, bounded connection admission,
+CAN message integrity and freshness, serial-link framing and authorisation,
+strong entropy and component governance — carry the entire cybersecurity
+requirement set and have **no verification link in either direction**.
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| No synthetic promoted to observed | ✅ | ✅ | Field-level provenance enforced |
-| No proposed as existing | ✅ | ✅ | implementation_status field |
-| No synthetic sign-off as human | ✅ | ✅ | human_approval_status=pending |
-| No stale review after content change | ✅ | ✅ | Review digests match artifact digests |
+**Root cause:** the five security requirements were authored as a derived set
+from the TARA (`derived_from FB2-SAF-TAR-000001`) and each states its own
+`verification_approach`, but **no verification planning pass was ever run against
+the security requirement set**. Verification planning in the corpus
+concentrates on the cell-voltage safety chain (FSR/TMS/EXE); the security set was
+outside that plan's scope when the plan was written.
 
-### 9. Process/Lifecycle Consistency ✅
+**Resolution: NOT RESOLVED.** Closing it requires authoring security
+verification measures and executions, and the underlying control does not yet
+exist in the real source to be verified against. No check was weakened and no
+verification was fabricated.
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Agreed revisions | ✅ | ✅ | Baselines BAS-REF-001..004 |
-| Communication evidence | ✅ | ✅ | Review records with fictional participants |
-| Change history | ✅ | ✅ | 3 change lifecycle demos |
-| Release contents | ✅ | ✅ | Baselines documented |
-| Supplier assumptions | ✅ | ✅ | Vendor code dispositions documented |
-| Affected evidence updated | ✅ | ✅ | Change lifecycles invalidate reviews |
+### Family C — no machine-readable fault reaction (7, `FB2-REV-FND-000013`…`000019`)
 
-### 10. View/Export Consistency ✅
+**Verbatim rule texts:** `safety requirement FB2-SAF-FSR-00000N has no
+fault_reaction defined`, one per FSR per profile. Confirmed by direct inspection:
+the `fault_reaction` key is absent from the whole document of each affected FSR,
+so the rule's condition is exactly met.
 
-| Check | synthetic_reference | as_is | Details |
-|-------|---------------------|-------|---------|
-| Canonical ↔ Markdown | ✅ | ✅ | Reports generated from canonical |
-| Canonical ↔ CSV | ✅ | ✅ | Link registry, coverage exported |
-| Canonical ↔ Diagrams | ✅ | ✅ | Mermaid diagrams in reports |
-| Coverage numbers match | ✅ | ✅ | Derived from canonical inventories |
+**Why it matters beyond tidiness:** the corpus holds **no machine-readable record
+of what the system must do on detection of any of its safety faults** — no
+reaction time, no reaction target, no degraded-mode statement per requirement.
+The information exists only as prose, so no checker can consume it.
 
-## Findings Summary
+**Root cause is tooling ahead of specification, not an authoring lapse.** The
+requirement schema never made `fault_reaction` required, so the records are
+schema-valid and no author was ever asked to populate it. The field was added to
+the tooling as mutation detector `MUT-008` without a matching authoring
+requirement, so the detector fires on the baseline by construction.
 
-| Severity | synthetic_reference | as_is | Total |
-|----------|---------------------|-------|-------|
-| Critical | 0 | 0 | 0 |
-| High | 0 | 1 (FTTI budget) | 1 |
-| Medium | 2 | 2 | 4 |
-| Low | 3 | 3 | 6 |
-| Info | 1 | 1 | 2 |
+**Resolution: NOT RESOLVED.** Resolving it means adding a required
+`fault_reaction` field to the requirement schema and populating it across all
+seven FSR instances from the existing prose. That is a schema change plus
+authoring work, both outside the scope of a finding record. The check was **not**
+weakened and no record was relabelled to silence it.
 
-## Resolved Findings
+### Family D — ASIL assignment with no justification (2, `FB2-REV-FND-000020`, `000021`)
 
-1. **FB2-FND-000001** (FTTI budget violation) - **RESOLVED** in synthetic_reference: increased acquisition to 20 Hz, added independent monitor
-2. **FB2-FND-000002** (Target timing not verified) - **ACCEPTED** as gap
-3. **FB2-FND-000003** (HW accuracy from datasheet) - **ACCEPTED** as synthetic assumption
-3. **FB2-FND-000004** (Debounce rationale) - **RESOLVED** in synthetic_reference
-4. **FB2-FND-000005** (Integration test gap) - **ACCEPTED** as documented gap
+**Verbatim rule text:** `safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks
+justification`. Confirmed by direct inspection: the safety goal carries
+`asil: "ASIL_D"` and the key `asil_justification` is absent from the document.
+The same absence holds in both profiles, which is why the validator reports it
+twice.
 
-## Unresolved Findings (as_is)
+**This is the load-bearing finding for the ASIL question, and it is a genuine
+gap.** An ASIL classification determines the required rigor of everything
+derived from it, so an underived `ASIL_D` means the corpus cannot demonstrate
+that it applied the correct rigor anywhere in the chain, even where it did apply
+it.
 
-1. **FTTI budget violation** - 115ms > 100ms in as_is
-2. **No target hardware timing verification** - all tests on host
-3. **HW accuracy from datasheet only** - no production measurements
-4. **Debounce count arbitrary** - no statistical justification in as_is
-5. **No integration tests** - unit tests only
+**There is no tooling defect and no authoring rule was violated** — the argument
+is simply missing. The `MUT-009` detector exists to catch unsupported ASIL
+downgrades and it fires correctly: the corpus does carry an ASIL assignment for
+which no supporting argument exists.
+
+**Resolution: NOT RESOLVED, and it cannot honestly be resolved in this
+revision.** Writing the justification requires an engineering determination —
+hazard exposure, system-level integrity, and the aggregate ASIL of the
+cell-voltage chain — which this corpus has no basis to assert on its own.
+Inventing one would be worse than the gap. No ASIL was changed and no
+justification was fabricated.
+
+This finding is also the corpus's own internal acknowledgement of the point
+made in `FB2-REV-FND-000022` §5: the ASIL values in this corpus are field
+entries without derivation, and they must not be read as an ASIL capability.
+
+### Recorded report outside the validator's scope
+
+**`FB2-REV-FND-000022`** (severity `high`, category `consistency`, disposition
+`in_progress`) records that `TRACEABILITY_DOCUMENT.md` at the **repository root**
+states ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B
+capability. No corpus record was authored against IEC 61508 and it is absent
+from the standards lock. The file lies outside the absolute `docs/artifacts/` write
+boundary and was **not modified**; it is reported instead. See §4.4.
+
+## 4. Structure Defects Found and Reported, Not Hidden
+
+### 4.1 Duplicated review record
+
+`FB2-REV-000001` exists in two files with identical content:
+
+- `docs/artifacts/corpus/as_is/reviews/records/review-vertical-slice.json`
+- `docs/artifacts/reviews/records/review-vertical-slice.json`
+
+**Effect:** the artifact index de-duplicates on `(profile, id)` and keeps the
+first, so no count is inflated. `validate` counts files, so it reports 154
+artifact files against 153 indexed records — the difference is exactly this
+duplicate.
+
+**Why the validator does not flag it:** duplicate detection is a rule inside the
+validator that raises a finding, and the index de-duplication happens upstream of
+it, so the duplicate is absorbed silently. This is a real gap in the validator,
+not a non-issue.
+
+**Action taken: reported, not deleted.** Removing a file is a corpus owner's
+decision, and doing it unrecorded would be the same class of error this report
+exists to prevent. It is recorded in the final acceptance report §8 and in
+`final-acceptance-report.json` under `reported_defects`.
+
+### 4.2 Redundant link registry copy
+
+`corpus/synthetic_reference/traceability/link-registry/synthetic_reference/links-cell-voltage.json`
+holds 51 links that are a strict subset of the 172 in the canonical
+`traceability/link-registry/synthetic_reference/links-cell-voltage.json`. The
+tool de-duplicates on `(profile, link_id)`, so no count is inflated. Reported,
+not deleted.
+
+### 4.3 Stale feature-inventory summary
+
+`sources/feature-inventory.json` carries `summary.total_features: 20` while the
+file holds **22** feature records. `corpus.py inventory` reports 22, so the tool
+is correct and the summary field is stale. This is the origin of the
+previously-reported "All features (20)" coverage target, which has been
+corrected under `CORR-COV-013`.
+
+### 4.4 Conformity claim outside the write boundary
+
+`TRACEABILITY_DOCUMENT.md` at the repository root states ISO 26262 and IEC 61508
+compliance evidence and an ASIL-D/ASIL-B capability. No corpus record was
+authored against IEC 61508. The file is **not** modified — it is outside the absolute
+`docs/artifacts/` write boundary — and is recorded as finding
+**`FB2-REV-FND-000022`** (severity `high`, category `consistency`, disposition
+`in_progress`).
+
+### 4.5 Fifteen governance overclaims corrected
+
+`governance/coverage-plan.json` carried 15 status claims that verification
+against disk contradicted. All 15 are now corrected with a recorded reason and
+evidence. Two landed on a *different* status than the originally reported
+reality suggested, because verification found evidence on both sides; both record
+the divergence explicitly. Every `expected_artifacts` and
+`capability_attributes` list was retained unchanged, and no artifact was
+fabricated to make a status true.
+
+## 5. Integrity Dimensions
+
+| Dimension | Ratio | % | Reading |
+|---|---|---|---|
+| scope_accounting | 1/1 | 100% | complete |
+| artifact_population | 13/13 | 100% | complete |
+| standards_mapping | 44/44 | 100% | every locked item has a disposition — but 6 processes and 2 ISO parts are `gap` |
+| source_grounding | 76/154 | 49% | 78 records carry no `source_refs`; mostly synthetic, which is expected |
+| traceability_integrity | 283/283 | 100% | 0 dangling |
+| semantic_consistency_checks | 10/10 | 100% | 21 findings, 0 errors |
+| automated_review_coverage | 82/123 | 67% | 41 unique IDs uncovered |
+| verification_planning | 16/7 | 229% | over-covered; a ratio, not a score |
+| actual_product_evidence | 0/16 | 0% | blocked by policy; no target-hardware member in the enum |
+| synthetic_fixture_coverage | 82/43 | 191% | over-covered |
+| negative_scenario_validation | 20/20 | 100% | plus 3/3 change lifecycles |
+| export_reproducibility | 1/1 | 100% | manifest present, hashes stable |
+| human_approval | 0/154 | 0% | pending; none performed |
+| production_authorization | 0/154 | 0% | false; by policy |
+
+## 6. What Consistency Does Not Mean Here
+
+A clean validator run establishes that the corpus is **internally** consistent:
+schemas hold, links resolve, guards are correct, and mutations are detected. It
+establishes nothing about whether the engineering content is right, whether the
+records describe the real product, or whether any standard is satisfied. The
+corpus is synthetic, no artifact is human-approved, none is
+production-authorized, and no target-hardware verification evidence exists.

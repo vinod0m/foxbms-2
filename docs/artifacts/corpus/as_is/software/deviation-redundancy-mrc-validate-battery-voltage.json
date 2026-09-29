@@ -1,0 +1,152 @@
+{
+  "id": "FB2-SW-DEV-000001",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "deviation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Deviation: Directive-4.1 loop-counter / accumulation casts in MRC_ValidateBatteryVoltageMeasurement (redundancy.c) - one record, 3 suppressed sites",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000031"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "MISRA_C_2012",
+      "reference": "Rule/directive Directive-4.1 as written in the source annotation; normative rule text is proprietary and is not reproduced or verified by this corpus.",
+      "status": "unverified",
+      "rationale": "The rule number is reproduced exactly as written in the in-source Axivion annotation at commit 308028fb. The severity classification and the normative wording of the rule are proprietary and are deliberately not asserted here."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 Software Verification (static analysis evidence and justified deviance)",
+      "status": "partially_mapped",
+      "rationale": "The record is the in-source static-analysis deviance evidence for one rule set, which is part of what SWE.4 expects a project to hold. It is only partial: the repository holds no deviance log, no approval trail, no tool criticality entry for the analysing tool, and no re-analysis trigger register, so the surrounding SWE.4 evidence a qualified project would need is not evidenced at this commit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6 Clause 8 / Part 11 Clause 8 (coding guidelines and their justified deviations)",
+      "status": "partially_mapped",
+      "rationale": "The project states a MUST for MISRA C:2012 compatibility (docs/developer-manual/software/software-programming-language.rst:22), so these suppressions are deviations from a stated coding-guideline expectation. No ISO 26262 safety classification is claimed for any of them, and no argument is made here that the residual risk of any deviation is acceptable."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed': the record was mined mechanically from source and no human review of the deviation has taken place. human_approval_status is 'pending' for the same reason. automated_review_status below refers to the corpus automation gates only and is not a statement about the engineering validity of the deviation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "Mined from the in-source Axivion MISRA C:2012 style-check suppression at commit 308028fb. Rationale text is verbatim from the source comment."
+    }
+  ],
+  "guideline_id": "MisraC2012",
+  "rule_reference": "Directive-4.1",
+  "rule_category": "advisory_directive",
+  "deviation_rationale": "Values start with 0, iteration is less than UINT8_MAX; overflow impossible",
+  "deviation_type": "deliberate_truncation_of_wider_value",
+  "affected_file": "src/app/application/redundancy/redundancy.c",
+  "affected_symbol": "MRC_ValidateBatteryVoltageMeasurement",
+  "affected_lines": "658-662,669-673",
+  "suppression_form": "disable_enable_block",
+  "suppression_scope": "block",
+  "review_disposition": "recorded_inline_no_governance_evidence",
+  "review_disposition_note": "Governance evidence search at the pinned baseline: no deviance log, deviation log, suppression register, waiver file or review record for the MisraC2012 style checks exists anywhere in the repository (searched for *deviance*, *deviation*, *misra*, *axivion* file names and for 'AXIVION' across docs/). docs/tools/static-analysis/ and conf/spa/ do not exist at this commit. The rationale text below is therefore the only recorded justification.",
+  "reanalysis_justification": "The two block suppressions are justified by a bound argument ('iteration is less than UINT8_MAX') that depends on BS_NR_OF_STRINGS staying below UINT8_MAX and on stringVoltage_mV staying inside int32_t. Neither bound is checked at run time and neither is stated in the record. The third site (line 680, AXIVION Next Codeline Style MisraC2012Directive-4.1) is a different claim: 'we sum INT32 values x times and divide by x, resulting in INT32'. The top-level affected_lines and suppression_form therefore cover only the two Disable/Enable block sites, 658-662 and 669-673; the Next Codeline site at 680-681 is carried in the deviations[] entry below, because a record's top-level suppression_form is single-valued and cannot represent both annotation forms. All three must be re-analysed if the string count, the cell-voltage type or the redundancy summation width changes, and the truncation of a 64-bit accumulator to int32_t at line 682 should be re-checked against the worst-case pack voltage.",
+  "tool_reference": {
+    "tool": "Axivion",
+    "check_family": "Style MisraC2012Directive",
+    "annotation": "MisraC2012Directive-4.1"
+  },
+  "evidence_quote": "/* AXIVION Disable Style MisraC2012Directive-4.1: Values start with 0, iteration is less than UINT8_MAX;\n             * overflow impossible */\n            sumOfStringValues_mV += mrc_tablePackValues.stringVoltage_mV[s];\n            numberOfValidStringVoltages++;\n            /* AXIVION Enable Style MisraC2012Directive-4.1: */",
+  "normative_verification": {
+    "rule_text_reproduced": false,
+    "rule_severity_asserted": false,
+    "conformance_claimed": false,
+    "status": "rule_reference_unverified_against_proprietary_source"
+  },
+  "design_traceability": {
+    "design_artifact_id": null,
+    "coverage_status": "gap_no_design_artifact_in_profile",
+    "coverage_note": "redundancy.c is not in the implementation_mapping of any as_is software design artifact. FB2-SW-DSN-000002 (SOA voltage monitoring) reads cell voltages from the database and would be the natural owner of a pack-voltage validation step, but its implementation_mapping lists only soa.c and diag_cbs_voltage.c, so linking this record to it would assert a design coverage that does not exist in the as_is profile. Recorded as a coverage gap instead."
+  },
+  "impact_notes": [
+    {
+      "aspect": "type_safety",
+      "note": "sumOfStringValues_mV is declared int64_t and accumulated in a loop bounded by BS_NR_OF_STRINGS, but the result is truncated to int32_t by the cast at line 682; the suppression itself covers the loop counters, not that final cast."
+    },
+    {
+      "aspect": "runtime_behavior",
+      "note": "When no string is closed (numberOfConnectedStrings == 0) the function averages over all valid strings, and when none is valid it publishes batteryVoltage_mV = INT32_MAX with invalidBatteryVoltage = 1. The suppressed loop is on both branches."
+    },
+    {
+      "aspect": "safety_argument",
+      "note": "This is the redundancy cross-check path. The rationale asserts 'overflow impossible' but the record carries no bound evidence, so the assertion is unreviewed within this corpus."
+    }
+  ],
+  "project_process_evidence": [
+    {
+      "document_path": "docs/developer-manual/software/software-programming-language.rst",
+      "line": "22",
+      "what_it_states": "Project-level MUST: 'Code contributed to this project **MUST** be compatible with MISRA C:2012 which is described in :cite:`MISRA-C:2012`.' This is the only occurrence of 'MISRA' in the whole pinned docs/ tree and is the statement every suppression in this record set is a deviation from."
+    },
+    {
+      "document_path": "docs/developer-manual/style-guide/guidelines_c.rst",
+      "line": "540-545",
+      "what_it_states": "C:015 defines the project's only documented in-source deviation annotation syntax: 'If no assertion can be made for the parameter ... the parameter **MUST** be marked like this at the start of the function context: /* AXIVION Routine Generic-MissingParameterAssert: *ENTITY_NAME*: *RATIONALE* */.' The written guideline therefore mandates the '<ENTITY>: <RATIONALE>' annotation shape for one Axivion check family only; the MisraC2012 style-check family follows the same shape in practice but is not covered by any C:001..C:033 rule."
+    },
+    {
+      "document_path": "docs/developer-manual/style-guide/guidelines_overview_c.csv",
+      "line": "1-34",
+      "what_it_states": "The project's own C coding guideline is a 33-rule set (C:001..C:033) with an 'Automated Check' column. Only C:002, C:004, C:005, C:006 and C:029 are marked 'Yes'; no rule in the set corresponds to a MisraC2012 style check, so the guideline set does not govern the rules these suppressions waive."
+    },
+    {
+      "document_path": "docs/developer-manual/software/criticality-mapping-of-third-party-tools.csv",
+      "line": "1-11",
+      "what_it_states": "The third-party tool criticality table classifies git, TI ARM CGT, gcc, vs-code, waf, sphinx, ceedling and a custom HIL runner. No static-analysis tool (Axivion, cppcheck or equivalent) is classified, so no tool criticality or qualification basis for the tool that produced these suppressions is recorded in the repository."
+    }
+  ],
+  "corpus_scope": {
+    "query": "graft grep \"AXIVION Disable Style MisraC2012\" -i (repo root)",
+    "hit_count": 43,
+    "scope_note": "This set is 26 deviation records, one per (file, symbol) group, and covers all 43 'AXIVION Disable Style MisraC2012*' annotation lines found under src/ at commit 308028fb. Those 43 annotation lines fall in 20 files, and every one of the 43 is represented in the affected_lines of a record. 26 records cover 43 annotation lines over 26 distinct (file, symbol) groups because, where one symbol carries more than one MisraC2012 rule, the additional Disable lines appear as further entries in the same record's deviations array instead of as separate records. Axivion annotations outside this query are not mined by this set, and their absence must not be read as 'no deviation': 'AXIVION Routine Generic-MissingParameterAssert', 'AXIVION Next Codeline Style MisraC2012*', 'AXIVION Next Codeline Generic-LocalInclude', 'AXIVION Next Codeline CodingStyle-Naming.*', 'AXIVION Next Codeline IISB-LiteralSuffixesCheck', 'AXIVION Next Codeline Generic-NoEllipsis', 'AXIVION Next Codeline Generic-ForbiddenFunctions', 'AXIVION Routine FaultDetection-DivisionByZero', and the 'AXIVION Routine MisraC2012Directive-4.1' / 'AXIVION Routine MisraC2012-2.7' annotations. Non-MISRA families that share one of the 43 mined annotation lines ARE recorded, per record, in tool_reference.co_located_non_misra_checks and in the corresponding deviations entry (for example Generic-NoUnsafeMacro, CertC-PRE01, Generic-NoEmptyLoops, Generic-DoxygenCommentInHeader, Generic-NoMagicNumbers, IISB-LiteralSuffixesCheck); out-of-query suppression sites on the same symbol are likewise listed in the record's deviations array with a note, so that each record's rule exposure is complete for the symbol it names."
+  },
+  "deviations": [
+    {
+      "rule_reference": "Directive-4.1",
+      "rule_category": "advisory_directive",
+      "deviation_rationale": "Values start with 0, iteration is less than UINT8_MAX; overflow impossible",
+      "deviation_type": "deliberate_truncation_of_wider_value",
+      "affected_lines": "658-662,669-673",
+      "suppression_form": "disable_enable_block"
+    },
+    {
+      "rule_reference": "Directive-4.1",
+      "rule_category": "advisory_directive",
+      "deviation_rationale": "truncation impossible; we sum INT32 values x times and divide by x, resulting in INT32",
+      "deviation_type": "deliberate_truncation_of_wider_value",
+      "affected_lines": "680-681",
+      "suppression_form": "next_codeline",
+      "note": "Third site inside the same symbol. It uses the AXIVION 'Next Codeline Style' form, not 'Disable Style', so it is outside the 43-hit literal query result but is part of the same symbol and the same rule. Recorded here so the symbol's Directive-4.1 exposure is complete."
+    }
+  ]
+}
