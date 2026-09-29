@@ -1,0 +1,207 @@
+{
+ "id": "FB2-SUP-QAP-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "process_record",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "SUP.1 Quality assurance: populated process record for Project Northcell",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.1",
+   "status": "mapped",
+   "rationale": "Quality assurance: review, finding and disposition."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Supporting-process record authored because the generated view reported SUP.1 as a coverage gap: no record whose engineering_domain is 'supporting' named the process. This record populates it - definition, inputs, outputs, accountable role, acceptance criteria, at least one performed instance with fictional participants and a synthetic decision, and the communication records showing how agreed revisions reach affected roles."
+  }
+ ],
+ "process_record_id": "FB2-SUP-QAP-000001",
+ "aspice_process_id": "SUP.1",
+ "process_name": "Quality assurance",
+ "fictional_organisation": {
+  "name": "Halden Cell Systems (fictional) quality function (fictional)",
+  "is_a_real_organisation": false
+ },
+ "purpose": "Ensure that every engineering artifact is independently reviewed against its exact revision, that the review's claims are checkable, and that no critical or high finding survives a gate.",
+ "definition": "Quality assurance in this corpus is a review pass over the canonical records, followed by a finding raised against each defect the pass finds, followed by a problem-resolution record for each finding that must be worked. The process does not decide engineering content; it decides whether the content has been looked at and whether what was found is open.",
+ "inputs": [
+  {
+   "input": "The canonical record index and the link registry",
+   "kind": "artifact",
+   "controlled_by": "FB2-SUP-CFM-000001"
+  },
+  {
+   "input": "The generated views, which must be regenerated from the records and not edited",
+   "kind": "artifact",
+   "controlled_by": "FB2-SUP-CFM-000001"
+  },
+  {
+   "input": "The review checklist version in force",
+   "kind": "record",
+   "controlled_by": "This process record's revision history"
+  }
+ ],
+ "outputs": [
+  {
+   "output": "A review record naming every reviewed id, its revision and its digest",
+   "kind": "record",
+   "retention": "for the lifetime of the programme plus the retention period required by the applicable regulation"
+  },
+  {
+   "output": "A finding record for every defect the pass finds",
+   "kind": "record",
+   "retention": "as above"
+  },
+  {
+   "output": "A disposition for every finding, including the ones not worked",
+   "kind": "decision",
+   "retention": "as above"
+  }
+ ],
+ "accountable_role": {
+  "role": "quality_engineer",
+  "independence": "The quality engineer may not review an artifact it authored, and may not close a finding it raised. In this corpus that independence is stated and not achieved: every review record in it is an automated review produced by the same process that produced the artifacts, and no human reviewer exists. That is recorded as risk RSK-003 in FB2-MAN-RSK-000001 and is the single largest limitation of this process record."
+ },
+ "acceptance_criteria": [
+  {
+   "criterion": "Every reviewed artifact is named with its exact revision and content digest",
+   "how_conformance_is_checked": "Read reviewed_ids on the review record and confirm each entry carries a revision and a digest.",
+   "evidence_of_conformance": "All 12 pre-existing review records and the three authored by this pass carry artifact_id, revision and digest on every reviewed_ids entry."
+  },
+  {
+   "criterion": "Every finding carries a severity, a category, evidence, an impact, a root cause, a resolution and a disposition",
+   "how_conformance_is_checked": "Validate every finding record against finding.schema.json, which requires all seven fields.",
+   "evidence_of_conformance": "All 28 finding records in the corpus validate against the schema, which makes all seven fields mandatory rather than optional."
+  },
+  {
+   "criterion": "The arithmetic of every numeric record is checked by the review and not assumed",
+   "how_conformance_is_checked": "Sum the serial elements and margin of each timing budget and compare the total with the stated interval.",
+   "evidence_of_conformance": "This check found FB2-SAF-SGO-000001: 85 ms of serial work plus a 20 ms margin is 105 ms against a 100 ms interval. Raised as finding FB2-REV-FND-000025 and recorded as improvement FB2-PIM-IMP-000001."
+  },
+  {
+   "criterion": "A review never declares universal coverage from a sample",
+   "how_conformance_is_checked": "Confirm every artifact the review claims to have covered is individually enumerated in reviewed_ids.",
+   "evidence_of_conformance": "The generated coverage output reports automated review coverage as a fraction of the indexed records and names the number of review records behind it, so a partial coverage is visible as a partial number."
+  }
+ ],
+ "performed_instances": [
+  {
+   "instance_id": "INST-001",
+   "instance_date": "2026-09-29",
+   "instance_description": "Domain review of the concept, system, security-verification and post-development records authored in this pass, plus a re-read of the records they were written from.",
+   "participants": [
+    {
+     "role": "quality_engineer",
+     "named_as": "role identity: quality_engineer (reviewer, not the author, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "safety_engineer",
+     "named_as": "role identity: safety_engineer (present for the safety records, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "reviewer_adversarial",
+     "named_as": "role identity: reviewer_adversarial (challenge pass, fictional)",
+     "is_a_real_person": false
+    }
+   ],
+   "inputs_used": [
+    "FB2-SAF-ITE-000001 rev 1",
+    "FB2-SAF-FSC-000001 rev 1",
+    "FB2-SAF-TSC-000001 rev 1",
+    "FB2-SYS-SYR-000001 rev 1 through FB2-SYS-SYR-000008 rev 1",
+    "FB2-VER-TMS-000016 rev 1 through FB2-VER-TMS-000020 rev 1"
+   ],
+   "outputs_produced": [
+    "FB2-REV-000013",
+    "FB2-REV-000014",
+    "FB2-REV-000015",
+    "FB2-REV-FND-000023 through FB2-REV-FND-000028"
+   ],
+   "decision_or_outcome": "The concept records are internally consistent with each other and each names the records it was written from. Six contradictions in the pre-existing records were confirmed and raised as findings rather than corrected in place. The security measures each declare an oracle basis and four of the five declare explicitly what their oracle cannot see.",
+   "synthetic_decision": "synthetic_decision:quality_engineer:SYNTH-SUP1-INST-001",
+   "conformance_against_acceptance_criteria": "partially_conforming",
+   "non_conformances_found": [
+    "Criterion 2 is not met for findings raised by this pass that were authored before the schema made all seven fields mandatory: the earliest finding records carry the required fields but not in the schema's exact enumeration, and this pass did not edit them because they are canonical records of an earlier review.",
+    "Criterion 1 is not met for the three review records this pass authored until the digests were recomputed after the records were written; the check is performed after the fact rather than at review time, which is a weakness of the process as recorded and is stated rather than hidden."
+   ]
+  }
+ ],
+ "review_and_communication": [
+  {
+   "communication_id": "COM-001",
+   "date": "2026-09-29",
+   "communicated_artifact_revisions": [
+    "FB2-SAF-FSC-000001 rev 1",
+    "FB2-SAF-TSC-000001 rev 1",
+    "FB2-SYS-SYR-000001 rev 1 .. FB2-SYS-SYR-000008 rev 1"
+   ],
+   "attendee_roles": [
+    "safety_engineer",
+    "system_engineer",
+    "architect",
+    "traceability_engineer"
+   ],
+   "acknowledgement_recorded": true,
+   "acknowledgement_note": "Synthetic boolean. No person acknowledged anything; the corpus has no participants."
+  }
+ ],
+ "traceability": {
+  "produces_records": [
+   "FB2-REV-000013",
+   "FB2-REV-000014",
+   "FB2-REV-000015"
+  ],
+  "depends_on_records": [
+   "FB2-SUP-CFM-000001"
+  ],
+  "controlled_by_records": [
+   "FB2-SUP-CFM-000001",
+   "FB2-MAN-MSM-000001"
+  ]
+ },
+ "process_performance_measurement": {
+  "metric_id": "MET-04",
+  "metric_name": "Finding severity profile per review pass",
+  "unit": "findings",
+  "how_measured": "Count findings by severity in each review pass; a critical or high finding breaches the control limit and blocks the gate it belongs to.",
+  "measurement_plan_ref": "FB2-MAN-MSM-000001"
+ },
+ "limitations": [
+  "Synthetic process record for a synthetic project. The instance describes a fictional review pass that produced real finding records.",
+  "The independence the process states is not achieved. Every review in this corpus is an automated review by the same runtime that wrote the artifacts, which master-prompt clause 2.9 says is not organisational independence. The process record states this rather than claiming the quality assurance it describes.",
+  "The instance records two non-conformances. Both were left open rather than closed by editing a canonical record, which is the correct behaviour and an unflattering one.",
+  "Digest verification is performed after authoring rather than at review time. A real process would bind the digest when the review is performed, so that a later edit invalidates the review. This corpus's automated_review_status flags are re-derived on every run instead, which is weaker and is stated."
+ ]
+}

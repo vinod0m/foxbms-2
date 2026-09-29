@@ -1,0 +1,118 @@
+{
+ "id": "FB2-SYS-SYR-000008",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "SYR: commissioning and service shall not permit the item to energise on unconnected or untrusted inputs",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.2",
+   "status": "mapped",
+   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7 (system requirements)",
+   "status": "mapped",
+   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them."
+  }
+ ],
+ "statement": "While the item is in its commissioning mode, no high-voltage contactor shall be commanded closed unless an explicit commissioning command is present, and an open-circuit or unconnected sensor input shall be diagnosed as such and shall not be interpreted as a cell at a limit; on leaving commissioning, the item shall return to a state in which no contactor actuation is possible without a current-flow request. Bytes received on a service link shall be acted upon only inside a validated, authenticated frame.",
+ "rationale": "The system-level requirement behind the commissioning mode, and the one that carries the service-class stakeholder need FB2-SYS-NED-000005 into the item's architecture. Its second half is deliberately a cybersecurity requirement appearing at system level: the framing and authorisation of the service link is a property of the integrated item's interfaces, not of one module, and the security requirement FB2-SAF-SEC-000004 constrains the same link from the other direction. Both halves exist because the failure they guard against is the one a production or service error produces, and no safety requirement in this corpus covers it.",
+ "classification": "safety",
+ "acceptance_criteria": [
+  {
+   "criterion": "Actuation inhibition",
+   "measure": "Contactor close commands accepted while commissioning with no explicit commissioning command",
+   "threshold": "0",
+   "unit": "commands"
+  },
+  {
+   "criterion": "Open-circuit interpretation",
+   "measure": "Unconnected sense inputs interpreted as cell limit violations",
+   "threshold": "0",
+   "unit": "interpretations"
+  },
+  {
+   "criterion": "Return to inert state",
+   "measure": "States reachable after leaving commissioning that permit actuation without a current-flow request",
+   "threshold": "0",
+   "unit": "states"
+  },
+  {
+   "criterion": "Service-link framing",
+   "measure": "Bytes acted upon outside a validated, authenticated frame",
+   "threshold": "0",
+   "unit": "bytes"
+  }
+ ],
+ "verification_approach": "test",
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "N/A - commissioning is a service and production activity; its failure is a production escape rather than a runtime hazard, which is why it is not allocated an ASIL here",
+  "mitigation": "The commissioning mode's actuation inhibition and the message-level framing and authorisation required by FB2-SAF-SEC-000004"
+ },
+ "assumptions": [
+  "FB2-ASM-011"
+ ],
+ "conditions_modes": [
+  "MOD-001",
+  "MOD-007"
+ ],
+ "feasibility_dependencies": [
+  "FB2-SW-SWR-000003",
+  "FB2-SAF-SEC-000001",
+  "FB2-SAF-SEC-000004"
+ ],
+ "requirement_level": "system",
+ "requirement_id": "FB2-SYS-SYR-000008",
+ "allocated_to_requirements": [
+  "FB2-SYS-NED-000005"
+ ],
+ "refines_from": [
+  "arch_elements",
+  "why_not_asil"
+ ],
+ "trace_to_architecture_elements": [],
+ "limitations": [
+  "Synthetic. This requirement describes a hypothetical programme and establishes nothing about the real foxBMS project.",
+  "System-level only. It does not carry the hardware or software detail, which lives in FB2-HW-TSR-* and FB2-SW-SWR-*. Where this record and those records disagree, neither is silently preferred and the disagreement is raised as a finding.",
+  "Not verified against the product. Every measure that touches its allocated requirements is a synthetic fixture or a blocked record; see the FB2-VER-EXE-* set."
+ ]
+}

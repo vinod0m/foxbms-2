@@ -1,0 +1,120 @@
+{
+ "id": "FB2-SYS-SYR-000003",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "SYR: the item shall reach and confirm the safe state within the fault-tolerant time interval, and shall latch the condition that required it",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-006",
+  "FB2-ASM-007"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.2",
+   "status": "mapped",
+   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7 (system requirements)",
+   "status": "mapped",
+   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them."
+  }
+ ],
+ "statement": "On a confirmed safe-operating-area violation the item shall open all high-voltage contactors, disable charging and log the fault within 100 ms of the condition becoming measurable, shall confirm the open state by auxiliary feedback, and shall not leave that state on the fault disappearing.",
+ "rationale": "The system-level statement of the safety goal's objective. It is written at this level because the obligation spans three allocated requirements - the software state machine, the hardware driver path and the hardware feedback path - and a requirement that any one of them could claim to satisfy would let the end-to-end timing go unstated. The figure here is the safety goal's own fault-tolerant time interval; the way that interval is spent is the technical safety concept's business, not this requirement's.",
+ "classification": "safety",
+ "acceptance_criteria": [
+  {
+   "criterion": "End-to-end reaction time",
+   "measure": "Time from the condition becoming measurable to the open state being confirmed",
+   "threshold": "<= 100",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Contactor state confirmation",
+   "measure": "Open states confirmed by auxiliary feedback",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Latch behaviour",
+   "measure": "Faults that do not clear on the disappearance of the condition",
+   "threshold": "100",
+   "unit": "%"
+  }
+ ],
+ "verification_approach": "test",
+ "safety_allocation": {
+  "asil": "ASIL_D",
+  "safety_goal_ref": "FB2-SAF-SGO-000001",
+  "mitigation": "Latched fault state, auxiliary feedback confirmation, the hardware watchdog path and the independent monitor"
+ },
+ "assumptions": [
+  "FB2-ASM-006",
+  "FB2-ASM-007"
+ ],
+ "conditions_modes": [
+  "MOD-001",
+  "MOD-002",
+  "MOD-003",
+  "MOD-004",
+  "MOD-005",
+  "MOD-006",
+  "MOD-007"
+ ],
+ "feasibility_dependencies": [
+  "FB2-SW-SWR-000003",
+  "FB2-HW-TSR-000003",
+  "FB2-HW-TSR-000004"
+ ],
+ "requirement_level": "system",
+ "requirement_id": "FB2-SYS-SYR-000003",
+ "allocated_to_requirements": [
+  "FB2-SYS-NED-000003",
+  "FB2-SAF-SGO-000001"
+ ],
+ "refines_from": [
+  "arch_elements",
+  "known_conflict"
+ ],
+ "trace_to_architecture_elements": [],
+ "limitations": [
+  "Synthetic. This requirement describes a hypothetical programme and establishes nothing about the real foxBMS project.",
+  "System-level only. It does not carry the hardware or software detail, which lives in FB2-HW-TSR-* and FB2-SW-SWR-*. Where this record and those records disagree, neither is silently preferred and the disagreement is raised as a finding.",
+  "Not verified against the product. Every measure that touches its allocated requirements is a synthetic fixture or a blocked record; see the FB2-VER-EXE-* set."
+ ]
+}

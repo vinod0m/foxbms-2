@@ -1,0 +1,203 @@
+{
+ "id": "FB2-VER-TMS-000016",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Verification: an unauthenticated peer is refused service, and an authenticated session's payload is neither readable nor alterable by a passive or active segment observer",
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.5",
+   "status": "mapped",
+   "rationale": "System qualification test: the security requirements are system-level work products and this is the measure that would qualify them."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.6",
+   "status": "mapped",
+   "rationale": "Software qualification test: the measures exercise the master software's handling of the specified inputs."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 (system verification)",
+   "status": "mapped",
+   "rationale": "Verification of the system requirement as written, against its own acceptance criteria."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "ISO SAE 21434 relationship",
+   "status": "mapped",
+   "rationale": "Recorded as a relationship, not as a mapping. No ISO/SAE 21434 work product exists in this corpus and the corpus-local TARA FB2-SAF-TAR-000001 is machine-pinned to is_iso_21434_tara = false."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Security verification measure authored because FB2-SAF-SEC-000001 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is."
+  }
+ ],
+ "test_type": "robustness",
+ "objective": "Confirm that the master software completes no externally reachable network session with a peer that has not authenticated, and that after authentication the session's application payload is neither recoverable in plaintext by an observer on the segment nor modifiable by one. Also confirm that each refusal is diagnosable, because a silent refusal cannot be distinguished from an outage during field analysis.",
+ "referenced_requirements": [
+  "FB2-SAF-SEC-000001"
+ ],
+ "referenced_designs": [
+  "FB2-SYS-SYR-000007",
+  "FB2-SYS-SYR-000008"
+ ],
+ "preconditions": [
+  "The service is externally reachable in the configuration under test, which is the hypothetical project's planned commissioning service, not the one that exists in the pinned source.",
+  "The item is otherwise in a nominal mode with no active fault.",
+  "A capture point exists on the segment."
+ ],
+ "environment": {
+  "hardware": "Hypothetical 400 V pack on a bench with an instrumented network segment",
+  "software": "BMS master firmware under test",
+  "tools": [
+   "Passive network capture",
+   "Protocol analyser",
+   "Credential injection harness"
+  ],
+  "configuration": "VAR-REF-001 with the commissioning service enabled and all debug endpoints closed"
+ },
+ "stimuli": [
+  {
+   "signal": "TCP connection to the service port from a peer with no credential",
+   "value": "connection offered, handshake completed by the stack",
+   "timing": "one per 60 s for 24 h"
+  },
+  {
+   "signal": "Passive capture on the segment",
+   "value": "full capture of the segment for 24 h",
+   "timing": "continuous"
+  },
+  {
+   "signal": "Bit-flip injection into an established session's payload",
+   "value": "one altered byte per frame",
+   "timing": "1 in 1000 frames"
+  },
+  {
+   "signal": "Valid credential replay",
+   "value": "one previously used credential",
+   "timing": "once per hour for 24 h"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Offer 1000 connections from peers that fail authentication",
+   "expected": "Zero sessions reach the application data state"
+  },
+  {
+   "step": 2,
+   "action": "Authenticate successfully and capture the segment for 24 h",
+   "expected": "No application payload byte is recoverable in plaintext"
+  },
+  {
+   "step": 3,
+   "action": "Alter bytes of an authenticated session's payload",
+   "expected": "The receiver rejects every altered frame and raises a diagnosis entry"
+  },
+  {
+   "step": 4,
+   "action": "Replay a previously valid credential",
+   "expected": "The replay is refused and diagnosed"
+  },
+  {
+   "step": 5,
+   "action": "Review the diagnosis log against the injection schedule",
+   "expected": "One diagnosis entry per refused attempt, no missing and no extra"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "unauthenticated_sessions",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "sessions"
+  },
+  {
+   "signal": "plaintext_payload_bytes_recovered",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "bytes"
+  },
+  {
+   "signal": "altered_frames_accepted",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  },
+  {
+   "signal": "authentication_latency",
+   "expected_value": "100",
+   "tolerance": "at most",
+   "unit": "ms"
+  },
+  {
+   "signal": "diagnosis_entries_per_refusal",
+   "expected_value": "1",
+   "tolerance": "exact",
+   "unit": "entry"
+  }
+ ],
+ "tolerances": {
+  "unauthenticated_sessions": "exact",
+  "plaintext_payload_bytes_recovered": "exact",
+  "altered_frames_accepted": "exact",
+  "authentication_latency": "at most",
+  "diagnosis_entries_per_refusal": "exact"
+ },
+ "timing": {
+  "max_execution_time_ms": 86400000,
+  "setup_time_ms": 3600000,
+  "teardown_time_ms": 1800000
+ },
+ "oracle_basis": "source_grounded",
+ "oracle_detail": {
+  "kind": "source_grounded",
+  "why_this_oracle": "The oracle is the cryptography's own definition, read from the requirement rather than from the implementation. 'A peer that cannot produce the key cannot produce a session it can decrypt' is a property of authenticated encryption, and it is checkable against the implementation by inspection: if the item uses an authenticated mode with a key the peer must possess, an observer without the key recovers nothing, and a modified frame fails authentication by definition of the mode. The expected outcomes are therefore not copied from what the item produced; they are what the chosen mode permits.",
+  "what_the_oracle_is_not": "It is not a measured reference: no capture exists and nothing was replayed. It is not an analytical model: no model of the key exchange is computed here. It is not a synthetic assumption: the property asserted is a property of a primitive, not an assumption about this programme.",
+  "what_it_still_does_not_prove": "It does not prove the item uses such a mode, that the key is stored well, that the mode is non-negotiable, or that the authentication cannot be bypassed by a different path. It also cannot prove the 'confidentiality of session data' acceptance criterion as a field observation, only as an inspection against the protocol's own guarantees.",
+  "residual_risk": "A source-grounded oracle still rests on the implementation using the mechanism the requirement names. If the implementation used a different mechanism, this oracle would be measuring the wrong thing.",
+  "oracle_kind": "source_grounded"
+ },
+ "cleanup": "Remove the test credentials, disable the injection harness, re-enable the production credential set and confirm the diagnosis log is archived with the capture.",
+ "regression_selection": "Re-run on every change to the service's authentication path, to the cryptographic library, to the key-derivation or storage, and to the session timeout. Also re-run once per release because the acceptance criteria are zero-tolerance and a single regression fails the whole measure.",
+ "security_verification_note": "This measure verifies the requirement as written against the item's observable behaviour. It does not establish that the threat it addresses is exploitable, and it is not a penetration test: no exploit was developed, no advisory was checked and no CVSS score was assigned to any finding.",
+ "limitations": [
+  "Planned, not executed. Planning a security measure is not evidence that the requirement is satisfied, and the paired execution record carries execution_kind 'none' and outcome 'blocked' for that reason.",
+  "Not a penetration test. No exploit was developed, no advisory source was consulted and no vulnerability was scored. A requirement can pass every expected outcome here and still leave the item exploitable by a route this measure does not exercise.",
+  "The requirement verified here constrains a mechanism the hypothetical project has planned. Nothing in this corpus establishes that the mechanism exists.",
+  "No human security reviewer has confirmed this measure. Human approval is pending."
+ ]
+}

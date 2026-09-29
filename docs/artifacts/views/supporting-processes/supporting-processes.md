@@ -1,6 +1,6 @@
 # Supporting processes (generated view)
 
-Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -25,20 +25,36 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 
 ## Supporting and organisational process records
 
-The master prompt (section 12) requires populated **process records**, not just policies, for each supporting process family. The table below states, per family, whether a record whose `engineering_domain` is `supporting` exists. The corpus holds no process-definition record for any of these families: the only `supporting`-domain records are two meta-review records, which exercise review practice but are not the process artifacts the master prompt asks for. Listing the same two records against six different families would imply a coverage that does not exist, so each family is reported as a gap.
+The master prompt (section 12) requires populated **process records**, not just policies, for each supporting process family. A record counts for a family below only when it names that process id explicitly, so the same record is never claimed for a family it does not address. 9 of the 12 `supporting`-domain record(s) are process-definition or plan records; the remainder are review records and are listed separately below so the two are not conflated.
 
 | Process family | ASPICE | Matching process record | Guard |
 |---|---|---|---|
-| Quality assurance | `SUP.1` | **none — coverage gap** | - |
-| Configuration management | `SUP.8` | **none — coverage gap** | - |
-| Problem resolution | `SUP.9` | **none — coverage gap** | - |
-| Change control | `SUP.10` | **none — coverage gap** | - |
-| Measurement | `MAN.6` | **none — coverage gap** | - |
-| Process improvement | `PIM.3` | **none — coverage gap** | - |
+| Quality assurance | `SUP.1` | `FB2-PIM-IMP-000001`; `FB2-PIM-IMP-000002`; `FB2-REV-000014`; `FB2-SUP-CHC-000001`; `FB2-SUP-QAP-000001` | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| Configuration management | `SUP.8` | `FB2-PIM-IMP-000002`; `FB2-SUP-CFM-000001` | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| Problem resolution | `SUP.9` | `FB2-SUP-PRB-000001` | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| Change control | `SUP.10` | `FB2-SUP-CHC-000001` | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| Measurement | `MAN.6` | `FB2-MAN-MSM-000001`; `FB2-PIM-IMP-000001`; `FB2-PIM-IMP-000002` | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| Process improvement | `PIM.3` | `FB2-MAN-MSM-000001`; `FB2-PIM-IMP-000001`; `FB2-PIM-IMP-000002` | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
-The `supporting` domain is populated by 2 record(s), listed in full below. They are review records, not process-definition records.
+### Process and plan records in the `supporting` domain (9 record(s))
 
-The corpus does contain review records that exercise these process families in practice (QA, meta-review, change-management review, deviation review). They are review records, not process-definition records, and are shown below as the closest available material rather than presented as the process artifacts the master prompt asks for.
+These are the records that populate the families in the table above. Each one carries its own `performed_instances` or equivalent executed-work content, its accountable role, its acceptance criteria and its own guard fields.
+
+| Id | Profile | Type | ASPICE process | Title | Performed / defined work items | Guard |
+|---|---|---|---|---|---|---|
+| `FB2-MAN-MSM-000001` | synthetic_reference | measurement_plan | MAN.6; PIM.3; Part 2, Clause 6.4.4 (monitoring and measurem… | Process measurement plan for Project Northcell: population, collection rules, metric definitions, baselines, … | 6 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-PIM-IMP-000001` | synthetic_reference | process_improvement | PIM.3; MAN.6; SUP.1 | Improvement 001: a review check that a timing budget's arithmetic closes | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-PIM-IMP-000002` | synthetic_reference | process_improvement | PIM.3; MAN.6; SUP.1 | Improvement 002: a communication record that cannot be marked done until an acknowledgement is captured | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SUP-CFM-000001` | synthetic_reference | process_record | SUP.8 | SUP.8 Configuration management: populated process record for Project Northcell | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SUP-CHC-000001` | synthetic_reference | process_record | SUP.10 | SUP.10 Change request management: populated process record for Project Northcell | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SUP-PRB-000001` | synthetic_reference | process_record | SUP.9 | SUP.9 Problem resolution management: populated process record for Project Northcell | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SUP-QAP-000001` | synthetic_reference | process_record | SUP.1 | SUP.1 Quality assurance: populated process record for Project Northcell | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SUP-RUS-000001` | synthetic_reference | process_record | REU.2 | REU.2 Reuse program management: populated process record for Project Northcell | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SUP-SPL-000001` | synthetic_reference | process_record | ACQ.4 | ACQ.4 Supplier monitoring: populated process record for Project Northcell | 1 | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+
+The `supporting` domain is populated by 12 record(s) in total: the 9 above plus 3 review record(s). The review records are listed separately below so a process record and a review of a process are not counted as the same coverage.
+
+The corpus also contains review records that exercise these process families in practice (QA, meta-review, change-management review, deviation review). They are review records, not process-definition records, and are shown below as separate material rather than presented as the process artifacts the master prompt asks for.
 
 | Id | Profile | Review type | Domain | Title | Lifecycle | Guard |
 |---|---|---|---|---|---|---|
@@ -54,13 +70,16 @@ The corpus does contain review records that exercise these process families in p
 | `FB2-REV-000010` | as_is | challenge | safety | Challenge review: the as_is cell-voltage safety chain (separated adversarial pass) | draft | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-REV-000011` | as_is | meta | supporting | Meta review: audit of the prior review FB2-REV-000001's claims against the artifacts it covered | draft | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-REV-000012` | synthetic_reference | meta | supporting | Meta review: audit of the synthetic_reference review records and the findings they assert | draft | profile=`synthetic_reference` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-REV-000013` | synthetic_reference | cross_domain | safety | Review: the Part 3 item definition, both safety concepts, the SYS.1 elicitation set, the SYS.2 system require… | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-REV-000014` | synthetic_reference | cross_domain | supporting | Review: the project plan, risk register, measurement plan, improvement records, the six supporting-process re… | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-REV-000015` | synthetic_reference | domain | verification | Review: the five security verification measures, their blocked executions and the two findings raised against… | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### Review finding counts by severity
 
 | Profile | critical | high | medium | low | Total |
 |---|---|---|---|---|---|
 | as_is | 0 | 1 | 9 | 3 | 17 |
-| synthetic_reference | 0 | 3 | 8 | 2 | 19 |
+| synthetic_reference | 0 | 7 | 15 | 4 | 32 |
 
 **These are automated AI-assisted review findings. They are not human review findings and none of them constitutes approval.**
 

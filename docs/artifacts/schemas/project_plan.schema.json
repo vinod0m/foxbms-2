@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/project_plan.schema.json",
+  "title": "Project Plan Schema",
+  "description": "Schema for a populated project management plan (Automotive SPICE MAN.3). A plan that only states intent is not a plan: the schema requires a work-breakdown with named owners, a schedule with dated milestones and entry/exit criteria at each gate, a resource assignment, and a progress record showing actual-versus-planned against the schedule. A scope statement is a different artifact and does not satisfy this schema, because it carries no schedule, no resource assignment and no gate.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "plan_basis",
+        "fictional_project",
+        "lifecycle_model",
+        "work_breakdown",
+        "schedule",
+        "milestones_and_gates",
+        "resource_plan",
+        "progress_records",
+        "communication_plan",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "project_plan"
+        },
+        "plan_id": {"type": "string", "pattern": "^FB2-MAN-PLN-[0-9]{6}$"},
+        "plan_basis": {"type": "string", "minLength": 1},
+        "fictional_project": {
+          "const": true,
+          "description": "Machine-pinned to true. The project this plan schedules is hypothetical. No organisation named in this plan exists."
+        },
+        "calendar_note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "States explicitly that all dates are synthetic."
+        },
+        "lifecycle_model": {
+          "type": "object",
+          "required": ["model", "phase_definition"],
+          "properties": {
+            "model": {"type": "string", "minLength": 1},
+            "phase_definition": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["phase_id", "phase_name", "entry_criteria", "exit_criteria"],
+                "properties": {
+                  "phase_id": {"type": "string", "pattern": "^PH-[0-9]{2}$"},
+                  "phase_name": {"type": "string", "minLength": 1},
+                  "entry_criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "exit_criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "work_breakdown": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["wbs_id", "work_package", "accountable_role", "deliverable_records", "depends_on", "effort_person_days_estimate"],
+            "properties": {
+              "wbs_id": {"type": "string", "pattern": "^WBS-[0-9]{3}$"},
+              "work_package": {"type": "string", "minLength": 1},
+              "accountable_role": {"type": "string", "minLength": 1},
+              "supporting_roles": {"type": "array", "items": {"type": "string"}},
+              "deliverable_records": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+              "depends_on": {"type": "array", "items": {"type": "string", "pattern": "^WBS-[0-9]{3}$"}},
+              "effort_person_days_estimate": {"type": "number", "minimum": 0},
+              "estimate_basis": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "schedule": {
+          "type": "object",
+          "required": ["planned_start", "planned_finish", "critical_path_wbs", "float_days_by_work_package"],
+          "properties": {
+            "planned_start": {"type": "string", "format": "date"},
+            "planned_finish": {"type": "string", "format": "date"},
+            "critical_path_wbs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^WBS-[0-9]{3}$"}},
+            "float_days_by_work_package": {
+              "type": "object",
+              "additionalProperties": {"type": "number"}
+            }
+          },
+          "additionalProperties": false
+        },
+        "milestones_and_gates": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["milestone_id", "name", "planned_date", "gate_type", "entry_criteria", "exit_decision_owner_role", "synthetic_decision"],
+            "properties": {
+              "milestone_id": {"type": "string", "pattern": "^MS-[0-9]{2}$"},
+              "name": {"type": "string", "minLength": 1},
+              "planned_date": {"type": "string", "format": "date"},
+              "gate_type": {"type": "string", "enum": ["concept_freeze", "requirement_baseline", "design_freeze", "verification_readiness", "release_readiness", "safety_case_review"]},
+              "entry_criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+              "exit_criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+              "exit_decision_owner_role": {"type": "string", "minLength": 1},
+              "decision_status": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Whether the gate decision has been taken. 'Planned. Not taken.' is the expected value for every gate in this corpus, and a gate recorded as taken by an automated process would be a fabricated approval."
+              },
+              "synthetic_decision": {
+                "type": "string",
+                "pattern": "^synthetic_decision:[a-z_]{3,40}:[A-Z0-9-]{3,60}$",
+                "description": "Per governance/corpus-policy.json the label format is synthetic_decision:{fictional_role}:{decision_id}. A fictitious workflow outcome must be separately labelled; it is never a human approval."
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "At least three gates. Minimum three so a plan cannot present a single decision as a gated lifecycle."
+        },
+        "resource_plan": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["role", "allocation_percent", "named_as", "competence_record_ref"],
+            "properties": {
+              "role": {"type": "string", "minLength": 1},
+              "allocation_percent": {"type": "number", "minimum": 0, "maximum": 100},
+              "named_as": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Fictional role identity. Must not name a real person, a real foxBMS maintainer or SoftwareDevLabs staff."
+              },
+              "competence_record_ref": {"type": "string"},
+              "single_point_of_failure": {"type": "boolean"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "progress_records": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["report_date", "reporting_wbs", "planned_finish", "forecast_finish", "schedule_variance_days", "status", "reported_by_role"],
+            "properties": {
+              "report_date": {"type": "string", "format": "date"},
+              "reporting_wbs": {"type": "string", "pattern": "^WBS-[0-9]{3}$"},
+              "planned_finish": {"type": "string", "format": "date"},
+              "forecast_finish": {"type": "string", "format": "date"},
+              "schedule_variance_days": {"type": "number"},
+              "status": {"type": "string", "enum": ["on_track", "at_risk", "behind", "complete"]},
+              "reported_by_role": {"type": "string", "minLength": 1},
+              "narrative": {"type": "string"},
+              "escalated": {"type": "boolean"}
+            },
+            "additionalProperties": false
+          },
+          "description": "Actual-versus-planned, not a restatement of the plan. At least one record is required so a plan cannot substitute its own intent for reporting."
+        },
+        "communication_plan": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["meeting_id", "cadence", "attendee_roles", "purpose", "artifact_revision_communicated"],
+            "properties": {
+              "meeting_id": {"type": "string", "pattern": "^MTG-[0-9]{3}$"},
+              "cadence": {"type": "string", "minLength": 1},
+              "attendee_roles": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+              "purpose": {"type": "string", "minLength": 1},
+              "artifact_revision_communicated": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+              "acknowledgement_recorded": {"type": "boolean"},
+              "acknowledgement_note": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required whenever acknowledgement_recorded is false, so that a missing acknowledgement carries a stated reason instead of being an empty boolean."
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "Master prompt section 12: review/communication packages showing how agreed artifact revisions reach affected roles."
+        },
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": true
+    }
+  ]
+}

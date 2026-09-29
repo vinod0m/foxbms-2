@@ -1,0 +1,127 @@
+{
+ "id": "FB2-SYS-SYR-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "SYR: every monitored cell voltage shall be acquired, validated and published with its age",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-004",
+  "FB2-ASM-005"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.2",
+   "status": "mapped",
+   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7 (system requirements)",
+   "status": "mapped",
+   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them."
+  }
+ ],
+ "statement": "The item shall acquire the voltage of every monitored cell, validate the integrity of every transferred value before it is used by any decision, and publish each validated value together with the age of the acquisition that produced it, at a rate of at least 20 acquisitions per second in every mode in which the item is monitoring.",
+ "rationale": "This is the system-level statement of what FB2-HW-TSR-000001 and FB2-SW-SWR-000001 together achieve. It is not a restatement of either: the hardware record states the measurement accuracy and the error-detection capability of the analogue chain, and the software record states the transfer scheduling and the publication latency. Neither states the age of the data, and the age is what makes every downstream timeout meaningful: a value without an age cannot be rejected for being stale, so a decision made on it may be acting on an acquisition from several periods earlier.",
+ "classification": "interface",
+ "acceptance_criteria": [
+  {
+   "criterion": "Acquisition rate",
+   "measure": "Acquisitions per second per monitored cell",
+   "threshold": ">= 20",
+   "unit": "Hz"
+  },
+  {
+   "criterion": "Integrity validation coverage",
+   "measure": "Transferred values whose integrity was checked before any decision used them",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Data age published",
+   "measure": "Published values carrying a valid age stamp",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Stale-data rejection",
+   "measure": "Values older than the freshness limit that reach a decision unchallenged",
+   "threshold": "0",
+   "unit": "values"
+  }
+ ],
+ "verification_approach": "test",
+ "safety_allocation": {
+  "asil": "ASIL_D",
+  "safety_goal_ref": "FB2-SAF-SGO-000001",
+  "mitigation": "Front-end integrity code, age stamping on every published value, and the independent hardware monitor as a second source that does not depend on this path"
+ },
+ "assumptions": [
+  "FB2-ASM-001",
+  "FB2-ASM-004",
+  "FB2-ASM-005"
+ ],
+ "conditions_modes": [
+  "MOD-001",
+  "MOD-002",
+  "MOD-003",
+  "MOD-004",
+  "MOD-005",
+  "MOD-006",
+  "MOD-007"
+ ],
+ "feasibility_dependencies": [
+  "FB2-HW-TSR-000001",
+  "FB2-SW-SWR-000001"
+ ],
+ "requirement_level": "system",
+ "requirement_id": "FB2-SYS-SYR-000001",
+ "allocated_to_requirements": [
+  "FB2-SYS-NED-000001",
+  "FB2-SYS-NED-000004"
+ ],
+ "refines_from": [
+  "arch_elements",
+  "why_system_level"
+ ],
+ "trace_to_architecture_elements": [],
+ "limitations": [
+  "Synthetic. This requirement describes a hypothetical programme and establishes nothing about the real foxBMS project.",
+  "System-level only. It does not carry the hardware or software detail, which lives in FB2-HW-TSR-* and FB2-SW-SWR-*. Where this record and those records disagree, neither is silently preferred and the disagreement is raised as a finding.",
+  "Not verified against the product. Every measure that touches its allocated requirements is a synthetic fixture or a blocked record; see the FB2-VER-EXE-* set."
+ ]
+}

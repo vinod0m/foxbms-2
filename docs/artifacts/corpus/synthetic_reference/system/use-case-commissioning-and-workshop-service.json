@@ -1,0 +1,138 @@
+{
+ "id": "FB2-SYS-UC-000004",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "use_case",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Use case: commissioning a new item and servicing it in the workshop",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1",
+   "status": "mapped",
+   "rationale": "Requirements elicitation: use cases and their operational scenarios."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "VAL.1",
+   "status": "mapped",
+   "rationale": "The use case is the object validation is written against."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Use case authored because SYS.1 was recorded as a coverage gap. Each use case carries operational scenarios, because a use case without a scenario cannot be validated and the gap report separately recorded that validation measures were missing."
+  }
+ ],
+ "use_case_id": "FB2-SYS-UC-000004",
+ "use_case_name": "Use case: commissioning a new item and servicing it in the workshop",
+ "primary_stakeholders": [
+  "FB2-SYS-NED-000005"
+ ],
+ "preconditions": [
+  "The item is new or has been removed from a pack.",
+  "Sense leads may be unconnected.",
+  "A service diagnostic tool is available.",
+  "The service technician is trained to the documented procedure and nothing else."
+ ],
+ "main_success_scenario": [
+  {
+   "step": 1,
+   "action": "The technician follows the commissioning procedure",
+   "expected_observable_outcome": "Every step is executable in the order given without an undocumented intermediate state"
+  },
+  {
+   "step": 2,
+   "action": "The technician connects the sense leads and confirms the item sees the right cells",
+   "expected_observable_outcome": "The cell count and the individual values match the pack's build record"
+  },
+  {
+   "step": 3,
+   "action": "The technician releases commissioning and removes the tool",
+   "expected_observable_outcome": "The item returns to a state in which no contactor actuation is possible without a current-flow request"
+  },
+  {
+   "step": 4,
+   "action": "The technician performs a later service action",
+   "expected_observable_outcome": "The item's latched faults can be read and cleared only through the authorised route"
+  }
+ ],
+ "operational_scenarios": [
+  {
+   "scenario_id": "OS-005",
+   "operational_situation": "Production line, item not yet installed in a pack",
+   "initial_conditions": [
+    "Sense leads unconnected",
+    "No cell voltages present"
+   ],
+   "perturbation": "The commissioning input is asserted and a contactor close is attempted",
+   "expected_item_behaviour": "The close command is refused and the refusal is diagnosed; open-circuit inputs are not interpreted as cells at zero volts",
+   "expected_observable_outcome": "No energisation, and a diagnosis entry naming the reason",
+   "observable_by": "The end-of-line test operator",
+   "safe_state_interaction": "Not reached, and that is the point: the item stays in its unenergised state rather than reaching a safe state from a condition in which it never left commissioning.",
+   "related_requirement_refs": [
+    "FB2-SYS-SYR-000008"
+   ]
+  },
+  {
+   "scenario_id": "OS-006",
+   "operational_situation": "Workshop service with a diagnostic tool connected",
+   "initial_conditions": [
+    "Item removed from pack",
+    "Tool connected to the service interface"
+   ],
+   "perturbation": "An unframed or control-byte sequence is sent on the service link",
+   "expected_item_behaviour": "Bytes outside a validated, authenticated frame are not acted on, and the item's actuation state is unchanged",
+   "expected_observable_outcome": "No transmit-enable change and no actuation; the sequence is diagnosed",
+   "observable_by": "The service technician, from the item's own diagnosis output",
+   "safe_state_interaction": "Not reached. The item's state is unchanged, which is the correct outcome for a rejected input.",
+   "related_requirement_refs": [
+    "FB2-SYS-SYR-000008"
+   ],
+   "related_hazard_refs": []
+  }
+ ],
+ "postconditions": [
+  "The item is either in its uncommissioned state or returned to service with commissioning released and the tool removed.",
+  "No actuation is possible without a current-flow request."
+ ],
+ "validation_measures": [
+  "FB2-VER-TMS-000015"
+ ],
+ "limitations": [
+  "The procedure this use case validates does not exist in approved form in this corpus, so the use case describes an intent rather than a testable sequence.",
+  "The workshop scenario's second half is a cybersecurity scenario and is verified by the security measures rather than by the service measure; the use case records the linkage and does not duplicate the verification.",
+  "No technician has performed anything."
+ ]
+}

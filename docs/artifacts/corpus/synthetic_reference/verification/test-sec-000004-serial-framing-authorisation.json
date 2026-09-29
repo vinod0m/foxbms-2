@@ -1,0 +1,210 @@
+{
+ "id": "FB2-VER-TMS-000019",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Verification: the serial link acts only on authenticated frames, and the XOFF/XON byte values are demoted to ordinary payload",
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.5",
+   "status": "mapped",
+   "rationale": "System qualification test: the security requirements are system-level work products and this is the measure that would qualify them."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.6",
+   "status": "mapped",
+   "rationale": "Software qualification test: the measures exercise the master software's handling of the specified inputs."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 (system verification)",
+   "status": "mapped",
+   "rationale": "Verification of the system requirement as written, against its own acceptance criteria."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "ISO SAE 21434 relationship",
+   "status": "mapped",
+   "rationale": "Recorded as a relationship, not as a mapping. No ISO/SAE 21434 work product exists in this corpus and the corpus-local TARA FB2-SAF-TAR-000001 is machine-pinned to is_iso_21434_tara = false."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Security verification measure authored because FB2-SAF-SEC-000004 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is."
+  }
+ ],
+ "test_type": "robustness",
+ "objective": "Confirm that no byte on the serial receive line reaches the application layer without passing a length check and an integrity check, that a structurally valid frame with a modified payload is rejected, that neither 0x13 nor 0x11 can change the transmit-enabled state outside an authenticated frame, and that a receive overflow is diagnosable.",
+ "referenced_requirements": [
+  "FB2-SAF-SEC-000004"
+ ],
+ "referenced_designs": [
+  "FB2-SYS-SYR-000007",
+  "FB2-SYS-SYR-000008"
+ ],
+ "preconditions": [
+  "The serial link under test is the link the item uses for its external service interface.",
+  "The item is otherwise nominal and no genuine peer is mid-transfer.",
+  "The receive queue depth is configured and known."
+ ],
+ "environment": {
+  "hardware": "Hypothetical 400 V pack on a bench with an instrumented serial port",
+  "software": "BMS master firmware under test",
+  "tools": [
+   "Serial line analyser",
+   "Byte-level transmitter with timing control",
+   "24 h capture capability"
+  ],
+  "configuration": "VAR-REF-001 with the service interface enabled and no genuine peer connected"
+ },
+ "stimuli": [
+  {
+   "signal": "Unframed byte sequences",
+   "value": "random bytes including 0x11 and 0x13 at arbitrary positions",
+   "timing": "continuously for 24 h"
+  },
+  {
+   "signal": "Structurally valid frames with a modified payload",
+   "value": "one per second",
+   "timing": "1 Hz for 24 h"
+  },
+  {
+   "signal": "Frames whose declared length differs from the received byte count",
+   "value": "one per minute",
+   "timing": "1/min for 24 h"
+  },
+  {
+   "signal": "Receive-queue overflow",
+   "value": "a burst exceeding the configured queue depth",
+   "timing": "one per run"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Send 100000 unframed bytes including both control-byte values",
+   "expected": "Zero bytes reach the application layer; zero transmit-enabled transitions occur"
+  },
+  {
+   "step": 2,
+   "action": "Send 86400 valid-structure frames with a modified payload",
+   "expected": "Zero are accepted; each raises a diagnosis entry"
+  },
+  {
+   "step": 3,
+   "action": "Send 1440 frames with a declared length that does not match the byte count",
+   "expected": "Zero are passed onward; each is diagnosed"
+  },
+  {
+   "step": 4,
+   "action": "Overflow the receive queue deliberately",
+   "expected": "The overflow is detected and one diagnosis entry is raised per event"
+  },
+  {
+   "step": 5,
+   "action": "Run genuine traffic for 24 h alongside the injections",
+   "expected": "Zero genuine frames rejected"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "unframed_bytes_passing",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "bytes"
+  },
+  {
+   "signal": "transmit_state_transitions_from_control_bytes",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "transitions"
+  },
+  {
+   "signal": "modified_payload_frames_accepted",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  },
+  {
+   "signal": "length_mismatch_frames_passed",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  },
+  {
+   "signal": "diagnosis_entries_per_overflow",
+   "expected_value": "1",
+   "tolerance": "exact",
+   "unit": "entry"
+  },
+  {
+   "signal": "genuine_frames_rejected",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  }
+ ],
+ "tolerances": {
+  "unframed_bytes_passing": "exact",
+  "transmit_state_transitions_from_control_bytes": "exact",
+  "modified_payload_frames_accepted": "exact",
+  "length_mismatch_frames_passed": "exact",
+  "diagnosis_entries_per_overflow": "exact",
+  "genuine_frames_rejected": "exact"
+ },
+ "timing": {
+  "max_execution_time_ms": 86400000,
+  "setup_time_ms": 3600000,
+  "teardown_time_ms": 1800000
+ },
+ "oracle_basis": "source_grounded",
+ "oracle_detail": {
+  "kind": "source_grounded",
+  "why_this_oracle": "The oracle is the framing rule's own definition, read from the requirement. A frame is admissible only when its declared length equals the received byte count and its integrity value verifies; both are decidable by the receiver alone, so a byte outside such a frame has no admissible interpretation and must be discarded. The control-byte clause follows from the same definition: 0x13 and 0x11 are payload byte values, and a value that is privileged only inside an authenticated frame cannot be reached outside one. The expected outcomes - zero bytes passing, zero transitions - are consequences of the rule, not observations of an implementation.",
+  "what_the_oracle_is_not": "It is not a measured reference: no serial traffic was sent or captured. It is not an analytical model: there is no model of the receiver's parser. It is not a synthetic assumption: admissibility is decidable by the receiver by construction.",
+  "what_it_still_does_not_prove": "The oracle says nothing about the strength of the integrity value, about re-synchronisation after a desynchronising error, or about whether an authenticated peer is entitled to command what it commands. It also does not cover the availability consequence: a receiver that discards everything malformed but never resynchronises passes every expected outcome here and is unusable.",
+  "known_limitation_in_the_requirement": "As with the CAN measure, the 'genuine frames rejected: 0' criterion is not achievable for a practical integrity value and is recorded here as the requirement states it while naming it as unachievable. See finding FB2-REV-FND-000028.",
+  "oracle_kind": "source_grounded"
+ },
+ "cleanup": "Disconnect the transmitter, confirm the item's receive path has returned to its steady state and archive the capture with the diagnosis log.",
+ "regression_selection": "Re-run on any change to the framing format, the integrity primitive, the key, the queue depth or the parser's resynchronisation behaviour. Any change that makes a byte actionable outside a verified frame must fail this measure.",
+ "security_verification_note": "This measure verifies the requirement as written against the item's observable behaviour. It does not establish that the threat it addresses is exploitable, and it is not a penetration test: no exploit was developed, no advisory was checked and no CVSS score was assigned to any finding.",
+ "limitations": [
+  "Planned, not executed. Planning a security measure is not evidence that the requirement is satisfied, and the paired execution record carries execution_kind 'none' and outcome 'blocked' for that reason.",
+  "Not a penetration test. No exploit was developed, no advisory source was consulted and no vulnerability was scored. A requirement can pass every expected outcome here and still leave the item exploitable by a route this measure does not exercise.",
+  "The requirement verified here constrains a mechanism the hypothetical project has planned. Nothing in this corpus establishes that the mechanism exists.",
+  "No human security reviewer has confirmed this measure. Human approval is pending."
+ ]
+}

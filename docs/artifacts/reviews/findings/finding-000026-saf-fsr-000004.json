@@ -1,0 +1,62 @@
+{
+ "id": "FB2-REV-FND-000026",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000026: the independent monitor is justified by a 115 ms main-path figure that appears in no record; the safety goal's own allocation for that path sums to 85 ms",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9",
+   "status": "mapped",
+   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "The obligation to record rather than to conceal."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  }
+ ],
+ "subject_artifact_id": "FB2-SAF-FSR-000004",
+ "severity": "medium",
+ "category": "consistency",
+ "evidence": "FB2-SAF-FSR-000004's rationale reads: 'addresses timing budget violation in main path (115 ms > 100 ms FTTI) by providing parallel safety channel'. FB2-HW-TSR-000004 repeats the same sentence word for word. No record in the corpus contains 115 ms. The nearest figure is FB2-SAF-SGO-000001's allocation, whose serial elements sum to 85 ms for the main path. 115 is neither 85 (the actual sum) nor 105 (the sum plus the recorded margin), so it cannot be reconstructed from the corpus at all.",
+ "disposition": "accepted",
+ "impact": "The justification for adding an independent ASIL B hardware channel - a substantial hardware cost and the basis of the ASIL D decomposition - rests on a number that cannot be located or reproduced. A reader checking the arithmetic finds nothing to check, and the most likely reading is that the figure was estimated at some point and never reconciled. The independent monitor may well be justified; the justification as written does not support it.",
+ "root_cause": "The figure appears to predate the current allocation and to have survived a later rewrite of the timing budget without being updated. Two records carrying the identical sentence mean the figure has been copied rather than checked twice, so a single unverified number propagated to both the functional and the hardware level.",
+ "resolution": "NOT RESOLVED. This pass: (a) recorded the contradiction; (b) wrote FB2-SAF-TSC-000001 restating the independent monitor's justification on the 85 ms figure that does exist, and noted that the 85 ms does not fit once the reaction chain is added - which is the substantive argument for the independent path and does not need the 115 ms at all; (c) registered the referral in INST-004. Neither record carrying the unsourced figure was edited, because both are functional-safety and hardware requirements and correcting a requirement's rationale is a controlled change."
+}

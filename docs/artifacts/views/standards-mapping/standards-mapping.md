@@ -1,6 +1,6 @@
 # Standards mapping — ASPICE processes and ISO 26262 parts (generated view)
 
-Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -29,8 +29,8 @@ Derived from `governance/coverage-plan.json` (`process_inventory`). The disposit
 
 | Process | Name | Applicability | Disposition (as recorded) |
 |---|---|---|---|
-| `SYS.1` | Requirements Elicitation | `applicable` | gap - no stakeholder-needs, use-case or operational-scenario record exists in either profile |
-| `SYS.2` | System Requirements Analysis | `applicable` | gap - no system requirements specification record exists in either profile |
+| `SYS.1` | Requirements Elicitation | `applicable` | mapped - the five stakeholder need records FB2-SYS-NED-000001..000005, the four use case records FB2-SYS-UC-000001..000004 and the Part 3 item definition FB2-SAF-ITE-000001 now exist in the synthetic_reference profile. … |
+| `SYS.2` | System Requirements Analysis | `applicable` | mapped - the eight system requirement records FB2-SYS-SYR-000001..000008 now exist in the synthetic_reference profile, each refining a stakeholder need, a use-case obligation or the safety goal and each allocating to ex… |
 | `SYS.3` | System Architectural Design | `applicable` | mapped - HSI authority created; allocation documented |
 | `SYS.4` | System Integration and Integration Test | `applicable` | partially_mapped - integration planning stub FB2-VER-TMS-000007 + blocked execution record FB2-VER-EXE-000007 (outcome blocked, harness not in corpus scope); as_is has implicit integration |
 | `SYS.5` | System Qualification Test | `applicable` | partially_mapped - qualification planning stub FB2-VER-TMS-000008 + blocked execution record FB2-VER-EXE-000008; HIL stub FB2-VER-TMS-000011 + blocked execution FB2-VER-EXE-000011 (no target hardware) |
@@ -44,18 +44,18 @@ Derived from `governance/coverage-plan.json` (`process_inventory`). The disposit
 | `HWE.2` | Hardware Architectural Design | `applicable` | partially_mapped - design packages inventoried; architecture extracted where readable |
 | `HWE.3` | Hardware Detailed Design | `applicable` | partially_mapped - design packages referenced; detailed analysis limited by CAD format |
 | `HWE.4` | Hardware Integration and Test | `applicable` | gap - synthetic test specs created; as_is lacks explicit HW test records |
-| `VAL.1` | Validation | `applicable` | partially_mapped - validation planning stub FB2-VER-TMS-000009 + blocked execution record FB2-VER-EXE-000009; as_is has no validation evidence |
+| `VAL.1` | Validation | `applicable` | mapped - the planning stub FB2-VER-TMS-000009 and its blocked execution remain, and four real validation measures are added: FB2-VER-TMS-000012 (no false reaction over a full charge), FB2-VER-TMS-000013 (driver-facing o… |
 | `ACQ.4` | Supplier Monitoring | `applicable` | mapped - supplier inventory created; synthetic monitoring records |
-| `SPL.2` | Release Management | `applicable` | partially_mapped - pinned release version history only; no Release Plan, Release Checklist or release record in either profile |
+| `SPL.2` | Release Management | `applicable` | mapped - the three expected artifact families now exist as records rather than being inferred from a version history: the release and configuration identification record FB2-REL-RLS-000001 (identification scheme, config… |
 | `SUP.1` | Quality Assurance | `applicable` | mapped - QA approach documented; synthetic review records |
 | `SUP.8` | Configuration Management | `applicable` | mapped - Git + Waf as CM; synthetic CM records |
 | `SUP.9` | Problem Resolution Management | `applicable` | mapped - GitHub issues as evidence; synthetic problem records |
 | `SUP.10` | Change Request Management | `applicable` | mapped - PR/commit history as evidence; synthetic change lifecycle demos |
 | `SUP.11` | Traceability Management | `applicable` | mapped - corpus implements traceability; matrices generated |
-| `MAN.3` | Project Management | `applicable` | gap - no project plan, schedule, resource plan or progress report exists in either profile; the only management record is a project scope statement |
-| `MAN.5` | Risk Management | `applicable` | gap - no project risk register, risk analysis set or mitigation plan exists in either profile |
-| `MAN.6` | Measurement | `applicable` | partially_mapped - no measurement plan exists; measurable acceptance criteria with named measure, threshold and unit exist on 26 records, but no process-performance metric set, baseline, target, control limit, cadence, … |
-| `PIM.3` | Process Improvement | `applicable` | gap - no improvement proposal, improvement record or effectiveness evaluation exists in either profile |
+| `MAN.3` | Project Management | `applicable` | mapped - the project plan FB2-MAN-PLN-000001 carries a six-phase lifecycle model, an eight-package work breakdown with named accountable roles and dated phases, a schedule with a critical path and per-package float, six… |
+| `MAN.5` | Risk Management | `applicable` | mapped - the risk register FB2-MAN-RSK-000001 carries eight entries across schedule, resource, technical, supplier, quality, organisational, compliance and reuse categories, each with an ordinal-pair exposure on a state… |
+| `MAN.6` | Measurement | `applicable` | mapped - the measurement plan FB2-MAN-MSM-000001 adds what the 100 acceptance criteria on requirement records never had: a named population with its exclusions and its known bias, six collection rules with cadence and c… |
+| `PIM.3` | Process Improvement | `applicable` | mapped - three improvement-related records now exist: FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002, each carrying a baseline, a hypothesis with a falsification condition, the change made and an effectiveness evaluation wit… |
 | `REU.2` | Reuse Program Management | `applicable` | mapped - reuse inventory created; assessments for vendor code |
 | `MLE.1` | Machine Learning Requirements Analysis | `not_applicable` | not_applicable - explicit non-applicability artifact created per master prompt Section 3 |
 | `MLE.2` | Machine Learning Architectural Design | `not_applicable` | not_applicable |
@@ -69,9 +69,9 @@ Derived from `governance/coverage-plan.json` (`process_inventory`). The disposit
 | processes in inventory | 32 | - |
 | applicable | 28 | 32 |
 | not_applicable | 4 | 32 |
-| disposition starts `mapped` | 12 | 32 |
-| disposition contains `partially_mapped` | 10 | 32 |
-| disposition starts `gap` | 6 | 32 |
+| disposition starts `mapped` | 20 | 32 |
+| disposition contains `partially_mapped` | 9 | 32 |
+| disposition starts `gap` | 1 | 32 |
 
 The four MLE processes are recorded as explicitly `not_applicable` with a rationale. Per the master prompt, non-applicability here is a recorded decision, not an absence.
 
@@ -86,12 +86,12 @@ Derived from `governance/coverage-plan.json` (`iso26262_coverage`).
 | `part_12_motorcycles` | `not_applicable` | foxBMS targets automotive/industrial energy storage, not motorcycle-specific | APP-ISO-12 |
 | `part_1_vocabulary` | referenced | referenced | - |
 | `part_2_management` | mapped | mapped - safety plan, roles, tailoring | - |
-| `part_3_concept` | partially_mapped | partially_mapped - hazard analysis and safety goals exist (FB2-SAF-HAZ-000001, FB2-SAF-SGO-000001, one per profile); no functional safety concept and no technical safety concept record exists, and the only item definition is the TARA's sec… | - |
-| `part_4_system` | partially_mapped | partially_mapped - HSI interface authority FB2-SYS-HSI-000001 only; no system requirements record and no technical safety concept record exist in either profile (CORR-COV-002, CORR-COV-005) | - |
+| `part_3_concept` | mapped | mapped - item definition FB2-SAF-ITE-000001, functional safety concept FB2-SAF-FSC-000001 and technical safety concept FB2-SAF-TSC-000001 now exist alongside the pre-existing hazard FB2-SAF-HAZ-000001 and safety goal FB2-SAF-SGO-000001. Th… | - |
+| `part_4_system` | mapped | mapped - the HSI interface authority FB2-SYS-HSI-000001 is joined by eight system requirement records FB2-SYS-SYR-000001..000008, which allocate to the existing FB2-HW-TSR-* and FB2-SW-SWR-* records and are covered in the requirement-to-te… | - |
 | `part_5_hardware` | partially_mapped | partially_mapped - HW requirements, architecture, FMEDA (synthetic) | - |
 | `part_6_software` | partially_mapped | partially_mapped - SW requirements, architecture and detailed design are backed; unit verification is only partially mapped, because SWE.4 is recorded partially_mapped with blocked execution records (CORR-COV-011) | - |
-| `part_7_production` | gap | gap - no production, end-of-line test, operation, service or decommissioning record exists in either profile; the prior 'release, production test plan (synthetic)' text was unbacked (CORR-COV-004) | - |
-| `part_8_supporting` | gap | gap - no supporting-domain process-definition record exists for configuration management, change management, documentation, QA, measurement or process improvement; the generated view reports all six as coverage gaps (CORR-COV-012) | - |
+| `part_7_production` | mapped | mapped - six post-development lifecycle records now exist, one per area the generated view searches: release and configuration identification FB2-REL-RLS-000001, production control and end-of-line test FB2-PRD-EOL-000001 (six named test st… | - |
+| `part_8_supporting` | mapped | mapped - six supporting-process records now exist, each naming its process id explicitly and each carrying a definition, inputs, outputs, an accountable role with its independence stated, at least two acceptance criteria, at least one perf… | - |
 | `part_9_asils` | mapped | mapped - ASIL assignment methodology, safety analyses (FMEA, FTA) | - |
 
 ### Standards lock

@@ -1,0 +1,398 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/safety_concept.schema.json",
+  "title": "Safety Concept Schema",
+  "description": "Schema for the ISO 26262 Part 3 safety concepts. One schema covers both concept stages because they are two halves of one argument: concept_stage discriminates them. 'functional_safety_concept' (ISO 26262-3 clause 7) carries the item-related assumptions, the high-level architectural elements and their roles, the safety strategies and the interfaces to other safety-related items, and allocates the safety goals to architectural elements. 'technical_safety_concept' (ISO 26262-4 clause 7) carries the hardware/software allocation the functional concept decided, the technical safety requirements that follow, the FTTI and timing-budget allocation, the diagnostic-coverage assumptions and their justification, and the hardware-side interfaces and assumptions. Neither is a safety PLAN: a plan states what will be done, a concept states what the item is and how the safety goal is achieved.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "concept_stage",
+        "concept_identity",
+        "safety_goals_addressed",
+        "architectural_elements",
+        "safety_strategies",
+        "scope_statement",
+        "interfaces_to_other_safety_related_items",
+        "concept_assumptions",
+        "external_measures",
+        "verification_and_validation_criteria",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "safety_concept"
+        },
+        "concept_stage": {
+          "type": "string",
+          "enum": ["functional_safety_concept", "technical_safety_concept"],
+          "description": "Which of the two Part 3 concepts this record is. The two have different required content; the `allOf` branches below make the difference structural rather than advisory."
+        },
+        "concept_identity": {
+          "type": "object",
+          "required": ["concept_id", "item_ref", "fictional", "derived_from"],
+          "properties": {
+            "concept_id": {"type": "string", "pattern": "^FB2-SAF-(FSC|TSC)-[0-9]{6}$"},
+            "item_ref": {
+              "type": "string",
+              "pattern": "^FB2-SAF-ITE-[0-9]{6}$",
+              "description": "The Part 3 item definition this concept is about. A concept that names no item is a set of engineering aspirations."
+            },
+            "fictional": {"const": true},
+            "derived_from": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string"},
+              "description": "The hazard, safety-goal, requirement and analysis records this concept was written from."
+            },
+            "clause_reference": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "item_related_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["assumption", "evidence_class", "consequence_if_false"],
+            "properties": {
+              "assumption": {"type": "string", "minLength": 1},
+              "evidence_class": {"type": "string", "enum": ["source_observed", "synthetic_assumption", "derived"]},
+              "consequence_if_false": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          },
+          "description": "ISO 26262-3 clause 7.4.3. Required for the functional concept; optional for the technical concept, which instead carries concept_assumptions at hardware level."
+        },
+        "safety_goals_addressed": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["safety_goal_id", "asil", "allocation_statement"],
+            "properties": {
+              "safety_goal_id": {"type": "string", "pattern": "^FB2-SAF-SGO-[0-9]{6}$"},
+              "asil": {"type": "string", "enum": ["QM", "ASIL_A", "ASIL_B", "ASIL_C", "ASIL_D", "not_applicable"]},
+              "allocation_statement": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Which architectural element(s) the goal's objective is allocated to, and what each is accountable for. 'All elements' is not an allocation."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "architectural_elements": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["element_id", "element_name", "role", "interfaces", "owns_objective_part"],
+            "properties": {
+              "element_id": {"type": "string", "pattern": "^AR-[0-9]{3}$"},
+              "element_name": {"type": "string", "minLength": 1},
+              "role": {"type": "string", "minLength": 1},
+              "element_kind": {"type": "string", "enum": ["hardware", "software", "hardware_and_software", "external"]},
+              "interfaces": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "owns_objective_part": {"type": "string", "minLength": 1},
+              "independence_note": {"type": "string"}
+            },
+            "additionalProperties": false
+          },
+          "description": "The high-level architectural elements of the concept. Minimum two, because a concept with one element has no architecture to allocate to."
+        },
+        "safety_strategies": {
+          "type": "object",
+          "required": ["fault_detection", "fault_reaction", "degraded_operation", "safe_state", "strategy_allocation"],
+          "properties": {
+            "fault_detection": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["mechanism", "detects", "element_id", "detection_time_budget_ms"],
+                "properties": {
+                  "mechanism": {"type": "string", "minLength": 1},
+                  "detects": {"type": "string", "minLength": 1},
+                  "element_id": {"type": "string", "pattern": "^AR-[0-9]{3}$"},
+                  "detection_time_budget_ms": {"type": "number", "minimum": 0},
+                  "coverage_claim": {"type": "string"},
+                  "coverage_claim_evidence": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "description": "Required whenever coverage_claim is populated. A diagnostic-coverage figure with no evidence is a claim, not a coverage statement."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "fault_reaction": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["reaction", "triggered_by", "element_id", "reaction_time_budget_ms"],
+                "properties": {
+                  "reaction": {"type": "string", "minLength": 1},
+                  "triggered_by": {"type": "string", "minLength": 1},
+                  "element_id": {"type": "string", "pattern": "^AR-[0-9]{3}$"},
+                  "reaction_time_budget_ms": {"type": "number", "minimum": 0},
+                  "mode_dependence": {
+                    "type": "string",
+                    "description": "Mandatory prose for mode-dependent reactions. Opening a contactor is not unconditionally safe in every operational situation: in a traction discharge situation it removes propulsion. State the situation-dependence rather than assuming it away."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "degraded_operation": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["degraded_mode", "capability_kept", "capability_removed", "entry_condition", "duration_limit"],
+                "properties": {
+                  "degraded_mode": {"type": "string", "minLength": 1},
+                  "capability_kept": {"type": "string", "minLength": 1},
+                  "capability_removed": {"type": "string", "minLength": 1},
+                  "entry_condition": {"type": "string", "minLength": 1},
+                  "duration_limit": {"type": "string", "minLength": 1},
+                  "user_indication": {"type": "string"}
+                },
+                "additionalProperties": false
+              }
+            },
+            "safe_state": {"type": "string", "minLength": 1},
+            "strategy_allocation": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "scope_statement": {
+          "type": "object",
+          "required": ["inside_safety_scope", "outside_safety_scope", "boundary_argument"],
+          "properties": {
+            "inside_safety_scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "outside_safety_scope": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["element", "why_outside", "hazard_class"],
+                "properties": {
+                  "element": {"type": "string", "minLength": 1},
+                  "why_outside": {"type": "string", "minLength": 1},
+                  "hazard_class": {
+                    "type": "string",
+                    "enum": ["inherent_battery_hazard_outside_fuSaS_scope", "external_system_behaviour", "production_or_service_process", "environmental"]
+                  }
+                },
+                "additionalProperties": false
+              },
+              "description": "At least one entry required. A hazard inherent to lithium-ion chemistry is not an E/E-system malfunction hazard and must be classified as such rather than absorbed into an ASIL."
+            },
+            "boundary_argument": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "hardware_software_allocation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["element_id", "allocated_to", "allocated_responsibility", "reason_for_the_split"],
+            "properties": {
+              "element_id": {"type": "string", "pattern": "^AR-[0-9]{3}$"},
+              "allocated_to": {"type": "string", "enum": ["hardware", "software", "split"]},
+              "allocated_responsibility": {"type": "string", "minLength": 1},
+              "reason_for_the_split": {"type": "string", "minLength": 1},
+              "allocated_requirements": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": false
+          },
+          "description": "Required for the technical concept. Every architectural element must appear."
+        },
+        "technical_safety_requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["requirement_id", "requirement_type", "statement_summary", "allocated_to_element_id", "verification_approach"],
+            "properties": {
+              "requirement_id": {"type": "string", "pattern": "^FB2-(HW-TSR|SW-SWR)-[0-9]{6}$"},
+              "requirement_type": {"type": "string", "enum": ["hardware", "software"]},
+              "statement_summary": {"type": "string", "minLength": 1},
+              "allocated_to_element_id": {"type": "string", "pattern": "^AR-[0-9]{3}$"},
+              "verification_approach": {"type": "string", "enum": ["test", "analysis", "inspection", "demonstration", "review"]},
+              "verification_record_refs": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": false
+          },
+          "description": "Required for the technical concept: the requirements that follow from the allocation."
+        },
+        "ftti_and_timing_budget": {
+          "type": "object",
+          "required": ["ftti_ms", "allocation", "arithmetic_check"],
+          "properties": {
+            "ftti_ms": {"type": "number", "minimum": 0},
+            "allocation": {
+              "type": "object",
+              "minItems": 1,
+              "description": "Serial-path element -> milliseconds.",
+              "additionalProperties": {"type": "number", "minimum": 0}
+            },
+            "arithmetic_check": {
+              "type": "object",
+              "required": ["serial_sum_ms", "margin_ms", "statement"],
+              "properties": {
+                "serial_sum_ms": {"type": "number", "minimum": 0},
+                "margin_ms": {"type": "number", "minimum": 0},
+                "statement": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Must state explicitly whether serial_sum + margin is inside or outside the FTTI. Where it is outside, the statement must name the compensating mechanism. This field exists because the corpus already contains a timing budget whose arithmetic does not close; see the finding raised against FB2-SAF-SGO-000001."
+                }
+              },
+              "additionalProperties": false
+            },
+            "allocation_to_element_id": {
+              "type": "object",
+              "additionalProperties": {"type": "string", "pattern": "^AR-[0-9]{3}$"}
+            }
+          },
+          "additionalProperties": false,
+          "description": "Required for the technical concept."
+        },
+        "diagnostic_coverage_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["mechanism", "claimed_coverage", "justification", "justification_basis", "verification_record_refs"],
+            "properties": {
+              "mechanism": {"type": "string", "minLength": 1},
+              "claimed_coverage": {"type": "string", "minLength": 1},
+              "justification": {"type": "string", "minLength": 1},
+              "justification_basis": {
+                "type": "string",
+                "enum": ["analytical_model", "measured_reference", "source_grounded", "synthetic_assumption"],
+                "description": "What kind of evidence the justification rests on. An assumption is not a measurement."
+              },
+              "independence_assumption": {"type": "string"},
+              "common_cause_note": {"type": "string"},
+              "verification_record_refs": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "References to the analysis or test records that establish the coverage. An empty list is permitted only when justification_basis is synthetic_assumption, and then the entry must say so in justification."
+              }
+            },
+            "additionalProperties": false
+          },
+          "description": "Required for the technical concept."
+        },
+        "hardware_interfaces_and_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["element_id", "interface_or_assumption", "basis", "consequence_if_unmet"],
+            "properties": {
+              "element_id": {"type": "string", "pattern": "^AR-[0-9]{3}$"},
+              "interface_or_assumption": {"type": "string", "minLength": 1},
+              "basis": {"type": "string", "minLength": 1},
+              "consequence_if_unmet": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          },
+          "description": "Required for the technical concept: what the hardware side of the concept assumes."
+        },
+        "interfaces_to_other_safety_related_items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["other_item", "interface_description", "shared_objective_or_none", "assumption_dependence"],
+            "properties": {
+              "other_item": {"type": "string", "minLength": 1},
+              "interface_description": {"type": "string", "minLength": 1},
+              "shared_objective_or_none": {"type": "string", "minLength": 1},
+              "assumption_dependence": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "concept_assumptions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^FB2-ASM-[0-9]{3}$"},
+          "description": "Ids from the canonical assumption registry the concept rests on."
+        },
+        "external_measures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["measure", "owner_outside_the_item", "why_the_item_cannot_do_it"],
+            "properties": {
+              "measure": {"type": "string", "minLength": 1},
+              "owner_outside_the_item": {"type": "string", "minLength": 1},
+              "why_the_item_cannot_do_it": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          },
+          "description": "At least one entry required. If there are genuinely none, record the entry with why_the_item_cannot_do_it set to the declaration that no external measure is relied upon; an empty array is indistinguishable from an omission."
+        },
+        "verification_and_validation_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["criterion", "how_it_would_be_checked", "record_kind_expected"],
+            "properties": {
+              "criterion": {"type": "string", "minLength": 1},
+              "how_it_would_be_checked": {"type": "string", "minLength": 1},
+              "record_kind_expected": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "contradictions_found_while_authoring": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["contradiction", "records_in_conflict", "how_this_concept_handles_it"],
+            "properties": {
+              "contradiction": {"type": "string", "minLength": 1},
+              "records_in_conflict": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+              "how_this_concept_handles_it": {"type": "string", "minLength": 1},
+              "finding_ref": {"type": "string"}
+            },
+            "additionalProperties": false
+          },
+          "description": "Contradictions found in the records this concept was written from. The concept does not silently conform to a wrong record; it records the conflict and names the finding. This field exists because writing this concept exposed arithmetic that does not close."
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"concept_stage": {"const": "functional_safety_concept"}}, "required": ["concept_stage"]},
+          "then": {"required": ["item_related_assumptions"]}
+        },
+        {
+          "if": {"properties": {"concept_stage": {"const": "technical_safety_concept"}}, "required": ["concept_stage"]},
+          "then": {
+            "required": [
+              "hardware_software_allocation",
+              "technical_safety_requirements",
+              "ftti_and_timing_budget",
+              "diagnostic_coverage_assumptions",
+              "hardware_interfaces_and_assumptions"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  ]
+}

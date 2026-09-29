@@ -1,6 +1,6 @@
 # Production, operation, service and decommissioning (generated view)
 
-Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -25,65 +25,58 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 
 ## Release and configuration identification
 
-### Coverage gap: Release and configuration identification
+| Id | Profile | Title | Guard |
+|---|---|---|---|
+| `FB2-PRD-CAL-000001` | synthetic_reference | Calibration and programming specification for the hypothetical 400 V BMS | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-PRD-EOL-000001` | synthetic_reference | Production control and end-of-line test plan for the hypothetical 400 V BMS | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-REL-RLS-000001` | synthetic_reference | Release and configuration identification for the hypothetical 400 V BMS | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
-**No records in the corpus for this area - this is a coverage gap, not an omission from this view.**
-
-The corpus holds no release-configuration record, release-notes record, acceptance/release checklist record, or configuration-identification record in either profile. The required directory layout mandates this view, so the section is emitted with the gap stated rather than omitted; a silently empty section would misrepresent corpus completeness. Domains searched: production, release.
-
-Adjacent material that does exist: The plan's current position, read at render time, is that `SPL.2` (Release Management) is recorded `partially_mapped`; and `iso26262_coverage.part_7_production` is recorded `gap`. Neither names a release, production, operation, service or decommissioning record, and no canonical record matching one exists on disk, so the gap above holds regardless of how the plan is worded.
+Each record above is printed with its own guard fields. Every area record in this corpus is `origin: synthetic`, `human_approval_status: pending`, `production_authorized: false` and `product_verification_credit: false`, and each states in its own `evidence_state` / `operational_authorisation_statement` that none of its steps has been executed and that it authorises no action on real equipment. The presence of a record here means the area is *documented*, not that any production, service or recycling activity has occurred.
 
 ## Production and end-of-line test
 
-### Coverage gap: Production and end-of-line test
+| Id | Profile | Title | Guard |
+|---|---|---|---|
+| `FB2-PRD-CAL-000001` | synthetic_reference | Calibration and programming specification for the hypothetical 400 V BMS | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-PRD-EOL-000001` | synthetic_reference | Production control and end-of-line test plan for the hypothetical 400 V BMS | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
-**No records in the corpus for this area - this is a coverage gap, not an omission from this view.**
-
-The corpus holds no production control plan, end-of-line test plan, or calibration/programming specification record in either profile. The required directory layout mandates this view, so the section is emitted with the gap stated rather than omitted; a silently empty section would misrepresent corpus completeness. Domains searched: production.
-
-Adjacent material that does exist: The plan's current position, read at render time, is that `SPL.2` (Release Management) is recorded `partially_mapped`; and `iso26262_coverage.part_7_production` is recorded `gap`. Neither names a release, production, operation, service or decommissioning record, and no canonical record matching one exists on disk, so the gap above holds regardless of how the plan is worded.
+Each record above is printed with its own guard fields. Every area record in this corpus is `origin: synthetic`, `human_approval_status: pending`, `production_authorized: false` and `product_verification_credit: false`, and each states in its own `evidence_state` / `operational_authorisation_statement` that none of its steps has been executed and that it authorises no action on real equipment. The presence of a record here means the area is *documented*, not that any production, service or recycling activity has occurred.
 
 ## Operation and field monitoring
 
-### Coverage gap: Operation and field monitoring
+| Id | Profile | Title | Guard |
+|---|---|---|---|
+| `FB2-OPS-MON-000001` | synthetic_reference | Field monitoring and incident handling for the hypothetical 400 V BMS in service | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
-**No records in the corpus for this area - this is a coverage gap, not an omission from this view.**
-
-The corpus holds no field-monitoring record, incident-handling record, or operational-instruction record in either profile. The required directory layout mandates this view, so the section is emitted with the gap stated rather than omitted; a silently empty section would misrepresent corpus completeness. Domains searched: operation.
-
-Adjacent material that does exist: The plan's current position, read at render time, is that `SPL.2` (Release Management) is recorded `partially_mapped`; and `iso26262_coverage.part_7_production` is recorded `gap`. Neither names a release, production, operation, service or decommissioning record, and no canonical record matching one exists on disk, so the gap above holds regardless of how the plan is worded.
+Each record above is printed with its own guard fields. Every area record in this corpus is `origin: synthetic`, `human_approval_status: pending`, `production_authorized: false` and `product_verification_credit: false`, and each states in its own `evidence_state` / `operational_authorisation_statement` that none of its steps has been executed and that it authorises no action on real equipment. The presence of a record here means the area is *documented*, not that any production, service or recycling activity has occurred.
 
 ## Service and maintenance
 
-### Coverage gap: Service and maintenance
+| Id | Profile | Title | Guard |
+|---|---|---|---|
+| `FB2-SVC-SVC-000001` | synthetic_reference | Installation, operation and service instructions for the hypothetical 400 V BMS | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
-**No records in the corpus for this area - this is a coverage gap, not an omission from this view.**
-
-The corpus holds no installation, operation, service-instruction, maintenance, or regression-strategy record in either profile. The required directory layout mandates this view, so the section is emitted with the gap stated rather than omitted; a silently empty section would misrepresent corpus completeness. Domains searched: service.
-
-Adjacent material that does exist: The plan's current position, read at render time, is that `SPL.2` (Release Management) is recorded `partially_mapped`; and `iso26262_coverage.part_7_production` is recorded `gap`. Neither names a release, production, operation, service or decommissioning record, and no canonical record matching one exists on disk, so the gap above holds regardless of how the plan is worded.
+Each record above is printed with its own guard fields. Every area record in this corpus is `origin: synthetic`, `human_approval_status: pending`, `production_authorized: false` and `product_verification_credit: false`, and each states in its own `evidence_state` / `operational_authorisation_statement` that none of its steps has been executed and that it authorises no action on real equipment. The presence of a record here means the area is *documented*, not that any production, service or recycling activity has occurred.
 
 ## Decommissioning and recycling
 
-### Coverage gap: Decommissioning and recycling
+| Id | Profile | Title | Guard |
+|---|---|---|---|
+| `FB2-DEC-DCM-000001` | synthetic_reference | Decommissioning and recycling safety assumptions for the hypothetical 400 V BMS | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
-**No records in the corpus for this area - this is a coverage gap, not an omission from this view.**
-
-The corpus holds no decommissioning or recycling safety-assumption record in either profile. The required directory layout mandates this view, so the section is emitted with the gap stated rather than omitted; a silently empty section would misrepresent corpus completeness. Domains searched: decommissioning.
-
-Adjacent material that does exist: The plan's current position, read at render time, is that `SPL.2` (Release Management) is recorded `partially_mapped`; and `iso26262_coverage.part_7_production` is recorded `gap`. Neither names a release, production, operation, service or decommissioning record, and no canonical record matching one exists on disk, so the gap above holds regardless of how the plan is worded.
+Each record above is printed with its own guard fields. Every area record in this corpus is `origin: synthetic`, `human_approval_status: pending`, `production_authorized: false` and `product_verification_credit: false`, and each states in its own `evidence_state` / `operational_authorisation_statement` that none of its steps has been executed and that it authorises no action on real equipment. The presence of a record here means the area is *documented*, not that any production, service or recycling activity has occurred.
 
 ## Domains actually present in the corpus
 
 For transparency, the full set of `engineering_domain` values present across all indexed records:
 
-`hardware`, `management`, `safety`, `software`, `supporting`, `system`, `verification`
+`decommissioning`, `hardware`, `management`, `operation`, `production`, `release`, `safety`, `service`, `software`, `supporting`, `system`, `verification`
 
-None of the lifecycle-continuation domains (production, operation, service, decommissioning) appear. This is a structural gap in corpus population, not a rendering omission.
+All five lifecycle-continuation domains (`release`, `production`, `operation`, `service`, `decommissioning`) are now represented by at least one canonical record, so no area in this view is an unbacked declaration. Representation is not evidence: every one of those records states that its steps have not been executed and that it authorises nothing on real equipment.
 
 ### Guard-field status of this view
 
-This view prints **no per-record guard fields**, because it shows no records: every section above is a declared coverage gap. That is deliberate. Were the gaps to be filled, each record added would be printed with its own `profile` / `origin` / `human_approval_status` / `production_authorized` values in the same format used by the other views.
+This view prints **per-record guard fields** for all 6 lifecycle-continuation record(s) shown above, in the same format used by the other views: `profile`, `origin`, `human_approval_status` and `production_authorized`. Those four fields are not a verdict this view can apply; they are read from each record so a reader can see that a documented lifecycle area is still an unapproved, unauthorised piece of synthetic engineering.
 
 Corpus-wide, verified at render time from the indexed records: `human_approval_status` is `pending` on every record, `production_authorized` is `false` on every record, and `product_verification_credit` is `false` on every record. No lifecycle-continuation artifact in this corpus has been human-approved or production-authorized, and this view does not imply otherwise.
 

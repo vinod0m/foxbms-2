@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T10:08:35Z |
+| Generated | 2026-09-29T12:17:43Z |
 
 ## Scope
 
@@ -220,8 +220,16 @@ stateDiagram-v2
 ```mermaid
 flowchart TD
     "FB2-SW-SWR-000001" --> "FB2-SAF-FSR-000001"
+    "FB2-SW-SWR-000001" --> "FB2-SYS-SYR-000001"
+    "FB2-SW-SWR-000001" --> "FB2-SYS-SYR-000002"
+    "FB2-SW-SWR-000001" --> "FB2-SYS-SYR-000006"
+    "FB2-SW-SWR-000001" --> "FB2-SYS-SYR-000007"
     "FB2-SW-SWR-000002" --> "FB2-SAF-FSR-000002"
+    "FB2-SW-SWR-000002" --> "FB2-SYS-SYR-000002"
     "FB2-SW-SWR-000003" --> "FB2-SAF-FSR-000003"
+    "FB2-SW-SWR-000003" --> "FB2-SYS-SYR-000003"
+    "FB2-SW-SWR-000003" --> "FB2-SYS-SYR-000004"
+    "FB2-SW-SWR-000003" --> "FB2-SYS-SYR-000008"
     "FB2-SW-DSN-000001" -.implements.-> "FB2-SW-SWR-000001"
     "FB2-SW-DSN-000002" -.implements.-> "FB2-SW-SWR-000002"
     "FB2-SW-DSN-000003" -.implements.-> "FB2-SW-SWR-000003"
@@ -335,4 +343,4 @@ flowchart LR
 
 ---
 
-*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T12:17:43Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

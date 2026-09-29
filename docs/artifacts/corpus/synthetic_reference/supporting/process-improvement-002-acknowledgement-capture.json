@@ -1,0 +1,150 @@
+{
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "PIM.3",
+   "status": "mapped",
+   "rationale": "Process improvement: proposal, implementation and effectiveness evaluation recorded separately."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.6",
+   "status": "mapped",
+   "rationale": "The metrics these improvements act on."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.1",
+   "status": "mapped",
+   "rationale": "Quality assurance: the finding stream that prompted two of the three improvements."
+  }
+ ],
+ "id": "FB2-PIM-IMP-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "process_improvement",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Improvement 002: a communication record that cannot be marked done until an acknowledgement is captured",
+ "owner_role": "project_manager",
+ "origin": "synthetic",
+ "source_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "PIM.3",
+   "status": "mapped",
+   "rationale": "Process improvement: proposal, implementation and effectiveness evaluation recorded separately."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.6",
+   "status": "mapped",
+   "rationale": "The metrics these improvements act on."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.1",
+   "status": "mapped",
+   "rationale": "Quality assurance: the finding stream that prompted two of the three improvements."
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "project_manager",
+   "description": "Effectiveness evaluation of the acknowledgement capture step."
+  }
+ ],
+ "improvement_id": "FB2-PIM-IMP-000002",
+ "stage": "effectiveness_evaluation",
+ "fictional_project": true,
+ "calendar_note": "Every date in this record is synthetic. They describe the hypothetical Project Northcell as its own artefact says that programme does not exist. No date here is a real commitment, a real gate date or a real review date.",
+ "process_being_improved": {
+  "process_id": "SUP.8",
+  "process_name": "Configuration management",
+  "process_record_ref": "FB2-SUP-CFM-000001",
+  "why_this_process": "The communication step is how an agreed revision reaches the roles affected by it. A communication recorded as sent with nobody acknowledging it is a distribution list, not an agreement."
+ },
+ "baseline_evidence": [
+  {
+   "observation": "Communications recorded as performed with no acknowledgement captured",
+   "value": 1,
+   "unit": "communications",
+   "where_it_came_from": "FB2-MAN-PLN-000001, meeting MTG-003, recorded as acknowledgement_recorded = false with a note that the first measurement review was held and no acknowledgement captured",
+   "synthetic": true
+  },
+  {
+   "observation": "Communication records carrying an acknowledgement reference",
+   "value": 0,
+   "unit": "communications",
+   "where_it_came_from": "Read of the communication arrays in the supporting-process records at the plan's start date",
+   "synthetic": true
+  }
+ ],
+ "hypothesis": {
+  "statement": "Making the acknowledgement capture an explicit, separately recorded step with its own record reference will cause a communication to be reported as incomplete rather than as done when nobody acknowledged it.",
+  "predicted_effect": "The count of communications marked performed with acknowledgement_recorded = false will be reported rather than disclosed in a note, and every performed communication will carry an acknowledgement reference or an explicit statement that none was captured.",
+  "metric_id": "MET-06",
+  "falsification_condition": "If a communication is still recorded as performed and complete with acknowledgement_recorded = true and no acknowledgement record, the hypothesis is false."
+ },
+ "changes_made": [
+  {
+   "change": "Add an explicit acknowledgement capture step to the communication procedure, requiring a record reference and forbidding a bare boolean",
+   "change_type": "process_definition_change",
+   "change_date": "2026-09-29",
+   "changed_by_role": "project_manager",
+   "affected_process_records": [
+    "FB2-SUP-CFM-000001"
+   ],
+   "adoption_evidence": "FB2-SUP-CFM-000001's acceptance criteria require the capture, and its performed instance records the capture as not obtained."
+  }
+ ],
+ "effectiveness_evaluation": {
+  "evaluation_date": "2026-09-29",
+  "metric_id": "MET-06",
+  "before_value": 0,
+  "after_value": 0,
+  "unit": "acknowledgement records held",
+  "arithmetic": "Before: 0 acknowledgement records. After: 0. 0 - 0 = 0. There is NO improvement. The change was made to the process definition and the corpus was then searched for acknowledgement references and none was found, because no communication has been sent to anybody: the participants are fictional and no meeting has occurred.",
+  "observation_ids_used": [
+   "OBS-06"
+  ],
+  "verdict": "insufficient_evidence",
+  "verdict_argument": "The change is defined and the corpus was searched for the thing it was meant to produce, and the thing is not there. There is no evidence either way about whether the change works, because the only possible demonstration requires a communication that cannot happen in this corpus. Recording an improvement here would be claiming a result from a change that has never had the opportunity to act.",
+  "evaluated_by_role": "project_manager",
+  "confirmation_by_second_role": "reviewer_adversarial (fictional role identity), who agreed with the insufficient_evidence verdict and noted that this record's value is that it is the one improvement in this set with a negative result."
+ },
+ "counter_evidence": [
+  "The metric moved by zero. A hypothesis that has produced no measurable effect cannot be called effective, whatever the process definition now says.",
+  "The improvement is recorded by the role whose own communication lacks the acknowledgement (MTG-003 in FB2-MAN-PLN-000001), which makes it a self-assessment with no independence."
+ ],
+ "limitations": [
+  "Synthetic improvement. The negative result is the honest one and the record exists partly so that a corpus of improvements is not a corpus of successes.",
+  "Verdict insufficient_evidence is not a failure of the change; it is a statement that no evidence exists either way. The record says which of the two a reader should not assume.",
+  "No human approved or evaluated this improvement."
+ ]
+}

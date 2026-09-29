@@ -1,0 +1,170 @@
+{
+ "id": "FB2-VER-TMS-000012",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Validation: charging a healthy pack at the limit does not cause a spurious safety reaction (stakeholder intent: pack manufacturer)",
+ "owner_role": "verification_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "VAL.1",
+   "status": "mapped",
+   "rationale": "Intended-use validation against stakeholder needs and use cases."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 and Part 5/6 validation",
+   "status": "mapped",
+   "rationale": "Validation confirms the integrated item against its intended use; the existing FB2-VER-TMS-000009 maps the same clause and remains a stub."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Validation measure authored because the corpus's validation coverage was a planning stub (FB2-VER-TMS-000009) with a blocked execution, and the gap report recorded 'Validation Measures: not present' as a major gap. This measure addresses stakeholder intent and an operational scenario rather than repeating a lower-level requirement test."
+  }
+ ],
+ "test_type": "validation",
+ "objective": "Confirm that a pack operated correctly at its published charge limit produces no spurious safe-state reaction over a full charge, because the pack manufacturer's stated need is that the item does not reduce usable capacity through false reactions. This is a false-reaction validation: it does not test that the item detects a real violation (FB2-VER-TMS-000005 does that) but that it stays quiet when it should.",
+ "referenced_requirements": [
+  "FB2-SYS-NED-000001",
+  "FB2-SAF-SGO-000001"
+ ],
+ "referenced_designs": [],
+ "preconditions": [
+  "The item is fitted to the declared pack configuration and its configuration data matches the pack's build record.",
+  "The cell voltages, temperatures and the pack current are logged at a rate that resolves 100 ms.",
+  "The charger respects the charge limits the item publishes (FB2-ASM-003)."
+ ],
+ "environment": {
+  "hardware": "Fictional 400 V pack on a lab charging rig with a synchronised logger",
+  "software": "Item firmware and the vehicle control unit build under test",
+  "tools": [
+   "data logger with a synchronised time base",
+   "operational scenario script (human-in-the-loop)"
+  ],
+  "configuration": "VAR-REF-001 reference configuration, nominal cells"
+ },
+ "stimuli": [
+  {
+   "signal": "Pack terminal voltage during charge",
+   "value": "ramp from 3.5 V to the configured maximum per cell over the full charge duration",
+   "timing": "over the full charge duration, ramp rate limited by the charger"
+  },
+  {
+   "signal": "Ambient temperature",
+   "value": "nominally 20 degC, and repeated at the range extremes",
+   "timing": "held constant within each run"
+  },
+  {
+   "signal": "Cell-to-cell spread",
+   "value": "within the pack's declared manufacturing spread",
+   "timing": "constant within each run"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Run a full charge cycle from the declared minimum state to full",
+   "expected": "No FAULT mode entry and no contactor opening attributable to a false reaction"
+  },
+  {
+   "step": 2,
+   "action": "Record every diagnosis entry raised during the cycle",
+   "expected": "Zero entries whose severity would have forced the safe state"
+  },
+  {
+   "step": 3,
+   "action": "Compare the delivered capacity against the pack's declared capacity",
+   "expected": "At least 98% of declared usable capacity"
+  },
+  {
+   "step": 4,
+   "action": "Repeat at the two ambient temperature extremes",
+   "expected": "Same outcome; no reaction count that rises with temperature"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "fault_reaction_count",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "count"
+  },
+  {
+   "signal": "delivered_capacity_fraction",
+   "expected_value": "98",
+   "tolerance": "at least",
+   "unit": "%"
+  },
+  {
+   "signal": "diagnosis_entries_forcing_safe_state",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "entries"
+  }
+ ],
+ "tolerances": {
+  "false_reaction_count": 0,
+  "delivered_capacity_fraction": 0.98
+ },
+ "timing": {
+  "max_execution_time_ms": 3600000,
+  "setup_time_ms": 1800000,
+  "teardown_time_ms": 600000
+ },
+ "oracle_basis": "synthetic_assumption",
+ "oracle_detail": {
+  "oracle_kind": "synthetic_assumption",
+  "why_this_oracle": "The oracle is a stakeholder-intent oracle, not a computed threshold: the judgement is the pack manufacturer's own acceptance criterion that the item shall not take capacity away through false reactions. This corpus has no such agreed criterion, so the acceptance figures below are engineering proposals, and the oracle is therefore synthetic rather than source-grounded or measured.",
+  "what_the_oracle_is_not": "It is not a measured reference: no pack has been charged. It is not an analytical model: the false-positive rate in FB2-SAF-FSR-000002 is a noise-propagation argument and says nothing about a whole-charge cycle. It is not a requirement test: passing FB2-SAF-FSR-000002 in a unit test says the limit comparison works on synthetic input, which is a different claim from saying a real pack is not cut off."
+ },
+ "validates_stakeholder_needs": [
+  "FB2-SYS-NED-000001"
+ ],
+ "validates_use_cases": [
+  "FB2-SYS-UC-000001"
+ ],
+ "validates_safety_goals": [
+  "FB2-SAF-SGO-000001"
+ ],
+ "cleanup": "Restore the pack to the declared minimum state and archive the log and the diagnosis extract.",
+ "regression_selection": "Re-run whenever the debounce, the limit set, the plausibility limits or the measurement path changes, and once per pack build. This is the single measure that detects a false reaction, so it is not a sample-only regression.",
+ "execution_state": "NOT EXECUTED. execution_kind would be 'none' and outcome 'blocked' because the validation environment does not exist in this corpus: there is no vehicle, no pack, no charging site and no operational data. No execution record for this measure may claim any other value.",
+ "limitations": [
+  "This measure is a plan. Planning is not execution, and the absence of an execution record is not a result.",
+  "The stakeholder needs it validates are declared assumptions: no workshop was held and no stakeholder was interviewed. Validating an assumed need confirms that the item behaves as the assumption says, which is not the same as confirming the need was right.",
+  "No human acceptance criterion exists yet. The acceptance thresholds below are engineering proposals; a real validation requires acceptance criteria agreed with the stakeholders, and this corpus has none."
+ ]
+}

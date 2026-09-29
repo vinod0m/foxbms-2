@@ -1,6 +1,6 @@
 # Verification and validation — measures, executions, evidence (generated view)
 
-Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -62,6 +62,15 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 | `FB2-VER-TMS-000009` | synthetic_reference | Test: Stakeholder Validation (Cell-Voltage Use Cases) | validation | synthetic_assumption | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-TMS-000010` | synthetic_reference | Test: Component Verification (SOA Monitor + DIAG Callbacks) | unit | synthetic_assumption | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-TMS-000011` | synthetic_reference | Test: HIL Fault Reaction (Target) | system | synthetic_assumption | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000012` | synthetic_reference | Validation: charging a healthy pack at the limit does not cause a spurious safety reaction (stakeho… | validation | synthetic_assumption | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000013` | synthetic_reference | Validation: the driver's usable experience after a genuine overvoltage reaction (operational scenar… | validation | synthetic_assumption | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000014` | synthetic_reference | Validation: degraded operation remains usable and is announced before it becomes a hard stop (opera… | validation | analytical_model | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000015` | synthetic_reference | Validation: the service technician can commission and service the item without being able to energi… | validation | synthetic_assumption | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000016` | synthetic_reference | Verification: an unauthenticated peer is refused service, and an authenticated session's payload is… | robustness | source_grounded | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000017` | synthetic_reference | Verification: a peer holding the maximum permitted connections open and silent does not deny servic… | robustness | analytical_model | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000018` | synthetic_reference | Verification: a bus peer without the shared secret cannot present a frame the dispatch layer accepts | robustness | source_grounded | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000019` | synthetic_reference | Verification: the serial link acts only on authenticated frames, and the XOFF/XON byte values are d… | robustness | source_grounded | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-TMS-000020` | synthetic_reference | Verification: the initial sequence number is unpredictable across connections and power cycles, and… | robustness | synthetic_assumption | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### FB2-VER-TMS-000001 (as_is) — Test: SOA Voltage Limit Detection
 
@@ -271,6 +280,123 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 - oracle basis: `synthetic_assumption`
 - regression selection: Include once HIL bench exists
 
+### FB2-VER-TMS-000012 (synthetic_reference) — Validation: charging a healthy pack at the limit does not cause a spurious safety reaction (stakeholder intent: pack manufacturer)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that a pack operated correctly at its published charge limit produces no spurious safe-state reaction over a full charge, because the pack manufacturer's stated need is that the item does not reduce usable capacity through false reactions. This is a false-reaction validation: it does not test that the item detects a real violation (FB2-VER-TMS-000005 does that) but that it stays quiet whe…
+- referenced requirements: FB2-SYS-NED-000001; FB2-SAF-SGO-000001
+- referenced designs: -
+- preconditions: The item is fitted to the declared pack configuration and its configuration data matches the pack's build record.; The cell voltages, temperatures and the pack current are logged at a rate that resolves 100 ms.; The charger respects the charge limits the item publishes (FB2-ASM-003).
+- expected outcomes: {'signal': 'fault_reaction_count', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'count'}; {'signal': 'delivered_capacity_fraction', 'expected_value': '98', 'tolerance': 'at least', 'unit': '%'}; {'signal': 'diagnosis_entries_forcing_safe_state', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'entries'}
+- tolerances: delivered_capacity_fraction=0.98, false_reaction_count=0
+- timing: max_execution_time_ms=3600000, setup_time_ms=1800000, teardown_time_ms=600000
+- oracle basis: `synthetic_assumption`
+- regression selection: Re-run whenever the debounce, the limit set, the plausibility limits or the measurement path changes, and once per pack build. This is the single measure that detects a false reaction, so it is not a sample-only regression.
+
+### FB2-VER-TMS-000013 (synthetic_reference) — Validation: the driver's usable experience after a genuine overvoltage reaction (operational scenario OS-002, traction discharge)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that when a genuine overvoltage reaction occurs while the vehicle is being driven, the outcome is the one the end-user driver stakeholder needs: the pack is isolated, the vehicle coasts to a stop under its own control, and the driver is told what happened in terms that do not require a diagnostic engineer to interpret. This measure exists because the master prompt warns that disconnecting…
+- referenced requirements: FB2-SYS-NED-000003; FB2-SAF-SGO-000001
+- referenced designs: -
+- preconditions: The pack, vehicle and charger are real (hypothetical) installations, not a bench.; A driver representative from the declared end-user class is available and has not been briefed on what the item will do.; A logging setup captures the driver-facing indication, not only the internal state.
+- expected outcomes: {'signal': 'contactor_open_time', 'expected_value': '100', 'tolerance': 'at most', 'unit': 'ms'}; {'signal': 'steering_and_brake_assist_retained', 'expected_value': 'true', 'tolerance': 'exact', 'unit': 'bool'}; {'signal': 'driver_indication_states_the_cause', 'expected_value': 'true', 'tolerance': 'exact', 'unit': 'bool'}
+- tolerances: safe_state_reached_ms=100, unexplained_indication_count=0
+- timing: max_execution_time_ms=3600000, setup_time_ms=1800000, teardown_time_ms=600000
+- oracle basis: `synthetic_assumption`
+- regression selection: Re-run whenever the fault-reaction logic, the state indication, the latching policy or the mode arbitration changes. It is the only measure that tests whether the mode-dependent reaction is comprehensible, so it is never sampled out.
+
+### FB2-VER-TMS-000014 (synthetic_reference) — Validation: degraded operation remains usable and is announced before it becomes a hard stop (operational scenario: single-channel measurement degradation)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that a measurement-path degradation moves the item into its degraded mode with a capability the pack manufacturer can still use, and that the reduction is announced before the condition becomes a hard stop. The failure this guards against is specific: a degraded mode that silently removes capability, or one that escalates to a full safe state on the first degradation, makes the item unusa…
+- referenced requirements: FB2-SYS-NED-000002; FB2-SYS-NED-000005
+- referenced designs: -
+- preconditions: The pack is at a nominal mid-discharge state with the vehicle stationary.; A channel degradation can be injected without disturbing the cells themselves.; The vehicle control unit is logging the item's published state.
+- expected outcomes: {'signal': 'mode_on_first_degradation', 'expected_value': 'DEGRADED', 'tolerance': 'exact', 'unit': 'mode'}; {'signal': 'contactor_control_retained', 'expected_value': 'true', 'tolerance': 'exact', 'unit': 'bool'}; {'signal': 'degraded_indication_latency', 'expected_value': '100', 'tolerance': 'at most', 'unit': 'ms'}
+- tolerances: degraded_indication_latency_ms=100, escalation_to_fault_on_first_degradation=0
+- timing: max_execution_time_ms=3600000, setup_time_ms=1800000, teardown_time_ms=600000
+- oracle basis: `analytical_model`
+- regression selection: Re-run whenever a diagnosis severity changes, whenever a degraded mode is added or removed, and whenever the plausibility limits change.
+
+### FB2-VER-TMS-000015 (synthetic_reference) — Validation: the service technician can commission and service the item without being able to energise it incorrectly (operational scenario OS-006, workshop service)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that a service technician following the documented commissioning and service procedure cannot bring the item into a state in which the contactors are commanded closed with open-circuit sensor inputs, and that the procedure's steps are executable in the order given. The stakeholder need is the service class's: a procedure that is technically correct but not executable in sequence causes te…
+- referenced requirements: FB2-SYS-NED-000005
+- referenced designs: -
+- preconditions: The item is unpowered or on a low-voltage service supply with the contactor drivers inhibited.; The service procedure under test exists as an approved document; in this corpus it does not, and this measure is blocked partly for that reason.; Sense leads may be connected or left open without damaging anything, which is an assumption this corpus does not verify.
+- expected outcomes: {'signal': 'contactor_close_command_without_sense_leads', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'commands'}; {'signal': 'open_circuit_diagnosed', 'expected_value': 'true', 'tolerance': 'exact', 'unit': 'bool'}; {'signal': 'technician_improvised_steps', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'steps'}
+- tolerances: contactor_close_without_leads=0, unassisted_completion=pass
+- timing: max_execution_time_ms=3600000, setup_time_ms=1800000, teardown_time_ms=600000
+- oracle basis: `synthetic_assumption`
+- regression selection: Re-run whenever the commissioning logic, the service interface, the maintenance input or the service procedure changes.
+
+### FB2-VER-TMS-000016 (synthetic_reference) — Verification: an unauthenticated peer is refused service, and an authenticated session's payload is neither readable nor alterable by a passive or active segment observer
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that the master software completes no externally reachable network session with a peer that has not authenticated, and that after authentication the session's application payload is neither recoverable in plaintext by an observer on the segment nor modifiable by one. Also confirm that each refusal is diagnosable, because a silent refusal cannot be distinguished from an outage during field…
+- referenced requirements: FB2-SAF-SEC-000001
+- referenced designs: FB2-SYS-SYR-000007; FB2-SYS-SYR-000008
+- preconditions: The service is externally reachable in the configuration under test, which is the hypothetical project's planned commissioning service, not the one that exists in the pinned source.; The item is otherwise in a nominal mode with no active fault.; A capture point exists on the segment.
+- expected outcomes: {'signal': 'unauthenticated_sessions', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'sessions'}; {'signal': 'plaintext_payload_bytes_recovered', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'bytes'}; {'signal': 'altered_frames_accepted', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}; {'signal': 'authentication_latency', 'expected_value': '100', 'tolerance': 'at most', 'unit': 'ms'}; {'signal': 'diagnosis_entries_per_refusal', 'expected_value': '1', 'tolerance': 'exact', 'unit': 'entry'}
+- tolerances: altered_frames_accepted=exact, authentication_latency=at most, diagnosis_entries_per_refusal=exact, plaintext_payload_bytes_recovered=exact, unauthenticated_sessions=exact
+- timing: max_execution_time_ms=86400000, setup_time_ms=3600000, teardown_time_ms=1800000
+- oracle basis: `source_grounded`
+- regression selection: Re-run on every change to the service's authentication path, to the cryptographic library, to the key-derivation or storage, and to the session timeout. Also re-run once per release because the acceptance criteria are zero-tolerance and a single regression fails the whole measure.
+
+### FB2-VER-TMS-000017 (synthetic_reference) — Verification: a peer holding the maximum permitted connections open and silent does not deny service to legitimate peers
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that a hostile peer cannot make the service unavailable to a legitimate peer by opening the maximum number of permitted connections and sending nothing on them, and that every refusal and every budget breach is diagnosable. This is the measure for the requirement's availability clause; the resource figures it checks are the requirement's own, not figures this measure chooses.
+- referenced requirements: FB2-SAF-SEC-000002
+- referenced designs: FB2-SYS-SYR-000007; FB2-SYS-SYR-000008
+- preconditions: The service under test implements the caps the requirement states.; The hostile peer can hold sockets open without sending data.; The legitimate peer behaves as a legitimate peer.
+- expected outcomes: {'signal': 'concurrent_connections_serviced', 'expected_value': '4', 'tolerance': 'at most', 'unit': 'connections'}; {'signal': 'receive_timeout', 'expected_value': '2000', 'tolerance': 'at most', 'unit': 'ms'}; {'signal': 'per_connection_byte_budget', 'expected_value': '65536', 'tolerance': 'at most', 'unit': 'bytes'}; {'signal': 'breach_to_close_time', 'expected_value': '100', 'tolerance': 'at most', 'unit': 'ms'}; {'signal': 'legitimate_connections_per_hour_under_exhaustion', 'expected_value': '1', 'tolerance': 'at least', 'unit': 'connections/hour'}
+- tolerances: breach_to_close_time=at most, concurrent_connections_serviced=at most, legitimate_connections_per_hour_under_exhaustion=at least, per_connection_byte_budget=at most, receive_timeout=at most
+- timing: max_execution_time_ms=86400000, setup_time_ms=3600000, teardown_time_ms=1800000
+- oracle basis: `analytical_model`
+- regression selection: Re-run on any change to the connection limit, the timeout, the buffer sizes or the accept loop. This is the measure that would catch the single-deep-queue and discarded-enqueue behaviour the requirement's rationale describes, so it is never sampled out.
+
+### FB2-VER-TMS-000018 (synthetic_reference) — Verification: a bus peer without the shared secret cannot present a frame the dispatch layer accepts
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that for every CAN identifier whose payload influences a safety function, a frame carrying a valid identifier but no valid counter, no valid integrity value or the wrong data-length code is rejected before the receive callback is invoked, and that a genuine frame with a sequence error is rejected rather than accepted out of order.
+- referenced requirements: FB2-SAF-SEC-000003
+- referenced designs: FB2-SYS-SYR-000007; FB2-SYS-SYR-000008
+- preconditions: The bus under test carries the item's normal traffic.; The shared secret is held only by the genuine peer and by the item.; The identifiers whose payloads influence a safety function are enumerated.
+- expected outcomes: {'signal': 'injected_frames_accepted', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}; {'signal': 'replayed_frames_accepted', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}; {'signal': 'short_frames_accepted', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}; {'signal': 'genuine_frames_rejected', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}; {'signal': 'verification_latency', 'expected_value': '2', 'tolerance': 'at most', 'unit': 'ms'}
+- tolerances: genuine_frames_rejected=exact, injected_frames_accepted=exact, replayed_frames_accepted=exact, short_frames_accepted=exact, verification_latency=at most
+- timing: max_execution_time_ms=86400000, setup_time_ms=3600000, teardown_time_ms=1800000
+- oracle basis: `source_grounded`
+- regression selection: Re-run on any change to the identifier set, the counter discipline, the integrity primitive, the key or the dispatch order. A change that removes one check from the dispatch path must re-run this measure and must fail it.
+
+### FB2-VER-TMS-000019 (synthetic_reference) — Verification: the serial link acts only on authenticated frames, and the XOFF/XON byte values are demoted to ordinary payload
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Confirm that no byte on the serial receive line reaches the application layer without passing a length check and an integrity check, that a structurally valid frame with a modified payload is rejected, that neither 0x13 nor 0x11 can change the transmit-enabled state outside an authenticated frame, and that a receive overflow is diagnosable.
+- referenced requirements: FB2-SAF-SEC-000004
+- referenced designs: FB2-SYS-SYR-000007; FB2-SYS-SYR-000008
+- preconditions: The serial link under test is the link the item uses for its external service interface.; The item is otherwise nominal and no genuine peer is mid-transfer.; The receive queue depth is configured and known.
+- expected outcomes: {'signal': 'unframed_bytes_passing', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'bytes'}; {'signal': 'transmit_state_transitions_from_control_bytes', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'transitions'}; {'signal': 'modified_payload_frames_accepted', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}; {'signal': 'length_mismatch_frames_passed', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}; {'signal': 'diagnosis_entries_per_overflow', 'expected_value': '1', 'tolerance': 'exact', 'unit': 'entry'}; {'signal': 'genuine_frames_rejected', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'frames'}
+- tolerances: diagnosis_entries_per_overflow=exact, genuine_frames_rejected=exact, length_mismatch_frames_passed=exact, modified_payload_frames_accepted=exact, transmit_state_transitions_from_control_bytes=exact, unframed_bytes_passing=exact
+- timing: max_execution_time_ms=86400000, setup_time_ms=3600000, teardown_time_ms=1800000
+- oracle basis: `source_grounded`
+- regression selection: Re-run on any change to the framing format, the integrity primitive, the key, the queue depth or the parser's resynchronisation behaviour. Any change that makes a byte actionable outside a verified frame must fail this measure.
+
+### FB2-VER-TMS-000020 (synthetic_reference) — Verification: the initial sequence number is unpredictable across connections and power cycles, and the third-party component inventory is evidenced and checked against an advisory source on a stated interval
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- objective: Two clauses with two different oracles, stated separately rather than blended. First: confirm that the initial TCP sequence number takes a distinct value on every one of 1000 connection establishments and that the entropy seed is distinct across 1000 power cycles. Second: confirm that every entry in the component inventory carries either evidenced version information or an explicit null with a st…
+- referenced requirements: FB2-SAF-SEC-000005
+- referenced designs: FB2-SYS-SYR-000007; FB2-SYS-SYR-000008
+- preconditions: The item's network stack is reachable and the source can be inspected for the seed's origin.; A power-cycle fixture exists that records the seed at each boot.; The component inventory exists as a maintained document with an owner.; An authoritative advisory source exists and the project is permitted to consult it. This last precondition is NOT satisfied in this corpus, which is why this measure cannot produce a pass even in principle.
+- expected outcomes: {'signal': 'distinct_initial_sequence_numbers', 'expected_value': '1000', 'tolerance': 'exact', 'unit': 'values'}; {'signal': 'distinct_seeds_across_power_cycles', 'expected_value': '1000', 'tolerance': 'exact', 'unit': 'values'}; {'signal': 'build_time_fixed_seeds', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'seeds'}; {'signal': 'inventory_entries_with_version_evidence_or_explicit_null', 'expected_value': '100', 'tolerance': 'at least', 'unit': '%'}; {'signal': 'days_since_last_advisory_check', 'expected_value': '30', 'tolerance': 'at most', 'unit': 'days'}; {'signal': 'matches_without_adjudication', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'matches'}; {'signal': 'entries_with_guessed_version', 'expected_value': '0', 'tolerance': 'exact', 'unit': 'entries'}
+- tolerances: build_time_fixed_seeds=exact, days_since_last_advisory_check=at most, distinct_initial_sequence_numbers=exact, distinct_seeds_across_power_cycles=exact, entries_with_guessed_version=exact, inventory_entries_with_version_evidence_or_explicit_null=at least, matches_without_adjudication=exact
+- timing: max_execution_time_ms=86400000, setup_time_ms=3600000, teardown_time_ms=1800000
+- oracle basis: `synthetic_assumption`
+- regression selection: Re-run on any change to the network stack's randomness path, to the seeding procedure, to the boot sequence, and on every advisory check cycle. The inventory half is re-run quarterly regardless of whether the firmware changed, because the vulnerability question changes without the code changing.
+
 ## Executions
 
 | Id | Profile | Test measure | execution_kind | outcome | Lifecycle | Guard |
@@ -298,8 +424,17 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 | `FB2-VER-EXE-000011` | as_is | `FB2-VER-TMS-000003` | `actual_host_run` | `fail` | reviewed | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-EXE-000011` | synthetic_reference | `FB2-VER-TMS-000011` | `none` | `blocked` | reviewed | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-EXE-000012` | as_is | `FB2-VER-TMS-000003` | `actual_host_run` | `fail` | reviewed | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000012` | synthetic_reference | `FB2-VER-TMS-000012` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-EXE-000013` | as_is | `FB2-VER-TMS-000003` | `actual_host_run` | `fail` | reviewed | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000013` | synthetic_reference | `FB2-VER-TMS-000013` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-EXE-000014` | as_is | `FB2-VER-TMS-000003` | `actual_host_run` | `fail` | reviewed | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000014` | synthetic_reference | `FB2-VER-TMS-000014` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000015` | synthetic_reference | `FB2-VER-TMS-000015` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000016` | synthetic_reference | `FB2-VER-TMS-000016` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000017` | synthetic_reference | `FB2-VER-TMS-000017` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000018` | synthetic_reference | `FB2-VER-TMS-000018` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000019` | synthetic_reference | `FB2-VER-TMS-000019` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000020` | synthetic_reference | `FB2-VER-TMS-000020` | `none` | `blocked` | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### Evidence classes present in the corpus
 
@@ -332,7 +467,7 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 | `FB2-VER-EXE-000005` | synthetic_reference | `synthetic_fixture` | `pass` | sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-EXE-000006` | synthetic_reference | `synthetic_fixture` | `pass` | sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
-**Blocked / not executed (6).** `execution_kind=none` with `outcome=blocked`. These record why a run did not happen.
+**Blocked / not executed (15).** `execution_kind=none` with `outcome=blocked`. These record why a run did not happen.
 
 | Id | Profile | execution_kind | outcome | Limitations | Guard |
 |---|---|---|---|---|---|
@@ -342,6 +477,15 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 | `FB2-VER-EXE-000009` | synthetic_reference | `none` | `blocked` | No validation environment or operational data in corpus scope — execution blocked; No verification credit for production | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-EXE-000010` | synthetic_reference | `none` | `blocked` | Component harness not defined in corpus scope — execution blocked; No verification credit for production | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-VER-EXE-000011` | synthetic_reference | `none` | `blocked` | HIL bench unpublished upstream (tests/hil placeholder) — execution blocked; No verification credit for production | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000012` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000013` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000014` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000015` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000016` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000017` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000018` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000019` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-VER-EXE-000020` | synthetic_reference | `none` | `blocked` | No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit. | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### Execution detail
 
@@ -644,6 +788,19 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 - anomalies: {'description': "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.", 'severity': 'high', 'disposition': 'accepted'}; {'description': "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.", 'severity': 'high', 'disposition': 'accepted'}; {'description': 'Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(".kernelTEXT") and similar), because Mach-O requires a \'SEGMENT,SECTION\' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.', 'severity': 'medium', 'disposition': 'accepted'}; {'description': "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.", 'severity': 'low', 'disposition': 'accepted'}; {'description': 'Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor\'s directive-only pass with "Failed to read \'./test/preprocess/files/<test>/directives_only/raw/ftask.h\' for comment stripping ... No such file or directory". The value was set to :none, which selects Ceedling\'s own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.', 'severity': 'medium', 'disposition': 'accepted'}; {'description': "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.", 'severity': 'low', 'disposition': 'accepted'}; {'description': 'The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.', 'severity': 'low', 'disposition': 'accepted'}; {'description': 'Unity assertion failure, verbatim: At line (90): "Expected 0x0000000102688000 Was 0x0000000102688098:Function DATA_Write4DataBlocks Argument pDataFromSender0:Function called with unexpected argument value."', 'severity': 'high', 'disposition': 'investigating'}; {'description': "Probable root cause, established from the sources and NOT from the host environment: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.", 'severity': 'high', 'disposition': 'investigating'}
 - limitations: Host execution on Apple Silicon macOS; Root cause attribution to the void*-typed database API is an analysis of the sources, not a fix; it has not been re-run under GNU gcc to confirm the same failure occurs there
 
+#### FB2-VER-EXE-000012 (synthetic_reference) — Execution: FB2-VER-TMS-000012 (blocked - no validation environment)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000012` rev `1`
+- environment: configuration=not applicable, hardware=none - no vehicle, pack, charger or bench harness exists in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit.
+
 #### FB2-VER-EXE-000013 (as_is) — Execution: Redundancy layer (tests/unit/app/application/redundancy/test_redundancy.c) - real macOS host run, FAILING
 
 - guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
@@ -657,6 +814,19 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 - anomalies: {'description': "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.", 'severity': 'high', 'disposition': 'accepted'}; {'description': "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.", 'severity': 'high', 'disposition': 'accepted'}; {'description': 'Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(".kernelTEXT") and similar), because Mach-O requires a \'SEGMENT,SECTION\' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.', 'severity': 'medium', 'disposition': 'accepted'}; {'description': "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.", 'severity': 'low', 'disposition': 'accepted'}; {'description': 'Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor\'s directive-only pass with "Failed to read \'./test/preprocess/files/<test>/directives_only/raw/ftask.h\' for comment stripping ... No such file or directory". The value was set to :none, which selects Ceedling\'s own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.', 'severity': 'medium', 'disposition': 'accepted'}; {'description': "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.", 'severity': 'low', 'disposition': 'accepted'}; {'description': 'The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.', 'severity': 'low', 'disposition': 'accepted'}; {'description': 'Unity assertion failure, verbatim: At line (101): "Expected 0x0000000102758000 Was 0x00000001027581C4:Function DATA_Read4DataBlocks Argument pDataToReceiver0:Function called with unexpected argument value."', 'severity': 'high', 'disposition': 'investigating'}; {'description': "Probable root cause, established from the sources and NOT from the host environment: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.", 'severity': 'high', 'disposition': 'investigating'}; {'description': 'This test does not compile under the shipped strict flag set on Apple clang. The recorded result is from the extended run that adds -Wno-enum-conversion, -Wno-array-bounds and -Wno-parentheses-equality. Under the strict run it is a build failure and this defect would have been invisible.', 'severity': 'medium', 'disposition': 'investigating'}
 - limitations: Host execution on Apple Silicon macOS; Root cause attribution to the void*-typed database API is an analysis of the sources, not a fix; it has not been re-run under GNU gcc to confirm the same failure occurs there
 
+#### FB2-VER-EXE-000013 (synthetic_reference) — Execution: FB2-VER-TMS-000013 (blocked - no validation environment)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000013` rev `1`
+- environment: configuration=not applicable, hardware=none - no vehicle, pack, charger or bench harness exists in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit.
+
 #### FB2-VER-EXE-000014 (as_is) — Execution: DIAG engine (tests/unit/app/engine/diag/test_diag.c) - real macOS host run, FAILING
 
 - guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
@@ -669,6 +839,97 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 - timestamps: duration_ms=1020, end=2026-09-29T10:33:07+0200, start=2026-09-29T10:33:07+0200
 - anomalies: {'description': "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.", 'severity': 'high', 'disposition': 'accepted'}; {'description': "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.", 'severity': 'high', 'disposition': 'accepted'}; {'description': 'Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(".kernelTEXT") and similar), because Mach-O requires a \'SEGMENT,SECTION\' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.', 'severity': 'medium', 'disposition': 'accepted'}; {'description': "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.", 'severity': 'low', 'disposition': 'accepted'}; {'description': 'Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor\'s directive-only pass with "Failed to read \'./test/preprocess/files/<test>/directives_only/raw/ftask.h\' for comment stripping ... No such file or directory". The value was set to :none, which selects Ceedling\'s own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.', 'severity': 'medium', 'disposition': 'accepted'}; {'description': "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.", 'severity': 'low', 'disposition': 'accepted'}; {'description': 'The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.', 'severity': 'low', 'disposition': 'accepted'}; {'description': 'Unity assertion failure, verbatim: At line (292): "Expected 0x00000001040DC008 Was 0x00000001040DC0A0:Function DATA_Write4DataBlocks Argument pDataFromSender0:Function called with unexpected argument value."', 'severity': 'high', 'disposition': 'investigating'}; {'description': "Probable root cause, established from the sources and NOT from the host environment: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.", 'severity': 'high', 'disposition': 'investigating'}; {'description': 'This test does not compile under the shipped strict flag set on Apple clang. The recorded result is from the extended run that adds -Wno-enum-conversion, -Wno-array-bounds and -Wno-parentheses-equality. Under the strict run it is a build failure and this defect would have been invisible.', 'severity': 'medium', 'disposition': 'investigating'}
 - limitations: Host execution on Apple Silicon macOS; Root cause attribution to the void*-typed database API is an analysis of the sources, not a fix; it has not been re-run under GNU gcc to confirm the same failure occurs there
+
+#### FB2-VER-EXE-000014 (synthetic_reference) — Execution: FB2-VER-TMS-000014 (blocked - no validation environment)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000014` rev `1`
+- environment: configuration=not applicable, hardware=none - no vehicle, pack, charger or bench harness exists in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit.
+
+#### FB2-VER-EXE-000015 (synthetic_reference) — Execution: FB2-VER-TMS-000015 (blocked - no validation environment)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000015` rev `1`
+- environment: configuration=not applicable, hardware=none - no vehicle, pack, charger or bench harness exists in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started; it is not a measurement.; No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.; This record carries no product verification credit.
+
+#### FB2-VER-EXE-000016 (synthetic_reference) — Execution: FB2-VER-TMS-000016 (blocked - FB2-SAF-SEC-000001 has no executable security harness in this corpus)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000016` rev `1`
+- environment: configuration=not applicable, hardware=none - no target hardware and no instrumented bus in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit.
+
+#### FB2-VER-EXE-000017 (synthetic_reference) — Execution: FB2-VER-TMS-000017 (blocked - FB2-SAF-SEC-000002 has no executable security harness in this corpus)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000017` rev `1`
+- environment: configuration=not applicable, hardware=none - no target hardware and no instrumented bus in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit.
+
+#### FB2-VER-EXE-000018 (synthetic_reference) — Execution: FB2-VER-TMS-000018 (blocked - FB2-SAF-SEC-000003 has no executable security harness in this corpus)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000018` rev `1`
+- environment: configuration=not applicable, hardware=none - no target hardware and no instrumented bus in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit.
+
+#### FB2-VER-EXE-000019 (synthetic_reference) — Execution: FB2-VER-TMS-000019 (blocked - FB2-SAF-SEC-000004 has no executable security harness in this corpus)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000019` rev `1`
+- environment: configuration=not applicable, hardware=none - no target hardware and no instrumented bus in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit.
+
+#### FB2-VER-EXE-000020 (synthetic_reference) — Execution: FB2-VER-TMS-000020 (blocked - FB2-SAF-SEC-000005 has no executable security harness in this corpus)
+
+- guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
+- execution_kind: `none` | outcome: `blocked` (orthogonal axes)
+- test measure: `FB2-VER-TMS-000020` rev `1`
+- environment: configuration=not applicable, hardware=none - no target hardware and no instrumented bus in this corpus, software=not applicable
+- input hashes: 
+- output hashes: 
+- logs: -
+- timestamps: duration_ms=0, end=2026-09-29T00:00:00Z, start=2026-09-29T00:00:00Z
+- anomalies: -
+- limitations: No run occurred. duration_ms is 0 because no process started.; No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.; The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.; Carries no product verification credit.
 
 ### Evidence classification diagram
 

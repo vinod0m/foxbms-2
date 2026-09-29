@@ -1,26 +1,40 @@
 # foxBMS 2 - End-to-End Traceability Document
 
+> ## ⚠️ READ FIRST — what this document is and is not
+>
+> **This is a synthetic engineering corpus, not a conformity or certification package.**
+>
+> - It does **not** establish compliance with ISO 26262, IEC 61508, or any other standard.
+> - It does **not** assert an Automotive SPICE capability level. No ASPICE assessment has been performed.
+> - Every `ASIL-x` label is a **hypothetical value in a fictional reference project**, assigned to demonstrate how ASIL allocation works. It is **not** an ASIL assigned to the real foxBMS 2 product, which has never undergone a HARA.
+> - The real foxBMS 2 project is a **research/development platform** that its own documentation states must be adapted by the user before any product use.
+> - No artifact here carries human approval, tool qualification, or production authorization. All are `human_approval_status: pending` and `production_authorized: false`.
+> - Authoring: automated review only. Automated review is **not** organizational independence and is **not** human confirmation.
+>
+> See `docs/artifacts/README.md` and `docs/artifacts/governance/corpus-policy.json`.
+
 ## Document Information
-- **Project**: foxBMS 2 - Battery Management System
+- **Project**: foxBMS 2 - Battery Management System (synthetic reference corpus)
 - **Version**: 2.x
 - **Baseline**: BAS-REF-001
 - **Baseline Commit**: 308028fb
-- **Document Version**: 1.0
-- **Date**: 2026-09-11
-- **Classification**: Internal
+- **Document Version**: 2.0
+- **Date**: 2026-09-29
+- **Classification**: Internal — synthetic corpus, not a certification package
 
 ## 1. Introduction
 
-This document provides a complete end-to-end traceability matrix linking all requirements, design elements, and test cases across all engineering process areas for the foxBMS 2 Battery Management System.
+This document provides an end-to-end traceability matrix linking requirements, design elements, and test cases across the engineering process areas of a **hypothetical** automotive BMS project grounded in the real foxBMS 2 sources. It is derived from a synthetic corpus whose two profiles are kept explicitly separate: `as_is` (what the pinned source demonstrably does) and `synthetic_reference` (a fictional project used to exercise the full lifecycle).
 
 ### 1.1 Purpose
 This document establishes bidirectional traceability between:
 - Stakeholder Requirements → System Requirements → Software Requirements → Software Architecture → Software Detailed Design → Software Units → Test Cases
-- Provides evidence for compliance with ISO 26262, IEC 61508, and other applicable safety standards
+
+It does **not** provide evidence of standards compliance. Traceability here demonstrates that a coherent chain of records exists and can be navigated; it is not a demonstration that the chain is correct, that the requirements are right, or that any standard's obligations are met.
 
 ### 1.2 Scope
-Covers the complete foxBMS 2 lifecycle artifact corpus including:
-- Safety Requirements (ASIL-D, ASIL-B)
+Covers the synthetic foxBMS 2 lifecycle artifact corpus including:
+- Safety requirements carrying **hypothetical** ASIL-D and ASIL-B labels (fictional reference project; not assigned to the real product)
 - Hardware Requirements (AFE, Contactor, Communication)
 - Software Requirements (Application, Engine, Driver layers)
 - Software Architecture and Detailed Design
@@ -71,8 +85,8 @@ Bidirectional traceability is maintained through:
 
 | Hazard ID | Hazard Description | Safety Goal ID | Safety Goal Description | FSR IDs |
 |-----------|-------------------|----------------|------------------------|---------|
-| FB2-SAF-HAZ-000001 | Cell Overvoltage/Undervoltage | FB2-SAF-SGO-000001 | Cell Voltage Safety Goal (FTTI=100ms, ASIL-D) | FB2-SAF-FSR-000001, FB2-SAF-FSR-000002, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004 |
-| FB2-SAF-HAZ-000002 | Cell Overvoltage/Undervoltage | FB2-SAF-SGO-000001 | Cell Voltage Safety Goal (FTTI=100ms, ASIL-D) | FB2-SAF-FSR-000001, FB2-SAF-FSR-000002, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004 |
+| FB2-SAF-HAZ-000001 | Cell Overvoltage/Undervoltage | FB2-SAF-SGO-000001 | Cell Voltage Safety Goal (FTTI=100ms, hypothetical ASIL-D) | FB2-SAF-FSR-000001, FB2-SAF-FSR-000002, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004 |
+| FB2-SAF-HAZ-000002 | Cell Overvoltage/Undervoltage | FB2-SAF-SGO-000001 | Cell Voltage Safety Goal (FTTI=100ms, hypothetical ASIL-D) | FB2-SAF-FSR-000001, FB2-SAF-FSR-000002, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004 |
 
 ### 3.2 Safety Goal → FSR → TSR/SWR Traceability
 
@@ -81,7 +95,7 @@ Bidirectional traceability is maintained through:
 | FB2-SAF-SGO-000001 | FB2-SAF-FSR-000001 | Cell Voltage Acquisition (20Hz, PEC) | FB2-HW-TSR-000001, FB2-SW-TSR-000001, FB2-SW-SWR-000001 | FB2-SW-DSN-000001 |
 | FB2-SAF-SGO-000001 | FB2-SAF-FSR-000002 | SOA Voltage Monitoring (10ms, debounce=2) | FB2-SW-TSR-000002, FB2-SW-SWR-000002 | FB2-SW-DSN-000002 |
 | FB2-SAF-SGO-000001 | FB2-SAF-FSR-000003 | Contactor Response (50ms) | FB2-HW-TSR-000003, FB2-SW-TSR-000003, FB2-SW-SWR-000003 | FB2-SW-DSN-000003 |
-| FB2-SAF-SGO-000001 | FB2-SAF-FSR-000004 | Independent Monitor (50ms, ASIL-B) | FB2-HW-TSR-000004, FB2-SW-TSR-000004 | FB2-SW-DSN-000004 |
+| FB2-SAF-SGO-000001 | FB2-SAF-FSR-000004 | Independent Monitor (50ms, hypothetical ASIL-B) | FB2-HW-TSR-000004, FB2-SW-TSR-000004 | FB2-SW-DSN-000004 |
 
 ### 3.3 FSR → Design → Source Traceability
 
@@ -208,9 +222,15 @@ Bidirectional traceability is maintained through:
 | FB2-ASM-006 | Contactor mechanical ≤30ms | Mechanical specs met | FTTI exceeded | FSR-000003, HW-TSR-003 |
 | FB2-ASM-008 | Independent HW monitor feasible | HW design feasible | Independent monitor impossible | FSR-000004, HW-TSR-004 |
 
-## 9. Standards Compliance Traceability
+## 9. Standards Reference Traceability
 
-| Standard | Clause | Related Artifacts | Verification Method |
+**This is a reference index, not a compliance matrix.** It records which corpus artifacts a
+clause refers to. It does **not** assert that the clause's obligations are satisfied, that the
+clause text has been verified against the normative standard, or that any assessment occurred.
+Clause identifiers below are the corpus's own references, not verified citations against the
+ISO/IEC publications; the proprietary standards themselves are not reproduced or ingested.
+
+| Standard | Clause (corpus reference) | Related Artifacts | Verification Method |
 |----------|--------|-------------------|---------------------|
 | ISO 26262-6 | 6.4.4 | All FSRs, TSRs, SWRs | Review, Test |
 | ISO 26262-6 | 6.4.5 | Test Measures, Executions | Test Execution |
@@ -221,6 +241,11 @@ Bidirectional traceability is maintained through:
 ## 10. Traceability Matrix Summary
 
 ### 10.1 Coverage Statistics
+
+> ⚠️ **STALE.** These counts predate the 2026-09-29 corpus expansion and understate it
+> substantially. Authoritative, tool-computed figures are in
+> `docs/artifacts/reports/coverage-report.md` and `corpus.py coverage`. Do not cite
+> this table; regenerate it from the corpus.
 
 | Metric | Count | Target | Status |
 |--------|-------|--------|--------|

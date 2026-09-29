@@ -12,10 +12,18 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Stakeholder needs for BMS must be elicited and documented. Applies to both as_is (observed foxBMS capabilities) and synthetic_reference (hypothetical automotive project).",
-      "expected_artifacts": ["Stakeholder Needs", "Use Cases", "Operational Scenarios"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
-      "disposition": "gap - no stakeholder-needs, use-case or operational-scenario record exists in either profile",
-      "disposition_reason": "Corrected 2026-09-29 under CORR-COV-001. The prior text read 'mapped - synthetic_reference stakeholder needs created; as_is back-inferred from features'. Verified false against disk: no corpus record with a stakeholder, system or use-case domain exists in either profile, and corpus/synthetic_reference/system/ contains only the HSI design FB2-SYS-HSI-000001. The narrative needs in governance/scope-and-applicability.json are a governance item definition, not a profile-scoped corpus requirement record. The expectation is retained and stays visible; only the status changed."
+      "expected_artifacts": [
+        "Stakeholder Needs",
+        "Use Cases",
+        "Operational Scenarios"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
+      "disposition": "mapped - the five stakeholder need records FB2-SYS-NED-000001..000005, the four use case records FB2-SYS-UC-000001..000004 and the Part 3 item definition FB2-SAF-ITE-000001 now exist in the synthetic_reference profile. They are declared, not elicited: every need carries is_a_real_elicitation = false, and no workshop, interview or questionnaire was held. 'mapped' here means the expectation has backing records, not that the elicitation was performed on real stakeholders. The as_is profile remains at gap: the NOTE-gap.md source finding for that profile is unchanged and still true (corrected earlier under CORR-COV-001, which stays open for as_is).",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-001 (partially superseded 2026-09-29: the synthetic_reference expectation is now backed by FB2-SYS-NED-*, FB2-SYS-UC-* and FB2-SAF-ITE-000001; the as_is half of the same correction remains open and true)."
     },
     {
       "process_id": "SYS.2",
@@ -23,10 +31,18 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "System requirements derived from stakeholder needs. foxBMS has implicit system requirements in code/config; synthetic_reference needs explicit SYS requirements.",
-      "expected_artifacts": ["System Requirements Specification", "System Modes/States", "Interface Requirements"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
-      "disposition": "gap - no system requirements specification record exists in either profile",
-      "disposition_reason": "Corrected 2026-09-29 under CORR-COV-002. The prior text read 'mapped - synthetic_reference SYS requirements created; as_is reconstructed from behavior'. Verified false against disk: corpus/synthetic_reference/system/ contains only hsi-cell-voltage.json (FB2-SYS-HSI-000001, artifact_type design), and corpus/as_is/system/ contained no record. Source investigation of the pinned commit 308028fb (see corpus/as_is/system/NOTE-gap.md) found only informal explanatory prose at docs/introduction/use-case.rst and docs/introduction/bms-overview.rst, with no elicited, identified, baselined or approved system requirements. No system requirement record was fabricated to close the gap. The expectation is retained and stays visible; only the status changed."
+      "expected_artifacts": [
+        "System Requirements Specification",
+        "System Modes/States",
+        "Interface Requirements"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
+      "disposition": "mapped - the eight system requirement records FB2-SYS-SYR-000001..000008 now exist in the synthetic_reference profile, each refining a stakeholder need, a use-case obligation or the safety goal and each allocating to existing FB2-HW-TSR-* and FB2-SW-SWR-* records rather than restating them. Every one is covered in the requirement-to-test matrix through its allocation. The as_is profile remains at gap for the reason recorded in corpus/as_is/system/NOTE-gap.md, which was left untouched.",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-002 (partially superseded 2026-09-29: the synthetic_reference expectation is now backed by FB2-SYS-SYR-000001..000008; the as_is half remains open and corpus/as_is/system/NOTE-gap.md is unchanged)."
     },
     {
       "process_id": "SYS.3",
@@ -34,8 +50,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "System architecture allocating requirements to HW/SW. foxBMS has documented 3-layer architecture; synthetic_reference needs explicit allocation.",
-      "expected_artifacts": ["System Architecture", "HW/SW Allocation", "HSI Specification"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "System Architecture",
+        "HW/SW Allocation",
+        "HSI Specification"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - HSI authority created; allocation documented"
     },
     {
@@ -44,8 +68,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Integration of HW/SW components. foxBMS has integration via CAN/SPI; synthetic_reference needs integration strategy and test specs.",
-      "expected_artifacts": ["Integration Plan", "Integration Test Specification", "Integration Test Results"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Integration Plan",
+        "Integration Test Specification",
+        "Integration Test Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "partially_mapped - integration planning stub FB2-VER-TMS-000007 + blocked execution record FB2-VER-EXE-000007 (outcome blocked, harness not in corpus scope); as_is has implicit integration"
     },
     {
@@ -54,8 +86,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "System-level verification against requirements. foxBMS has unit tests; synthetic_reference needs system qualification test specs.",
-      "expected_artifacts": ["Qualification Test Plan", "Qualification Test Specification", "Qualification Test Results"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Qualification Test Plan",
+        "Qualification Test Specification",
+        "Qualification Test Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "partially_mapped - qualification planning stub FB2-VER-TMS-000008 + blocked execution record FB2-VER-EXE-000008; HIL stub FB2-VER-TMS-000011 + blocked execution FB2-VER-EXE-000011 (no target hardware)"
     },
     {
@@ -64,8 +104,15 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "SW requirements from system requirements. foxBMS has implicit SW requirements in code; synthetic_reference needs explicit SW requirements.",
-      "expected_artifacts": ["Software Requirements Specification", "SW Interface Requirements"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Software Requirements Specification",
+        "SW Interface Requirements"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - synthetic_reference SW requirements created per module; as_is back-inferred"
     },
     {
@@ -74,8 +121,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "SW architecture with components, interfaces, data flow. foxBMS has 3-layer architecture documented; synthetic_reference needs detailed SW architecture.",
-      "expected_artifacts": ["Software Architecture", "Component Design", "Interface Specifications"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Software Architecture",
+        "Component Design",
+        "Interface Specifications"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - SW architecture documented per module; interfaces specified"
     },
     {
@@ -84,8 +139,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Detailed design and implementation. foxBMS source code IS the detailed design; synthetic_reference maps requirements to code units.",
-      "expected_artifacts": ["Detailed Design", "Source Code", "Unit Test Specifications"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Detailed Design",
+        "Source Code",
+        "Unit Test Specifications"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - source code inventoried; detailed design extracted; unit tests mapped"
     },
     {
@@ -94,8 +157,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "SW unit verification against detailed design. foxBMS has unit tests (Unity/CMock); synthetic_reference needs unit verification traceability.",
-      "expected_artifacts": ["SW Unit Verification Measures", "Unit Test Specifications", "Unit Test Results"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "SW Unit Verification Measures",
+        "Unit Test Specifications",
+        "Unit Test Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "partially_mapped - unit tests inventoried; as_is TMS-002..005 blocked execution records (upstream CI runs not captured), single host-run unsubstantiated; component stub TMS-010 + blocked EXE-000010"
     },
     {
@@ -104,8 +175,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "SW component integration. foxBMS integrates via database/task model; synthetic_reference needs integration test specs.",
-      "expected_artifacts": ["SW Integration Plan", "SW Integration Test Specification", "SW Integration Test Results"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "SW Integration Plan",
+        "SW Integration Test Specification",
+        "SW Integration Test Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "partially_mapped - integration approach documented (database/task model, build system); integration stub FB2-VER-TMS-000007 + blocked execution record FB2-VER-EXE-000007"
     },
     {
@@ -114,8 +193,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "SW qualification against software requirements. foxBMS has unit tests (Unity/CMock); synthetic_reference needs qualification test traceability. (Configuration management is covered by SUP.8.)",
-      "expected_artifacts": ["SW Qualification Test Plan", "SW Qualification Test Specification", "SW Qualification Test Results"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "SW Qualification Test Plan",
+        "SW Qualification Test Specification",
+        "SW Qualification Test Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "partially_mapped - qualification planning stub FB2-VER-TMS-000008 + blocked execution record FB2-VER-EXE-000008 (no qualification environment)"
     },
     {
@@ -124,8 +211,15 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "HW requirements from system requirements. foxBMS has hardware design packages; synthetic_reference needs explicit HW requirements.",
-      "expected_artifacts": ["Hardware Requirements Specification", "HW Interface Requirements"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Hardware Requirements Specification",
+        "HW Interface Requirements"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - HW requirements derived from design packages; synthetic created"
     },
     {
@@ -134,8 +228,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "HW architecture with blocks, interfaces. foxBMS has schematics/BOM; synthetic_reference needs HW architecture.",
-      "expected_artifacts": ["Hardware Architecture", "Block Diagrams", "Interface Schematics"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Hardware Architecture",
+        "Block Diagrams",
+        "Interface Schematics"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "partially_mapped - design packages inventoried; architecture extracted where readable"
     },
     {
@@ -144,8 +246,17 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Detailed HW design (schematics, layout, BOM). foxBMS has Altium packages; synthetic_reference references these.",
-      "expected_artifacts": ["Schematics", "PCB Layout", "BOM", "Component Specifications"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Schematics",
+        "PCB Layout",
+        "BOM",
+        "Component Specifications"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "partially_mapped - design packages referenced; detailed analysis limited by CAD format"
     },
     {
@@ -154,8 +265,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "HW integration and verification. foxBMS has bring-up implied; synthetic_reference needs HW integration test specs.",
-      "expected_artifacts": ["HW Integration Plan", "HW Test Specification", "HW Test Results"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "HW Integration Plan",
+        "HW Test Specification",
+        "HW Test Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "gap - synthetic test specs created; as_is lacks explicit HW test records"
     },
     {
@@ -164,9 +283,17 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Validation against stakeholder needs/use cases. Synthetic reference needs validation plan; as_is has no validation records.",
-      "expected_artifacts": ["Validation Plan", "Validation Test Specification", "Validation Results"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
-      "disposition": "partially_mapped - validation planning stub FB2-VER-TMS-000009 + blocked execution record FB2-VER-EXE-000009; as_is has no validation evidence"
+      "expected_artifacts": [
+        "Validation Plan",
+        "Validation Test Specification",
+        "Validation Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
+      "disposition": "mapped - the planning stub FB2-VER-TMS-000009 and its blocked execution remain, and four real validation measures are added: FB2-VER-TMS-000012 (no false reaction over a full charge), FB2-VER-TMS-000013 (driver-facing outcome of a genuine overvoltage reaction under traction), FB2-VER-TMS-000014 (degraded operation remains usable and announced) and FB2-VER-TMS-000015 (a technician can commission and service without energising incorrectly). Each validates a stakeholder need or a use case against a named operational scenario, each states its oracle basis and what that oracle cannot see, and each carries a blocked execution with the specific missing environment named. All four executions are execution_kind 'none' / outcome 'blocked'. The status describes planning completeness; no validation has been executed."
     },
     {
       "process_id": "ACQ.4",
@@ -174,8 +301,15 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Monitoring of suppliers (AFEs, SBC, MCU, sensors). foxBMS uses multiple vendors; synthetic_reference needs supplier monitoring records.",
-      "expected_artifacts": ["Supplier List", "Monitoring Records", "Supplier Assessments"],
-      "capability_attributes": ["PA1.1", "PA2.1"],
+      "expected_artifacts": [
+        "Supplier List",
+        "Monitoring Records",
+        "Supplier Assessments"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1"
+      ],
       "disposition": "mapped - supplier inventory created; synthetic monitoring records"
     },
     {
@@ -184,10 +318,17 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Release of SW/HW. foxBMS has versioned releases (v1.11.0); synthetic_reference needs release management process.",
-      "expected_artifacts": ["Release Plan", "Release Notes", "Release Checklist"],
-      "capability_attributes": ["PA1.1", "PA2.1"],
-      "disposition": "partially_mapped - pinned release version history only; no Release Plan, Release Checklist or release record in either profile",
-      "disposition_reason": "Corrected 2026-09-29 under CORR-COV-003. The prior text read 'mapped - release process documented; synthetic release artifacts'. Verified false against disk: no release artifact exists in either profile. The generated view docs/artifacts/views/production-operation-service/lifecycle-continuation.md reports Release and configuration identification as a coverage gap with zero records, and a corpus-wide search for release plan / release notes / release checklist records returns nothing. What the pinned commit 308028fb does demonstrate is a release version history (docs/general/releases.csv and docs/general/releases.rst, each row being version, release date and documentation link). That is source_observed and is the only basis for a non-zero status; it is a version history, not a Release Plan or Release Checklist. Status is partially_mapped rather than gap because that source evidence exists, and rather than mapped because two of the three expected artifact families are absent. No synthetic release artifact was created, because creating one would be inventing coverage."
+      "expected_artifacts": [
+        "Release Plan",
+        "Release Notes",
+        "Release Checklist"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1"
+      ],
+      "disposition": "mapped - the three expected artifact families now exist as records rather than being inferred from a version history: the release and configuration identification record FB2-REL-RLS-000001 (identification scheme, configuration items, release checklist steps and acceptance criteria), the process record FB2-SUP-CHC-000001 for the supporting half of the release process, and the release-facing content of FB2-PRD-CAL-000001 and FB2-PRD-EOL-000001. Every one states that no step was executed and that it authorises no production activity. The status moves from partially_mapped because two of the three families were absent; it is not 'mapped' in any sense that implies a release happened.",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-003 (superseded 2026-09-29 by FB2-REL-RLS-000001 and the supporting records it names)."
     },
     {
       "process_id": "SUP.1",
@@ -195,8 +336,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "QA processes for development. foxBMS has code reviews, static analysis config; synthetic_reference needs QA records.",
-      "expected_artifacts": ["QA Plan", "Review Records", "Audit Records"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "QA Plan",
+        "Review Records",
+        "Audit Records"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - QA approach documented; synthetic review records"
     },
     {
@@ -205,8 +354,17 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "CM for all work products. foxBMS uses Git; synthetic_reference needs CM for all artifacts.",
-      "expected_artifacts": ["CM Plan", "Configuration Items", "Baselines", "Change Control"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "CM Plan",
+        "Configuration Items",
+        "Baselines",
+        "Change Control"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - Git + Waf as CM; synthetic CM records"
     },
     {
@@ -215,8 +373,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Defect/issue tracking. foxBMS uses GitHub issues; synthetic_reference needs problem resolution records.",
-      "expected_artifacts": ["Problem Reports", "Resolution Records", "Trend Analysis"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Problem Reports",
+        "Resolution Records",
+        "Trend Analysis"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - GitHub issues as evidence; synthetic problem records"
     },
     {
@@ -225,8 +391,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Formal change control. foxBMS has PRs/commits; synthetic_reference needs change request process.",
-      "expected_artifacts": ["Change Requests", "Impact Analyses", "Change Decisions"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Change Requests",
+        "Impact Analyses",
+        "Change Decisions"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - PR/commit history as evidence; synthetic change lifecycle demos"
     },
     {
@@ -235,8 +409,16 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Bidirectional traceability. THIS CORPUS IS THE TRACEABILITY IMPLEMENTATION.",
-      "expected_artifacts": ["Traceability Matrix", "Traceability Links", "Coverage Reports"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
+      "expected_artifacts": [
+        "Traceability Matrix",
+        "Traceability Links",
+        "Coverage Reports"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
       "disposition": "mapped - corpus implements traceability; matrices generated"
     },
     {
@@ -245,10 +427,19 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Project planning/monitoring. Synthetic reference needs project plan; as_is has no project management records.",
-      "expected_artifacts": ["Project Plan", "Schedule", "Resource Plan", "Progress Reports"],
-      "capability_attributes": ["PA1.1", "PA2.1", "PA3.1"],
-      "disposition": "gap - no project plan, schedule, resource plan or progress report exists in either profile; the only management record is a project scope statement",
-      "disposition_reason": "Corrected 2026-09-29 under CORR-COV-006. The prior text read 'mapped - synthetic project plan created'. Verified false against disk: the management domain holds exactly six records, and only two are not change or review records. FB2-MAN-SCO-000001 is titled 'Project Scope' and has artifact_type 'requirement'; a scope statement is a boundary declaration, not a plan. It contains no schedule, no resource assignment, no milestone, no progress measurement and no status reporting, so it does not satisfy any of the four expected artifact families. The three other non-change, non-review management records are FB2-MAN-CHG-000001..000003 (change records, which belong to SUP.10) and FB2-REV-000004 (a review of those change records). A corpus-wide search for project plan, schedule, resource plan and progress report records returns nothing. The expectation and its four expected artifact families are retained and stay visible; only the status changed. No project plan was fabricated to close the gap."
+      "expected_artifacts": [
+        "Project Plan",
+        "Schedule",
+        "Resource Plan",
+        "Progress Reports"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1",
+        "PA3.1"
+      ],
+      "disposition": "mapped - the project plan FB2-MAN-PLN-000001 carries a six-phase lifecycle model, an eight-package work breakdown with named accountable roles and dated phases, a schedule with a critical path and per-package float, six gates each with entry and exit criteria and a synthetic_decision label, a resource assignment, five actual-against-planned progress records and three communication records. The scope statement FB2-MAN-SCO-000001 is not counted toward this status.",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-006 (superseded 2026-09-29 by FB2-MAN-PLN-000001)."
     },
     {
       "process_id": "MAN.5",
@@ -256,10 +447,17 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Project risk management. Synthetic reference needs risk register; as_is has no risk records.",
-      "expected_artifacts": ["Risk Register", "Risk Analyses", "Mitigation Plans"],
-      "capability_attributes": ["PA1.1", "PA2.1"],
-      "disposition": "gap - no project risk register, risk analysis set or mitigation plan exists in either profile",
-      "disposition_reason": "Corrected 2026-09-29 under CORR-COV-007. The prior text read 'mapped - synthetic risk register created'. Verified false against disk: no corpus record has artifact_type 'risk_register' or any domain in which a project risk register would live, and a corpus-wide search for risk register, mitigation plan and risk analysis records returns no project-risk artifact. The one adjacent record is FB2-SAF-TAR-000001, the threat analysis and risk assessment for the external communication attack surface, which carries eight threat records with per-threat residual_risk and residual_risk_justification fields and nine mitigations. That is a cybersecurity threat risk analysis with a security risk-acceptance statement; it is not a project risk register, because its subject matter is attack surface rather than project risk (schedule, cost, resource, technical and supplier risk), it covers no project-management risk category, and its own residual_risk_acceptance.acceptance_exists is false, so it does not even record a completed risk acceptance. The status is gap rather than partially_mapped because the expectation named by this process is project risk management and none of its three expected artifact families is present in that sense. A reviewer who prefers to count the TARA's risk table as partial credit should read the alternative as partially_mapped; the reason is recorded here so that disagreement is visible rather than silent. The expectation and its three expected artifact families are retained and stay visible; only the status changed. No risk register was fabricated to close the gap."
+      "expected_artifacts": [
+        "Risk Register",
+        "Risk Analyses",
+        "Mitigation Plans"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1"
+      ],
+      "disposition": "mapped - the risk register FB2-MAN-RSK-000001 carries eight entries across schedule, resource, technical, supplier, quality, organisational, compliance and reuse categories, each with an ordinal-pair exposure on a stated scale, an owner, dated mitigation actions and a residual exposure with its argument. Two entries have a residual exposure equal to their inherent because no action was taken, and that is recorded rather than presented as progress. Not counted: FB2-SAF-TAR-000001, which is a cybersecurity threat analysis and not a project risk register.",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-007 (superseded 2026-09-29 by FB2-MAN-RSK-000001)."
     },
     {
       "process_id": "MAN.6",
@@ -267,10 +465,17 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Process/product measurement. Synthetic reference needs measurement definitions; as_is has no measurement records.",
-      "expected_artifacts": ["Measurement Plan", "Metrics Definitions", "Measurement Results"],
-      "capability_attributes": ["PA1.1", "PA2.1"],
-      "disposition": "partially_mapped - no measurement plan exists; measurable acceptance criteria with named measure, threshold and unit exist on 26 records, but no process-performance metric set, baseline, target, control limit, cadence, analysis method or ownership is defined",
-      "disposition_reason": "Corrected 2026-09-29 under CORR-COV-008. The prior text read 'mapped - synthetic measurement plan created'. Verified against disk on 2026-09-29 with a result that differs from the originally reported claim, and the difference is recorded here rather than resolved in the convenient direction. No measurement plan exists: there is no corpus record of that kind, and a search for measurement plan and metric definition records returns nothing. However the originally reported statement that there are 'no metric definitions' is not accurate as written. Twenty-six records carry acceptance_criteria, totalling 100 entries, each giving a named measure, a threshold and a unit, for example 'Time from overvoltage to contactor command' with a millisecond threshold, 'False positive rate (Gaussian noise, sigma=5mV)', and the five security requirements' SEC-000001..SEC-000005 measurable statements. Those are real, quantified, unit-bearing metric definitions and they are what keeps this status at partially_mapped rather than gap. They are nevertheless product verification acceptance criteria carried on requirement records, not a process measurement plan. Nothing in the corpus defines process performance metrics, a measurement baseline, a target or control limit, a measurement cadence, an analysis method, or who owns and reviews each measure, and no measurement result is recorded against any defined metric. Correcting the status upward to mapped would repeat the original error; correcting it to gap would understate 100 quantified criteria that are plainly present. The expectation and its three expected artifact families are retained and stay visible; only the status changed. No measurement plan was fabricated to close the gap."
+      "expected_artifacts": [
+        "Measurement Plan",
+        "Metrics Definitions",
+        "Measurement Results"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1"
+      ],
+      "disposition": "mapped - the measurement plan FB2-MAN-MSM-000001 adds what the 100 acceptance criteria on requirement records never had: a named population with its exclusions and its known bias, six collection rules with cadence and collector role, six metrics each with a definition, unit, formula, baseline, target, control limit and action on breach, an analysis method that requires every charted point to be an observation record, and six synthetic observations with their derivations. The status moves from partially_mapped because the absence of a plan is now closed; the 100 acceptance criteria remain what they always were, product verification criteria, and the plan separates them explicitly.",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-008 (superseded 2026-09-29 by FB2-MAN-MSM-000001)."
     },
     {
       "process_id": "PIM.3",
@@ -278,10 +483,17 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Process improvement. Synthetic reference needs improvement records; as_is has no process improvement records.",
-      "expected_artifacts": ["Improvement Proposals", "Improvement Records", "Effectiveness Evaluation"],
-      "capability_attributes": ["PA1.1", "PA2.1"],
-      "disposition": "gap - no improvement proposal, improvement record or effectiveness evaluation exists in either profile",
-      "disposition_reason": "Corrected 2026-09-29 under CORR-COV-009. The prior text read 'mapped - synthetic improvement records created'. Verified false against disk: no corpus record has an artifact type, title or domain corresponding to an improvement proposal, improvement record or effectiveness evaluation, and a corpus-wide search for improvement record and improvement proposal returns nothing. Adjacent material that does exist is deliberately not counted. The 21 finding artifacts and the findings embedded in the 12 review records are inputs to improvement, not evidence that improvement was performed or evaluated. The corrections recorded in this file's own corrections array are corrections to a governance record, not process-improvement records against an improvement baseline, and they carry no effectiveness evaluation. The two meta-review records FB2-REV-000011 and FB2-REV-000012 audit prior review claims, which is quality assurance on the review activity (SUP.1) rather than a process improvement record (PIM.3). The expectation and its three expected artifact families are retained and stay visible; only the status changed. No improvement record was fabricated to close the gap."
+      "expected_artifacts": [
+        "Improvement Proposals",
+        "Improvement Records",
+        "Effectiveness Evaluation"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1"
+      ],
+      "disposition": "mapped - three improvement-related records now exist: FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002, each carrying a baseline, a hypothesis with a falsification condition, the change made and an effectiveness evaluation with the arithmetic written out, plus counter-evidence and a verdict. Verdict distribution: one partially_effective, one insufficient_evidence, and no effective. A process-improvement set with no effective improvement in it is the honest outcome for a corpus whose improvements were authored after the problems they address.",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-009 (superseded 2026-09-29 by FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002)."
     },
     {
       "process_id": "REU.2",
@@ -289,8 +501,15 @@
       "standard": "ASPICE_PAM_41",
       "applicability": "applicable",
       "rationale": "Reuse of components (FreeRTOS, drivers). foxBMS reuses FreeRTOS, vendor drivers; synthetic_reference needs reuse management.",
-      "expected_artifacts": ["Reuse Strategy", "Reuse Assessments", "Reuse Records"],
-      "capability_attributes": ["PA1.1", "PA2.1"],
+      "expected_artifacts": [
+        "Reuse Strategy",
+        "Reuse Assessments",
+        "Reuse Records"
+      ],
+      "capability_attributes": [
+        "PA1.1",
+        "PA2.1"
+      ],
       "disposition": "mapped - reuse inventory created; assessments for vendor code"
     },
     {
@@ -341,12 +560,12 @@
   "iso26262_coverage": {
     "part_1_vocabulary": "referenced",
     "part_2_management": "mapped - safety plan, roles, tailoring",
-    "part_3_concept": "partially_mapped - hazard analysis and safety goals exist (FB2-SAF-HAZ-000001, FB2-SAF-SGO-000001, one per profile); no functional safety concept and no technical safety concept record exists, and the only item definition is the TARA's security item_and_scope (FB2-SAF-TAR-000001) (CORR-COV-010)",
-    "part_4_system": "partially_mapped - HSI interface authority FB2-SYS-HSI-000001 only; no system requirements record and no technical safety concept record exist in either profile (CORR-COV-002, CORR-COV-005)",
+    "part_3_concept": "mapped - item definition FB2-SAF-ITE-000001, functional safety concept FB2-SAF-FSC-000001 and technical safety concept FB2-SAF-TSC-000001 now exist alongside the pre-existing hazard FB2-SAF-HAZ-000001 and safety goal FB2-SAF-SGO-000001. The two concepts allocate the safety goal to six architectural elements, state the item-related assumptions, the detection, reaction and degraded-operation strategies, the inside/outside safety scope, the interfaces to other safety-related items, the hardware/software allocation, the technical safety requirements that follow from it, a timing budget that closes, and diagnostic-coverage assumptions each labelled with the kind of evidence it rests on. All three are synthetic and unapproved; writing them exposed four contradictions in the pre-existing records, which were raised as findings FB2-REV-FND-000023..000027 and NOT corrected in place. Note that FB2-MAN-SPL-000001 remains a safety PLAN in the management domain and is not one of these concepts. Supersedes the partially_mapped text under CORR-COV-010.",
+    "part_4_system": "mapped - the HSI interface authority FB2-SYS-HSI-000001 is joined by eight system requirement records FB2-SYS-SYR-000001..000008, which allocate to the existing FB2-HW-TSR-* and FB2-SW-SWR-* records and are covered in the requirement-to-test matrix through those allocations. The technical safety concept FB2-SAF-TSC-000001, previously named as absent in the CORR-COV-002 and CORR-COV-005 text, now exists. Two honest gaps remain inside Part 4 and are not closed by this status: the timing budget of FB2-SAF-SGO-000001 does not close (FB2-REV-FND-000025) and the contactor reaction requirement contradicts itself (FB2-REV-FND-000024). Both are findings against baselined records and both need a controlled change; 'mapped' describes record presence, not arithmetic closure.",
     "part_5_hardware": "partially_mapped - HW requirements, architecture, FMEDA (synthetic)",
     "part_6_software": "partially_mapped - SW requirements, architecture and detailed design are backed; unit verification is only partially mapped, because SWE.4 is recorded partially_mapped with blocked execution records (CORR-COV-011)",
-    "part_7_production": "gap - no production, end-of-line test, operation, service or decommissioning record exists in either profile; the prior 'release, production test plan (synthetic)' text was unbacked (CORR-COV-004)",
-    "part_8_supporting": "gap - no supporting-domain process-definition record exists for configuration management, change management, documentation, QA, measurement or process improvement; the generated view reports all six as coverage gaps (CORR-COV-012)",
+    "part_7_production": "mapped - six post-development lifecycle records now exist, one per area the generated view searches: release and configuration identification FB2-REL-RLS-000001, production control and end-of-line test FB2-PRD-EOL-000001 (six named test stations), calibration and programming FB2-PRD-CAL-000001 (six parameters referenced to the canonical registry), field monitoring and incident handling FB2-OPS-MON-000001 (five signals, four incident classes), installation operation and service FB2-SVC-SVC-000001 (five procedures with safety warnings), and decommissioning and recycling FB2-DEC-DCM-000001 (five end-of-life assumptions, one of them recorded explicitly as having no control). Every record states that none of its steps was executed and that it authorises nothing on real equipment. 'mapped' means documented, not performed. Supersedes the gap text under CORR-COV-004.",
+    "part_8_supporting": "mapped - six supporting-process records now exist, each naming its process id explicitly and each carrying a definition, inputs, outputs, an accountable role with its independence stated, at least two acceptance criteria, at least one performed instance with fictional participants and a synthetic_decision label, and communication records: SUP.1 FB2-SUP-QAP-000001, SUP.8 FB2-SUP-CFM-000001, SUP.9 FB2-SUP-PRB-000001, SUP.10 FB2-SUP-CHC-000001, ACQ.4 FB2-SUP-SPL-000001, REU.2 FB2-SUP-RUS-000001. MAN.6 and PIM.3 are populated by FB2-MAN-MSM-000001 and FB2-PIM-IMP-000001/000002. Every performed instance records at least one non-conformance against its own acceptance criteria, because the criteria are real and the instances are honest. The QA record's independence is stated and NOT achieved: every review in this corpus is an automated review by the runtime that wrote the artifacts, which master-prompt clause 2.9 says is not organisational independence; that is risk RSK-003. Supersedes the gap text under CORR-COV-012.",
     "part_9_asils": "mapped - ASIL assignment methodology, safety analyses (FMEA, FTA)",
     "part_10_guidelines": "referenced - methodology guidance",
     "part_11_semiconductors": {

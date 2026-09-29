@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/item_definition.schema.json",
+  "title": "Item Definition Schema",
+  "description": "Schema for an ISO 26262 Part 3 / Automotive SPICE SYS.1 item definition. The item definition is the boundary statement of the development: it is what every later requirement is about, so it carries the boundaries, functions, operational situations, operating modes, environmental and operational assumptions, external systems, stakeholder needs it raises and the use cases it enables. A cybersecurity item scope (as carried inside a TARA) is NOT an item definition and must not be recorded in this schema; the two answer different questions.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "item_identity",
+        "boundaries",
+        "functions",
+        "operational_situations",
+        "operating_modes",
+        "operating_envelope",
+        "environmental_conditions",
+        "external_systems",
+        "stakeholder_needs_raised",
+        "use_cases_enabled",
+        "interfaces_to_other_safety_related_items",
+        "assumptions_on_the_item",
+        "misuse_and_service_assumptions",
+        "in_scope",
+        "out_of_scope",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "item_definition"
+        },
+        "concept_stage": {
+          "type": "string",
+          "const": "item_definition",
+          "description": "Discriminator retained so a reader can tell an item definition from a safety concept without inspecting the artifact_type."
+        },
+        "item_identity": {
+          "type": "object",
+          "required": ["item_name", "item_purpose", "fictional", "development_context"],
+          "properties": {
+            "item_name": {"type": "string", "minLength": 1},
+            "item_purpose": {"type": "string", "minLength": 1},
+            "fictional": {
+              "const": true,
+              "description": "Machine-pinned to true. This corpus describes a hypothetical item. A record with fictional=false would assert that a real product definition exists, which no record in this corpus may do."
+            },
+            "development_context": {
+              "type": "object",
+              "required": ["vehicle_platform", "development_stage", "reference_implementation"],
+              "properties": {
+                "vehicle_platform": {"type": "string", "minLength": 1},
+                "development_stage": {"type": "string", "minLength": 1},
+                "reference_implementation": {"type": "string", "minLength": 1},
+                "grounding_note": {"type": "string"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "boundaries": {
+          "type": "object",
+          "required": ["included_elements", "excluded_elements", "boundary_rationale"],
+          "properties": {
+            "included_elements": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["element", "element_kind", "why_inside"],
+                "properties": {
+                  "element": {"type": "string", "minLength": 1},
+                  "element_kind": {"type": "string", "enum": ["hardware", "software", "firmware", "mechanical", "data", "document"]},
+                  "why_inside": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              }
+            },
+            "excluded_elements": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["element", "element_kind", "why_outside", "residual_risk_owner"],
+                "properties": {
+                  "element": {"type": "string", "minLength": 1},
+                  "element_kind": {"type": "string", "enum": ["hardware", "software", "firmware", "mechanical", "energy_storage", "external_system", "process"]},
+                  "why_outside": {"type": "string", "minLength": 1},
+                  "residual_risk_owner": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              }
+            },
+            "boundary_rationale": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "functions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["function_id", "function_name", "description", "essential_for_item_purpose", "modes_where_active"],
+            "properties": {
+              "function_id": {"type": "string", "pattern": "^FUN-[0-9]{3}$"},
+              "function_name": {"type": "string", "minLength": 1},
+              "description": {"type": "string", "minLength": 1},
+              "essential_for_item_purpose": {"type": "boolean"},
+              "modes_where_active": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+            },
+            "additionalProperties": false
+          }
+        },
+        "operational_situations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["situation_id", "description", "including_or_excluding", "argument_for_the_decision"],
+            "properties": {
+              "situation_id": {"type": "string", "pattern": "^OS-[0-9]{3}$"},
+              "description": {"type": "string", "minLength": 1},
+              "including_or_excluding": {"type": "string", "enum": ["including", "excluding"]},
+              "argument_for_the_decision": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "operating_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["mode_id", "mode_name", "entry_condition", "exit_condition", "safe_state_in_this_mode"],
+            "properties": {
+              "mode_id": {"type": "string", "pattern": "^MOD-[0-9]{3}$"},
+              "mode_name": {"type": "string", "minLength": 1},
+              "entry_condition": {"type": "string", "minLength": 1},
+              "exit_condition": {"type": "string", "minLength": 1},
+              "safe_state_in_this_mode": {"type": "string", "minLength": 1},
+              "note": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "operating_envelope": {
+          "type": "object",
+          "required": ["energy_domain", "voltage_class", "cells_monitored", "parameter_refs"],
+          "properties": {
+            "energy_domain": {"type": "string", "minLength": 1},
+            "voltage_class": {"type": "string", "minLength": 1},
+            "cells_monitored": {"type": "integer", "minimum": 1},
+            "parameter_refs": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "pattern": "^FB2-PRM-[0-9]{6}$"},
+              "description": "Ids from the canonical parameter registry. The envelope is not restated numerically here so that one value has one home."
+            }
+          },
+          "additionalProperties": false
+        },
+        "environmental_conditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["parameter", "unit", "range_or_limit", "source_of_the_assumption"],
+            "properties": {
+              "parameter": {"type": "string", "minLength": 1},
+              "unit": {"type": "string", "minLength": 1},
+              "range_or_limit": {"type": "string", "minLength": 1},
+              "source_of_the_assumption": {"type": "string", "enum": ["source_observed", "synthetic_assumption"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "external_systems": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["system_id", "system_name", "direction_of_interaction", "assumptions_on_the_external_system"],
+            "properties": {
+              "system_id": {"type": "string", "pattern": "^EXT-[0-9]{3}$"},
+              "system_name": {"type": "string", "minLength": 1},
+              "direction_of_interaction": {"type": "string", "enum": ["item_to_external", "external_to_item", "bidirectional"]},
+              "assumptions_on_the_external_system": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+            },
+            "additionalProperties": false
+          }
+        },
+        "stakeholder_needs_raised": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^FB2-SYS-NED-[0-9]{6}$"},
+          "description": "The stakeholder-need records this item definition raises. An item definition with no derived needs is an item description, not a requirements input."
+        },
+        "use_cases_enabled": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^FB2-SYS-UC-[0-9]{6}$"},
+          "description": "The use-case records this item definition enables."
+        },
+        "interfaces_to_other_safety_related_items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["other_item", "interface_description", "assumption_dependence", "effect_if_the_assumption_fails"],
+            "properties": {
+              "other_item": {"type": "string", "minLength": 1},
+              "interface_description": {"type": "string", "minLength": 1},
+              "assumption_dependence": {"type": "string", "minLength": 1},
+              "effect_if_the_assumption_fails": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          },
+          "description": "At least one entry is required. If the item genuinely has no interface to another safety-related item, say so in the entry rather than leaving the array empty; an empty array here is indistinguishable from an unperformed analysis."
+        },
+        "assumptions_on_the_item": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^FB2-ASM-[0-9]{3}$"},
+          "description": "Ids from the canonical assumption registry that the item's own functioning rests on."
+        },
+        "misuse_and_service_assumptions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["assumption", "kind", "who_may_violate_it", "mitigation_or_declaration"],
+            "properties": {
+              "assumption": {"type": "string", "minLength": 1},
+              "kind": {"type": "string", "enum": ["misuse", "service", "maintenance", "recycling"]},
+              "who_may_violate_it": {"type": "string", "minLength": 1},
+              "mitigation_or_declaration": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "in_scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "out_of_scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "description": "What this item definition does not establish. At least one entry is mandatory so an item definition cannot present itself as a completed analysis."
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

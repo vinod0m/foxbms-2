@@ -1,0 +1,196 @@
+{
+ "id": "FB2-SUP-SPL-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "process_record",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "ACQ.4 Supplier monitoring: populated process record for Project Northcell",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-008"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "ACQ.4",
+   "status": "mapped",
+   "rationale": "Supplier monitoring: monitoring of purchased parts and services."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Supporting-process record authored because the generated view reported ACQ.4 as a coverage gap: no record whose engineering_domain is 'supporting' named the process. This record populates it - definition, inputs, outputs, accountable role, acceptance criteria, at least one performed instance with fictional participants and a synthetic decision, and the communication records showing how agreed revisions reach affected roles."
+  }
+ ],
+ "process_record_id": "FB2-SUP-SPL-000001",
+ "aspice_process_id": "ACQ.4",
+ "process_name": "Supplier monitoring",
+ "fictional_organisation": {
+  "name": "Halden Cell Systems (fictional) supplier quality function (fictional); suppliers: 'Northvale Semiconductor BV (fictional)' for the analogue front end, 'Kestrel Power Devices (fictional)' for the safe base controller, 'Ardenne Metrology (fictional)' for the current sensor",
+  "is_a_real_organisation": false
+ },
+ "purpose": "Monitor the components and services the item depends on for changes that affect the item's safety argument, and record the result of each check.",
+ "definition": "Supplier monitoring here is a defined process with a named owner and one recorded instance, and nothing more. It does not include a component inventory that has been checked against an advisory source, because no advisory source was consulted and this corpus has no authority to consult one. The record says so rather than describing a monitoring activity that did not occur.",
+ "inputs": [
+  {
+   "input": "The list of components on safety-relevant paths",
+   "kind": "data",
+   "controlled_by": "This process record's traceability block"
+  },
+  {
+   "input": "Supplier notifications and published change notices",
+   "kind": "external_input",
+   "controlled_by": "No supplier is under contract; see the limitation"
+  },
+  {
+   "input": "The recorded instance of a monitoring review",
+   "kind": "record",
+   "controlled_by": "This process record's revision history"
+  }
+ ],
+ "outputs": [
+  {
+   "output": "A monitoring review record per cycle",
+   "kind": "record",
+   "retention": "permanent"
+  },
+  {
+   "output": "A recorded determination per component reviewed, including a determination that no applicable notice was found",
+   "kind": "decision",
+   "retention": "permanent"
+  },
+  {
+   "output": "An escalation to change control when a component change affects a safety requirement",
+   "kind": "decision",
+   "retention": "permanent"
+  }
+ ],
+ "accountable_role": {
+  "role": "quality_engineer",
+  "independence": "The supplier quality function may not accept a supplier's own assessment of a component that is on a safety path. In this corpus no supplier has submitted anything, so the independence is untested."
+ },
+ "acceptance_criteria": [
+  {
+   "criterion": "Every component on a safety-relevant path has a named owner and a monitoring interval",
+   "how_conformance_is_checked": "Confirm each entry in the trace list names a supplier and an interval.",
+   "evidence_of_conformance": "Four components are named with a monitoring interval. The inventory is complete for the components the corpus's own requirements depend on."
+  },
+  {
+   "criterion": "Every monitoring cycle records a determination, including 'no applicable notice found'",
+   "how_conformance_is_checked": "Confirm the cycle record contains a determination for every reviewed component.",
+   "evidence_of_conformance": "One cycle record exists and covers three of four components. The fourth, the current sensor, was not covered and the record says which and why."
+  },
+  {
+   "criterion": "No component version is recorded without evidence",
+   "how_conformance_is_checked": "Confirm every version field is either sourced or explicitly null with a reason.",
+   "evidence_of_conformance": "The instance records that the item's own third-party component inventory deliberately records no vulnerability status for any component, because no advisory source was consulted. That is the criterion being met: absence of a status is recorded as absence of a check, not as a negative answer."
+  }
+ ],
+ "performed_instances": [
+  {
+   "instance_id": "INST-005",
+   "instance_date": "2026-09-29",
+   "instance_description": "First supplier monitoring review cycle. Reviewed the analogue front end and the safe base controller against the changes the components' documented behaviour could imply for the item's requirements. The current sensor was not reviewed.",
+   "participants": [
+    {
+     "role": "quality_engineer",
+     "named_as": "role identity: quality_engineer (reviewer, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "hw_engineer",
+     "named_as": "role identity: hw_engineer (technical assessment of the front end, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "safety_engineer",
+     "named_as": "role identity: safety_engineer (assessment of the effect on FB2-SAF-TSC-000001, fictional)",
+     "is_a_real_person": false
+    }
+   ],
+   "inputs_used": [
+    "FB2-HW-TSR-000001 rev 1",
+    "FB2-HW-TSR-000002 rev 1",
+    "FB2-HW-TSR-000003 rev 1",
+    "FB2-HW-TSR-000004 rev 1"
+   ],
+   "outputs_produced": [
+    "The monitoring review record for this cycle"
+   ],
+   "decision_or_outcome": "The analogue front end was determined to be consistent with the accuracy and error-detection figures FB2-HW-TSR-000001 depends on, on the basis of its documented specification rather than of any measurement. The safe base controller was determined to be consistent with the watchdog independence that FB2-ASM-007 assumes. The current sensor was not reviewed and is recorded as outstanding. No advisory source was consulted for any component, and the record states that absence of an advisory means the question was not asked.",
+   "synthetic_decision": "synthetic_decision:quality_engineer:SYNTH-SUP-ACQ4-INST-005",
+   "conformance_against_acceptance_criteria": "partially_conforming",
+   "non_conformances_found": [
+    "Criterion 2 is not met: one component of four was not reviewed. The instance records the omission rather than completing the row with an assumed result.",
+    "No determination in this instance rests on an advisory check, because none was possible. Every determination rests on a supplier's own documented specification, which is the weakest evidence available and is not independent of the supplier."
+   ]
+  }
+ ],
+ "review_and_communication": [
+  {
+   "communication_id": "COM-006",
+   "date": "2026-09-29",
+   "communicated_artifact_revisions": [
+    "FB2-SUP-SPL-000001 rev 1",
+    "The monitoring review record for cycle 1"
+   ],
+   "attendee_roles": [
+    "quality_engineer",
+    "hw_engineer",
+    "safety_engineer",
+    "project_manager"
+   ],
+   "acknowledgement_recorded": true
+  }
+ ],
+ "traceability": {
+  "produces_records": [
+   "FB2-SUP-SPL-000001"
+  ],
+  "depends_on_records": [
+   "FB2-SAF-SEC-000005",
+   "FB2-HW-TSR-000001"
+  ],
+  "controlled_by_records": [
+   "FB2-SUP-CFM-000001"
+  ]
+ },
+ "process_performance_measurement": {
+  "metric_id": "MET-06",
+  "metric_name": "Supporting-process instance conformance",
+  "unit": "percent",
+  "how_measured": "Count instances judged conforming against the process's own acceptance criteria, over the number of instances. 'partially_conforming' counts as not conforming.",
+  "measurement_plan_ref": "FB2-MAN-MSM-000001"
+ },
+ "limitations": [
+  "Synthetic process record. The suppliers named are fictional and do not exist.",
+  "No supplier is under contract and no supplier has been contacted. A monitoring process with no contractual hook cannot be executed against a supplier who is not obliged to respond, and this record does not pretend the process is effective in that condition. That is risk RSK-005 in FB2-MAN-RSK-000001.",
+  "No advisory source was consulted for any component. The instance is therefore a specification review and not a vulnerability review, and it says so.",
+  "One of four components was not reviewed in the one cycle that has run."
+ ]
+}

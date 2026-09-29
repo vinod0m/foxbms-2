@@ -1,0 +1,81 @@
+{
+ "id": "FB2-VER-EXE-000019",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "execution",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Execution: FB2-VER-TMS-000019 (blocked - FB2-SAF-SEC-000004 has no executable security harness in this corpus)",
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Honest blocked-execution record for FB2-VER-TMS-000019, the measure that would verify FB2-SAF-SEC-000004. the security test harness for this corpus does not exist: there is no target hardware, no protocol analyser, no packet capture path and no injection tooling, and building any of them would require modifying hardware or code that this corpus may not touch. There is additionally no instrumented serial port on any item this corpus can address."
+  }
+ ],
+ "test_measure_id": "FB2-VER-TMS-000019",
+ "test_measure_revision": "1",
+ "execution_kind": "none",
+ "outcome": "blocked",
+ "environment": {
+  "hardware": "none - no target hardware and no instrumented bus in this corpus",
+  "software": "not applicable",
+  "tools": [],
+  "configuration": "not applicable",
+  "tool_versions": {
+   "none": "0.0.0"
+  }
+ },
+ "input_hashes": {},
+ "output_hashes": {},
+ "logs": [],
+ "timestamps": {
+  "start": "2026-09-29T00:00:00Z",
+  "end": "2026-09-29T00:00:00Z",
+  "duration_ms": 0
+ },
+ "anomalies": [],
+ "evidence_refs": [
+  "FB2-VER-TMS-000019",
+  "FB2-SAF-SEC-000004"
+ ],
+ "blocked_reason": "the security test harness for this corpus does not exist: there is no target hardware, no protocol analyser, no packet capture path and no injection tooling, and building any of them would require modifying hardware or code that this corpus may not touch. There is additionally no instrumented serial port on any item this corpus can address.",
+ "what_would_unblock_it": [
+  "A bench with the item fitted and the serial port brought out.",
+  "A byte-level transmitter able to place 0x11 and 0x13 at arbitrary offsets with arbitrary timing.",
+  "A capture capability and an automated diagnosis-log comparator.",
+  "A decision on the false-rejection criterion, which is unachievable as the requirement writes it."
+ ],
+ "limitations": [
+  "No run occurred. duration_ms is 0 because no process started.",
+  "No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.",
+  "The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.",
+  "Carries no product verification credit."
+ ],
+ "notes": "Recorded so that the requirement's verification state is visible as planned-and-unexecuted. The five findings FB2-REV-FND-000008..12 remain open on the point that the requirement has no verification evidence; this measure is the work that would close them, and doing the work is outside what this corpus may do."
+}

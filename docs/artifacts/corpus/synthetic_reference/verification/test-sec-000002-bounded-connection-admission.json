@@ -1,0 +1,207 @@
+{
+ "id": "FB2-VER-TMS-000017",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Verification: a peer holding the maximum permitted connections open and silent does not deny service to legitimate peers",
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.5",
+   "status": "mapped",
+   "rationale": "System qualification test: the security requirements are system-level work products and this is the measure that would qualify them."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.6",
+   "status": "mapped",
+   "rationale": "Software qualification test: the measures exercise the master software's handling of the specified inputs."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 (system verification)",
+   "status": "mapped",
+   "rationale": "Verification of the system requirement as written, against its own acceptance criteria."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "ISO SAE 21434 relationship",
+   "status": "mapped",
+   "rationale": "Recorded as a relationship, not as a mapping. No ISO/SAE 21434 work product exists in this corpus and the corpus-local TARA FB2-SAF-TAR-000001 is machine-pinned to is_iso_21434_tara = false."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Security verification measure authored because FB2-SAF-SEC-000002 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is."
+  }
+ ],
+ "test_type": "robustness",
+ "objective": "Confirm that a hostile peer cannot make the service unavailable to a legitimate peer by opening the maximum number of permitted connections and sending nothing on them, and that every refusal and every budget breach is diagnosable. This is the measure for the requirement's availability clause; the resource figures it checks are the requirement's own, not figures this measure chooses.",
+ "referenced_requirements": [
+  "FB2-SAF-SEC-000002"
+ ],
+ "referenced_designs": [
+  "FB2-SYS-SYR-000007",
+  "FB2-SYS-SYR-000008"
+ ],
+ "preconditions": [
+  "The service under test implements the caps the requirement states.",
+  "The hostile peer can hold sockets open without sending data.",
+  "The legitimate peer behaves as a legitimate peer."
+ ],
+ "environment": {
+  "hardware": "Hypothetical 400 V pack on a bench with a routable network segment",
+  "software": "BMS master firmware under test",
+  "tools": [
+   "Connection exhaustion harness",
+   "Traffic generator with a silent-connection mode"
+  ],
+  "configuration": "VAR-REF-001 with the commissioning service enabled"
+ },
+ "stimuli": [
+  {
+   "signal": "Concurrent connections from a hostile peer",
+   "value": "one per second up to the permitted cap, then held open and silent",
+   "timing": "continuously"
+  },
+  {
+   "signal": "Legitimate peer connection attempts",
+   "value": "one per second throughout the exhaustion window",
+   "timing": "1 Hz"
+  },
+  {
+   "signal": "Per-connection payload",
+   "value": "nothing sent for 30 min, then a burst of 128 KiB",
+   "timing": "two phases"
+  },
+  {
+   "signal": "Admission attempts beyond the cap",
+   "value": "one per second",
+   "timing": "1 Hz"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Open the permitted maximum of silent connections and hold them",
+   "expected": "The service accepts exactly the cap and refuses the next attempt"
+  },
+  {
+   "step": 2,
+   "action": "Attempt a legitimate connection while the cap is held",
+   "expected": "The legitimate peer is served, or refused within a bounded time and diagnosed"
+  },
+  {
+   "step": 3,
+   "action": "Burst 128 KiB on one held connection",
+   "expected": "The connection is closed within 100 ms of the breach and its resources are released"
+  },
+  {
+   "step": 4,
+   "action": "Hold the cap open for 30 minutes",
+   "expected": "No service task is blocked indefinitely; the receive timeout fires within 2000 ms"
+  },
+  {
+   "step": 5,
+   "action": "Run for 1 hour with the hostile peer active",
+   "expected": "At least 1 legitimate connection served per hour"
+  },
+  {
+   "step": 6,
+   "action": "Review the diagnosis log",
+   "expected": "One entry per refusal and per detected breach"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "concurrent_connections_serviced",
+   "expected_value": "4",
+   "tolerance": "at most",
+   "unit": "connections"
+  },
+  {
+   "signal": "receive_timeout",
+   "expected_value": "2000",
+   "tolerance": "at most",
+   "unit": "ms"
+  },
+  {
+   "signal": "per_connection_byte_budget",
+   "expected_value": "65536",
+   "tolerance": "at most",
+   "unit": "bytes"
+  },
+  {
+   "signal": "breach_to_close_time",
+   "expected_value": "100",
+   "tolerance": "at most",
+   "unit": "ms"
+  },
+  {
+   "signal": "legitimate_connections_per_hour_under_exhaustion",
+   "expected_value": "1",
+   "tolerance": "at least",
+   "unit": "connections/hour"
+  }
+ ],
+ "tolerances": {
+  "concurrent_connections_serviced": "at most",
+  "receive_timeout": "at most",
+  "per_connection_byte_budget": "at most",
+  "breach_to_close_time": "at most",
+  "legitimate_connections_per_hour_under_exhaustion": "at least"
+ },
+ "timing": {
+  "max_execution_time_ms": 86400000,
+  "setup_time_ms": 3600000,
+  "teardown_time_ms": 1800000
+ },
+ "oracle_basis": "analytical_model",
+ "oracle_detail": {
+  "kind": "analytical_model",
+  "why_this_oracle": "The oracle is a resource model rather than an observation. A service with a hard cap C on concurrent connections and a finite receive timeout T cannot be starved by a peer that sends nothing: at most C connections can be blocked for at most T each, after which their resources are reclaimed, so the steady-state availability of the remaining capacity is a function of C and T and not of how long the hostile peer holds its sockets. The expected outcomes are the model's outputs - C, T, the byte budget and the breach-response time - each chosen so the model closes: 4 connections at a 2000 ms timeout bounds the blocked-time budget, and a 128 KiB burst exceeds the 65536-byte budget by a factor of two so the breach is unambiguous.",
+  "what_the_oracle_is_not": "It is not a measurement: no service was starved and nothing was timed. It is not a source-grounded oracle: the caps are engineering choices, not properties of a protocol, and the requirement carries them as proposals. It is not a synthetic assumption about the world, though it is an assumption about the implementation: the model holds only if the implementation actually enforces the caps rather than declaring them.",
+  "what_it_still_does_not_prove": "The model says nothing about a peer that stays within the caps and still consumes the service's CPU through a cheap request pattern, nor about a peer that opens and closes rapidly enough to churn through the cap. It also cannot prove the 'resources released' part of the breach criterion, which is a code-path property no external model reaches.",
+  "model_sensitivity": "Availability under exhaustion falls as C rises. At C = 4 with a 2000 ms timeout the worst case is that 4 of the pool are blocked for at most 2 s each. Raising C to 16 without shortening T would make a silent peer able to consume four times the blocked-time budget, which is why the requirement fixes both figures rather than one.",
+  "oracle_kind": "analytical_model"
+ },
+ "cleanup": "Close all test sockets, confirm the service has returned to its steady state and archive the connection counter trace alongside the diagnosis log.",
+ "regression_selection": "Re-run on any change to the connection limit, the timeout, the buffer sizes or the accept loop. This is the measure that would catch the single-deep-queue and discarded-enqueue behaviour the requirement's rationale describes, so it is never sampled out.",
+ "security_verification_note": "This measure verifies the requirement as written against the item's observable behaviour. It does not establish that the threat it addresses is exploitable, and it is not a penetration test: no exploit was developed, no advisory was checked and no CVSS score was assigned to any finding.",
+ "limitations": [
+  "Planned, not executed. Planning a security measure is not evidence that the requirement is satisfied, and the paired execution record carries execution_kind 'none' and outcome 'blocked' for that reason.",
+  "Not a penetration test. No exploit was developed, no advisory source was consulted and no vulnerability was scored. A requirement can pass every expected outcome here and still leave the item exploitable by a route this measure does not exercise.",
+  "The requirement verified here constrains a mechanism the hypothetical project has planned. Nothing in this corpus establishes that the mechanism exists.",
+  "No human security reviewer has confirmed this measure. Human approval is pending."
+ ]
+}

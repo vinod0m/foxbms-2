@@ -1,0 +1,319 @@
+{
+ "id": "FB2-OPS-MON-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "post_development_record",
+ "engineering_domain": "operation",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Field monitoring and incident handling for the hypothetical 400 V BMS in service",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-012"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "VAL.1",
+   "status": "mapped",
+   "rationale": "Intended-use validation continues in the field; a field event is evidence about the intended use."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 7, Clause 13 (monitoring in operation and service)",
+   "status": "mapped",
+   "rationale": "The monitoring activity this record identifies."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record and no vehicle is in service.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Field monitoring and incident handling record. Authored because the lifecycle-continuation view reported operation and field monitoring as a gap with zero records."
+  }
+ ],
+ "post_development_id": "FB2-OPS-MON-000001",
+ "lifecycle_area": "field_monitoring_and_incident_handling",
+ "fictional_project": true,
+ "calendar_note": "Every date in this record is synthetic and belongs to the hypothetical Project Northcell. No organisation, plant, vehicle, technician or recycler named here exists.",
+ "purpose": "Establish what is collected from vehicles in service, what is done with it, and what happens when a field event suggests the item is not behaving as declared. The failure this exists to prevent is a field population that diverges from the validated population with nothing watching the divergence.",
+ "scope": {
+  "in_scope": [
+   "The item's own fault and state records as published to the vehicle control unit",
+   "Non-volatile event logs read at service",
+   "Fleet-level aggregation of those records by configuration identification",
+   "The incident classification and escalation path"
+  ],
+  "out_of_scope": [
+   "The vehicle's own telemetry, which the vehicle manufacturer owns",
+   "Any analysis that attributes a field event to a cause without the item's own record; a fleet aggregate can show a rate, not a cause",
+   "Cybersecurity incident response, which is a separate process and is not covered here"
+  ]
+ },
+ "responsible_roles": [
+  {
+   "role": "quality_engineer",
+   "named_as": "role identity: quality_engineer (field quality owner, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Owns the monitoring specification and the trend analysis"
+  },
+  {
+   "role": "service_technician",
+   "named_as": "role identity: service_technician (first responder, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Collects the item's record at service and files the incident report"
+  },
+  {
+   "role": "project_manager",
+   "named_as": "role identity: project_manager (escalation owner, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Decides whether a field event becomes a problem-resolution record"
+  },
+  {
+   "role": "safety_engineer",
+   "named_as": "role identity: safety_engineer (safety event assessor, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Assesses any field event bearing on a safety requirement"
+  }
+ ],
+ "procedures": [
+  {
+   "step": 1,
+   "action": "Collect the item's published state and fault records fleet-wide, keyed by the configuration identification string",
+   "record_produced": "Fleet aggregation record",
+   "acceptance_condition": "Every record is attributable to exactly one released configuration; records that cannot be attributed are excluded and the exclusion is counted",
+   "decision_point": "Whether a record that cannot be attributed is excluded or blocks the aggregate",
+   "synthetic_decision": "synthetic_decision:quality_engineer:SYNTH-MON-STEP-001"
+  },
+  {
+   "step": 2,
+   "action": "Compare each recorded fault occurrence count and state distribution against the expected distribution for that configuration",
+   "record_produced": "Trend record",
+   "acceptance_condition": "The comparison is per configuration and per operating mode, not pooled across the fleet; pooling mixes configurations whose expected behaviour differs",
+   "decision_point": "What deviation triggers an incident classification",
+   "synthetic_decision": "synthetic_decision:safety_engineer:SYNTH-MON-STEP-002"
+  },
+  {
+   "step": 3,
+   "action": "At each service, read the item's non-volatile event log before any replacement or reprogramming, and file the log with the service record",
+   "record_produced": "Service event record",
+   "acceptance_condition": "The log is captured before any action that could overwrite it",
+   "decision_point": "Whether a service action may proceed without capturing the log, which this procedure forbids",
+   "synthetic_decision": "synthetic_decision:project_manager:SYNTH-MON-STEP-003"
+  },
+  {
+   "step": 4,
+   "action": "Classify any field event against the severity classes and open an incident record",
+   "record_produced": "Incident record",
+   "acceptance_condition": "The event is classified against a named class with a stated response target, not left unclassified"
+  },
+  {
+   "step": 5,
+   "action": "Assess any incident bearing on a safety requirement and, if the assessment requires it, raise a problem-resolution record against the requirement",
+   "record_produced": "Safety event assessment",
+   "acceptance_condition": "The assessment names the requirement, the observed behaviour and whether the requirement's acceptance criteria were met in the field",
+   "decision_point": "Whether the incident requires a change, a problem-resolution record, or no action",
+   "synthetic_decision": "synthetic_decision:safety_manager:SYNTH-MON-STEP-005"
+  },
+  {
+   "step": 6,
+   "action": "Feed the trend into the measurement plan so that a fleet trend can inform the process metrics",
+   "record_produced": "Trend feedback record",
+   "acceptance_condition": "The trend is recorded against the metric it informs and with the population it was computed over; a fleet trend is not a process measurement and must not be reported as one"
+  }
+ ],
+ "records_produced": [
+  {
+   "record": "Fleet aggregation record",
+   "kind": "data",
+   "retention": "retained for the fleet's service life plus the trend window",
+   "identification_rule": "Configuration identification plus the aggregation period"
+  },
+  {
+   "record": "Trend record",
+   "kind": "data",
+   "retention": "retained for the trend window",
+   "identification_rule": "Configuration identification, operating mode and the deviation observed"
+  },
+  {
+   "record": "Service event record",
+   "kind": "record",
+   "retention": "permanent, per service event",
+   "identification_rule": "Vehicle identification, configuration identification, service date"
+  },
+  {
+   "record": "Incident record",
+   "kind": "record",
+   "retention": "permanent, per incident",
+   "identification_rule": "Incident identifier, classification and the configuration it occurred on"
+  },
+  {
+   "record": "Safety event assessment",
+   "kind": "record",
+   "retention": "permanent, per assessment",
+   "identification_rule": "Incident identifier, requirement id and the assessment verdict"
+  }
+ ],
+ "acceptance_criteria": [
+  {
+   "criterion": "Attribution",
+   "measure": "Fleet records attributable to exactly one configuration",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Pre-action log capture",
+   "measure": "Service events where the log was captured before any overwriting action",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Incident classification coverage",
+   "measure": "Incidents classified against a named severity class",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Safety event assessment coverage",
+   "measure": "Incidents bearing on a safety requirement that received an assessment",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Trend window",
+   "measure": "Fleet population within the stated trend window",
+   "threshold": ">= 90",
+   "unit": "%"
+  }
+ ],
+ "monitoring_signals": [
+  {
+   "signal": "Occurrence count per diagnosis entry, by configuration",
+   "what_it_detects": "A configuration whose fault population is diverging from its expected distribution, which is the earliest available signal of a systematic problem",
+   "collection_route": "Published by the item to the vehicle control unit and aggregated fleet-side",
+   "escalation": "To the field quality owner on deviation beyond the stated threshold; to the safety event assessor where the entry is safety-related",
+   "retention": "For the trend window"
+  },
+  {
+   "signal": "Time spent in each operating mode, by configuration",
+   "what_it_detects": "A population being used outside the mode envelope the item was validated for, which invalidates the validation for that population",
+   "collection_route": "Published mode indication, aggregated fleet-side",
+   "escalation": "To the project manager where a mode's share differs materially from the validated population",
+   "retention": "For the trend window"
+  },
+  {
+   "signal": "Degraded-mode entries and their duration",
+   "what_it_detects": "Population-wide degradation, which would indicate a fault the end-of-line test did not catch or a duty cycle the item was not designed for",
+   "collection_route": "Published by the item, aggregated fleet-side",
+   "escalation": "Immediate to the field quality owner; a sustained degraded population is an incident regardless of rate",
+   "retention": "For the trend window plus the incident retention period"
+  },
+  {
+   "signal": "Safe-state entries and their preceding fault",
+   "what_it_detects": "Every occasion the item reached the safe state in service, which is the direct measure of how often the item protects the vehicle in the field",
+   "collection_route": "Non-volatile event log, read at service",
+   "escalation": "Each occurrence is a candidate incident and is triaged; no threshold is applied because one safe-state entry in service is not a normal event",
+   "retention": "Permanent"
+  },
+  {
+   "signal": "Non-volatile log integrity check result at each boot",
+   "what_it_detects": "Tampering with or corruption of the item's own record, which is the precondition for every other signal being trustworthy",
+   "collection_route": "Recorded by the item and read at service",
+   "escalation": "Immediate; a failed integrity check means the other field signals from that item cannot be relied on",
+   "retention": "Permanent"
+  }
+ ],
+ "incident_handling": {
+  "severity_classes": [
+   {
+    "class": "class A - safety event",
+    "definition": "Any field event bearing on a requirement with a safety allocation, including every safe-state entry",
+    "response": "Immediate notification to the safety event assessor; assessment against the requirement's acceptance criteria within the response target; the assessment is filed whether or not it concludes anything"
+   },
+   {
+    "class": "class B - functional loss",
+    "definition": "A safety-unrelated function is lost or degraded in a way the declaring party did not intend, affecting usable capability",
+    "response": "Assessed by the field quality owner; a rising rate across the fleet is escalated to the project manager as a trend"
+   },
+   {
+    "class": "class C - diagnosability failure",
+    "definition": "The item behaves as intended but cannot be diagnosed, or a diagnosis entry is raised without an underlying condition",
+    "response": "Assessed by the field quality owner. This class matters more than its severity suggests: an item that cannot be diagnosed is an item whose safety case cannot be checked in the field."
+   },
+   {
+    "class": "class D - nuisance reaction",
+    "definition": "A safe-state or degraded reaction that the fleet data indicates was not warranted",
+    "response": "Assessed by the field quality owner and fed back into the false-reaction measure FB2-VER-TMS-000012. A rising class D rate is a signal that the item is being defeated or worked around in the field, which is a safety concern in its own right."
+   }
+  ],
+  "escalation_path": "Service technician to field quality owner to project manager, with the safety event assessor joining at class A and the safety manager joining when the assessment concludes the item's declared behaviour does not hold. The path is named rather than assumed: every participant is a fictional role identity and no one has been contacted.",
+  "response_targets": "Class A assessment within five working days of the log being read; class B triage within ten working days; class C and class D at the monthly trend review. These targets are the hypothetical programme's proposal and no party has agreed them.",
+  "post_incident_actions": [
+   "File the incident record with the configuration identification, the log and the service record",
+   "Raise a problem-resolution record against the requirement the event bears on, through the problem resolution process",
+   "Re-verify the measures covering that requirement before the resolution is closed",
+   "Feed the incident into the measurement plan's finding metric so that the trend is visible to the project rather than held by one person",
+   "Where the incident shows the item's declared behaviour does not hold, assess whether a safety event assessment is required against the safety case"
+  ]
+ },
+ "interactions_with_other_lifecycle_areas": [
+  {
+   "other_area": "Release and configuration identification",
+   "interaction": "Every field signal is keyed by the configuration identification string",
+   "direction": "this_area_requires_from_other",
+   "consequence_if_the_interaction_is_broken": "Fleet aggregates mix configurations whose expected behaviour differs, and a real divergence disappears into normal variation."
+  },
+  {
+   "other_area": "Production control and end-of-line test",
+   "interaction": "Line records are the baseline a field event is compared against",
+   "direction": "this_area_requires_from_other",
+   "consequence_if_the_interaction_is_broken": "A field event cannot be characterised against the item's as-delivered behaviour, so it cannot be attributed to the item or to its use."
+  },
+  {
+   "other_area": "Installation, operation and service",
+   "interaction": "The service class reads the non-volatile log this area depends on",
+   "direction": "mutual",
+   "consequence_if_the_interaction_is_broken": "The log is overwritten before it is read and the field signal for that vehicle is lost permanently."
+  },
+  {
+   "other_area": "Decommissioning and recycling",
+   "interaction": "An end-of-life decision is informed by the field record",
+   "direction": "this_area_provides_to_other",
+   "consequence_if_the_interaction_is_broken": "A pack is retired for a reason that its own record contradicts, or is kept because a record is missing."
+  }
+ ],
+ "operational_authorisation_statement": "This record is a fictional engineering artefact. It is NOT an authorised field procedure, it collects nothing, and there is no fleet. No monitoring signal listed here has ever been collected. production_authorized is false.",
+ "evidence_state": {
+  "any_step_executed": false,
+  "executed_steps": [],
+  "reason": "No production line, vehicle, charging site, workshop, fleet or recycling facility exists anywhere in this corpus. Master-prompt clause 2.5 forbids energising hardware and connecting to vehicles, so no step below can be performed by any means available here. The record documents the procedure and records that it has not been run."
+ },
+ "limitations": [
+  "Synthetic. There is no vehicle, no fleet and no telemetry. Every signal below is a signal that would be collected, not one that has been.",
+  "The record cannot say whether the item behaves as declared in service, because nothing has been observed. That is the central limitation and it is not softened by the specificity of the tables.",
+  "The severity classes, the escalation path and the response targets are the hypothetical programme's proposals. No fleet operator, service organisation or customer has agreed any of them.",
+  "Class D is included because a nuisance-reaction rate is a safety concern: an item that reacts when it should not is an item whose operators stop trusting its reactions. Nothing in this corpus measures that, and the validation measure written against it is blocked.",
+  "The fleet-trend analysis this record implies is not a process measurement and is not reported as one; the separation is stated in step 6 and repeated in the measurement plan."
+ ]
+}

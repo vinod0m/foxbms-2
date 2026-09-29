@@ -1,6 +1,6 @@
 # Traceability — links, chains and coverage (generated view)
 
-Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -29,17 +29,18 @@ Derived from the canonical link registries. Counts are computed here, not transc
 
 | Relation type | as_is | synthetic_reference | Total |
 |---|---|---|---|
-| `allocated_to` | 6 | 7 | 13 |
+| `allocated_to` | 6 | 34 | 40 |
 | `changes` | 0 | 16 | 16 |
+| `depends_on` | 0 | 12 | 12 |
 | `implements` | 3 | 3 | 6 |
-| `mitigates` | 1 | 1 | 2 |
-| `refines` | 9 | 4 | 13 |
-| `result_of` | 5 | 11 | 16 |
-| `reviewed_by` | 78 | 89 | 167 |
-| `supports` | 0 | 16 | 16 |
-| `validates` | 0 | 2 | 2 |
-| `verifies` | 9 | 23 | 32 |
-| **Total** | 111 | 172 | 283 |
+| `mitigates` | 1 | 2 | 3 |
+| `refines` | 9 | 32 | 41 |
+| `result_of` | 5 | 20 | 25 |
+| `reviewed_by` | 78 | 151 | 229 |
+| `supports` | 0 | 29 | 29 |
+| `validates` | 0 | 12 | 12 |
+| `verifies` | 9 | 38 | 47 |
+| **Total** | 111 | 349 | 460 |
 
 `related_to` is forbidden in canonical registries and appears only in mutation fixtures, where it is the injected defect.
 
@@ -104,6 +105,31 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-CHG-000014` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-SW-DSN-000002` | pending | false |
 | `FB2-LNK-CHG-000015` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-SW-SWR-000002` | pending | false |
 | `FB2-LNK-CHG-000016` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-VER-TMS-000001` | pending | false |
+| `FB2-LNK-CPT-000015` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000001` | reviewed | false |
+| `FB2-LNK-CPT-000016` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000002` | reviewed | false |
+| `FB2-LNK-CPT-000017` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000003` | reviewed | false |
+| `FB2-LNK-CPT-000018` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000004` | reviewed | false |
+| `FB2-LNK-CPT-000019` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000001` | reviewed | false |
+| `FB2-LNK-CPT-000020` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000002` | reviewed | false |
+| `FB2-LNK-CPT-000021` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000003` | reviewed | false |
+| `FB2-LNK-CPT-000022` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000004` | reviewed | false |
+| `FB2-LNK-FND-000111` | synthetic_reference | supports | `FB2-REV-FND-000025` | `FB2-SAF-TSC-000001` | reviewed | false |
+| `FB2-LNK-FND-000112` | synthetic_reference | supports | `FB2-REV-FND-000024` | `FB2-SAF-TSC-000001` | reviewed | false |
+| `FB2-LNK-FND-000113` | synthetic_reference | supports | `FB2-REV-FND-000026` | `FB2-SAF-TSC-000001` | reviewed | false |
+| `FB2-LNK-FND-000114` | synthetic_reference | supports | `FB2-REV-FND-000027` | `FB2-SYS-SYR-000005` | reviewed | false |
+| `FB2-LNK-FND-000115` | synthetic_reference | supports | `FB2-REV-FND-000028` | `FB2-VER-TMS-000018` | reviewed | false |
+| `FB2-LNK-LIF-000099` | synthetic_reference | depends_on | `FB2-REL-RLS-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
+| `FB2-LNK-LIF-000100` | synthetic_reference | depends_on | `FB2-PRD-EOL-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
+| `FB2-LNK-LIF-000101` | synthetic_reference | depends_on | `FB2-PRD-CAL-000001` | `FB2-SYS-SYR-000002` | reviewed | false |
+| `FB2-LNK-LIF-000102` | synthetic_reference | depends_on | `FB2-PRD-CAL-000001` | `FB2-SYS-SYR-000006` | reviewed | false |
+| `FB2-LNK-LIF-000103` | synthetic_reference | depends_on | `FB2-SVC-SVC-000001` | `FB2-SYS-SYR-000008` | reviewed | false |
+| `FB2-LNK-LIF-000104` | synthetic_reference | depends_on | `FB2-OPS-MON-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
+| `FB2-LNK-LIF-000105` | synthetic_reference | depends_on | `FB2-MAN-PLN-000001` | `FB2-SYS-SYR-000001` | reviewed | false |
+| `FB2-LNK-LIF-000106` | synthetic_reference | depends_on | `FB2-MAN-RSK-000001` | `FB2-SAF-TSC-000001` | reviewed | false |
+| `FB2-LNK-LIF-000107` | synthetic_reference | depends_on | `FB2-MAN-MSM-000001` | `FB2-SUP-QAP-000001` | reviewed | false |
+| `FB2-LNK-LIF-000108` | synthetic_reference | depends_on | `FB2-SUP-CFM-000001` | `FB2-MAN-PLN-000001` | reviewed | false |
+| `FB2-LNK-LIF-000109` | synthetic_reference | depends_on | `FB2-SUP-QAP-000001` | `FB2-PIM-IMP-000001` | reviewed | false |
+| `FB2-LNK-LIF-000110` | synthetic_reference | depends_on | `FB2-DEC-DCM-000001` | `FB2-SAF-ITE-000001` | reviewed | false |
 | `FB2-LNK-REVB-000001` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-HAZ-000001` | reviewed | false |
 | `FB2-LNK-REVB-000001` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-HAZ-000001` | reviewed | false |
 | `FB2-LNK-REVB-000002` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-SGO-000001` | reviewed | false |
@@ -269,6 +295,68 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-REVB-000087` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000009` | reviewed | false |
 | `FB2-LNK-REVB-000088` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000010` | reviewed | false |
 | `FB2-LNK-REVB-000089` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000011` | reviewed | false |
+| `FB2-LNK-REVB-000116` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-ITE-000001` | reviewed | false |
+| `FB2-LNK-REVB-000117` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-FSC-000001` | reviewed | false |
+| `FB2-LNK-REVB-000118` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-TSC-000001` | reviewed | false |
+| `FB2-LNK-REVB-000119` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000012` | reviewed | false |
+| `FB2-LNK-REVB-000120` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000013` | reviewed | false |
+| `FB2-LNK-REVB-000121` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000014` | reviewed | false |
+| `FB2-LNK-REVB-000122` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000015` | reviewed | false |
+| `FB2-LNK-REVB-000123` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000012` | reviewed | false |
+| `FB2-LNK-REVB-000124` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000013` | reviewed | false |
+| `FB2-LNK-REVB-000125` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000014` | reviewed | false |
+| `FB2-LNK-REVB-000126` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000015` | reviewed | false |
+| `FB2-LNK-REVB-000127` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000001` | reviewed | false |
+| `FB2-LNK-REVB-000128` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000002` | reviewed | false |
+| `FB2-LNK-REVB-000129` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000003` | reviewed | false |
+| `FB2-LNK-REVB-000130` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000004` | reviewed | false |
+| `FB2-LNK-REVB-000131` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000005` | reviewed | false |
+| `FB2-LNK-REVB-000132` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000001` | reviewed | false |
+| `FB2-LNK-REVB-000133` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000002` | reviewed | false |
+| `FB2-LNK-REVB-000134` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000003` | reviewed | false |
+| `FB2-LNK-REVB-000135` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000004` | reviewed | false |
+| `FB2-LNK-REVB-000136` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-PLN-000001` | reviewed | false |
+| `FB2-LNK-REVB-000137` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-RSK-000001` | reviewed | false |
+| `FB2-LNK-REVB-000138` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-MSM-000001` | reviewed | false |
+| `FB2-LNK-REVB-000139` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PIM-IMP-000001` | reviewed | false |
+| `FB2-LNK-REVB-000140` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PIM-IMP-000002` | reviewed | false |
+| `FB2-LNK-REVB-000141` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-QAP-000001` | reviewed | false |
+| `FB2-LNK-REVB-000142` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-CFM-000001` | reviewed | false |
+| `FB2-LNK-REVB-000143` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-PRB-000001` | reviewed | false |
+| `FB2-LNK-REVB-000144` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-CHC-000001` | reviewed | false |
+| `FB2-LNK-REVB-000145` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-SPL-000001` | reviewed | false |
+| `FB2-LNK-REVB-000146` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-RUS-000001` | reviewed | false |
+| `FB2-LNK-REVB-000147` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-REL-RLS-000001` | reviewed | false |
+| `FB2-LNK-REVB-000148` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PRD-EOL-000001` | reviewed | false |
+| `FB2-LNK-REVB-000149` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PRD-CAL-000001` | reviewed | false |
+| `FB2-LNK-REVB-000150` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-OPS-MON-000001` | reviewed | false |
+| `FB2-LNK-REVB-000151` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SVC-SVC-000001` | reviewed | false |
+| `FB2-LNK-REVB-000152` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-DEC-DCM-000001` | reviewed | false |
+| `FB2-LNK-REVB-000153` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000001` | reviewed | false |
+| `FB2-LNK-REVB-000154` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000002` | reviewed | false |
+| `FB2-LNK-REVB-000155` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000003` | reviewed | false |
+| `FB2-LNK-REVB-000156` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000004` | reviewed | false |
+| `FB2-LNK-REVB-000157` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000005` | reviewed | false |
+| `FB2-LNK-REVB-000158` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000006` | reviewed | false |
+| `FB2-LNK-REVB-000159` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000007` | reviewed | false |
+| `FB2-LNK-REVB-000160` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000008` | reviewed | false |
+| `FB2-LNK-REVB-000161` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000016` | reviewed | false |
+| `FB2-LNK-REVB-000162` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000017` | reviewed | false |
+| `FB2-LNK-REVB-000163` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000018` | reviewed | false |
+| `FB2-LNK-REVB-000164` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000019` | reviewed | false |
+| `FB2-LNK-REVB-000165` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000020` | reviewed | false |
+| `FB2-LNK-REVB-000166` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000016` | reviewed | false |
+| `FB2-LNK-REVB-000167` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000017` | reviewed | false |
+| `FB2-LNK-REVB-000168` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000018` | reviewed | false |
+| `FB2-LNK-REVB-000169` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000019` | reviewed | false |
+| `FB2-LNK-REVB-000170` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000020` | reviewed | false |
+| `FB2-LNK-REVB-000171` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000023` | reviewed | false |
+| `FB2-LNK-REVB-000172` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000024` | reviewed | false |
+| `FB2-LNK-REVB-000173` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000025` | reviewed | false |
+| `FB2-LNK-REVB-000174` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000026` | reviewed | false |
+| `FB2-LNK-REVB-000175` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000027` | reviewed | false |
+| `FB2-LNK-REVB-000176` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000028` | reviewed | false |
+| `FB2-LNK-REVB-000177` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000029` | reviewed | false |
 | `FB2-LNK-SAF-000019` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-HAZ-000001` | reviewed | false |
 | `FB2-LNK-SAF-000020` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000001` | reviewed | false |
 | `FB2-LNK-SEC-000001` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000001` | pending | false |
@@ -288,7 +376,7 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-SEC-000015` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-FSR-000003` | pending | false |
 | `FB2-LNK-SEC-000016` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SCS-000001` | pending | false |
 
-Relation types defined by the model but **not used by any canonical link in this corpus**: `constrained_by`, `consumes`, `depends_on`, `produces`, `specified_by`, `supersedes`. Their absence is reported rather than hidden.
+Relation types defined by the model but **not used by any canonical link in this corpus**: `constrained_by`, `consumes`, `produces`, `specified_by`, `supersedes`. Their absence is reported rather than hidden.
 
 ## Requirement-to-test coverage matrix
 
@@ -330,6 +418,31 @@ Built from `verifies` and `validates` links only. A requirement with no row in t
 | synthetic_reference | `FB2-VER-TMS-000011` | Test: HIL Fault Reaction (Target) | `FB2-SAF-FSR-000002` | FSR: SOA Voltage Limit Monitoring with Debounce | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000011` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000011` | Test: HIL Fault Reaction (Target) | `FB2-SAF-FSR-000003` | FSR: Contactor Opening on SOA Violation | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000011` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000011` | Test: HIL Fault Reaction (Target) | `FB2-SAF-FSR-000004` | FSR: Independent Hardware Voltage Monitor | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000011` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000016` | Verification: an unauthenticated peer is refused service, and an auth… | `FB2-SAF-SEC-000001` | SEC-000001: Authenticated and confidential transport for externally r… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000016` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000016` | Verification: an unauthenticated peer is refused service, and an auth… | `FB2-SYS-SYR-000007` | SYR: the item shall publish its state and shall not accept a request … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000016` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000016` | Verification: an unauthenticated peer is refused service, and an auth… | `FB2-SYS-SYR-000008` | SYR: commissioning and service shall not permit the item to energise … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000016` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000017` | Verification: a peer holding the maximum permitted connections open a… | `FB2-SAF-SEC-000002` | SEC-000002: Bounded connection admission and per-service resource bud… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000017` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000017` | Verification: a peer holding the maximum permitted connections open a… | `FB2-SYS-SYR-000007` | SYR: the item shall publish its state and shall not accept a request … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000017` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000017` | Verification: a peer holding the maximum permitted connections open a… | `FB2-SYS-SYR-000008` | SYR: commissioning and service shall not permit the item to energise … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000017` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000018` | Verification: a bus peer without the shared secret cannot present a f… | `FB2-SAF-SEC-000003` | SEC-000003: Message-level integrity and freshness for safety-relevant… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000018` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000018` | Verification: a bus peer without the shared secret cannot present a f… | `FB2-SYS-SYR-000007` | SYR: the item shall publish its state and shall not accept a request … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000018` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000018` | Verification: a bus peer without the shared secret cannot present a f… | `FB2-SYS-SYR-000008` | SYR: commissioning and service shall not permit the item to energise … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000018` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000019` | Verification: the serial link acts only on authenticated frames, and … | `FB2-SAF-SEC-000004` | SEC-000004: Framing, integrity and authorisation on the serial link, … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000019` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000019` | Verification: the serial link acts only on authenticated frames, and … | `FB2-SYS-SYR-000007` | SYR: the item shall publish its state and shall not accept a request … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000019` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000019` | Verification: the serial link acts only on authenticated frames, and … | `FB2-SYS-SYR-000008` | SYR: commissioning and service shall not permit the item to energise … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000019` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000020` | Verification: the initial sequence number is unpredictable across con… | `FB2-SAF-SEC-000005` | SEC-000005: Cryptographically strong entropy for network security par… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000020` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000020` | Verification: the initial sequence number is unpredictable across con… | `FB2-SYS-SYR-000007` | SYR: the item shall publish its state and shall not accept a request … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000020` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000020` | Verification: the initial sequence number is unpredictable across con… | `FB2-SYS-SYR-000008` | SYR: commissioning and service shall not permit the item to energise … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000020` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000012` | Validation: charging a healthy pack at the limit does not cause a spu… | `FB2-SYS-NED-000001` | Stakeholder need: the pack manufacturer shall not lose usable capacit… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000012` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000012` | Validation: charging a healthy pack at the limit does not cause a spu… | `FB2-SYS-UC-000001` | Use case: charging a healthy 400 V pack to its declared full state | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000012` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000013` | Validation: the driver's usable experience after a genuine overvoltag… | `FB2-SYS-NED-000003` | Stakeholder need: a driver shall be left in control and told what hap… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000013` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000013` | Validation: the driver's usable experience after a genuine overvoltag… | `FB2-SYS-UC-000002` | Use case: cell overvoltage detected while the vehicle is being driven | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000013` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000014` | Validation: degraded operation remains usable and is announced before… | `FB2-SYS-NED-000002` | Stakeholder need: on a degradation the item shall retain a usable cap… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000014` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000014` | Validation: degraded operation remains usable and is announced before… | `FB2-SYS-NED-000005` | Stakeholder need: a trained service technician shall be able to commi… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000014` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000014` | Validation: degraded operation remains usable and is announced before… | `FB2-SYS-UC-000003` | Use case: a single measurement channel degrades in service | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000014` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000015` | Validation: the service technician can commission and service the ite… | `FB2-SYS-NED-000005` | Stakeholder need: a trained service technician shall be able to commi… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000015` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000015` | Validation: the service technician can commission and service the ite… | `FB2-SYS-UC-000004` | Use case: commissioning a new item and servicing it in the workshop | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000015` none/blocked |
+| synthetic_reference | `FB2-VER-TMS-000013` | Validation: the driver's usable experience after a genuine overvoltag… | `FB2-SAF-SGO-000001` | Cell Voltage Safety Goal | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000013` none/blocked |
 
 ### Coverage diagram
 

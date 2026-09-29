@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T10:08:35Z |
+| Generated | 2026-09-29T12:17:43Z |
 
 ## Scope
 
@@ -174,27 +174,30 @@ One row per requirement artifact across FSR/TSR/SWR/management classes, both pro
 | `synthetic_reference` | `FB2-SAF-FSR-000002` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` | `FB2-SW-SWR-000002`←FB2-VER-TMS-000001,FB2-VER-TMS-000007,FB2-VER-TMS-000010 | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000010`, `FB2-VER-TMS-000011` |  |
 | `synthetic_reference` | `FB2-SAF-FSR-000003` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` |  |
 | `synthetic_reference` | `FB2-SAF-FSR-000004` | FSR | **COVERED-DIRECT** | `FB2-VER-TMS-000004`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` | `FB2-HW-TSR-000004`←FB2-VER-TMS-000004 | `FB2-VER-TMS-000004`, `FB2-VER-TMS-000008`, `FB2-VER-TMS-000011` |  |
-| `synthetic_reference` | `FB2-SAF-SEC-000001` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
-| `synthetic_reference` | `FB2-SAF-SEC-000002` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
-| `synthetic_reference` | `FB2-SAF-SEC-000003` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
-| `synthetic_reference` | `FB2-SAF-SEC-000004` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
-| `synthetic_reference` | `FB2-SAF-SEC-000005` | SEC | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SAF-SEC-000001` | SEC | **COVERED-DIRECT** | `FB2-VER-TMS-000016` | — | `FB2-VER-TMS-000016` |  |
+| `synthetic_reference` | `FB2-SAF-SEC-000002` | SEC | **COVERED-DIRECT** | `FB2-VER-TMS-000017` | — | `FB2-VER-TMS-000017` |  |
+| `synthetic_reference` | `FB2-SAF-SEC-000003` | SEC | **COVERED-DIRECT** | `FB2-VER-TMS-000018` | — | `FB2-VER-TMS-000018` |  |
+| `synthetic_reference` | `FB2-SAF-SEC-000004` | SEC | **COVERED-DIRECT** | `FB2-VER-TMS-000019` | — | `FB2-VER-TMS-000019` |  |
+| `synthetic_reference` | `FB2-SAF-SEC-000005` | SEC | **COVERED-DIRECT** | `FB2-VER-TMS-000020` | — | `FB2-VER-TMS-000020` |  |
 | `synthetic_reference` | `FB2-SW-SWR-000001` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` | — | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` |  |
 | `synthetic_reference` | `FB2-SW-SWR-000002` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` | — | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` |  |
 | `synthetic_reference` | `FB2-SW-SWR-000003` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` | — | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000001` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000002` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007, `FB2-SW-SWR-000002`←FB2-VER-TMS-000001,FB2-VER-TMS-000007,FB2-VER-TMS-000010 | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000003` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-HW-TSR-000004`←FB2-VER-TMS-000004, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000004`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000004` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000005` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000004`←FB2-VER-TMS-000004 | `FB2-VER-TMS-000004` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000006` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005`, `FB2-VER-TMS-000007` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000007` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` | `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000008` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` | `FB2-SAF-SEC-000001`←FB2-VER-TMS-000016, `FB2-SAF-SEC-000004`←FB2-VER-TMS-000019, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` |  |
 
 ### Coverage Summary
 
-- **Total requirement artifacts**: 26
-- **Covered (any status)**: 21 (80%)
-- **UNCOVERED**: 5
-  - `FB2-SAF-SEC-000001` (`synthetic_reference`)
-  - `FB2-SAF-SEC-000002` (`synthetic_reference`)
-  - `FB2-SAF-SEC-000003` (`synthetic_reference`)
-  - `FB2-SAF-SEC-000004` (`synthetic_reference`)
-  - `FB2-SAF-SEC-000005` (`synthetic_reference`)
+- **Total requirement artifacts**: 34
+- **Covered (any status)**: 34 (100%)
+- **UNCOVERED**: 0
 
-UNCOVERED requirements are the honest corpus state; the gaps are tracked by review dispositions in `FB2-REV-000001` and the gap report. No coverage is fabricated.
+Every requirement artifact has at least one verification route: a direct `verifies` link, an allocated child that is verified, or a test measure that names it. **This is a statement about the traceability graph and not about verification evidence.** COVERED-INDIRECT means a lower-level requirement is verified by some measure; it says nothing about whether that measure was executed, and in this corpus most were not. The executions that exist carry `execution_kind` `synthetic_fixture`, `none` or a host run of the real product code, and none of them is a run on the target hardware. A requirement whose only route is an allocated child that is itself blocked is uncovered in substance and covered in form, and the coverage matrix reports the form because that is what it measures.
 
 ## Change Impact Mapping
 
@@ -257,4 +260,4 @@ Three slots in these records are empty by schema rather than by omission, and th
 
 ---
 
-*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T12:17:43Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

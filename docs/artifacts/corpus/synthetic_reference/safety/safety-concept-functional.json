@@ -1,0 +1,495 @@
+{
+ "id": "FB2-SAF-FSC-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "safety_concept",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Functional Safety Concept: allocation of the cell-voltage safety goal to the architectural elements of the item",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-COD-000005",
+  "FB2-SRC-COD-000006",
+  "FB2-SRC-COD-000007",
+  "FB2-SRC-COD-000008",
+  "FB2-SRC-COD-000009",
+  "FB2-SRC-COD-000027",
+  "FB2-SRC-COD-000028",
+  "FB2-SRC-COD-000029"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-002",
+  "FB2-ASM-003",
+  "FB2-ASM-004",
+  "FB2-ASM-005",
+  "FB2-ASM-006",
+  "FB2-ASM-007",
+  "FB2-ASM-008",
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 7 (functional safety concept)",
+   "status": "mapped",
+   "rationale": "The item-related assumptions, the high-level architectural elements and the safety strategies are exactly what this clause asks for. Recorded as mapped for the conceptual role only; no normative text is reproduced and the clause was not consulted for this record."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 6 (hazard analysis and safety goals)",
+   "status": "mapped",
+   "rationale": "The concept consumes the safety goal produced there and allocates it."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.3",
+   "status": "mapped",
+   "rationale": "System architectural design: the high-level architectural elements and their allocation."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "First functional safety concept for the synthetic_reference profile. The corpus previously had a hazard, a safety goal and four functional safety requirements with no record of how the goal was to be achieved by any architecture. This concept supplies that: the item-related assumptions, the high-level architectural elements and their roles, the safety strategies, the scope boundary, the interfaces to other safety-related items and the allocation of the safety goal to elements. Not a safety plan: a plan states what will be done, this states what the item is."
+  }
+ ],
+ "concept_stage": "functional_safety_concept",
+ "concept_identity": {
+  "concept_id": "FB2-SAF-FSC-000001",
+  "item_ref": "FB2-SAF-ITE-000001",
+  "fictional": true,
+  "derived_from": [
+   "FB2-SAF-HAZ-000001",
+   "FB2-SAF-SGO-000001",
+   "FB2-SAF-FSR-000001",
+   "FB2-SAF-FSR-000002",
+   "FB2-SAF-FSR-000003",
+   "FB2-SAF-FSR-000004",
+   "FB2-SAF-ANL-000001",
+   "FB2-SAF-ANL-000004",
+   "FB2-SAF-SCS-000001"
+  ],
+  "clause_reference": "ISO 26262-3:2018 Clause 7 (working title: functional safety concept). The clause reference is recorded from the locked standards baseline; no clause text was consulted or reproduced."
+ },
+ "item_related_assumptions": [
+  {
+   "assumption": "A cell can leave its safe operating area at any time without warning, and the item will observe it as a voltage outside the configured limit.",
+   "evidence_class": "synthetic_assumption",
+   "consequence_if_false": "If a cell failed in a way that stayed inside the limit while being dangerous (a chemistry failure at nominal voltage), every requirement in the concept would be satisfied and the hazard would still occur. The concept's coverage would be an illusion."
+  },
+  {
+   "assumption": "Cell-voltage measurement noise is Gaussian with sigma not exceeding 5 mV.",
+   "evidence_class": "synthetic_assumption",
+   "consequence_if_false": "The debounce strategy in FB2-SAF-FSR-000002 is dimensioned on this figure. A heavier-tailed or correlated noise distribution would produce either late detection or a false reaction, and the recorded false-positive rate of 1e-6 per hour would be wrong."
+  },
+  {
+   "assumption": "The contactor opens mechanically within 30 ms worst case over the whole temperature range.",
+   "evidence_class": "synthetic_assumption",
+   "consequence_if_false": "The mechanical part of the timing budget is spent before the item has finished deciding, and the whole FTTI is lost."
+  },
+  {
+   "assumption": "The external converter respects the charge and discharge limits the item publishes.",
+   "evidence_class": "synthetic_assumption",
+   "consequence_if_false": "The item's safe operating area is not enforced by anyone; the item detects the excursion but the cause is outside its control, and the reaction is a protective disconnect rather than a correction."
+  },
+  {
+   "assumption": "The independent hardware monitor can be built with a separate divider, comparator and supply, and can actuate the contactors without passing through the main MCU.",
+   "evidence_class": "synthetic_assumption",
+   "consequence_if_false": "The independent path is not independent, the ASIL D objective has no second barrier, and the freedom-from-interference claim in FB2-SAF-FSR-000004 is false."
+  },
+  {
+   "assumption": "The real foxBMS source at commit 308028fb implements the observed measurement, SOA, contactor and diagnosis behaviour, so that grounding this concept on it grounds the concept on something that exists.",
+   "evidence_class": "source_observed",
+   "consequence_if_false": "The concept's grounding becomes an invention. The observed behaviour is recorded in the as_is profile and is not restated here as if it were the hypothetical item's verified behaviour."
+  }
+ ],
+ "safety_goals_addressed": [
+  {
+   "safety_goal_id": "FB2-SAF-SGO-000001",
+   "asil": "ASIL_D",
+   "allocation_statement": "The goal's objective - detect a cell voltage limit violation and reach the safe state, all contactors open, within the FTTI - is split across five of the six architectural elements below, and no single element is accountable for the whole objective. AR-001 owns detection of the condition; AR-002 owns the decision that the condition is confirmed; AR-003 owns carrying the decision to the actuator without it ageing or being forged; AR-004 owns commanding and confirming the contactor state; AR-005 owns an independent, second detection and actuation path that does not pass through any of the above. AR-006 owns only supply integrity and is explicitly not allocated any part of the goal's objective, which is why it can fail without defeating the goal."
+  }
+ ],
+ "architectural_elements": [
+  {
+   "element_id": "AR-001",
+   "element_name": "Measurement acquisition and validation chain",
+   "element_kind": "hardware_and_software",
+   "role": "Convert the cell voltages on the sense leads into validated, age-stamped values in the shared data store, or declare that the conversion did not succeed.",
+   "interfaces": [
+    "slave analogue front end -> isoSPI/SPI link",
+    "SPI link -> shared data store"
+   ],
+   "owns_objective_part": "Detection of the condition. It is the only element that can observe an out-of-range cell voltage in the first place.",
+   "independence_note": "Shares the supply and the MCU with AR-002 to AR-004. It is not independent of them; AR-005 is the independent path."
+  },
+  {
+   "element_id": "AR-002",
+   "element_name": "Safe-operating-area decision function",
+   "element_kind": "software",
+   "role": "Compare acquired values against the configured limits with a debounce, apply plausibility and redundancy checks, classify the result as within limits, degraded or out of limits, and request the safe state when the classification warrants it.",
+   "interfaces": [
+    "shared data store",
+    "fault management and state machine (SYS)"
+   ],
+   "owns_objective_part": "Confirmation. It decides that the condition is real rather than a measurement artefact, and it is the element whose debounce directly costs detection latency.",
+   "independence_note": "Runs on the main MCU. A failure of this element leaves AR-005 as the only barrier, which is the reason AR-005 exists at all."
+  },
+  {
+   "element_id": "AR-003",
+   "element_name": "Shared data and communication path",
+   "element_kind": "software",
+   "role": "Carry measurements, ages and decisions between elements with a defined freshness and integrity, and exchange state with the vehicle controller without allowing an external actor to override an item-side safety decision.",
+   "interfaces": [
+    "AR-001 -> AR-002",
+    "AR-002 -> AR-004",
+    "AR-004 -> vehicle control unit"
+   ],
+   "owns_objective_part": "Chain integrity. It holds no part of the objective on its own, but a stale or forged value crossing it invalidates the detection and the confirmation that AR-001 and AR-002 produced.",
+   "independence_note": "This is also the attack surface the cybersecurity concept bounds. Its integrity is assumed by FB2-SAF-SEC-000003 and FB2-SAF-SEC-000004; the assumption is one-directional and is stated as such."
+  },
+  {
+   "element_id": "AR-004",
+   "element_name": "Contactor actuation and feedback path",
+   "element_kind": "hardware_and_software",
+   "role": "Command the contactor drivers into the safe state, confirm by auxiliary feedback that the contactor actually opened, and detect a welded contactor.",
+   "interfaces": [
+    "AR-002 -> SYS state machine",
+    "SYS state machine -> safe base controller -> contactor coils",
+    "auxiliary contacts -> AR-003"
+   ],
+   "owns_objective_part": "Actuation and confirmation. Without it the safe state is commanded but not achieved, which is a different outcome from reaching it.",
+   "independence_note": "Its controller has its own watchdog independent of the main MCU (FB2-ASM-007), which makes this element's actuation path partly independent of AR-002."
+  },
+  {
+   "element_id": "AR-005",
+   "element_name": "Independent hardware voltage monitor",
+   "element_kind": "hardware",
+   "role": "Measure a subset of the cell voltages through its own dividers and comparator and open the contactors on its own command, with no path through the main MCU, its supply or its software.",
+   "interfaces": [
+    "independent dividers/comparator -> independent actuation -> contactor coils"
+   ],
+   "owns_objective_part": "A second, independent realisation of detection and actuation. It is the element that makes the ASIL D objective survive a failure of AR-001 to AR-004.",
+   "independence_note": "This is the element whose independence FB2-SAF-FSR-000004 claims. The claim is recorded as an assumption (FB2-ASM-008), not as a demonstrated property, and this concept does not upgrade it."
+  },
+  {
+   "element_id": "AR-006",
+   "element_name": "Supply and watchdog supervision",
+   "element_kind": "hardware",
+   "role": "Detect an out-of-range or unstable supply and force the safe base controller into its defined state when the MCU stops servicing it.",
+   "interfaces": [
+    "supply rails -> safe base controller watchdog",
+    "reset line -> MCU"
+   ],
+   "owns_objective_part": "None of the safety goal's objective is allocated to it. This is a deliberate statement: a design in which every element carries part of the objective has no element left whose failure is harmless.",
+   "independence_note": "Its failure mode is benign to the goal: losing supply supervision means the watchdog no longer acts, which is a loss of a barrier, not a direct cause of the hazard."
+  }
+ ],
+ "safety_strategies": {
+  "fault_detection": [
+   {
+    "mechanism": "Front-end error-detection code on every measurement transfer",
+    "detects": "A corrupted or mis-addressed cell-voltage transfer on the slave link",
+    "element_id": "AR-001",
+    "detection_time_budget_ms": 2,
+    "coverage_claim": "Single-bit and double-bit errors in the transferred word",
+    "coverage_claim_evidence": [
+     "FB2-HW-TSR-000001 requires the front end to detect a single-bit error on every transfer; no measurement of that coverage exists in this corpus.",
+     "FB2-VER-TMS-000001 and FB2-VER-EXE-000001 exercise the software path; the front end's own error-detection capability is not exercised by them."
+    ]
+   },
+   {
+    "mechanism": "Measurement plausibility and spread checks against independent channels",
+    "detects": "A measurement that is physically implausible or that disagrees with a redundant channel",
+    "element_id": "AR-002",
+    "detection_time_budget_ms": 5,
+    "coverage_claim": "Front-end gain, offset and open-sense-line failures",
+    "coverage_claim_evidence": [
+     "FB2-SAF-FSR-000001 names plausibility and redundancy as the mitigation; the coverage figure itself is not quantified anywhere in this corpus."
+    ]
+   },
+   {
+    "mechanism": "Safe-operating-area comparison with debounce",
+    "detects": "A cell voltage above the maximum or below the minimum limit",
+    "element_id": "AR-002",
+    "detection_time_budget_ms": 5,
+    "coverage_claim": "Confirmed limit violations after two consecutive samples within 100 ms",
+    "coverage_claim_evidence": [
+     "FB2-SAF-FSR-000002 and FB2-SW-SWR-000002 carry the debounce and its 1e-6 per hour false-positive claim; the claim is an analytical estimate on the assumed noise distribution, not a measurement, and is labelled as such there."
+    ]
+   },
+   {
+    "mechanism": "Contactor auxiliary feedback and weld detection",
+    "detects": "A contactor that did not open, or that opened when it was commanded closed",
+    "element_id": "AR-004",
+    "detection_time_budget_ms": 5,
+    "coverage_claim": "Coil-path failure and welded contacts",
+    "coverage_claim_evidence": [
+     "FB2-HW-TSR-000003 sets a 2 ms feedback latency and a 100 ms weld-detection time; no hardware measurement of either exists in this corpus."
+    ]
+   },
+   {
+    "mechanism": "Independent hardware threshold monitor",
+    "detects": "A cell voltage above the hardware monitor's own threshold, independently of the main MCU and its software",
+    "element_id": "AR-005",
+    "detection_time_budget_ms": 50,
+    "coverage_claim": "All monitored cells, or a representative subset of at least 50%",
+    "coverage_claim_evidence": [
+     "FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 state the coverage with an 'all cells or representative subset >= 50%' disjunction. That disjunction is not a measurable acceptance criterion, and it is recorded as finding FB2-REV-FND-000027 rather than resolved here."
+    ]
+   },
+   {
+    "mechanism": "Link and watchdog supervision",
+    "detects": "Loss of the measurement link and loss of the main MCU",
+    "element_id": "AR-003",
+    "detection_time_budget_ms": 5,
+    "coverage_claim": "Not quantified",
+    "coverage_claim_evidence": []
+   }
+  ],
+  "fault_reaction": [
+   {
+    "reaction": "Open all high-voltage contactors, disable charging, latch the fault and log it",
+    "triggered_by": "A confirmed safe-operating-area violation",
+    "element_id": "AR-004",
+    "reaction_time_budget_ms": 35,
+    "mode_dependence": "Mode-dependent, and this is the load-bearing caveat of the concept. In MOD-004 (closed, current flowing) opening the contactors removes propulsion from a moving vehicle, so the item must distinguish a genuine limit violation from a degraded condition and must not enter FAULT for the latter. In MOD-001, MOD-002 and MOD-007 the reaction is unambiguous and immediate. In MOD-006 the state is already latched. Disconnecting a battery is itself an action with consequences, and this concept does not treat it as unconditionally safe."
+   },
+   {
+    "reaction": "Open the contactors through the independent path, without waiting for the main MCU",
+    "triggered_by": "The independent monitor's own hardware threshold",
+    "element_id": "AR-005",
+    "reaction_time_budget_ms": 50,
+    "mode_dependence": "The independent path has no mode arbitration. It opens the contactors whenever its threshold is exceeded. In MOD-004 that means a hardware false positive disconnects a moving vehicle, which is why the independent monitor's threshold accuracy is a safety requirement in its own right and not only a specification detail."
+   },
+   {
+    "reaction": "Enter the latched FAULT mode and refuse to leave it without an authorised service action",
+    "triggered_by": "Any condition whose severity requires the safe state",
+    "element_id": "AR-002",
+    "reaction_time_budget_ms": 3,
+    "mode_dependence": "Mode-independent. The latch is what makes the safe state persistent rather than a transient that a clearing condition would undo."
+   },
+   {
+    "reaction": "Force the safe base controller into its defined state",
+    "triggered_by": "Watchdog expiry or supply out of range",
+    "element_id": "AR-006",
+    "reaction_time_budget_ms": 5,
+    "mode_dependence": "Mode-independent, and it is the reaction that still works when AR-002 has failed, which is the reason it exists."
+   }
+  ],
+  "degraded_operation": [
+   {
+    "degraded_mode": "Derated charge and discharge with enhanced monitoring",
+    "capability_kept": "Monitoring at a higher rate, charge and discharge within reduced limits, contactor control retained",
+    "capability_removed": "Full-rate charge and discharge, and the ability to claim the item is healthy",
+    "entry_condition": "A diagnosis entry whose severity permits operation but forbids full-rate transfer",
+    "duration_limit": "Until the degraded condition is cleared by service or exceeds the vehicle's own derating time limit",
+    "user_indication": "The degraded state is published to the vehicle control unit so the driver is told the pack is restricted"
+   },
+   {
+    "degraded_mode": "Reduced-rate monitoring after a measurement-path degradation",
+    "capability_kept": "Contactor control and a coarser measurement set",
+    "capability_removed": "Fast detection on the degraded channel",
+    "entry_condition": "Plausibility or redundancy detects a disagreement between channels",
+    "duration_limit": "Until service; a degraded channel is not cleared by the condition disappearing",
+    "user_indication": "Published to the vehicle control unit"
+   }
+  ],
+  "safe_state": "All high-voltage contactors open, charging disabled, propulsion disabled, fault logged and latched. The safe state is reachable from every mode and is identical in every mode; what differs between modes is how much capability is lost by reaching it, which is why the fault reaction above is stated per mode.",
+  "strategy_allocation": "Detection is split so that no single element both detects and acts: AR-001 and AR-005 detect, AR-002 confirms, AR-004 acts and confirms the action, AR-003 carries the decision, AR-006 acts only when the others have failed. A failure of AR-001 to AR-004 together is covered by AR-005, which shares nothing with them. A failure of AR-005 costs a barrier but does not cause the hazard, because the goal's objective is still achieved by AR-001 to AR-004 in that case. That asymmetry is the allocation's load-bearing property and it is what the ASIL D assignment rests on."
+ },
+ "scope_statement": {
+  "inside_safety_scope": [
+   "Acquisition, validation and age-stamping of cell voltage and cell temperature",
+   "Safe-operating-area monitoring, debounce, classification and the latched reaction",
+   "Measurement plausibility and redundancy evaluation",
+   "Contactor and precharge sequencing, actuation and feedback confirmation",
+   "The independent hardware monitor and its own actuation path",
+   "Supply and watchdog supervision as a barrier",
+   "The integrity of the internal data path, to the extent that a forged or stale value could defeat a detection"
+  ],
+  "outside_safety_scope": [
+   {
+    "element": "Thermal runaway from cell chemistry",
+    "why_outside": "A property of the cells, not of an E/E system. No requirement in this concept can prevent it, and pretending otherwise would inflate the ASIL of the item over a hazard it does not reach.",
+    "hazard_class": "inherent_battery_hazard_outside_fuSaS_scope"
+   },
+   {
+    "element": "Mechanical protection of the pack",
+    "why_outside": "Venting and enclosure are mechanical. Their adequacy is the pack integrator's safety case.",
+    "hazard_class": "inherent_battery_hazard_outside_fuSaS_scope"
+   },
+   {
+    "element": "Converter and charger control strategy",
+    "why_outside": "The item publishes limits and assumes they are respected (FB2-ASM-003). A converter that ignores them is an external-system behaviour failure, and the item's response to it is the protective disconnect already specified.",
+    "hazard_class": "external_system_behaviour"
+   },
+   {
+    "element": "Vehicle-level crash isolation policy",
+    "why_outside": "Whether a collision requires isolation is a vehicle-level decision. The item supervises the interlock it is given.",
+    "hazard_class": "external_system_behaviour"
+   },
+   {
+    "element": "Production programming and end-of-line test execution",
+    "why_outside": "A lifecycle process, not a function. A wrongly configured item is a production escape, and it is handled by the production records, not by a functional requirement.",
+    "hazard_class": "production_or_service_process"
+   },
+   {
+    "element": "Electromagnetic robustness of the item under the full test level",
+    "why_outside": "An environmental property. The concept assumes a level of robustness and does not claim to establish it.",
+    "hazard_class": "environmental"
+   }
+  ],
+  "boundary_argument": "The scope is the set of failures the item can cause or detect-and-react to. Every element inside the boundary can produce the hazardous event by failing to report an overvoltage, failing to report it in time, or failing to open the contactor. Every element outside the boundary either cannot produce the event at all, or produces it through a route that passes back into one of the inside elements (for example a converter that overdrives a cell produces an overvoltage, which AR-001 then detects and AR-004 then reacts to, so the requirement lands inside the boundary even though the cause does not). The argument is drawn at the item's electrical interfaces, not at its functions, because the item's functions are chosen by the integrator and its interfaces are constrained by the chemistry."
+ },
+ "interfaces_to_other_safety_related_items": [
+  {
+   "other_item": "Vehicle high-voltage safety monitor",
+   "interface_description": "Interlock assertion into the item and item state and insulation diagnosis out of it",
+   "shared_objective_or_none": "Shared objective in MOD-004 and MOD-006: both items may require the pack to be isolated. Neither coordinates with the other; both act independently.",
+   "assumption_dependence": "That the interlock assertion cannot be defeated from inside the item, and that the vehicle-level monitor is itself qualified."
+  },
+  {
+   "other_item": "Cell protection circuit embedded in each cell",
+   "interface_description": "The cell's own overvoltage protection acts on the cell independently of the item",
+   "shared_objective_or_none": "Shared objective for overvoltage. Two independent mechanisms pursue the same safe outcome with thresholds the item does not control.",
+   "assumption_dependence": "That the cell's threshold and timing are known and compatible with the item's limits."
+  },
+  {
+   "other_item": "Cell-sensing front end and its analogue network",
+   "interface_description": "The cell input network, its protection and its calibration are inside the item but are supplied by a component vendor",
+   "shared_objective_or_none": "None. The item owns the objective; the vendor owns the component's behaviour within its specification.",
+   "assumption_dependence": "That the component meets its stated accuracy and error-detection specification over the full temperature range. Nothing in this corpus demonstrates that."
+  }
+ ],
+ "concept_assumptions": [
+  "FB2-ASM-001",
+  "FB2-ASM-002",
+  "FB2-ASM-003",
+  "FB2-ASM-004",
+  "FB2-ASM-005",
+  "FB2-ASM-006",
+  "FB2-ASM-007",
+  "FB2-ASM-008",
+  "FB2-ASM-011"
+ ],
+ "external_measures": [
+  {
+   "measure": "Cell-level overvoltage protection inside each cell",
+   "owner_outside_the_item": "Cell supplier (fictional role: cell_supplier_quality_engineer)",
+   "why_the_item_cannot_do_it": "The cell protection is inside the cell, physically unreachable from the item, and reacts even with the item unpowered. It is a second barrier the item does not control and could not replace."
+  },
+  {
+   "measure": "Cell chemistry limits and the cell supplier's own safety case",
+   "owner_outside_the_item": "Cell supplier (fictional role: cell_supplier_quality_engineer)",
+   "why_the_item_cannot_do_it": "The safe operating area of the chemistry is a property of the chemistry. The item monitors against limits it is given; it cannot widen them."
+  },
+  {
+   "measure": "Vehicle high-voltage isolation on collision",
+   "owner_outside_the_item": "Vehicle manufacturer (fictional role: vehicle_safety_owner)",
+   "why_the_item_cannot_do_it": "The item supervises the interlock line. Whether a collision warrants isolation depends on vehicle-level information the item does not have."
+  },
+  {
+   "measure": "Certified recycling handling of an energised pack",
+   "owner_outside_the_item": "Recycler (fictional role: recycler_safety_officer)",
+   "why_the_item_cannot_do_it": "The item is removed from the vehicle before end of life. It contributes no control once it is disconnected."
+  }
+ ],
+ "verification_and_validation_criteria": [
+  {
+   "criterion": "Every architecture element allocated part of the safety goal has a fault detection and a fault reaction allocated to it, and the reaction reaches the safe state.",
+   "how_it_would_be_checked": "Traversal of the refines and allocated_to links from the safety goal to the architecture, then a coverage check that each element appears in both the detection and the reaction list.",
+   "record_kind_expected": "Traceability query result plus a review record"
+  },
+  {
+   "criterion": "The serial timing budget closes inside the FTTI with a non-negative margin.",
+   "how_it_would_be_checked": "Arithmetic over the safety goal's timing budget allocation, compared with the FTTI, performed by the technical safety concept rather than asserted.",
+   "record_kind_expected": "Technical safety concept with an explicit arithmetic_check"
+  },
+  {
+   "criterion": "Each claimed diagnostic coverage figure has a named evidence source.",
+   "how_it_would_be_checked": "Check that every coverage_claim is accompanied by a non-empty coverage_claim_evidence list.",
+   "record_kind_expected": "Safety concept record plus analysis records"
+  },
+  {
+   "criterion": "The safe state is reachable from every operating mode named in the item definition.",
+   "how_it_would_be_checked": "For each mode in the item definition, confirm that a reaction is allocated and that its mode_dependence field is populated rather than assumed.",
+   "record_kind_expected": "Item definition plus this concept"
+  },
+  {
+   "criterion": "Stakeholder intent is validated in operational scenarios, not only in requirement-level tests.",
+   "how_it_would_be_checked": "Each validation measure must validate a stakeholder need or safety goal and must state the observable by which the outcome is judged.",
+   "record_kind_expected": "Validation test measures and their executions"
+  }
+ ],
+ "contradictions_found_while_authoring": [
+  {
+   "contradiction": "The safety goal's timing budget allocation sums to 85 ms and its recorded margin is 20 ms, giving 105 ms against a fault-tolerant time interval of 100 ms. The margin is therefore larger than the time available, which means it is an overrun rather than a margin.",
+   "records_in_conflict": [
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSC-000001"
+   ],
+   "how_this_concept_handles_it": "The concept does not adopt the 105 ms figure and does not edit the safety goal. The functional strategy allocation above is written so that the barrier chain fits inside the FTTI, and the arithmetic is carried explicitly into the technical safety concept, which allocates a margin that closes. The contradiction is raised as finding FB2-REV-FND-000025. Resolving it requires a change to FB2-SAF-SGO-000001, which this authoring pass does not make: changing a baselined safety goal is a controlled change, not a documentation edit.",
+   "finding_ref": "FB2-REV-FND-000025"
+  },
+  {
+   "contradiction": "FB2-SAF-FSR-000003 requires the contactors open within 30 ms of the fault request with feedback confirmation within a further 5 ms, so its own acceptance criterion (30 ms to feedback open) contradicts its own rationale (30 ms mechanical plus 5 ms feedback, i.e. 35 ms), and the safety goal allocates 5 ms of command plus 30 ms of mechanical time plus 5 ms of feedback verification, i.e. 40 ms, before detection.",
+   "records_in_conflict": [
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-SGO-000001"
+   ],
+   "how_this_concept_handles_it": "The fault reaction for AR-004 is budgeted here at 35 ms of command-plus-actuation and the technical safety concept shows the arithmetic, which exceeds the 30 ms the requirement states. The concept does not silently restate the requirement's threshold to 40 ms, and it does not shorten the requirement's threshold to fit the budget. It records the conflict and raises finding FB2-REV-FND-000024.",
+   "finding_ref": "FB2-REV-FND-000024"
+  },
+  {
+   "contradiction": "FB2-SAF-FSR-000004 states a functional safety requirement whose text is identical, word for word, to the hardware technical safety requirement FB2-HW-TSR-000004, including the ASIL B allocation and the acceptance criteria.",
+   "records_in_conflict": [
+    "FB2-SAF-FSR-000004",
+    "FB2-HW-TSR-000004"
+   ],
+   "how_this_concept_handles_it": "This concept allocates AR-005 as a hardware element and treats its independence as the reason it exists, which is the reading the Part 5 record should have carried and the Part 3 record should not have. It does not edit either record. The duplication is raised as finding FB2-REV-FND-000027.",
+   "finding_ref": "FB2-REV-FND-000027"
+  },
+  {
+   "contradiction": "FB2-SAF-FSR-000004 justifies the independent monitor by a main-path figure of 115 ms against the 100 ms FTTI. No record in the corpus contains 115 ms; the safety goal's own allocation for the main path sums to 85 ms.",
+   "records_in_conflict": [
+    "FB2-SAF-FSR-000004",
+    "FB2-SAF-SGO-000001"
+   ],
+   "how_this_concept_handles_it": "The concept does not adopt 115 ms and does not use it anywhere. It records the independent monitor's justification on the allocation that actually exists (85 ms serial, which does not fit once the reaction chain is added), and raises finding FB2-REV-FND-000026 for the unsourced figure.",
+   "finding_ref": "FB2-REV-FND-000026"
+  }
+ ],
+ "limitations": [
+  "This concept is synthetic and describes a hypothetical programme. It establishes no property of the real foxBMS project and asserts no ASIL capability.",
+  "No diagnostic coverage figure in this concept is measured. Every one is either a requirement-side claim, an analytical estimate on an assumed noise distribution, or an assumption about a component that this corpus has not measured.",
+  "The independence of the hardware monitor is assumed (FB2-ASM-008), not demonstrated. An independent-monitor concept that had been analysed for common-cause failure would state which failures it does and does not cover; this one states that no such analysis exists in the corpus, which is why the dependent-failure analysis FB2-SAF-ANL-000003 exists and is referenced rather than replaced.",
+  "This concept does not verify anything. Verification is planned and, where a fixture exists, executed, in the FB2-VER-* records; none of that evidence is product evidence.",
+  "The architecture is a high-level functional decomposition. It says what each element is accountable for and not how any of them is built, and it does not establish that the elements as described can be built within the stated timing.",
+  "Human approval of this concept is pending. No functional-safety expert has confirmed it, and an automated review pass is not the independent confirmation an ASIL D concept requires."
+ ]
+}

@@ -1,0 +1,62 @@
+{
+ "id": "FB2-REV-FND-000029",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000029: the validator's safety-requirement verification rule tests the wrong endpoint of the verifies link, so a correctly directed verification link cannot clear the finding it raises",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9",
+   "status": "mapped",
+   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "The obligation to record rather than to conceal."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  }
+ ],
+ "subject_artifact_id": "FB2-SAF-SEC-000001",
+ "severity": "medium",
+ "category": "process",
+ "evidence": "Read from docs/artifacts/tools/corpus.py. The rule computes verified = {l['source_id'] for l in links if l.relation_type in ('verifies', 'validates')} and then raises 'safety requirement has no verifies/validates link' for any safety-domain requirement whose id is absent from that set. The master prompt section 13 defines the relation as 'verification measure -> requirement', and the corpus's own convention follows that: the pre-existing finding FB2-REV-FND-000008 states that 'in the corpus's own convention a test measure is the SOURCE and the requirement is the TARGET, so a well-verified requirement appears as a link TARGET, never as a source'. A correctly directed verifies link therefore places the requirement at the target, and the rule, which reads only the source, still reports it as unverified. This was verified on disk after the five security measures were authored: FB2-VER-TMS-000016..000020 each carry a verifies link to FB2-SAF-SEC-000001..000005 respectively, and each requirement is present as a target and absent as a source. The rule's finding count is therefore unchanged by correct work. The same rule is responsible for the seven 'no verifies/validates link' findings against the FSR records, so 12 of the corpus's 21 standing findings come from this single defect.",
+ "disposition": "accepted",
+ "impact": "The corpus's own headline metric for verification coverage is produced by a rule that cannot distinguish a verified requirement from an unverified one. A safety requirement that is fully verified by twenty measures and one that has none score identically. Because the rule under-reports, it under-reports safely: nothing claims coverage it cannot show. But it also means that closing findings FB2-REV-FND-000008..12 is not achievable by doing the work, and a team following the rule literally - adding links in the reversed direction so the rule fires - would corrupt the graph's documented semantics to satisfy a checker.",
+ "root_cause": "The rule was written as a quick presence check over whichever endpoint was convenient and was never reconciled with the relation's declared direction in the link schema and the master prompt. The mismatch is invisible until someone authors a correctly directed link and observes that the finding does not clear.",
+ "resolution": "NOT RESOLVED, and deliberately not resolved by the two available workarounds. This pass did NOT (a) modify the validator rule, because the instruction governing this authoring pass forbids touching validator rules and because a rule that under-reports coverage is not one to relax silently; and (b) NOT add verifies or validates links with the requirement as SOURCE, because that is the graph-inversion the master prompt's relation definitions forbid and because it would make the coverage computation in the spec-document renderer disagree with the validator. The five security requirements now carry correctly directed verifies links to five measures with declared oracle bases, and the five standing findings against them remain, which is the honest state: the requirements have a verification plan and still have no verification evidence. Recorded here so that a reader who sees the finding and the link together is not left to conclude that one of them is wrong."
+}

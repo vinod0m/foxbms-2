@@ -1,0 +1,203 @@
+{
+ "id": "FB2-VER-TMS-000018",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Verification: a bus peer without the shared secret cannot present a frame the dispatch layer accepts",
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.5",
+   "status": "mapped",
+   "rationale": "System qualification test: the security requirements are system-level work products and this is the measure that would qualify them."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.6",
+   "status": "mapped",
+   "rationale": "Software qualification test: the measures exercise the master software's handling of the specified inputs."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 (system verification)",
+   "status": "mapped",
+   "rationale": "Verification of the system requirement as written, against its own acceptance criteria."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "ISO SAE 21434 relationship",
+   "status": "mapped",
+   "rationale": "Recorded as a relationship, not as a mapping. No ISO/SAE 21434 work product exists in this corpus and the corpus-local TARA FB2-SAF-TAR-000001 is machine-pinned to is_iso_21434_tara = false."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Security verification measure authored because FB2-SAF-SEC-000003 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is."
+  }
+ ],
+ "test_type": "robustness",
+ "objective": "Confirm that for every CAN identifier whose payload influences a safety function, a frame carrying a valid identifier but no valid counter, no valid integrity value or the wrong data-length code is rejected before the receive callback is invoked, and that a genuine frame with a sequence error is rejected rather than accepted out of order.",
+ "referenced_requirements": [
+  "FB2-SAF-SEC-000003"
+ ],
+ "referenced_designs": [
+  "FB2-SYS-SYR-000007",
+  "FB2-SYS-SYR-000008"
+ ],
+ "preconditions": [
+  "The bus under test carries the item's normal traffic.",
+  "The shared secret is held only by the genuine peer and by the item.",
+  "The identifiers whose payloads influence a safety function are enumerated."
+ ],
+ "environment": {
+  "hardware": "Hypothetical 400 V pack on a bus bench with a second node able to transmit arbitrary frames",
+  "software": "BMS master firmware under test",
+  "tools": [
+   "CAN bus analyser",
+   "Frame injection node without the shared secret",
+   "24 h traffic capture"
+  ],
+  "configuration": "VAR-REF-001 with the safety-relevant identifiers configured and the integrity check enabled"
+ },
+ "stimuli": [
+  {
+   "signal": "Injected frames with a valid identifier and no valid integrity value",
+   "value": "one per 10 ms for 24 h",
+   "timing": "1 in 1000 of genuine traffic"
+  },
+  {
+   "signal": "Replayed frames",
+   "value": "a recorded valid frame re-presented out of sequence",
+   "timing": "one replay per 10 s for 24 h"
+  },
+  {
+   "signal": "Short frames",
+   "value": "data-length code one byte shorter than configured for the identifier",
+   "timing": "one per minute for 24 h"
+  },
+  {
+   "signal": "Genuine traffic",
+   "value": "the vehicle's normal message set",
+   "timing": "continuous"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Inject 5000 frames with a valid identifier and no valid integrity value",
+   "expected": "Zero reach the receive callback; each is diagnosed as an integrity failure"
+  },
+  {
+   "step": 2,
+   "action": "Replay 500 recorded valid frames out of sequence",
+   "expected": "Zero reach the receive callback; each is diagnosed as a counter failure"
+  },
+  {
+   "step": 3,
+   "action": "Inject 1440 short frames",
+   "expected": "Zero reach the receive callback; each is diagnosed as a length failure"
+  },
+  {
+   "step": 4,
+   "action": "Run genuine traffic for 24 h alongside the injections",
+   "expected": "Zero genuine frames rejected"
+  },
+  {
+   "step": 5,
+   "action": "Review the diagnosis log",
+   "expected": "One entry per rejected frame, and the three failure kinds are distinguishable"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "injected_frames_accepted",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  },
+  {
+   "signal": "replayed_frames_accepted",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  },
+  {
+   "signal": "short_frames_accepted",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  },
+  {
+   "signal": "genuine_frames_rejected",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "frames"
+  },
+  {
+   "signal": "verification_latency",
+   "expected_value": "2",
+   "tolerance": "at most",
+   "unit": "ms"
+  }
+ ],
+ "tolerances": {
+  "injected_frames_accepted": "exact",
+  "replayed_frames_accepted": "exact",
+  "short_frames_accepted": "exact",
+  "genuine_frames_rejected": "exact",
+  "verification_latency": "at most"
+ },
+ "timing": {
+  "max_execution_time_ms": 86400000,
+  "setup_time_ms": 3600000,
+  "teardown_time_ms": 1800000
+ },
+ "oracle_basis": "source_grounded",
+ "oracle_detail": {
+  "kind": "source_grounded",
+  "why_this_oracle": "The oracle is the arithmetic of the check itself, taken from the requirement and independent of the item. A counter establishes freshness only if the receiver's expected value is not derivable from observed traffic, which is exactly the property a strict-increment counter with a seeded initial value has and a zero-based counter does not. A frame-integrity value a peer cannot produce without the shared secret establishes authenticity because the receiver recomputes it over the payload and compares; a modified payload necessarily fails the comparison, and a forged one necessarily fails unless the peer holds the key. A data-length check is a direct comparison. Each expected outcome - zero accepted - is a consequence of the check existing, not a number read out of a run.",
+  "what_the_oracle_is_not": "It is not a measured reference: no bus was instrumented and nothing was injected. It is not a synthetic assumption: the properties asserted are properties of counter discipline and keyed integrity, both of which hold or fail independently of this item. It is not an analytical model of the bus: bus load, arbitration and error frames are outside it.",
+  "what_it_still_does_not_prove": "The oracle proves the dispatch layer's verdict, not the secrecy of the key. A key that is short, hard-coded, or recoverable from the firmware image satisfies every expected outcome here and still gives no authenticity. It also does not prove the counter's initial value is unpredictable, which is the property FB2-SAF-SEC-000005 addresses and which this measure must not be read as covering.",
+  "known_limitation_in_the_requirement": "The requirement's 'genuine-frame false-rejection rate: 0 frames over 24 h' criterion is not achievable as written. A keyed integrity value of any practical width collides with some payload, so a genuine frame will occasionally be rejected on a correct implementation. The expected outcome above records '0 genuine frames rejected' because that is what the requirement says, and this record states plainly that it is therefore an unachievable criterion rather than a strict oracle: a real implementation would need a rate threshold with a stated bound, not a zero. Raised as finding FB2-REV-FND-000028 rather than resolved by quietly relaxing the measure.",
+  "oracle_kind": "source_grounded"
+ },
+ "cleanup": "Remove the injection node, re-seed nothing (the counter continues), confirm the genuine peer is still accepted and archive the capture with the diagnosis log.",
+ "regression_selection": "Re-run on any change to the identifier set, the counter discipline, the integrity primitive, the key or the dispatch order. A change that removes one check from the dispatch path must re-run this measure and must fail it.",
+ "security_verification_note": "This measure verifies the requirement as written against the item's observable behaviour. It does not establish that the threat it addresses is exploitable, and it is not a penetration test: no exploit was developed, no advisory was checked and no CVSS score was assigned to any finding.",
+ "limitations": [
+  "Planned, not executed. Planning a security measure is not evidence that the requirement is satisfied, and the paired execution record carries execution_kind 'none' and outcome 'blocked' for that reason.",
+  "Not a penetration test. No exploit was developed, no advisory source was consulted and no vulnerability was scored. A requirement can pass every expected outcome here and still leave the item exploitable by a route this measure does not exercise.",
+  "The requirement verified here constrains a mechanism the hypothetical project has planned. Nothing in this corpus establishes that the mechanism exists.",
+  "No human security reviewer has confirmed this measure. Human approval is pending."
+ ]
+}

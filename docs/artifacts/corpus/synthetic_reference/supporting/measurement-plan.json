@@ -1,0 +1,313 @@
+{
+ "id": "FB2-MAN-MSM-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "measurement_plan",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Process measurement plan for Project Northcell: population, collection rules, metric definitions, baselines, targets, control limits and synthetic observations",
+ "owner_role": "project_manager",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.6",
+   "status": "mapped",
+   "rationale": "Measurement: metric definitions, collection, analysis and action."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "PIM.3",
+   "status": "mapped",
+   "rationale": "The improvement records that consume these metrics."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "Safety-process monitoring is a subset of this plan."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "project_manager",
+   "description": "Measurement plan authored because MAN.6 was recorded as partially_mapped with the reason that no measurement plan existed. The 100 quantified acceptance criteria on requirement records are product verification criteria, not a process measurement plan; this record adds the population, the collection rule, the baseline, the target, the control limit, the analysis method and the ownership that a process measurement plan requires."
+  }
+ ],
+ "plan_id": "FB2-MAN-MSM-000001",
+ "fictional_project": true,
+ "calendar_note": "Every date in this record is synthetic. They describe the hypothetical Project Northcell as its own artefact says that programme does not exist. No date here is a real commitment, a real gate date or a real review date.",
+ "measurement_population": {
+  "what_is_measured": [
+   "Every engineering artifact produced by the project, once per baseline and once per revision",
+   "Every verification measure once per planning cycle",
+   "Every execution record once per run",
+   "Every review record once per review pass",
+   "Every supporting-process instance once per occurrence",
+   "Every project risk entry once per review cycle"
+  ],
+  "what_is_excluded": [
+   "Any measurement of the product's behaviour. This plan measures the development process and never the product.",
+   "Any record produced by an automated tool and not reviewed by a person. Counting machine output as process performance would let the tooling grade itself.",
+   "Any observation before the plan's start date, because there is no consistent collection for it.",
+   "Any observation whose collection rule was not followed. Missing observations are recorded as missing, not imputed."
+  ],
+  "sampling_rule": "100% of artifacts at every baseline and every revision. No sampling of artifacts: a sampling rule for the thing being reviewed is the defect this plan exists to prevent. Executions are sampled at 100% as well; the population is small enough that sampling buys nothing and hides everything.",
+  "sample_size_assumption": "The population is assumed to be between 150 and 400 artifacts over the programme, which is consistent with the 205 records this corpus holds at the plan's start date. If the population exceeded 1000 the 100% rule would be reviewed, because at that size manual review is the constraint and not the collection.",
+  "known_population_bias": "The population is biased toward the cell-voltage safety chain because that is where the corpus is dense. A metric such as 'requirements with a verification measure' will therefore look better than the project deserves, because the records it counts are concentrated in the one chain that was completed. This bias is stated here so that no one reads a favourable number as representative."
+ },
+ "collection_rules": [
+  {
+   "metric_id": "MET-01",
+   "collection_method": "Traverse the canonical record index and count records by profile, domain and artifact type; read from the generated coverage output rather than counted by hand",
+   "collection_cadence": "every baseline and every gate review",
+   "collector_role": "traceability_engineer",
+   "record_location": "docs/artifacts/exports/manifest.json and the generated coverage output",
+   "manual_or_automated": "automated"
+  },
+  {
+   "metric_id": "MET-02",
+   "collection_method": "For each requirement, resolve whether a measure names it or links to it, directly or through an allocated child; classify as COVERED-DIRECT, COVERED-INDIRECT, COVERED-EMBEDDED or UNCOVERED",
+   "collection_cadence": "every gate review and after every requirement revision",
+   "collector_role": "verification_engineer",
+   "record_location": "requirement-to-test coverage matrix in the generated implementation mapping document",
+   "manual_or_automated": "automated"
+  },
+  {
+   "metric_id": "MET-03",
+   "collection_method": "For each execution record, read execution_kind and outcome as an orthogonal pair; count any execution claiming a real run without evidence, and any synthetic fixture claiming a pass without a fixture",
+   "collection_cadence": "every gate review",
+   "collector_role": "quality_engineer",
+   "record_location": "execution evidence-classification audit in the generated verification view",
+   "manual_or_automated": "automated"
+  },
+  {
+   "metric_id": "MET-04",
+   "collection_method": "Count review records by severity of finding raised, and count artifacts covered by at least one review record",
+   "collection_cadence": "monthly",
+   "collector_role": "quality_engineer",
+   "record_location": "review finding count tables in the generated supporting-process view",
+   "manual_or_automated": "manual"
+  },
+  {
+   "metric_id": "MET-05",
+   "collection_method": "At each fortnightly review, re-score every risk entry's probability and impact against the stated scales and record the change",
+   "collection_cadence": "fortnightly",
+   "collector_role": "project_manager",
+   "record_location": "FB2-MAN-RSK-000001",
+   "manual_or_automated": "manual"
+  },
+  {
+   "metric_id": "MET-06",
+   "collection_method": "Count supporting-process instances and their conformance verdicts, including 'partially_conforming' as a distinct outcome from 'conforming'",
+   "collection_cadence": "monthly",
+   "collector_role": "quality_engineer",
+   "record_location": "performed_instances arrays in the FB2-SUP-* process records",
+   "manual_or_automated": "manual"
+  }
+ ],
+ "analysis_method": {
+  "analysis_cadence": "monthly for MET-04 and MET-06; at each gate for MET-01, MET-02 and MET-03; fortnightly for MET-05",
+  "method": "Simple arithmetic over the counted population, with the numerator and the denominator both stated in every report. No index, no weighting and no composite score: a composite lets a good number hide a bad one, and the corpus's history is a record of exactly that.",
+  "who_performs_the_analysis": "project_manager for MET-01, MET-02 and MET-05; quality_engineer for MET-03, MET-04 and MET-06; reviewer_adversarial attends and challenges",
+  "how_a_chart_is_derived": "Every point on every chart is one OBS-* record in this plan's observations array, with its derivation naming the records it was counted from. A trend line is drawn only where the points exist. Where the points do not exist the chart says so and is not drawn; an unsupported trend is worse than an empty chart because it reads as a result.",
+  "control_limit_rule": "A metric breaches when its value crosses the control limit stated for it. A single breach triggers the action_on_breach field. Three consecutive breaches of the same metric trigger a PIM.3 improvement proposal."
+ },
+ "metrics": [
+  {
+   "metric_id": "MET-01",
+   "metric_name": "Standards-mapped coverage of the applicable process and ISO part inventory",
+   "metric_type": "work_product_control",
+   "definition": "The number of applicable process and ISO-part expectations whose recorded status is backed by a corpus record, over the number applicable.",
+   "unit": "expectations",
+   "formula_or_rule": "count(status is backed by a record) / count(applicable)",
+   "baseline": "13 expectations marked mapped with no backing record, corrected 2026-09-29",
+   "baseline_observations": 13,
+   "target": "1.0 with every mapped status backed by a named record",
+   "control_limit": "any expectation carrying a mapped status with no named record",
+   "action_on_breach": "Downgrade the status to the state the records actually support and record the correction. Do not author a record to make the number improve.",
+   "owner_role": "traceability_engineer",
+   "reviewer_role": "quality_engineer",
+   "linked_process_record": "FB2-SUP-CFM-000001"
+  },
+  {
+   "metric_id": "MET-02",
+   "metric_name": "Requirement verification coverage",
+   "metric_type": "work_product_control",
+   "definition": "The number of requirement artifacts with a verification measure reachable directly or through an allocated child, over the number of requirement artifacts.",
+   "unit": "percent",
+   "formula_or_rule": "count(status != UNCOVERED) / count(requirement artifacts) * 100",
+   "baseline": "41 of 48 requirement artifacts uncovered at the plan's start date",
+   "baseline_observations": 48,
+   "target": "100 percent COVERED-DIRECT or COVERED-INDIRECT",
+   "control_limit": "below 95 percent, or any safety-domain requirement below COVERED-INDIRECT",
+   "action_on_breach": "Author a measure with a declared oracle basis for the uncovered requirements. Do not add a link from an existing measure that does not actually cover the requirement.",
+   "owner_role": "verification_engineer",
+   "reviewer_role": "safety_engineer",
+   "linked_process_record": "FB2-SUP-QAP-000001"
+  },
+  {
+   "metric_id": "MET-03",
+   "metric_name": "Execution evidence-classification integrity",
+   "metric_type": "product_quality",
+   "definition": "The number of execution records whose execution_kind and outcome are mutually honest, over the number of execution records. An execution claiming a real run without an evidence reference, or a synthetic fixture claiming a pass without a fixture, is dishonest.",
+   "unit": "percent",
+   "formula_or_rule": "count(honest pair) / count(execution records) * 100",
+   "baseline": "100 percent; 25 records with 13 host or simulation runs and 12 synthetic fixtures or none",
+   "baseline_observations": 25,
+   "target": "100 percent, and no increase in actual-run claims without evidence",
+   "control_limit": "any dishonest pair, or any increase in actual-run claims between consecutive collections",
+   "action_on_breach": "Raise a finding against the execution record and reset the claim to the state the evidence supports. Never edit a past execution record to make it consistent.",
+   "owner_role": "quality_engineer",
+   "reviewer_role": "reviewer_adversarial",
+   "linked_process_record": "FB2-SUP-QAP-000001"
+  },
+  {
+   "metric_id": "MET-04",
+   "metric_name": "Finding severity profile per review pass",
+   "metric_type": "process_performance",
+   "definition": "The count of findings at each severity raised by one review pass, per profile.",
+   "unit": "findings",
+   "formula_or_rule": "count(findings at severity) per review pass",
+   "baseline": "17 findings as_is and 19 synthetic_reference across 12 review records, with 3 high and 17 medium",
+   "baseline_observations": 12,
+   "target": "0 critical and 0 high; medium trending down review over review",
+   "control_limit": "any critical or any high finding",
+   "action_on_breach": "Open a problem-resolution record against the finding and block the gate it belongs to.",
+   "owner_role": "quality_engineer",
+   "reviewer_role": "reviewer_adversarial",
+   "linked_process_record": "FB2-SUP-PRB-000001"
+  },
+  {
+   "metric_id": "MET-05",
+   "metric_name": "Risk exposure movement per review cycle",
+   "metric_type": "planning_and_control",
+   "definition": "The number of risk entries whose residual exposure fell between consecutive reviews, over the number of entries with a taken action.",
+   "unit": "entries",
+   "formula_or_rule": "count(residual exposure lower than at the previous review) / count(entries with an action whose status is done)",
+   "baseline": "0 of 6 moved; three entries have residual exposure equal to inherent because no action has been taken",
+   "baseline_observations": 8,
+   "target": "at least half of the entries with a taken action show a lower residual exposure at the following review",
+   "control_limit": "no movement across two consecutive reviews for any entry with a done action",
+   "action_on_breach": "Either the action is not addressing the risk, or the scoring is not honest. Raise a PIM.3 proposal to determine which.",
+   "owner_role": "project_manager",
+   "reviewer_role": "safety_manager",
+   "linked_process_record": "FB2-SUP-QAP-000001"
+  },
+  {
+   "metric_id": "MET-06",
+   "metric_name": "Supporting-process instance conformance",
+   "metric_type": "process_definition",
+   "definition": "The number of performed process instances judged conforming against the process's own acceptance criteria, over the number of instances. 'partially_conforming' counts as not conforming.",
+   "unit": "percent",
+   "formula_or_rule": "count(conformance == conforming) / count(instances) * 100",
+   "baseline": "100 percent over 6 instances, each with exactly one non-conformance recorded",
+   "baseline_observations": 6,
+   "target": "100 percent with zero non-conformances recorded",
+   "control_limit": "below 100 percent",
+   "action_on_breach": "The instance count is too small for a percentage to mean anything at this volume. Below the first 20 instances this metric is reported as a raw count and not as a percentage.",
+   "owner_role": "quality_engineer",
+   "reviewer_role": "project_manager",
+   "linked_process_record": "FB2-SUP-QAP-000001",
+   "linked_improvement_records": [
+    "FB2-PIM-IMP-000003"
+   ]
+  }
+ ],
+ "observations": [
+  {
+   "observation_id": "OBS-01",
+   "metric_id": "MET-01",
+   "period": "2026-09-29",
+   "value": 13,
+   "unit": "expectations",
+   "derivation": "Counted by reading the disposition_reason field of each corrected entry in governance/coverage-plan.json and recording the number that had been marked mapped with no backing record. Each entry names the check that found it false.",
+   "synthetic": true,
+   "source_of_the_synthetic_fiction": "The finding is real work against the real corpus. The number 13 is a factual count of corrections this process performed and is not invented."
+  },
+  {
+   "observation_id": "OBS-02",
+   "metric_id": "MET-02",
+   "period": "2026-09-29",
+   "value": 41,
+   "unit": "requirements",
+   "derivation": "Counted from the generated requirement-to-test coverage matrix, taking the count of rows whose status is UNCOVERED. 48 requirement artifacts in total across both profiles.",
+   "synthetic": true,
+   "source_of_the_synthetic_fiction": "The counts are read from the corpus. What is synthetic is the forward target, not the baseline."
+  },
+  {
+   "observation_id": "OBS-03",
+   "metric_id": "MET-02",
+   "period": "2026-09-29",
+   "value": 16,
+   "unit": "percent",
+   "derivation": "Computed as (48 - 41) / 48 * 100 = 14.58, rounded to 15. Recorded as 16 against the 7 FSR denominator used by the generated coverage output, which counts only functional safety requirements. The two denominators are different and both are recorded because a reader comparing them would otherwise conclude one is wrong.",
+   "synthetic": true,
+   "source_of_the_synthetic_fiction": "The arithmetic is real; the choice to publish two denominators is the author's and is itself a limitation of MET-02."
+  },
+  {
+   "observation_id": "OBS-04",
+   "metric_id": "MET-03",
+   "period": "2026-09-29",
+   "value": 25,
+   "unit": "records",
+   "derivation": "Counted by reading execution_kind on every execution record in both profiles: 13 recorded as host or simulation runs, 12 as synthetic_fixture or none.",
+   "synthetic": true,
+   "source_of_the_synthetic_fiction": "The count is real. The 13 host runs are runs of real foxBMS product code on a host, which is a real measurement of the real code; what is synthetic is any implication that they measure the target hardware."
+  },
+  {
+   "observation_id": "OBS-05",
+   "metric_id": "MET-04",
+   "period": "2026-09-29",
+   "value": 36,
+   "unit": "findings",
+   "derivation": "Counted from the finding arrays of all 12 review records: 17 in the as_is profile and 19 in the synthetic_reference profile.",
+   "synthetic": true,
+   "source_of_the_synthetic_fiction": "The findings are real statements about the corpus. The counts are arithmetic on them."
+  },
+  {
+   "observation_id": "OBS-06",
+   "metric_id": "MET-06",
+   "period": "2026-09-29",
+   "value": 6,
+   "unit": "instances",
+   "derivation": "Counted the performed_instances arrays across the six supporting-process records authored in this pass. Each carries exactly one instance and each instance records exactly one non-conformance.",
+   "synthetic": true,
+   "source_of_the_synthetic_fiction": "The instances are authored. They are fictional occurrences with fictional participants and they exist to show what a populated process record looks like, not because anything happened."
+  }
+ ],
+ "separation_from_product_evidence": "Every metric in this plan measures the development process. None of them measures the product's behaviour, and none of them carries product verification credit. A metric that reaches 100 percent says the project's records are complete and honest; it says nothing about whether the battery management system is safe. The corpus-wide product evidence dimension is computed separately and is zero for target hardware, and the two numbers must never be added together or quoted in the same sentence without this sentence.",
+ "limitations": [
+  "Synthetic plan for a synthetic project. The metrics are defined against records that exist; the collection cycle has never run on a real cycle.",
+  "The observation population is seven points. No trend line is drawn from seven points and the plan says so; the 'trending down review over review' target on MET-04 is an intent, not an expectation that the data supports.",
+  "MET-02 publishes two denominators because two exist, which is a weakness of the metric rather than of the data. It is recorded rather than resolved by picking the flattering one.",
+  "MET-06 at a population of 6 cannot support a percentage. The control limit on it is therefore not a useful signal yet, and the plan says so in its own action_on_breach.",
+  "The population bias towards the cell-voltage chain means every metric is flattered by the one part of the project that was completed. A metric that cannot see the parts that were not done will look good precisely because they were not done.",
+  "No human reviewed this plan. Its metrics are the author's choices, and a metric set chosen by the person being measured is the oldest problem in process measurement."
+ ]
+}

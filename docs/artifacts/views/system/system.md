@@ -1,6 +1,6 @@
 # System — requirements, interfaces and architecture (generated view)
 
-Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 links
+Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -25,13 +25,16 @@ Generated: 2026-09-29T10:09:01Z | Baseline: BAS-REF-001 | 153 artifacts, 283 lin
 
 ## System requirements
 
-### Coverage gap: system requirements
-
-**No records in the corpus for this area - this is a coverage gap, not an omission from this view.**
-
-The corpus contains **no system-level or stakeholder requirement record** in either profile, and this is a coverage gap, not a rendering omission: no record matching the expectation exists on disk in any profile. The expectation is retained in the coverage plan and is not satisfied. The plan's current position, read at render time, is that `SYS.1` (Requirements Elicitation) is recorded `gap`; `SYS.2` (System Requirements Analysis) is recorded `gap`; and `artifact_coverage_targets.requirements` is restated as an unmet target with status `partially_mapped`. This view reports what the corpus actually holds and quotes the plan as it stands now; where the plan has been corrected, the corrected status appears here automatically, so this text cannot drift from the governance file.
-
-Adjacent material that does exist: the system-domain HSI design `FB2-SYS-HSI-000001`, the project-scope record `FB2-MAN-SCO-000001` (management domain), and the scenario `FB2-SCN-CHG-000002`.
+| Id | Profile | Title | Guard |
+|---|---|---|---|
+| `FB2-SYS-SYR-000001` | synthetic_reference | SYR: every monitored cell voltage shall be acquired, validated and published with its age | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SYS-SYR-000002` | synthetic_reference | SYR: the item shall enforce the configured safe operating area, and shall distinguish a recoverable measurement degrada… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SYS-SYR-000003` | synthetic_reference | SYR: the item shall reach and confirm the safe state within the fault-tolerant time interval, and shall latch the condi… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SYS-SYR-000004` | synthetic_reference | SYR: the fault reaction shall be selected by mode, and a degraded condition shall never be reacted to as if it were a s… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SYS-SYR-000005` | synthetic_reference | SYR: the item shall include a hardware voltage monitor that can detect an overvoltage and open the contactors without t… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SYS-SYR-000006` | synthetic_reference | SYR: pack current and cell temperature shall be acquired, plausibility-checked and supplied to the item's supervisory f… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SYS-SYR-000007` | synthetic_reference | SYR: the item shall publish its state and shall not accept a request that contradicts its own safety evaluation | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SYS-SYR-000008` | synthetic_reference | SYR: commissioning and service shall not permit the item to energise on unconnected or untrusted inputs | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ## HSI / interface authority
 
@@ -63,7 +66,97 @@ Signals (system-owned authority; hardware and software views link here rather th
 | Link | Source | Relation | Target | Provenance | Review state |
 |---|---|---|---|---|---|
 | `FB2-LNK-CHG-000006` | `FB2-MAN-CHG-000002` | changes | `FB2-SYS-HSI-000001` | synthetic | pending |
+| `FB2-LNK-CPT-000019` | `FB2-SAF-ITE-000001` | supports | `FB2-SYS-UC-000001` | derived | reviewed |
+| `FB2-LNK-CPT-000020` | `FB2-SAF-ITE-000001` | supports | `FB2-SYS-UC-000002` | derived | reviewed |
+| `FB2-LNK-CPT-000021` | `FB2-SAF-ITE-000001` | supports | `FB2-SYS-UC-000003` | derived | reviewed |
+| `FB2-LNK-CPT-000022` | `FB2-SAF-ITE-000001` | supports | `FB2-SYS-UC-000004` | derived | reviewed |
+| `FB2-LNK-ELC-000023` | `FB2-SYS-NED-000001` | refines | `FB2-SAF-ITE-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000024` | `FB2-SYS-NED-000002` | refines | `FB2-SAF-ITE-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000025` | `FB2-SYS-NED-000003` | refines | `FB2-SAF-ITE-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000026` | `FB2-SYS-NED-000004` | refines | `FB2-SAF-ITE-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000027` | `FB2-SYS-NED-000005` | refines | `FB2-SAF-ITE-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000028` | `FB2-SYS-SYR-000001` | refines | `FB2-SYS-NED-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000029` | `FB2-SYS-SYR-000001` | refines | `FB2-SYS-NED-000004` | derived | reviewed |
+| `FB2-LNK-ELC-000030` | `FB2-SYS-SYR-000001` | refines | `FB2-SAF-SGO-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000031` | `FB2-SYS-SYR-000002` | refines | `FB2-SYS-NED-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000032` | `FB2-SYS-SYR-000002` | refines | `FB2-SYS-NED-000002` | derived | reviewed |
+| `FB2-LNK-ELC-000033` | `FB2-SYS-SYR-000002` | refines | `FB2-SAF-SGO-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000034` | `FB2-SYS-SYR-000003` | refines | `FB2-SYS-NED-000003` | derived | reviewed |
+| `FB2-LNK-ELC-000035` | `FB2-SYS-SYR-000003` | refines | `FB2-SAF-SGO-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000036` | `FB2-SYS-SYR-000004` | refines | `FB2-SYS-NED-000002` | derived | reviewed |
+| `FB2-LNK-ELC-000037` | `FB2-SYS-SYR-000004` | refines | `FB2-SYS-NED-000003` | derived | reviewed |
+| `FB2-LNK-ELC-000038` | `FB2-SYS-SYR-000004` | refines | `FB2-SAF-SGO-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000039` | `FB2-SYS-SYR-000005` | refines | `FB2-SAF-SGO-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000040` | `FB2-SYS-SYR-000006` | refines | `FB2-SYS-NED-000004` | derived | reviewed |
+| `FB2-LNK-ELC-000041` | `FB2-SYS-SYR-000007` | refines | `FB2-SYS-NED-000004` | derived | reviewed |
+| `FB2-LNK-ELC-000042` | `FB2-SYS-SYR-000008` | refines | `FB2-SYS-NED-000005` | derived | reviewed |
+| `FB2-LNK-ELC-000043` | `FB2-HW-TSR-000001` | allocated_to | `FB2-SYS-SYR-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000044` | `FB2-SW-SWR-000001` | allocated_to | `FB2-SYS-SYR-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000045` | `FB2-SW-SWR-000002` | allocated_to | `FB2-SYS-SYR-000002` | derived | reviewed |
+| `FB2-LNK-ELC-000046` | `FB2-SW-SWR-000001` | allocated_to | `FB2-SYS-SYR-000002` | derived | reviewed |
+| `FB2-LNK-ELC-000047` | `FB2-HW-TSR-000001` | allocated_to | `FB2-SYS-SYR-000002` | derived | reviewed |
+| `FB2-LNK-ELC-000048` | `FB2-SW-SWR-000003` | allocated_to | `FB2-SYS-SYR-000003` | derived | reviewed |
+| `FB2-LNK-ELC-000049` | `FB2-HW-TSR-000003` | allocated_to | `FB2-SYS-SYR-000003` | derived | reviewed |
+| `FB2-LNK-ELC-000050` | `FB2-HW-TSR-000004` | allocated_to | `FB2-SYS-SYR-000003` | derived | reviewed |
+| `FB2-LNK-ELC-000051` | `FB2-SW-SWR-000003` | allocated_to | `FB2-SYS-SYR-000004` | derived | reviewed |
+| `FB2-LNK-ELC-000052` | `FB2-HW-TSR-000003` | allocated_to | `FB2-SYS-SYR-000004` | derived | reviewed |
+| `FB2-LNK-ELC-000053` | `FB2-HW-TSR-000004` | allocated_to | `FB2-SYS-SYR-000005` | derived | reviewed |
+| `FB2-LNK-ELC-000054` | `FB2-SW-SWR-000001` | allocated_to | `FB2-SYS-SYR-000006` | derived | reviewed |
+| `FB2-LNK-ELC-000055` | `FB2-HW-TSR-000002` | allocated_to | `FB2-SYS-SYR-000006` | derived | reviewed |
+| `FB2-LNK-ELC-000056` | `FB2-SW-SWR-000001` | allocated_to | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-ELC-000057` | `FB2-HW-TSR-000002` | allocated_to | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-ELC-000058` | `FB2-SW-SWR-000003` | allocated_to | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-ELC-000059` | `FB2-SAF-SEC-000001` | allocated_to | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-ELC-000060` | `FB2-SAF-SEC-000004` | allocated_to | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-ELC-000061` | `FB2-SYS-SYR-000002` | refines | `FB2-SYS-UC-000001` | derived | reviewed |
+| `FB2-LNK-ELC-000062` | `FB2-SYS-SYR-000003` | refines | `FB2-SYS-UC-000002` | derived | reviewed |
+| `FB2-LNK-ELC-000063` | `FB2-SYS-SYR-000004` | refines | `FB2-SYS-UC-000003` | derived | reviewed |
+| `FB2-LNK-ELC-000064` | `FB2-SYS-SYR-000008` | refines | `FB2-SYS-UC-000004` | derived | reviewed |
+| `FB2-LNK-FND-000114` | `FB2-REV-FND-000027` | supports | `FB2-SYS-SYR-000005` | derived | reviewed |
+| `FB2-LNK-LIF-000099` | `FB2-REL-RLS-000001` | depends_on | `FB2-SYS-SYR-000003` | derived | reviewed |
+| `FB2-LNK-LIF-000100` | `FB2-PRD-EOL-000001` | depends_on | `FB2-SYS-SYR-000003` | derived | reviewed |
+| `FB2-LNK-LIF-000101` | `FB2-PRD-CAL-000001` | depends_on | `FB2-SYS-SYR-000002` | derived | reviewed |
+| `FB2-LNK-LIF-000102` | `FB2-PRD-CAL-000001` | depends_on | `FB2-SYS-SYR-000006` | derived | reviewed |
+| `FB2-LNK-LIF-000103` | `FB2-SVC-SVC-000001` | depends_on | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-LIF-000104` | `FB2-OPS-MON-000001` | depends_on | `FB2-SYS-SYR-000003` | derived | reviewed |
+| `FB2-LNK-LIF-000105` | `FB2-MAN-PLN-000001` | depends_on | `FB2-SYS-SYR-000001` | derived | reviewed |
 | `FB2-LNK-REVB-000072` | `FB2-REV-000008` | reviewed_by | `FB2-SYS-HSI-000001` | derived | reviewed |
+| `FB2-LNK-REVB-000127` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-NED-000001` | derived | reviewed |
+| `FB2-LNK-REVB-000128` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-NED-000002` | derived | reviewed |
+| `FB2-LNK-REVB-000129` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-NED-000003` | derived | reviewed |
+| `FB2-LNK-REVB-000130` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-NED-000004` | derived | reviewed |
+| `FB2-LNK-REVB-000131` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-NED-000005` | derived | reviewed |
+| `FB2-LNK-REVB-000132` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-UC-000001` | derived | reviewed |
+| `FB2-LNK-REVB-000133` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-UC-000002` | derived | reviewed |
+| `FB2-LNK-REVB-000134` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-UC-000003` | derived | reviewed |
+| `FB2-LNK-REVB-000135` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-UC-000004` | derived | reviewed |
+| `FB2-LNK-REVB-000153` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000001` | derived | reviewed |
+| `FB2-LNK-REVB-000154` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000002` | derived | reviewed |
+| `FB2-LNK-REVB-000155` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000003` | derived | reviewed |
+| `FB2-LNK-REVB-000156` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000004` | derived | reviewed |
+| `FB2-LNK-REVB-000157` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000005` | derived | reviewed |
+| `FB2-LNK-REVB-000158` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000006` | derived | reviewed |
+| `FB2-LNK-REVB-000159` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-REVB-000160` | `FB2-REV-000013` | reviewed_by | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-SEC-000076` | `FB2-VER-TMS-000016` | verifies | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-SEC-000077` | `FB2-VER-TMS-000016` | verifies | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-SEC-000079` | `FB2-VER-TMS-000017` | verifies | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-SEC-000080` | `FB2-VER-TMS-000017` | verifies | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-SEC-000082` | `FB2-VER-TMS-000018` | verifies | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-SEC-000083` | `FB2-VER-TMS-000018` | verifies | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-SEC-000085` | `FB2-VER-TMS-000019` | verifies | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-SEC-000086` | `FB2-VER-TMS-000019` | verifies | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-SEC-000088` | `FB2-VER-TMS-000020` | verifies | `FB2-SYS-SYR-000007` | derived | reviewed |
+| `FB2-LNK-SEC-000089` | `FB2-VER-TMS-000020` | verifies | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-VAL-000065` | `FB2-VER-TMS-000012` | validates | `FB2-SYS-NED-000001` | derived | reviewed |
+| `FB2-LNK-VAL-000066` | `FB2-VER-TMS-000012` | validates | `FB2-SYS-UC-000001` | derived | reviewed |
+| `FB2-LNK-VAL-000067` | `FB2-VER-TMS-000013` | validates | `FB2-SYS-NED-000003` | derived | reviewed |
+| `FB2-LNK-VAL-000068` | `FB2-VER-TMS-000013` | validates | `FB2-SYS-UC-000002` | derived | reviewed |
+| `FB2-LNK-VAL-000069` | `FB2-VER-TMS-000014` | validates | `FB2-SYS-NED-000002` | derived | reviewed |
+| `FB2-LNK-VAL-000070` | `FB2-VER-TMS-000014` | validates | `FB2-SYS-NED-000005` | derived | reviewed |
+| `FB2-LNK-VAL-000071` | `FB2-VER-TMS-000014` | validates | `FB2-SYS-UC-000003` | derived | reviewed |
+| `FB2-LNK-VAL-000072` | `FB2-VER-TMS-000015` | validates | `FB2-SYS-NED-000005` | derived | reviewed |
+| `FB2-LNK-VAL-000073` | `FB2-VER-TMS-000015` | validates | `FB2-SYS-UC-000004` | derived | reviewed |
 
 ### Allocation diagram
 

@@ -1,0 +1,90 @@
+{
+ "id": "FB2-SYS-NED-000004",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "stakeholder_need",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Stakeholder need: the vehicle manufacturer shall receive the item's state and limits and shall not be able to talk the item out of a safety decision",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1",
+   "status": "mapped",
+   "rationale": "Requirements elicitation: the stakeholder needs this process produces."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 5 (item definition and stakeholder needs)",
+   "status": "mapped",
+   "rationale": "The needs here are the item's needs raised at concept level; they are refined into requirements only at system level."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Stakeholder need authored because SYS.1 was recorded as a coverage gap with zero records in either profile. Declared, not elicited: no workshop, interview or questionnaire was held for any of the needs in this set."
+  }
+ ],
+ "need_id": "FB2-SYS-NED-000004",
+ "stakeholder": {
+  "stakeholder_id": "STK-004",
+  "stakeholder_class": "service_technician",
+  "fictional": true,
+  "stakeholder_description": "Fictional service technician who commissions the item and services it in the workshop. Trained to the documented procedure and to nothing else."
+ },
+ "need_statement": "The item shall publish its state, its limits and its fault condition to the vehicle manufacturer's control unit, and shall act on that control unit's state requests only when doing so is consistent with the item's own safety evaluation.",
+ "rationale": "The vehicle manufacturer owns the vehicle-level safety case and needs enough of the item's state to integrate with it, and needs the item not to become a hazard to that case through an unhandled request. The two halves are in tension: an item that ignores requests cannot support vehicle features, and an item that honours them can be steered into a state its own monitoring has already judged unsafe. The need resolves the tension in one direction only - the item's own evaluation wins - and that direction is a deliberate asymmetry, not a neutral one.",
+ "origin_of_the_need": {
+  "elicitation_method": "assumption_declaration",
+  "elicited_from": "the hypothetical programme's own design assumption set, declared by the author",
+  "is_a_real_elicitation": false,
+  "elicitation_evidence": []
+ },
+ "priority": {
+  "rank": 3,
+  "rationale": "The vehicle manufacturer owns the vehicle-level safety case and needs enough of the item's state to integrate with it, and needs the item not to become a hazard to that case through an unhandled request."
+ },
+ "operational_situation_refs": [
+  "OS-001",
+  "OS-002",
+  "OS-003"
+ ],
+ "derived_requirements": [
+  "FB2-SYS-SYR-000007",
+  "FB2-SYS-SYR-000006"
+ ],
+ "validation_measures": [
+  "FB2-VER-TMS-000013",
+  "FB2-VER-TMS-000014"
+ ],
+ "limitation": "Declared, not elicited. The corpus has no interface agreement with any vehicle manufacturer, so the set of requests the item may honour and the set it may refuse is not written down anywhere. The 'won't be able to talk the item out of a safety decision' half of this need is asserted by the cybersecurity requirements, not demonstrated."
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/measurement_plan.schema.json",
+  "title": "Measurement Plan Schema",
+  "description": "Schema for a populated process measurement plan (Automotive SPICE MAN.6). Product-verification acceptance criteria carried on requirement records are quantified metric definitions but they are not a measurement plan. This schema is what a measurement plan must additionally provide: the measurement population, the unit, the collection rule, the baseline and target, the control limit and the action taken when it is breached, the analysis method and cadence, and the owner. Observations are synthetic and are explicitly separated from product evidence.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "fictional_project",
+        "measurement_population",
+        "collection_rules",
+        "analysis_method",
+        "metrics",
+        "observations",
+        "separation_from_product_evidence",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "measurement_plan"
+        },
+        "plan_id": {"type": "string", "pattern": "^FB2-MAN-MSM-[0-9]{6}$"},
+        "fictional_project": {"const": true},
+        "calendar_note": {"type": "string", "minLength": 1},
+        "measurement_population": {
+          "type": "object",
+          "required": ["what_is_measured", "what_is_excluded", "sampling_rule", "sample_size_assumption"],
+          "properties": {
+            "what_is_measured": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "what_is_excluded": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "sampling_rule": {"type": "string", "minLength": 1},
+            "sample_size_assumption": {"type": "string", "minLength": 1},
+            "known_population_bias": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "collection_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["metric_id", "collection_method", "collection_cadence", "collector_role", "record_location"],
+            "properties": {
+              "metric_id": {"type": "string", "pattern": "^MET-[0-9]{2}$"},
+              "collection_method": {"type": "string", "minLength": 1},
+              "collection_cadence": {"type": "string", "minLength": 1},
+              "collector_role": {"type": "string", "minLength": 1},
+              "record_location": {"type": "string", "minLength": 1},
+              "manual_or_automated": {"type": "string", "enum": ["manual", "automated", "mixed"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "analysis_method": {
+          "type": "object",
+          "required": ["analysis_cadence", "method", "who_performs_the_analysis", "how_a_chart_is_derived"],
+          "properties": {
+            "analysis_cadence": {"type": "string", "minLength": 1},
+            "method": {"type": "string", "minLength": 1},
+            "who_performs_the_analysis": {"type": "string", "minLength": 1},
+            "how_a_chart_is_derived": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Must state that the statistic is computed from the listed observations. A trend conclusion not computed from recorded observations is not an accepted result."
+            },
+            "control_limit_rule": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["metric_id", "metric_name", "metric_type", "definition", "unit", "formula_or_rule", "baseline", "target", "control_limit", "action_on_breach", "owner_role", "reviewer_role"],
+            "properties": {
+              "metric_id": {"type": "string", "pattern": "^MET-[0-9]{2}$"},
+              "metric_name": {"type": "string", "minLength": 1},
+              "metric_type": {
+                "type": "string",
+                "enum": ["process_performance", "product_quality", "planning_and_control", "work_product_control", "process_definition", "quantitative_process_improvement"]
+              },
+              "definition": {"type": "string", "minLength": 1},
+              "unit": {"type": "string", "minLength": 1},
+              "formula_or_rule": {"type": "string", "minLength": 1},
+              "baseline": {"type": "string", "minLength": 1},
+              "baseline_observations": {"type": "integer", "minimum": 1},
+              "target": {"type": "string", "minLength": 1},
+              "control_limit": {"type": "string", "minLength": 1},
+              "action_on_breach": {"type": "string", "minLength": 1},
+              "owner_role": {"type": "string", "minLength": 1},
+              "reviewer_role": {"type": "string", "minLength": 1},
+              "linked_improvement_records": {"type": "array", "items": {"type": "string"}},
+              "linked_process_record": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "observations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["observation_id", "metric_id", "period", "value", "unit", "derivation"],
+            "properties": {
+              "observation_id": {"type": "string", "pattern": "^OBS-[0-9]{2}$"},
+              "metric_id": {"type": "string", "pattern": "^MEG-[0-9]{2}$|^MET-[0-9]{2}$"},
+              "period": {"type": "string", "format": "date"},
+              "value": {"type": "number"},
+              "unit": {"type": "string", "minLength": 1},
+              "derivation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "How this single value was obtained. A value with no derivation is not an observation."
+              },
+              "synthetic": {"const": true},
+              "source_of_the_synthetic_fiction": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          },
+          "description": "Explicitly synthetic observations. Statistics elsewhere in the corpus must be computed from these and not from a drawn trend."
+        },
+        "separation_from_product_evidence": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Mandatory statement that these measurements describe the development process and carry no product-verification credit."
+        },
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": true
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+ "id": "FB2-SUP-CHC-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "process_record",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "SUP.10 Change request management: populated process record for Project Northcell",
+ "owner_role": "project_manager",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.10",
+   "status": "mapped",
+   "rationale": "Change request management: impact analysis, decision, re-baseline and re-verification."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "project_manager",
+   "description": "Supporting-process record authored because the generated view reported SUP.10 as a coverage gap: no record whose engineering_domain is 'supporting' named the process. This record populates it - definition, inputs, outputs, accountable role, acceptance criteria, at least one performed instance with fictional participants and a synthetic decision, and the communication records showing how agreed revisions reach affected roles."
+  }
+ ],
+ "process_record_id": "FB2-SUP-CHC-000001",
+ "aspice_process_id": "SUP.10",
+ "process_name": "Change request management",
+ "fictional_organisation": {
+  "name": "Halden Cell Systems (fictional) change control board (fictional)",
+  "is_a_real_organisation": false
+ },
+ "purpose": "Decide every proposed change to a baselined record, record which artifacts move, which links and reviews the change puts in question, and which measures must be re-run.",
+ "definition": "A change request in this corpus is a change record carrying a trigger, an impact analysis, a decision, the new revisions the change would create, the links it makes suspect and the re-verification it requires. The board decides; this process records. A change that would correct a baselined record is handled here and not by the author editing the record, which is why the six findings raised in this pass are findings and not edits.",
+ "inputs": [
+  {
+   "input": "A change proposal with a stated trigger",
+   "kind": "record",
+   "controlled_by": "FB2-SUP-PRB-000001"
+  },
+  {
+   "input": "The affected records at their current revisions",
+   "kind": "artifact",
+   "controlled_by": "FB2-SUP-CFM-000001"
+  },
+  {
+   "input": "The verification measures covering the affected requirements",
+   "kind": "record",
+   "controlled_by": "FB2-SUP-QAP-000001"
+  }
+ ],
+ "outputs": [
+  {
+   "output": "A change record with the full impact chain",
+   "kind": "record",
+   "retention": "permanent"
+  },
+  {
+   "output": "A decision with a named decision maker and a disposition",
+   "kind": "decision",
+   "retention": "permanent"
+  },
+  {
+   "output": "A re-verification selection naming the measures to re-run",
+   "kind": "data",
+   "retention": "for the lifetime of the change"
+  }
+ ],
+ "accountable_role": {
+  "role": "project_manager",
+  "independence": "The change board may not approve a change whose author is a board member. The board chair is the project manager and the authors are domain roles, so the separation holds structurally; no human board member exists."
+ },
+ "acceptance_criteria": [
+  {
+   "criterion": "Every change record names its trigger, its affected artifacts, the new revisions, the suspect links and the re-verification selection",
+   "how_conformance_is_checked": "Validate against change.schema.json and confirm every one of the five blocks is populated.",
+   "evidence_of_conformance": "The three pre-existing change records validate. This pass did not author a new change record: the six contradictions it found are recorded as findings, because a change record would assert that a change was decided and the decision has not been taken."
+  },
+  {
+   "criterion": "No baselined record is edited without a change record authorising it",
+   "how_conformance_is_checked": "Compare a baselined record's revision history against the change records for its id.",
+   "evidence_of_conformance": "Not verifiable across the corpus today, because no record has yet been revised above 1 and so no change has been executed. The criterion is real and currently unexercised; recording it as satisfied would be false."
+  },
+  {
+   "criterion": "A decision is labelled as a synthetic decision and is never presented as a human approval",
+   "how_conformance_is_checked": "Confirm every decision field carries a synthetic_decision label naming a fictional role.",
+   "evidence_of_conformance": "All three pre-existing change records carry synthetic_decision labels and the corpus policy records the label format."
+  }
+ ],
+ "performed_instances": [
+  {
+   "instance_id": "INST-004",
+   "instance_date": "2026-09-29",
+   "instance_description": "Referral of six baselined-record corrections to the change board rather than editing the records in place.",
+   "participants": [
+    {
+     "role": "project_manager",
+     "named_as": "role identity: project_manager (board chair, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "safety_engineer",
+     "named_as": "role identity: safety_engineer (requester, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "hw_engineer",
+     "named_as": "role identity: hw_engineer (requester, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "quality_engineer",
+     "named_as": "role identity: quality_engineer (secretary recording the referral, fictional)",
+     "is_a_real_person": false
+    }
+   ],
+   "inputs_used": [
+    "FB2-REV-FND-000023",
+    "FB2-REV-FND-000024",
+    "FB2-REV-FND-000025",
+    "FB2-REV-FND-000026",
+    "FB2-REV-FND-000027",
+    "FB2-REV-FND-000028",
+    "The three pre-existing change records"
+   ],
+   "outputs_produced": [
+    "Six change referrals, none of which is a change record"
+   ],
+   "decision_or_outcome": "The board accepted all six referrals for future change control. No change record was raised, no record was edited and no revision was raised above 1. The distinction matters: a referral is a problem, a change record is a decision, and only the decision can move a baseline.",
+   "synthetic_decision": "synthetic_decision:project_manager:SYNTH-SUP10-INST-004",
+   "conformance_against_acceptance_criteria": "partially_conforming",
+   "non_conformances_found": [
+    "Criterion 1 is not met for this instance, and deliberately: producing six change records here would assert six decisions that have not been taken. The instance is recorded as partially conforming so the shortfall is visible rather than papered over by authoring records that would be fiction."
+   ]
+  }
+ ],
+ "review_and_communication": [
+  {
+   "communication_id": "COM-005",
+   "date": "2026-09-29",
+   "communicated_artifact_revisions": [
+    "FB2-REV-FND-000023 rev 1 .. FB2-REV-FND-000028 rev 1",
+    "Referral register"
+   ],
+   "attendee_roles": [
+    "project_manager",
+    "quality_engineer",
+    "safety_engineer",
+    "hw_engineer"
+   ],
+   "acknowledgement_recorded": true
+  }
+ ],
+ "traceability": {
+  "produces_records": [
+   "FB2-MAN-CHG-000001",
+   "FB2-MAN-CHG-000002",
+   "FB2-MAN-CHG-000003"
+  ],
+  "depends_on_records": [
+   "FB2-SUP-PRB-000001",
+   "FB2-SUP-CFM-000001"
+  ],
+  "controlled_by_records": [
+   "FB2-MAN-RSK-000001"
+  ]
+ },
+ "process_performance_measurement": {
+  "metric_id": "MET-05",
+  "metric_name": "Risk exposure movement per review cycle",
+  "unit": "entries",
+  "how_measured": "Count entries whose residual exposure fell between consecutive reviews, over the number with a taken action.",
+  "measurement_plan_ref": "FB2-MAN-MSM-000001"
+ },
+ "limitations": [
+  "Synthetic process record for a synthetic project.",
+  "One of the three acceptance criteria is recorded as not met, on purpose. The instance shows a control that correctly refused to let the process fabricate the artifacts that would make it look satisfied.",
+  "The second criterion is unexercised rather than met. A control with no instance cannot be called effective and this record does not call it effective."
+ ]
+}

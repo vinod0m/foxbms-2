@@ -1,0 +1,652 @@
+{
+ "id": "FB2-MAN-PLN-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "project_plan",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Project plan for Project Northcell: lifecycle model, work breakdown, schedule, gates, resources and progress",
+ "owner_role": "project_manager",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.3",
+   "status": "mapped",
+   "rationale": "Project management: project plan, schedule, resources, milestones and progress reporting."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1, SYS.3, SWE.1",
+   "status": "mapped",
+   "rationale": "The engineering phases this plan schedules."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (project management)",
+   "status": "mapped",
+   "rationale": "Safety project management is a subset of this plan; the safety-specific activities themselves are in FB2-MAN-SPL-000001."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "project_manager",
+   "description": "Project plan authored because MAN.3 was recorded as a coverage gap: the management domain held a project scope statement and change records, and neither is a plan. A scope statement declares a boundary; this record carries the schedule, the gates, the resource assignment and the actual-against-planned progress reporting that MAN.3 expects."
+  }
+ ],
+ "plan_id": "FB2-MAN-PLN-000001",
+ "plan_basis": "Derived from the work the corpus' existing records imply: a hazard analysis and safety goal that exist, four functional safety requirements with four hardware and three software requirements beneath them, a system-level chain that had no system requirements until this authoring pass, and no post-development work at all. The plan is sized for the gap between that state and a coherent lifecycle, not for a greenfield programme.",
+ "fictional_project": true,
+ "calendar_note": "Every date in this record is synthetic. They describe the hypothetical Project Northcell as its own artefact says that programme does not exist. No date here is a real commitment, a real gate date or a real review date.",
+ "lifecycle_model": {
+  "model": "Sequential-with-overlapping-verification, six phases",
+  "phase_definition": [
+   {
+    "phase_id": "PH-01",
+    "phase_name": "Concept and safety",
+    "entry_criteria": [
+     "Project scope baselined",
+     "Item definition agreed"
+    ],
+    "exit_criteria": [
+     "Hazard analysis complete with a safety goal per hazard",
+     "Functional safety concept baselined",
+     "Every hazard traced to a safety goal or an explicit not-applicable decision"
+    ]
+   },
+   {
+    "phase_id": "PH-02",
+    "phase_name": "System definition",
+    "entry_criteria": [
+     "Functional safety concept baselined"
+    ],
+    "exit_criteria": [
+     "Stakeholder needs and use cases baselined",
+     "System requirements baselined and allocated to hardware and software",
+     "Interface authority baselined"
+    ]
+   },
+   {
+    "phase_id": "PH-03",
+    "phase_name": "Hardware and software definition",
+    "entry_criteria": [
+     "System requirements baselined"
+    ],
+    "exit_criteria": [
+     "Technical safety requirements baselined per allocated element",
+     "Detailed design baselined per software unit",
+     "Software freedom-from-interference argument recorded"
+    ]
+   },
+   {
+    "phase_id": "PH-04",
+    "phase_name": "Integration and verification",
+    "entry_criteria": [
+     "Design baselined",
+     "Verification planning baselined"
+    ],
+    "exit_criteria": [
+     "Every requirement has a measure and an execution record",
+     "Every executed measure has an honest execution_kind and outcome",
+     "No unresolved critical or high corpus finding"
+    ]
+   },
+   {
+    "phase_id": "PH-05",
+    "phase_name": "Intended-use validation",
+    "entry_criteria": [
+     "Integration complete"
+    ],
+    "exit_criteria": [
+     "Every applicable stakeholder need validated against an operational scenario",
+     "Validation acceptance criteria agreed with the stakeholder class, not proposed by engineering"
+    ]
+   },
+   {
+    "phase_id": "PH-06",
+    "phase_name": "Release and post-development preparation",
+    "entry_criteria": [
+     "Validation complete",
+     "Safety case reviewed"
+    ],
+    "exit_criteria": [
+     "Release configuration identified and recorded",
+     "Production and end-of-line test plan baselined",
+     "Calibration specification baselined",
+     "Installation, operation and service instructions baselined",
+     "Decommissioning assumptions recorded"
+    ]
+   }
+  ]
+ },
+ "work_breakdown": [
+  {
+   "wbs_id": "WBS-001",
+   "work_package": "Concept phase: item definition, hazard analysis, safety goal, functional safety concept",
+   "accountable_role": "safety_engineer",
+   "supporting_roles": [
+    "system_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-SAF-ITE-000001",
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSC-000001"
+   ],
+   "depends_on": [],
+   "effort_person_days_estimate": 95,
+   "estimate_basis": "Three domain experts part-time over one quarter plus a concept-review pass. An estimate, not a bottom-up derivation."
+  },
+  {
+   "wbs_id": "WBS-002",
+   "work_package": "Functional safety requirements and technical safety concept",
+   "accountable_role": "safety_engineer",
+   "supporting_roles": [
+    "hw_engineer",
+    "sw_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-SAF-TSC-000001"
+   ],
+   "depends_on": [
+    "WBS-001"
+   ],
+   "effort_person_days_estimate": 70,
+   "estimate_basis": "Follows the concept. Four requirements plus the technical concept."
+  },
+  {
+   "wbs_id": "WBS-003",
+   "work_package": "Stakeholder elicitation, use cases and system requirements",
+   "accountable_role": "system_engineer",
+   "supporting_roles": [
+    "safety_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-SYS-NED-000001",
+    "FB2-SYS-NED-000002",
+    "FB2-SYS-NED-000003",
+    "FB2-SYS-NED-000004",
+    "FB2-SYS-NED-000005",
+    "FB2-SYS-UC-000001",
+    "FB2-SYS-UC-000002",
+    "FB2-SYS-UC-000003",
+    "FB2-SYS-UC-000004",
+    "FB2-SYS-SYR-000001",
+    "FB2-SYS-SYR-000002",
+    "FB2-SYS-SYR-000003",
+    "FB2-SYS-SYR-000004",
+    "FB2-SYS-SYR-000005",
+    "FB2-SYS-SYR-000006",
+    "FB2-SYS-SYR-000007",
+    "FB2-SYS-SYR-000008"
+   ],
+   "depends_on": [
+    "WBS-001"
+   ],
+   "effort_person_days_estimate": 110,
+   "estimate_basis": "The largest single package. Eighteen records across two levels, and the elicitation that a real programme would have to do with people."
+  },
+  {
+   "wbs_id": "WBS-004",
+   "work_package": "Hardware and software requirements and detailed design",
+   "accountable_role": "hw_engineer",
+   "supporting_roles": [
+    "sw_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-HW-TSR-000001",
+    "FB2-HW-TSR-000002",
+    "FB2-HW-TSR-000003",
+    "FB2-HW-TSR-000004",
+    "FB2-SW-SWR-000001",
+    "FB2-SW-SWR-000002",
+    "FB2-SW-SWR-000003"
+   ],
+   "depends_on": [
+    "WBS-003"
+   ],
+   "effort_person_days_estimate": 130,
+   "estimate_basis": "Seven technical requirements. The corpus already held these; the estimate covers the re-baselining against the system requirements, not their first authoring."
+  },
+  {
+   "wbs_id": "WBS-005",
+   "work_package": "Verification planning and execution across concept, system, hardware and software",
+   "accountable_role": "verification_engineer",
+   "supporting_roles": [
+    "safety_engineer",
+    "sw_engineer",
+    "hw_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-VER-TMS-000012",
+    "FB2-VER-TMS-000013",
+    "FB2-VER-TMS-000014",
+    "FB2-VER-TMS-000015",
+    "FB2-VER-TMS-000016",
+    "FB2-VER-TMS-000017",
+    "FB2-VER-TMS-000018",
+    "FB2-VER-TMS-000019",
+    "FB2-VER-TMS-000020"
+   ],
+   "depends_on": [
+    "WBS-004"
+   ],
+   "effort_person_days_estimate": 120,
+   "estimate_basis": "Nine measures, none of which this corpus could execute; the estimate assumes the harnesses exist, which they do not."
+  },
+  {
+   "wbs_id": "WBS-006",
+   "work_package": "Supporting process definition and instantiation: quality, configuration, problem resolution, change control, supplier monitoring, reuse",
+   "accountable_role": "quality_engineer",
+   "supporting_roles": [
+    "project_manager",
+    "traceability_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-SUP-QAP-000001",
+    "FB2-SUP-CFM-000001",
+    "FB2-SUP-PRB-000001",
+    "FB2-SUP-CHC-000001",
+    "FB2-SUP-SPL-000001",
+    "FB2-SUP-RUS-000001"
+   ],
+   "depends_on": [],
+   "effort_person_days_estimate": 45,
+   "estimate_basis": "Definition plus one recorded instance each. A real programme would need far more instances; one is the minimum that distinguishes a process record from a policy."
+  },
+  {
+   "wbs_id": "WBS-007",
+   "work_package": "Post-development lifecycle: release identification, production and end-of-line test, calibration, field monitoring, service, decommissioning",
+   "accountable_role": "project_manager",
+   "supporting_roles": [
+    "quality_engineer",
+    "hw_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-REL-RLS-000001",
+    "FB2-PRD-EOL-000001",
+    "FB2-PRD-CAL-000001",
+    "FB2-OPS-MON-000001",
+    "FB2-SVC-SVC-000001",
+    "FB2-DEC-DCM-000001"
+   ],
+   "depends_on": [
+    "WBS-005"
+   ],
+   "effort_person_days_estimate": 85,
+   "estimate_basis": "Six lifecycle areas, each documented to the level at which the corpus can state what it does not know."
+  },
+  {
+   "wbs_id": "WBS-008",
+   "work_package": "Measurement, risk management and process improvement",
+   "accountable_role": "project_manager",
+   "supporting_roles": [
+    "quality_engineer"
+   ],
+   "deliverable_records": [
+    "FB2-MAN-MSM-000001",
+    "FB2-MAN-RSK-000001",
+    "FB2-PIM-IMP-000001",
+    "FB2-PIM-IMP-000002",
+    "FB2-PIM-IMP-000003"
+   ],
+   "depends_on": [
+    "WBS-006"
+   ],
+   "effort_person_days_estimate": 40,
+   "estimate_basis": "Continuous rather than a package; the estimate covers the setup pass and the first improvement cycle."
+  }
+ ],
+ "schedule": {
+  "planned_start": "2026-01-12",
+  "planned_finish": "2027-10-15",
+  "critical_path_wbs": [
+   "WBS-001",
+   "WBS-003",
+   "WBS-004",
+   "WBS-005",
+   "WBS-007"
+  ],
+  "float_days_by_work_package": {
+   "WBS-001": 0,
+   "WBS-002": 8,
+   "WBS-003": 0,
+   "WBS-004": 0,
+   "WBS-005": 0,
+   "WBS-006": 20,
+   "WBS-007": 0,
+   "WBS-008": 20
+  }
+ },
+ "milestones_and_gates": [
+  {
+   "milestone_id": "MS-01",
+   "name": "Concept freeze",
+   "planned_date": "2026-04-24",
+   "gate_type": "concept_freeze",
+   "entry_criteria": [
+    "Item definition baselined",
+    "Hazard analysis reviewed",
+    "Functional safety concept reviewed"
+   ],
+   "exit_criteria": [
+    "Every hazard has a safety goal or a recorded non-applicability decision",
+    "Every safety goal has an allocation statement naming architectural elements",
+    "No unresolved high finding against a concept record"
+   ],
+   "exit_decision_owner_role": "safety_manager",
+   "synthetic_decision": "synthetic_decision:safety_manager:SYNTH-MAN-GATE-001",
+   "decision_status": "Planned. Not taken. No human has attended this gate."
+  },
+  {
+   "milestone_id": "MS-02",
+   "name": "Requirement baseline",
+   "planned_date": "2026-11-06",
+   "gate_type": "requirement_baseline",
+   "entry_criteria": [
+    "System requirements authored and reviewed",
+    "Allocation to hardware and software complete"
+   ],
+   "exit_criteria": [
+    "Every stakeholder need refined into at least one system requirement",
+    "Every system requirement allocated to at least one technical requirement",
+    "Every requirement carries measurable acceptance criteria"
+   ],
+   "exit_decision_owner_role": "system_engineer",
+   "synthetic_decision": "synthetic_decision:system_engineer:SYNTH-MAN-GATE-002",
+   "decision_status": "Planned. Not taken."
+  },
+  {
+   "milestone_id": "MS-03",
+   "name": "Design freeze",
+   "planned_date": "2027-02-26",
+   "gate_type": "design_freeze",
+   "entry_criteria": [
+    "Technical safety concept baselined",
+    "Detailed design baselined for every in-scope unit"
+   ],
+   "exit_criteria": [
+    "The technical safety concept's timing budget closes inside the FTTI",
+    "Every diagnostic coverage claim has a named evidence source",
+    "Freedom-from-interference argument recorded for every allocated element"
+   ],
+   "exit_decision_owner_role": "architect",
+   "synthetic_decision": "synthetic_decision:architect:SYNTH-MAN-GATE-003",
+   "decision_status": "Planned. Not taken. Note that as of this record the corpus does not meet this gate's second exit criterion: two of the technical safety concept's coverage claims are synthetic assumptions with no evidence record at all."
+  },
+  {
+   "milestone_id": "MS-04",
+   "name": "Verification readiness",
+   "planned_date": "2027-06-18",
+   "gate_type": "verification_readiness",
+   "entry_criteria": [
+    "Verification planning baselined",
+    "Every measure has an execution environment named"
+   ],
+   "exit_criteria": [
+    "Every requirement has a measure with a declared oracle basis",
+    "No measure's expected outcome is a copy of implementation output",
+    "Every blocked execution has a stated reason and an unblock condition"
+   ],
+   "exit_decision_owner_role": "verification_engineer",
+   "synthetic_decision": "synthetic_decision:verification_engineer:SYNTH-MAN-GATE-004",
+   "decision_status": "Planned. Not taken. As of this record the corpus does not meet the first exit criterion for the security requirements: the measures exist now, but their execution environments do not."
+  },
+  {
+   "milestone_id": "MS-05",
+   "name": "Release readiness",
+   "planned_date": "2027-10-15",
+   "gate_type": "release_readiness",
+   "entry_criteria": [
+    "Validation complete",
+    "Post-development lifecycle records baselined"
+   ],
+   "exit_criteria": [
+    "Release configuration identified and recorded",
+    "Every changed requirement re-verified against the selected measures",
+    "No unresolved critical or high finding against any release record"
+   ],
+   "exit_decision_owner_role": "project_manager",
+   "synthetic_decision": "synthetic_decision:project_manager:SYNTH-MAN-GATE-005",
+   "decision_status": "Planned. Not taken."
+  },
+  {
+   "milestone_id": "MS-06",
+   "name": "Safety case review",
+   "planned_date": "2027-10-15",
+   "gate_type": "safety_case_review",
+   "entry_criteria": [
+    "All earlier gates passed",
+    "All evidence records collected"
+   ],
+   "exit_criteria": [
+    "Every claim in the safety case has at least one evidence record and no open defeater",
+    "Every unresolved concern is recorded as a concern rather than closed",
+    "Confirmation review performed by a party independent of the authors"
+   ],
+   "exit_decision_owner_role": "safety_manager",
+   "synthetic_decision": "synthetic_decision:safety_manager:SYNTH-MAN-GATE-006",
+   "decision_status": "Planned. Not taken. The corpus has no independent confirmation reviewer: every review record in it is an automated AI review, which master-prompt clause 2.9 says is not organisational independence."
+  }
+ ],
+ "resource_plan": [
+  {
+   "role": "safety_engineer",
+   "allocation_percent": 60,
+   "named_as": "role identity: safety_engineer (fictional)",
+   "competence_record_ref": "not created; competence records are named here and do not exist as artifacts",
+   "single_point_of_failure": true
+  },
+  {
+   "role": "system_engineer",
+   "allocation_percent": 70,
+   "named_as": "role identity: system_engineer (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": true
+  },
+  {
+   "role": "hw_engineer",
+   "allocation_percent": 50,
+   "named_as": "role identity: hw_engineer (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": false
+  },
+  {
+   "role": "sw_engineer",
+   "allocation_percent": 80,
+   "named_as": "role identity: sw_engineer (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": false
+  },
+  {
+   "role": "verification_engineer",
+   "allocation_percent": 70,
+   "named_as": "role identity: verification_engineer (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": true
+  },
+  {
+   "role": "cybersecurity_engineer",
+   "allocation_percent": 40,
+   "named_as": "role identity: cybersecurity_engineer (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": true
+  },
+  {
+   "role": "quality_engineer",
+   "allocation_percent": 50,
+   "named_as": "role identity: quality_engineer (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": false
+  },
+  {
+   "role": "project_manager",
+   "allocation_percent": 60,
+   "named_as": "role identity: project_manager (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": true
+  },
+  {
+   "role": "safety_manager",
+   "allocation_percent": 30,
+   "named_as": "role identity: safety_manager (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": true
+  },
+  {
+   "role": "reviewer_adversarial",
+   "allocation_percent": 20,
+   "named_as": "role identity: reviewer_adversarial, independent of every authoring role above (fictional)",
+   "competence_record_ref": "not created",
+   "single_point_of_failure": false
+  }
+ ],
+ "progress_records": [
+  {
+   "report_date": "2026-03-06",
+   "reporting_wbs": "WBS-001",
+   "planned_finish": "2026-04-24",
+   "forecast_finish": "2026-04-24",
+   "schedule_variance_days": 0,
+   "status": "behind",
+   "reported_by_role": "project_manager",
+   "narrative": "Two weeks behind on the hazard analysis. The cause is not technical: the safety manager who was to review the severity and controllability reasoning was unavailable for eleven days and there is no second person qualified to do it. The plan named a single point of failure and the risk register's RSK-002 predicted exactly this.",
+   "escalated": true
+  },
+  {
+   "report_date": "2026-03-06",
+   "reporting_wbs": "WBS-006",
+   "planned_finish": "2026-02-13",
+   "forecast_finish": "2026-03-20",
+   "schedule_variance_days": 35,
+   "status": "behind",
+   "reported_by_role": "project_manager",
+   "narrative": "Supporting process definition is the package actually behind. It was given 20 days of float and has consumed 55. The float was real: the package had no predecessor and was therefore expected to finish early. The variance is absorbed, not recovered, and this is stated rather than hidden in a re-baselined date.",
+   "escalated": false
+  },
+  {
+   "report_date": "2026-05-08",
+   "reporting_wbs": "WBS-001",
+   "planned_finish": "2026-04-24",
+   "forecast_finish": "2026-05-22",
+   "schedule_variance_days": 28,
+   "status": "behind",
+   "reported_by_role": "project_manager",
+   "narrative": "Still behind after the reviewer returned. Recorded as behind rather than complete because the functional safety concept was baselined with two unresolved contradictions against the safety goal's timing budget, and a concept cannot be baselined while its own arithmetic does not close.",
+   "escalated": true
+  },
+  {
+   "report_date": "2026-08-14",
+   "reporting_wbs": "WBS-003",
+   "planned_finish": "2026-08-14",
+   "forecast_finish": "2026-08-14",
+   "schedule_variance_days": 0,
+   "status": "on_track",
+   "reported_by_role": "project_manager",
+   "narrative": "Stakeholder needs and system requirements on plan. The package recovered because WBS-006 finished late and released the system engineer, which is the opposite of what the float was for. Recorded because it is the kind of dependency that a plan which treats packages independently would miss.",
+   "escalated": false
+  },
+  {
+   "report_date": "2026-11-06",
+   "reporting_wbs": "WBS-005",
+   "planned_finish": "2026-11-06",
+   "forecast_finish": "2027-01-15",
+   "schedule_variance_days": 70,
+   "status": "at_risk",
+   "reported_by_role": "project_manager",
+   "narrative": "Verification is the package driving the forecast. Not because the measures are hard to write but because none of the nine new measures can be executed: there is no security harness, no injection node and no vehicle. The plan assumed the harnesses would be built by the verification package and it does not fund them. This is a planning omission and the risk register's RSK-004 names it.",
+   "escalated": true
+  }
+ ],
+ "communication_plan": [
+  {
+   "meeting_id": "MTG-001",
+   "cadence": "weekly",
+   "attendee_roles": [
+    "project_manager",
+    "safety_engineer",
+    "system_engineer",
+    "hw_engineer",
+    "sw_engineer",
+    "verification_engineer",
+    "quality_engineer"
+   ],
+   "purpose": "Status, blockers and decision requests",
+   "artifact_revision_communicated": [
+    "FB2-SAF-FSC-000001 rev 1",
+    "FB2-SAF-TSC-000001 rev 1",
+    "FB2-SYS-SYR-000001 rev 1 .. FB2-SYS-SYR-000008 rev 1"
+   ],
+   "acknowledgement_recorded": true,
+   "acknowledgement_note": "Acknowledgement is recorded as a synthetic boolean. No person acknowledged anything; the corpus has no participants."
+  },
+  {
+   "meeting_id": "MTG-002",
+   "cadence": "at every baseline and at every change to a baselined record",
+   "attendee_roles": [
+    "architect",
+    "traceability_engineer",
+    "quality_engineer",
+    "project_manager"
+   ],
+   "purpose": "Configuration control board: which revisions are baselined and which links are affected",
+   "artifact_revision_communicated": [
+    "Every record moved to a new revision in the period"
+   ],
+   "acknowledgement_recorded": true
+  },
+  {
+   "meeting_id": "MTG-003",
+   "cadence": "monthly",
+   "attendee_roles": [
+    "project_manager",
+    "quality_engineer"
+   ],
+   "purpose": "Measurement and risk review against the measurement plan",
+   "artifact_revision_communicated": [
+    "FB2-MAN-MSM-000001 rev 1",
+    "FB2-MAN-RSK-000001 rev 1"
+   ],
+   "acknowledgement_recorded": false,
+   "acknowledgement_note": "Recorded false deliberately. The first measurement review was held and no acknowledgement was captured, which is why the measurement plan's collection rule names an explicit capture step: the process had one and it was not followed."
+  }
+ ],
+ "limitations": [
+  "Synthetic. This plan schedules a hypothetical programme. No organisation, person, supplier or vehicle named here exists.",
+  "The effort estimates are order-of-magnitude figures produced by the author, not bottom-up estimates from a team that exists. They are recorded so that the schedule has denominators, not because they mean anything.",
+  "The progress records are authored, not collected. There is no project to report on, so these are synthetic observations with the same shape a real report would have.",
+  "The competence records this plan's resource table refers to do not exist. Naming a competence record that is absent is how a competence-management gap hides, so the resource table says 'not created' rather than leaving the field blank.",
+  "Four of the six gates carry an explicit note that the corpus does not currently meet their exit criteria. A plan whose gates all pass is a plan whose gates mean nothing.",
+  "The schedule does not account for the fact that the corpus's largest engineering gap was the absence of the work this plan schedules. It assumes the plan starts from a state in which concept-level work is partly done, which it is."
+ ]
+}

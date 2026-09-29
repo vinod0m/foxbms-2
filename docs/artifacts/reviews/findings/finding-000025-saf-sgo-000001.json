@@ -1,0 +1,62 @@
+{
+ "id": "FB2-REV-FND-000025",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000025: the timing budget's arithmetic does not close: 85 ms of serial work plus a 20 ms margin is 105 ms against a 100 ms fault-tolerant time interval",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9",
+   "status": "mapped",
+   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "The obligation to record rather than to conceal."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  }
+ ],
+ "subject_artifact_id": "FB2-SAF-SGO-000001",
+ "severity": "high",
+ "category": "consistency",
+ "evidence": "Read directly from the record's own fields. FB2-SAF-SGO-000001 declares fault_tolerant_time_interval_ms = 100 and a timing_budget.allocation whose elements sum to 85: afe_acquisition 25, spi_transfer 5, pec_validation 2, database_publish 3, soa_limit_check 5, fault_classification 2, sys_state_transition 3, contactor_command 5, contactor_mechanical 30, feedback_verification 5. It also declares margin_ms = 20. 85 + 20 = 105 > 100. A margin larger than the time available is not a margin; it is an overrun recorded as headroom. The corpus validator's FTTI rule does not catch this: it reads the interval from a field named ftti_ms or ftti, and this record names it fault_tolerant_time_interval_ms, so the rule silently skips it. The rule's own behaviour is separately worth noting and is not changed by this finding.",
+ "disposition": "accepted",
+ "impact": "Every requirement, measure and analysis that spends this budget is spending a budget that does not exist. FB2-SAF-FSR-000001, FB2-SAF-FSR-000002, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004, FB2-SW-SWR-000001, FB2-SW-SWR-000002 and FB2-SW-SWR-000003 all derive their latency figures from it, and the technical safety concept FB2-SAF-TSC-000001 had to allocate a 15 ms margin rather than the 20 ms recorded here in order to close. A safety goal that is baselined with an arithmetic that does not close cannot be the root of a defensible safety argument, and the corpus's own release-readiness gate requires that the technical concept's budget close.",
+ "root_cause": "The margin was entered as an intention rather than computed as the difference between the interval and the work. No review or validation step computed the sum, and the validator rule that could have found it does not fire because it looks the interval up under a field name this record does not use. The two causes are independent: even a working rule would not have caught a field-naming mismatch on its own, and a correctly named field would have been caught by a working rule.",
+ "resolution": "NOT RESOLVED, and it cannot honestly be resolved by this pass. Reconciling the recorded margin with the interval requires editing a baselined safety goal, which is a controlled change and not a documentation edit. This pass therefore: (a) recorded the contradiction here; (b) wrote FB2-SAF-TSC-000001 with an allocation that closes at 100 ms and a statement naming the departure; (c) opened the improvement FB2-PIM-IMP-000001 to add an arithmetic check to the review checklist, whose verdict is partially_effective; and (d) registered the referral in the change-control process instance INST-004. The validator rule was NOT weakened or modified: it remains as it was, and its field-name limitation is reported here rather than fixed by renaming a record."
+}

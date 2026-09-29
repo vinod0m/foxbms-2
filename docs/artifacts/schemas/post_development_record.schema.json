@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/post_development_record.schema.json",
+  "title": "Post-Development Lifecycle Record Schema",
+  "description": "Schema for the post-development lifecycle artefacts required by ISO 26262-7 and Automotive SPICE SPL.2 / ACQ.4 / VAL.1: release and configuration identification, production control and end-of-line test, calibration and programming, field monitoring and incident handling, installation/operation/service, and decommissioning and recycling. One schema with a required lifecycle_area discriminator, because these six share a shape (purpose, area-specific content, produced records, interactions, acceptance, limitations) while their typed content differs; the conditional branches below make the area-specific content structural. These are fictional lifecycle artefacts, not operational instructions authorised for any real equipment.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "post_development_id",
+        "lifecycle_area",
+        "fictional_project",
+        "purpose",
+        "scope",
+        "responsible_roles",
+        "procedures",
+        "records_produced",
+        "acceptance_criteria",
+        "interactions_with_other_lifecycle_areas",
+        "operational_authorisation_statement",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "post_development_record"
+        },
+        "post_development_id": {"type": "string", "pattern": "^FB2-(REL|PRD|OPS|SVC|DEC)-[A-Z]{3}-[0-9]{6}$"},
+        "lifecycle_area": {
+          "type": "string",
+          "enum": [
+            "release_and_configuration_identification",
+            "production_control_and_end_of_line_test",
+            "calibration_and_programming",
+            "field_monitoring_and_incident_handling",
+            "installation_operation_and_service",
+            "decommissioning_and_recycling"
+          ]
+        },
+        "fictional_project": {"const": true},
+        "purpose": {"type": "string", "minLength": 1},
+        "scope": {
+          "type": "object",
+          "required": ["in_scope", "out_of_scope"],
+          "properties": {
+            "in_scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "out_of_scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+          },
+          "additionalProperties": false
+        },
+        "responsible_roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["role", "named_as", "is_a_real_person"],
+            "properties": {
+              "role": {"type": "string", "minLength": 1},
+              "named_as": {"type": "string", "minLength": 1},
+              "is_a_real_person": {"const": false},
+              "responsibility": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "procedures": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["step", "action", "record_produced", "acceptance_condition"],
+            "properties": {
+              "step": {"type": "integer", "minimum": 1},
+              "action": {"type": "string", "minLength": 1},
+              "record_produced": {"type": "string", "minLength": 1},
+              "acceptance_condition": {"type": "string", "minLength": 1},
+              "decision_point": {"type": "string"},
+              "synthetic_decision": {"type": "string", "pattern": "^synthetic_decision:[a-z_]{3,40}:[A-Z0-9-]{3,60}$"}
+            },
+            "additionalProperties": false
+          },
+          "description": "Minimum two steps so a lifecycle area cannot be recorded as a one-line instruction."
+        },
+        "records_produced": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["record", "kind", "retention", "identification_rule"],
+            "properties": {
+              "record": {"type": "string", "minLength": 1},
+              "kind": {"type": "string", "enum": ["record", "data", "certificate", "label", "report", "log", "identification_record"]},
+              "retention": {"type": "string", "minLength": 1},
+              "identification_rule": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["criterion", "measure", "threshold", "unit"],
+            "properties": {
+              "criterion": {"type": "string", "minLength": 1},
+              "measure": {"type": "string", "minLength": 1},
+              "threshold": {"type": "string", "minLength": 1},
+              "unit": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "configuration_identification": {
+          "type": "object",
+          "required": ["baseline_id", "configuration_items", "identification_scheme"],
+          "properties": {
+            "baseline_id": {"type": "string", "pattern": "^BAS-(REF|MUT|VAR)-[0-9]{3}$"},
+            "configuration_items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["item", "identifier", "how_the_identifier_is_established"],
+                "properties": {
+                  "item": {"type": "string", "minLength": 1},
+                  "identifier": {"type": "string", "minLength": 1},
+                  "how_the_identifier_is_established": {"type": "string", "minLength": 1},
+                  "recorded_on": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              }
+            },
+            "identification_scheme": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "test_stations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["station_id", "station_purpose", "tests_performed", "reject_action", "sample_rate"],
+            "properties": {
+              "station_id": {"type": "string", "pattern": "^ST-[0-9]{2}$"},
+              "station_purpose": {"type": "string", "minLength": 1},
+              "tests_performed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "reject_action": {"type": "string", "minLength": 1},
+              "sample_rate": {"type": "string", "minLength": 1},
+              "measured_parameter": {"type": "string"},
+              "tolerance": {"type": "string"},
+              "measuring_equipment_calibrated": {"type": "boolean"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "calibration_parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["parameter", "parameter_ref", "calibration_value", "unit", "tolerance", "stored_where"],
+            "properties": {
+              "parameter": {"type": "string", "minLength": 1},
+              "parameter_ref": {"type": "string", "pattern": "^FB2-PRM-[0-9]{6}$"},
+              "calibration_value": {"type": "number"},
+              "unit": {"type": "string", "minLength": 1},
+              "tolerance": {"type": "string", "minLength": 1},
+              "stored_where": {"type": "string", "minLength": 1},
+              "recalibration_trigger": {"type": "string"},
+              "checksum_rule": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "monitoring_signals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "what_it_detects", "collection_route", "escalation"],
+            "properties": {
+              "signal": {"type": "string", "minLength": 1},
+              "what_it_detects": {"type": "string", "minLength": 1},
+              "collection_route": {"type": "string", "minLength": 1},
+              "escalation": {"type": "string", "minLength": 1},
+              "retention": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "incident_handling": {
+          "type": "object",
+          "required": ["severity_classes", "escalation_path", "response_targets", "post_incident_actions"],
+          "properties": {
+            "severity_classes": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": ["class", "definition", "response"],
+                "properties": {
+                  "class": {"type": "string", "minLength": 1},
+                  "definition": {"type": "string", "minLength": 1},
+                  "response": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              }
+            },
+            "escalation_path": {"type": "string", "minLength": 1},
+            "response_targets": {"type": "string", "minLength": 1},
+            "post_incident_actions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+          },
+          "additionalProperties": false
+        },
+        "service_procedures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["procedure_id", "procedure_name", "who_may_perform_it", "steps", "safety_warning"],
+            "properties": {
+              "procedure_id": {"type": "string", "pattern": "^SVC-[0-9]{2}$"},
+              "procedure_name": {"type": "string", "minLength": 1},
+              "who_may_perform_it": {"type": "string", "minLength": 1},
+              "steps": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "safety_warning": {"type": "string", "minLength": 1},
+              "tools_required": {"type": "array", "items": {"type": "string"}},
+              "post_service_check": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "end_of_life_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["assumption", "responsibility_holder", "basis", "if_false"],
+            "properties": {
+              "assumption": {"type": "string", "minLength": 1},
+              "responsibility_holder": {"type": "string", "minLength": 1},
+              "basis": {"type": "string", "minLength": 1},
+              "if_false": {"type": "string", "minLength": 1},
+              "control_that_makes_it_visible": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "interactions_with_other_lifecycle_areas": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["other_area", "interaction", "direction"],
+            "properties": {
+              "other_area": {"type": "string", "minLength": 1},
+              "interaction": {"type": "string", "minLength": 1},
+              "direction": {"type": "string", "enum": ["this_area_provides_to_other", "this_area_requires_from_other", "mutual"]},
+              "consequence_if_the_interaction_is_broken": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "operational_authorisation_statement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Mandatory statement that this record is not an instruction authorised for any real equipment, vehicle or battery."
+        },
+        "evidence_state": {
+          "type": "object",
+          "required": ["any_step_executed", "executed_steps", "reason"],
+          "properties": {
+            "any_step_executed": {
+              "type": "boolean",
+              "description": "False in this corpus. No production line, vehicle, pack or recycling facility exists to execute any of these steps."
+            },
+            "executed_steps": {"type": "array", "items": {"type": "string"}},
+            "reason": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"lifecycle_area": {"const": "release_and_configuration_identification"}}, "required": ["lifecycle_area"]},
+          "then": {"required": ["configuration_identification"]}
+        },
+        {
+          "if": {"properties": {"lifecycle_area": {"const": "production_control_and_end_of_line_test"}}, "required": ["lifecycle_area"]},
+          "then": {"required": ["test_stations"]}
+        },
+        {
+          "if": {"properties": {"lifecycle_area": {"const": "calibration_and_programming"}}, "required": ["lifecycle_area"]},
+          "then": {"required": ["calibration_parameters"]}
+        },
+        {
+          "if": {"properties": {"lifecycle_area": {"const": "field_monitoring_and_incident_handling"}}, "required": ["lifecycle_area"]},
+          "then": {"required": ["monitoring_signals", "incident_handling"]}
+        },
+        {
+          "if": {"properties": {"lifecycle_area": {"const": "installation_operation_and_service"}}, "required": ["lifecycle_area"]},
+          "then": {"required": ["service_procedures"]}
+        },
+        {
+          "if": {"properties": {"lifecycle_area": {"const": "decommissioning_and_recycling"}}, "required": ["lifecycle_area"]},
+          "then": {"required": ["end_of_life_assumptions"]}
+        }
+      ],
+      "additionalProperties": true
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/risk_register.schema.json",
+  "title": "Risk Register Schema",
+  "description": "Schema for a populated project risk register (Automotive SPICE MAN.5). Project risk is risk to the development: schedule, cost, resource, technical, supplier, quality and organisational. A cybersecurity threat-and-risk assessment is a different artifact with a different subject matter and does not satisfy this schema. Every entry carries an owner, a probability and an impact, a residual exposure after its mitigation, and a review cadence, so a risk cannot be recorded and then forgotten.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "register_id",
+        "fictional_project",
+        "scoring_method",
+        "review_cadence",
+        "risk_entries",
+        "aggregate_exposure",
+        "acceptance_authority",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "risk_register"
+        },
+        "register_id": {"type": "string", "pattern": "^FB2-MAN-RSK-[0-9]{6}$"},
+        "fictional_project": {"const": true},
+        "review_cadence": {"type": "string", "minLength": 1},
+        "scope_note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "States what is in scope for this register and what is not, so a reader does not mistake it for the project's complete risk picture."
+        },
+        "scoring_method": {
+          "type": "object",
+          "required": ["probability_scale", "impact_scale", "exposure_formula", "escalation_threshold"],
+          "properties": {
+            "probability_scale": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": ["label", "definition"],
+                "properties": {
+                  "label": {"type": "string", "minLength": 1},
+                  "definition": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              }
+            },
+            "impact_scale": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": ["label", "definition"],
+                "properties": {
+                  "label": {"type": "string", "minLength": 1},
+                  "definition": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              }
+            },
+            "exposure_formula": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The arithmetic, written out. An ordinal product of two label scales is declared as such and not presented as a quantitative probability."
+            },
+            "escalation_threshold": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "risk_entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["risk_id", "title", "category", "risk_statement", "cause", "effect_on_the_project", "probability", "impact", "inherent_exposure", "owner_role", "mitigation_actions", "residual_probability", "residual_impact", "residual_exposure", "trigger_for_escalation", "status"],
+            "properties": {
+              "risk_id": {"type": "string", "pattern": "^RSK-[0-9]{3}$"},
+              "title": {"type": "string", "minLength": 1},
+              "category": {
+                "type": "string",
+                "enum": ["schedule", "cost", "resource", "technical", "supplier", "quality", "organisational", "tooling", "compliance", "schedule_dependency"]
+              },
+              "risk_statement": {
+                "type": "object",
+                "required": ["condition", "consequence"],
+                "properties": {
+                  "condition": {"type": "string", "minLength": 1},
+                  "consequence": {"type": "string", "minLength": 1}
+                },
+                "additionalProperties": false
+              },
+              "cause": {"type": "string", "minLength": 1},
+              "effect_on_the_project": {"type": "string", "minLength": 1},
+              "probability": {"type": "string", "minLength": 1},
+              "impact": {"type": "string", "minLength": 1},
+              "inherent_exposure": {"type": "string", "minLength": 1},
+              "owner_role": {"type": "string", "minLength": 1},
+              "mitigation_actions": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["action", "action_type", "action_date", "action_owner_role", "status"],
+                  "properties": {
+                    "action": {"type": "string", "minLength": 1},
+                    "action_type": {"type": "string", "enum": ["avoid", "reduce_probability", "reduce_impact", "transfer", "accept", "escalate"]},
+                    "action_date": {"type": "string", "format": "date"},
+                    "action_owner_role": {"type": "string", "minLength": 1},
+                    "status": {"type": "string", "enum": ["planned", "in_progress", "done", "cancelled"]},
+                    "evidence_of_effect": {"type": "string"}
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "residual_probability": {"type": "string", "minLength": 1},
+              "residual_impact": {"type": "string", "minLength": 1},
+              "residual_exposure": {"type": "string", "minLength": 1},
+              "residual_exposure_argument": {"type": "string", "minLength": 1},
+              "trigger_for_escalation": {"type": "string", "minLength": 1},
+              "linked_change_records": {"type": "array", "items": {"type": "string"}},
+              "linked_artifact_refs": {"type": "array", "items": {"type": "string"}},
+              "status": {"type": "string", "enum": ["open", "mitigating", "accepted", "closed", "realised"]},
+              "last_reviewed": {"type": "string", "format": "date"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "aggregate_exposure": {
+          "type": "object",
+          "required": ["open_count", "accepted_count", "closed_count", "escalated_count", "highest_residual_exposure", "summary"],
+          "properties": {
+            "open_count": {"type": "integer", "minimum": 0},
+            "accepted_count": {"type": "integer", "minimum": 0},
+            "closed_count": {"type": "integer", "minimum": 0},
+            "escalated_count": {"type": "integer", "minimum": 0},
+            "highest_residual_exposure": {"type": "string", "minLength": 1},
+            "summary": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "acceptance_authority": {
+          "type": "object",
+          "required": ["role", "acceptance_exists", "statement"],
+          "properties": {
+            "role": {"type": "string", "minLength": 1},
+            "acceptance_exists": {
+              "type": "boolean",
+              "description": "False in this corpus. No risk is accepted by a human authority; the accepting parties are fictional roles and the acceptance is a synthetic decision."
+            },
+            "statement": {"type": "string", "minLength": 1},
+            "synthetic_decision_refs": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": true
+    }
+  ]
+}

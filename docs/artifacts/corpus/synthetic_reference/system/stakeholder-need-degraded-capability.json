@@ -1,0 +1,89 @@
+{
+ "id": "FB2-SYS-NED-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "stakeholder_need",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Stakeholder need: on a degradation the item shall retain a usable capability rather than escalate immediately",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1",
+   "status": "mapped",
+   "rationale": "Requirements elicitation: the stakeholder needs this process produces."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 5 (item definition and stakeholder needs)",
+   "status": "mapped",
+   "rationale": "The needs here are the item's needs raised at concept level; they are refined into requirements only at system level."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Stakeholder need authored because SYS.1 was recorded as a coverage gap with zero records in either profile. Declared, not elicited: no workshop, interview or questionnaire was held for any of the needs in this set."
+  }
+ ],
+ "need_id": "FB2-SYS-NED-000002",
+ "stakeholder": {
+  "stakeholder_id": "STK-002",
+  "stakeholder_class": "end_user_driver",
+  "fictional": true,
+  "stakeholder_description": "Fictional end-user driver of the hypothetical vehicle. Not a technical stakeholder; cannot read a diagnosis entry and will not be shown one."
+ },
+ "need_statement": "When a measurement channel degrades, the item shall continue to supervise and control the pack with reduced capability and shall announce the reduction, rather than opening the contactors on the first detected disagreement.",
+ "rationale": "The need is the difference between a serviceable vehicle and an immobilised one. An item that escalates every degradation to a safe state is not unsafe; it is unusable, and an unusable safety function gets disabled, overridden or removed by whoever is frustrated by it, which is the more likely outcome in the field. The need is therefore as much about the survival of the safety function as about capability. It is tightly coupled to the false-reaction need: a degraded mode that is too permissive reintroduces the false-reaction problem in a harder form, because a degraded channel is exactly the case where the item's normal checks are weakened.",
+ "origin_of_the_need": {
+  "elicitation_method": "assumption_declaration",
+  "elicited_from": "the hypothetical programme's own design assumption set, declared by the author",
+  "is_a_real_elicitation": false,
+  "elicitation_evidence": []
+ },
+ "priority": {
+  "rank": 2,
+  "rationale": "The need is the difference between a serviceable vehicle and an immobilised one."
+ },
+ "operational_situation_refs": [
+  "OS-001",
+  "OS-002",
+  "OS-003"
+ ],
+ "derived_requirements": [
+  "FB2-SYS-SYR-000002",
+  "FB2-SYS-SYR-000004"
+ ],
+ "validation_measures": [
+  "FB2-VER-TMS-000014"
+ ],
+ "limitation": "Declared, not elicited. The degradation magnitudes this need implies are not specified anywhere in the corpus; the concept names three degraded modes but the boundary between degraded and fault is not defined numerically, and this need cannot be validated until it is."
+}

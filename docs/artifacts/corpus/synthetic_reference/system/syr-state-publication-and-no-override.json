@@ -1,0 +1,120 @@
+{
+ "id": "FB2-SYS-SYR-000007",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "SYR: the item shall publish its state and shall not accept a request that contradicts its own safety evaluation",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.2",
+   "status": "mapped",
+   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 7 (system requirements)",
+   "status": "mapped",
+   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them."
+  }
+ ],
+ "statement": "The item shall publish its mode, its charge and discharge limits and its active fault condition to the vehicle control unit, and shall act on a state request from that unit only when the request is consistent with the item's own safety evaluation; where it is not, the item shall refuse the request and publish the refusal with its reason.",
+ "rationale": "The system-level statement of the integration contract with the vehicle manufacturer. It resolves the tension named in the stakeholder need FB2-SYS-NED-000004 in one direction and states the direction explicitly, because a requirement that said only 'the item honours state requests' would leave the safety case resting on the item being overridden cleanly, and 'cleanly' is not a property any record here establishes. The publication half is separated from the refusal half deliberately: publication is a capability the vehicle manufacturer needs in every mode, and refusal is a safety behaviour that only exists when the item has already judged something unsafe.",
+ "classification": "interface",
+ "acceptance_criteria": [
+  {
+   "criterion": "State publication completeness",
+   "measure": "Modes and active faults published in every mode",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Limit publication",
+   "measure": "Charge and discharge limits published to the control unit",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Refusal of inconsistent requests",
+   "measure": "Requests contradicting the item's own evaluation that were acted on",
+   "threshold": "0",
+   "unit": "requests"
+  },
+  {
+   "criterion": "Refusal diagnosability",
+   "measure": "Refusals published with a reason",
+   "threshold": "100",
+   "unit": "%"
+  }
+ ],
+ "verification_approach": "test",
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "N/A - the interface itself is not allocated an ASIL; its integrity is bounded by the cybersecurity requirements FB2-SAF-SEC-000003 and FB2-SAF-SEC-000004",
+  "mitigation": "Message-level integrity and freshness verification, and the explicit refusal path"
+ },
+ "assumptions": [
+  "FB2-ASM-011"
+ ],
+ "conditions_modes": [
+  "MOD-001",
+  "MOD-002",
+  "MOD-003",
+  "MOD-004",
+  "MOD-005"
+ ],
+ "feasibility_dependencies": [
+  "FB2-SW-SWR-000001",
+  "FB2-HW-TSR-000002"
+ ],
+ "requirement_level": "system",
+ "requirement_id": "FB2-SYS-SYR-000007",
+ "allocated_to_requirements": [
+  "FB2-SYS-NED-000004"
+ ],
+ "refines_from": [
+  "arch_elements",
+  "dependency_direction"
+ ],
+ "trace_to_architecture_elements": [],
+ "limitations": [
+  "Synthetic. This requirement describes a hypothetical programme and establishes nothing about the real foxBMS project.",
+  "System-level only. It does not carry the hardware or software detail, which lives in FB2-HW-TSR-* and FB2-SW-SWR-*. Where this record and those records disagree, neither is silently preferred and the disagreement is raised as a finding.",
+  "Not verified against the product. Every measure that touches its allocated requirements is a synthetic fixture or a blocked record; see the FB2-VER-EXE-* set."
+ ]
+}

@@ -71,6 +71,12 @@ DOC_TITLES = {
 def _owns(doc, d):
     at = d.get("artifact_type", "")
     aid = d.get("id", "")
+    if doc == "01-stakeholder-requirements-specification":
+        # The item definition, the declared stakeholder needs and the use cases are the
+        # SYS.1 work product: they are what this document is for. They are owned here and
+        # emitted here; an ownership clause without an emitted id would fail --check with
+        # 'owned artifact not present', so the two always move together.
+        return at in ("item_definition", "stakeholder_need", "use_case")
     if doc == "02-system-requirements-specification":
         # A TARA and the security requirements derived from it are SYSTEM-level work
         # products: ISO/SAE 21434 operates on the item, the threat set is drawn from
@@ -78,8 +84,14 @@ def _owns(doc, d):
         # mitigations protect system-level safety goals. The Software Requirements
         # Specification stays the home of the -SWR-/-MAN- requirements; the TARA and the
         # security requirements belong here, next to the goals they bound.
-        return (at in ("safety_goal", "tara")
-                or (at == "requirement" and ("-FSR-" in aid or "-SEC-" in aid)))
+        #
+        # The ISO 26262 Part 3 safety concepts are added for the same reason: they are the
+        # system-level record of how the safety goal is achieved and what follows from that
+        # allocation, which is system engineering content and not software content. The
+        # -SYR- system requirements are added because this document is the System
+        # Requirements Specification and SYS.2 records have nowhere else to live.
+        return (at in ("safety_goal", "tara", "safety_concept")
+                or (at == "requirement" and ("-FSR-" in aid or "-SEC-" in aid or "-SYR-" in aid)))
     if doc == "04-software-requirements-specification":
         return at == "requirement" and ("-SWR-" in aid or "-MAN-" in aid)
     if doc == "05-software-architecture-specification":
@@ -516,6 +528,155 @@ def emit_01(v, out):
              "`FB2-SAF-SGO-000001`; item scope artifact `governance/scope-and-applicability.json`; "
              "repository anchors listed above.")
     L.append("")
+
+    # ---- synthetic_reference SYS.1 work products -------------------------
+    # Owned by this document (_owns: item_definition / stakeholder_need / use_case) and
+    # therefore emitted here. The clause and the emission must both exist: --check fails
+    # on an owned id that is absent from the body.
+    for profile in PROFILES:
+        ite = v.of_profile(profile, lambda d: d.get("artifact_type") == "item_definition")
+        neds = v.of_profile(profile, lambda d: d.get("artifact_type") == "stakeholder_need")
+        ucs = v.of_profile(profile, lambda d: d.get("artifact_type") == "use_case")
+        if not (ite or neds or ucs):
+            continue
+        L.append(f"### Profile: `{profile}` — Part 3 item definition and SYS.1 elicitation")
+        L.append("")
+        for iid in ite:
+            d = v.get(profile, iid)
+            L.append(f"#### `{iid}` — {esc(d.get('title', ''))}")
+            L.append("")
+            ident = d.get("item_identity", {}) or {}
+            L.append(f"- **Item name**: {esc(ident.get('item_name', '?'))}")
+            L.append(f"- **Item purpose**: {esc(ident.get('item_purpose', '?'), 500)}")
+            L.append(f"- **Hypothetical**: `{str(ident.get('fictional')).lower()}` — this record "
+                     f"describes a programme that does not exist")
+            L.append(f"- **Operating envelope**: "
+                     f"{esc((d.get('operating_envelope') or {}).get('voltage_class', '?'))}; "
+                     f"{esc((d.get('operating_envelope') or {}).get('cells_monitored', '?'))} "
+                     f"monitored cells")
+            L.append(f"- **Functions**: {len(d.get('functions', []) or [])} · "
+                     f"**operational situations**: "
+                     f"{len(d.get('operational_situations', []) or [])} · "
+                     f"**modes**: {len(d.get('operating_modes', []) or [])} · "
+                     f"**external systems**: {len(d.get('external_systems', []) or [])}")
+            L.append(f"- **Guard**: profile=`{d.get('profile')}`, origin=`{d.get('origin')}`, "
+                     f"human_approval_status=`{d.get('human_approval_status')}`, "
+                     f"production_authorized=`{str(d.get('production_authorized')).lower()}`")
+            L.append("")
+            bnd = d.get("boundaries", {}) or {}
+            L.append("**Boundary**")
+            L.append("")
+            L.append("| Inside the item | Why inside | Outside the item | Why outside | "
+                     "Residual risk owner |")
+            L.append("|---|---|---|---|---|")
+            inc = bnd.get("included_elements", []) or []
+            exc = bnd.get("excluded_elements", []) or []
+            for i, e in enumerate(inc):
+                o = exc[i] if i < len(exc) else {}
+                L.append(f"| {esc(e.get('element', '?'), 70)} | {esc(e.get('why_inside', ''), 110)} "
+                         f"| {esc(o.get('element', '—'), 70)} | "
+                         f"{esc(o.get('why_outside', '—'), 110)} | "
+                         f"{esc(o.get('residual_risk_owner', '—'), 40)} |")
+            L.append("")
+            L.append("**Operational situations**")
+            L.append("")
+            L.append("| Id | Situation | In/out | Argument |")
+            L.append("|---|---|---|---|")
+            for s in (d.get("operational_situations", []) or []):
+                L.append(f"| `{s.get('scenario_id', s.get('situation_id'))}` | "
+                         f"{esc(s.get('description', ''), 130)} | "
+                         f"{s.get('including_or_excluding', '?')} | "
+                         f"{esc(s.get('argument_for_the_decision', ''), 150)} |")
+            L.append("")
+            L.append("**Operating modes**")
+            L.append("")
+            L.append("| Id | Mode | Entry | Exit | Safe state in this mode |")
+            L.append("|---|---|---|---|---|")
+            for m in (d.get("operating_modes", []) or []):
+                L.append(f"| `{m.get('mode_id')}` | {esc(m.get('mode_name', ''), 40)} | "
+                         f"{esc(m.get('entry_condition', ''), 80)} | "
+                         f"{esc(m.get('exit_condition', ''), 80)} | "
+                         f"{esc(m.get('safe_state_in_this_mode', ''), 110)} |")
+            L.append("")
+            L.append("**Interfaces to other safety-related items**")
+            L.append("")
+            for it in (d.get("interfaces_to_other_safety_related_items", []) or []):
+                L.append(f"- **{esc(it.get('other_item', ''), 90)}** — "
+                         f"{esc(it.get('interface_description', ''), 200)} "
+                         f"*Assumption dependence:* {esc(it.get('assumption_dependence', ''), 180)} "
+                         f"*If false:* {esc(it.get('effect_if_the_assumption_fails', ''), 200)}")
+            L.append("")
+            L.append("**What this item definition does not establish**")
+            L.append("")
+            for lim in (d.get("limitations", []) or []):
+                L.append(f"- {esc(lim, 260)}")
+            L.append("")
+
+        for nid in neds:
+            d = v.get(profile, nid)
+            st = d.get("stakeholder", {}) or {}
+            oe = d.get("origin_of_the_need", {}) or {}
+            L.append(f"#### `{nid}` — {esc(d.get('title', ''))}")
+            L.append("")
+            L.append(f"- **Stakeholder**: `{st.get('stakeholder_id')}` "
+                     f"({st.get('stakeholder_class')}), fictional="
+                     f"`{str(st.get('fictional')).lower()}`")
+            L.append(f"- **Need**: {esc(d.get('need_statement', ''), 500)}")
+            L.append(f"- **Priority**: {esc((d.get('priority') or {}).get('rank', '?'))} — "
+                     f"{esc((d.get('priority') or {}).get('rationale', ''), 200)}")
+            L.append(f"- **Elicitation**: `{oe.get('elicitation_method')}` · "
+                     f"**is_a_real_elicitation**: "
+                     f"`{str(oe.get('is_a_real_elicitation')).lower()}`")
+            L.append(f"- **Refined into**: "
+                     f"{', '.join('`' + r + '`' for r in d.get('derived_requirements', []) or []) or '—'}")
+            L.append(f"- **Validation measures**: "
+                     f"{', '.join('`' + r + '`' for r in d.get('validation_measures', []) or []) or '—'}")
+            L.append(f"- **Limitation**: {esc(d.get('limitation', ''), 400)}")
+            L.append("")
+
+        for uid in ucs:
+            d = v.get(profile, uid)
+            L.append(f"#### `{uid}` — {esc(d.get('title', ''))}")
+            L.append("")
+            L.append(f"- **Stakeholders served**: "
+                     f"{', '.join('`' + s + '`' for s in d.get('primary_stakeholders', []) or [])}")
+            L.append(f"- **Validation measures**: "
+                     f"{', '.join('`' + s + '`' for s in d.get('validation_measures', []) or []) or '—'}")
+            L.append("**Main success scenario**")
+            L.append("")
+            for stp in (d.get("main_success_scenario", []) or []):
+                L.append(f"{stp.get('step', '?')}. {esc(stp.get('action', ''), 130)} → "
+                         f"{esc(stp.get('expected_observable_outcome', ''), 130)}")
+            L.append("")
+            L.append("**Operational scenarios**")
+            L.append("")
+            for sc in (d.get("operational_scenarios", []) or []):
+                L.append(f"- **`{sc.get('scenario_id')}`** — {esc(sc.get('operational_situation', ''), 140)}")
+                L.append(f"  - Perturbation: {esc(sc.get('perturbation', ''), 220)}")
+                L.append(f"  - Expected item behaviour: {esc(sc.get('expected_item_behaviour', ''), 220)}")
+                L.append(f"  - Observable by: {esc(sc.get('observable_by', ''), 140)}")
+                if sc.get("safe_state_interaction"):
+                    L.append(f"  - Safe-state interaction: "
+                             f"{esc(sc.get('safe_state_interaction', ''), 220)}")
+            L.append("")
+            L.append("**Limitations**")
+            L.append("")
+            for lim in (d.get("limitations", []) or []):
+                L.append(f"- {esc(lim, 300)}")
+            L.append("")
+        L.append("---")
+        L.append("")
+    L.append("### Why the elicitation records are declared rather than elicited")
+    L.append("")
+    L.append("Every stakeholder need above carries `is_a_real_elicitation: false`. No workshop was "
+             "held, no stakeholder was interviewed and no questionnaire was issued for this corpus. "
+             "The needs are therefore declared assumptions about what a hypothetical programme's "
+             "stakeholders would want, and the validation measures written against them confirm "
+             "that the item behaves as an assumed party would want — which is not the same as "
+             "confirming that the need was right. That distinction is stated on each need record "
+             "as well, in its `limitation` field.")
+    L.append("")
+
     (out / "01-stakeholder-requirements-specification.md").write_text(finish(L))
 
 
@@ -694,6 +855,247 @@ def emit_02(v, out):
             L.append(f"- **Conditions/modes**: " + (", ".join(f"`{m}`" for m in cm) if cm else "not specified in corpus"))
             L.append(f"- **Source references**: " + (", ".join(f"`{r}`" for r in d.get("source_refs", [])) or "—"))
             L.append(f"- **Assumption references**: " + (", ".join(f"`{r}` ({esc(v.asm_stmt(r),60)})" for r in d.get("assumption_refs", [])) or "—"))
+            L.append("")
+
+    # ---- system requirements and safety concepts (owned by this document) --
+    # _owns covers safety_concept and the -SYR- system requirements; they are emitted
+    # here so that an owned id is never absent from the body.
+    for profile in PROFILES:
+        syrs = v.of_profile(profile, lambda d: d.get("artifact_type") == "requirement"
+                            and "-SYR-" in d.get("id", ""))
+        if not syrs:
+            continue
+        L.append(f"## Profile: `{profile}` — System requirements (SYS.2)")
+        L.append("")
+        L.append("These are system-level requirements: what the integrated item must do. Each "
+                 "refines a stakeholder need, a use-case obligation or the safety goal, and "
+                 "allocates to the existing hardware technical requirements (`FB2-HW-TSR-*`) and "
+                 "software requirements (`FB2-SW-SWR-*`) rather than restating them, which is why "
+                 "the requirement-to-test coverage matrix reports them as covered indirectly "
+                 "through those allocations.")
+        L.append("")
+        for sid in syrs:
+            d = v.get(profile, sid)
+            sa = d.get("safety_allocation", {}) or {}
+            L.append(f"### `{sid}` — {esc(d.get('title', ''))}")
+            L.append("")
+            L.append(f"- **Statement**: {esc(d.get('statement', ''), 600)}")
+            L.append(f"- **Rationale**: {esc(d.get('rationale', ''), 450)}")
+            L.append(f"- **Classification**: `{d.get('classification')}` · "
+                     f"**ASIL allocation**: `{sa.get('asil')}` · "
+                     f"**safety goal**: `{sa.get('safety_goal_ref')}`")
+            L.append(f"- **Refines**: "
+                     f"{', '.join('`' + r + '`' for r in d.get('refines_from', []) or []) or '—'}")
+            L.append(f"- **Allocated to**: "
+                     f"{', '.join('`' + r + '`' for r in d.get('allocated_to_requirements', []) or []) or '—'}")
+            L.append(f"- **Architecture elements**: "
+                     f"{', '.join('`' + r + '`' for r in d.get('trace_to_architecture_elements', []) or []) or '—'}")
+            L.append(f"- **Verification approach**: `{d.get('verification_approach')}`")
+            ac = d.get("acceptance_criteria", []) or []
+            if ac:
+                L.append("- **Acceptance criteria**:")
+                for c in ac:
+                    L.append(f"  - {esc(c.get('criterion', '?'))}: "
+                             f"{esc(c.get('measure', ''), 120)} ≤ {esc(c.get('threshold', ''))} "
+                             f"{esc(c.get('unit', ''))}")
+            for key, label in (("why_system_level", "Why system level"),
+                               ("open_point", "Open point"),
+                               ("open_gap", "Open gap"),
+                               ("known_conflict", "Known conflict"),
+                               ("independence_is_assumed", "Independence status"),
+                               ("coverage_gap", "Coverage gap"),
+                               ("why_not_asil", "Why no ASIL"),
+                               ("verification_note", "Verification note"),
+                               ("dependency_direction", "Dependency direction")):
+                if d.get(key):
+                    L.append(f"- **{label}**: {esc(d.get(key), 600)}")
+            L.append("")
+        L.append("---")
+        L.append("")
+
+    for profile in PROFILES:
+        cons = v.of_profile(profile, lambda d: d.get("artifact_type") == "safety_concept")
+        if not cons:
+            continue
+        L.append(f"## Profile: `{profile}` — ISO 26262 Part 3 safety concepts")
+        L.append("")
+        for cid in cons:
+            d = v.get(profile, cid)
+            ci = d.get("concept_identity", {}) or {}
+            stage = d.get("concept_stage", "?")
+            L.append(f"### `{cid}` — {esc(d.get('title', ''))}")
+            L.append("")
+            L.append(f"- **Concept stage**: `{stage}`")
+            L.append(f"- **Item**: `{ci.get('item_ref')}` · **hypothetical**: "
+                     f"`{str(ci.get('fictional')).lower()}`")
+            L.append(f"- **Clause reference**: {esc(ci.get('clause_reference', ''), 200)}")
+            L.append(f"- **Derived from**: "
+                     f"{', '.join('`' + r + '`' for r in ci.get('derived_from', []) or []) or '—'}")
+            L.append(f"- **Guard**: profile=`{d.get('profile')}`, origin=`{d.get('origin')}`, "
+                     f"human_approval_status=`{d.get('human_approval_status')}`, "
+                     f"production_authorized=`{str(d.get('production_authorized')).lower()}`")
+            L.append("")
+            sg = d.get("scope_statement", {}) or {}
+            L.append("**Scope boundary**")
+            L.append("")
+            for e in (sg.get("inside_safety_scope", []) or []):
+                L.append(f"- Inside: {esc(e, 180)}")
+            for e in (sg.get("outside_safety_scope", []) or []):
+                L.append(f"- Outside ({e.get('hazard_class', '?')}): {esc(e.get('element', ''), 80)} "
+                         f"— {esc(e.get('why_outside', ''), 180)}")
+            L.append("")
+            L.append(f"- **Boundary argument**: {esc(sg.get('boundary_argument', ''), 700)}")
+            L.append("")
+            L.append("**Architectural elements and their roles**")
+            L.append("")
+            L.append("| Element | Name | Kind | Role | Owns objective part | Independence note |")
+            L.append("|---|---|---|---|---|---|")
+            for e in (d.get("architectural_elements", []) or []):
+                L.append(f"| `{e.get('element_id')}` | {esc(e.get('element_name', ''), 40)} | "
+                         f"{e.get('element_kind', '?')} | {esc(e.get('role', ''), 110)} | "
+                         f"{esc(e.get('owns_objective_part', ''), 110)} | "
+                         f"{esc(e.get('independence_note', ''), 110)} |")
+            L.append("")
+            st = d.get("safety_strategies", {}) or {}
+            L.append("**Safety strategies**")
+            L.append("")
+            L.append("| Kind | Mechanism or reaction | Element | Budget (ms) | Note |")
+            L.append("|---|---|---|---|---|")
+            for m in (st.get("fault_detection", []) or []):
+                L.append(f"| detection | {esc(m.get('mechanism', ''), 70)} | "
+                         f"`{m.get('element_id')}` | {m.get('detection_time_budget_ms')} | "
+                         f"{esc(m.get('coverage_claim', ''), 90)} |")
+            for m in (st.get("fault_reaction", []) or []):
+                L.append(f"| reaction | {esc(m.get('reaction', ''), 70)} | "
+                         f"`{m.get('element_id')}` | {m.get('reaction_time_budget_ms')} | "
+                         f"{esc(m.get('mode_dependence', ''), 150)} |")
+            L.append("")
+            for dm in (st.get("degraded_operation", []) or []):
+                L.append(f"- **Degraded mode** `{esc(dm.get('degraded_mode', ''), 60)}`: keeps "
+                         f"{esc(dm.get('capability_kept', ''), 90)}; removes "
+                         f"{esc(dm.get('capability_removed', ''), 90)}; enters on "
+                         f"{esc(dm.get('entry_condition', ''), 90)}; duration "
+                         f"{esc(dm.get('duration_limit', ''), 90)}")
+            L.append("")
+            L.append(f"- **Safe state**: {esc(st.get('safe_state', ''), 500)}")
+            L.append(f"- **Strategy allocation**: {esc(st.get('strategy_allocation', ''), 700)}")
+            L.append("")
+            fs = d.get("ftti_and_timing_budget")
+            if fs:
+                ac = fs.get("arithmetic_check", {}) or {}
+                L.append("**FTTI and timing budget**")
+                L.append("")
+                L.append("| Element | Budget (ms) |")
+                L.append("|---|---|")
+                owner = fs.get("allocation_to_element_id", {}) or {}
+                for k, budget_ms in (fs.get("allocation", {}) or {}).items():
+                    L.append(f"| {esc(k, 50)} (`{owner.get(k, '?')}`) | {budget_ms} |")
+                L.append(f"| **FTTI** | **{fs.get('ftti_ms')}** |")
+                L.append("")
+                L.append(f"- Serial sum: {ac.get('serial_sum_ms')} ms · margin: "
+                         f"{ac.get('margin_ms')} ms")
+                L.append(f"- **Arithmetic statement**: {esc(ac.get('statement', ''), 900)}")
+                L.append("")
+            hw = d.get("hardware_software_allocation")
+            if hw:
+                L.append("**Hardware / software allocation**")
+                L.append("")
+                L.append("| Element | Allocated to | Responsibility | Why the split |")
+                L.append("|---|---|---|---|")
+                for a in hw:
+                    L.append(f"| `{a.get('element_id')}` | {a.get('allocated_to')} | "
+                             f"{esc(a.get('allocated_responsibility', ''), 130)} | "
+                             f"{esc(a.get('reason_for_the_split', ''), 150)} |")
+                L.append("")
+            tsr = d.get("technical_safety_requirements")
+            if tsr:
+                L.append("**Technical safety requirements carried by this allocation**")
+                L.append("")
+                L.append("| Requirement | Type | Element | Verification | Statement |")
+                L.append("|---|---|---|---|---|")
+                for t in tsr:
+                    L.append(f"| `{t.get('requirement_id')}` | {t.get('requirement_type')} | "
+                             f"`{t.get('allocated_to_element_id')}` | "
+                             f"{t.get('verification_approach')} | "
+                             f"{esc(t.get('statement_summary', ''), 120)} |")
+                L.append("")
+            dc = d.get("diagnostic_coverage_assumptions")
+            if dc:
+                L.append("**Diagnostic-coverage assumptions**")
+                L.append("")
+                L.append("| Mechanism | Claimed coverage | Basis | Independence assumption | "
+                         "Verification records |")
+                L.append("|---|---|---|---|---|")
+                for a in dc:
+                    L.append(f"| {esc(a.get('mechanism', ''), 60)} | "
+                             f"{esc(a.get('claimed_coverage', ''), 100)} | "
+                             f"`{a.get('justification_basis')}` | "
+                             f"{esc(a.get('independence_assumption', ''), 110)} | "
+                             f"{', '.join('`' + r + '`' for r in a.get('verification_record_refs', []) or []) or '**none**'} |")
+                L.append("")
+                for a in dc:
+                    L.append(f"- *{esc(a.get('mechanism', ''), 60)}* — "
+                             f"{esc(a.get('justification', ''), 500)}")
+                L.append("")
+            hi = d.get("hardware_interfaces_and_assumptions")
+            if hi:
+                L.append("**Hardware interfaces and assumptions**")
+                L.append("")
+                L.append("| Element | Assumption | Basis | If unmet |")
+                L.append("|---|---|---|---|")
+                for a in hi:
+                    L.append(f"| `{a.get('element_id')}` | "
+                             f"{esc(a.get('interface_or_assumption', ''), 150)} | "
+                             f"{esc(a.get('basis', ''), 130)} | "
+                             f"{esc(a.get('consequence_if_unmet', ''), 180)} |")
+                L.append("")
+            iro = d.get("item_related_assumptions")
+            if iro:
+                L.append("**Item-related assumptions**")
+                L.append("")
+                for a in iro:
+                    L.append(f"- ({a.get('evidence_class')}) {esc(a.get('assumption', ''), 250)} "
+                             f"— *if false:* {esc(a.get('consequence_if_false', ''), 250)}")
+                L.append("")
+            ifs = d.get("interfaces_to_other_safety_related_items") or []
+            if ifs:
+                L.append("**Interfaces to other safety-related items**")
+                L.append("")
+                for a in ifs:
+                    L.append(f"- **{esc(a.get('other_item', ''), 90)}** — "
+                             f"{esc(a.get('interface_description', ''), 200)} "
+                             f"*Shared objective:* {esc(a.get('shared_objective_or_none', ''), 150)}")
+                L.append("")
+            em = d.get("external_measures") or []
+            if em:
+                L.append("**External measures relied upon**")
+                L.append("")
+                for a in em:
+                    L.append(f"- {esc(a.get('measure', ''), 120)} — owner "
+                             f"{esc(a.get('owner_outside_the_item', ''), 80)}; why not the item: "
+                             f"{esc(a.get('why_the_item_cannot_do_it', ''), 180)}")
+                L.append("")
+            cw = d.get("contradictions_found_while_authoring")
+            if cw:
+                L.append("**Contradictions found in the records this concept was written from**")
+                L.append("")
+                L.append("These are recorded rather than absorbed. Neither the concept nor the "
+                         "conflicting record was edited to make them agree; each names the finding "
+                         "that carries it.")
+                L.append("")
+                for c in cw:
+                    L.append(f"- **Contradiction**: {esc(c.get('contradiction', ''), 450)}")
+                    L.append(f"  - **Records in conflict**: "
+                             f"{', '.join('`' + r + '`' for r in c.get('records_in_conflict', []) or [])}")
+                    L.append(f"  - **How this concept handles it**: "
+                             f"{esc(c.get('how_this_concept_handles_it', ''), 450)}")
+                    if c.get("finding_ref"):
+                        L.append(f"  - **Finding**: `{c.get('finding_ref')}`")
+                L.append("")
+            L.append("**What this concept does not establish**")
+            L.append("")
+            for lim in (d.get("limitations", []) or []):
+                L.append(f"- {esc(lim, 400)}")
             L.append("")
 
     # ---- cybersecurity work products (TARA + derived security requirements) ----
@@ -1868,8 +2270,13 @@ def emit_10(v, out):
     for profile, rid in v.all_requirements():
         d = v.artifacts[(profile, rid)]
         cov = v.coverage(profile, rid)
+        # The label was previously a four-case chain with an "MGT" fallback, which
+        # labelled every system requirement as a management requirement because SYS ids
+        # were not anticipated. SYS and NED and UC are distinct classes and a reader
+        # comparing rows cannot tell them apart under one label.
         rtype = ("FSR" if "-FSR-" in rid else "TSR" if "-TSR-" in rid
-                 else "SWR" if "-SWR-" in rid else "SEC" if "-SEC-" in rid else "MGT")
+                 else "SWR" if "-SWR-" in rid else "SEC" if "-SEC-" in rid
+                 else "SYR" if "-SYR-" in rid else "HSE" if "-HSE-" in rid else "MGT")
         direct = ", ".join(f"`{x}`" for x in cov["direct"]) or "—"
         indirect = ", ".join(f"`{c}`←{','.join(t)}" for c, t in sorted(cov["indirect"].items())) or "—"
         tests = ", ".join(f"`{x}`" for x in cov["tests"]) or "—"
@@ -1891,8 +2298,25 @@ def emit_10(v, out):
     for p, r in uncovered:
         L.append(f"  - `{r}` (`{p}`)")
     L.append("")
-    L.append("UNCOVERED requirements are the honest corpus state; the gaps are tracked by review "
-             "dispositions in `FB2-REV-000001` and the gap report. No coverage is fabricated.")
+    # Computed, not asserted. This sentence used to be unconditional, so it claimed there
+    # were uncovered requirements even when the matrix showed none, which is the failure mode
+    # a generated document is supposed to prevent.
+    if uncovered:
+        L.append(f"{len(uncovered)} requirement artifact(s) remain UNCOVERED and that is the "
+                 "honest corpus state; the gaps are tracked by review dispositions and by the "
+                 "gap report. No coverage is fabricated.")
+    else:
+        L.append("Every requirement artifact has at least one verification route: a direct "
+                 "`verifies` link, an allocated child that is verified, or a test measure that "
+                 "names it. **This is a statement about the traceability graph and not about "
+                 "verification evidence.** COVERED-INDIRECT means a lower-level requirement is "
+                 "verified by some measure; it says nothing about whether that measure was "
+                 "executed, and in this corpus most were not. The executions that exist carry "
+                 "`execution_kind` `synthetic_fixture`, `none` or a host run of the real product "
+                 "code, and none of them is a run on the target hardware. A requirement whose "
+                 "only route is an allocated child that is itself blocked is uncovered in "
+                 "substance and covered in form, and the coverage matrix reports the form because "
+                 "that is what it measures.")
     L.append("")
 
     # ---- change impact mapping (canonical change records, SUP.10) --------

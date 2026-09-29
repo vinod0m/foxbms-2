@@ -1,0 +1,462 @@
+{
+ "id": "FB2-MAN-RSK-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "risk_register",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Project risk register for Project Northcell: schedule, resource, technical, supplier, quality and organisational risk",
+ "owner_role": "project_manager",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-006",
+  "FB2-ASM-008"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.5",
+   "status": "mapped",
+   "rationale": "Risk management: risk register, analysis and mitigation planning."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.3",
+   "status": "mapped",
+   "rationale": "The plan this register reports against."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "project_manager",
+   "description": "Risk register authored because MAN.5 was recorded as a coverage gap. This is project risk to the development, not a threat assessment: the cybersecurity TARA FB2-SAF-TAR-000001 is a different artifact with a different subject matter and does not satisfy MAN.5."
+  }
+ ],
+ "register_id": "FB2-MAN-RSK-000001",
+ "fictional_project": true,
+ "review_cadence": "Fortnightly, and immediately on any missed gate date. Review is by the project manager with the owner of each open entry; escalation is to the safety manager where the risk touches a safety record.",
+ "scope_note": "This register covers risk to the development of the hypothetical programme: schedule, resource, technical, supplier, quality, tooling, compliance and organisational risk. It does NOT cover risk arising from the product's behaviour in service, which the cybersecurity TARA FB2-SAF-TAR-000001 and the hazard analysis FB2-SAF-HAZ-000001 address, and it does not cover functional-safety hazard risk, which the safety analyses address. The three are separate registers with separate acceptance authorities in a real programme, and conflating them would let a product risk be accepted by a project manager.",
+ "scoring_method": {
+  "probability_scale": [
+   {
+    "label": "low",
+    "definition": "Not expected within the planned programme duration; would require an unusual combination of circumstances."
+   },
+   {
+    "label": "medium",
+    "definition": "Could occur once within the planned programme duration."
+   },
+   {
+    "label": "high",
+    "definition": "Expected to occur at least once, or already has."
+   }
+  ],
+  "impact_scale": [
+   {
+    "label": "minor",
+    "definition": "Absorbed inside the package's float; no gate moved."
+   },
+   {
+    "label": "moderate",
+    "definition": "A gate moves; a package needs rework; float is consumed."
+   },
+   {
+    "label": "major",
+    "definition": "A gate criterion cannot be met as written, or a safety or compliance record must be reopened."
+   }
+  ],
+  "exposure_formula": "Exposure is the ordinal pair (probability, impact), written as e.g. 'high/moderate'. It is deliberately NOT a product of two label scores multiplied together: the labels have no numeric meaning, so a product would be a number with no derivation behind it. Escalation is on the pair, not on a total.",
+  "escalation_threshold": "high/major and high/moderate escalate to the safety manager at the next fortnightly review. medium/major escalates to the project manager's sponsor, which in this fictional programme is the safety manager. Every other pair is managed at review."
+ },
+ "risk_entries": [
+  {
+   "risk_id": "RSK-001",
+   "title": "The safety goal's timing budget does not close",
+   "category": "technical",
+   "risk_statement": {
+    "condition": "The 100 ms fault-tolerant time interval is spent by a budget whose serial elements sum to 85 ms and whose recorded margin is 20 ms",
+    "consequence": "The safety goal is baselined with an arithmetic that does not close, and every requirement and measure derived from it inherits an unachievable budget"
+   },
+   "cause": "The margin was entered as a wish rather than as the difference between the interval and the work. Nothing in the process checked the sum.",
+   "effect_on_the_project": "A baselined record cannot be corrected without a controlled change, so the project either carries a known-invalid budget or opens a change against a baselined safety goal.",
+   "probability": "high",
+   "impact": "major",
+   "inherent_exposure": "high/major",
+   "owner_role": "safety_engineer",
+   "mitigation_actions": [
+    {
+     "action": "Raise a finding recording the arithmetic rather than editing the safety goal",
+     "action_type": "reduce_impact",
+     "action_date": "2026-09-29",
+     "action_owner_role": "safety_engineer",
+     "status": "done",
+     "evidence_of_effect": "Finding FB2-REV-FND-000025 records the arithmetic. The technical safety concept FB2-SAF-TSC-000001 now carries a budget that closes and names the departure."
+    },
+    {
+     "action": "Open a controlled change against FB2-SAF-SGO-000001 to reconcile the recorded margin with the interval",
+     "action_type": "escalate",
+     "action_date": "2026-10-13",
+     "action_owner_role": "safety_manager",
+     "status": "planned",
+     "evidence_of_effect": "Not yet opened. The change record does not exist."
+    }
+   ],
+   "residual_probability": "high",
+   "residual_impact": "moderate",
+   "residual_exposure": "high/moderate",
+   "residual_exposure_argument": "The contradiction is now visible and owned. The residual exposure is the time until the change is opened and the gate cannot pass until it is.",
+   "trigger_for_escalation": "Any requirement or measure raised against this safety goal before the change is closed.",
+   "linked_artifact_refs": [
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-REV-FND-000025"
+   ],
+   "status": "mitigating",
+   "last_reviewed": "2026-09-29"
+  },
+  {
+   "risk_id": "RSK-002",
+   "title": "Single qualified reviewer for the safety reasoning",
+   "category": "resource",
+   "risk_statement": {
+    "condition": "Only one person in the fictional programme is qualified to review severity and controllability reasoning and to approve a safety concept",
+    "consequence": "Every safety gate depends on one person's calendar, and a review queue forms behind a single absence"
+   },
+   "cause": "Competence planning named one holder per specialism and no deputy, because building a second qualified reviewer was not funded.",
+   "effect_on_the_project": "Gate dates slip on absence, as the progress record for 2026-03-06 shows, and the slip is not recoverable because no one else can perform the review.",
+   "probability": "high",
+   "impact": "moderate",
+   "inherent_exposure": "high/moderate",
+   "owner_role": "project_manager",
+   "mitigation_actions": [
+    {
+     "action": "Name and fund a deputy for each single-holder specialism",
+     "action_type": "reduce_probability",
+     "action_date": "2026-03-20",
+     "action_owner_role": "project_manager",
+     "status": "planned",
+     "evidence_of_effect": "Not done. The register still shows four single points of failure in the plan's resource table."
+    }
+   ],
+   "residual_probability": "high",
+   "residual_impact": "moderate",
+   "residual_exposure": "high/moderate",
+   "residual_exposure_argument": "No action has been taken, so the residual exposure equals the inherent exposure. Recording it as equal is more useful than recording an improvement that did not happen.",
+   "trigger_for_escalation": "Any absence of the single holder exceeding five working days.",
+   "linked_artifact_refs": [
+    "FB2-MAN-PLN-000001"
+   ],
+   "status": "open",
+   "last_reviewed": "2026-09-29"
+  },
+  {
+   "risk_id": "RSK-003",
+   "title": "No independent confirmation reviewer exists",
+   "category": "organisational",
+   "risk_statement": {
+    "condition": "Every review record in the corpus is an automated AI review performed in a coding-agent session",
+    "consequence": "No review in the corpus has organisational independence, which an ASIL D safety case requires and which master-prompt clause 2.9 says an AI review is not"
+   },
+   "cause": "The corpus was authored by an automated process with no access to a human review organisation, and no independent reviewer was ever engaged.",
+   "effect_on_the_project": "The safety case cannot be assembled at all. This is not a schedule risk; it is a risk that the project's central deliverable cannot be produced.",
+   "probability": "high",
+   "impact": "major",
+   "inherent_exposure": "high/major",
+   "owner_role": "safety_manager",
+   "mitigation_actions": [
+    {
+     "action": "Record the absence as an explicit limitation on every review record rather than letting the review count imply independence",
+     "action_type": "reduce_impact",
+     "action_date": "2026-09-29",
+     "action_owner_role": "quality_engineer",
+     "status": "done",
+     "evidence_of_effect": "Every review record in the corpus carries a limitations entry stating that the review is automated and is not human confirmation."
+    },
+    {
+     "action": "Engage an independent confirmation reviewer",
+     "action_type": "escalate",
+     "action_date": "2026-10-27",
+     "action_owner_role": "safety_manager",
+     "status": "planned",
+     "evidence_of_effect": "Not engaged. Nothing in this corpus can stand in for it."
+    }
+   ],
+   "residual_probability": "high",
+   "residual_impact": "major",
+   "residual_exposure": "high/major",
+   "residual_exposure_argument": "Mitigating the impact by documenting it does not reduce the exposure. The project's deliverable cannot exist until a real reviewer is engaged, and that is outside what an automated process can do.",
+   "trigger_for_escalation": "Any statement anywhere in the corpus that implies a reviewed or approved state without naming this limitation.",
+   "linked_artifact_refs": [
+    "FB2-MAN-SPL-000001",
+    "FB2-SAF-SCS-000001"
+   ],
+   "status": "open",
+   "last_reviewed": "2026-09-29"
+  },
+  {
+   "risk_id": "RSK-004",
+   "title": "Verification harnesses are unfunded",
+   "category": "schedule",
+   "risk_statement": {
+    "condition": "Verification measures are written but no execution environment exists for the security, validation or hardware-injection measures",
+    "consequence": "Every requirement whose measure needs an environment ends the project with an unexecuted plan and a blocked execution record"
+   },
+   "cause": "The plan funded writing measures and did not fund building the benches, the bus injection nodes, the network capture points or the vehicle. The 2026-11-06 progress record shows the plan did not fund them.",
+   "effect_on_the_project": "The verification-readiness gate cannot pass, so the release gate cannot pass, so the project cannot ship. Nine measures are affected and none can be executed by any means available to this corpus.",
+   "probability": "high",
+   "impact": "major",
+   "inherent_exposure": "high/major",
+   "owner_role": "verification_engineer",
+   "mitigation_actions": [
+    {
+     "action": "Record each blocked execution with the reason and the specific condition that would unblock it",
+     "action_type": "reduce_impact",
+     "action_date": "2026-09-29",
+     "action_owner_role": "verification_engineer",
+     "status": "done",
+     "evidence_of_effect": "All nine new execution records carry execution_kind 'none' and outcome 'blocked' with a what_would_unblock_it list."
+    },
+    {
+     "action": "Fund and build the harnesses",
+     "action_type": "reduce_probability",
+     "action_date": "2026-10-06",
+     "action_owner_role": "project_manager",
+     "status": "planned",
+     "evidence_of_effect": "Not funded. No budget line exists."
+    }
+   ],
+   "residual_probability": "high",
+   "residual_impact": "major",
+   "residual_exposure": "high/major",
+   "residual_exposure_argument": "Honest recording of a blocked execution does not make the project able to proceed. It only makes the blocker impossible to overlook.",
+   "trigger_for_escalation": "Any planning cycle that treats the verification measures as covered because they exist.",
+   "linked_artifact_refs": [
+    "FB2-MAN-PLN-000001",
+    "FB2-VER-TMS-000016",
+    "FB2-VER-EXE-000016"
+   ],
+   "status": "mitigating",
+   "last_reviewed": "2026-09-29"
+  },
+  {
+   "risk_id": "RSK-005",
+   "title": "Supplier monitoring has no accountable supplier",
+   "category": "supplier",
+   "risk_statement": {
+    "condition": "The item depends on an analogue front end, a safe base controller, a current sensor and a memory device, all from named vendors, none of which is under any monitoring relationship",
+    "consequence": "A component changes behaviour, or an advisory appears against it, and the project has no contractual or technical means of finding out before a vehicle ships"
+   },
+   "cause": "The hypothetical programme assumed a supplier monitoring process would be established during procurement. It has not been.",
+   "effect_on_the_project": "The safety argument's assumption that components meet their specification has no monitoring behind it, and the third-party-component half of FB2-SAF-SEC-000005 cannot be satisfied.",
+   "probability": "medium",
+   "impact": "major",
+   "inherent_exposure": "medium/major",
+   "owner_role": "quality_engineer",
+   "mitigation_actions": [
+    {
+     "action": "Define the supplier monitoring process and record it",
+     "action_type": "reduce_impact",
+     "action_date": "2026-09-29",
+     "action_owner_role": "quality_engineer",
+     "status": "done",
+     "evidence_of_effect": "Process record FB2-SUP-SPL-000001 defines ACQ.4 with its inputs, outputs, acceptance criteria and one performed instance."
+    },
+    {
+     "action": "Establish the contractual means to obtain component change notification",
+     "action_type": "reduce_probability",
+     "action_date": "2026-10-20",
+     "action_owner_role": "project_manager",
+     "status": "planned",
+     "evidence_of_effect": "Not established. No contract exists."
+    }
+   ],
+   "residual_probability": "medium",
+   "residual_impact": "major",
+   "residual_exposure": "medium/major",
+   "residual_exposure_argument": "A defined process with one recorded instance is better than no process, but a process with no contractual hook cannot be executed against a supplier who is not obliged to respond.",
+   "trigger_for_escalation": "Any advisory published against any component in the item.",
+   "linked_artifact_refs": [
+    "FB2-SUP-SPL-000001",
+    "FB2-SAF-SEC-000005"
+   ],
+   "status": "mitigating",
+   "last_reviewed": "2026-09-29"
+  },
+  {
+   "risk_id": "RSK-006",
+   "title": "Requirement and concept records are authored before the derivation that would justify them",
+   "category": "quality",
+   "risk_statement": {
+    "condition": "Technical safety requirements exist at both the functional and the hardware level with identical text",
+    "consequence": "Two records at two different ISO 26262 levels claim the same obligation, so neither can be reviewed as a decomposition and the reader cannot tell which is authoritative"
+   },
+   "cause": "The requirements were authored from the safety goal without the intermediate system requirements that would have decomposed it, so the hardware record was written at the same level as the functional record and in the same words.",
+   "effect_on_the_project": "A duplicated obligation at two levels is invisible to a link check because both endpoints resolve. It is only visible on read, which is why it was found while writing the technical safety concept.",
+   "probability": "high",
+   "impact": "moderate",
+   "inherent_exposure": "high/moderate",
+   "owner_role": "safety_engineer",
+   "mitigation_actions": [
+    {
+     "action": "Raise a finding recording the duplication instead of editing either record",
+     "action_type": "reduce_impact",
+     "action_date": "2026-09-29",
+     "action_owner_role": "safety_engineer",
+     "status": "done",
+     "evidence_of_effect": "Finding FB2-REV-FND-000027 records the verbatim duplication between FB2-SAF-FSR-000004 and FB2-HW-TSR-000004."
+    },
+    {
+     "action": "Decompose the functional requirement into distinct technical statements",
+     "action_type": "reduce_impact",
+     "action_date": "2026-10-27",
+     "action_owner_role": "hw_engineer",
+     "status": "planned",
+     "evidence_of_effect": "Not done. Both records remain as they were."
+    }
+   ],
+   "residual_probability": "high",
+   "residual_impact": "moderate",
+   "residual_exposure": "high/moderate",
+   "residual_exposure_argument": "The finding makes the problem visible to a reviewer but leaves the corpus with the duplication until the change is raised.",
+   "trigger_for_escalation": "Any third record appearing with the same statement text.",
+   "linked_artifact_refs": [
+    "FB2-SAF-FSR-000004",
+    "FB2-HW-TSR-000004",
+    "FB2-REV-FND-000027"
+   ],
+   "status": "mitigating",
+   "last_reviewed": "2026-09-29"
+  },
+  {
+   "risk_id": "RSK-007",
+   "title": "Incomplete post-development lifecycle",
+   "category": "compliance",
+   "risk_statement": {
+    "condition": "Release identification, production and end-of-line test, calibration, field monitoring, service and decommissioning are all unpopulated",
+    "consequence": "A configuration could ship without being identified, a pack could leave the line without being tested, and an energised pack could be handled by a party that does not know it is energised"
+   },
+   "cause": "The corpus was built bottom-up from the cell-voltage safety chain, and that chain stops at the reaction. Nothing forced the lifecycle after it to exist.",
+   "effect_on_the_project": "ISO 26262 Part 7 is entirely unsatisfied and the release-readiness gate cannot pass on its lifecycle criteria.",
+   "probability": "high",
+   "impact": "major",
+   "inherent_exposure": "high/major",
+   "owner_role": "project_manager",
+   "mitigation_actions": [
+    {
+     "action": "Author a post-development record for each of the six areas",
+     "action_type": "reduce_impact",
+     "action_date": "2026-09-29",
+     "action_owner_role": "project_manager",
+     "status": "done",
+     "evidence_of_effect": "FB2-REL-RLS-000001, FB2-PRD-EOL-000001, FB2-PRD-CAL-000001, FB2-OPS-MON-000001, FB2-SVC-SVC-000001 and FB2-DEC-DCM-000001 now exist and each states that none of its steps has been executed."
+    },
+    {
+     "action": "Obtain the organisational capability to execute them",
+     "action_type": "reduce_probability",
+     "action_date": "2026-11-03",
+     "action_owner_role": "project_manager",
+     "status": "planned",
+     "evidence_of_effect": "Not obtained. There is no plant, no line and no service organisation."
+    }
+   ],
+   "residual_probability": "medium",
+   "residual_impact": "major",
+   "residual_exposure": "medium/major",
+   "residual_exposure_argument": "The likelihood fell because the areas are now documented and the likelihood that a reader believes they are operational fell. The impact did not move at all.",
+   "trigger_for_escalation": "Any external party treating one of these records as an authorised procedure.",
+   "linked_artifact_refs": [
+    "FB2-REL-RLS-000001",
+    "FB2-PRD-EOL-000001",
+    "FB2-DEC-DCM-000001"
+   ],
+   "status": "mitigating",
+   "last_reviewed": "2026-09-29"
+  },
+  {
+   "risk_id": "RSK-008",
+   "title": "Reused and generated code assurance is not established",
+   "category": "technical",
+   "risk_statement": {
+    "condition": "The reference implementation reuses an operating system, driver code from several vendors and generated code, and the corpus holds a reuse inventory but no reuse assessment",
+    "consequence": "Code runs on a safety path whose provenance, qualification status and modification constraints are unknown"
+   },
+   "cause": "Reuse was treated as a listing exercise rather than as an assurance decision.",
+   "effect_on_the_project": "The freedom-from-interference argument for the software layer rests on an unexamined assumption about what the reused code is permitted to do.",
+   "probability": "medium",
+   "impact": "major",
+   "inherent_exposure": "medium/major",
+   "owner_role": "sw_engineer",
+   "mitigation_actions": [
+    {
+     "action": "Define the reuse process with an assessment per reused element",
+     "action_type": "reduce_impact",
+     "action_date": "2026-09-29",
+     "action_owner_role": "sw_engineer",
+     "status": "done",
+     "evidence_of_effect": "Process record FB2-SUP-RUS-000001 defines REU.2 with its acceptance criteria and one performed instance."
+    },
+    {
+     "action": "Complete a reuse assessment for every element on a safety path",
+     "action_type": "reduce_probability",
+     "action_date": "2026-10-27",
+     "action_owner_role": "sw_engineer",
+     "status": "planned",
+     "evidence_of_effect": "Not done. No assessment record exists."
+    }
+   ],
+   "residual_probability": "medium",
+   "residual_impact": "major",
+   "residual_exposure": "medium/major",
+   "residual_exposure_argument": "Defining the process does not assess anything. The residual exposure is unchanged.",
+   "trigger_for_escalation": "Any safety-path requirement whose allocation depends on a reused element with no assessment.",
+   "linked_artifact_refs": [
+    "FB2-SUP-RUS-000001"
+   ],
+   "status": "mitigating",
+   "last_reviewed": "2026-09-29"
+  }
+ ],
+ "aggregate_exposure": {
+  "open_count": 2,
+  "accepted_count": 0,
+  "closed_count": 0,
+  "escalated_count": 0,
+  "highest_residual_exposure": "high/major",
+  "summary": "Eight entries: six mitigating and two open. No entry is closed and none is accepted. Three entries carry a residual exposure equal to their inherent exposure because no mitigating action has been taken: RSK-002, RSK-003 and RSK-004. The highest residual exposure is high/major and it is held by RSK-003, which cannot be closed by anything this corpus can do."
+ },
+ "acceptance_authority": {
+  "role": "project_manager",
+  "acceptance_exists": false,
+  "statement": "No risk in this register has been accepted by any human authority. The register's acceptance field exists and is false, because an automated process cannot accept risk. Entries marked 'mitigating' have actions taken or planned; none of them has been signed off, and 'planned' in an action status means the action is written down, not that it happened.",
+  "synthetic_decision_refs": []
+ },
+ "limitations": [
+  "Synthetic register for a synthetic project. Every probability and impact label is the author's judgement, not an estimate from data.",
+  "The exposure is an ordinal pair, not a number. Two entries with the same pair are not comparable in magnitude, and the register does not pretend otherwise.",
+  "The register does not cover product risk, functional-safety hazard risk or cybersecurity threat risk. Those have separate analyses in this corpus and separate acceptance authorities in a real programme.",
+  "Three entries have a residual exposure equal to their inherent exposure because no action has been taken. That is recorded rather than dressed as progress.",
+  "RSK-003 cannot be closed by any action available to an automated authoring process. It is in the register because omitting it would be the more dishonest choice."
+ ]
+}

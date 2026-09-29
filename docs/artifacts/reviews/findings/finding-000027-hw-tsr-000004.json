@@ -1,0 +1,62 @@
+{
+ "id": "FB2-REV-FND-000027",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000027: a hardware technical safety requirement and a functional safety requirement are the same sentence, and their shared acceptance criterion is not measurable",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9",
+   "status": "mapped",
+   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "The obligation to record rather than to conceal."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  }
+ ],
+ "subject_artifact_id": "FB2-HW-TSR-000004",
+ "severity": "medium",
+ "category": "cross_domain",
+ "evidence": "FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 have identical statement text, identical rationale text, identical safety_allocation including asil = ASIL_B, and identical acceptance_criteria. ISO 26262 places the functional requirement at Part 3 and the technical requirement at Part 4/5, and a technical requirement is a decomposition of the functional one: it should state what the hardware must do where the functional statement states what the item must achieve. Identical text means neither record can be reviewed as a distinct obligation and a reader cannot tell which is authoritative. Separately, the shared acceptance criterion 'Monitoring coverage, Cells monitored, All cells (or representative subset >= 50%), 50, %' is a disjunction containing an undefined term: 'representative subset' is not defined, no subset selection method is recorded, and the two branches are not comparable, so the criterion cannot be checked at review time.",
+ "disposition": "accepted",
+ "impact": "Two obligations at two ISO 26262 levels are indistinguishable, so the review that should confirm the hardware decomposition cannot be performed. The unmeasurable coverage criterion is worse: it appears in the ASIL B element that the ASIL D goal's decomposition depends on, and no verification measure can ever produce a pass or a fail against 'all cells or a representative subset'. FB2-SAF-TSC-000001 could not improve the wording without inventing a coverage percentage it cannot defend, so it carries the wording unchanged, labels it synthetic_assumption, records no verification reference against it, and raises this finding.",
+ "root_cause": "The hardware requirement was authored at the same level as the functional one and in the same words, before the system requirements existed that would have decomposed the functional statement into hardware and software obligations. With no intermediate level to decompose at, the nearest available text was the functional statement itself.",
+ "resolution": "NOT RESOLVED. Resolving it requires decomposing FB2-SAF-FSR-000004 into distinct technical statements - which is the engineering work - and defining the monitored-cell subset, which is a design decision. This pass: (a) recorded the duplication and the unmeasurable criterion together, because they have the same root cause; (b) wrote FB2-SYS-SYR-000005 at system level stating the separation of supply, reference, computation and actuation that the functional requirement does not state, which gives the decomposition somewhere to land; (c) registered the referral in INST-004 and as risk RSK-006 in FB2-MAN-RSK-000001. Neither FB2-SAF-FSR-000004 nor FB2-HW-TSR-000004 was edited."
+}

@@ -1,0 +1,62 @@
+{
+ "id": "FB2-REV-FND-000028",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000028: two security requirements set a zero-false-rejection acceptance criterion that no correct implementation can meet, so no verification measure against them can ever pass",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9",
+   "status": "mapped",
+   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "The obligation to record rather than to conceal."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  }
+ ],
+ "subject_artifact_id": "FB2-SAF-SEC-000003",
+ "severity": "medium",
+ "category": "verification",
+ "evidence": "FB2-SAF-SEC-000003's criterion 'Genuine-frame false-rejection rate, Genuine frames rejected under nominal bus conditions over 24 h, 0, frames' and FB2-SAF-SEC-000004's 'Genuine-frame false-rejection rate, Genuine frames rejected over 24 h at nominal bus load, 0, frames' are both absolute zeros over a finite window on a channel that carries an integrity value. An integrity value of any practical width collides with some payload: the acceptance criterion is therefore unachievable by a correct implementation and achievable only by one that never rejects anything, which would also satisfy the requirement's other criteria vacuously. The same pattern appears in FB2-SAF-SEC-000001's 'Plaintext bytes recoverable ... 0 bytes' and FB2-SAF-SEC-000002's 'Connections ... refused ... 0 connections', which are zeros over a countable event rather than over a collision-prone channel and are therefore achievable; the distinction matters and the two requirements do not make it.",
+ "disposition": "accepted",
+ "impact": "A requirement with an unachievable acceptance criterion cannot be verified, and a verification measure written against it has no possible pass. That is exactly what this pass found while authoring FB2-VER-TMS-000018 and FB2-VER-TMS-000019: the honest thing to do was record the requirement's own zero as the expected outcome and state on the face of the measure that a real implementation would need a rate threshold with a stated bound. Both measures carry that statement in their oracle_detail. A reviewer who ran them would find an unpassable measure and would be right to.",
+ "root_cause": "The criteria were written as absolutes because a security requirement is easier to state as 'nothing gets through' than as 'no more than N per million frames at 99.9 percent confidence'. The convenience form is unfalsifiable, which makes it read as strictness and is in fact the opposite: a criterion nobody can meet cannot distinguish a good implementation from a bad one.",
+ "resolution": "NOT RESOLVED. Fixing it requires setting a rate and a confidence bound for the integrity value, which is a cryptographic engineering decision about the implementation, and editing the requirements is a controlled change. This pass: (a) recorded the finding; (b) wrote the two measures with the requirement's own zero as the expected outcome and with an explicit statement in each oracle_detail that the zero is unachievable and why, rather than quietly relaxing the criterion in the measure to something that passes; (c) named the criterion in each execution record's what_would_unblock_it list as a decision the project has to take. No acceptance criterion was altered and no verifier rule was weakened."
+}

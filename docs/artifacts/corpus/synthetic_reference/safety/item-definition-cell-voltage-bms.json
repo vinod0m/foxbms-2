@@ -1,0 +1,620 @@
+{
+ "id": "FB2-SAF-ITE-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "item_definition",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Item definition: the hypothetical 400 V traction battery monitoring and control unit of Project Northcell (Part 3 item)",
+ "owner_role": "safety_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-DOC-000001",
+  "FB2-SRC-HW-000001",
+  "FB2-SRC-COD-000029"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-002",
+  "FB2-ASM-003",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 5 and 7 (item definition, item-related assumptions)",
+   "status": "mapped",
+   "rationale": "The item and its boundaries are the root of the Part 3 concept chain. Recorded with status mapped for the concept-chain role only; the clause text itself was not consulted and no normative wording is reproduced."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1",
+   "status": "mapped",
+   "rationale": "Stakeholder and item definition are one SYS.1 work product."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "First item definition for the synthetic_reference profile. Authored because the corpus had no Part 3 item definition: the only item scope in the corpus was the cybersecurity item_and_scope inside FB2-SAF-TAR-000001, which answers a different question (what is exposed to attack) and cannot serve as the boundary statement that every functional-safety requirement is about. Explicitly a hypothetical item, origin synthetic."
+  }
+ ],
+ "concept_stage": "item_definition",
+ "item_identity": {
+  "item_name": "Traction battery monitoring and control unit (BMS), 400 V class",
+  "item_purpose": "Monitor the cell voltages, cell temperatures and pack current of a 400 V lithium-ion traction battery, keep every cell inside its safe operating area, and control the high-voltage contactors that connect and disconnect the battery, so that no cell leaves its safe operating area without the item having detected the condition and acted within a bounded time.",
+  "fictional": true,
+  "development_context": {
+   "vehicle_platform": "Hypothetical 400 V passenger BEV programme, 96S4P pack, one BMS master board plus four monitoring slaves",
+   "development_stage": "Series production intent. The corpus describes this project; no such vehicle, pack or programme exists.",
+   "reference_implementation": "The foxBMS 2 platform as read at commit 308028fb, used as the reference implementation whose measured behaviour the concept is grounded in. The real foxBMS 2 project is a research and development platform and is not this item.",
+   "grounding_note": "Every statement about what the item does is a statement about the hypothetical project. Statements about what the real foxBMS sources do are source_observed and live in the as_is profile, never in this record."
+  }
+ },
+ "boundaries": {
+  "included_elements": [
+   {
+    "element": "BMS master board: MCU, PMIC, independent hardware cell-voltage monitor, SBC contactor driver, supply supervision",
+    "element_kind": "hardware",
+    "why_inside": "It acquires the measurements the safety goal depends on and actuates the contactors that realise the safe state. Both directions of the safety argument pass through it."
+   },
+   {
+    "element": "BMS master firmware: measurement control, SOA monitoring, plausibility, redundancy, state machine, contactor and precharge control, diagnosis, database, CAN and Ethernet communication",
+    "element_kind": "software",
+    "why_inside": "The decision to open the contactors is taken here; so is the detection of the condition that requires it."
+   },
+   {
+    "element": "Four monitoring slaves with the analogue front end, cell input network and passive balancing",
+    "element_kind": "hardware",
+    "why_inside": "The cell voltages are measured here. A fault in this element produces the hazardous event directly, so it cannot sit outside the boundary."
+   },
+   {
+    "element": "Configuration and calibration data: safe operating area limits, cell and pack parameters, sensor tables",
+    "element_kind": "data",
+    "why_inside": "The limits are the decision boundary between safe and unsafe operation. A wrong limit is a safety defect even though it is data, not code."
+   },
+   {
+    "element": "Contactor feedback and interlock input conditioning",
+    "element_kind": "hardware",
+    "why_inside": "Without the feedback the item cannot know that the safe state was reached, so the fault reaction is unverified."
+   }
+  ],
+  "excluded_elements": [
+   {
+    "element": "Lithium-ion cells and the pack mechanical structure",
+    "element_kind": "energy_storage",
+    "why_outside": "Thermal runaway is a property of the cell chemistry, not of the item's E/E systems. It is outside the functional-safety boundary; it is addressed by the cell supplier's own safety case and by pack-level venting design.",
+    "residual_risk_owner": "Pack integrator (fictional role: pack_safety_owner)"
+   },
+   {
+    "element": "Battery enclosure, venting device and crash structure",
+    "element_kind": "mechanical",
+    "why_outside": "Passive mechanical protection against a chemistry hazard, outside the E/E-system boundary.",
+    "residual_risk_owner": "Pack integrator (fictional role: pack_safety_owner)"
+   },
+   {
+    "element": "Vehicle high-voltage interlock chain actuators and the emergency-stop wiring",
+    "element_kind": "external_system",
+    "why_outside": "The item supervises the interlock; it does not actuate it. Whether the vehicle opens the circuit is the vehicle's decision.",
+    "residual_risk_owner": "Vehicle manufacturer (fictional role: vehicle_safety_owner)"
+   },
+   {
+    "element": "Charger, inverter and DC/DC converter control strategies",
+    "element_kind": "external_system",
+    "why_outside": "The item publishes charge and discharge limits and expects the converter to respect them. Whether it does is outside the boundary and is an explicit assumption (FB2-ASM-003).",
+    "residual_risk_owner": "Vehicle manufacturer (fictional role: vehicle_safety_owner)"
+   },
+   {
+    "element": "Production line programming and end-of-line test equipment",
+    "element_kind": "process",
+    "why_outside": "A production and service process, not a function of the item. It is covered by post-development lifecycle records instead.",
+    "residual_risk_owner": "End-of-line test owner (fictional role: eol_test_owner)"
+   }
+  ],
+  "boundary_rationale": "The boundary is drawn where the item either produces the hazardous event or can detect and react to it. Everything from the cell input pin on a slave through to the contactor coil driver output is inside, because every one of those elements can either fail to report an overvoltage or fail to open the contactor. Everything that is chemically or mechanically responsible for runaway is outside, because no software change can defeat it and pretending otherwise would produce an ASIL for a hazard the item cannot influence."
+ },
+ "functions": [
+  {
+   "function_id": "FUN-001",
+   "function_name": "Cell voltage acquisition and validation",
+   "description": "Acquire every monitored cell voltage, validate each transfer with the front end's error-detection code, and publish validated values with their age to the shared database.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005"
+   ]
+  },
+  {
+   "function_id": "FUN-002",
+   "function_name": "Cell temperature acquisition",
+   "description": "Acquire the temperature of every monitored cell group and publish validated values with their age.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004"
+   ]
+  },
+  {
+   "function_id": "FUN-003",
+   "function_name": "Pack current measurement",
+   "description": "Acquire pack current, voltage and power over the external sensor link, validate the values against the plausible operating envelope and publish them with their age.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005"
+   ]
+  },
+  {
+   "function_id": "FUN-004",
+   "function_name": "Safe operating area monitoring",
+   "description": "Compare every monitored quantity against its configured minimum and maximum limits with a defined debounce, and classify a confirmed violation within a bounded time.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005"
+   ]
+  },
+  {
+   "function_id": "FUN-005",
+   "function_name": "Measurement plausibility and redundancy",
+   "description": "Detect measurements that are physically implausible or that disagree with an independent channel, so that a single faulty front end cannot be mistaken for a real cell excursion.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005"
+   ]
+  },
+  {
+   "function_id": "FUN-006",
+   "function_name": "Contactor and precharge sequencing",
+   "description": "Sequence the string-minus, precharge and string-plus contactors, and open them within a bounded time when the safe state is requested.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005",
+    "MOD-006"
+   ]
+  },
+  {
+   "function_id": "FUN-007",
+   "function_name": "Contactor feedback supervision",
+   "description": "Read the auxiliary contacts and detect a welded or unexpectedly open contactor, so that a commanded open is not mistaken for an achieved open.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005",
+    "MOD-006"
+   ]
+  },
+  {
+   "function_id": "FUN-008",
+   "function_name": "Fault management and diagnosis",
+   "description": "Raise, debounce, latch and clear diagnosis entries with defined severities, and drive the state machine from them.",
+   "essential_for_item_purpose": true,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005",
+    "MOD-006"
+   ]
+  },
+  {
+   "function_id": "FUN-009",
+   "function_name": "Insulation and interlock supervision",
+   "description": "Evaluate the insulation monitoring device stream and the interlock line, and treat an open interlock or a low insulation resistance as a reason to leave the safe state.",
+   "essential_for_item_purpose": false,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005",
+    "MOD-006"
+   ]
+  },
+  {
+   "function_id": "FUN-010",
+   "function_name": "External communication",
+   "description": "Publish state and measurements to the vehicle controller and accept state requests from it, without allowing either to override an item-side safety decision.",
+   "essential_for_item_purpose": false,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005"
+   ]
+  },
+  {
+   "function_id": "FUN-011",
+   "function_name": "Cell balancing",
+   "description": "Equalise cell charge by passive balancing, subject to the same safe operating area supervision as every other function.",
+   "essential_for_item_purpose": false,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-004",
+    "MOD-005"
+   ]
+  },
+  {
+   "function_id": "FUN-012",
+   "function_name": "State estimation",
+   "description": "Estimate state of charge, state of energy, state of function and state of health for the vehicle controller.",
+   "essential_for_item_purpose": false,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005"
+   ]
+  },
+  {
+   "function_id": "FUN-013",
+   "function_name": "Persistent event logging",
+   "description": "Record faults, state transitions and overcurrent events in non-volatile memory so that a field event can be reconstructed after the fact.",
+   "essential_for_item_purpose": false,
+   "modes_where_active": [
+    "MOD-001",
+    "MOD-002",
+    "MOD-003",
+    "MOD-004",
+    "MOD-005",
+    "MOD-006"
+   ]
+  }
+ ],
+ "operational_situations": [
+  {
+   "situation_id": "OS-001",
+   "description": "Vehicle parked, charger connected, mains present, pack at rest. The item is fully active and supervises the pack.",
+   "including_or_excluding": "including",
+   "argument_for_the_decision": "The charging case is the situation in which overvoltage happens most readily and in which a single cell may sit at the top of its range while the pack average looks normal. Excluding it would remove the situation the safety goal was written for."
+  },
+  {
+   "situation_id": "OS-002",
+   "description": "Vehicle in motion, pack discharging, traction requested.",
+   "including_or_excluding": "including",
+   "argument_for_the_decision": "In this situation opening the contactors removes propulsion while the vehicle is moving. The safe state is therefore mode-dependent, and a blanket 'open on any fault' rule would be unsafe for a different reason. This situation is the reason the functional safety concept states its fault reaction per mode rather than once."
+  },
+  {
+   "situation_id": "OS-003",
+   "description": "Vehicle in motion, regenerative braking, pack charging under load.",
+   "including_or_excluding": "including",
+   "argument_for_the_decision": "Regeneration raises cell voltage under load, so the overvoltage detection path is exercised in a situation where opening the contactors is also disruptive."
+  },
+  {
+   "situation_id": "OS-004",
+   "description": "Post-crash, high-voltage system possibly damaged, pack state unknown, insulation possibly lost.",
+   "including_or_excluding": "including",
+   "argument_for_the_decision": "After a crash the item may be the only thing that knows whether the pack is energised. Its behaviour must be defined even though the environment is outside its specified range."
+  },
+  {
+   "situation_id": "OS-005",
+   "description": "Production line, item not yet installed in a pack, cables not connected.",
+   "including_or_excluding": "including",
+   "argument_for_the_decision": "The commissioning mode is when open-circuit inputs and unconnected sensors are normal. A monitor that treats every open input as a cell at zero volts will produce false reactions in exactly this situation."
+  },
+  {
+   "situation_id": "OS-006",
+   "description": "Workshop service, item removed from the pack, diagnostic tool connected.",
+   "including_or_excluding": "including",
+   "argument_for_the_decision": "A service technician connecting a tool is the most likely route by which an external actor reaches the item's communication interfaces."
+  },
+  {
+   "situation_id": "OS-007",
+   "description": "Storage and transport of the pack, not in a vehicle, not on a charger.",
+   "including_or_excluding": "excluding",
+   "argument_for_the_decision": "No electrical function of the item is active, so no hazardous event attributable to the item arises. Excluded from the item's operational situations and addressed by the transport requirements of the pack integrator instead."
+  },
+  {
+   "situation_id": "OS-008",
+   "description": "Post-decommissioning, pack dismantled for recycling.",
+   "including_or_excluding": "excluding",
+   "argument_for_the_decision": "The item is destroyed or removed before this point. The hazard is handled by the recycler's own assumptions, recorded in the decommissioning record."
+  },
+  {
+   "situation_id": "OS-009",
+   "description": "Workshop, item powered on a service supply, one measurement channel degraded by component drift or damage while the pack is otherwise healthy.",
+   "including_or_excluding": "including",
+   "argument_for_the_decision": "A degrading channel is the situation in which the item's normal disagreement checks begin to fire on a pack that is not actually at a limit. Whether the item degrades gracefully or escalates to the safe state is decided here, and an item that escalates is safe and unusable. This situation is included for exactly that reason."
+  }
+ ],
+ "operating_modes": [
+  {
+   "mode_id": "MOD-001",
+   "mode_name": "INITIALISATION",
+   "entry_condition": "Supply voltage within range and reset released.",
+   "exit_condition": "All configured data structures initialised and self-checks passed.",
+   "safe_state_in_this_mode": "Contactor drivers held de-energised. The item cannot command the contactors closed in this mode under any circumstance.",
+   "note": "The safe state here is the same safe state as in FAULT: the difference is that no fault has occurred."
+  },
+  {
+   "mode_id": "MOD-002",
+   "mode_name": "STANDBY",
+   "entry_condition": "Self-checks passed and the vehicle controller has not requested a current flow.",
+   "exit_condition": "A current-flow request is accepted, or a safety reaction is required.",
+   "safe_state_in_this_mode": "Contactor drivers de-energised; monitoring fully active."
+  },
+  {
+   "mode_id": "MOD-003",
+   "mode_name": "PRECHARGE",
+   "entry_condition": "A current-flow request is accepted and the pack voltage is below the precharge threshold.",
+   "exit_condition": "Pack voltage within tolerance of the bus voltage, or precharge timed out.",
+   "safe_state_in_this_mode": "If the precharge path is interrupted the item opens the precharge contactor and returns to STANDBY. It must never close string-plus on an incomplete precharge."
+  },
+  {
+   "mode_id": "MOD-004",
+   "mode_name": "CLOSED / CURRENT FLOW",
+   "entry_condition": "Precharge complete and string-plus closed.",
+   "exit_condition": "A safety reaction, a state request to OPEN, or supply loss.",
+   "safe_state_in_this_mode": "This is the mode where the safe state is genuinely mode-dependent. Opening the contactors removes propulsion from a moving vehicle, so the item must distinguish a condition that is unsafe to continue from one that is merely degraded, and must not apply the FAULT reaction to a degraded condition."
+  },
+  {
+   "mode_id": "MOD-005",
+   "mode_name": "DEGRADED",
+   "entry_condition": "A diagnosis entry whose severity permits continued operation with reduced capability.",
+   "exit_condition": "The degraded condition clears, or a condition requiring the full safe state arises.",
+   "safe_state_in_this_mode": "Capability is reduced and the reduction is indicated to the vehicle controller. The item must not enter DEGRADED for a condition that is a safety-goal violation."
+  },
+  {
+   "mode_id": "MOD-006",
+   "mode_name": "FAULT",
+   "entry_condition": "A diagnosis entry whose severity requires the safe state.",
+   "exit_condition": "The condition is acknowledged and cleared by an authorised service action only.",
+   "safe_state_in_this_mode": "All high-voltage contactors open, charging disabled, fault logged. This mode is latched: it is not left by the fault disappearing."
+  },
+  {
+   "mode_id": "MOD-007",
+   "mode_name": "COMMISSIONING",
+   "entry_condition": "A maintenance pin or service tool asserts commissioning.",
+   "exit_condition": "The service session ends and the pin is removed.",
+   "safe_state_in_this_mode": "Contactor actuation inhibited unless an explicit, logged commissioning command is present. Open-circuit sensor inputs must not be interpreted as cell excursions.",
+   "note": "This mode is the item's protection against commissioning errors being propagated into a vehicle. It is also the mode an attacker or an untrained technician is most likely to be able to reach."
+  }
+ ],
+ "operating_envelope": {
+  "energy_domain": "Lithium-ion traction battery, 96 cells in four 24-cell modules, four parallel strings",
+  "voltage_class": "400 V nominal pack, 2500 mV to 4200 mV per cell",
+  "cells_monitored": 96,
+  "parameter_refs": [
+   "FB2-PRM-000001",
+   "FB2-PRM-000002",
+   "FB2-PRM-000008",
+   "FB2-PRM-000009"
+  ]
+ },
+ "environmental_conditions": [
+  {
+   "parameter": "Ambient temperature",
+   "unit": "degC",
+   "range_or_limit": "-40 to +85",
+   "source_of_the_assumption": "synthetic_assumption"
+  },
+  {
+   "parameter": "Cell temperature during operation",
+   "unit": "degC",
+   "range_or_limit": "-40 to +60 charge / -40 to +70 discharge",
+   "source_of_the_assumption": "synthetic_assumption"
+  },
+  {
+   "parameter": "Supply voltage at the master board",
+   "unit": "V",
+   "range_or_limit": "9 to 32",
+   "source_of_the_assumption": "synthetic_assumption"
+  },
+  {
+   "parameter": "Cell input range per slave",
+   "unit": "mV",
+   "range_or_limit": "0 to 5000",
+   "source_of_the_assumption": "source_observed"
+  },
+  {
+   "parameter": "Vibration and mechanical shock",
+   "unit": "g",
+   "range_or_limit": "5 g random vibration, 30 g shock",
+   "source_of_the_assumption": "synthetic_assumption"
+  },
+  {
+   "parameter": "Electromagnetic environment",
+   "unit": "qualitative",
+   "range_or_limit": "ISO 11452 and CISPR 25 test levels; the item's behaviour under the full level is an assumption, not a demonstrated property",
+   "source_of_the_assumption": "synthetic_assumption"
+  },
+  {
+   "parameter": "Ingress protection of the enclosure",
+   "unit": "qualitative",
+   "range_or_limit": "IP67 assumed at the vehicle level; the item's own boards carry no ingress rating of their own",
+   "source_of_the_assumption": "synthetic_assumption"
+  }
+ ],
+ "external_systems": [
+  {
+   "system_id": "EXT-001",
+   "system_name": "Vehicle high-voltage bus and DC/DC converter",
+   "direction_of_interaction": "bidirectional",
+   "assumptions_on_the_external_system": [
+    "The converter respects the charge and discharge current limits the item publishes.",
+    "The bus does not exceed its insulation and voltage limits when the contactors close.",
+    "A bus fault that the converter detects is reported rather than acted on silently."
+   ]
+  },
+  {
+   "system_id": "EXT-002",
+   "system_name": "Vehicle control unit",
+   "direction_of_interaction": "bidirectional",
+   "assumptions_on_the_external_system": [
+    "A state request from the vehicle controller is well-formed and rate-limited.",
+    "The vehicle controller does not require the item to override an item-side safety reaction.",
+    "The vehicle controller indicates an available current path truthfully."
+   ]
+  },
+  {
+   "system_id": "EXT-003",
+   "system_name": "Battery cells and module wiring",
+   "direction_of_interaction": "bidirectional",
+   "assumptions_on_the_external_system": [
+    "Cell voltages stay inside the chemistry's range under a correct control function.",
+    "A cell may be damaged and produce an out-of-range voltage at any time.",
+    "The sense leads are connected to the intended cells."
+   ]
+  },
+  {
+   "system_id": "EXT-004",
+   "system_name": "External current sensor",
+   "direction_of_interaction": "external_to_item",
+   "assumptions_on_the_external_system": [
+    "The sensor reports current, voltage, temperature and power over its own link.",
+    "The sensor's accuracy specification is honoured by the item's plausibility checks."
+   ]
+  },
+  {
+   "system_id": "EXT-005",
+   "system_name": "Insulation monitoring device",
+   "direction_of_interaction": "external_to_item",
+   "assumptions_on_the_external_system": [
+    "The device reports an insulation resistance and marks its measurements invalid when they are not trustworthy."
+   ]
+  },
+  {
+   "system_id": "EXT-006",
+   "system_name": "Service and end-of-line diagnostic tool",
+   "direction_of_interaction": "bidirectional",
+   "assumptions_on_the_external_system": [
+    "The tool is operated by a trained technician.",
+    "The tool does not remain connected after the service session."
+   ]
+  }
+ ],
+ "stakeholder_needs_raised": [
+  "FB2-SYS-NED-000001",
+  "FB2-SYS-NED-000002",
+  "FB2-SYS-NED-000003",
+  "FB2-SYS-NED-000004",
+  "FB2-SYS-NED-000005"
+ ],
+ "use_cases_enabled": [
+  "FB2-SYS-UC-000001",
+  "FB2-SYS-UC-000002",
+  "FB2-SYS-UC-000003",
+  "FB2-SYS-UC-000004"
+ ],
+ "interfaces_to_other_safety_related_items": [
+  {
+   "other_item": "Vehicle high-voltage safety monitor (the vehicle-level item that judges whether a collision or an insulation fault requires the pack to be isolated)",
+   "interface_description": "The vehicle-level monitor asserts the interlock line and receives the item's state and insulation-related diagnosis.",
+   "assumption_dependence": "That the vehicle-level monitor is itself functional-safety qualified and that its assertion is not defeatable by the item.",
+   "effect_if_the_assumption_fails": "A pack insulation fault could persist with the contactors closed, or the item could open the contactors in a collision where keeping the pack energised is required for first-responder operation."
+  },
+  {
+   "other_item": "Battery cell supplier's cell-protection function (embedded in the protection circuit of each cell)",
+   "interface_description": "The cell protection circuit disconnects a cell on its own overvoltage condition, independently of the item.",
+   "assumption_dependence": "That the cell protection circuit's threshold and timing are known to the item's integrator and are compatible with the item's own limits.",
+   "effect_if_the_assumption_fails": "The cell protection circuit could act before the item detects the condition, producing an unexplained capacity loss, or could fail to act at all in a cell whose protection is defeated, in which case the item is the only remaining barrier."
+  }
+ ],
+ "assumptions_on_the_item": [
+  "FB2-ASM-001",
+  "FB2-ASM-002",
+  "FB2-ASM-003",
+  "FB2-ASM-004",
+  "FB2-ASM-005",
+  "FB2-ASM-006",
+  "FB2-ASM-007",
+  "FB2-ASM-011"
+ ],
+ "misuse_and_service_assumptions": [
+  {
+   "assumption": "The item is commissioned by a trained technician using the documented commissioning procedure.",
+   "kind": "service",
+   "who_may_violate_it": "Any person with physical access to the master board, which in a production vehicle is anyone who can reach the battery enclosure.",
+   "mitigation_or_declaration": "The COMMISSIONING mode inhibits contactor actuation and is entered only on an explicit assertion, so an uncommissioned board cannot be energised by accident. This mitigates; it does not remove the assumption, and the service instructions record states the assumption explicitly."
+  },
+  {
+   "assumption": "Safe operating area limits are never raised beyond the cell chemistry's own limits to make a test pass or a driveability target.",
+   "kind": "misuse",
+   "who_may_violate_it": "Anyone with write access to the configuration, including the hypothetical project's own engineers.",
+   "mitigation_or_declaration": "The limit set is part of the configuration baseline, and changing it is a controlled change requiring a safety impact analysis. No such analysis exists in this corpus, so the control is declared and not demonstrated."
+  },
+  {
+   "assumption": "The pack is not opened or serviced by the end user.",
+   "kind": "maintenance",
+   "who_may_violate_it": "The vehicle owner, and any party the owner permits.",
+   "mitigation_or_declaration": "Declared as an assumption, not as a control. The item cannot enforce it; a high-voltage service restriction in the vehicle documentation is the assumed external measure."
+  },
+  {
+   "assumption": "At end of life the pack is handled by a certified recycler who treats a pack as energised until proven otherwise.",
+   "kind": "recycling",
+   "who_may_violate_it": "A recycler who does not follow the declared procedure.",
+   "mitigation_or_declaration": "Declared and carried into the decommissioning record as an end-of-life assumption with its control stated; the item itself contributes nothing to end-of-life safety once removed from the vehicle."
+  }
+ ],
+ "in_scope": [
+  "Cell voltage, cell temperature and pack current acquisition, validation and publication",
+  "Safe operating area monitoring, debounce and classification",
+  "Measurement plausibility and redundancy checking",
+  "Contactor and precharge sequencing and feedback supervision",
+  "Fault management, severity handling, latching and persistent logging",
+  "Independent hardware voltage monitoring and its own actuation path",
+  "Configuration and calibration data that defines the safe operating area",
+  "The communication interfaces whose compromise could defeat a safety requirement"
+ ],
+ "out_of_scope": [
+  "Thermal runaway arising from cell chemistry or damage that no E/E function can prevent",
+  "Mechanical protection of the pack (venting, enclosure, crash structure)",
+  "Charger and inverter control strategies",
+  "Vehicle-level crash isolation decisions",
+  "Production line and end-of-line test execution (documented, not performed here)",
+  "Field service execution and end-of-life recycling execution",
+  "Functional safety of the external current sensor and insulation monitoring device"
+ ],
+ "limitations": [
+  "This item definition is synthetic. It describes a hypothetical programme and asserts no property of any real vehicle, pack, supplier or organisation.",
+  "No stakeholder was interviewed, no workshop was held and no requirement was elicited from a real party. The stakeholder needs it raises are declared assumptions, which is why every one of them carries is_a_real_elicitation = false.",
+  "The environmental limits in this record are engineering assumptions for the hypothetical programme. Nothing here demonstrates that the item meets any of them.",
+  "The item definition establishes no ASIL. ASIL is assigned to safety goals in the hazard analysis, and this record does not allocate it.",
+  "The boundary between the item's cell-voltage monitoring and the cell supplier's own cell protection is drawn from the hypothetical integrator's viewpoint. In a real programme this boundary is negotiated between two organisations and is a contractual artefact.",
+  "The interfaces to other safety-related items are recorded as assumptions on systems the item does not contain. Whether those assumptions hold in a real vehicle is outside anything this corpus can show."
+ ]
+}

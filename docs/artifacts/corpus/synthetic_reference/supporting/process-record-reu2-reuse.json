@@ -1,0 +1,195 @@
+{
+ "id": "FB2-SUP-RUS-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "process_record",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "REU.2 Reuse program management: populated process record for Project Northcell",
+ "owner_role": "sw_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "REU.2",
+   "status": "mapped",
+   "rationale": "Reuse program management: reuse strategy, assessment and acceptance."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Supporting-process record authored because the generated view reported REU.2 as a coverage gap: no record whose engineering_domain is 'supporting' named the process. This record populates it - definition, inputs, outputs, accountable role, acceptance criteria, at least one performed instance with fictional participants and a synthetic decision, and the communication records showing how agreed revisions reach affected roles."
+  }
+ ],
+ "process_record_id": "FB2-SUP-RUS-000001",
+ "aspice_process_id": "REU.2",
+ "process_name": "Reuse program management",
+ "fictional_organisation": {
+  "name": "Halden Cell Systems (fictional) software and reuse function (fictional)",
+  "is_a_real_organisation": false
+ },
+ "purpose": "Control the reuse of existing software, generated code and vendor components by recording what is reused, assessing it, and stating the conditions under which the reuse is acceptable.",
+ "definition": "Reuse in this corpus is substantial and largely unassessed: an operating system, a peripheral driver framework, vendor front-end drivers for several different parts, a non-volatile memory driver and generated configuration code all execute on paths that the safety requirements depend on. This record establishes the process and one instance of it. It does not complete a reuse assessment for any individual element, and the instance says which element was assessed and how far.",
+ "inputs": [
+  {
+   "input": "The reuse inventory of third-party, generated and vendor elements",
+   "kind": "data",
+   "controlled_by": "This process record's traceability block"
+  },
+  {
+   "input": "The upstream licence, version and modification constraints of each element",
+   "kind": "external_input",
+   "controlled_by": "No upstream is under agreement"
+  },
+  {
+   "input": "The safety requirements whose allocation depends on a reused element",
+   "kind": "artifact",
+   "controlled_by": "FB2-SAF-TSC-000001"
+  }
+ ],
+ "outputs": [
+  {
+   "output": "A reuse assessment per element on a safety-relevant path",
+   "kind": "record",
+   "retention": "permanent"
+  },
+  {
+   "output": "A reuse decision recording whether the element may be used and under what constraints",
+   "kind": "decision",
+   "retention": "permanent"
+  },
+  {
+   "output": "A constraint record stating what the reused element may not be relied upon for",
+   "kind": "record",
+   "retention": "permanent"
+  }
+ ],
+ "accountable_role": {
+  "role": "sw_engineer",
+  "independence": "The reuse function may not assess an element that the assessing engineer modified. The vendor front-end drivers were modified by the project's own engineers in the observed source, so the independence cannot hold for them and the instance records that."
+ },
+ "acceptance_criteria": [
+  {
+   "criterion": "Every element on a safety-relevant path has a reuse record naming its upstream, its version and its modification state",
+   "how_conformance_is_checked": "Confirm each entry in the trace list names all three.",
+   "evidence_of_conformance": "Four elements are named with upstream, version and modification state. The assessment depth varies by element and the instance states which elements received only an inventory entry."
+  },
+  {
+   "criterion": "A reused element is never relied upon for a property its upstream does not claim",
+   "how_conformance_is_checked": "Read each reuse decision's constraints against the safety requirements that depend on it.",
+   "evidence_of_conformance": "The operating system's task-latency figure was found to be assumed (FB2-ASM-011) rather than sourced, and the reuse decision records it as an assumption this project owns rather than a property of the operating system."
+  },
+  {
+   "criterion": "Modified vendor code is assessed by someone who did not modify it",
+   "how_conformance_is_checked": "Confirm the assessing role is not in the modification history of the element.",
+   "evidence_of_conformance": "NOT met. The vendor front-end drivers were modified by the project's own software engineers, so no independent assessor exists for them in the fictional organisation. Recorded as a non-conformance rather than assessed by the modifier."
+  }
+ ],
+ "performed_instances": [
+  {
+   "instance_id": "INST-006",
+   "instance_date": "2026-09-29",
+   "instance_description": "First reuse assessment cycle. Assessed the operating system's role in the acquisition path and inventoried the vendor front-end drivers, the safe base controller driver and the generated configuration code without assessing them.",
+   "participants": [
+    {
+     "role": "sw_engineer",
+     "named_as": "role identity: sw_engineer (assessor, and a modifier of the vendor drivers, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "safety_engineer",
+     "named_as": "role identity: safety_engineer (assessed the effect on the safety requirements, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "architect",
+     "named_as": "role identity: architect (accepted the constraints, fictional)",
+     "is_a_real_person": false
+    }
+   ],
+   "inputs_used": [
+    "FB2-SW-SWR-000001 rev 1",
+    "FB2-SW-SWR-000002 rev 1",
+    "FB2-SW-SWR-000003 rev 1",
+    "The reuse inventory"
+   ],
+   "outputs_produced": [
+    "The reuse assessment record for the operating system",
+    "Three inventory entries with no assessment"
+   ],
+   "decision_or_outcome": "The operating system's task scheduling is acceptable for the software's role on the condition that its worst-case scheduling latency is treated as an assumption this project owns (FB2-ASM-011) and not as a property of the operating system. The vendor front-end drivers were inventoried with their modification state recorded as modified by this project, and were not assessed, because no assessor independent of the modifier exists. The generated configuration code was inventoried and not assessed, because its generator is not identified in the corpus.",
+   "synthetic_decision": "synthetic_decision:sw_engineer:SYNTH-SUP-REU2-INST-006",
+   "conformance_against_acceptance_criteria": "partially_conforming",
+   "non_conformances_found": [
+    "Criterion 3 is not met for the vendor front-end drivers and no independent assessor exists. The instance records the failure instead of the modifier assessing their own modification, which would have produced a conformant record and a worthless one.",
+    "Criterion 1 is not met for three of four elements, which received inventory entries only. An inventory is not an assessment and the record says so."
+   ]
+  }
+ ],
+ "review_and_communication": [
+  {
+   "communication_id": "COM-007",
+   "date": "2026-09-29",
+   "communicated_artifact_revisions": [
+    "FB2-SUP-RUS-000001 rev 1",
+    "The reuse assessment record for the operating system"
+   ],
+   "attendee_roles": [
+    "sw_engineer",
+    "safety_engineer",
+    "architect",
+    "quality_engineer"
+   ],
+   "acknowledgement_recorded": true
+  }
+ ],
+ "traceability": {
+  "produces_records": [
+   "FB2-SUP-RUS-000001"
+  ],
+  "depends_on_records": [
+   "FB2-SAF-TSC-000001",
+   "FB2-SW-SWR-000001"
+  ],
+  "controlled_by_records": [
+   "FB2-SUP-CFM-000001"
+  ]
+ },
+ "process_performance_measurement": {
+  "metric_id": "MET-06",
+  "metric_name": "Supporting-process instance conformance",
+  "unit": "percent",
+  "how_measured": "Count instances judged conforming against the process's own acceptance criteria, over the number of instances. 'partially_conforming' counts as not conforming.",
+  "measurement_plan_ref": "FB2-MAN-MSM-000001"
+ },
+ "limitations": [
+  "Synthetic process record. The reuse inventory describes the real observed situation in the pinned foxBMS source; the assessment is fictional and its conclusions are the hypothetical project's.",
+  "One of four reused elements was assessed. Three were inventoried. The record states the difference and does not present the inventory as an assessment.",
+  "The independence criterion cannot be met for modified vendor code in a fictional organisation of this size, and the record says that rather than assigning the assessment to the modifier.",
+  "This record does not assert that any reused element is qualified, proven-in-use or fit for a safety path. No such claim exists anywhere in this corpus."
+ ]
+}

@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T10:08:35Z |
+| Generated | 2026-09-29T12:17:43Z |
 
 ## Scope
 
@@ -258,6 +258,172 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - **Expected outcomes**:
   - `hil_reaction_verified` = true (tolerance exact)
 
+#### `FB2-VER-TMS-000012` — Validation: charging a healthy pack at the limit does not cause a spurious safety reaction (stakeholder intent: pack manufacturer) (synthetic_reference)
+
+- **Test type**: `validation` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Confirm that a pack operated correctly at its published charge limit produces no spurious safe-state reaction over a full charge, because the pack manufacturer's stated need is that the item does not reduce usable capacity through false reactions. This is a false-reaction validation: it does not tes...
+- **Preconditions**: The item is fitted to the declared pack configuration and its configuration data matches the pack's ..., The cell voltages, temperatures and the pack current are logged at a rate that resolves 100 ms., The charger respects the charge limits the item publishes (FB2-ASM-003).
+- **Environment**: Fictional 400 V pack on a lab charging rig with a synchronised logger; Item firmware and the vehicle control unit build under test; config `VAR-REF-001 reference configuration, nominal cells`
+- **Test cases (steps)**:
+  1. **Run a full charge cycle from the declared minimum state to full** → expected: No FAULT mode entry and no contactor opening attributable to a false reaction
+  2. **Record every diagnosis entry raised during the cycle** → expected: Zero entries whose severity would have forced the safe state
+  3. **Compare the delivered capacity against the pack's declared capacity** → expected: At least 98% of declared usable capacity
+  4. **Repeat at the two ambient temperature extremes** → expected: Same outcome; no reaction count that rises with temperature
+- **Expected outcomes**:
+  - `fault_reaction_count` = 0 (tolerance exact)
+  - `delivered_capacity_fraction` = 98 (tolerance at least)
+  - `diagnosis_entries_forcing_safe_state` = 0 (tolerance exact)
+
+#### `FB2-VER-TMS-000013` — Validation: the driver's usable experience after a genuine overvoltage reaction (operational scenario OS-002, traction discharge) (synthetic_reference)
+
+- **Test type**: `validation` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Confirm that when a genuine overvoltage reaction occurs while the vehicle is being driven, the outcome is the one the end-user driver stakeholder needs: the pack is isolated, the vehicle coasts to a stop under its own control, and the driver is told what happened in terms that do not require a diagn...
+- **Preconditions**: The pack, vehicle and charger are real (hypothetical) installations, not a bench., A driver representative from the declared end-user class is available and has not been briefed on wh..., A logging setup captures the driver-facing indication, not only the internal state.
+- **Environment**: Fictional 400 V pack in a fictional vehicle on a closed test route; Item firmware and the vehicle control unit build under test; config `VAR-REF-001 reference configuration, nominal cells`
+- **Test cases (steps)**:
+  1. **Drive the vehicle at speed until the cell overvoltage occurs** → expected: The item reaches the safe state within the fault-tolerant time interval
+  2. **Observe the vehicle's behaviour after the contactors open** → expected: The vehicle coasts and stops without loss of steering or of brake assist
+  3. **Capture what the driver is shown** → expected: An unambiguous statement that the battery has been isolated for a battery fault, not a generic warning light
+  4. **Confirm with the driver stakeholder class whether the indication is actionable** → expected: The driver states what happened and what to do without reference to a service manual
+- **Expected outcomes**:
+  - `contactor_open_time` = 100 (tolerance at most)
+  - `steering_and_brake_assist_retained` = true (tolerance exact)
+  - `driver_indication_states_the_cause` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000014` — Validation: degraded operation remains usable and is announced before it becomes a hard stop (operational scenario: single-channel measurement degradation) (synthetic_reference)
+
+- **Test type**: `validation` | **Oracle basis**: `analytical_model`
+- **Objective**: Confirm that a measurement-path degradation moves the item into its degraded mode with a capability the pack manufacturer can still use, and that the reduction is announced before the condition becomes a hard stop. The failure this guards against is specific: a degraded mode that silently removes ca...
+- **Preconditions**: The pack is at a nominal mid-discharge state with the vehicle stationary., A channel degradation can be injected without disturbing the cells themselves., The vehicle control unit is logging the item's published state.
+- **Environment**: Fictional pack on a bench with an injectable measurement-channel fault injector; Item firmware and the vehicle control unit build under test; config `VAR-REF-001 reference configuration, nominal cells`
+- **Test cases (steps)**:
+  1. **Degrade one channel and observe the item** → expected: The item enters degraded mode rather than FAULT
+  2. **Record what capability is retained and what is removed** → expected: Contactor control retained, charge and discharge limited, monitoring rate increased
+  3. **Confirm the reduction is published to the vehicle control unit** → expected: A degraded-state indication is present within one publication period
+  4. **Increase the degradation to the point of no usable reference** → expected: The item escalates to the safe state rather than continuing on an unusable channel
+  5. **Confirm with the service stakeholder class that the degradation is diagnosable** → expected: The service class can identify which channel degraded from the item's own output
+- **Expected outcomes**:
+  - `mode_on_first_degradation` = DEGRADED (tolerance exact)
+  - `contactor_control_retained` = true (tolerance exact)
+  - `degraded_indication_latency` = 100 (tolerance at most)
+
+#### `FB2-VER-TMS-000015` — Validation: the service technician can commission and service the item without being able to energise it incorrectly (operational scenario OS-006, workshop service) (synthetic_reference)
+
+- **Test type**: `validation` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Confirm that a service technician following the documented commissioning and service procedure cannot bring the item into a state in which the contactors are commanded closed with open-circuit sensor inputs, and that the procedure's steps are executable in the order given. The stakeholder need is th...
+- **Preconditions**: The item is unpowered or on a low-voltage service supply with the contactor drivers inhibited., The service procedure under test exists as an approved document; in this corpus it does not, and thi..., Sense leads may be connected or left open without damaging anything, which is an assumption this cor...
+- **Environment**: Fictional item on a service bench with a service diagnostic tool; Item firmware and the vehicle control unit build under test; config `VAR-REF-001 reference configuration, nominal cells`
+- **Test cases (steps)**:
+  1. **Execute the commissioning procedure exactly as written** → expected: Every step is executable in the order given without an undocumented intermediate state
+  2. **With sense leads unconnected, assert commissioning and attempt to command the contactors closed** → expected: The command is refused and the refusal is diagnosed
+  3. **Connect only a subset of the sense leads and repeat** → expected: The open-circuit condition is diagnosed rather than interpreted as cells at zero volts
+  4. **Release commissioning and remove the tool** → expected: The item returns to a state in which no contactor actuation is possible without a current-flow request
+  5. **Have a technician from the declared class perform the procedure unassisted** → expected: The technician completes it without improvising a step
+- **Expected outcomes**:
+  - `contactor_close_command_without_sense_leads` = 0 (tolerance exact)
+  - `open_circuit_diagnosed` = true (tolerance exact)
+  - `technician_improvised_steps` = 0 (tolerance exact)
+
+#### `FB2-VER-TMS-000016` — Verification: an unauthenticated peer is refused service, and an authenticated session's payload is neither readable nor alterable by a passive or active segment observer (synthetic_reference)
+
+- **Test type**: `robustness` | **Oracle basis**: `source_grounded`
+- **Objective**: Confirm that the master software completes no externally reachable network session with a peer that has not authenticated, and that after authentication the session's application payload is neither recoverable in plaintext by an observer on the segment nor modifiable by one. Also confirm that each r...
+- **Preconditions**: The service is externally reachable in the configuration under test, which is the hypothetical proje..., The item is otherwise in a nominal mode with no active fault., A capture point exists on the segment.
+- **Environment**: Hypothetical 400 V pack on a bench with an instrumented network segment; BMS master firmware under test; config `VAR-REF-001 with the commissioning service enabled and all debug endpoints closed`
+- **Test cases (steps)**:
+  1. **Offer 1000 connections from peers that fail authentication** → expected: Zero sessions reach the application data state
+  2. **Authenticate successfully and capture the segment for 24 h** → expected: No application payload byte is recoverable in plaintext
+  3. **Alter bytes of an authenticated session's payload** → expected: The receiver rejects every altered frame and raises a diagnosis entry
+  4. **Replay a previously valid credential** → expected: The replay is refused and diagnosed
+  5. **Review the diagnosis log against the injection schedule** → expected: One diagnosis entry per refused attempt, no missing and no extra
+- **Expected outcomes**:
+  - `unauthenticated_sessions` = 0 (tolerance exact)
+  - `plaintext_payload_bytes_recovered` = 0 (tolerance exact)
+  - `altered_frames_accepted` = 0 (tolerance exact)
+  - `authentication_latency` = 100 (tolerance at most)
+  - `diagnosis_entries_per_refusal` = 1 (tolerance exact)
+
+#### `FB2-VER-TMS-000017` — Verification: a peer holding the maximum permitted connections open and silent does not deny service to legitimate peers (synthetic_reference)
+
+- **Test type**: `robustness` | **Oracle basis**: `analytical_model`
+- **Objective**: Confirm that a hostile peer cannot make the service unavailable to a legitimate peer by opening the maximum number of permitted connections and sending nothing on them, and that every refusal and every budget breach is diagnosable. This is the measure for the requirement's availability clause; the r...
+- **Preconditions**: The service under test implements the caps the requirement states., The hostile peer can hold sockets open without sending data., The legitimate peer behaves as a legitimate peer.
+- **Environment**: Hypothetical 400 V pack on a bench with a routable network segment; BMS master firmware under test; config `VAR-REF-001 with the commissioning service enabled`
+- **Test cases (steps)**:
+  1. **Open the permitted maximum of silent connections and hold them** → expected: The service accepts exactly the cap and refuses the next attempt
+  2. **Attempt a legitimate connection while the cap is held** → expected: The legitimate peer is served, or refused within a bounded time and diagnosed
+  3. **Burst 128 KiB on one held connection** → expected: The connection is closed within 100 ms of the breach and its resources are released
+  4. **Hold the cap open for 30 minutes** → expected: No service task is blocked indefinitely; the receive timeout fires within 2000 ms
+  5. **Run for 1 hour with the hostile peer active** → expected: At least 1 legitimate connection served per hour
+  6. **Review the diagnosis log** → expected: One entry per refusal and per detected breach
+- **Expected outcomes**:
+  - `concurrent_connections_serviced` = 4 (tolerance at most)
+  - `receive_timeout` = 2000 (tolerance at most)
+  - `per_connection_byte_budget` = 65536 (tolerance at most)
+  - `breach_to_close_time` = 100 (tolerance at most)
+  - `legitimate_connections_per_hour_under_exhaustion` = 1 (tolerance at least)
+
+#### `FB2-VER-TMS-000018` — Verification: a bus peer without the shared secret cannot present a frame the dispatch layer accepts (synthetic_reference)
+
+- **Test type**: `robustness` | **Oracle basis**: `source_grounded`
+- **Objective**: Confirm that for every CAN identifier whose payload influences a safety function, a frame carrying a valid identifier but no valid counter, no valid integrity value or the wrong data-length code is rejected before the receive callback is invoked, and that a genuine frame with a sequence error is rej...
+- **Preconditions**: The bus under test carries the item's normal traffic., The shared secret is held only by the genuine peer and by the item., The identifiers whose payloads influence a safety function are enumerated.
+- **Environment**: Hypothetical 400 V pack on a bus bench with a second node able to transmit arbitrary frames; BMS master firmware under test; config `VAR-REF-001 with the safety-relevant identifiers configured and the integrity check enabled`
+- **Test cases (steps)**:
+  1. **Inject 5000 frames with a valid identifier and no valid integrity value** → expected: Zero reach the receive callback; each is diagnosed as an integrity failure
+  2. **Replay 500 recorded valid frames out of sequence** → expected: Zero reach the receive callback; each is diagnosed as a counter failure
+  3. **Inject 1440 short frames** → expected: Zero reach the receive callback; each is diagnosed as a length failure
+  4. **Run genuine traffic for 24 h alongside the injections** → expected: Zero genuine frames rejected
+  5. **Review the diagnosis log** → expected: One entry per rejected frame, and the three failure kinds are distinguishable
+- **Expected outcomes**:
+  - `injected_frames_accepted` = 0 (tolerance exact)
+  - `replayed_frames_accepted` = 0 (tolerance exact)
+  - `short_frames_accepted` = 0 (tolerance exact)
+  - `genuine_frames_rejected` = 0 (tolerance exact)
+  - `verification_latency` = 2 (tolerance at most)
+
+#### `FB2-VER-TMS-000019` — Verification: the serial link acts only on authenticated frames, and the XOFF/XON byte values are demoted to ordinary payload (synthetic_reference)
+
+- **Test type**: `robustness` | **Oracle basis**: `source_grounded`
+- **Objective**: Confirm that no byte on the serial receive line reaches the application layer without passing a length check and an integrity check, that a structurally valid frame with a modified payload is rejected, that neither 0x13 nor 0x11 can change the transmit-enabled state outside an authenticated frame, a...
+- **Preconditions**: The serial link under test is the link the item uses for its external service interface., The item is otherwise nominal and no genuine peer is mid-transfer., The receive queue depth is configured and known.
+- **Environment**: Hypothetical 400 V pack on a bench with an instrumented serial port; BMS master firmware under test; config `VAR-REF-001 with the service interface enabled and no genuine peer connected`
+- **Test cases (steps)**:
+  1. **Send 100000 unframed bytes including both control-byte values** → expected: Zero bytes reach the application layer; zero transmit-enabled transitions occur
+  2. **Send 86400 valid-structure frames with a modified payload** → expected: Zero are accepted; each raises a diagnosis entry
+  3. **Send 1440 frames with a declared length that does not match the byte count** → expected: Zero are passed onward; each is diagnosed
+  4. **Overflow the receive queue deliberately** → expected: The overflow is detected and one diagnosis entry is raised per event
+  5. **Run genuine traffic for 24 h alongside the injections** → expected: Zero genuine frames rejected
+- **Expected outcomes**:
+  - `unframed_bytes_passing` = 0 (tolerance exact)
+  - `transmit_state_transitions_from_control_bytes` = 0 (tolerance exact)
+  - `modified_payload_frames_accepted` = 0 (tolerance exact)
+  - `length_mismatch_frames_passed` = 0 (tolerance exact)
+  - `diagnosis_entries_per_overflow` = 1 (tolerance exact)
+  - `genuine_frames_rejected` = 0 (tolerance exact)
+
+#### `FB2-VER-TMS-000020` — Verification: the initial sequence number is unpredictable across connections and power cycles, and the third-party component inventory is evidenced and checked against an advisory source on a stated ... (synthetic_reference)
+
+- **Test type**: `robustness` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Two clauses with two different oracles, stated separately rather than blended. First: confirm that the initial TCP sequence number takes a distinct value on every one of 1000 connection establishments and that the entropy seed is distinct across 1000 power cycles. Second: confirm that every entry in...
+- **Preconditions**: The item's network stack is reachable and the source can be inspected for the seed's origin., A power-cycle fixture exists that records the seed at each boot., The component inventory exists as a maintained document with an owner., An authoritative advisory source exists and the project is permitted to consult it. This last precon...
+- **Environment**: Hypothetical 400 V pack on a bench, plus a workstation for the inventory review; BMS master firmware under test; config `VAR-REF-001`
+- **Test cases (steps)**:
+  1. **Establish 1000 connections and record each initial sequence number** → expected: 1000 distinct values, no repetition within the set
+  2. **Power cycle 1000 times and record each entropy seed** → expected: 1000 distinct seeds
+  3. **Compare the source of each seed against the pinned build** → expected: No seed is fixed at build time and every seed derives from a running source
+  4. **Review every inventory entry's version evidence** → expected: Every entry is evidenced by a named source or explicitly null with a stated reason
+  5. **Review the advisory check records** → expected: The most recent check is within 30 days and every match has an adjudication
+  6. **Search the inventory for inferred or guessed versions** → expected: Zero entries
+- **Expected outcomes**:
+  - `distinct_initial_sequence_numbers` = 1000 (tolerance exact)
+  - `distinct_seeds_across_power_cycles` = 1000 (tolerance exact)
+  - `build_time_fixed_seeds` = 0 (tolerance exact)
+  - `inventory_entries_with_version_evidence_or_explicit_null` = 100 (tolerance at least)
+  - `days_since_last_advisory_check` = 30 (tolerance at most)
+  - `matches_without_adjudication` = 0 (tolerance exact)
+  - `entries_with_guessed_version` = 0 (tolerance exact)
+
 ## Test Cases
 
 - `FB2-VER-TMS-000001` (as_is): 4 test case(s)
@@ -276,8 +442,17 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - `FB2-VER-TMS-000009` (synthetic_reference): 2 test case(s)
 - `FB2-VER-TMS-000010` (synthetic_reference): 3 test case(s)
 - `FB2-VER-TMS-000011` (synthetic_reference): 3 test case(s)
+- `FB2-VER-TMS-000012` (synthetic_reference): 4 test case(s)
+- `FB2-VER-TMS-000013` (synthetic_reference): 4 test case(s)
+- `FB2-VER-TMS-000014` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000015` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000016` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000017` (synthetic_reference): 6 test case(s)
+- `FB2-VER-TMS-000018` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000019` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000020` (synthetic_reference): 6 test case(s)
 
-**Total system-level test cases**: 49
+**Total system-level test cases**: 94
 
 ## Execution Report
 
@@ -431,8 +606,62 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - **Environment**: Target TMS570LC4357 + HIL bench (blocked — unpublished upstream); Linked target program; tools: GCC
 - **Evidence refs**: `FB2-VER-TMS-000011`
 
+##### Execution `FB2-VER-EXE-000012` — Execution: FB2-VER-TMS-000012 (blocked - no validation environment)
+
+- **Test measure**: `FB2-VER-TMS-000012` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no vehicle, pack, charger or bench harness exists in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000012`
+
+##### Execution `FB2-VER-EXE-000013` — Execution: FB2-VER-TMS-000013 (blocked - no validation environment)
+
+- **Test measure**: `FB2-VER-TMS-000013` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no vehicle, pack, charger or bench harness exists in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000013`
+
+##### Execution `FB2-VER-EXE-000014` — Execution: FB2-VER-TMS-000014 (blocked - no validation environment)
+
+- **Test measure**: `FB2-VER-TMS-000014` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no vehicle, pack, charger or bench harness exists in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000014`
+
+##### Execution `FB2-VER-EXE-000015` — Execution: FB2-VER-TMS-000015 (blocked - no validation environment)
+
+- **Test measure**: `FB2-VER-TMS-000015` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no vehicle, pack, charger or bench harness exists in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000015`
+
+##### Execution `FB2-VER-EXE-000016` — Execution: FB2-VER-TMS-000016 (blocked - FB2-SAF-SEC-000001 has no executable security harness in this corpus)
+
+- **Test measure**: `FB2-VER-TMS-000016` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware and no instrumented bus in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000016`, `FB2-SAF-SEC-000001`
+
+##### Execution `FB2-VER-EXE-000017` — Execution: FB2-VER-TMS-000017 (blocked - FB2-SAF-SEC-000002 has no executable security harness in this corpus)
+
+- **Test measure**: `FB2-VER-TMS-000017` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware and no instrumented bus in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000017`, `FB2-SAF-SEC-000002`
+
+##### Execution `FB2-VER-EXE-000018` — Execution: FB2-VER-TMS-000018 (blocked - FB2-SAF-SEC-000003 has no executable security harness in this corpus)
+
+- **Test measure**: `FB2-VER-TMS-000018` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware and no instrumented bus in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000018`, `FB2-SAF-SEC-000003`
+
+##### Execution `FB2-VER-EXE-000019` — Execution: FB2-VER-TMS-000019 (blocked - FB2-SAF-SEC-000004 has no executable security harness in this corpus)
+
+- **Test measure**: `FB2-VER-TMS-000019` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware and no instrumented bus in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000019`, `FB2-SAF-SEC-000004`
+
+##### Execution `FB2-VER-EXE-000020` — Execution: FB2-VER-TMS-000020 (blocked - FB2-SAF-SEC-000005 has no executable security harness in this corpus)
+
+- **Test measure**: `FB2-VER-TMS-000020` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware and no instrumented bus in this corpus; not applicable; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000020`, `FB2-SAF-SEC-000005`
+
 
 
 ---
 
-*Generated: 2026-09-29T10:08:35Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T12:17:43Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

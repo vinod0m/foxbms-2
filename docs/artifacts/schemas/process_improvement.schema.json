@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/process_improvement.schema.json",
+  "title": "Process Improvement Record Schema",
+  "description": "Schema for a process improvement record (Automotive SPICE PIM.3). Three stages exist and each is recorded as a separate artifact: 'improvement_proposal' states the hypothesis and the baseline evidence; 'improvement_implementation' states what was changed and when; 'effectiveness_evaluation' states the post-change measurement, the before/after arithmetic and the verdict. A proposal with no evaluation is not an improvement, and an evaluation with no computed before/after comparison is not an evaluation. The corpus previously had none of the three.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "improvement_id",
+        "stage",
+        "fictional_project",
+        "process_being_improved",
+        "baseline_evidence",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "process_improvement"
+        },
+        "improvement_id": {"type": "string", "pattern": "^FB2-PIM-IMP-[0-9]{6}$"},
+        "stage": {
+          "type": "string",
+          "enum": ["improvement_proposal", "improvement_implementation", "effectiveness_evaluation"],
+          "description": "Which of the three stages this record carries. The allOf branch below makes the stage-specific content structural."
+        },
+        "fictional_project": {"const": true},
+        "calendar_note": {"type": "string", "minLength": 1},
+        "process_being_improved": {
+          "type": "object",
+          "required": ["process_id", "process_name", "process_record_ref"],
+          "properties": {
+            "process_id": {"type": "string", "minLength": 1},
+            "process_name": {"type": "string", "minLength": 1},
+            "process_record_ref": {"type": "string", "minLength": 1},
+            "why_this_process": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "baseline_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["observation", "value", "unit", "where_it_came_from"],
+            "properties": {
+              "observation": {"type": "string", "minLength": 1},
+              "value": {"type": "number"},
+              "unit": {"type": "string", "minLength": 1},
+              "where_it_came_from": {"type": "string", "minLength": 1},
+              "synthetic": {"const": true}
+            },
+            "additionalProperties": false
+          }
+        },
+        "hypothesis": {
+          "type": "object",
+          "required": ["statement", "predicted_effect", "metric_id", "falsification_condition"],
+          "properties": {
+            "statement": {"type": "string", "minLength": 1},
+            "predicted_effect": {"type": "string", "minLength": 1},
+            "metric_id": {"type": "string", "pattern": "^MET-[0-9]{2}$"},
+            "falsification_condition": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The observation that would show the hypothesis wrong. Required so the improvement can fail rather than being declared successful by default."
+            }
+          },
+          "additionalProperties": false
+        },
+        "changes_made": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["change", "change_type", "change_date", "changed_by_role", "affected_process_records"],
+            "properties": {
+              "change": {"type": "string", "minLength": 1},
+              "change_type": {"type": "string", "enum": ["process_definition_change", "tooling_change", "template_change", "role_change", "checklist_change", "training_change"]},
+              "change_date": {"type": "string", "format": "date"},
+              "changed_by_role": {"type": "string", "minLength": 1},
+              "affected_process_records": {"type": "array", "items": {"type": "string"}},
+              "adoption_evidence": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "effectiveness_evaluation": {
+          "type": "object",
+          "required": ["evaluation_date", "metric_id", "before_value", "after_value", "unit", "arithmetic", "verdict", "evaluated_by_role"],
+          "properties": {
+            "evaluation_date": {"type": "string", "format": "date"},
+            "metric_id": {"type": "string", "pattern": "^MET-[0-9]{2}$"},
+            "before_value": {"type": "number"},
+            "after_value": {"type": "number"},
+            "unit": {"type": "string", "minLength": 1},
+            "arithmetic": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The computed difference and percentage change, written out. Not 'improved'."
+            },
+            "observation_ids_used": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+            "verdict": {"type": "string", "enum": ["effective", "not_effective", "partially_effective", "insufficient_evidence"]},
+            "verdict_argument": {"type": "string", "minLength": 1},
+            "evaluated_by_role": {"type": "string", "minLength": 1},
+            "confirmation_by_second_role": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "counter_evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "description": "Observations that argue against the change. Required to be present (possibly stating that none were found, with the search described) so a favourable result is never the only evidence on the page."
+        },
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"stage": {"const": "improvement_proposal"}}, "required": ["stage"]},
+          "then": {"required": ["hypothesis"]}
+        },
+        {
+          "if": {"properties": {"stage": {"const": "improvement_implementation"}}, "required": ["stage"]},
+          "then": {"required": ["changes_made", "hypothesis"]}
+        },
+        {
+          "if": {"properties": {"stage": {"const": "effectiveness_evaluation"}}, "required": ["stage"]},
+          "then": {"required": ["effectiveness_evaluation", "hypothesis", "counter_evidence"]}
+        }
+      ],
+      "additionalProperties": true
+    }
+  ]
+}

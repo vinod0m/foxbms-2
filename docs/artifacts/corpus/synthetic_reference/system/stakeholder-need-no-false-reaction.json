@@ -1,0 +1,88 @@
+{
+ "id": "FB2-SYS-NED-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "stakeholder_need",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Stakeholder need: the pack manufacturer shall not lose usable capacity through false safety reactions",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1",
+   "status": "mapped",
+   "rationale": "Requirements elicitation: the stakeholder needs this process produces."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 5 (item definition and stakeholder needs)",
+   "status": "mapped",
+   "rationale": "The needs here are the item's needs raised at concept level; they are refined into requirements only at system level."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Stakeholder need authored because SYS.1 was recorded as a coverage gap with zero records in either profile. Declared, not elicited: no workshop, interview or questionnaire was held for any of the needs in this set."
+  }
+ ],
+ "need_id": "FB2-SYS-NED-000001",
+ "stakeholder": {
+  "stakeholder_id": "STK-001",
+  "stakeholder_class": "pack_manufacturer",
+  "fictional": true,
+  "stakeholder_description": "Fictional pack manufacturer of the hypothetical 400 V programme. Buys the item as a component into a pack it has designed and validated itself, and is accountable for the pack's usable energy and its own cell safety case."
+ },
+ "need_statement": "A pack manufacturer integrating the item shall be able to charge a healthy pack to its declared full state and discharge it to its declared minimum without the item reducing the pack's usable energy, and shall be able to state the delivered capacity against the declared capacity for warranty purposes.",
+ "rationale": "A safety function that reacts to a healthy pack is a cost the pack manufacturer carries and the driver experiences as a shortened range. The pack manufacturer therefore needs the reaction to be specific, not merely safe. This need is in genuine tension with the debounce strategy: every millisecond of debounce added to suppress false reactions is milliseconds taken from the detection latency the safety goal needs. The need is ranked first because the tension is the single most consequential design trade in the item and because the party that pays for a wrong resolution of it is not the party that makes the decision. It conflicts with the detection-latency need carried by the safety goal, which is stated there and not here.",
+ "origin_of_the_need": {
+  "elicitation_method": "assumption_declaration",
+  "elicited_from": "the hypothetical programme's own design assumption set, declared by the author",
+  "is_a_real_elicitation": false,
+  "elicitation_evidence": []
+ },
+ "priority": {
+  "rank": 1,
+  "rationale": "A safety function that reacts to a healthy pack is a cost the pack manufacturer carries and the driver experiences as a shortened range."
+ },
+ "operational_situation_refs": [
+  "OS-001",
+  "OS-003"
+ ],
+ "derived_requirements": [
+  "FB2-SYS-SYR-000001",
+  "FB2-SYS-SYR-000002"
+ ],
+ "validation_measures": [
+  "FB2-VER-TMS-000012"
+ ],
+ "limitation": "This is a declared need, not an elicited one. No pack manufacturer stated it, and the warranty framing in it is this corpus's invention. Validating it confirms the item behaves as an assumed party would want; it cannot confirm that the assumption matches any real pack manufacturer's interest."
+}

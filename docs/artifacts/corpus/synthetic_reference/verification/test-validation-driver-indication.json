@@ -1,0 +1,170 @@
+{
+ "id": "FB2-VER-TMS-000013",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Validation: the driver's usable experience after a genuine overvoltage reaction (operational scenario OS-002, traction discharge)",
+ "owner_role": "verification_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "VAL.1",
+   "status": "mapped",
+   "rationale": "Intended-use validation against stakeholder needs and use cases."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 and Part 5/6 validation",
+   "status": "mapped",
+   "rationale": "Validation confirms the integrated item against its intended use; the existing FB2-VER-TMS-000009 maps the same clause and remains a stub."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Validation measure authored because the corpus's validation coverage was a planning stub (FB2-VER-TMS-000009) with a blocked execution, and the gap report recorded 'Validation Measures: not present' as a major gap. This measure addresses stakeholder intent and an operational scenario rather than repeating a lower-level requirement test."
+  }
+ ],
+ "test_type": "validation",
+ "objective": "Confirm that when a genuine overvoltage reaction occurs while the vehicle is being driven, the outcome is the one the end-user driver stakeholder needs: the pack is isolated, the vehicle coasts to a stop under its own control, and the driver is told what happened in terms that do not require a diagnostic engineer to interpret. This measure exists because the master prompt warns that disconnecting a battery can itself affect propulsion: the safety reaction that satisfies the safety goal may still fail the stakeholder if the driver is left without an explanation.",
+ "referenced_requirements": [
+  "FB2-SYS-NED-000003",
+  "FB2-SAF-SGO-000001"
+ ],
+ "referenced_designs": [],
+ "preconditions": [
+  "The pack, vehicle and charger are real (hypothetical) installations, not a bench.",
+  "A driver representative from the declared end-user class is available and has not been briefed on what the item will do.",
+  "A logging setup captures the driver-facing indication, not only the internal state."
+ ],
+ "environment": {
+  "hardware": "Fictional 400 V pack in a fictional vehicle on a closed test route",
+  "software": "Item firmware and the vehicle control unit build under test",
+  "tools": [
+   "data logger with a synchronised time base",
+   "operational scenario script (human-in-the-loop)"
+  ],
+  "configuration": "VAR-REF-001 reference configuration, nominal cells"
+ },
+ "stimuli": [
+  {
+   "signal": "Cell overvoltage",
+   "value": "one cell driven above the configured maximum limit",
+   "timing": "at a ramp of 20 mV/s so that the debounce is exercised rather than bypassed"
+  },
+  {
+   "signal": "Vehicle speed",
+   "value": "60 km/h at the moment of the excursion",
+   "timing": "constant until the reaction"
+  },
+  {
+   "signal": "Pack current",
+   "value": "traction discharge, i.e. the operational situation in which opening the contactors removes propulsion",
+   "timing": "constant until the reaction"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Drive the vehicle at speed until the cell overvoltage occurs",
+   "expected": "The item reaches the safe state within the fault-tolerant time interval"
+  },
+  {
+   "step": 2,
+   "action": "Observe the vehicle's behaviour after the contactors open",
+   "expected": "The vehicle coasts and stops without loss of steering or of brake assist"
+  },
+  {
+   "step": 3,
+   "action": "Capture what the driver is shown",
+   "expected": "An unambiguous statement that the battery has been isolated for a battery fault, not a generic warning light"
+  },
+  {
+   "step": 4,
+   "action": "Confirm with the driver stakeholder class whether the indication is actionable",
+   "expected": "The driver states what happened and what to do without reference to a service manual"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "contactor_open_time",
+   "expected_value": "100",
+   "tolerance": "at most",
+   "unit": "ms"
+  },
+  {
+   "signal": "steering_and_brake_assist_retained",
+   "expected_value": "true",
+   "tolerance": "exact",
+   "unit": "bool"
+  },
+  {
+   "signal": "driver_indication_states_the_cause",
+   "expected_value": "true",
+   "tolerance": "exact",
+   "unit": "bool"
+  }
+ ],
+ "tolerances": {
+  "safe_state_reached_ms": 100,
+  "unexplained_indication_count": 0
+ },
+ "timing": {
+  "max_execution_time_ms": 3600000,
+  "setup_time_ms": 1800000,
+  "teardown_time_ms": 600000
+ },
+ "oracle_basis": "synthetic_assumption",
+ "oracle_detail": {
+  "oracle_kind": "synthetic_assumption",
+  "why_this_oracle": "Two oracles are combined and both are declared. The safety half is a source-grounded oracle: the 100 ms figure comes from the safety goal's own FTTI and is checkable by arithmetic against the timing budget. The experience half is a synthetic-assumption oracle: 'actionable to a driver' has no agreed definition in this corpus, and the proposal that it is decided by asking the driver class is a process invention, not a derived criterion.",
+  "what_the_oracle_is_not": "It is not a measured reference: no vehicle has been driven and no driver has been observed. It is not an analytical model: nothing here models the vehicle's coast behaviour, which the real judge would be. It is not a requirement test: FB2-VER-TMS-000006 and FB2-VER-EXE-000006 exercise the state machine's reaction, which says the state changes and not that a human understands what changed."
+ },
+ "validates_stakeholder_needs": [
+  "FB2-SYS-NED-000003"
+ ],
+ "validates_use_cases": [
+  "FB2-SYS-UC-000002"
+ ],
+ "validates_safety_goals": [
+  "FB2-SAF-SGO-000001"
+ ],
+ "cleanup": "Recover the vehicle to base, restore the cell to its declared state and archive the driver-facing indication exactly as presented.",
+ "regression_selection": "Re-run whenever the fault-reaction logic, the state indication, the latching policy or the mode arbitration changes. It is the only measure that tests whether the mode-dependent reaction is comprehensible, so it is never sampled out.",
+ "execution_state": "NOT EXECUTED. execution_kind would be 'none' and outcome 'blocked' because the validation environment does not exist in this corpus: there is no vehicle, no pack, no charging site and no operational data. No execution record for this measure may claim any other value.",
+ "limitations": [
+  "This measure is a plan. Planning is not execution, and the absence of an execution record is not a result.",
+  "The stakeholder needs it validates are declared assumptions: no workshop was held and no stakeholder was interviewed. Validating an assumed need confirms that the item behaves as the assumption says, which is not the same as confirming the need was right.",
+  "No human acceptance criterion exists yet. The acceptance thresholds below are engineering proposals; a real validation requires acceptance criteria agreed with the stakeholders, and this corpus has none."
+ ]
+}

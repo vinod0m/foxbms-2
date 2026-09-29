@@ -1,0 +1,172 @@
+{
+ "id": "FB2-VER-TMS-000015",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Validation: the service technician can commission and service the item without being able to energise it incorrectly (operational scenario OS-006, workshop service)",
+ "owner_role": "verification_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "VAL.1",
+   "status": "mapped",
+   "rationale": "Intended-use validation against stakeholder needs and use cases."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 and Part 5/6 validation",
+   "status": "mapped",
+   "rationale": "Validation confirms the integrated item against its intended use; the existing FB2-VER-TMS-000009 maps the same clause and remains a stub."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Validation measure authored because the corpus's validation coverage was a planning stub (FB2-VER-TMS-000009) with a blocked execution, and the gap report recorded 'Validation Measures: not present' as a major gap. This measure addresses stakeholder intent and an operational scenario rather than repeating a lower-level requirement test."
+  }
+ ],
+ "test_type": "validation",
+ "objective": "Confirm that a service technician following the documented commissioning and service procedure cannot bring the item into a state in which the contactors are commanded closed with open-circuit sensor inputs, and that the procedure's steps are executable in the order given. The stakeholder need is the service class's: a procedure that is technically correct but not executable in sequence causes technicians to improvise, and improvisation is how commissioning errors reach a vehicle.",
+ "referenced_requirements": [
+  "FB2-SYS-NED-000005"
+ ],
+ "referenced_designs": [],
+ "preconditions": [
+  "The item is unpowered or on a low-voltage service supply with the contactor drivers inhibited.",
+  "The service procedure under test exists as an approved document; in this corpus it does not, and this measure is blocked partly for that reason.",
+  "Sense leads may be connected or left open without damaging anything, which is an assumption this corpus does not verify."
+ ],
+ "environment": {
+  "hardware": "Fictional item on a service bench with a service diagnostic tool",
+  "software": "Item firmware and the vehicle control unit build under test",
+  "tools": [
+   "data logger with a synchronised time base",
+   "operational scenario script (human-in-the-loop)"
+  ],
+  "configuration": "VAR-REF-001 reference configuration, nominal cells"
+ },
+ "stimuli": [
+  {
+   "signal": "Item state",
+   "value": "new or removed from pack, sense leads not connected",
+   "timing": "the pre-condition under test, not a stimulus applied to it"
+  },
+  {
+   "signal": "Commissioning input",
+   "value": "asserted then released",
+   "timing": "asserted at step 2, released at step 4"
+  },
+  {
+   "signal": "Diagnostic tool",
+   "value": "connected to the service interface",
+   "timing": "connected at step 5"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Execute the commissioning procedure exactly as written",
+   "expected": "Every step is executable in the order given without an undocumented intermediate state"
+  },
+  {
+   "step": 2,
+   "action": "With sense leads unconnected, assert commissioning and attempt to command the contactors closed",
+   "expected": "The command is refused and the refusal is diagnosed"
+  },
+  {
+   "step": 3,
+   "action": "Connect only a subset of the sense leads and repeat",
+   "expected": "The open-circuit condition is diagnosed rather than interpreted as cells at zero volts"
+  },
+  {
+   "step": 4,
+   "action": "Release commissioning and remove the tool",
+   "expected": "The item returns to a state in which no contactor actuation is possible without a current-flow request"
+  },
+  {
+   "step": 5,
+   "action": "Have a technician from the declared class perform the procedure unassisted",
+   "expected": "The technician completes it without improvising a step"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "contactor_close_command_without_sense_leads",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "commands"
+  },
+  {
+   "signal": "open_circuit_diagnosed",
+   "expected_value": "true",
+   "tolerance": "exact",
+   "unit": "bool"
+  },
+  {
+   "signal": "technician_improvised_steps",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "steps"
+  }
+ ],
+ "tolerances": {
+  "contactor_close_without_leads": 0,
+  "unassisted_completion": "pass"
+ },
+ "timing": {
+  "max_execution_time_ms": 3600000,
+  "setup_time_ms": 1800000,
+  "teardown_time_ms": 600000
+ },
+ "oracle_basis": "synthetic_assumption",
+ "oracle_detail": {
+  "oracle_kind": "synthetic_assumption",
+  "why_this_oracle": "The oracle is the documented procedure itself: a step is conformant when it can be performed in the stated order and the item's response matches what the step says. The 'a technician completes it without improvising' criterion is a process oracle that this corpus cannot settle, because the technician is a declared fictional stakeholder and no usability study exists.",
+  "what_the_oracle_is_not": "It is not a source-grounded oracle: the observed source contains a commissioning mode and a maintenance pin behaviour, but the procedure written here is authored, not extracted, and the real foxBMS documentation does not contain this procedure. It is not an analytical model: nothing computes executability. It is not a measured reference: no technician has performed it."
+ },
+ "validates_stakeholder_needs": [
+  "FB2-SYS-NED-000005"
+ ],
+ "validates_use_cases": [
+  "FB2-SYS-UC-000004"
+ ],
+ "validates_safety_goals": [],
+ "cleanup": "Return the item to its uncommissioned state, disconnect the tool and archive the technician's notes.",
+ "regression_selection": "Re-run whenever the commissioning logic, the service interface, the maintenance input or the service procedure changes.",
+ "execution_state": "NOT EXECUTED. execution_kind would be 'none' and outcome 'blocked' because the validation environment does not exist in this corpus: there is no vehicle, no pack, no charging site and no operational data. No execution record for this measure may claim any other value.",
+ "limitations": [
+  "This measure is a plan. Planning is not execution, and the absence of an execution record is not a result.",
+  "The stakeholder needs it validates are declared assumptions: no workshop was held and no stakeholder was interviewed. Validating an assumed need confirms that the item behaves as the assumption says, which is not the same as confirming the need was right.",
+  "No human acceptance criterion exists yet. The acceptance thresholds below are engineering proposals; a real validation requires acceptance criteria agreed with the stakeholders, and this corpus has none."
+ ]
+}

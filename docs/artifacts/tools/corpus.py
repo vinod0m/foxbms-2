@@ -57,6 +57,25 @@ ARTIFACT_TYPE_SCHEMAS = {
     "finding": "finding.schema.json",
     "deviation": "deviation.schema.json",
     "tara": "tara.schema.json",
+    # Added when the ISO 26262 Part 3 concept work products, the ASPICE SYS.1
+    # elicitation records, the previously zero-record management processes, the
+    # supporting-process records and the post-development lifecycle records were
+    # authored. Each of these has a real schema and is registered here for
+    # validation. Per the corpus rule that a type belongs in exactly one of
+    # ARTIFACT_TYPE_SCHEMAS / expected_families, none of them is added to
+    # expected_families below: that map is the denominator of the
+    # artifact_population coverage dimension and its definition is not changed by
+    # this authoring pass.
+    "item_definition": "item_definition.schema.json",
+    "safety_concept": "safety_concept.schema.json",
+    "stakeholder_need": "stakeholder_need.schema.json",
+    "use_case": "use_case.schema.json",
+    "project_plan": "project_plan.schema.json",
+    "risk_register": "risk_register.schema.json",
+    "measurement_plan": "measurement_plan.schema.json",
+    "process_improvement": "process_improvement.schema.json",
+    "process_record": "process_record.schema.json",
+    "post_development_record": "post_development_record.schema.json",
 }
 # artifact types validated against base schema only (no dedicated schema exists)
 BASE_ONLY_TYPES = {
@@ -2149,6 +2168,15 @@ class CorpusTool:
                 self._table(b, ["Id", "Profile", "Title", "Guard"],
                             [[f"`{a}`", d.get("profile"), self._cell(d.get("title"), 120), self._guard(d)]
                              for a, p, d in found])
+                b.append(f"Each record above is printed with its own guard fields. Every area "
+                         f"record in this corpus is `origin: synthetic`, "
+                         f"`human_approval_status: pending`, `production_authorized: false` and "
+                         f"`product_verification_credit: false`, and each states in its own "
+                         f"`evidence_state` / `operational_authorisation_statement` that none of "
+                         f"its steps has been executed and that it authorises no action on real "
+                         f"equipment. The presence of a record here means the area is *documented*, "
+                         f"not that any production, service or recycling activity has occurred.")
+                b.append("")
         b.append("## Domains actually present in the corpus")
         b.append("")
         b.append("For transparency, the full set of `engineering_domain` values present across "
@@ -2157,17 +2185,49 @@ class CorpusTool:
         doms_present = sorted(x for x in have_domains if x)
         b.append("`" + "`, `".join(doms_present) + "`")
         b.append("")
-        b.append("None of the lifecycle-continuation domains (production, operation, service, "
-                 "decommissioning) appear. This is a structural gap in corpus population, not a "
-                 "rendering omission.")
+        # Computed, not asserted. An earlier revision of this view stated in prose that none of
+        # the lifecycle-continuation domains appear; that sentence became false the moment the
+        # first post-development record was authored, and a view whose own prose can silently go
+        # stale is exactly the failure mode this corpus is meant to prevent. The sentence is now
+        # derived from the indexed records, so it is true in every corpus state.
+        lifecycle_domains = sorted({"production", "release", "operation", "service", "decommissioning"})
+        missing_lifecycle = [d for d in lifecycle_domains if d not in doms_present]
+        if missing_lifecycle:
+            b.append("Lifecycle-continuation domains not yet represented by any record: "
+                     + ", ".join(f"`{d}`" for d in missing_lifecycle)
+                     + ". Each absence above is reported as an explicit coverage gap rather than "
+                       "as an empty section. This is a structural gap in corpus population, not a "
+                       "rendering omission.")
+        else:
+            b.append("All five lifecycle-continuation domains (`release`, `production`, "
+                     "`operation`, `service`, `decommissioning`) are now represented by at least "
+                     "one canonical record, so no area in this view is an unbacked declaration. "
+                     "Representation is not evidence: every one of those records states that its "
+                     "steps have not been executed and that it authorises nothing on real "
+                     "equipment.")
         b.append("")
         b.append("### Guard-field status of this view")
         b.append("")
-        b.append("This view prints **no per-record guard fields**, because it shows no records: "
-                 "every section above is a declared coverage gap. That is deliberate. Were the "
-                 "gaps to be filled, each record added would be printed with its own "
-                 "`profile` / `origin` / `human_approval_status` / `production_authorized` values "
-                 "in the same format used by the other views.")
+        # Computed, not asserted: the earlier revision hard-coded "prints no per-record guard
+        # fields, because it shows no records", which goes false as soon as one lifecycle-continuation
+        # record exists. Derived from the same search that fills the sections above.
+        n_lifecycle = sum(1 for r in select()
+                          if r[2].get("engineering_domain") in
+                          ("production", "release", "operation", "service", "decommissioning"))
+        if n_lifecycle == 0:
+            b.append("This view prints **no per-record guard fields**, because it shows no records: "
+                     "every section above is a declared coverage gap. That is deliberate. Were the "
+                     "gaps to be filled, each record added would be printed with its own "
+                     "`profile` / `origin` / `human_approval_status` / `production_authorized` values "
+                     "in the same format used by the other views.")
+        else:
+            b.append(f"This view prints **per-record guard fields** for all {n_lifecycle} "
+                     f"lifecycle-continuation record(s) shown above, in the same format used by "
+                     f"the other views: `profile`, `origin`, `human_approval_status` and "
+                     f"`production_authorized`. Those four fields are not a verdict this view can "
+                     f"apply; they are read from each record so a reader can see that a documented "
+                     f"lifecycle area is still an unapproved, unauthorised piece of synthetic "
+                     f"engineering.")
         b.append("")
         b.append("Corpus-wide, verified at render time from the indexed records: "
                  f"`human_approval_status` is `pending` on every record, "
@@ -2184,26 +2244,46 @@ class CorpusTool:
         # ------------------------------------------------- supporting processes
         b = ["## Supporting and organisational process records", ""]
         support = select(domain="supporting")
-        b.append("The master prompt (section 12) requires populated **process records**, not just "
-                 "policies, for each supporting process family. The table below states, per "
-                 "family, whether a record whose `engineering_domain` is `supporting` exists. "
-                 "The corpus holds no process-definition record for any of these families: the "
-                 "only `supporting`-domain records are two meta-review records, which exercise "
-                 "review practice but are not the process artifacts the master prompt asks for. "
-                 "Listing the same two records against six different families would imply a "
-                 "coverage that does not exist, so each family is reported as a gap.")
+        # Computed, not asserted. The earlier revision hard-coded "the corpus holds no
+        # process-definition record for any of these families: the only supporting-domain records
+        # are two meta-review records". Both halves of that sentence are derived here, so the
+        # prose stays true when the families are populated and keeps reporting the gap when they
+        # are not. The selection rule below is unchanged: a record counts for a family only when
+        # it names that process id explicitly.
+        proc_families = (("Quality assurance", "SUP.1"),
+                         ("Configuration management", "SUP.8"),
+                         ("Problem resolution", "SUP.9"),
+                         ("Change control", "SUP.10"),
+                         ("Measurement", "MAN.6"),
+                         ("Process improvement", "PIM.3"))
+        def _family_matches(proc_ids):
+            return [r for r in support if proc_ids in json.dumps(r[2])]
+        definition_records = [r for r in support if r[2].get("artifact_type") != "review"]
+        if not support:
+            b.append("The master prompt (section 12) requires populated **process records**, not "
+                     "just policies, for each supporting process family. The corpus holds no "
+                     "record whose `engineering_domain` is `supporting` at all, so every family "
+                     "below is reported as a gap.")
+        elif not definition_records:
+            b.append("The master prompt (section 12) requires populated **process records**, not "
+                     "just policies, for each supporting process family. The `supporting` domain "
+                     f"is populated by {len(support)} record(s), but all of them are review "
+                     "records: they exercise review practice, which is not the same thing as "
+                     "populating the process. Listing the same review records against six "
+                     "different families would imply a coverage that does not exist, so each "
+                     "family is reported as a gap.")
+        else:
+            b.append("The master prompt (section 12) requires populated **process records**, not "
+                     "just policies, for each supporting process family. A record counts for a "
+                     "family below only when it names that process id explicitly, so the same "
+                     "record is never claimed for a family it does not address. "
+                     f"{len(definition_records)} of the {len(support)} `supporting`-domain "
+                     "record(s) are process-definition or plan records; the remainder are review "
+                     "records and are listed separately below so the two are not conflated.")
         b.append("")
         proc_rows = []
-        for label, proc_ids in (("Quality assurance", "SUP.1"),
-                               ("Configuration management", "SUP.8"),
-                               ("Problem resolution", "SUP.9"),
-                               ("Change control", "SUP.10"),
-                               ("Measurement", "MAN.6"),
-                               ("Process improvement", "PIM.3")):
-            # A record counts for a family only if it names that process id
-            # explicitly. A loose keyword match would attribute the same review
-            # to families it never addresses.
-            fam = [r for r in support if proc_ids in json.dumps(r[2])]
+        for label, proc_ids in proc_families:
+            fam = _family_matches(proc_ids)
             proc_rows.append((label, proc_ids, fam))
         self._table(b, ["Process family", "ASPICE", "Matching process record", "Guard"],
                     [[label, f"`{ids}`",
@@ -2214,15 +2294,62 @@ class CorpusTool:
         if not support:
             self._gap(b, "supporting-process records",
                       "The corpus holds no record whose `engineering_domain` is `supporting`.")
-        else:
+        elif not definition_records:
             b.append(f"The `supporting` domain is populated by {len(support)} record(s), listed "
                      "in full below. They are review records, not process-definition records.")
             b.append("")
-        b.append("The corpus does contain review records that exercise these process families "
+        else:
+            b.append(f"### Process and plan records in the `supporting` domain "
+                     f"({len(definition_records)} record(s))")
+            b.append("")
+            b.append("These are the records that populate the families in the table above. Each "
+                     "one carries its own `performed_instances` or equivalent executed-work "
+                     "content, its accountable role, its acceptance criteria and its own guard "
+                     "fields.")
+            b.append("")
+            def _process_id(d):
+                """The process this record populates, read from whichever field carries it.
+
+                Three shapes exist in the supporting domain: process_record carries an explicit
+                aspice_process_id; the plan and improvement records carry it only in
+                standards_mappings. Reading the first two blindly produced a column of empty
+                strings joined by commas, which looks like a populated field and is not one.
+                """
+                explicit = d.get("aspice_process_id")
+                if explicit:
+                    return str(explicit)
+                refs = [str(s.get("reference")) for s in (d.get("standards_mappings") or [])
+                        if isinstance(s, dict) and s.get("reference")]
+                return "; ".join(refs) if refs else "-"
+
+            def _instance_count(d):
+                """Performed-work content, whichever field carries it."""
+                for field in ("performed_instances", "milestones_and_gates", "observations",
+                              "changes_made", "risk_entries"):
+                    val = d.get(field)
+                    if isinstance(val, list) and val:
+                        return len(val)
+                return 0
+
+            self._table(b, ["Id", "Profile", "Type", "ASPICE process", "Title",
+                            "Performed / defined work items", "Guard"],
+                        [[f"`{a}`", d.get("profile"), d.get("artifact_type"),
+                          self._cell(_process_id(d), 60),
+                          self._cell(d.get("title"), 110),
+                          _instance_count(d),
+                          self._guard(d)]
+                         for a, p, d in definition_records])
+            b.append(f"The `supporting` domain is populated by {len(support)} record(s) in total: "
+                     f"the {len(definition_records)} above plus "
+                     f"{len(support) - len(definition_records)} review record(s). The review "
+                     "records are listed separately below so a process record and a review of a "
+                     "process are not counted as the same coverage.")
+            b.append("")
+        b.append("The corpus also contains review records that exercise these process families "
                  "in practice (QA, meta-review, change-management review, deviation review). "
                  "They are review records, not process-definition records, and are shown below "
-                 "as the closest available material rather than presented as the process "
-                 "artifacts the master prompt asks for.")
+                 "as separate material rather than presented as the process artifacts the master "
+                 "prompt asks for.")
         b.append("")
         revs = select(atype="review")
         self._table(b, ["Id", "Profile", "Review type", "Domain", "Title", "Lifecycle", "Guard"],

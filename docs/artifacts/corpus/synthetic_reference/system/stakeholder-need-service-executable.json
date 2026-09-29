@@ -1,0 +1,87 @@
+{
+ "id": "FB2-SYS-NED-000005",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "stakeholder_need",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Stakeholder need: a trained service technician shall be able to commission and service the item without being able to energise it incorrectly",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1",
+   "status": "mapped",
+   "rationale": "Requirements elicitation: the stakeholder needs this process produces."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 5 (item definition and stakeholder needs)",
+   "status": "mapped",
+   "rationale": "The needs here are the item's needs raised at concept level; they are refined into requirements only at system level."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Stakeholder need authored because SYS.1 was recorded as a coverage gap with zero records in either profile. Declared, not elicited: no workshop, interview or questionnaire was held for any of the needs in this set."
+  }
+ ],
+ "need_id": "FB2-SYS-NED-000005",
+ "stakeholder": {
+  "stakeholder_id": "STK-005",
+  "stakeholder_class": "end_of_line_tester",
+  "fictional": true,
+  "stakeholder_description": "Fictional end-of-line test operator at the fictional pack plant who fits the item to a pack and commissions it before the pack ships."
+ },
+ "need_statement": "A service technician following the item's documented commissioning and service procedure shall be able to complete every step in the order given, and shall not be able by any sequence of the documented steps to leave the item able to command the contactors closed with unconnected or open-circuit sensor inputs.",
+ "rationale": "The technician is the stakeholder with the least ability to recover from a mistake and the most opportunity to make one, because the procedure is executed on an item that is not yet trusted and therefore attracts improvisation. The second half of the need - the negative one - is the load-bearing part: a procedure that merely works is not enough, because the failure mode that matters is the one the procedure does not contemplate. This need also carries the item's commissioning-mode design requirement, which is why the mode exists at all.",
+ "origin_of_the_need": {
+  "elicitation_method": "assumption_declaration",
+  "elicited_from": "the hypothetical programme's own design assumption set, declared by the author",
+  "is_a_real_elicitation": false,
+  "elicitation_evidence": []
+ },
+ "priority": {
+  "rank": 4,
+  "rationale": "The technician is the stakeholder with the least ability to recover from a mistake and the most opportunity to make one, because the procedure is executed on an item that is not yet trusted and therefore attracts improvisation."
+ },
+ "operational_situation_refs": [
+  "OS-005",
+  "OS-006"
+ ],
+ "derived_requirements": [
+  "FB2-SYS-SYR-000008"
+ ],
+ "validation_measures": [
+  "FB2-VER-TMS-000015"
+ ],
+ "limitation": "Declared, not elicited. No service procedure exists in approved form anywhere in this corpus, and the technician who would execute it is fictional, so the need describes a requirement on a document that has not been written."
+}

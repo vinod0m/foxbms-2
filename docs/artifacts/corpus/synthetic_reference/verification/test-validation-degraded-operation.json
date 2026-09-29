@@ -1,0 +1,176 @@
+{
+ "id": "FB2-VER-TMS-000014",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Validation: degraded operation remains usable and is announced before it becomes a hard stop (operational scenario: single-channel measurement degradation)",
+ "owner_role": "verification_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "VAL.1",
+   "status": "mapped",
+   "rationale": "Intended-use validation against stakeholder needs and use cases."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 and Part 5/6 validation",
+   "status": "mapped",
+   "rationale": "Validation confirms the integrated item against its intended use; the existing FB2-VER-TMS-000009 maps the same clause and remains a stub."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Validation measure authored because the corpus's validation coverage was a planning stub (FB2-VER-TMS-000009) with a blocked execution, and the gap report recorded 'Validation Measures: not present' as a major gap. This measure addresses stakeholder intent and an operational scenario rather than repeating a lower-level requirement test."
+  }
+ ],
+ "test_type": "validation",
+ "objective": "Confirm that a measurement-path degradation moves the item into its degraded mode with a capability the pack manufacturer can still use, and that the reduction is announced before the condition becomes a hard stop. The failure this guards against is specific: a degraded mode that silently removes capability, or one that escalates to a full safe state on the first degradation, makes the item unusable in service without ever being unsafe, which is a different and equally real defect.",
+ "referenced_requirements": [
+  "FB2-SYS-NED-000002",
+  "FB2-SYS-NED-000005"
+ ],
+ "referenced_designs": [],
+ "preconditions": [
+  "The pack is at a nominal mid-discharge state with the vehicle stationary.",
+  "A channel degradation can be injected without disturbing the cells themselves.",
+  "The vehicle control unit is logging the item's published state."
+ ],
+ "environment": {
+  "hardware": "Fictional pack on a bench with an injectable measurement-channel fault injector",
+  "software": "Item firmware and the vehicle control unit build under test",
+  "tools": [
+   "data logger with a synchronised time base",
+   "operational scenario script (human-in-the-loop)"
+  ],
+  "configuration": "VAR-REF-001 reference configuration, nominal cells"
+ },
+ "stimuli": [
+  {
+   "signal": "One measurement channel degraded",
+   "value": "the redundant channel disagrees with the primary channel within the plausibility envelope",
+   "timing": "injected from the third run onwards"
+  },
+  {
+   "signal": "Pack state",
+   "value": "nominal, mid-discharge, vehicle stationary",
+   "timing": "held constant"
+  },
+  {
+   "signal": "Degradation magnitude",
+   "value": "progressively increased across three runs",
+   "timing": "small, then beyond the plausibility envelope, then total"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Degrade one channel and observe the item",
+   "expected": "The item enters degraded mode rather than FAULT"
+  },
+  {
+   "step": 2,
+   "action": "Record what capability is retained and what is removed",
+   "expected": "Contactor control retained, charge and discharge limited, monitoring rate increased"
+  },
+  {
+   "step": 3,
+   "action": "Confirm the reduction is published to the vehicle control unit",
+   "expected": "A degraded-state indication is present within one publication period"
+  },
+  {
+   "step": 4,
+   "action": "Increase the degradation to the point of no usable reference",
+   "expected": "The item escalates to the safe state rather than continuing on an unusable channel"
+  },
+  {
+   "step": 5,
+   "action": "Confirm with the service stakeholder class that the degradation is diagnosable",
+   "expected": "The service class can identify which channel degraded from the item's own output"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "mode_on_first_degradation",
+   "expected_value": "DEGRADED",
+   "tolerance": "exact",
+   "unit": "mode"
+  },
+  {
+   "signal": "contactor_control_retained",
+   "expected_value": "true",
+   "tolerance": "exact",
+   "unit": "bool"
+  },
+  {
+   "signal": "degraded_indication_latency",
+   "expected_value": "100",
+   "tolerance": "at most",
+   "unit": "ms"
+  }
+ ],
+ "tolerances": {
+  "escalation_to_fault_on_first_degradation": 0,
+  "degraded_indication_latency_ms": 100
+ },
+ "timing": {
+  "max_execution_time_ms": 3600000,
+  "setup_time_ms": 1800000,
+  "teardown_time_ms": 600000
+ },
+ "oracle_basis": "analytical_model",
+ "oracle_detail": {
+  "oracle_kind": "analytical_model",
+  "why_this_oracle": "The oracle is derived from the concept's own degraded-operation strategy, not from a measurement of the item. The functional safety concept defines three degraded modes with named retained and removed capability; the acceptance figures check that the item reaches the mode it is specified to reach and escalates at the specified point. The model is the specification's internal consistency, checked against the specification.",
+  "what_the_oracle_is_not": "It is not a source-grounded oracle: nothing in the pinned source demonstrates a degraded mode of this shape, and the observed foxBMS diagnosis severities do not map onto the concept's modes one to one. It is not a measured reference: no channel was degraded. It is not a stakeholder oracle: the service class's ability to diagnose the degradation is proposed, not agreed."
+ },
+ "validates_stakeholder_needs": [
+  "FB2-SYS-NED-000002",
+  "FB2-SYS-NED-000005"
+ ],
+ "validates_use_cases": [
+  "FB2-SYS-UC-000003"
+ ],
+ "validates_safety_goals": [
+  "FB2-SAF-SGO-000001"
+ ],
+ "cleanup": "Restore the channel, return the item to normal mode and confirm the degradation indication clears.",
+ "regression_selection": "Re-run whenever a diagnosis severity changes, whenever a degraded mode is added or removed, and whenever the plausibility limits change.",
+ "execution_state": "NOT EXECUTED. execution_kind would be 'none' and outcome 'blocked' because the validation environment does not exist in this corpus: there is no vehicle, no pack, no charging site and no operational data. No execution record for this measure may claim any other value.",
+ "limitations": [
+  "This measure is a plan. Planning is not execution, and the absence of an execution record is not a result.",
+  "The stakeholder needs it validates are declared assumptions: no workshop was held and no stakeholder was interviewed. Validating an assumed need confirms that the item behaves as the assumption says, which is not the same as confirming the need was right.",
+  "No human acceptance criterion exists yet. The acceptance thresholds below are engineering proposals; a real validation requires acceptance criteria agreed with the stakeholders, and this corpus has none."
+ ]
+}

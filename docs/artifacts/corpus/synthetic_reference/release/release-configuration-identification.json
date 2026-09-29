@@ -1,0 +1,318 @@
+{
+ "id": "FB2-REL-RLS-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "post_development_record",
+ "engineering_domain": "release",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Release and configuration identification for the hypothetical 400 V BMS",
+ "owner_role": "project_manager",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-DOC-000002"
+ ],
+ "assumption_refs": [
+  "FB2-ASM-012"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SPL.2",
+   "status": "mapped",
+   "rationale": "Release management: what is released, identified and how it is described."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 7, Clause 9 (configuration management and release)",
+   "status": "mapped",
+   "rationale": "The identification of a released configuration and its records."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 7, Clause 11 (release and production after development)",
+   "status": "mapped",
+   "rationale": "The activities this record identifies. Recorded as mapped for the activity identity only; no clause text is reproduced."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. No release has been made.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "project_manager",
+   "description": "Release and configuration identification record. Authored because the generated lifecycle-continuation view reported release and configuration identification as a coverage gap with zero records, and the coverage plan recorded SPL.2 as only partially mapped on the strength of the real project's version history."
+  }
+ ],
+ "post_development_id": "FB2-REL-RLS-000001",
+ "lifecycle_area": "release_and_configuration_identification",
+ "fictional_project": true,
+ "calendar_note": "Every date in this record is synthetic and belongs to the hypothetical Project Northcell. No organisation, plant, vehicle, technician or recycler named here exists.",
+ "purpose": "Establish what a release of this item is, how that release is identified unambiguously, and what a recipient must be able to determine from the identification alone. A release that cannot be identified cannot be recalled, and an item whose configuration cannot be recalled cannot be serviced.",
+ "scope": {
+  "in_scope": [
+   "Software configuration: application, bootloader and the commissioning tool",
+   "Hardware: board revision and the component set fitted to it",
+   "Data: the safe-operating-area limit set and the calibration data",
+   "Documentation: the set of documents shipped with the release"
+  ],
+  "out_of_scope": [
+   "The pack, which is configured and identified by the pack integrator against this item, not by this item's release",
+   "The vehicle, which has its own configuration identification",
+   "Any statement that the released configuration is safe: this record identifies a configuration, it does not qualify one"
+  ]
+ },
+ "responsible_roles": [
+  {
+   "role": "project_manager",
+   "named_as": "role identity: project_manager (release manager, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Owns the release decision and the release record"
+  },
+  {
+   "role": "traceability_engineer",
+   "named_as": "role identity: traceability_engineer (configuration controller, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Produces the content manifest and the identification string"
+  },
+  {
+   "role": "quality_engineer",
+   "named_as": "role identity: quality_engineer (release auditor, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Confirms that the release checklist in this record is complete"
+  },
+  {
+   "role": "sw_engineer",
+   "named_as": "role identity: sw_engineer (software owner, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Confirms the software build identity"
+  },
+  {
+   "role": "hw_engineer",
+   "named_as": "role identity: hw_engineer (hardware owner, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Confirms the board revision and component set"
+  }
+ ],
+ "procedures": [
+  {
+   "step": 1,
+   "action": "Freeze the software build and record its content hash, its build configuration and its compiler and linker versions",
+   "record_produced": "Build identity record",
+   "acceptance_condition": "The recorded hash matches the hash of the artefact that will be shipped, and the build is reproducible from the recorded configuration",
+   "decision_point": "The build is declared reproducible or it is not released",
+   "synthetic_decision": "synthetic_decision:sw_engineer:SYNTH-REL-STEP-001"
+  },
+  {
+   "step": 2,
+   "action": "Record the hardware configuration: board revision, the fitted component set and any component substitutions permitted for this variant",
+   "record_produced": "Hardware configuration record",
+   "acceptance_condition": "Every component on a safety-relevant path is named with its part number and its variant eligibility",
+   "decision_point": "Whether a proposed substitution is eligible",
+   "synthetic_decision": "synthetic_decision:hw_engineer:SYNTH-REL-STEP-002"
+  },
+  {
+   "step": 3,
+   "action": "Record the data configuration: the safe-operating-area limit set, the sensor tables and the calibration values, each with the parameter id that owns it",
+   "record_produced": "Data configuration record",
+   "acceptance_condition": "Every limit value resolves to a parameter in the canonical parameter registry and no value appears here that does not",
+   "decision_point": "Whether the limit set may differ from the baselined set",
+   "synthetic_decision": "synthetic_decision:safety_engineer:SYNTH-REL-STEP-003"
+  },
+  {
+   "step": 4,
+   "action": "Generate the configuration identification string from the content of steps 1 to 3 and record it on the physical item and in the non-volatile memory",
+   "record_produced": "Configuration identification record",
+   "acceptance_condition": "The string on the item can be read back and resolves to exactly one configuration",
+   "decision_point": "Whether the item may ship with an identification that cannot be read back",
+   "synthetic_decision": "synthetic_decision:quality_engineer:SYNTH-REL-STEP-004"
+  },
+  {
+   "step": 5,
+   "action": "Complete the release checklist: verification status of every requirement, open finding count by severity, change records included, and the safety case review record",
+   "record_produced": "Release checklist record",
+   "acceptance_condition": "No critical or high finding is open against any released record, and every unexecuted verification is named with the reason it is unexecuted",
+   "decision_point": "Whether the release proceeds with unexecuted verification",
+   "synthetic_decision": "synthetic_decision:project_manager:SYNTH-REL-STEP-005"
+  },
+  {
+   "step": 6,
+   "action": "Publish the release notes stating what changed, what was re-verified, what was not and why, and what a recipient must do differently",
+   "record_produced": "Release notes",
+   "acceptance_condition": "The 'what was not and why' section is populated and is not empty; a release note that lists only successes is a marketing document"
+  }
+ ],
+ "records_produced": [
+  {
+   "record": "Build identity record",
+   "kind": "record",
+   "retention": "permanent",
+   "identification_rule": "Content hash of the built artefacts plus the build configuration identifier"
+  },
+  {
+   "record": "Hardware configuration record",
+   "kind": "record",
+   "retention": "permanent",
+   "identification_rule": "Board revision and fitted component set"
+  },
+  {
+   "record": "Data configuration record",
+   "kind": "record",
+   "retention": "permanent",
+   "identification_rule": "Parameter id and value for every limit and calibration entry"
+  },
+  {
+   "record": "Configuration identification record",
+   "kind": "identification_record",
+   "retention": "permanent",
+   "identification_rule": "Identification string read back from the item's non-volatile memory"
+  },
+  {
+   "record": "Release checklist record",
+   "kind": "certificate",
+   "retention": "permanent",
+   "identification_rule": "Checklist version, completion state and the identity of each approver role"
+  },
+  {
+   "record": "Release notes",
+   "kind": "report",
+   "retention": "permanent",
+   "identification_rule": "Release identification string and the release date"
+  }
+ ],
+ "acceptance_criteria": [
+  {
+   "criterion": "Identification uniqueness",
+   "measure": "Distinct released configurations sharing an identification string",
+   "threshold": "0",
+   "unit": "configurations"
+  },
+  {
+   "criterion": "Identification readback",
+   "measure": "Identification strings readable from the delivered item",
+   "threshold": "100",
+   "unit": "% of items"
+  },
+  {
+   "criterion": "Limit traceability",
+   "measure": "Released limit values resolving to a canonical parameter id",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Checklist completeness",
+   "measure": "Release checklist fields populated before the release decision",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Unverified-verification disclosure",
+   "measure": "Release notes naming every unexecuted verification and its reason",
+   "threshold": "100",
+   "unit": "% of unexecuted verifications"
+  }
+ ],
+ "configuration_identification": {
+  "baseline_id": "BAS-REF-001",
+  "configuration_items": [
+   {
+    "item": "Application firmware",
+    "identifier": "Content hash of the built application image",
+    "how_the_identifier_is_established": "Computed over the built artefact at the release build, recorded in the build identity record",
+    "recorded_on": "The release record and the item's non-volatile memory"
+   },
+   {
+    "item": "Bootloader",
+    "identifier": "Content hash of the built bootloader image",
+    "how_the_identifier_is_established": "Computed the same way as the application",
+    "recorded_on": "The release record and the item's non-volatile memory"
+   },
+   {
+    "item": "Commissioning tool",
+    "identifier": "Content hash of the tool distribution",
+    "how_the_identifier_is_established": "Computed over the distributed archive",
+    "recorded_on": "The release record"
+   },
+   {
+    "item": "BMS master board",
+    "identifier": "Board revision identifier printed on the board",
+    "how_the_identifier_is_established": "Physical marking plus the hardware configuration record",
+    "recorded_on": "The board and the release record"
+   },
+   {
+    "item": "Monitoring slaves",
+    "identifier": "Front-end part number and slave hardware revision",
+    "how_the_identifier_is_established": "Part marking plus the hardware configuration record",
+    "recorded_on": "Each slave and the release record"
+   },
+   {
+    "item": "Safe operating area limit set",
+    "identifier": "The set of canonical parameter ids and values",
+    "how_the_identifier_is_established": "Resolved from the canonical parameter registry, never retyped",
+    "recorded_on": "The release record and the item's non-volatile memory"
+   },
+   {
+    "item": "Calibration data",
+    "identifier": "The set of canonical parameter ids and values",
+    "how_the_identifier_is_established": "Resolved from the canonical parameter registry",
+    "recorded_on": "The release record and the item's non-volatile memory"
+   }
+  ],
+  "identification_scheme": "One identification string per released configuration, formed from the content hashes of the software items and the canonical identifiers of the hardware and data items. The string is written to the item's non-volatile memory at the end of the line and read back before the item is allowed to leave. A readback that does not resolve to exactly one configuration is a line stop. In this corpus the scheme is described and nothing has been written or read: no item exists."
+ },
+ "interactions_with_other_lifecycle_areas": [
+  {
+   "other_area": "Production control and end-of-line test",
+   "interaction": "The identification is written and read back on the production line",
+   "direction": "this_area_provides_to_other",
+   "consequence_if_the_interaction_is_broken": "An item ships with an identification nobody verified, which is the failure the readback step exists to prevent."
+  },
+  {
+   "other_area": "Calibration and programming",
+   "interaction": "The calibration record is part of the configuration identification",
+   "direction": "mutual",
+   "consequence_if_the_interaction_is_broken": "An item is identified as one configuration and programmed as another, and the identification becomes actively misleading."
+  },
+  {
+   "other_area": "Installation, operation and service",
+   "interaction": "The service class reads the identification to determine what is fitted",
+   "direction": "this_area_provides_to_other",
+   "consequence_if_the_interaction_is_broken": "A service action is performed against a configuration the technician did not know was fitted."
+  },
+  {
+   "other_area": "Field monitoring and incident handling",
+   "interaction": "Field data is keyed by the identification string",
+   "direction": "this_area_provides_to_other",
+   "consequence_if_the_interaction_is_broken": "A field event cannot be attributed to a configuration and the event analysis produces a trend that mixes configurations."
+  }
+ ],
+ "operational_authorisation_statement": "This record is a fictional engineering artefact. It is NOT an authorised release procedure, it grants no production authority, and no step in it has been performed. The release it describes has not happened. production_authorized is false and human_approval_status is pending on every record it would release.",
+ "evidence_state": {
+  "any_step_executed": false,
+  "executed_steps": [],
+  "reason": "No production line, vehicle, charging site, workshop, fleet or recycling facility exists anywhere in this corpus. Master-prompt clause 2.5 forbids energising hardware and connecting to vehicles, so no step below can be performed by any means available here. The record documents the procedure and records that it has not been run."
+ },
+ "limitations": [
+  "Synthetic. The release described has not occurred and no item exists to release.",
+  "The identification scheme is described and not demonstrated. No readback has been performed and no string has been resolved.",
+  "The real foxBMS source demonstrates a release version history (docs/general/releases.csv), and that history is the only real basis for any release process claim. It is a version history, not a release plan or a release checklist, and this record does not claim the real project performs any of these steps.",
+  "The release checklist in step 5 requires a safety case review record. The corpus has one, and it is a skeleton with no evidence behind it, so on this corpus's own terms the release checklist could not be completed."
+ ]
+}

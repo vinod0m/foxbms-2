@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/stakeholder_need.schema.json",
+  "title": "Stakeholder Need Schema",
+  "description": "Schema for an elicited stakeholder need (Automotive SPICE SYS.1). A stakeholder need states what a stakeholder wants the item to achieve, in stakeholder language, with the stakeholder identified and the need given a rationale. It is deliberately not a requirement: it carries no threshold, no acceptance criterion and no interface, because a need that already contains those has silently become a requirement and the derivation step is lost.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "need_id",
+        "stakeholder",
+        "need_statement",
+        "rationale",
+        "origin_of_the_need",
+        "priority",
+        "derived_requirements",
+        "limitation"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "stakeholder_need"
+        },
+        "need_id": {"type": "string", "pattern": "^FB2-SYS-NED-[0-9]{6}$"},
+        "stakeholder": {
+          "type": "object",
+          "required": ["stakeholder_id", "stakeholder_class", "fictional"],
+          "properties": {
+            "stakeholder_id": {"type": "string", "pattern": "^STK-[0-9]{3}$"},
+            "stakeholder_class": {
+              "type": "string",
+              "enum": ["vehicle_manufacturer", "pack_manufacturer", "end_user_driver", "service_technician", "end_of_line_tester", "recycler", "regulator", "supply_chain"]
+            },
+            "fictional": {
+              "const": true,
+              "description": "Machine-pinned to true. No stakeholder in this corpus is a real person, organisation or foxBMS maintainer."
+            },
+            "stakeholder_description": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "need_statement": {"type": "string", "minLength": 1},
+        "rationale": {"type": "string", "minLength": 1},
+        "origin_of_the_need": {
+          "type": "object",
+          "required": ["elicitation_method", "elicited_from", "is_a_real_elicitation"],
+          "properties": {
+            "elicitation_method": {
+              "type": "string",
+              "enum": ["workshop", "interview", "questionnaire", "observation", "document_analysis", "assumption_declaration"]
+            },
+            "elicited_from": {"type": "string", "minLength": 1},
+            "is_a_real_elicitation": {
+              "type": "boolean",
+              "description": "False for every record in this corpus. No workshop, interview or questionnaire was held. Set to false so a reader cannot mistake a declared need for an elicited one."
+            },
+            "elicitation_evidence": {
+              "type": "array",
+              "items": {"type": "string", "minLength": 1},
+              "description": "Required whenever is_a_real_elicitation is true. Empty in this corpus, and that emptiness is the honest state."
+            }
+          },
+          "additionalProperties": false
+        },
+        "priority": {
+          "type": "object",
+          "required": ["rank", "rationale"],
+          "properties": {
+            "rank": {"type": "integer", "minimum": 1},
+            "rationale": {"type": "string", "minLength": 1},
+            "conflict_with": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "operational_situation_refs": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^OS-[0-9]{3}$"},
+          "description": "Operational situations in which the need applies. A need that does not apply in any situation cannot be tested."
+        },
+        "derived_requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"},
+          "description": "Requirement ids this need was refined into. A need with no derived requirement is an unprocessed need, and is stated as such in `limitation`."
+        },
+        "validation_measures": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^FB2-VER-TMS-[0-9]{6}$"},
+          "description": "Validation measures that address this need. Validation must be against stakeholder intent, not a re-run of unit tests."
+        },
+        "limitation": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+ "id": "FB2-SYS-UC-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "use_case",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Use case: cell overvoltage detected while the vehicle is being driven",
+ "owner_role": "system_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001",
+  "FB2-ASM-003",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.1",
+   "status": "mapped",
+   "rationale": "Requirements elicitation: use cases and their operational scenarios."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "VAL.1",
+   "status": "mapped",
+   "rationale": "The use case is the object validation is written against."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Use case authored because SYS.1 was recorded as a coverage gap. Each use case carries operational scenarios, because a use case without a scenario cannot be validated and the gap report separately recorded that validation measures were missing."
+  }
+ ],
+ "use_case_id": "FB2-SYS-UC-000002",
+ "use_case_name": "Use case: cell overvoltage detected while the vehicle is being driven",
+ "primary_stakeholders": [
+  "FB2-SYS-NED-000003",
+  "FB2-SYS-NED-000001"
+ ],
+ "preconditions": [
+  "The vehicle is in motion under traction discharge, so opening the contactors removes propulsion rather than adding hazard.",
+  "The pack is at a normal state of charge.",
+  "The independent hardware monitor is present and armed."
+ ],
+ "main_success_scenario": [
+  {
+   "step": 1,
+   "action": "The cell voltage rises above the configured maximum limit",
+   "expected_observable_outcome": "The item classifies the violation after the debounce and requests the safe state"
+  },
+  {
+   "step": 2,
+   "action": "The item commands the contactors open",
+   "expected_observable_outcome": "All high-voltage contactors open within the fault-tolerant time interval"
+  },
+  {
+   "step": 3,
+   "action": "The vehicle coasts to a stop",
+   "expected_observable_outcome": "Steering and brake assist remain available throughout"
+  },
+  {
+   "step": 4,
+   "action": "The driver is informed",
+   "expected_observable_outcome": "An unambiguous statement that the battery has been isolated for a battery fault"
+  },
+  {
+   "step": 5,
+   "action": "The item remains in the fault mode after the vehicle has stopped",
+   "expected_observable_outcome": "The fault is latched and does not clear on its own"
+  }
+ ],
+ "operational_scenarios": [
+  {
+   "scenario_id": "OS-002",
+   "operational_situation": "Vehicle in motion under traction, pack discharging",
+   "initial_conditions": [
+    "Vehicle at 60 km/h",
+    "Pack mid-discharge",
+    "All contactors closed, healthy channels"
+   ],
+   "perturbation": "One cell driven above the configured maximum limit at 20 mV/s",
+   "expected_item_behaviour": "Detect, confirm, command open, confirm open, latch the fault and indicate it",
+   "expected_observable_outcome": "Vehicle coasts to a stop with steering and brakes available; driver is told the cause",
+   "observable_by": "The end-user driver, and the vehicle manufacturer from the item's published state",
+   "safe_state_interaction": "Reached. This is the scenario in which the safe state costs the vehicle its propulsion, which is why the reaction is specified per mode rather than once.",
+   "related_requirement_refs": [
+    "FB2-SYS-SYR-000003",
+    "FB2-SYS-SYR-000004"
+   ],
+   "related_hazard_refs": [
+    "FB2-SAF-HAZ-000001"
+   ]
+  },
+  {
+   "scenario_id": "OS-003",
+   "operational_situation": "Vehicle in motion under regenerative braking, pack charging under load",
+   "initial_conditions": [
+    "Vehicle decelerating under regeneration",
+    "Pack mid-charge"
+   ],
+   "perturbation": "Regeneration drives a cell above the configured maximum limit",
+   "expected_item_behaviour": "The same detect-and-react chain, but the reaction also terminates the regeneration, so the converter must tolerate an abrupt load removal",
+   "expected_observable_outcome": "As above; the converter's tolerance is the vehicle manufacturer's dependency and is not verified here",
+   "observable_by": "The vehicle manufacturer",
+   "safe_state_interaction": "Reached.",
+   "related_requirement_refs": [
+    "FB2-SYS-SYR-000003"
+   ],
+   "related_hazard_refs": [
+    "FB2-SAF-HAZ-000001"
+   ]
+  },
+  {
+   "scenario_id": "OS-004",
+   "operational_situation": "Post-crash, pack state unknown, insulation possibly lost",
+   "initial_conditions": [
+    "Item still powered",
+    "Interlock state unknown",
+    "Cell voltages unknown"
+   ],
+   "perturbation": "Item loses its measurement link entirely",
+   "expected_item_behaviour": "The item treats loss of the measurement link as requiring the safe state rather than as a tolerable fault",
+   "expected_observable_outcome": "Contactors open and the fault is logged",
+   "observable_by": "The vehicle manufacturer, from the item's published state",
+   "safe_state_interaction": "Reached. Note that post-crash behaviour may be governed by the vehicle-level item instead; this scenario records the hypothetical project's assumption that the battery item acts on its own, which is an assumption and not an agreement.",
+   "related_requirement_refs": [
+    "FB2-SYS-SYR-000003"
+   ]
+  }
+ ],
+ "postconditions": [
+  "The vehicle is stationary with the contactors open.",
+  "The fault is latched and the item will not leave the fault mode without an authorised service action."
+ ],
+ "validation_measures": [
+  "FB2-VER-TMS-000013"
+ ],
+ "limitations": [
+  "The scenarios assume the vehicle remains controllable after an abrupt contactor opening, which is a vehicle-integration property this corpus does not model at all. It is the largest unverified assumption in this use case.",
+  "The post-crash scenario records an assumption about division of responsibility with the vehicle-level safety item that no agreement supports.",
+  "No vehicle has been driven and no driver has been observed."
+ ]
+}

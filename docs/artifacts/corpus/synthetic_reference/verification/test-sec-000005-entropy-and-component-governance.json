@@ -1,0 +1,223 @@
+{
+ "id": "FB2-VER-TMS-000020",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "test_measure",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Verification: the initial sequence number is unpredictable across connections and power cycles, and the third-party component inventory is evidenced and checked against an advisory source on a stated interval",
+ "owner_role": "cybersecurity_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.5",
+   "status": "mapped",
+   "rationale": "System qualification test: the security requirements are system-level work products and this is the measure that would qualify them."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.6",
+   "status": "mapped",
+   "rationale": "Software qualification test: the measures exercise the master software's handling of the specified inputs."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 4, Clause 9 (system verification)",
+   "status": "mapped",
+   "rationale": "Verification of the system requirement as written, against its own acceptance criteria."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "ISO SAE 21434 relationship",
+   "status": "mapped",
+   "rationale": "Recorded as a relationship, not as a mapping. No ISO/SAE 21434 work product exists in this corpus and the corpus-local TARA FB2-SAF-TAR-000001 is machine-pinned to is_iso_21434_tara = false."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Security verification measure authored because FB2-SAF-SEC-000005 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is."
+  }
+ ],
+ "test_type": "robustness",
+ "objective": "Two clauses with two different oracles, stated separately rather than blended. First: confirm that the initial TCP sequence number takes a distinct value on every one of 1000 connection establishments and that the entropy seed is distinct across 1000 power cycles. Second: confirm that every entry in the component inventory carries either evidenced version information or an explicit null with a stated reason, that no entry carries a guessed version, that the inventory has been checked against an authoritative advisory source within the stated interval, and that every match has a recorded adjudication including the determinations that found nothing.",
+ "referenced_requirements": [
+  "FB2-SAF-SEC-000005"
+ ],
+ "referenced_designs": [
+  "FB2-SYS-SYR-000007",
+  "FB2-SYS-SYR-000008"
+ ],
+ "preconditions": [
+  "The item's network stack is reachable and the source can be inspected for the seed's origin.",
+  "A power-cycle fixture exists that records the seed at each boot.",
+  "The component inventory exists as a maintained document with an owner.",
+  "An authoritative advisory source exists and the project is permitted to consult it. This last precondition is NOT satisfied in this corpus, which is why this measure cannot produce a pass even in principle."
+ ],
+ "environment": {
+  "hardware": "Hypothetical 400 V pack on a bench, plus a workstation for the inventory review",
+  "software": "BMS master firmware under test",
+  "tools": [
+   "Boot-time seed recorder",
+   "Connection-sequence-number recorder",
+   "Advisory database query interface (not available in this corpus)"
+  ],
+  "configuration": "VAR-REF-001"
+ },
+ "stimuli": [
+  {
+   "signal": "Connection establishment",
+   "value": "one per second from a fresh source port",
+   "timing": "1 Hz"
+  },
+  {
+   "signal": "Power cycle",
+   "value": "full power removal and re-application",
+   "timing": "one per 30 s"
+  },
+  {
+   "signal": "Component inventory review",
+   "value": "every entry",
+   "timing": "at review time"
+  },
+  {
+   "signal": "Advisory check record review",
+   "value": "the last two check cycles",
+   "timing": "at review time"
+  }
+ ],
+ "steps": [
+  {
+   "step": 1,
+   "action": "Establish 1000 connections and record each initial sequence number",
+   "expected": "1000 distinct values, no repetition within the set"
+  },
+  {
+   "step": 2,
+   "action": "Power cycle 1000 times and record each entropy seed",
+   "expected": "1000 distinct seeds"
+  },
+  {
+   "step": 3,
+   "action": "Compare the source of each seed against the pinned build",
+   "expected": "No seed is fixed at build time and every seed derives from a running source"
+  },
+  {
+   "step": 4,
+   "action": "Review every inventory entry's version evidence",
+   "expected": "Every entry is evidenced by a named source or explicitly null with a stated reason"
+  },
+  {
+   "step": 5,
+   "action": "Review the advisory check records",
+   "expected": "The most recent check is within 30 days and every match has an adjudication"
+  },
+  {
+   "step": 6,
+   "action": "Search the inventory for inferred or guessed versions",
+   "expected": "Zero entries"
+  }
+ ],
+ "expected_outcomes": [
+  {
+   "signal": "distinct_initial_sequence_numbers",
+   "expected_value": "1000",
+   "tolerance": "exact",
+   "unit": "values"
+  },
+  {
+   "signal": "distinct_seeds_across_power_cycles",
+   "expected_value": "1000",
+   "tolerance": "exact",
+   "unit": "values"
+  },
+  {
+   "signal": "build_time_fixed_seeds",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "seeds"
+  },
+  {
+   "signal": "inventory_entries_with_version_evidence_or_explicit_null",
+   "expected_value": "100",
+   "tolerance": "at least",
+   "unit": "%"
+  },
+  {
+   "signal": "days_since_last_advisory_check",
+   "expected_value": "30",
+   "tolerance": "at most",
+   "unit": "days"
+  },
+  {
+   "signal": "matches_without_adjudication",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "matches"
+  },
+  {
+   "signal": "entries_with_guessed_version",
+   "expected_value": "0",
+   "tolerance": "exact",
+   "unit": "entries"
+  }
+ ],
+ "tolerances": {
+  "distinct_initial_sequence_numbers": "exact",
+  "distinct_seeds_across_power_cycles": "exact",
+  "build_time_fixed_seeds": "exact",
+  "inventory_entries_with_version_evidence_or_explicit_null": "at least",
+  "days_since_last_advisory_check": "at most",
+  "matches_without_adjudication": "exact",
+  "entries_with_guessed_version": "exact"
+ },
+ "timing": {
+  "max_execution_time_ms": 86400000,
+  "setup_time_ms": 3600000,
+  "teardown_time_ms": 1800000
+ },
+ "oracle_basis": "synthetic_assumption",
+ "oracle_detail": {
+  "kind": "synthetic_assumption",
+  "why_this_oracle": "Neither clause has an oracle available to it, and saying so is the honest answer rather than borrowing one. Unpredictability is not observable from outside: the measure checks distinctness, which is a necessary condition for unpredictability and far from sufficient, and it checks that the seed is not fixed at build time, which the observed source's own annotation says is currently not the case. A generator that is entirely predictable and never repeats would pass this measure. The inventory clause is worse: 'checked against an authoritative advisory source' has no oracle at all, because this corpus consulted no advisory source and has no authority to consult one, so the expected outcomes here are checks on the RECORD of checking, and the record is the thing under test.",
+  "what_the_oracle_is_not": "It is not a source-grounded oracle: nothing in the pinned source demonstrates a sound entropy source, and the requirement's own rationale records the opposite. It is not a measured reference: no sequence number was collected and no advisory was queried. It is not an analytical model: no entropy estimate is computed. It is a synthetic assumption, and the assumption it makes is that distinctness plus a non-fixed seed is worth recording while the real property remains unmeasured.",
+  "what_it_still_does_not_prove": "It does not prove unpredictability, which is the property the requirement's first clause is actually about. It does not prove that any component is free of known vulnerabilities; a complete, evidenced, freshly checked inventory containing a vulnerable component passes every expected outcome here. It does not prove the advisory source is authoritative or that its coverage is adequate.",
+  "why_this_measure_is_still_worth_running": "A requirement whose verification plan contains no oracle at all will never be verified however long it is planned. Recording the weakest oracle that can honestly be applied, together with an explicit statement of what it cannot see, is the step that makes the gap visible. The honest next step is not this measure but an advisory-source review performed by an authorised party, which is outside this corpus entirely.",
+  "oracle_kind": "synthetic_assumption"
+ },
+ "cleanup": "Clear the recorded seeds and sequence numbers, revoke the temporary diagnostic access granted for the review, and archive the evidence with the inventory snapshot.",
+ "regression_selection": "Re-run on any change to the network stack's randomness path, to the seeding procedure, to the boot sequence, and on every advisory check cycle. The inventory half is re-run quarterly regardless of whether the firmware changed, because the vulnerability question changes without the code changing.",
+ "security_verification_note": "This measure verifies the requirement as written against the item's observable behaviour. It does not establish that the threat it addresses is exploitable, and it is not a penetration test: no exploit was developed, no advisory was checked and no CVSS score was assigned to any finding.",
+ "limitations": [
+  "Planned, not executed. Planning a security measure is not evidence that the requirement is satisfied, and the paired execution record carries execution_kind 'none' and outcome 'blocked' for that reason.",
+  "Not a penetration test. No exploit was developed, no advisory source was consulted and no vulnerability was scored. A requirement can pass every expected outcome here and still leave the item exploitable by a route this measure does not exercise.",
+  "The requirement verified here constrains a mechanism the hypothetical project has planned. Nothing in this corpus establishes that the mechanism exists.",
+  "No human security reviewer has confirmed this measure. Human approval is pending."
+ ]
+}

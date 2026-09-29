@@ -1,0 +1,349 @@
+{
+ "id": "FB2-PRD-EOL-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "post_development_record",
+ "engineering_domain": "production",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Production control and end-of-line test plan for the hypothetical 400 V BMS",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-004",
+  "FB2-ASM-006"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "ACQ.4",
+   "status": "mapped",
+   "rationale": "Production control of purchased parts and of the delivered item."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 7, Clause 10 (the item is produced and serviceable)",
+   "status": "mapped",
+   "rationale": "The end-of-line test that establishes the item is serviceable before it leaves the line."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 7, Clause 11 (release and production after development)",
+   "status": "mapped",
+   "rationale": "The production activities this plan identifies."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record and no production line exists.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Production control and end-of-line test plan. Authored because the lifecycle-continuation view reported production and end-of-line test as a gap with zero records."
+  }
+ ],
+ "post_development_id": "FB2-PRD-EOL-000001",
+ "lifecycle_area": "production_control_and_end_of_line_test",
+ "fictional_project": true,
+ "calendar_note": "Every date in this record is synthetic and belongs to the hypothetical Project Northcell. No organisation, plant, vehicle, technician or recycler named here exists.",
+ "purpose": "Establish that every item leaving the production line has been configured, tested and identified, and that an item that fails any test is stopped rather than shipped with the failure recorded. The failure this plan exists to prevent is the escape of a defective item into a pack, which no later activity can detect because by then the item is inside a pack that looks correct from outside.",
+ "scope": {
+  "in_scope": [
+   "Incoming inspection of the components that end up on a safety path",
+   "Programming of the application, bootloader and commissioning tool",
+   "Calibration verification against the calibration specification",
+   "Functional end-of-line tests including the safe-state path",
+   "Identification write and readback",
+   "Records of what each station did to each item"
+  ],
+  "out_of_scope": [
+   "Pack assembly and pack-level testing, which the pack integrator performs",
+   "Vehicle-level end-of-line testing",
+   "Any claim that a passing end-of-line test makes the item safe. An end-of-line test samples the item's behaviour at one moment; it does not establish a safety case and this plan does not present it as one."
+  ]
+ },
+ "responsible_roles": [
+  {
+   "role": "quality_engineer",
+   "named_as": "role identity: quality_engineer (line quality, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Owns the test plan and the reject decision"
+  },
+  {
+   "role": "hw_engineer",
+   "named_as": "role identity: hw_engineer (hardware station owner, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Owns the electrical tests"
+  },
+  {
+   "role": "sw_engineer",
+   "named_as": "role identity: sw_engineer (programming station owner, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Owns the programming and verification of the readback"
+  },
+  {
+   "role": "eol_test_owner",
+   "named_as": "role identity: eol_test_owner (end-of-line test operator, fictional)",
+   "is_a_real_person": false,
+   "responsibility": "Executes the stations and records the results"
+  }
+ ],
+ "procedures": [
+  {
+   "step": 1,
+   "action": "Incoming inspection: verify the identity and the lot of every component that will be fitted to a safety-relevant path",
+   "record_produced": "Incoming inspection record",
+   "acceptance_condition": "Every such component's part number matches the released hardware configuration record and no unapproved substitution is present"
+  },
+  {
+   "step": 2,
+   "action": "Programming station: write the application and bootloader and verify each write by readback before proceeding",
+   "record_produced": "Programming record",
+   "acceptance_condition": "The readback content hash equals the hash of the released build; a write that does not read back is a line stop and the board is not retried silently"
+  },
+  {
+   "step": 3,
+   "action": "Calibration station: apply the calibration data and verify each value against the calibration specification's tolerance",
+   "record_produced": "Calibration record",
+   "acceptance_condition": "Every calibrated parameter is inside its stated tolerance and the applied value resolves to a canonical parameter id"
+  },
+  {
+   "step": 4,
+   "action": "Electrical station: verify supply, measurement input range and the contactor driver outputs",
+   "record_produced": "Electrical test record",
+   "acceptance_condition": "All measured quantities inside their stated limits with calibrated measuring equipment"
+  },
+  {
+   "step": 5,
+   "action": "Functional station: exercise the safe-state path, the precharge sequence and the degraded-mode entry, using a simulated pack",
+   "record_produced": "Functional test record",
+   "acceptance_condition": "Each exercised transition occurs in the expected order and the safe state is reached from the fault injection within the fault-tolerant time interval"
+  },
+  {
+   "step": 6,
+   "action": "Identification station: write the configuration identification and read it back",
+   "record_produced": "Identification record",
+   "acceptance_condition": "The readback string resolves to exactly one released configuration"
+  },
+  {
+   "step": 7,
+   "action": "Route on the combined result: any station failing stops the item and the item is quarantined rather than repaired on the line",
+   "record_produced": "Line disposition record",
+   "acceptance_condition": "A stopped item is quarantined with its failure record, and no station may be bypassed to clear an item",
+   "decision_point": "Whether a stopped item may be reworked off-line or scrapped",
+   "synthetic_decision": "synthetic_decision:quality_engineer:SYNTH-EOL-STEP-007"
+  }
+ ],
+ "records_produced": [
+  {
+   "record": "Incoming inspection record",
+   "kind": "record",
+   "retention": "permanent, per production lot",
+   "identification_rule": "Lot identifier plus the inspected part numbers"
+  },
+  {
+   "record": "Programming record",
+   "kind": "record",
+   "retention": "permanent, per item",
+   "identification_rule": "Item identification plus the written and read-back content hashes"
+  },
+  {
+   "record": "Calibration record",
+   "kind": "record",
+   "retention": "permanent, per item",
+   "identification_rule": "Item identification plus each applied parameter id and value"
+  },
+  {
+   "record": "Electrical test record",
+   "kind": "record",
+   "retention": "permanent, per item",
+   "identification_rule": "Item identification plus each measured quantity and its measured value"
+  },
+  {
+   "record": "Functional test record",
+   "kind": "record",
+   "retention": "permanent, per item",
+   "identification_rule": "Item identification plus the transitions exercised and their outcome"
+  },
+  {
+   "record": "Line disposition record",
+   "kind": "record",
+   "retention": "permanent, per stopped item",
+   "identification_rule": "Item identification plus the failing station and the disposition"
+  }
+ ],
+ "acceptance_criteria": [
+  {
+   "criterion": "Programming readback",
+   "measure": "Items whose written content hash is confirmed by readback",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Calibration conformance",
+   "measure": "Calibrated parameters inside the specified tolerance",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Safe-state reaction time at end of line",
+   "measure": "Time from fault injection to confirmed contactor open, measured on the line",
+   "threshold": "<= 100",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Measuring equipment calibration",
+   "measure": "Stations whose measuring equipment is inside its calibration interval",
+   "threshold": "100",
+   "unit": "% of stations"
+  },
+  {
+   "criterion": "Escape rate",
+   "measure": "Items leaving the line with an unresolved station failure",
+   "threshold": "0",
+   "unit": "items"
+  },
+  {
+   "criterion": "Record completeness",
+   "measure": "Items with a complete record for every station",
+   "threshold": "100",
+   "unit": "%"
+  }
+ ],
+ "test_stations": [
+  {
+   "station_id": "ST-01",
+   "station_purpose": "Incoming inspection of safety-relevant components",
+   "tests_performed": [
+    "Part number verification against the released hardware configuration",
+    "Lot traceability confirmation"
+   ],
+   "reject_action": "Quarantine the lot and raise a supplier record",
+   "sample_rate": "100 percent of safety-relevant lots",
+   "measuring_equipment_calibrated": true
+  },
+  {
+   "station_id": "ST-02",
+   "station_purpose": "Programming of application and bootloader",
+   "tests_performed": [
+    "Write",
+    "Readback",
+    "Content hash comparison against the released build"
+   ],
+   "reject_action": "Line stop; the board is not retried in place",
+   "sample_rate": "100 percent of items",
+   "measuring_equipment_calibrated": true
+  },
+  {
+   "station_id": "ST-03",
+   "station_purpose": "Calibration and calibration verification",
+   "tests_performed": [
+    "Calibration data write",
+    "Per-parameter tolerance check"
+   ],
+   "reject_action": "Line stop; quarantine the board",
+   "sample_rate": "100 percent of items",
+   "measured_parameter": "Each calibrated parameter",
+   "tolerance": "As stated per parameter in FB2-PRD-CAL-000001",
+   "measuring_equipment_calibrated": true
+  },
+  {
+   "station_id": "ST-04",
+   "station_purpose": "Electrical verification",
+   "tests_performed": [
+    "Supply current at rest and under load",
+    "Measurement input range check with a known stimulus",
+    "Contactor driver output check"
+   ],
+   "reject_action": "Line stop; quarantine the board",
+   "sample_rate": "100 percent of items",
+   "measured_parameter": "Supply current, measurement input response, driver output level",
+   "tolerance": "Per the released hardware configuration record",
+   "measuring_equipment_calibrated": true
+  },
+  {
+   "station_id": "ST-05",
+   "station_purpose": "Functional verification including the safe-state path",
+   "tests_performed": [
+    "Precharge sequence exercise",
+    "Fault injection and safe-state reaction timing",
+    "Degraded-mode entry",
+    "Latched-fault behaviour"
+   ],
+   "reject_action": "Line stop; quarantine the board",
+   "sample_rate": "100 percent of items",
+   "measured_parameter": "Time from fault injection to confirmed contactor open",
+   "tolerance": "100 ms maximum, being the safety goal's fault-tolerant time interval",
+   "measuring_equipment_calibrated": true
+  },
+  {
+   "station_id": "ST-06",
+   "station_purpose": "Configuration identification write and readback",
+   "tests_performed": [
+    "Identification string write",
+    "Readback",
+    "Resolution against the released configuration set"
+   ],
+   "reject_action": "Line stop; quarantine the board",
+   "sample_rate": "100 percent of items",
+   "measuring_equipment_calibrated": true
+  }
+ ],
+ "interactions_with_other_lifecycle_areas": [
+  {
+   "other_area": "Release and configuration identification",
+   "interaction": "Every station's expectation derives from the released configuration record, and station 6 verifies the identification that record defines",
+   "direction": "this_area_requires_from_other",
+   "consequence_if_the_interaction_is_broken": "The line tests against a configuration that was never released, and an item that fails the real configuration passes the line."
+  },
+  {
+   "other_area": "Calibration and programming",
+   "interaction": "Station 3 executes the calibration specification this area produces",
+   "direction": "this_area_requires_from_other",
+   "consequence_if_the_interaction_is_broken": "Calibration tolerances differ between the specification and the line and whichever is looser wins in practice."
+  },
+  {
+   "other_area": "Installation, operation and service",
+   "interaction": "The functional tests at station 5 exercise the same transitions the service class is trained on",
+   "direction": "mutual",
+   "consequence_if_the_interaction_is_broken": "The service class is trained on transitions the line never verified, or verifies transitions the service class was not trained on."
+  },
+  {
+   "other_area": "Field monitoring and incident handling",
+   "interaction": "Line records are the baseline a field event is compared against",
+   "direction": "this_area_provides_to_other",
+   "consequence_if_the_interaction_is_broken": "A field fault cannot be characterised against the item's as-delivered behaviour, so the event cannot be attributed to the item or to its use."
+  }
+ ],
+ "operational_authorisation_statement": "This record is a fictional engineering artefact. It is NOT an authorised production instruction, it authorises no production activity, and no station described in it exists. No item has been produced. production_authorized is false.",
+ "evidence_state": {
+  "any_step_executed": false,
+  "executed_steps": [],
+  "reason": "No production line, vehicle, charging site, workshop, fleet or recycling facility exists anywhere in this corpus. Master-prompt clause 2.5 forbids energising hardware and connecting to vehicles, so no step below can be performed by any means available here. The record documents the procedure and records that it has not been run."
+ },
+ "limitations": [
+  "Synthetic. There is no production line, no pack plant and no item. Every station below describes a facility that does not exist.",
+  "The 100 ms acceptance criterion at station 5 is the safety goal's own fault-tolerant time interval. Measuring it on a line with a simulated pack would demonstrate that the item reacts within its budget under test conditions; it would not establish that it does so in a vehicle, and this plan does not claim it would.",
+  "The safe-state reaction test exercises one reaction path. A line test that reaches the safe state by the main path and not by the independent path would pass, so the plan requires the independent path to be exercised separately. That requirement is stated here and has not been implemented by anything.",
+  "The plan assumes a simulated pack with the real item fitted. That assumption has not been validated and no such fixture exists.",
+  "Nothing here establishes that the item is safe. An end-of-line test is a sampling activity and a safety case is not a sampling activity."
+ ]
+}

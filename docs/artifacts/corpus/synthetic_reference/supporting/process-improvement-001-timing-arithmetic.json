@@ -1,0 +1,152 @@
+{
+ "assumption_refs": [
+  "FB2-ASM-011"
+ ],
+ "standards": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "PIM.3",
+   "status": "mapped",
+   "rationale": "Process improvement: proposal, implementation and effectiveness evaluation recorded separately."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.6",
+   "status": "mapped",
+   "rationale": "The metrics these improvements act on."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.1",
+   "status": "mapped",
+   "rationale": "Quality assurance: the finding stream that prompted two of the three improvements."
+  }
+ ],
+ "id": "FB2-PIM-IMP-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "process_improvement",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Improvement 001: a review check that a timing budget's arithmetic closes",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "PIM.3",
+   "status": "mapped",
+   "rationale": "Process improvement: proposal, implementation and effectiveness evaluation recorded separately."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "MAN.6",
+   "status": "mapped",
+   "rationale": "The metrics these improvements act on."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.1",
+   "status": "mapped",
+   "rationale": "Quality assurance: the finding stream that prompted two of the three improvements."
+  }
+ ],
+ "lifecycle_status": "reviewed",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation and is not a statement about engineering validity.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Effectiveness evaluation of the timing-arithmetic review check, recorded as one artifact rather than three so that the hypothesis, the change and the verdict are readable together."
+  }
+ ],
+ "improvement_id": "FB2-PIM-IMP-000001",
+ "stage": "effectiveness_evaluation",
+ "fictional_project": true,
+ "calendar_note": "Every date in this record is synthetic. They describe the hypothetical Project Northcell as its own artefact says that programme does not exist. No date here is a real commitment, a real gate date or a real review date.",
+ "process_being_improved": {
+  "process_id": "SUP.1",
+  "process_name": "Quality assurance",
+  "process_record_ref": "FB2-SUP-QAP-000001",
+  "why_this_process": "The arithmetic error was found by a person reading a record, not by a check. A quality process that depends on somebody noticing is not a process."
+ },
+ "baseline_evidence": [
+  {
+   "observation": "Timing budget records whose serial elements plus margin exceed the fault-tolerant time interval",
+   "value": 1,
+   "unit": "records",
+   "where_it_came_from": "FB2-SAF-SGO-000001, read directly: 25+5+2+3+5+2+3+5+30+5 = 85 serial, 20 margin, 100 interval, 85+20 = 105 > 100",
+   "synthetic": true
+  },
+  {
+   "observation": "Validator rules that check the arithmetic automatically",
+   "value": 0,
+   "unit": "rules",
+   "where_it_came_from": "Read of the corpus validator's semantic rule set at the plan's start date. One rule attempts an FTTI check and does not fire, because it reads the interval from a field name the safety goal does not use.",
+   "synthetic": true
+  }
+ ],
+ "hypothesis": {
+  "statement": "Adding a review check that computes each timing budget's arithmetic and compares it with the interval will cause a budget that does not close to be found at review time rather than at concept-writing time.",
+  "predicted_effect": "The number of timing budget records whose arithmetic does not close will fall from 1 to 0 for records written after the check is adopted.",
+  "metric_id": "MET-04",
+  "falsification_condition": "If a second timing budget that does not close is written after the check is adopted and is not caught by it, the hypothesis is false and the check is ineffective."
+ },
+ "changes_made": [
+  {
+   "change": "Add to the review checklist an arithmetic check that sums each timing budget's serial elements and margin and compares the total with the stated fault-tolerant time interval",
+   "change_type": "checklist_change",
+   "change_date": "2026-09-29",
+   "changed_by_role": "quality_engineer",
+   "affected_process_records": [
+    "FB2-SUP-QAP-000001"
+   ],
+   "adoption_evidence": "The check is described in FB2-SUP-QAP-000001's acceptance criteria. It has been performed once, in this authoring pass, against FB2-SAF-SGO-000001."
+  }
+ ],
+ "effectiveness_evaluation": {
+  "evaluation_date": "2026-09-29",
+  "metric_id": "MET-04",
+  "before_value": 1,
+  "after_value": 0,
+  "unit": "budgets failing the arithmetic check",
+  "arithmetic": "Before: 1 record fails (FB2-SAF-SGO-000001 at 105 ms against 100 ms). After: 0 NEW records fail; the technical safety concept FB2-SAF-TSC-000001 declares 85 ms serial plus 15 ms margin = 100 ms and closes exactly. 1 - 1 = 0 new failures. The pre-existing failure is NOT counted as fixed: FB2-SAF-SGO-000001 still does not close and cannot be edited without a controlled change.",
+  "observation_ids_used": [
+   "OBS-05"
+  ],
+  "verdict": "partially_effective",
+  "verdict_argument": "The check works on the record it was run against: it found the error and the new record written under it closes. It is not demonstrably effective, because the only evidence is one application to one record, and one application cannot distinguish a working check from a lucky read. It is also not a fix: the original record is still wrong.",
+  "evaluated_by_role": "quality_engineer",
+  "confirmation_by_second_role": "reviewer_adversarial (fictional role identity). The confirmation pass disagreed with a 'partially_effective' verdict only in that it held the non-verdict should be 'insufficient_evidence'; the recorded verdict was left at partially_effective and the disagreement is recorded here rather than resolved by picking one."
+ },
+ "counter_evidence": [
+  "The check was applied to exactly one record. A search for other timing budgets in the corpus was run and found none, so there is no second application to compare against.",
+  "The change did not prevent the error; it found it after the fact. The safety goal was baselined with the error in it and remains baselined with it.",
+  "The improvement is recorded by the same role that authored the records it criticises, so it has no independence. A real programme would require the evaluation to be performed by a party who did not write the budget."
+ ],
+ "limitations": [
+  "Synthetic improvement on a synthetic project. The before and after numbers are real arithmetic on real records.",
+  "One application is not a sample. The verdict 'partially_effective' is the most that one application can support.",
+  "The counter-evidence includes a disagreement between the evaluating role and the confirming role about the verdict itself. The record keeps the disagreement visible rather than adopting either position.",
+  "No human approved this improvement and none evaluated it. An automated review of a process improvement is not process improvement evidence."
+ ]
+}

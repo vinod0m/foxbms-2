@@ -1,0 +1,207 @@
+{
+ "id": "FB2-SUP-CFM-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "process_record",
+ "engineering_domain": "supporting",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "SUP.8 Configuration management: populated process record for Project Northcell",
+ "owner_role": "traceability_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.8",
+   "status": "mapped",
+   "rationale": "Configuration management: identification, baselining, change control and status accounting."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "traceability_engineer",
+   "description": "Supporting-process record authored because the generated view reported SUP.8 as a coverage gap: no record whose engineering_domain is 'supporting' named the process. This record populates it - definition, inputs, outputs, accountable role, acceptance criteria, at least one performed instance with fictional participants and a synthetic decision, and the communication records showing how agreed revisions reach affected roles."
+  }
+ ],
+ "process_record_id": "FB2-SUP-CFM-000001",
+ "aspice_process_id": "SUP.8",
+ "process_name": "Configuration management",
+ "fictional_organisation": {
+  "name": "Halden Cell Systems (fictional) configuration control board (fictional)",
+  "is_a_real_organisation": false
+ },
+ "purpose": "Identify every configuration item, baseline it at a point in time, control every change to a baselined item, and record which links and reviews a change puts in question.",
+ "definition": "Configuration management is the identification, baselining, change control and status accounting of the corpus's records. Every record carries a profile, a baseline id, a revision and a revision history, and every link carries the revisions of both endpoints. A change to a baselined item goes through the change-control process and not through this one; this process identifies and baselines, that one decides.",
+ "inputs": [
+  {
+   "input": "The set of records proposed for a baseline",
+   "kind": "artifact",
+   "controlled_by": "This process record's revision history"
+  },
+  {
+   "input": "The change-control decisions that authorise a re-baseline",
+   "kind": "decision",
+   "controlled_by": "FB2-SUP-CHC-000001"
+  },
+  {
+   "input": "The content index and the canonicalisation rule",
+   "kind": "data",
+   "controlled_by": "FB2-SUP-CFM-000001 itself"
+  }
+ ],
+ "outputs": [
+  {
+   "output": "A baseline identification naming the records and revisions included",
+   "kind": "identification_record",
+   "retention": "permanent for the programme; a released configuration's identification is never superseded, only added to"
+  },
+  {
+   "output": "A status accounting record showing what changed between two baselines",
+   "kind": "record",
+   "retention": "permanent"
+  },
+  {
+   "output": "A link-suspicion list for every changed record",
+   "kind": "data",
+   "retention": "for the lifetime of the affected links"
+  }
+ ],
+ "accountable_role": {
+  "role": "traceability_engineer",
+  "independence": "The configuration control board may not baseline a record whose author is a board member. In this corpus the board is the traceability engineer and the authors are domain roles, so the separation holds structurally; what does not hold is any human oversight of the board's decisions."
+ },
+ "acceptance_criteria": [
+  {
+   "criterion": "Every record in a baseline carries the same baseline id and a monotonic revision history",
+   "how_conformance_is_checked": "Validate every record against artifact-base.schema.json, which requires baseline_id and revision_history, and confirm no revision number is reused with different content.",
+   "evidence_of_conformance": "All records validate. The 2026-09-29 baseline adds 41 records at revision 1 with a populated history."
+  },
+  {
+   "criterion": "Every link records the revision of both endpoints",
+   "how_conformance_is_checked": "Confirm no link omits source_revision or target_revision.",
+   "evidence_of_conformance": "The link schema requires both. A link whose endpoint is revised without the link being revisited is the failure this criterion cannot catch, and the corpus records that limitation explicitly rather than claiming the criterion covers it."
+  },
+  {
+   "criterion": "A communication of an agreed revision carries an acknowledgement",
+   "how_conformance_is_checked": "Confirm each performed communication carries an acknowledgement record reference, or an explicit statement that none was captured.",
+   "evidence_of_conformance": "One communication in this project has no acknowledgement. Recorded as improvement FB2-PIM-IMP-000002, whose verdict is insufficient_evidence because no acknowledgement record exists and none can."
+  }
+ ],
+ "performed_instances": [
+  {
+   "instance_id": "INST-002",
+   "instance_date": "2026-09-29",
+   "instance_description": "Establishment of baseline BAS-REF-001 revision 2, covering the concept, system, management, supporting, post-development and security-verification records added in this pass, plus the link registry that connects them.",
+   "participants": [
+    {
+     "role": "traceability_engineer",
+     "named_as": "role identity: traceability_engineer (board secretary, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "architect",
+     "named_as": "role identity: architect (board chair, fictional)",
+     "is_a_real_person": false
+    },
+    {
+     "role": "quality_engineer",
+     "named_as": "role identity: quality_engineer (verifies the baseline against the acceptance criteria, fictional)",
+     "is_a_real_person": false
+    }
+   ],
+   "inputs_used": [
+    "The 41 records authored in this pass at revision 1",
+    "The 172 pre-existing links in the synthetic_reference registry",
+    "The three new registries authored with this pass"
+   ],
+   "outputs_produced": [
+    "The extended synthetic_reference link registry",
+    "The regenerated exports manifest with its content hashes"
+   ],
+   "decision_or_outcome": "Baseline BAS-REF-001 revision 2 established, containing every record authored in this pass. The baseline is identified and its content is hashed; no record in it has been revised above 1, so no stale link or stale review arises from the change.",
+   "synthetic_decision": "synthetic_decision:traceability_engineer:SYNTH-SUP8-INST-002",
+   "conformance_against_acceptance_criteria": "partially_conforming",
+   "non_conformances_found": [
+    "Criterion 2 is only partially met in principle: a link whose endpoint is revised later will continue to record the old revision until someone revisits it, and nothing in this corpus automates that revisit. The criterion checks the presence of the fields, not their currency."
+   ]
+  }
+ ],
+ "review_and_communication": [
+  {
+   "communication_id": "COM-002",
+   "date": "2026-09-29",
+   "communicated_artifact_revisions": [
+    "BAS-REF-001 revision 2 contents: 41 records at revision 1"
+   ],
+   "attendee_roles": [
+    "architect",
+    "safety_engineer",
+    "system_engineer",
+    "verification_engineer",
+    "quality_engineer",
+    "project_manager"
+   ],
+   "acknowledgement_recorded": true
+  },
+  {
+   "communication_id": "COM-003",
+   "date": "2026-09-29",
+   "communicated_artifact_revisions": [
+    "BAS-REF-001 revision 2"
+   ],
+   "attendee_roles": [
+    "project_manager",
+    "quality_engineer"
+   ],
+   "acknowledgement_recorded": false,
+   "acknowledgement_note": "The measurement review was held and no acknowledgement was captured. Recorded as false with this note rather than as true with no evidence, which is the specific failure improvement FB2-PIM-IMP-000002 exists to address."
+  }
+ ],
+ "traceability": {
+  "produces_records": [
+   "BAS-REF-001",
+   "docs/artifacts/exports/manifest.json"
+  ],
+  "depends_on_records": [
+   "FB2-SUP-CHC-000001"
+  ],
+  "controlled_by_records": [
+   "FB2-MAN-MSM-000001"
+  ]
+ },
+ "process_performance_measurement": {
+  "metric_id": "MET-01",
+  "metric_name": "Standards-mapped coverage of the applicable process and ISO part inventory",
+  "unit": "expectations",
+  "how_measured": "Count applicable expectations whose recorded status is backed by a named corpus record. A mapped status with no record is a breach.",
+  "measurement_plan_ref": "FB2-MAN-MSM-000001"
+ },
+ "limitations": [
+  "Synthetic process record for a synthetic project.",
+  "The baseline id BAS-REF-001 is the id the whole corpus already uses. This record does not introduce a new baseline identifier, because renaming a baseline would invalidate every existing record's baseline_id and no engineering content is gained by doing so.",
+  "Currency of a link's recorded revisions is not automated. The process describes the control and does not claim the tooling enforces it.",
+  "The acknowledgement non-conformance is left open deliberately. Recording it as false with a reason is more useful than recording it as true."
+ ]
+}
