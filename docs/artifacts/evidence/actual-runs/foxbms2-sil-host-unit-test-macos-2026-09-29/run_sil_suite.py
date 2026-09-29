@@ -29,6 +29,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import pathlib
@@ -50,6 +51,12 @@ SUMMARY_RE = re.compile(
 )
 CEEDLING_EXC_RE = re.compile(r"EXCEPTION: (.*)", re.MULTILINE)
 ERROR_RE = re.compile(r"^(?:\.{0,2}/)?[^\n:]*:\d+:\d+: (?:fatal )?error: (.+)$", re.MULTILINE)
+DIAG_RE = re.compile(
+    r"^(?P<file>[^\n:]+\.(?:c|h|m)):(?P<line>\d+):(?P<col>\d+): "
+    r"(?P<sev>fatal error|error|warning|note): (?P<msg>.*)$",
+    re.MULTILINE,
+)
+FLAG_RE = re.compile(r"\[((?:-W[a-z0-9-]+)(?:\s*,\s*-W[a-z0-9-]+)*)\]")
 
 # Symbols the interface headers declare. A build failure that mentions one of
 # these is a genuine gap in sil/iface/, not a compiler-diagnostic artefact.
@@ -89,39 +96,215 @@ def tool_versions() -> dict[str, str]:
     }
 
 
-def classify(output: str, test: str) -> str:
-    # The shipped :paths: config and :files: :test: list exclude these tests
-    # deliberately. Ceedling reports an excluded test as "Found no file ... in
-    # search paths", not as a compile error, so it must be recognised first.
+def _flags(msg: str) -> str:
+    """The diagnostic group(s) clang attributed this message to.
+
+    Clang writes the group either bare (`[-Warray-bounds]`) or, when -Werror
+    promoted it, prefixed with it (`[-Werror,-Warray-bounds]`). `-Werror` is
+    the promotion, not the defect, so it is dropped and the remaining groups
+    are kept in order.
+    """
+    m = FLAG_RE.search(msg)
+    if not m:
+        return ""
+    return ",".join(g for g in (x.strip() for x in m.group(1).split(",")) if g != "-Werror")
+
+
+def _code(d: dict) -> str:
+    """A stable identity for one diagnostic.
+
+    Line and column numbers are deliberately NOT part of the code: they vary
+    with unrelated edits, and a class must survive an unrelated line shifting
+    above it. Identifiers in quotes and integer literals are folded, so the
+    same defect reached from two places collapses to one code.
+    """
+    msg = d.get("msg", "")
+    flag = d.get("flag") or _flags(msg)
+    msg = FLAG_RE.sub("", msg)
+    msg = re.sub(r"'[^']*'", "'X'", msg)
+    msg = re.sub(r"\b0[xX][0-9a-fA-F]+\b", "N", msg)
+    msg = re.sub(r"\b\d+\b", "N", msg)
+    return f"{d['sev']}|{flag}|{msg}".strip()
+
+
+def collect_codes(output: str, records: list[dict] | None = None) -> list[dict]:
+    """Every distinct diagnostic, keyed by stable code, order-independent.
+
+    `records` is the structured per-translation-unit log written by
+    tools/sil_cc.py. When present it is the authoritative source: it is
+    collected with SIL_DIAG_COLLECT=1, which makes the wrapper return 0 on a
+    failed compile so that Ceedling compiles EVERY remaining translation unit
+    instead of aborting at the first one. That is what makes this set
+    independent of Ceedling's unstable per-test file order.
+    """
+    found: dict[str, dict] = {}
+
+    def add(d: dict) -> None:
+        if d["sev"] not in ("error", "fatal error"):
+            return
+        d = {**d, "flag": d.get("flag") or _flags(d.get("msg", ""))}
+        c = _code(d)
+        if c not in found:
+            found[c] = {**d, "code": c, "count": 1, "sites": [f"{d['file']}:{d['line']}"]}
+        else:
+            found[c]["count"] += 1
+            site = f"{d['file']}:{d['line']}"
+            if site not in found[c]["sites"] and len(found[c]["sites"]) < 6:
+                found[c]["sites"].append(site)
+
+    for rec in records or []:
+        if rec.get("rc") == 0:
+            continue
+        for d in rec.get("diagnostics", []):
+            add(d)
+
+    if not records:
+        for m in DIAG_RE.finditer(output):
+            add(
+                {
+                    "file": m.group("file"),
+                    "line": int(m.group("line")),
+                    "col": int(m.group("col")),
+                    "sev": m.group("sev"),
+                    "msg": m.group("msg").rstrip(),
+                }
+            )
+
+    return sorted(found.values(), key=lambda d: d["code"])
+
+
+def _has(codes: list[dict], *needles: str) -> bool:
+    return any(any(n in c["code"] for n in needles) for c in codes)
+
+
+def _in_mocks(codes: list[dict]) -> bool:
+    return any("/mocks/" in c["file"] or c["file"].startswith("mocks/") for c in codes)
+
+
+# --- the decision table -----------------------------------------------------
+#
+# Every rule is a predicate over the WHOLE set of codes, and the rules are
+# evaluated in this fixed order, so the class is a pure function of the set.
+# The set itself is order-independent (see collect_codes). Nothing here reads
+# "the first error", which is what made the old classifier flip run to run.
+#
+# `real_defect` outranks everything. A diagnostic that denotes a genuine
+# out-of-bounds access, a genuine wrong initializer or a genuine undeclared
+# callee is reported as a defect even if a clang-only flag would otherwise have
+# filed it under a platform-difference class. A class that exists to explain
+# away a red build must never be able to swallow one.
+def classify(codes: list[dict], output: str) -> str:
+    # Not a build failure at all: upstream's own :paths:/:files: exclusions.
     if re.search(r"Found no file `test_", output):
-        return "build:excluded_by_shipped_paths"
-    errors = ERROR_RE.findall(output)
-    if not errors:
-        return "build:other"
-    joined = " | ".join(errors)
-    # A generated mock that fails to parse at a function body: CMock's #if
-    # accounting loses sync with FreeRTOS's #if blocks in queue.h / event_groups.h
-    # and the tail of the generated file is swallowed. Pre-existing, unrelated to
-    # the SIL headers, and platform-independent.
-    if "expected identifier or '('" in joined and "/mocks/" in output:
-        return "build:ceedling_cmock_config_quirk"
-    if HL_WITNESS.search(joined):
-        return "build:no_hl_surface"
-    if any(
-        k in joined
-        for k in (
-            "-Wenum-conversion",
-            "-Warray-bounds",
-            "-Wparentheses-equality",
-            "-Wimplicit-int",
-            "-Wswitch",
-            "-Wsign-compare",
-            "-Wdeclaration-after-statement",
-            "-Wmissing-field-initializers",
-        )
+        return "excluded:upstream_config"
+
+    # Every translation unit compiled; the LINK is what failed. Distinct from
+    # every compile class below and worth its own bucket, because a link
+    # failure usually means a harness gap (a missing model object) rather than
+    # a diagnostic about any construct.
+    if not codes:
+        return "build:link_failure"
+
+    # --- Genuine defects. Never a platform difference. -----------------------
+    # A genuine out-of-bounds array access. Verified by hand, per site, against
+    # the declaration: real, and must never be filed under a clang-difference
+    # class.
+    if _has(codes, "past the end of the array"):
+        return "build:real_defect_out_of_bounds_array_index"
+
+    # abs()/labs() on a type the function cannot represent. src/app/driver/
+    # rtc/rtc.c:272 calls abs() on a time_t difference. Benign on the 32-bit
+    # target, truncating on a 64-bit host. Fixing it is a product change.
+    if _has(codes, "absolute value function"):
+        return "build:real_defect_absolute_value_truncation"
+
+    # A genuine wrong-arity function-like macro invocation.
+    if _has(codes, "arguments provided to function-like macro invocation"):
+        return "build:real_defect_macro_arity"
+
+    # A genuine struct initializer with more elements than the type has fields.
+    if _has(codes, "excess elements in struct initializer"):
+        return "build:real_defect_excess_initializers"
+
+    # A missing declaration of a function. C99 removed implicit declarations;
+    # this is an error, not a style diagnostic, on both compilers.
+    if _has(codes, "implicit declaration of function", "call to undeclared function"):
+        return "build:real_defect_implicit_function_declaration"
+
+    # Implicit int: a type specifier is missing. Invalid in C99 and later on
+    # both compilers. Not a platform difference.
+    if _has(codes, "type specifier missing"):
+        return "build:real_defect_implicit_int"
+
+    # Enabled by -Wall in BOTH compilers, so not a platform difference:
+    #   -Wunused-but-set-variable   a test sets a variable and never reads it
+    #   -Wmissing-field-initializers a partial initialiser of a large struct
+    #   -Wparentheses-equality IS clang-only and is handled further down.
+    if _has(codes, "set but not used"):
+        return "build:strict_diagnostic_both_compilers"
+    if _has(codes, "-Wmissing-field-initializers"):
+        return "build:strict_diagnostic_both_compilers"
+
+    # A comparison of an ARRAY against NULL, which is always true.
+    # src/app/driver/afe/maxim/common/mxm_17841b.c:707. Behaviour is
+    # unchanged, but a tautological guard in product source is a finding, not
+    # something to mute. gcc's -Waddress is in -Wall and plausibly covers it,
+    # so a clang/gcc difference is NOT established.
+    if _has(codes, "not equal to a null pointer is always true"):
+        return "build:product_tautological_guard"
+
+    # An identifier used that nothing declares. Where the missing name is a
+    # device fact the harness must not invent, the test is reported as not
+    # brought up rather than given an invented value.
+    if _has(codes, "use of undeclared identifier", "unknown type name"):
+        return "build:undeclared_identifier"
+
+    # A conflicting or duplicated declaration of a name the SIL interface
+    # headers own. A gap or an error in sil/iface/, not a diagnostic about
+    # repository code.
+    if _has(codes, "conflicting types for", "duplicate member",
+            "too few arguments to function call", "too many arguments to function call",
+            "expected a field designator", "invalid parameter name",
+            "expected member name or", "expected identifier"):
+        return "build:sil_interface_header_mismatch"
+
+    # CMock's generated mock does not parse: the generated file's function
+    # definitions are erased by FreeRTOS's own EMPTY function-like macros.
+    # The needle stops before the quoted "'('" because _code folds quoted runs
+    # to 'X', so the code reads "expected identifier or 'X'".
+    if _has(codes, "expected identifier or") and _in_mocks(codes):
+        return "build:cmock_freertos_macro_erasure"
+
+    # A TI HAL register macro or an object-format-specific construct.
+    # Deliberately not reconstructed: a register offset or base address is a
+    # fact about the silicon, and an ELF section name has no Mach-O spelling.
+    if _has(codes, "EMAC_MACCONTROL", "EMAC_RXCONTROL", "EMAC_TXCONTROL",
+            "EMAC_SOFTRESET", "HWREG", "EMAC_MDIO_") or re.search(
+            r"\bEMAC_[A-Z0-9_]*(CONTROL|RESET|OFFSET|MACADDR)\b", output
     ):
-        return "build:strict_diagnostic"
+        return "build:not_brought_up_register_map"
+    if _has(codes, "attribute is not valid for this target",
+            "mach-o section specifier"):
+        return "build:not_buildable_on_macos_object_format"
+
+    # A diagnostic only Apple clang emits by default; GNU gcc has no
+    # equivalent under the shipped -std=c11 -Wextra -Wall -pedantic -Werror.
+    # Every flag in this list is justified individually in
+    # sil/RELAXED-DIAGNOSTICS.md with the evidence that the construct is
+    # correct. Adding to this list without that file being updated is a defect.
+    if _has(codes, "-Wenum-conversion", "-Wparentheses-equality",
+            "-Wmacro-redefined", "-Wunknown-warning-option",
+            "-Wtautological-pointer-compare", "-Wliteral-conversion",
+            "-Wnon-literal-null-conversion", "-Wpragma-pack",
+            "-Wabsolute-value",
+            "attribute only applies to", "attribute ignored when parsing type",
+            "expected ')'", "expected expression",
+            "initializing '"):
+        return "build:clang_only_diagnostic"
+
     return "build:other"
+
+
 
 
 def main() -> int:
@@ -156,6 +339,16 @@ def main() -> int:
     if args.relax:
         env["RELAX_CLANG_DIAGNOSTICS"] = "1"
 
+    # Diagnostics-collecting compiler wrapper. See tools/sil_cc.py: it makes the
+    # recorded diagnostic set independent of Ceedling's unstable per-test
+    # translation-unit order, which is what made the old `first_error`-keyed
+    # classifier flip between runs.
+    diag_dir = LOGS / "diag-records"
+    diag_dir.mkdir(parents=True, exist_ok=True)
+    env["SIL_DIAG_COLLECT"] = "1"
+    env["SIL_DIAG_DIR"] = str(diag_dir)
+    env["SIL_CC_WRAPPER"] = str(HERE / "tools" / "sil_cc.py")
+
     results = []
     provisioned = set()
     for index, row in enumerate(rows, start=1):
@@ -168,10 +361,14 @@ def main() -> int:
             provisioned.add(variant)
         started = time.time()
         stamp = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+        rec_file = diag_dir / f"{slug(test)}.jsonl"
+        rec_file.unlink(missing_ok=True)
+
         proc = subprocess.run(
             [str(HERE / "run.sh"), f"test:{test}"],
             cwd=cwd,
-            env={**env, "VARIANT": variant},
+            env={**env, "VARIANT": variant, "SIL_DIAG_SLUG": slug(test)},
             capture_output=True,
             text=True,
             check=False,
@@ -199,14 +396,43 @@ def main() -> int:
             "first_error": None,
             "log": f"logs/per-test-{log_subdir}/{slug(test)}.log",
         }
-        if summary and proc.returncode == 0 and int(summary.group(3)) == 0:
+
+        records = []
+        if rec_file.exists():
+            records = [
+                json.loads(line)
+                for line in rec_file.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+        failed_units = [r for r in records if r.get("rc") not in (0, None)]
+        codes = collect_codes(output, records)
+
+        # A failed translation unit is a build failure even if some other
+        # translation unit happened to produce a summary: the binary is not
+        # trustworthy, so it is never allowed to yield a pass or a fail verdict.
+        if summary and not failed_units and proc.returncode == 0 and int(summary.group(3)) == 0:
             rec["outcome"] = "pass"
-        elif summary:
+        elif summary and not failed_units:
             rec["outcome"] = "fail"
             rec["first_error"] = _first_failure(output)
         else:
             rec["outcome"] = "build_failure"
-            rec["build_failure_class"] = classify(output, test)
+            rec["build_failure_class"] = classify(codes, output)
+            rec["error_code_set"] = [c["code"] for c in codes]
+            rec["error_code_set_hash"] = _hash_codes(codes)
+            rec["diagnostic_codes"] = [
+                {
+                    "code": c["code"],
+                    "severity": c["sev"],
+                    "flag": c.get("flag", ""),
+                    "count": c["count"],
+                    "sites": c["sites"],
+                }
+                for c in codes
+            ]
+            rec["failed_translation_units"] = sorted(
+                {r["src"] for r in failed_units if r.get("src")}
+            )
             errs = ERROR_RE.findall(output)
             exc = CEEDLING_EXC_RE.search(output)
             rec["first_error"] = (
@@ -230,6 +456,21 @@ def main() -> int:
         "host": tool_versions(),
         "selection": "all" if args.all else "halcogen_blocked_only",
         "relaxed_clang_diagnostics": bool(args.relax),
+        "classifier": {
+            "rule": "build failure is classified on the SET of distinct, "
+                    "order-independent diagnostic codes (severity | -W flag | "
+                    "normalised message), not on any single message",
+            "determinism": "the set is collected with SIL_DIAG_COLLECT=1 via "
+                           "tools/sil_cc.py, which returns 0 on a failed compile "
+                           "so Ceedling compiles every remaining translation "
+                           "unit instead of aborting at the first. The set is "
+                           "therefore a union over all units and does not depend "
+                           "on Ceedling's unstable per-test file order.",
+            "replaced": "the previous classifier keyed on `first_error`, i.e. "
+                        "on whichever message arrived first, and flipped between "
+                        "build:other and build:ceedling_cmock_config_quirk for "
+                        "test_os_freertos.c (22/24 vs 2/24 over 24 clean runs)",
+        },
         "total": len(results),
         "passed_tests": sum(1 for r in results if r["outcome"] == "pass"),
         "failed_tests": sum(1 for r in results if r["outcome"] == "fail"),
@@ -244,6 +485,11 @@ def main() -> int:
     print()
     print(json.dumps({k: v for k, v in payload.items() if k != "results"}, indent=2))
     return 0
+
+
+def _hash_codes(codes: list[dict]) -> str:
+    joined = "\n".join(c["code"] for c in codes)
+    return hashlib.sha256(joined.encode("utf-8")).hexdigest()[:16] if codes else ""
 
 
 def _tally(results: list[dict]) -> dict[str, int]:

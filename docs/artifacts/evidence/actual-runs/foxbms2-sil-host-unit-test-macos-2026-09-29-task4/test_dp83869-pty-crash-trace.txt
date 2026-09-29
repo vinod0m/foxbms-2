@@ -1,0 +1,24 @@
+^Dtest_dp83869.c:150:testPHY_WriteExtendedAddressSpaceRegister:PASS (0 ms)
+test_dp83869.c:184:testPHY_ReadExtendedAddressSpaceRegister:PASS (0 ms)
+test_dp83869.c:234:testPHY_SelectSpeed:PASS (0 ms)
+test_dp83869.c:266:testPHY_RestartSoftware:PASS (0 ms)
+test_dp83869.c:306:testPHY_Initialize:FAIL: Expected 0x0000000100C08000 Was 0x0000000100C08010:Function DATA_Read1DataBlock Argument pDataToReceiver0:Function called with unexpected argument value. (0 ms)
+test_dp83869.c:526:testPHY_LinkStatusGet:FAIL: Expected 0x0000000100C08000 Was 0x0000000100C08010:Function DATA_Write1DataBlock Argument pDataFromSender0:Function called with unexpected argument value. (0 ms)
+test_dp83869.c:554:testPHY_IdGet:PASS (0 ms)
+test_dp83869.c:586:testPHY_AutoNegotiate:PASS (0 ms)
+test_dp83869.c:708:testPHY_PartnerAbilityGet:PASS (0 ms)
+test_dp83869.c:732:testPHY_MIImodeSet:PASS (0 ms)
+test_dp83869.c:769:testPHY_MiiReset:PASS (0 ms)
+test_dp83869.c:798:testPHY_EnableLoopback:PASS (0 ms)
+test_dp83869.c:871:testPHY_SwReset:PASS (0 ms)
+
+=== SIL CRASH: signal 11 at fault address 0xfff7bc38 ===
+0   test_dp83869.out                    0x0000000100c00e38 FoXBMS_SilCrashHandler + 204
+1   libsystem_platform.dylib            0x0000000196e50144 _sigtramp + 56
+2   test_dp83869.out                    0x0000000100bfc31c UnityAssertEqualIntArray + 260
+3   test_dp83869.out                    0x0000000100befb88 IO_PinReset + 524
+4   test_dp83869.out                    0x0000000100be3f24 PHY_ResetHardware + 40
+5   test_dp83869.out                    0x0000000100be3824 testPHY_HardwareReset + 88
+6   test_dp83869.out                    0x0000000100bfa8e0 run_test + 168
+7   test_dp83869.out                    0x0000000100bfa7d8 main + 1004
+8   dyld                                0x0000000196a6fe80 start + 6688

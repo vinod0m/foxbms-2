@@ -1,0 +1,53 @@
+{
+ "id": "FB2-REV-FND-000038",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "verification",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000038: the inherited RELAX_CLANG_DIAGNOSTICS flag -Wno-array-bounds was masking genuine out-of-bounds array access in 6 tests; the flag is removed and the defect is reported",
+ "owner_role": "quality_engineer",
+ "origin": "derived",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "'draft': the defect is established, measured and reported, and the masking flag has been removed. The defect itself is NOT closed - it lives in tests/ under tests/unit/app/driver/can/cbs/tx-cyclic/ and tests/unit/app/engine/diag/cbs/, which are upstream's and out of scope for the SIL harness. No human reviewer has confirmed this record, and human approval of the artifact it describes remains 'pending'.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z",
+  "note": "Corpus automation gates only. This is not a statement about the engineering validity of the out-of-bounds finding recorded here."
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-30T00:00:00Z",
+ "updated_at": "2026-09-30T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-30T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "New finding. The SIL harness's inherited RELAX_CLANG_DIAGNOSTICS mode silences three diagnostics that Apple clang enables by default and GNU gcc does not. One of the three, -Wno-array-bounds, was not such a diagnostic: it was suppressing real out-of-bounds array access. All 25 sites were verified by hand against the declaration each index refers to. The flag is removed and the 6 affected tests are reported as genuine defects."
+  }
+ ],
+ "subject_artifact_id": "FB2-VER-EXE-000015",
+ "validator_rule": "Manual harness audit: for every flag under RELAX_CLANG_DIAGNOSTICS, establish both that the diagnostic is Apple-clang-only under the shipped -std=c11 -Wextra -Wall -pedantic -Werror AND that the construct it fires on is correct. A flag failing either test is removed and its diagnostics reported as findings.",
+ "validator_finding_verbatim": "-Wno-array-bounds suppressed 25 out-of-bounds array accesses across 6 tests; clang was correct at every site.",
+ "severity": "high",
+ "category": "verification",
+ "evidence": "The harness documents RELAX_CLANG_DIAGNOSTICS=1 as silencing 'three diagnostics that Apple clang enables by default and GNU gcc does not'. Two of the three (-Wno-enum-conversion, -Wno-parentheses-equality) are: both are Clang default-on diagnostics whose GCC analogues are not enabled by -Wall or -Wextra. The third, -Wno-array-bounds, is not a clang-only diagnostic. GCC's -Warray-bounds IS enabled by -Wall, so a construct that trips it trips under both compilers and cannot be a platform artefact. Every one of the 25 sites it was hiding is a real out-of-bounds access, verified by hand against the declaration: tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93 declares `float_t testSignalData[3u] = {0u, 1u, 2u};` and the test indexes it at 4, 6, 8, 10 and 12 at lines 381, 382, 420, 421, 431, 432, 442, 443, 453, 454, 464, 465 -- out of bounds by up to 9 elements past a 3-element array. The three sibling files test_can_cbs_tx_f_cell-temperatures_{3,4,5}-temp-sensors.c declare the same `float_t[3]` and index it at 4 through 10. tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-voltages.c:92 declares `float_t testSignalData[4u]` and indexes it at 6 and 8 at lines 367 and 379. tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:112-117 writes `diag_kpkDatabaseShim.pTableMsl->cellChargeOvercurrent[BS_NR_OF_STRINGS]` and five siblings into a `uint8_t[1]`, and tests/unit/app/application/config/battery_system_cfg_unit_test.h:124 sets BS_NR_OF_STRINGS to (1u) for the default unit-test build, so the index is 1 into a one-element array -- a genuine off-by-one that looks like a test author intending to exercise the out-of-range string index and instead writing outside the array. The 6 affected tests are: test_can_cbs_tx_f_cell-temperatures.c, test_can_cbs_tx_f_cell-temperatures_3-temp-sensors.c, test_can_cbs_tx_f_cell-temperatures_4-temp-sensors.c, test_can_cbs_tx_f_cell-temperatures_5-temp-sensors.c, test_can_cbs_tx_f_cell-voltages.c and test_diag_cbs_current.c. Raw evidence: the per-test logs under docs/artifacts/.work/verification-env/sil/logs/per-test-*/ carry every diagnostic with file, line and column, and each result record in the sweep JSON carries the diagnostic code set with sites.",
+ "disposition": "deferred",
+ "impact": "Two things, and the second is the reason the severity is high. First, a build that compiled because this warning was silenced is exactly the failure mode the task forbids: the 6 tests would have been reported as building, and readers of a pass count would reasonably infer that their assertions mean something. They do not. A test that reads and writes up to 9 elements past a 3-element array is not measuring the code under test; it is reading whatever the linker happened to place next, and the value it then asserts on is not the value the fixture nominally set. The counts would have been green and meaningless. Second, the flag's presence contaminated the classification scheme itself. Because -Warray-bounds was suppressed under RELAX_CLANG_DIAGNOSTICS while the primary recorded sweep ran WITHOUT that mode, these 6 tests were recorded as build failures attributed to 'build:strict_diagnostic' -- a class defined as 'Apple-clang-only diagnostic promoted by -Werror' -- which is a false description of a real defect. Any reader who accepted that class name would have closed the finding as a known host-platform artefact. Removing the flag and re-measuring moves them to build:real_defect_out_of_bounds_array_index, where they are visible as what they are.",
+ "root_cause": "The flag list was assembled on the reasoning 'this diagnostic fires under -Werror, and it fires on vendored or generated code, so it is a platform nuisance' rather than on the two-part test each flag actually has to pass. -Warray-bounds passes 'it fires' and fails 'it is clang-only', and the second condition is the one that decides whether silencing is legitimate. There is a compounding factor specific to this harness: -Warray-bounds is a diagnostic that CATCHES defects rather than reporting style, so the cost of a false negative is categorically higher than for the other two. The same reasoning error was audited for the remaining flags and is why the list was not simply extended: four further diagnostics that also fire were examined and NOT silenced, for the same reason in different clothes - -Wtautological-pointer-compare (src/app/driver/afe/maxim/common/mxm_17841b.c:707 compares an array member against NULL, always true), -Wmissing-field-initializers and -Wunused-but-set-variable (both -Wall/-Wextra in BOTH compilers), and the `section` attribute error in src/version/version.h:83, which is a hard Mach-O error that no -W flag can suppress and which was deliberately not worked around by overriding the macro. The general rule now enforced is stated in sil/RELAXED-DIAGNOSTICS.md: a diagnostic may be silenced in this harness only if it is BOTH Apple-clang-only AND about a construct established to be correct, and a class that exists to explain away a red build must never be able to swallow a real defect.",
+ "resolution": "NOT RESOLVED IN PRODUCT, and out of scope to resolve here. -Wno-array-bounds has been REMOVED from sil/run.sh's RELAX_CLANG_DIAGNOSTICS list and the 6 tests are reported as real defects under build:real_defect_out_of_bounds_array_index. The defect itself is in tests/ under tests/unit/app/driver/can/cbs/tx-cyclic/ and tests/unit/app/engine/diag/cbs/, which this task is forbidden to modify, so the tests remain red and are reported as such. The fix is upstream's and is a one-line-per-site change: size each testSignalData to the number of sensors the test actually exercises (the CAN packing tests need one slot per transmitted temperature, and the declared sizes of 3 and 4 are simply too small), and in test_diag_cbs_current.c give the out-of-range case its own correctly sized buffer rather than indexing past the real one. No product source is involved and no product behaviour is in question: the defect is entirely within the test fixtures. This record makes no MISRA conformance claim, no tool-qualification claim and no certification claim of any kind; the harness mocks the HAL and verifies no register map, timing, clocking, interrupt behaviour, DMA transfer, electrical behaviour or device identity.",
+ "source_refs_note": "Empty by design. The defect is array indexing in test files under tests/unit/, and the corpus source registry holds no anchor covering those files at the pinned baseline. The subject record is named by subject_artifact_id; per-site file:line evidence is in evidence. An anchor was NOT invented to make this field non-empty."
+}
