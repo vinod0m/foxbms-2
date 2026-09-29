@@ -269,7 +269,13 @@ above, not gap 7.
 6. Resolve the `verifies`-direction convention jointly with the schema owner.
 7. Resolve the duplicated `FB2-REV-000001` record and the stale
    `feature-inventory.json` summary count.
-8. Have the repository owner correct the conformity claim in
-   `TRACEABILITY_DOCUMENT.md` at the root, recorded as `FB2-REV-FND-000022`.
+8. ~~Have the repository owner correct the conformity claim in
+   `TRACEABILITY_DOCUMENT.md` at the root, recorded as `FB2-REV-FND-000022`.~~
+   **DONE 2026-09-29:** the repository owner authorised amending the file and it was
+   corrected — conformity sentence, IEC 61508 clause rows and a fabricated
+   human-approval sign-off block removed, ASIL values relabelled hypothetical, false
+   "automatically generated" provenance claim replaced. Finding at revision 3,
+   disposition `accepted`. The residual item is that the file is still hand-authored
+   and outside the toolchain's reach, so nothing detects a regression.
 9. Build production, operation, service and decommissioning records, or state
    explicitly that they are out of scope for this corpus.

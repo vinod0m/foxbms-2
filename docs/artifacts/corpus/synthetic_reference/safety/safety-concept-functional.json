@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-FSC-000001",
- "revision": "1",
+ "revision": "3",
  "schema_version": "1.0.0",
  "artifact_type": "safety_concept",
  "engineering_domain": "safety",
@@ -75,6 +75,18 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "First functional safety concept for the synthetic_reference profile. The corpus previously had a hazard, a safety goal and four functional safety requirements with no record of how the goal was to be achieved by any architecture. This concept supplies that: the item-related assumptions, the high-level architectural elements and their roles, the safety strategies, the scope boundary, the interfaces to other safety-related items and the allocation of the safety goal to elements. Not a safety plan: a plan states what will be done, this states what the item is."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Regenerated as a dependent of the remediation of findings FB2-REV-FND-000024, 000025, 000026 and 000027. The four contradiction blocks recorded here described conditions in FB2-SAF-SGO-000001, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 that have now been corrected at source; the blocks are retained with their contradiction text unchanged so the record of what was found survives, and their how_this_concept_handles_it text now states what was actually done rather than a decision this pass declined to take. No allocation, strategy, budget, assumption or coverage claim in this concept was changed; the concept's own figures were already the ones the corrected records now agree with."
+  },
+  {
+   "revision": "3",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Regenerated as a dependent of finding FB2-REV-FND-000027. safety_strategies.fault_detection[AR-005] still carried the requirement's old unmeasurable coverage disjunction ('All monitored cells, or a representative subset of at least 50%') and pointed at finding FB2-REV-FND-000027 as an unresolved conflict. FB2-HW-TSR-000004 now states the coverage as 100 percent of the main measurement chain's monitored cell set, so this strategy entry states the same figure and records that the requirement is specified rather than demonstrated. No functional element, capability, safety strategy detection budget, reaction budget or degradation mode was changed."
   }
  ],
  "concept_stage": "functional_safety_concept",
@@ -257,9 +269,9 @@
     "detects": "A cell voltage above the hardware monitor's own threshold, independently of the main MCU and its software",
     "element_id": "AR-005",
     "detection_time_budget_ms": 50,
-    "coverage_claim": "All monitored cells, or a representative subset of at least 50%",
+    "coverage_claim": "Every cell the item monitors, detected by the independent hardware monitor independently of the main MCU and its software",
     "coverage_claim_evidence": [
-     "FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 state the coverage with an 'all cells or representative subset >= 50%' disjunction. That disjunction is not a measurable acceptance criterion, and it is recorded as finding FB2-REV-FND-000027 rather than resolved here."
+     "FB2-HW-TSR-000004 now states the coverage as 100 percent of the cells the main measurement chain monitors, with the population named and the selection method no longer a matter of interpretation. The requirement replaced the 'all cells or representative subset >= 50%' disjunction under finding FB2-REV-FND-000027. The requirement is specified, not demonstrated: no schematic, no BOM and no measurement of the independent chain exists in this corpus, and its feasibility as a full per-cell network remains the open assumption FB2-ASM-008."
     ]
    },
    {
@@ -453,7 +465,7 @@
     "FB2-SAF-SGO-000001",
     "FB2-SAF-FSC-000001"
    ],
-   "how_this_concept_handles_it": "The concept does not adopt the 105 ms figure and does not edit the safety goal. The functional strategy allocation above is written so that the barrier chain fits inside the FTTI, and the arithmetic is carried explicitly into the technical safety concept, which allocates a margin that closes. The contradiction is raised as finding FB2-REV-FND-000025. Resolving it requires a change to FB2-SAF-SGO-000001, which this authoring pass does not make: changing a baselined safety goal is a controlled change, not a documentation edit.",
+   "how_this_concept_handles_it": "RESOLVED at source. The safety goal's margin is now 15 ms, so its budget closes: 85 ms serial + 15 ms = 100 ms against the 100 ms interval, which is the figure this concept and FB2-SAF-TSC-000001 had already computed independently. The safety goal was revised rather than left in contradiction, and the two records no longer depart from one another. Finding FB2-REV-FND-000025.",
    "finding_ref": "FB2-REV-FND-000025"
   },
   {
@@ -462,7 +474,7 @@
     "FB2-SAF-FSR-000003",
     "FB2-SAF-SGO-000001"
    ],
-   "how_this_concept_handles_it": "The fault reaction for AR-004 is budgeted here at 35 ms of command-plus-actuation and the technical safety concept shows the arithmetic, which exceeds the 30 ms the requirement states. The concept does not silently restate the requirement's threshold to 40 ms, and it does not shorten the requirement's threshold to fit the budget. It records the conflict and raises finding FB2-REV-FND-000024.",
+   "how_this_concept_handles_it": "RESOLVED at source. FB2-SAF-FSR-000003 now states the three points of the chain separately: 5 ms to the coil command, 35 ms to the mechanically open contactor and 40 ms to the feedback-confirmed contactor, which is the 40 ms end-to-end figure this concept identified. Its 'Contactor open latency' criterion, which measures from the fault request to feedback open, now carries the 40 ms it was spending from rather than the 30 ms mechanical figure. The functional strategy allocation in this concept is unchanged and now agrees with the requirement it allocates. Finding FB2-REV-FND-000024.",
    "finding_ref": "FB2-REV-FND-000024"
   },
   {
@@ -471,7 +483,7 @@
     "FB2-SAF-FSR-000004",
     "FB2-HW-TSR-000004"
    ],
-   "how_this_concept_handles_it": "This concept allocates AR-005 as a hardware element and treats its independence as the reason it exists, which is the reading the Part 5 record should have carried and the Part 3 record should not have. It does not edit either record. The duplication is raised as finding FB2-REV-FND-000027.",
+   "how_this_concept_handles_it": "RESOLVED at source. FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 no longer carry the same text. The Part 4 record now states the safety intent and carries only behaviourally decidable criteria; the Part 5 record states the hardware obligation and carries the structural independence and coverage criteria, aligned with the statement this concept already published for FB2-HW-TSR-000004 in the technical concept's technical_safety_requirements block. AR-005 remains a pure hardware element and the system-level decomposition continues to land in FB2-SYS-SYR-000005. Finding FB2-REV-FND-000027.",
    "finding_ref": "FB2-REV-FND-000027"
   },
   {
@@ -480,7 +492,7 @@
     "FB2-SAF-FSR-000004",
     "FB2-SAF-SGO-000001"
    ],
-   "how_this_concept_handles_it": "The concept does not adopt 115 ms and does not use it anywhere. It records the independent monitor's justification on the allocation that actually exists (85 ms serial, which does not fit once the reaction chain is added), and raises finding FB2-REV-FND-000026 for the unsourced figure.",
+   "how_this_concept_handles_it": "RESOLVED at source, and this block's premise is corrected. The 115 ms figure is not unsourced: it is the sum of a superseded allocation recorded in FB2-REV-000001 (as_is vertical-slice review, embedded finding FB2-FND-000001) as 'FSR-001 specifies 10 Hz (100 ms); FSR-002 specifies 10 ms check; FSR-003 specifies 5 ms contactor; sum = 115 ms'. It is stale, not fabricated, and it described an allocation the corpus has since replaced. FB2-SAF-FSR-000004, FB2-HW-TSR-000004 and FB2-ASM-008 no longer carry it. The justification is now stated on figures that still hold: the main path is 85 ms of the 100 ms interval, 95 ms at the 40 ms upper tolerance of FB2-PRM-000005, and 110 ms if detection waits one full acquisition period of FB2-PRM-000003 instead of the 25 ms allocated. Finding FB2-REV-FND-000026.",
    "finding_ref": "FB2-REV-FND-000026"
   }
  ],

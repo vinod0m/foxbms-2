@@ -1,6 +1,6 @@
 {
  "id": "FB2-VER-TMS-000019",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "test_measure",
  "engineering_domain": "verification",
@@ -63,6 +63,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "cybersecurity_engineer",
    "description": "Security verification measure authored because FB2-SAF-SEC-000004 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Regenerated as a dependent of finding FB2-REV-FND-000028 after FB2-SAF-SEC-000004 revised its genuine-frame false-rejection criterion. The expected outcome genuine_frames_rejected no longer records the requirement's absolute 0; it records the population the rate bound is demonstrated over (>= 3 x 10^6 genuine frames in 24 h) and the pass condition derived from it (0 rejections observed over that population, i.e. a one-sided 95 percent upper confidence bound of 1 x 10^-6 by the rule of three), plus the observed genuine-frame population itself so that the bound can be recomputed by a reviewer rather than taken on trust. A new expected outcome records the integrity value width the requirement now mandates (>= 22 bits). The oracle_detail's known_limitation_in_the_requirement no longer states that the criterion is unachievable, because it is no longer unachievable; it now states what the revised criterion does and does not bound, and names the residual risks that a pass on this measure would NOT cover. Step 4's expected result was restated from 'Zero genuine frames rejected' to the population-plus-bound form for the same reason. Every other expected outcome - the zeros for injected frames accepted, replayed frames accepted, short frames accepted - is UNCHANGED: those are decidable by the check existing and were deliberately not relaxed. The measure remains planned and unexecuted; no execution evidence is claimed by this revision and human_approval_status remains pending."
   }
  ],
  "test_type": "robustness",
@@ -135,7 +141,7 @@
   {
    "step": 5,
    "action": "Run genuine traffic for 24 h alongside the injections",
-   "expected": "Zero genuine frames rejected"
+   "expected": "Zero genuine frames rejected over an observed genuine-frame population of at least 3 x 10^6 frames, giving a one-sided 95 percent upper confidence bound of 1 x 10^-6 on the false-rejection rate by the rule of three"
   }
  ],
  "expected_outcomes": [
@@ -170,10 +176,22 @@
    "unit": "entry"
   },
   {
+   "signal": "genuine_frames_observed",
+   "expected_value": "3e6",
+   "tolerance": "at least",
+   "unit": "frames in the 24 h campaign"
+  },
+  {
    "signal": "genuine_frames_rejected",
    "expected_value": "0",
-   "tolerance": "exact",
+   "tolerance": "exact, over a genuine-frame population of at least 3e6, i.e. a one-sided 95 percent upper bound of 1 per 10^6 genuine frames",
    "unit": "frames"
+  },
+  {
+   "signal": "integrity_value_width",
+   "expected_value": "22",
+   "tolerance": "at least",
+   "unit": "bits"
   }
  ],
  "tolerances": {
@@ -182,7 +200,9 @@
   "modified_payload_frames_accepted": "exact",
   "length_mismatch_frames_passed": "exact",
   "diagnosis_entries_per_overflow": "exact",
-  "genuine_frames_rejected": "exact"
+  "genuine_frames_observed": "at least",
+  "genuine_frames_rejected": "exact over a population of at least 3e6 frames",
+  "integrity_value_width": "at least"
  },
  "timing": {
   "max_execution_time_ms": 86400000,
@@ -195,7 +215,7 @@
   "why_this_oracle": "The oracle is the framing rule's own definition, read from the requirement. A frame is admissible only when its declared length equals the received byte count and its integrity value verifies; both are decidable by the receiver alone, so a byte outside such a frame has no admissible interpretation and must be discarded. The control-byte clause follows from the same definition: 0x13 and 0x11 are payload byte values, and a value that is privileged only inside an authenticated frame cannot be reached outside one. The expected outcomes - zero bytes passing, zero transitions - are consequences of the rule, not observations of an implementation.",
   "what_the_oracle_is_not": "It is not a measured reference: no serial traffic was sent or captured. It is not an analytical model: there is no model of the receiver's parser. It is not a synthetic assumption: admissibility is decidable by the receiver by construction.",
   "what_it_still_does_not_prove": "The oracle says nothing about the strength of the integrity value, about re-synchronisation after a desynchronising error, or about whether an authenticated peer is entitled to command what it commands. It also does not cover the availability consequence: a receiver that discards everything malformed but never resynchronises passes every expected outcome here and is unusable.",
-  "known_limitation_in_the_requirement": "As with the CAN measure, the 'genuine frames rejected: 0' criterion is not achievable for a practical integrity value and is recorded here as the requirement states it while naming it as unachievable. See finding FB2-REV-FND-000028.",
+  "known_limitation_in_the_requirement": "As with the CAN measure, the 'genuine frames rejected: 0' criterion was unsatisfiable for a practical integrity value and has been revised under finding FB2-REV-FND-000028. It now bounds the rate at 1 per 10^6 genuine frames, demonstrated as 0 rejections over a genuine-frame population of at least 3 x 10^6, and requires the integrity value to be at least 22 bits. The bounds it does not carry are the same as the CAN measure's: the bound holds only at the population stated, and it says nothing about the secrecy of the key, about resynchronisation after a desynchronising error, or about whether an authenticated peer is entitled to command what it commands.",
   "oracle_kind": "source_grounded"
  },
  "cleanup": "Disconnect the transmitter, confirm the item's receive path has returned to its steady state and archive the capture with the diagnosis log.",

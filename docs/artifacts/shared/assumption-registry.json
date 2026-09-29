@@ -77,7 +77,7 @@
     {
       "id": "FB2-ASM-008",
       "statement": "Independent hardware voltage monitor (ASIL B) can be implemented with separate voltage dividers, comparator, and contactor drive",
-      "rationale": "Addresses timing budget violation (115 ms > 100 ms FTTI) in main path",
+      "rationale": "Justifies a second barrier because the main path has no tolerance inside the 100 ms interval: as allocated in FB2-SAF-SGO-000001 it is 85 ms, at the 40 ms upper tolerance of FB2-PRM-000005 it is 95 ms, and it is 110 ms if detection waits one full acquisition period of FB2-PRM-000003 (50 ms) rather than the 25 ms allocated. The 115 ms figure previously recorded here was the sum of a superseded allocation (100 ms acquisition period at 10 Hz + 10 ms SOA check + 5 ms contactor) and described nothing in the current corpus; its provenance is FB2-REV-000001 embedded finding FB2-FND-000001. Corrected under finding FB2-REV-FND-000026. The statement, the validity conditions and the invalidation consequence are unchanged.",
       "affected_scope": ["FB2-SAF-FSR-000004", "FB2-PRM-000007"],
       "source": "synthetic",
       "validity_conditions": "Requires PCB space, separate power domain, additional BOM cost. Feasibility to be confirmed.",

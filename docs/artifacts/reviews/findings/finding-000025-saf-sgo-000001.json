@@ -1,6 +1,6 @@
 {
  "id": "FB2-REV-FND-000025",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "finding",
  "engineering_domain": "safety",
@@ -29,8 +29,8 @@
    "rationale": "The obligation to record rather than to conceal."
   }
  ],
- "lifecycle_status": "draft",
- "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "lifecycle_status": "reviewed",
+ "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
  "automated_review_status": {
   "schema_valid": true,
   "links_valid": true,
@@ -49,6 +49,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "quality_engineer",
    "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Corrected FB2-SAF-SGO-000001's margin from 20 ms to 15 ms (revision 1 -> 2) so that the timing budget closes at 100 ms, and regenerated FB2-SAF-TSC-000001's arithmetic_check statement and the contradiction blocks of FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001. Left the corpus validator's FTTI rule unchanged as instructed, and added docs/artifacts/tools/check_references.py to perform the arithmetic check the rule cannot."
   }
  ],
  "subject_artifact_id": "FB2-SAF-SGO-000001",
@@ -58,5 +64,5 @@
  "disposition": "accepted",
  "impact": "Every requirement, measure and analysis that spends this budget is spending a budget that does not exist. FB2-SAF-FSR-000001, FB2-SAF-FSR-000002, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004, FB2-SW-SWR-000001, FB2-SW-SWR-000002 and FB2-SW-SWR-000003 all derive their latency figures from it, and the technical safety concept FB2-SAF-TSC-000001 had to allocate a 15 ms margin rather than the 20 ms recorded here in order to close. A safety goal that is baselined with an arithmetic that does not close cannot be the root of a defensible safety argument, and the corpus's own release-readiness gate requires that the technical concept's budget close.",
  "root_cause": "The margin was entered as an intention rather than computed as the difference between the interval and the work. No review or validation step computed the sum, and the validator rule that could have found it does not fire because it looks the interval up under a field name this record does not use. The two causes are independent: even a working rule would not have caught a field-naming mismatch on its own, and a correctly named field would have been caught by a working rule.",
- "resolution": "NOT RESOLVED, and it cannot honestly be resolved by this pass. Reconciling the recorded margin with the interval requires editing a baselined safety goal, which is a controlled change and not a documentation edit. This pass therefore: (a) recorded the contradiction here; (b) wrote FB2-SAF-TSC-000001 with an allocation that closes at 100 ms and a statement naming the departure; (c) opened the improvement FB2-PIM-IMP-000001 to add an arithmetic check to the review checklist, whose verdict is partially_effective; and (d) registered the referral in the change-control process instance INST-004. The validator rule was NOT weakened or modified: it remains as it was, and its field-name limitation is reported here rather than fixed by renaming a record."
+ "resolution": "RESOLVED at source, and the validator's FTTI rule was NOT weakened or modified. The margin in FB2-SAF-SGO-000001.timing_budget.allocation was corrected from 20 ms to 15 ms, so 85 ms of serial work plus 15 ms of margin is exactly the 100 ms fault-tolerant time interval. The record moved to revision 2. The 15 ms is not a round-down: it is the value the interval admits, because 100 - 85 = 15, and it is the value FB2-SAF-TSC-000001 had already computed, published and used to close its own budget. The two records had been in open contradiction and are now in agreement, so the concept's recorded 'deliberate departure from the safety goal' no longer exists and its arithmetic_check statement was rewritten to say so. The two alternative repairs were considered and rejected on the corpus's own evidence rather than on preference: (a) raising the FTTI to 105 ms would contradict FB2-PRM-000004, which fixes ftti_ms = 100 with tolerance min = max = 100 and calibration by safety analysis against the HARA, and would define the interval from the answer; (b) reducing the serial sum to 80 ms would delete work that traces to a parameter or an assumption, and 85 ms is the figure the technical concept independently recomputed. 105 ms was NOT rounded to 100 ms. About the rule this finding reported: the rule reads the interval from a field named ftti_ms or ftti and this record names it fault_tolerant_time_interval_ms, so the rule skips it. That limitation is real and is still there. It was not fixed, because only finding FB2-REV-FND-000029 was in scope for a rule change, and it is also not load-bearing here: the record now passes whether or not the rule fires, because 85 + 15 = 100 is inside 100 ms under either reading, and the self-test 'FTTI budget violation detected' proves the rule still fires on a budget that does overrun. The gap is compensated by docs/artifacts/tools/check_references.py, which reads fault_tolerant_time_interval_ms, ftti_ms and ftti, walks EVERY timing allocation and EVERY arithmetic_check block in the corpus rather than only the safety goals, and fails if any of them does not close. Its output at the end of the remediation pass: 3 budgets checked - the safety goal's allocation, the technical concept's allocation and the technical concept's arithmetic_check - all closing, 0 arithmetic failures. No acceptance criterion was relaxed and the serial allocation, the FTTI, the statement's reaction content and the ASIL are unchanged. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
 }

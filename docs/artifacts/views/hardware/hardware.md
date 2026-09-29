@@ -1,6 +1,6 @@
 # Hardware — requirements, design and interfaces (generated view)
 
-Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 links
+Generated: 2026-09-29T14:03:33Z | Baseline: BAS-REF-001 | 219 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -84,17 +84,17 @@ Generated: 2026-09-29T12:17:31Z | Baseline: BAS-REF-001 | 218 artifacts, 460 lin
 
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The SBC (FS85xx) shall drive contactor coils with controlled slew rate and monitor auxiliary feedback contacts with < 2 ms latency.
-- rationale: Contactor control and feedback monitoring must meet FSR-003 30 ms latency budget
-- acceptance criteria: {'criterion': 'Coil drive slew rate', 'measure': 'dV/dt at coil terminals', 'threshold': '50', 'unit': 'V/ms'}; {'criterion': 'Feedback latency', 'measure': 'Time from contactor state change to SW notification', 'threshold': '2', 'unit': 'ms'}; {'criterion': 'Weld detection', 'measure': 'Feedback mismatch detection time', 'threshold': '100', 'unit': 'ms'}
+- rationale: Contactor control and feedback monitoring must meet the FB2-SAF-FSR-000003 reaction budget: 5 ms coil command plus 30 ms mechanical opening (FB2-PRM-000005) reaches the mechanically open state 35 ms after the fault request, and 5 ms of auxiliary feedback confirmation completes the reaction 40 ms after it
+- acceptance criteria: {'criterion': 'Coil drive slew rate', 'measure': 'dV/dt at coil terminals', 'threshold': '50', 'unit': 'V/ms'}; {'criterion': 'Feedback latency', 'measure': 'Time from contactor state change to SW notification', 'threshold': '2', 'unit': 'ms'}; {'criterion': 'Weld detection', 'measure': 'Feedback mismatch detection time. The criterion is the weld detection budget of the actuated path and is deliberately not the reaction budget of FB2-SAF-FSR-000003, which is 40 ms end to end; see finding FB2-REV-FND-000024 for the 50 ms figure recorded here and the 100 ms figure of FB2-HW-TSR-000003', 'threshold': '100', 'unit': 'ms'}
 - safety allocation: asil=ASIL_D, mitigation=Independent SBC, feedback monitoring, watchdog, safety_goal_ref=FB2-SAF-SGO-000001
 - source_refs: FB2-SRC-HW-000001; FB2-SRC-COD-000007; FB2-SRC-COD-000008; FB2-SRC-COD-000027
 
 ### FB2-HW-TSR-000004 (synthetic_reference) — TSR: Independent Hardware Voltage Monitor
 
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
-- statement: The BMS shall include an independent hardware voltage monitor (ASIL B) that continuously monitors cell voltages and can open HV contactors independently of the main MCU within 50 ms of overvoltage detection.
-- rationale: Provides freedom from interference for ASIL D safety goal; addresses timing budget violation in main path (115 ms > 100 ms FTTI) by providing parallel safety channel
-- acceptance criteria: {'criterion': 'Independent detection latency', 'measure': 'Time from overvoltage to contactor command', 'threshold': '50', 'unit': 'ms'}; {'criterion': 'Independence', 'measure': 'No shared MCU, power supply, or communication with main path', 'threshold': '100%', 'unit': '%'}; {'criterion': 'Monitoring coverage', 'measure': 'Cells monitored', 'threshold': 'All cells (or representative subset >= 50%)', 'unit': '%'}; {'criterion': 'Threshold accuracy', 'measure': 'Overvoltage threshold accuracy', 'threshold': '50', 'unit': 'mV'}
+- statement: The hardware shall realise the ASIL B overvoltage reaction as a discrete chain separate from the main measurement chain: every cell monitored by the main chain shall be divided by a dedicated divider network into a comparator that holds its own overvoltage threshold reference on a supply rail not shared with the main chain, and the comparator output shall drive a contactor driver stage whose command is not sourced from the main microcontroller. No divider, reference, comparator, driver or suppl…
+- rationale: Hardware realisation of the second barrier required by FB2-SAF-FSR-000004, decomposed at system level by FB2-SYS-SYR-000005 and allocated to element AR-005 of FB2-SAF-TSC-000001. Freedom from interference for the ASIL D cell-voltage goal rests on this chain sharing no measurement, reference, supply or command resource with the main chain: as allocated in FB2-SAF-SGO-000001 the main path is 85 ms …
+- acceptance criteria: {'criterion': 'Independent chain coverage', 'measure': 'Cells in the pack that the main measurement chain monitors and that the independent divider network also measures, as a fraction of that monitored set', 'threshold': '100', 'unit': '%'}; {'criterion': 'Independent chain detection latency', 'measure': "Time from the independent comparator's threshold being exceeded to the contactor driver command at the coil", 'threshold': '50', 'unit': 'ms'}; {'criterion': 'Supply-rail separation', 'measure': 'Supply rails common to the independent chain and the main measurement chain', 'threshold': '0', 'unit': 'rails'}; {'criterion': 'Threshold-reference separation', 'measure': 'Overvoltage threshold references common to the independent chain and the main chain', 'threshold': '0', 'unit': 'references'}; {'criterion': 'Command-source separation', 'measure': 'Contactor driver stages the independent chain can reach that are commanded from the main microcontroller', 'threshold': '0', 'unit': 'stages'}; {'criterion': 'Overvoltage threshold accuracy', 'measure': 'Difference between the overvoltage threshold realised by the independent comparator chain and the configured cell shutdown threshold', 'threshold': '50', 'unit': 'mV'}; {'criterion': 'Independent chain diagnosability', 'measure': 'Diagnosis entries raised per detected failure of the independent chain itself: supply rail out of range, threshold reference out of range, or self-test failure', 'threshold': '1', 'unit': 'entry per detected failure'}
 - safety allocation: asil=ASIL_B, mitigation=Independent power, sensing, and actuation path, safety_goal_ref=FB2-SAF-SGO-000001
 - source_refs: -
 

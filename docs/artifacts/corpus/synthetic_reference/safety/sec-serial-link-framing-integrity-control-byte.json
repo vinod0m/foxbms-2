@@ -1,5 +1,5 @@
 {
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "safety",
@@ -74,9 +74,9 @@
   },
   {
    "criterion": "Genuine-frame false-rejection rate",
-   "measure": "Genuine frames rejected over 24 h at nominal bus load",
-   "threshold": "0",
-   "unit": "frames"
+   "measure": "Genuine frames rejected over a 24 h campaign at nominal bus load whose observed genuine-frame population is at least 3 x 10^6 frames. Pass is 0 rejections observed over that population, which is a one-sided 95 percent upper confidence bound of 1 x 10^-6 on the rate by the rule of three (3/n <= 1e-6 for n >= 3e6). The integrity value used on this interface shall be at least 22 bits, which is the width for which a per-frame false rejection probability of 2^-w stays below the rate this criterion bounds over that population.",
+   "threshold": "1 per 10^6 genuine frames",
+   "unit": "rejections per 10^6 genuine frames"
   }
  ],
  "safety_allocation": {
@@ -118,6 +118,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "cybersecurity_engineer",
    "description": "First issue. Forward-engineered security requirement 'serial-link-framing-integrity-control-byte' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Replaced the absolute '0 genuine frames rejected over 24 h' acceptance criterion with a bounded rate, a stated population the bound is demonstrated over, and a minimum integrity value width that makes the bound achievable. Remediation of finding FB2-REV-FND-000028. The old criterion was unsatisfiable and non-discriminating at the same time: a keyed integrity value of width w rejects a genuine frame with probability 2^-w, so over a 24 h campaign the expected number of genuine rejections is n * 2^-w, non-zero for any practical w; meanwhile an implementation that rejected every frame would satisfy the criterion vacuously, and would also satisfy the other criteria in this record vacuously. The new criterion is 0 rejections observed over a genuine-frame population of at least 3 x 10^6 in a 24 h campaign, which by the rule of three (0 failures in n trials gives a one-sided 95 percent upper bound of 3/n) is a bound of 1 x 10^-6 on the rate; and it requires the integrity value on the interface to be at least 22 bits, which is the width for which 2^-w stays below that rate over that population. The three statements are mutually consistent, so the criterion is now achievable by a correct implementation of adequate width and is not satisfied by an always-rejecting one (~100 percent) or by a 16-bit one (~1.5e-5 per frame). The criterion is therefore STRICTER in discriminating power than the zero it replaces, and it is also a harder engineering obligation, because it constrains the width of the integrity value where the zero constrained nothing. The absolute zeros that remain in this record are the ones that are decidable by the check existing - injected frames accepted, replayed frames accepted, length-mismatch frames reaching the callback, control-byte transitions - and those are over countable events on a channel where no collision is involved, so they are unchanged and were deliberately not relaxed. The verification measure FB2-VER-TMS-000018 and its execution record were regenerated against the new criterion in the same revision set. No ASIL value, safety_goal_ref, statement clause or verification approach was changed."
   }
  ],
  "real_source_presence": "Control ABSENT. src/app/driver/uart/uart.c:163 arms a single-byte interrupt-driven receive into one static byte (declared at :108). In the receive interrupt at :244-263, the values 0x13 and 0x11 (defined at src/app/driver/uart/uart.h:68-69) are consumed at :247-250 to gate transmission, and every other byte is forwarded to a queue at :254 with the enqueue return value discarded, so overflow is silent and no diagnosis entry is raised. No framing, length validation, integrity field or authorisation exists anywhere on this path. A further absence is recorded honestly and constrains the impact rating: the application consumer of this queue is a stub \u2014 FTSK_RunUserCodeUart in src/app/task/config/ftask_cfg.c:330-338 contains only UART_HandleFlowControl() and OS_NotifyTake() and never calls UART_Read \u2014 so no application data path from the serial receive queue to the database was found, and the evidenced impact is confined to transmit suppression and silent overflow. This requirement MUST be re-derived if the hypothetical project connects a protocol to this queue. Anchors FB2-SRC-COD-000067, FB2-SRC-COD-000068, FB2-SRC-COD-000069, FB2-SRC-COD-000070, FB2-SRC-COD-000071.",

@@ -1,6 +1,6 @@
 {
  "id": "FB2-REV-FND-000024",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "finding",
  "engineering_domain": "safety",
@@ -29,8 +29,8 @@
    "rationale": "The obligation to record rather than to conceal."
   }
  ],
- "lifecycle_status": "draft",
- "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "lifecycle_status": "reviewed",
+ "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
  "automated_review_status": {
   "schema_valid": true,
   "links_valid": true,
@@ -49,6 +49,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "quality_engineer",
    "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Reconciled the three contactor-reaction figures to the chain points they each measure: FB2-SAF-FSR-000003 revision 1 -> 2 (40 ms to feedback open, 35 ms to mechanically open, 30 ms mechanical), and regenerated the dependents FB2-HW-TSR-000003, FB2-SAF-SGO-000001, FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001. Consulted the real source via graft before deciding; the source carries no timing constant, so the parameter registry is the authority. The 50 ms vs 100 ms weld-detection disagreement between the two records was left undecided and is reported."
   }
  ],
  "subject_artifact_id": "FB2-SAF-FSR-000003",
@@ -58,5 +64,5 @@
  "disposition": "accepted",
  "impact": "A requirement whose threshold is tighter than its own mechanism's budget will fail, and when it fails the failure will look like a defect in the contactor driver rather than a defect in the requirement, so the engineering effort goes to the wrong place. It also makes the safety goal's 100 ms interval unverifiable at the end of the chain: the existing acceptance criteria, taken together, claim a reaction that is faster than the sum of the recorded parts. Any verification measure written against FB2-SAF-FSR-000003 inherits an unachievable threshold.",
  "root_cause": "The requirement was written with a round 30 ms target derived from the mechanical opening time alone (FB2-ASM-006 states 30 ms worst case), and the command and feedback segments were added to the rationale and to the safety goal's budget without the threshold being recomputed. The 30 ms figure is a plausible-looking round number that survived because nothing reconciled the three places it appears.",
- "resolution": "NOT RESOLVED. Resolving it requires choosing between two changes - restating the requirement's threshold to the budgeted figure, or reducing the reaction so the threshold holds - and the choice is an engineering decision with a safety consequence, not a documentation one. This pass: (a) recorded the contradiction; (b) wrote FB2-SAF-TSC-000001 budgeting the command-plus-actuation chain at 35 ms and the full chain at 40 ms, and named the conflict in the concept's contradictions block rather than restating the requirement to match; (c) registered the referral in INST-004. Neither FB2-SAF-FSR-000003 nor FB2-SAF-SGO-000001 was edited."
+ "resolution": "RESOLVED at source, on evidence rather than convenience. Three figures were in play and each was a true statement about a DIFFERENT point on one chain; the defect was that a single acceptance criterion carried the value belonging to another point. 30 ms is the mechanical opening time alone - the value of FB2-PRM-000005 (tolerance 20..40, timing_budget worst_case) and of FB2-ASM-006. 35 ms is command-plus-actuation (5 + 30) and was WRONG where it appeared, because it omitted the coil-command segment that the same requirement budgets separately at 5 ms and that the safety goal budgets as contactor_command_ms = 5. 40 ms is 5 + 30 + 5 and is the correct figure for the quantity the criterion actually names, 'Time from FAULT request to contactor feedback open'. The real foxBMS source was consulted first and cannot settle the number: CONT_OpenContactor at src/app/driver/contactor/contactor.c:165-182 only requests the state change through SPS_RequestContactorState() and carries no timing constant, so FB2-PRM-000005 is the authority and it was NOT edited. Two of the corpus's own records already said 40 ms is the end-to-end figure - FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 both state '5 ms command plus 30 ms mechanical plus 5 ms feedback, 40 ms' - so the choice follows the corpus rather than the editor. Changes, all in FB2-SAF-FSR-000003 (revision 1 -> 2): the 'Contactor open latency' threshold moved from 30 ms to 40 ms; a new criterion 'Contactor mechanically open latency' was added at 35 ms; a new criterion 'Coil de-energise to mechanically open' was added at 30 ms so that FB2-PRM-000005's value is asked for under its own label; the statement now distinguishes the mechanically open point from the feedback-confirmed point; the rationale states the full chain and says why the earlier 35 ms was wrong. The 5 ms coil criterion, the feedback criterion and the weld-detection criterion are unchanged. The threshold was made HARDER to claim compliance with, not easier: 30 ms was unreachable, 40 ms is reachable and is the budget the record was already spending from. Dependent regenerated: FB2-HW-TSR-000003 (revision 1 -> 2) whose rationale cited 'FSR-003 30 ms latency budget' now states the three segments and the 35 ms and 40 ms points; FB2-SAF-SGO-000001's statement now names 30 ms as the mechanical opening time of FB2-PRM-000005 and 40 ms as the resulting end-to-end figure; FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001 had their contradiction blocks updated. NOT RESOLVED, and deliberately left open in a different record: FB2-SAF-FSR-000003 states a 50 ms weld-detection latency and FB2-HW-TSR-000003 states 100 ms for the same quantity. No record settles which is intended, so neither figure was changed and the disagreement is now named in FB2-HW-TSR-000003's measure text rather than silently harmonised. That is a separate finding of the same class, not this one. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
 }

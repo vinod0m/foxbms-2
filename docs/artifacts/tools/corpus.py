@@ -448,8 +448,20 @@ class CorpusTool:
             if sgo not in mitigates:
                 self.findings.add("medium", "traceability", sgo,
                                   "safety goal has no mitigates link to hazard")
-        # Rule: requirements of safety classification need verifies or validates link
-        verified = {l["source_id"] for l in links if l.get("relation_type") in ("verifies", "validates")}
+        # Rule: requirements of safety classification need verifies or validates link.
+        # Endpoint: the requirement is the TARGET of the link. Master prompt section 13 declares
+        # "verifies: verification measure -> requirement/design" and "validates: validation measure
+        # -> stakeholder need/use case/goal", so the measure is the source and the verified artefact
+        # is the target. This rule previously built its set from source_id, which is the measure's
+        # own endpoint, so a correctly directed verifies link could never clear the finding it
+        # raised: 12 of the corpus's 21 standing findings came from that single inversion and none
+        # of them could be closed by doing the verification work. See finding FB2-REV-FND-000029.
+        # The rule's intent is unchanged - a safety requirement with no verification at all is
+        # still reported - and it is strictly harder to satisfy by accident than before, because a
+        # requirement appearing as the SOURCE of a verifies/validates link is a malformed link
+        # under the declared direction and no longer counts as verification of that requirement.
+        verified = {l["target_id"] for l in links
+                    if l.get("relation_type") in ("verifies", "validates") and l.get("target_id")}
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety":
@@ -3009,6 +3021,52 @@ class CorpusTool:
             ok = self._validate_semantic_rules(index, [])
             return not ok and any("FTTI" in f["description"] for f in self.findings.items)
 
+        def t_verifies_link_target_not_flagged():
+            # Master prompt section 13: "verifies: verification measure -> requirement/design".
+            # The requirement is therefore the TARGET. A correctly directed link must NOT raise
+            # the 'no verifies/validates link' finding. Regression test for finding
+            # FB2-REV-FND-000029, where the rule read source_id and so could never clear.
+            self.findings = Findings()
+            index = {("synthetic_reference", "FB2-SAF-SEC-999999"): ("synthetic_reference", {
+                "id": "FB2-SAF-SEC-999999", "artifact_type": "requirement",
+                "engineering_domain": "safety", "profile": "synthetic_reference"})}
+            links = [{"link_id": "FB2-LNK-TEST-1", "relation_type": "verifies",
+                      "source_id": "FB2-VER-TMS-999999", "target_id": "FB2-SAF-SEC-999999",
+                      "rationale": "r", "provenance": "derived", "review_state": "reviewed",
+                      "change_suspect_status": False}]
+            self._validate_semantic_rules(index, links)
+            return not any(f["artifact_id"] == "FB2-SAF-SEC-999999" for f in self.findings.items)
+
+        def t_unverified_safety_requirement_flagged():
+            # The rule's intent must survive the endpoint fix: a safety requirement with no
+            # verification at all, in either direction, is still reported.
+            self.findings = Findings()
+            index = {("synthetic_reference", "FB2-SAF-SEC-999998"): ("synthetic_reference", {
+                "id": "FB2-SAF-SEC-999998", "artifact_type": "requirement",
+                "engineering_domain": "safety", "profile": "synthetic_reference"})}
+            self._validate_semantic_rules(index, [])
+            return any(f["artifact_id"] == "FB2-SAF-SEC-999998"
+                       and "no verifies/validates link" in f["description"]
+                       for f in self.findings.items)
+
+        def t_verifies_source_endpoint_not_counted():
+            # A safety requirement appearing as the SOURCE of a verifies link is a malformed
+            # link under the declared direction. It must not count as verification of that
+            # requirement, so the rule stays harder to satisfy by accident than it was before
+            # the endpoint fix.
+            self.findings = Findings()
+            index = {("synthetic_reference", "FB2-SAF-SEC-999997"): ("synthetic_reference", {
+                "id": "FB2-SAF-SEC-999997", "artifact_type": "requirement",
+                "engineering_domain": "safety", "profile": "synthetic_reference"})}
+            links = [{"link_id": "FB2-LNK-TEST-2", "relation_type": "verifies",
+                      "source_id": "FB2-SAF-SEC-999997", "target_id": "FB2-VER-TMS-999997",
+                      "rationale": "r", "provenance": "derived", "review_state": "reviewed",
+                      "change_suspect_status": False}]
+            self._validate_semantic_rules(index, links)
+            return any(f["artifact_id"] == "FB2-SAF-SEC-999997"
+                       and "no verifies/validates link" in f["description"]
+                       for f in self.findings.items)
+
         def t_profile_contamination():
             self.findings = Findings()
             schema_cache = {}
@@ -3051,6 +3109,11 @@ class CorpusTool:
         check("invalid link type detected", t_invalid_link_type)
         check("invalid evidence state detected", t_invalid_state_change)
         check("FTTI budget violation detected", t_ftti_budget)
+        check("correctly directed verifies link (requirement as target) not flagged",
+              t_verifies_link_target_not_flagged)
+        check("safety requirement with no verification link flagged", t_unverified_safety_requirement_flagged)
+        check("verifies link with requirement as source does not count as verification",
+              t_verifies_source_endpoint_not_counted)
         check("profile contamination detected", t_profile_contamination)
         check("production_authorized=true rejected", t_authorized_rejected)
         check("export roundtrip deterministic", t_export_roundtrip)

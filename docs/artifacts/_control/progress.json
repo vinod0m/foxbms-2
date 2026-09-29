@@ -1,1452 +1,1511 @@
 {
-  "repository": {
-    "path": "/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2",
-    "commit": "308028fb",
-    "tag": "v1.11.0",
-    "branch": "master",
-    "dirty": true,
-    "recorded_at": "2026-09-29T00:00:00Z",
-    "dirty_note": "Working tree is dirty by design: this corpus is developed as uncommitted work under docs/artifacts/. No foxBMS source file is modified; see operating rules in _control/resume.md."
-  },
-  "runtime": {
-    "platform": "OpenCode",
-    "model": "nvidia/nemotron-3-ultra-550b-a55b",
-    "model_provider": "nvidia",
-    "recorded_at": "2026-09-08T00:00:00Z"
-  },
-  "stage": "complete",
-  "phase": "final_assessment",
-  "overall_status": "completed_with_recorded_gaps",
-  "artifacts": {
-    "total_planned": 96,
-    "completed": 96,
-    "in_progress": 0,
-    "blocked": 0,
-    "note": "96 work-queue entries are complete. 'blocked: 0' refers to work-queue entries only; substantive engineering gaps remain open and are listed under current_state.blocked."
-  },
-  "work_queue": [
-    {
-      "id": "WF-001",
-      "title": "Preflight: verify repository/output boundaries",
-      "stage": "preflight",
-      "status": "completed",
-      "dependencies": [],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-08T00:00:00Z"
-    },
-    {
-      "id": "WF-002",
-      "title": "Preflight: record initial git state",
-      "stage": "preflight",
-      "status": "completed",
-      "dependencies": [
-        "WF-001"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-08T00:00:00Z"
-    },
-    {
-      "id": "WF-003",
-      "title": "Preflight: create control directory structure",
-      "stage": "preflight",
-      "status": "completed",
-      "dependencies": [
-        "WF-001"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-08T00:00:00Z"
-    },
-    {
-      "id": "WF-004",
-      "title": "Preflight: create .gitignore for .work/",
-      "stage": "preflight",
-      "status": "completed",
-      "dependencies": [
-        "WF-001"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-08T00:00:00Z"
-    },
-    {
-      "id": "WF-005",
-      "title": "Preflight: record runtime/tool capabilities",
-      "stage": "preflight",
-      "status": "completed",
-      "dependencies": [
-        "WF-001"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-08T00:00:00Z"
-    },
-    {
-      "id": "WF-006",
-      "title": "Preflight: read applicable repository guidance",
-      "stage": "preflight",
-      "status": "completed",
-      "dependencies": [
-        "WF-001"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-08T00:00:00Z"
-    },
-    {
-      "id": "WF-007",
-      "title": "Preflight: preserve master prompt in _control/",
-      "stage": "preflight",
-      "status": "completed",
-      "dependencies": [
-        "WF-003"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-08T00:00:00Z"
-    },
-    {
-      "id": "WF-008",
-      "title": "Discovery: create standards-lock.json",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-009",
-      "title": "Discovery: inventory source code modules",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-010",
-      "title": "Discovery: inventory tasks/interrupts and scheduling",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-011",
-      "title": "Discovery: inventory configuration/calibration",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-012",
-      "title": "Discovery: inventory startup/bootloader",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-013",
-      "title": "Discovery: inventory dependencies and vendor code",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-014",
-      "title": "Discovery: inventory host tools and CI/build scripts",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-015",
-      "title": "Discovery: inventory existing tests",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "verification",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-016",
-      "title": "Discovery: inventory hardware design resources",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-017",
-      "title": "Discovery: inventory documentation structure",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-002"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-018",
-      "title": "Discovery: create source-inventory.json",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-009",
-        "WF-010",
-        "WF-011",
-        "WF-012",
-        "WF-013",
-        "WF-014",
-        "WF-015",
-        "WF-016",
-        "WF-017"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-019",
-      "title": "Discovery: create feature-inventory.json",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-018"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-020",
-      "title": "Discovery: create variant-matrix.json",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-011",
-        "WF-018"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-021",
-      "title": "Discovery: create coverage-plan.json with process inventory",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-008"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-022",
-      "title": "Discovery: create scope-and-applicability.json",
-      "stage": "discovery",
-      "status": "completed",
-      "dependencies": [
-        "WF-018",
-        "WF-019",
-        "WF-020"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-023",
-      "title": "Model: create corpus-policy.json",
-      "stage": "model",
-      "status": "completed",
-      "dependencies": [
-        "WF-008",
-        "WF-021"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-024",
-      "title": "Model: define hypothetical item and parameters",
-      "stage": "model",
-      "status": "completed",
-      "dependencies": [
-        "WF-022",
-        "WF-023"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-025",
-      "title": "Model: define ID scheme and namespace rules",
-      "stage": "model",
-      "status": "completed",
-      "dependencies": [
-        "WF-023"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-026",
-      "title": "Model: define link semantics and relation types",
-      "stage": "model",
-      "status": "completed",
-      "dependencies": [
-        "WF-023"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-027",
-      "title": "Model: define JSON schemas in schemas/",
-      "stage": "model",
-      "status": "completed",
-      "dependencies": [
-        "WF-023",
-        "WF-025",
-        "WF-026"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-028",
-      "title": "Model: create source-registry.json",
-      "stage": "model",
-      "status": "completed",
-      "dependencies": [
-        "WF-018",
-        "WF-025"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-029",
-      "title": "Model: create role-and-review-policy.json",
-      "stage": "model",
-      "status": "completed",
-      "dependencies": [
-        "WF-023"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-030",
-      "title": "Vertical Slice: stakeholder needs and use cases",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-024",
-        "WF-027",
-        "WF-028"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-031",
-      "title": "Vertical Slice: hazard analysis and risk assessment",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-030"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-032",
-      "title": "Vertical Slice: functional safety requirements (FSR)",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-031"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-033",
-      "title": "Vertical Slice: technical safety requirements (TSR)",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-032"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-034",
-      "title": "Vertical Slice: system architecture and allocation",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-033"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-035",
-      "title": "Vertical Slice: hardware requirements (AFE)",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-034"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-036",
-      "title": "Vertical Slice: software requirements (voltage monitoring)",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-034"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-037",
-      "title": "Vertical Slice: hardware design (AFE)",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-035"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-038",
-      "title": "Vertical Slice: software design (voltage monitoring)",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-036"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-039",
-      "title": "Vertical Slice: implementation mappings",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-037",
-        "WF-038"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-040",
-      "title": "Vertical Slice: verification measures",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-039"
-      ],
-      "assigned_to": "verification",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-041",
-      "title": "Vertical Slice: execution records (synthetic fixtures)",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-040"
-      ],
-      "assigned_to": "verification",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-042",
-      "title": "Vertical Slice: review records",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-041"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-043",
-      "title": "Vertical Slice: safety argument fragment",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-042"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-044",
-      "title": "Vertical Slice: mutation scenario",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-043"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-045",
-      "title": "Vertical Slice: validate schemas and links",
-      "stage": "vertical_slice",
-      "status": "completed",
-      "dependencies": [
-        "WF-044"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-046",
-      "title": "Full Generation: project and safety management artifacts",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-045"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-047",
-      "title": "Full Generation: item definition and context",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-024"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-048",
-      "title": "Full Generation: hazard and risk analysis (all features)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-019",
-        "WF-031"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-049",
-      "title": "Full Generation: functional safety requirements (all)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-048"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-050",
-      "title": "Full Generation: technical safety requirements (all)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-049"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-051",
-      "title": "Full Generation: safety analyses (FMEA, FTA, dependent failures)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-050"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-052",
-      "title": "Full Generation: safety argument (complete)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-051"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-053",
-      "title": "Full Generation: system requirements and architecture",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-034",
-        "WF-047"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-054",
-      "title": "Full Generation: HSI/interface authority",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-053"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-055",
-      "title": "Full Generation: end-to-end function chains",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-054"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-056",
-      "title": "Full Generation: hardware requirements (all boards)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-016",
-        "WF-054"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-057",
-      "title": "Full Generation: hardware architecture and design (all)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-056"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-058",
-      "title": "Full Generation: hardware safety analysis (FMEA/FMEDA)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-057"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-059",
-      "title": "Full Generation: hardware verification procedures",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-058"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-060",
-      "title": "Full Generation: software requirements (all modules)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-018",
-        "WF-054"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-061",
-      "title": "Full Generation: software architecture and design (all)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-060"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-062",
-      "title": "Full Generation: software safety mechanisms",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-061"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-063",
-      "title": "Full Generation: coding guidelines and static analysis",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-061"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-064",
-      "title": "Full Generation: software verification measures",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-062",
-        "WF-063"
-      ],
-      "assigned_to": "verification",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-065",
-      "title": "Full Generation: verification strategies and plans (all domains)",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-040",
-        "WF-059",
-        "WF-064"
-      ],
-      "assigned_to": "verification",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-066",
-      "title": "Full Generation: post-development lifecycle artifacts",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-052",
-        "WF-065"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-067",
-      "title": "Full Generation: supporting and organizational processes",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-021",
-        "WF-029"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-068",
-      "title": "Full Generation: standards-to-work-product mappings",
-      "stage": "full_generation",
-      "status": "completed",
-      "dependencies": [
-        "WF-008",
-        "WF-021",
-        "WF-067"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-069",
-      "title": "Integration: reconcile HSI/interface authority",
-      "stage": "integration",
-      "status": "completed",
-      "dependencies": [
-        "WF-054",
-        "WF-057",
-        "WF-061"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-070",
-      "title": "Integration: reconcile shared parameters and assumptions",
-      "stage": "integration",
-      "status": "completed",
-      "dependencies": [
-        "WF-024",
-        "WF-054",
-        "WF-057",
-        "WF-061"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-071",
-      "title": "Integration: reconcile safety analyses",
-      "stage": "integration",
-      "status": "completed",
-      "dependencies": [
-        "WF-051",
-        "WF-058",
-        "WF-062"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-072",
-      "title": "Integration: reconcile verification measures and coverage",
-      "stage": "integration",
-      "status": "completed",
-      "dependencies": [
-        "WF-059",
-        "WF-064",
-        "WF-065"
-      ],
-      "assigned_to": "verification",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-073",
-      "title": "Integration: reconcile standards mappings",
-      "stage": "integration",
-      "status": "completed",
-      "dependencies": [
-        "WF-068"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-074",
-      "title": "Integration: reconcile lifecycle records",
-      "stage": "integration",
-      "status": "completed",
-      "dependencies": [
-        "WF-066",
-        "WF-067"
-      ],
-      "assigned_to": "system",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-075",
-      "title": "Review and Repair: system/safety domain review",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-073"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-076",
-      "title": "Review and Repair: hardware domain review",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-073"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-077",
-      "title": "Review and Repair: software domain review",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-073"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-078",
-      "title": "Review and Repair: verification domain review",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-073"
-      ],
-      "assigned_to": "verification",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-079",
-      "title": "Review and Repair: traceability/data engineering review",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-073"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-080",
-      "title": "Review and Repair: cross-domain consistency checks",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-075",
-        "WF-076",
-        "WF-077",
-        "WF-078",
-        "WF-079"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-081",
-      "title": "Review and Repair: adversarial review",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-080"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-082",
-      "title": "Review and Repair: repair authoritative records and regenerate",
-      "stage": "review_repair",
-      "status": "completed",
-      "dependencies": [
-        "WF-081"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-083",
-      "title": "Scenario Validation: create 20 mutation scenarios",
-      "stage": "scenario_validation",
-      "status": "completed",
-      "dependencies": [
-        "WF-082"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-084",
-      "title": "Scenario Validation: execute mutation checks",
-      "stage": "scenario_validation",
-      "status": "completed",
-      "dependencies": [
-        "WF-083"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-085",
-      "title": "Scenario Validation: change lifecycle - safety threshold change",
-      "stage": "scenario_validation",
-      "status": "completed",
-      "dependencies": [
-        "WF-082"
-      ],
-      "assigned_to": "safety",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-086",
-      "title": "Scenario Validation: change lifecycle - HSI/hardware interface change",
-      "stage": "scenario_validation",
-      "status": "completed",
-      "dependencies": [
-        "WF-082"
-      ],
-      "assigned_to": "hardware",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-087",
-      "title": "Scenario Validation: change lifecycle - software behavioral defect",
-      "stage": "scenario_validation",
-      "status": "completed",
-      "dependencies": [
-        "WF-082"
-      ],
-      "assigned_to": "software",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-088",
-      "title": "Scenario Validation: round-trip/export/reproducibility tests",
-      "stage": "scenario_validation",
-      "status": "completed",
-      "dependencies": [
-        "WF-084",
-        "WF-085",
-        "WF-086",
-        "WF-087"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-089",
-      "title": "Scenario Validation: corpus toolchain self-tests",
-      "stage": "scenario_validation",
-      "status": "completed",
-      "dependencies": [
-        "WF-088"
-      ],
-      "assigned_to": "traceability",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-090",
-      "title": "Final Assessment: run all completion gates",
-      "stage": "final_assessment",
-      "status": "completed",
-      "dependencies": [
-        "WF-089"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-091",
-      "title": "Final Assessment: produce final reports",
-      "stage": "final_assessment",
-      "status": "completed",
-      "dependencies": [
-        "WF-090"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-092",
-      "title": "Final Assessment: five cross-domain walkthroughs",
-      "stage": "final_assessment",
-      "status": "completed",
-      "dependencies": [
-        "WF-091"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-093",
-      "title": "Final Assessment: verify source unchanged",
-      "stage": "final_assessment",
-      "status": "completed",
-      "dependencies": [
-        "WF-090"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-094",
-      "title": "Final Assessment: report final corpus status",
-      "stage": "final_assessment",
-      "status": "completed",
-      "dependencies": [
-        "WF-092",
-        "WF-093"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-095",
-      "title": "Final Assessment: update README.md",
-      "stage": "final_assessment",
-      "status": "completed",
-      "dependencies": [
-        "WF-094"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    },
-    {
-      "id": "WF-096",
-      "title": "Final Assessment: final response and handoff",
-      "stage": "final_assessment",
-      "status": "completed",
-      "dependencies": [
-        "WF-095"
-      ],
-      "assigned_to": "architect",
-      "completed_at": "2026-09-11T00:00:00Z"
-    }
-  ],
-  "findings": [
-    "21 validator findings, 0 errors (live run 2026-09-29); 22 finding artifacts recorded under reviews/findings/",
-    "finding FB2-REV-FND-000022 (high): root TRACEABILITY_DOCUMENT.md claims ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability; file is outside the docs/artifacts write boundary and was NOT modified, only reported. No corpus record was authored against IEC 61508 and it is absent from the standards lock, though the pinned source lists it as a candidate standard and cites IEC 61508-3:2010.",
-    "FB2-REV-FND-000008..000012: 5 security requirements genuinely unverified (no link in either direction)",
-    "FB2-REV-FND-000013..000019: 7 FSRs carry no fault_reaction field; schema change required",
-    "FB2-REV-FND-000020/000021: ASIL_D assignment on FB2-SAF-SGO-000001 has no justification and no FSC/TSC derivation",
-    "FB2-REV-FND-000001..000007: verifies-direction rule fires on correctly verified requirements; convention decision owed",
-    "FB2-REV-000001 duplicated across two files; index de-duplicates on (profile,id) - reported, not deleted",
-    "redundant link-registry copy under corpus/ (51 of 172 links) - de-duplicated, reported, not deleted",
-    "feature-inventory.json summary.total_features states 20 while the file holds 22 records - reported, not edited",
-    "target-hardware evidence 0/16; 177 of 313 repository tests blocked on proprietary TI HALCoGen output (34 distinct headers)"
-  ],
-  "decisions": [
-    "DEC-001..DEC-005 accepted; see decisions.jsonl",
-    "Final status: synthetic_ready_with_limitations",
-    "All 96 work-queue entries completed 2026-09-11",
-    "2026-09-29: 15 coverage-plan corrections applied (CORR-COV-001..015); every expected_artifacts and capability_attributes list retained unchanged; no artifact fabricated to make a status true",
-    "2026-09-29: two corrections (CORR-COV-008 MAN.6, CORR-COV-011 ISO Part 6) landed on a different status than first reported because verification found evidence on both sides; divergence recorded rather than resolved",
-    "2026-09-29: generated views now read coverage-plan.json live at render time instead of quoting a frozen literal; no acceptance gate, check, scenario-test logic, validator rule or previously-fixed coverage computation was altered",
-    "2026-09-29: macOS is not an upstream-supported foxBMS platform; the 94/136 host run is NOT target-hardware evidence and carries no verification credit; the 5 failures are a real product defect, not a harness artefact",
-    "2026-09-29: root TRACEABILITY_DOCUMENT.md left unmodified - outside the write boundary, reported as FB2-REV-FND-000022 Scoped the IEC 61508 point precisely after discovering the pinned source itself references the standard."
-  ],
-  "last_updated": "2026-09-29T00:00:00Z",
+ "repository": {
+  "path": "/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2",
+  "commit": "308028fb",
+  "tag": "v1.11.0",
+  "branch": "master",
+  "dirty": true,
+  "recorded_at": "2026-09-29T00:00:00Z",
+  "dirty_note": "Working tree is dirty by design: this corpus is developed as uncommitted work under docs/artifacts/. No foxBMS source file is modified; see operating rules in _control/resume.md."
+ },
+ "runtime": {
+  "platform": "OpenCode",
+  "model": "nvidia/nemotron-3-ultra-550b-a55b",
+  "model_provider": "nvidia",
+  "recorded_at": "2026-09-08T00:00:00Z"
+ },
+ "stage": "complete",
+ "phase": "final_assessment",
+ "overall_status": "completed_with_recorded_gaps",
+ "artifacts": {
+  "total_planned": 96,
   "completed": 96,
-  "total": 96,
-  "status": "completed",
-  "final_status": "synthetic_ready_with_limitations",
-  "completed_at": "2026-09-11T00:00:00Z",
-  "current_state": {
-    "measured_at": "2026-09-29T00:00:00Z",
-    "source": "live runs of docs/artifacts/tools/corpus.py on 2026-09-29",
-    "acceptance_suite": {
-      "result": "PASSED",
-      "stages": 8,
-      "gate_lines_pass": 10,
-      "gate_lines_fail": 0,
-      "scenario_lines_pass": 23,
-      "scenario_lines_fail": 0,
-      "selftest_pass": 11,
-      "selftest_fail": 0
-    },
-    "populations": {
-      "validated_artifact_files": 177,
-      "artifact_files_with_id": 154,
-      "indexed_unique_records": 153,
-      "unique_artifact_ids_across_profiles": 123,
-      "duplicate_profile_id": [
-        [
-          "as_is",
-          "FB2-REV-000001"
-        ]
-      ],
-      "note": "177 = 154 corpus/review files + 23 scenario files. 153 = unique (profile,id) records in the index. 123 = unique ids across both profiles; 30 ids exist in both by design (profile isolation)."
-    },
-    "census": {
-      "by_type": {
-        "requirement": 26,
-        "deviation": 26,
-        "execution": 25,
-        "finding": 22,
-        "test_measure": 16,
-        "review": 12,
-        "design": 8,
-        "scenario": 5,
-        "safety_analysis": 4,
-        "change": 3,
-        "hazard": 2,
-        "safety_goal": 2,
-        "safety_case": 1,
-        "tara": 1
-      },
-      "by_domain": {
-        "verification": 64,
-        "software": 40,
-        "safety": 30,
-        "management": 7,
-        "hardware": 7,
-        "system": 3,
-        "supporting": 2
-      },
-      "by_profile": {
-        "synthetic_reference": 82,
-        "as_is": 71
-      },
-      "by_lifecycle": {
-        "draft": 73,
-        "reviewed": 51,
-        "baselined": 29
-      },
-      "by_origin": {
-        "synthetic": 60,
-        "source_observed": 57,
-        "derived": 36
-      },
-      "guard": {
-        "human_approval_status": {
-          "pending": 153
-        },
-        "production_authorized": {
-          "false": 153
-        },
-        "product_verification_credit": {
-          "false": 153
-        }
-      }
-    },
-    "traceability": {
-      "links": 283,
-      "dangling": 0,
-      "by_relation": {
-        "reviewed_by": 167,
-        "verifies": 32,
-        "result_of": 16,
-        "supports": 16,
-        "changes": 16,
-        "refines": 13,
-        "allocated_to": 13,
-        "implements": 6,
-        "mitigates": 2,
-        "validates": 2
-      },
-      "by_profile": {
-        "as_is": 111,
-        "synthetic_reference": 172
-      },
-      "by_review_state": {
-        "reviewed": 231,
-        "pending": 52
-      }
-    },
-    "coverage_dimensions": {
-      "scope_accounting": "1/1",
-      "artifact_population": "13/13",
-      "standards_mapping": "44/44",
-      "source_grounding": "76/154",
-      "traceability_integrity": "283/283",
-      "semantic_consistency_checks": "10/10",
-      "automated_review_coverage": "82/123",
-      "verification_planning": "16/7",
-      "actual_product_evidence": "0/16",
-      "synthetic_fixture_coverage": "82/43",
-      "negative_scenario_validation": "20/20",
-      "export_reproducibility": "1/1",
-      "human_approval": "0/154",
-      "production_authorization": "0/154",
-      "final_status": "synthetic_ready_with_limitations"
-    },
-    "governance": {
-      "process_inventory_total": 32,
-      "processes_applicable": 28,
-      "processes_not_applicable": 4,
-      "applicable_by_disposition": {
-        "mapped": 12,
-        "partially_mapped": 10,
-        "gap": 6
-      },
-      "corrections_recorded": 15,
-      "iso_parts": {
-        "mapped": 2,
-        "partially_mapped": 4,
-        "gap": 2,
-        "referenced": 2,
-        "not_applicable": 2
-      },
-      "zero_record_processes": [
-        "SYS.1",
-        "SYS.2",
-        "MAN.3",
-        "MAN.5",
-        "MAN.6",
-        "PIM.3"
-      ],
-      "standards_locked": [
-        {
-          "id": "ISO_26262_2018",
-          "edition": "2018"
-        },
-        {
-          "id": "ASPICE_PAM_41",
-          "edition": "4.1"
-        }
-      ],
-      "iec_61508_records_in_corpus": 0,
-      "iec_61508_note": "No corpus record was authored against IEC 61508. It is absent from standards-lock.json, which locks only ISO_26262_2018 and ASPICE_PAM_41. The pinned source nonetheless lists it as a candidate standard (docs/general/safety/safety.rst:60) and cites IEC 61508-3:2010 in docs/references.bib, so the standard is a legitimate consideration for the product; the corpus simply never engaged it."
-    },
-    "reviews": {
-      "review_records_indexed": 12,
-      "review_record_files": 13,
-      "unique_ids_covered": 82,
-      "unique_ids_total": 123,
-      "coverage_percent": 67,
-      "review_embedded_findings": 36,
-      "findings_by_severity": {
-        "critical": 0,
-        "high": 4,
-        "medium": 17,
-        "low": 5,
-        "info": 10
-      },
-      "review_records_at_reviewed": 1,
-      "review_records_at_draft": 11
-    },
-    "verification": {
-      "host_run_platform": "macOS arm64, Darwin kernel 27.0.0 (NOT an upstream-supported foxBMS platform)",
-      "host_run_is_target_hardware": false,
-      "host_run_credit": false,
-      "tests_in_scope": 136,
-      "passed": 94,
-      "failed": 5,
-      "build_failures": 37,
-      "assertions_tested": 332,
-      "assertions_passed": 323,
-      "assertions_failed": 8,
-      "repository_tests_total": 313,
-      "blocked_on_halcogen": 177,
-      "distinct_halcogen_headers": 34,
-      "target_hardware_executions": 0,
-      "execution_records": 25,
-      "as_is_outcomes": {
-        "pass": 4,
-        "fail": 9,
-        "blocked": 1
-      },
-      "failure_root_cause": "src/app/engine/database/database.h:209 declares the database access API with untyped void* parameters; the shipped Ceedling config sets :cmock: :when_ptr: :compare_data, so CMock cannot learn the pointed-to size and emits a pointer-identity check that can never succeed. Compiler- and platform-independent: a real defect in the product test setup, not a harness artefact. No result adjusted.",
-      "results_adjusted": false
-    },
-    "scenarios": {
-      "mutations_required": 20,
-      "mutations_present": 20,
-      "mutations_detected": 20,
-      "change_lifecycles": 3,
-      "change_lifecycles_complete": 3,
-      "lines_pass": 23,
-      "lines_fail": 0
-    },
-    "determinism": {
-      "views_files": 10,
-      "views_byte_identical_ignoring_Generated_line": true,
-      "exports_files": 4,
-      "exports_byte_identical_ignoring_generated_at": true,
-      "export_content_hashes_identical": true,
-      "export_content_hashes": 3,
-      "spec_documents": "INTEGRITY CHECK PASSED; DETERMINISM: byte-identical across runs; 10/10 converted",
-      "excluded_from_comparison": [
-        "views preamble 'Generated:' line",
-        "exports/manifest.json 'generated_at'"
-      ]
-    },
-    "blocked": [
-      {
-        "id": "B-01",
-        "item": "target-hardware verification",
-        "state": "0/16",
-        "reason": "execution_kind has no target-hardware member; recording one would fabricate it",
-        "unblocks_with": "test suite executed on TMS570LC4357 with AFE hardware"
-      },
-      {
-        "id": "B-02",
-        "item": "177 of 313 repository tests",
-        "state": "blocked",
-        "reason": "reached 34 distinct proprietary HL_*.h headers; reconstructing them would fabricate what the tests verify",
-        "unblocks_with": "a real HALCoGen run on conf/hcg/app.hcg under a TI licence, or a Linux host (which still needs the same HALCoGen output for these 177)"
-      },
-      {
-        "id": "B-03",
-        "item": "5 failing tests",
-        "state": "open product defect",
-        "reason": "void* database API parameters vs :when_ptr: :compare_data in the shipped Ceedling config",
-        "unblocks_with": "a product-owner decision: type the parameters, add :treat_as entries, or register CMock callbacks. Not a corpus action."
-      },
-      {
-        "id": "B-04",
-        "item": "human approval",
-        "state": "0/153 pending",
-        "reason": "requires human reviewers; AI sessions are not organisational independence",
-        "unblocks_with": "independent human review and sign-off"
-      },
-      {
-        "id": "B-05",
-        "item": "HWE.2 / HWE.3 hardware design",
-        "state": "format-limited",
-        "reason": "Altium and other CAD binaries are not readable by the corpus tooling",
-        "unblocks_with": "real hardware design analysis"
-      },
-      {
-        "id": "B-06",
-        "item": "6 applicable processes with no record",
-        "state": "gap",
-        "reason": "SYS.1, SYS.2, MAN.3, MAN.5, MAN.6, PIM.3 require authoring stakeholder needs, system requirements, a project plan, a risk register, a measurement plan and improvement records",
-        "unblocks_with": "authoring those artifacts, or an explicit scope decision"
-      },
-      {
-        "id": "B-07",
-        "item": "no FSC / TSC record",
-        "state": "gap",
-        "reason": "ISO 26262 Part 3 concept phase incomplete, so the ASIL assignment on FB2-SAF-SGO-000001 has no derivation",
-        "unblocks_with": "author the functional and technical safety concepts, then the ASIL justification - an engineering judgement the corpus cannot assert"
-      },
-      {
-        "id": "B-08",
-        "item": "5 security requirements unverified",
-        "state": "gap",
-        "reason": "verification planning never covered the security requirement set",
-        "unblocks_with": "author security verification measures and executions"
-      },
-      {
-        "id": "B-09",
-        "item": "conformity claim in root TRACEABILITY_DOCUMENT.md",
-        "state": "in_progress",
-        "reason": "file is outside the docs/artifacts write boundary and could not be corrected from inside it",
-        "unblocks_with": "a repository owner making the five corrections named in FB2-REV-FND-000022"
-      },
-      {
-        "id": "B-10",
-        "item": "review coverage 67% and 11 of 12 records draft",
-        "state": "partial",
-        "reason": "41 unique artifact ids uncovered; 11 review records still draft",
-        "unblocks_with": "additional review records and progression of the draft ones"
-      }
-    ]
+  "in_progress": 0,
+  "blocked": 0,
+  "note": "96 work-queue entries are complete. 'blocked: 0' refers to work-queue entries only; substantive engineering gaps remain open and are listed under current_state.blocked."
+ },
+ "work_queue": [
+  {
+   "id": "WF-001",
+   "title": "Preflight: verify repository/output boundaries",
+   "stage": "preflight",
+   "status": "completed",
+   "dependencies": [],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-08T00:00:00Z"
+  },
+  {
+   "id": "WF-002",
+   "title": "Preflight: record initial git state",
+   "stage": "preflight",
+   "status": "completed",
+   "dependencies": [
+    "WF-001"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-08T00:00:00Z"
+  },
+  {
+   "id": "WF-003",
+   "title": "Preflight: create control directory structure",
+   "stage": "preflight",
+   "status": "completed",
+   "dependencies": [
+    "WF-001"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-08T00:00:00Z"
+  },
+  {
+   "id": "WF-004",
+   "title": "Preflight: create .gitignore for .work/",
+   "stage": "preflight",
+   "status": "completed",
+   "dependencies": [
+    "WF-001"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-08T00:00:00Z"
+  },
+  {
+   "id": "WF-005",
+   "title": "Preflight: record runtime/tool capabilities",
+   "stage": "preflight",
+   "status": "completed",
+   "dependencies": [
+    "WF-001"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-08T00:00:00Z"
+  },
+  {
+   "id": "WF-006",
+   "title": "Preflight: read applicable repository guidance",
+   "stage": "preflight",
+   "status": "completed",
+   "dependencies": [
+    "WF-001"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-08T00:00:00Z"
+  },
+  {
+   "id": "WF-007",
+   "title": "Preflight: preserve master prompt in _control/",
+   "stage": "preflight",
+   "status": "completed",
+   "dependencies": [
+    "WF-003"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-08T00:00:00Z"
+  },
+  {
+   "id": "WF-008",
+   "title": "Discovery: create standards-lock.json",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-009",
+   "title": "Discovery: inventory source code modules",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-010",
+   "title": "Discovery: inventory tasks/interrupts and scheduling",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-011",
+   "title": "Discovery: inventory configuration/calibration",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-012",
+   "title": "Discovery: inventory startup/bootloader",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-013",
+   "title": "Discovery: inventory dependencies and vendor code",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-014",
+   "title": "Discovery: inventory host tools and CI/build scripts",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-015",
+   "title": "Discovery: inventory existing tests",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "verification",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-016",
+   "title": "Discovery: inventory hardware design resources",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-017",
+   "title": "Discovery: inventory documentation structure",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-002"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-018",
+   "title": "Discovery: create source-inventory.json",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-009",
+    "WF-010",
+    "WF-011",
+    "WF-012",
+    "WF-013",
+    "WF-014",
+    "WF-015",
+    "WF-016",
+    "WF-017"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-019",
+   "title": "Discovery: create feature-inventory.json",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-018"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-020",
+   "title": "Discovery: create variant-matrix.json",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-011",
+    "WF-018"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-021",
+   "title": "Discovery: create coverage-plan.json with process inventory",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-008"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-022",
+   "title": "Discovery: create scope-and-applicability.json",
+   "stage": "discovery",
+   "status": "completed",
+   "dependencies": [
+    "WF-018",
+    "WF-019",
+    "WF-020"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-023",
+   "title": "Model: create corpus-policy.json",
+   "stage": "model",
+   "status": "completed",
+   "dependencies": [
+    "WF-008",
+    "WF-021"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-024",
+   "title": "Model: define hypothetical item and parameters",
+   "stage": "model",
+   "status": "completed",
+   "dependencies": [
+    "WF-022",
+    "WF-023"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-025",
+   "title": "Model: define ID scheme and namespace rules",
+   "stage": "model",
+   "status": "completed",
+   "dependencies": [
+    "WF-023"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-026",
+   "title": "Model: define link semantics and relation types",
+   "stage": "model",
+   "status": "completed",
+   "dependencies": [
+    "WF-023"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-027",
+   "title": "Model: define JSON schemas in schemas/",
+   "stage": "model",
+   "status": "completed",
+   "dependencies": [
+    "WF-023",
+    "WF-025",
+    "WF-026"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-028",
+   "title": "Model: create source-registry.json",
+   "stage": "model",
+   "status": "completed",
+   "dependencies": [
+    "WF-018",
+    "WF-025"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-029",
+   "title": "Model: create role-and-review-policy.json",
+   "stage": "model",
+   "status": "completed",
+   "dependencies": [
+    "WF-023"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-030",
+   "title": "Vertical Slice: stakeholder needs and use cases",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-024",
+    "WF-027",
+    "WF-028"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-031",
+   "title": "Vertical Slice: hazard analysis and risk assessment",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-030"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-032",
+   "title": "Vertical Slice: functional safety requirements (FSR)",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-031"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-033",
+   "title": "Vertical Slice: technical safety requirements (TSR)",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-032"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-034",
+   "title": "Vertical Slice: system architecture and allocation",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-033"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-035",
+   "title": "Vertical Slice: hardware requirements (AFE)",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-034"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-036",
+   "title": "Vertical Slice: software requirements (voltage monitoring)",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-034"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-037",
+   "title": "Vertical Slice: hardware design (AFE)",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-035"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-038",
+   "title": "Vertical Slice: software design (voltage monitoring)",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-036"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-039",
+   "title": "Vertical Slice: implementation mappings",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-037",
+    "WF-038"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-040",
+   "title": "Vertical Slice: verification measures",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-039"
+   ],
+   "assigned_to": "verification",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-041",
+   "title": "Vertical Slice: execution records (synthetic fixtures)",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-040"
+   ],
+   "assigned_to": "verification",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-042",
+   "title": "Vertical Slice: review records",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-041"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-043",
+   "title": "Vertical Slice: safety argument fragment",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-042"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-044",
+   "title": "Vertical Slice: mutation scenario",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-043"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-045",
+   "title": "Vertical Slice: validate schemas and links",
+   "stage": "vertical_slice",
+   "status": "completed",
+   "dependencies": [
+    "WF-044"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-046",
+   "title": "Full Generation: project and safety management artifacts",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-045"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-047",
+   "title": "Full Generation: item definition and context",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-024"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-048",
+   "title": "Full Generation: hazard and risk analysis (all features)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-019",
+    "WF-031"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-049",
+   "title": "Full Generation: functional safety requirements (all)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-048"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-050",
+   "title": "Full Generation: technical safety requirements (all)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-049"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-051",
+   "title": "Full Generation: safety analyses (FMEA, FTA, dependent failures)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-050"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-052",
+   "title": "Full Generation: safety argument (complete)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-051"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-053",
+   "title": "Full Generation: system requirements and architecture",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-034",
+    "WF-047"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-054",
+   "title": "Full Generation: HSI/interface authority",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-053"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-055",
+   "title": "Full Generation: end-to-end function chains",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-054"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-056",
+   "title": "Full Generation: hardware requirements (all boards)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-016",
+    "WF-054"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-057",
+   "title": "Full Generation: hardware architecture and design (all)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-056"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-058",
+   "title": "Full Generation: hardware safety analysis (FMEA/FMEDA)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-057"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-059",
+   "title": "Full Generation: hardware verification procedures",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-058"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-060",
+   "title": "Full Generation: software requirements (all modules)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-018",
+    "WF-054"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-061",
+   "title": "Full Generation: software architecture and design (all)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-060"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-062",
+   "title": "Full Generation: software safety mechanisms",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-061"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-063",
+   "title": "Full Generation: coding guidelines and static analysis",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-061"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-064",
+   "title": "Full Generation: software verification measures",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-062",
+    "WF-063"
+   ],
+   "assigned_to": "verification",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-065",
+   "title": "Full Generation: verification strategies and plans (all domains)",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-040",
+    "WF-059",
+    "WF-064"
+   ],
+   "assigned_to": "verification",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-066",
+   "title": "Full Generation: post-development lifecycle artifacts",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-052",
+    "WF-065"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-067",
+   "title": "Full Generation: supporting and organizational processes",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-021",
+    "WF-029"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-068",
+   "title": "Full Generation: standards-to-work-product mappings",
+   "stage": "full_generation",
+   "status": "completed",
+   "dependencies": [
+    "WF-008",
+    "WF-021",
+    "WF-067"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-069",
+   "title": "Integration: reconcile HSI/interface authority",
+   "stage": "integration",
+   "status": "completed",
+   "dependencies": [
+    "WF-054",
+    "WF-057",
+    "WF-061"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-070",
+   "title": "Integration: reconcile shared parameters and assumptions",
+   "stage": "integration",
+   "status": "completed",
+   "dependencies": [
+    "WF-024",
+    "WF-054",
+    "WF-057",
+    "WF-061"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-071",
+   "title": "Integration: reconcile safety analyses",
+   "stage": "integration",
+   "status": "completed",
+   "dependencies": [
+    "WF-051",
+    "WF-058",
+    "WF-062"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-072",
+   "title": "Integration: reconcile verification measures and coverage",
+   "stage": "integration",
+   "status": "completed",
+   "dependencies": [
+    "WF-059",
+    "WF-064",
+    "WF-065"
+   ],
+   "assigned_to": "verification",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-073",
+   "title": "Integration: reconcile standards mappings",
+   "stage": "integration",
+   "status": "completed",
+   "dependencies": [
+    "WF-068"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-074",
+   "title": "Integration: reconcile lifecycle records",
+   "stage": "integration",
+   "status": "completed",
+   "dependencies": [
+    "WF-066",
+    "WF-067"
+   ],
+   "assigned_to": "system",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-075",
+   "title": "Review and Repair: system/safety domain review",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-073"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-076",
+   "title": "Review and Repair: hardware domain review",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-073"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-077",
+   "title": "Review and Repair: software domain review",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-073"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-078",
+   "title": "Review and Repair: verification domain review",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-073"
+   ],
+   "assigned_to": "verification",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-079",
+   "title": "Review and Repair: traceability/data engineering review",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-073"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-080",
+   "title": "Review and Repair: cross-domain consistency checks",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-075",
+    "WF-076",
+    "WF-077",
+    "WF-078",
+    "WF-079"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-081",
+   "title": "Review and Repair: adversarial review",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-080"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-082",
+   "title": "Review and Repair: repair authoritative records and regenerate",
+   "stage": "review_repair",
+   "status": "completed",
+   "dependencies": [
+    "WF-081"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-083",
+   "title": "Scenario Validation: create 20 mutation scenarios",
+   "stage": "scenario_validation",
+   "status": "completed",
+   "dependencies": [
+    "WF-082"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-084",
+   "title": "Scenario Validation: execute mutation checks",
+   "stage": "scenario_validation",
+   "status": "completed",
+   "dependencies": [
+    "WF-083"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-085",
+   "title": "Scenario Validation: change lifecycle - safety threshold change",
+   "stage": "scenario_validation",
+   "status": "completed",
+   "dependencies": [
+    "WF-082"
+   ],
+   "assigned_to": "safety",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-086",
+   "title": "Scenario Validation: change lifecycle - HSI/hardware interface change",
+   "stage": "scenario_validation",
+   "status": "completed",
+   "dependencies": [
+    "WF-082"
+   ],
+   "assigned_to": "hardware",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-087",
+   "title": "Scenario Validation: change lifecycle - software behavioral defect",
+   "stage": "scenario_validation",
+   "status": "completed",
+   "dependencies": [
+    "WF-082"
+   ],
+   "assigned_to": "software",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-088",
+   "title": "Scenario Validation: round-trip/export/reproducibility tests",
+   "stage": "scenario_validation",
+   "status": "completed",
+   "dependencies": [
+    "WF-084",
+    "WF-085",
+    "WF-086",
+    "WF-087"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-089",
+   "title": "Scenario Validation: corpus toolchain self-tests",
+   "stage": "scenario_validation",
+   "status": "completed",
+   "dependencies": [
+    "WF-088"
+   ],
+   "assigned_to": "traceability",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-090",
+   "title": "Final Assessment: run all completion gates",
+   "stage": "final_assessment",
+   "status": "completed",
+   "dependencies": [
+    "WF-089"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-091",
+   "title": "Final Assessment: produce final reports",
+   "stage": "final_assessment",
+   "status": "completed",
+   "dependencies": [
+    "WF-090"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-092",
+   "title": "Final Assessment: five cross-domain walkthroughs",
+   "stage": "final_assessment",
+   "status": "completed",
+   "dependencies": [
+    "WF-091"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-093",
+   "title": "Final Assessment: verify source unchanged",
+   "stage": "final_assessment",
+   "status": "completed",
+   "dependencies": [
+    "WF-090"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-094",
+   "title": "Final Assessment: report final corpus status",
+   "stage": "final_assessment",
+   "status": "completed",
+   "dependencies": [
+    "WF-092",
+    "WF-093"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-095",
+   "title": "Final Assessment: update README.md",
+   "stage": "final_assessment",
+   "status": "completed",
+   "dependencies": [
+    "WF-094"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
+  },
+  {
+   "id": "WF-096",
+   "title": "Final Assessment: final response and handoff",
+   "stage": "final_assessment",
+   "status": "completed",
+   "dependencies": [
+    "WF-095"
+   ],
+   "assigned_to": "architect",
+   "completed_at": "2026-09-11T00:00:00Z"
   }
+ ],
+ "findings": [
+  "9 validator findings, 0 errors (live run 2026-09-29); 30 finding artifacts recorded under reviews/findings/",
+  "FB2-REV-FND-000023..000029: corrected at source by a controlled remediation pass on 2026-09-29. Every corrected record had its revision incremented and a revision_history entry appended; dependents were regenerated. Validator findings fell 21 -> 9, all 12 removed observations being the false gaps of the verifies rule (FB2-REV-FND-000029). No check was relaxed to move that number.",
+  "FB2-REV-FND-000030: three declared-forward references (FB2-SW-DSN-000004 in two decomposition blocks, FB2-PIM-IMP-000003 in a plan and a measurement plan) name work products the corpus has never authored. Recorded rather than repaired; the missing records were not invented.",
+  "finding FB2-REV-FND-000022 (high): root TRACEABILITY_DOCUMENT.md claims ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability; file is outside the docs/artifacts write boundary and was NOT modified, only reported. No corpus record was authored against IEC 61508 and it is absent from the standards lock, though the pinned source lists it as a candidate standard and cites IEC 61508-3:2010.",
+  "FB2-REV-FND-000008..000012: 5 security requirements genuinely unverified (no link in either direction)",
+  "FB2-REV-FND-000013..000019: 7 FSRs carry no fault_reaction field; schema change required",
+  "FB2-REV-FND-000020/000021: ASIL_D assignment on FB2-SAF-SGO-000001 has no justification and no FSC/TSC derivation",
+  "FB2-REV-FND-000001..000007: verifies-direction rule fires on correctly verified requirements; convention decision owed",
+  "FB2-REV-000001 duplicated across two files; index de-duplicates on (profile,id) - reported, not deleted",
+  "redundant link-registry copy under corpus/ (51 of 172 links) - de-duplicated, reported, not deleted",
+  "feature-inventory.json summary.total_features states 20 while the file holds 22 records - reported, not edited",
+  "target-hardware evidence 0/16; 177 of 313 repository tests blocked on proprietary TI HALCoGen output (34 distinct headers)"
+ ],
+ "decisions": [
+  "DEC-001..DEC-005 accepted; see decisions.jsonl",
+  "Final status: synthetic_ready_with_limitations",
+  "All 96 work-queue entries completed 2026-09-11",
+  "2026-09-29: 15 coverage-plan corrections applied (CORR-COV-001..015); every expected_artifacts and capability_attributes list retained unchanged; no artifact fabricated to make a status true",
+  "2026-09-29: two corrections (CORR-COV-008 MAN.6, CORR-COV-011 ISO Part 6) landed on a different status than first reported because verification found evidence on both sides; divergence recorded rather than resolved",
+  "2026-09-29: generated views now read coverage-plan.json live at render time instead of quoting a frozen literal; no acceptance gate, check, scenario-test logic, validator rule or previously-fixed coverage computation was altered",
+  "2026-09-29: macOS is not an upstream-supported foxBMS platform; the 94/136 host run is NOT target-hardware evidence and carries no verification credit; the 5 failures are a real product defect, not a harness artefact",
+  "2026-09-29: root TRACEABILITY_DOCUMENT.md left unmodified - outside the write boundary, reported as FB2-REV-FND-000022 Scoped the IEC 61508 point precisely after discovering the pinned source itself references the standard."
+ ],
+ "last_updated": "2026-09-29T00:00:00Z",
+ "completed": 96,
+ "total": 96,
+ "status": "completed",
+ "final_status": "synthetic_ready_with_limitations",
+ "completed_at": "2026-09-11T00:00:00Z",
+ "current_state": {
+  "measured_at": "2026-09-29T00:00:00Z",
+  "source": "live runs of docs/artifacts/tools/corpus.py on 2026-09-29",
+  "acceptance_suite": {
+   "result": "PASSED",
+   "stages": 8,
+   "gate_lines_pass": 10,
+   "gate_lines_fail": 0,
+   "scenario_lines_pass": 23,
+   "scenario_lines_fail": 0,
+   "selftest_pass": 14,
+   "selftest_fail": 0,
+   "selftest_note": "Three self-tests were added by the remediation pass that corrected the verifies-rule endpoint (FB2-REV-FND-000029): a correctly directed verifies link is not flagged, a safety requirement with no verification link is flagged, and a verifies link with the requirement as source does not count as verification."
+  },
+  "populations": {
+   "validated_artifact_files": 243,
+   "indexed_unique_records": 219,
+   "unique_artifact_ids_across_profiles": 186,
+   "note": "243 = corpus/review files carrying an id plus scenario files. 219 = unique (profile,id) records in the index. 186 = unique ids across both profiles; ids present in both are profile isolation by design."
+  },
+  "census": {
+   "by_type": {
+    "change": 3,
+    "design": 8,
+    "deviation": 26,
+    "execution": 34,
+    "finding": 30,
+    "hazard": 2,
+    "item_definition": 1,
+    "measurement_plan": 1,
+    "post_development_record": 6,
+    "process_improvement": 2,
+    "process_record": 6,
+    "project_plan": 1,
+    "requirement": 34,
+    "review": 15,
+    "risk_register": 1,
+    "safety_analysis": 4,
+    "safety_case": 1,
+    "safety_concept": 2,
+    "safety_goal": 2,
+    "scenario": 5,
+    "stakeholder_need": 5,
+    "tara": 1,
+    "test_measure": 25,
+    "use_case": 4
+   },
+   "by_domain": {
+    "decommissioning": 1,
+    "hardware": 7,
+    "management": 11,
+    "operation": 1,
+    "production": 2,
+    "release": 1,
+    "safety": 38,
+    "service": 1,
+    "software": 40,
+    "supporting": 12,
+    "system": 21,
+    "verification": 84
+   },
+   "by_profile": {
+    "as_is": 71,
+    "synthetic_reference": 148
+   },
+   "by_lifecycle": {
+    "baselined": 63,
+    "draft": 95,
+    "reviewed": 61
+   },
+   "guard": {
+    "human_approval_status": {
+     "pending": 219
+    },
+    "production_authorized": {
+     "false": 219
+    },
+    "product_verification_credit": {
+     "false": 219
+    }
+   }
+  },
+  "traceability": {
+   "links": 460,
+   "dangling": 0,
+   "by_relation": {
+    "allocated_to": 40,
+    "changes": 16,
+    "depends_on": 12,
+    "implements": 6,
+    "mitigates": 3,
+    "refines": 41,
+    "result_of": 25,
+    "reviewed_by": 229,
+    "supports": 29,
+    "validates": 12,
+    "verifies": 47
+   },
+   "by_profile": {
+    "as_is": 111,
+    "synthetic_reference": 349
+   },
+   "by_review_state": {
+    "pending": 52,
+    "reviewed": 408
+   },
+   "direction_note": "verifies/validates are read on the TARGET endpoint, which is the direction master prompt section 13 declares; see FB2-REV-FND-000029. reviewed_by links are STORED as review->artifact, the reverse of the direction section 13 declares for that relation. That is a link-convention gap in the data, not a rule defect: the rule that reads them is consistent with the storage and produces no false finding. It is reported, not fixed, because correcting it means rewriting every reviewed_by link and is outside the scope of the finding that surfaced it."
+  },
+  "coverage_dimensions": {
+   "scope_accounting": "1/1",
+   "artifact_population": "13/13",
+   "standards_mapping": "44/44",
+   "source_grounding": "80/220",
+   "traceability_integrity": "460/460",
+   "semantic_consistency_checks": "10/10",
+   "automated_review_coverage": "144/186",
+   "verification_planning": "25/7",
+   "actual_product_evidence": "0/25",
+   "synthetic_fixture_coverage": "148/43",
+   "negative_scenario_validation": "20/20",
+   "final_status": "synthetic_ready_with_limitations",
+   "export_reproducibility": "1/1",
+   "human_approval": "0/220",
+   "production_authorization": "0/220"
+  },
+  "governance": {
+   "process_inventory_total": 32,
+   "processes_applicable": 28,
+   "processes_not_applicable": 4,
+   "applicable_by_disposition": {
+    "mapped": 12,
+    "partially_mapped": 10,
+    "gap": 6
+   },
+   "corrections_recorded": 15,
+   "iso_parts": {
+    "mapped": 2,
+    "partially_mapped": 4,
+    "gap": 2,
+    "referenced": 2,
+    "not_applicable": 2
+   },
+   "zero_record_processes": [
+    "SYS.1",
+    "SYS.2",
+    "MAN.3",
+    "MAN.5",
+    "MAN.6",
+    "PIM.3"
+   ],
+   "standards_locked": [
+    {
+     "id": "ISO_26262_2018",
+     "edition": "2018"
+    },
+    {
+     "id": "ASPICE_PAM_41",
+     "edition": "4.1"
+    }
+   ],
+   "iec_61508_records_in_corpus": 0,
+   "iec_61508_note": "No corpus record was authored against IEC 61508. It is absent from standards-lock.json, which locks only ISO_26262_2018 and ASPICE_PAM_41. The pinned source nonetheless lists it as a candidate standard (docs/general/safety/safety.rst:60) and cites IEC 61508-3:2010 in docs/references.bib, so the standard is a legitimate consideration for the product; the corpus simply never engaged it."
+  },
+  "reviews": {
+   "review_records_indexed": 12,
+   "review_record_files": 13,
+   "unique_ids_covered": 82,
+   "unique_ids_total": 123,
+   "coverage_percent": 67,
+   "review_embedded_findings": 36,
+   "findings_by_severity": {
+    "critical": 0,
+    "high": 4,
+    "medium": 17,
+    "low": 5,
+    "info": 10
+   },
+   "review_records_at_reviewed": 1,
+   "review_records_at_draft": 11
+  },
+  "verification": {
+   "host_run_platform": "macOS arm64, Darwin kernel 27.0.0 (NOT an upstream-supported foxBMS platform)",
+   "host_run_is_target_hardware": false,
+   "host_run_credit": false,
+   "tests_in_scope": 136,
+   "passed": 94,
+   "failed": 5,
+   "build_failures": 37,
+   "assertions_tested": 332,
+   "assertions_passed": 323,
+   "assertions_failed": 8,
+   "repository_tests_total": 313,
+   "blocked_on_halcogen": 177,
+   "distinct_halcogen_headers": 34,
+   "target_hardware_executions": 0,
+   "execution_records": 25,
+   "as_is_outcomes": {
+    "pass": 4,
+    "fail": 9,
+    "blocked": 1
+   },
+   "failure_root_cause": "src/app/engine/database/database.h:209 declares the database access API with untyped void* parameters; the shipped Ceedling config sets :cmock: :when_ptr: :compare_data, so CMock cannot learn the pointed-to size and emits a pointer-identity check that can never succeed. Compiler- and platform-independent: a real defect in the product test setup, not a harness artefact. No result adjusted.",
+   "results_adjusted": false
+  },
+  "scenarios": {
+   "mutations_required": 20,
+   "mutations_present": 20,
+   "mutations_detected": 20,
+   "change_lifecycles": 3,
+   "change_lifecycles_complete": 3,
+   "lines_pass": 23,
+   "lines_fail": 0
+  },
+  "determinism": {
+   "views_files": 10,
+   "views_byte_identical_ignoring_Generated_line": true,
+   "exports_files": 4,
+   "exports_byte_identical_ignoring_generated_at": true,
+   "export_content_hashes_identical": true,
+   "export_content_hashes": 3,
+   "spec_documents": "INTEGRITY CHECK PASSED; DETERMINISM: byte-identical across runs; 10/10 converted",
+   "excluded_from_comparison": [
+    "views preamble 'Generated:' line",
+    "exports/manifest.json 'generated_at'"
+   ]
+  },
+  "blocked": [
+   {
+    "id": "B-01",
+    "item": "target-hardware verification",
+    "state": "0/16",
+    "reason": "execution_kind has no target-hardware member; recording one would fabricate it",
+    "unblocks_with": "test suite executed on TMS570LC4357 with AFE hardware"
+   },
+   {
+    "id": "B-02",
+    "item": "177 of 313 repository tests",
+    "state": "blocked",
+    "reason": "reached 34 distinct proprietary HL_*.h headers; reconstructing them would fabricate what the tests verify",
+    "unblocks_with": "a real HALCoGen run on conf/hcg/app.hcg under a TI licence, or a Linux host (which still needs the same HALCoGen output for these 177)"
+   },
+   {
+    "id": "B-03",
+    "item": "5 failing tests",
+    "state": "open product defect",
+    "reason": "void* database API parameters vs :when_ptr: :compare_data in the shipped Ceedling config",
+    "unblocks_with": "a product-owner decision: type the parameters, add :treat_as entries, or register CMock callbacks. Not a corpus action."
+   },
+   {
+    "id": "B-04",
+    "item": "human approval",
+    "state": "0/153 pending",
+    "reason": "requires human reviewers; AI sessions are not organisational independence",
+    "unblocks_with": "independent human review and sign-off"
+   },
+   {
+    "id": "B-05",
+    "item": "HWE.2 / HWE.3 hardware design",
+    "state": "format-limited",
+    "reason": "Altium and other CAD binaries are not readable by the corpus tooling",
+    "unblocks_with": "real hardware design analysis"
+   },
+   {
+    "id": "B-06",
+    "item": "6 applicable processes with no record",
+    "state": "gap",
+    "reason": "SYS.1, SYS.2, MAN.3, MAN.5, MAN.6, PIM.3 require authoring stakeholder needs, system requirements, a project plan, a risk register, a measurement plan and improvement records",
+    "unblocks_with": "authoring those artifacts, or an explicit scope decision"
+   },
+   {
+    "id": "B-07",
+    "item": "no FSC / TSC record",
+    "state": "gap",
+    "reason": "ISO 26262 Part 3 concept phase incomplete, so the ASIL assignment on FB2-SAF-SGO-000001 has no derivation",
+    "unblocks_with": "author the functional and technical safety concepts, then the ASIL justification - an engineering judgement the corpus cannot assert"
+   },
+   {
+    "id": "B-08",
+    "item": "5 security requirements unverified",
+    "state": "gap",
+    "reason": "verification planning never covered the security requirement set",
+    "unblocks_with": "author security verification measures and executions"
+   },
+   {
+    "id": "B-09",
+    "item": "conformity claim in root TRACEABILITY_DOCUMENT.md",
+    "state": "in_progress",
+    "reason": "file is outside the docs/artifacts write boundary and could not be corrected from inside it",
+    "unblocks_with": "a repository owner making the five corrections named in FB2-REV-FND-000022"
+   },
+   {
+    "id": "B-10",
+    "item": "review coverage 67% and 11 of 12 records draft",
+    "state": "partial",
+    "reason": "41 unique artifact ids uncovered; 11 review records still draft",
+    "unblocks_with": "additional review records and progression of the draft ones"
+   }
+  ],
+  "validator_findings": {
+   "total": 9,
+   "errors": 0,
+   "by_description": {
+    "safety requirement FB2-SAF-FSR-000001 has no fault_reaction defined": 2,
+    "safety requirement FB2-SAF-FSR-000003 has no fault_reaction defined": 2,
+    "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined": 2,
+    "safety requirement FB2-SAF-FSR-000004 has no fault_reaction defined": 1,
+    "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification": 2
+   },
+   "note": "Was 21 before the remediation pass. All 12 removed observations were false gaps produced by the verifies rule reading the wrong endpoint of the link (FB2-REV-FND-000029); the rule is still in place, still fires, and is now strictly harder to satisfy by accident. The 9 that remain are the 7 fault_reaction findings (FB2-REV-FND-000013..19) and the 2 ASIL-justification findings (FB2-REV-FND-000020/21), which are real and open. No check was relaxed to move this number."
+  },
+  "remediation_pass": {
+   "measured_at": "2026-09-29T00:00:00Z",
+   "what": "A controlled pass corrected seven defects in existing records and one defect in the corpus validator, regenerated the dependents, and updated the seven finding records to the corpus's closed disposition.",
+   "findings_corrected": [
+    "FB2-REV-FND-000023",
+    "FB2-REV-FND-000024",
+    "FB2-REV-FND-000025",
+    "FB2-REV-FND-000026",
+    "FB2-REV-FND-000027",
+    "FB2-REV-FND-000028",
+    "FB2-REV-FND-000029"
+   ],
+   "finding_raised_by_the_pass": "FB2-REV-FND-000030",
+   "records_revised": [
+    "FB2-HW-TSR-000003",
+    "FB2-HW-TSR-000004",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-SAF-SEC-000003",
+    "FB2-SAF-SEC-000004",
+    "FB2-SAF-SEC-000005",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-TAR-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-VER-EXE-000018",
+    "FB2-VER-EXE-000019",
+    "FB2-VER-TMS-000018",
+    "FB2-VER-TMS-000019"
+   ],
+   "tool_added": "docs/artifacts/tools/check_references.py",
+   "not_done_and_why": [
+    "The FTTI rule was not changed even though it reads ftti_ms and the safety goal names the field fault_tolerant_time_interval_ms: only FB2-REV-FND-000029 was in scope for a rule change, and the safety goal's budget now closes whether or not the rule fires. check_references.py performs the arithmetic the rule cannot.",
+    "The reviewed_by link-storage direction was not changed: correcting it means rewriting every reviewed_by link and produces no false finding today.",
+    "FB2-SW-DSN-000004 and FB2-PIM-IMP-000003 were not authored to close the forward references, because inventing design or improvement content is fabrication. Recorded as FB2-REV-FND-000030.",
+    "The 50 ms vs 100 ms weld-detection disagreement between FB2-SAF-FSR-000003 and FB2-HW-TSR-000003 was not decided, because no record settles which is intended. Named in HW-TSR-000003's measure text instead of being silently harmonised."
+   ]
+  }
+ },
+ "revision": null
 }

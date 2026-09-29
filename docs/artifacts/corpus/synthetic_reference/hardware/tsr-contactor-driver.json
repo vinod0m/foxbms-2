@@ -1,6 +1,6 @@
 {
  "id": "FB2-HW-TSR-000003",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "hardware",
@@ -48,17 +48,23 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "hw_engineer",
    "description": "Synthetic TSR with timing budget allocation"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "hw_engineer",
+   "description": "Regenerated as a dependent of finding FB2-REV-FND-000024. The rationale cited 'FSR-003 30 ms latency budget', which is the mechanical opening time of FB2-PRM-000005 and not the budget FSR-000003 spends: that requirement's reaction budget is 5 + 30 + 5 = 40 ms from the fault request to feedback-confirmed open. The rationale now states the three segments and the 35 ms mechanically-open and 40 ms feedback-confirmed points. Separately, this record's weld-detection criterion states 100 ms while FB2-SAF-FSR-000003 states 50 ms for the same weld-detection latency; that disagreement is a further cross-record numeric inconsistency of the same class as finding FB2-REV-FND-000024, is NOT resolved here because no record in the corpus settles which of the two is the intended weld-detection budget, and is reported for a decision rather than silently harmonised. The 100 ms figure itself is unchanged; only the measure text now records that the disagreement exists. The coil-slew and feedback-latency criteria and the statement are unchanged."
   }
  ],
  "statement": "The SBC (FS85xx) shall drive contactor coils with controlled slew rate and monitor auxiliary feedback contacts with < 2 ms latency.",
- "rationale": "Contactor control and feedback monitoring must meet FSR-003 30 ms latency budget",
+ "rationale": "Contactor control and feedback monitoring must meet the FB2-SAF-FSR-000003 reaction budget: 5 ms coil command plus 30 ms mechanical opening (FB2-PRM-000005) reaches the mechanically open state 35 ms after the fault request, and 5 ms of auxiliary feedback confirmation completes the reaction 40 ms after it",
  "classification": "safety",
  "acceptance_criteria": [
   {
@@ -75,7 +81,7 @@
   },
   {
    "criterion": "Weld detection",
-   "measure": "Feedback mismatch detection time",
+   "measure": "Feedback mismatch detection time. The criterion is the weld detection budget of the actuated path and is deliberately not the reaction budget of FB2-SAF-FSR-000003, which is 40 ms end to end; see finding FB2-REV-FND-000024 for the 50 ms figure recorded here and the 100 ms figure of FB2-HW-TSR-000003",
    "threshold": "100",
    "unit": "ms"
   }

@@ -130,7 +130,7 @@ The change records are linked into the traceability graph: `FB2-MAN-CHG-000001`
 |---|---|
 | All 20 injected defects are detected at the expected severity and category | That the detector set is complete — a defect no scenario models is undetected by construction |
 | All 3 change lifecycles carry a complete structural chain | That the change decisions were engineering-correct; a complete structure can carry a poor decision |
-| The detectors the corpus relies on are live, not dormant | That the corpus is free of defects — 21 validator findings and 22 recorded finding artifacts are open |
+| The detectors the corpus relies on are live, not dormant | That the corpus is free of defects — 9 validator findings and 30 recorded finding artifacts are open, of which `FB2-REV-FND-000023`…`000029` were corrected at source by a separate remediation pass and `FB2-REV-FND-000030` was raised by it |
 | Negative-scenario coverage is complete against its own target of 20 | Anything about ISO 26262 conformity, ASIL capability or ASPICE capability level |
 
 **Three detectors fire on the clean baseline** (§3), which is the single most

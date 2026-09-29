@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T12:17:43Z |
+| Generated | 2026-09-29T14:03:49Z |
 
 ## Scope
 
@@ -327,7 +327,7 @@ flowchart LR
     T_fault_classification_ms --> CHAIN
     T_feedback_verification_ms["feedback_verification_ms<br/>5 ms"]
     T_feedback_verification_ms --> CHAIN
-    T_margin_ms["margin_ms<br/>20 ms"]
+    T_margin_ms["margin_ms<br/>15 ms"]
     T_margin_ms --> CHAIN
     T_pec_validation_ms["pec_validation_ms<br/>2 ms"]
     T_pec_validation_ms --> CHAIN
@@ -343,4 +343,4 @@ flowchart LR
 
 ---
 
-*Generated: 2026-09-29T12:17:43Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T14:03:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

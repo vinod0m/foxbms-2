@@ -1,6 +1,6 @@
 {
   "id": "FB2-VER-EXE-000004",
-  "revision": "2",
+  "revision": "3",
   "schema_version": "1.0.0",
   "artifact_type": "execution",
   "engineering_domain": "verification",
@@ -28,7 +28,7 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-19T00:00:00Z",
-  "updated_at": "2026-09-29T08:15:33Z",
+  "updated_at": "2026-09-29T16:10:04Z",
   "revision_history": [
     {
       "revision": "1",
@@ -107,6 +107,36 @@
       "date": "2026-09-29T08:15:33Z",
       "author": "verification_engineer",
       "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-29T16:03:04Z",
+      "author": "verification_engineer",
+      "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-29T16:05:38Z",
+      "author": "verification_engineer",
+      "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-29T16:07:46Z",
+      "author": "verification_engineer",
+      "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-29T16:09:52Z",
+      "author": "verification_engineer",
+      "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-29T16:10:04Z",
+      "author": "verification_engineer",
+      "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016."
     }
   ],
   "test_measure_id": "FB2-VER-TMS-000004",
@@ -192,6 +222,31 @@
       "description": "The test file named by the previous record, tests/unit/app/driver/ltc/6813-1/test_ltc_6813-1.c, does not exist in this checkout; the 'afe/' path segment is missing. The real file is tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c. evidence_refs has been corrected.",
       "severity": "medium",
       "disposition": "fixed"
+    },
+    {
+      "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+      "severity": "high",
+      "disposition": "deferred"
+    },
+    {
+      "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+      "severity": "high",
+      "disposition": "deferred"
+    },
+    {
+      "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+      "severity": "high",
+      "disposition": "deferred"
+    },
+    {
+      "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+      "severity": "high",
+      "disposition": "deferred"
+    },
+    {
+      "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+      "severity": "high",
+      "disposition": "deferred"
     }
   ],
   "evidence_refs": [

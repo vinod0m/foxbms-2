@@ -123,29 +123,41 @@ with a named measure, threshold and unit.
 2. `sources/feature-inventory.json` carries `summary.total_features: 20` while
    holding 22 feature records. `corpus.py inventory` reports 22.
 
-## 5. A Conformity Claim Outside the Write Boundary
+## 5. A Conformity Claim in the Hand-Authored Root Document — Corrected
 
-`TRACEABILITY_DOCUMENT.md` at the **repository root** states at line 19
+`TRACEABILITY_DOCUMENT.md` at the **repository root** **stated** under "1.1 Purpose"
 "Provides evidence for compliance with ISO 26262, IEC 61508, and other
-applicable safety standards" and at line 23 "Safety Requirements (ASIL-D,
-ASIL-B)".
+applicable safety standards", stated under "1.2 Scope" "Safety Requirements
+(ASIL-D, ASIL-B)", and carried a document-control sign-off block naming a safety
+engineer as reviewer, a safety manager as approver, and the document status as
+approved. That approval never existed.
 
-- The IEC 61508 reference is unsupported: the standard is not in the standards
+- The IEC 61508 reference was unsupported: the standard is not in the standards
   lock and no corpus record was authored against it. Note that the pinned
   source *does* list IEC 61508 as a candidate standard and cite IEC 61508-3:2010,
-  so the standard is a legitimate consideration for the product; the defect is
-  that compliance evidence is claimed for work never performed.
-- The conformity claim is unsupported: all 153 records are unapproved and
+  so the standard is a legitimate consideration for the product; the defect was
+  that compliance evidence was claimed for work never performed. The correction
+  removed the two IEC 61508-3 clause rows and replaced them with an explicit
+  not-engaged note rather than deleting the standard from consideration.
+- The conformity claim was unsupported: all corpus records are unapproved and
   unauthorized, and no certification, tool qualification or third-party
   assessment record exists.
+- The `asil` field on `FB2-SAF-SGO-000001` carries no justification field, which
+  the corpus's own validator flags as an open finding.
 - `git ls-tree -r 308028fb` contains no `TRACEABILITY` entry, so the file is
   corpus output, not pinned upstream source.
 
-**The file was not modified.** It lies outside the absolute `docs/artifacts/`
-write boundary. It is recorded as finding **`FB2-REV-FND-000022`** (severity
-`high`, category `consistency`, disposition `in_progress`) at
-`docs/artifacts/reviews/findings/finding-000022-root-traceability-document-conformity-claim.json`,
-with the five specific changes the repository owner must make.
+**The repository owner explicitly authorised amending the file.** It lies outside the
+absolute `docs/artifacts/` write boundary, and that authorisation is the sole basis
+for the out-of-boundary write; it is recorded verbatim in the finding. The file was
+corrected on 2026-09-29 and is recorded as finding **`FB2-REV-FND-000022`** at
+revision 3 (severity `high`, category `consistency`, disposition `accepted`) at
+`docs/artifacts/reviews/findings/finding-000022-root-traceability-document-conformity-claim.json`.
+The §9 standards-reference preamble in that file was also corrected so it no longer
+implied the removed IEC rows were corpus references.
+
+**Residual risk, not closed by that disposition:** the file remains hand-authored
+and outside the toolchain's reach, so nothing will detect a regression.
 
 ## 6. ASIL: What the Records Actually Say
 

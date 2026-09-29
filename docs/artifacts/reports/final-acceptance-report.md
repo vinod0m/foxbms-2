@@ -298,31 +298,38 @@ silently deleted, because removing a file is a corpus owner's decision and doing
 so unrecorded would be the same class of error this report exists to prevent.
 The validator does not currently raise a finding for it.
 
-## 9. Reported Defect Outside the Write Boundary
+## 9. Corrected Defect in the Hand-Authored Root Document
 
 `TRACEABILITY_DOCUMENT.md` at the **repository root** (one level above
-`docs/artifacts/`) states:
+`docs/artifacts/`) **stated**:
 
-- line 19: "Provides evidence for compliance with ISO 26262, IEC 61508, and
+- under "1.1 Purpose": "Provides evidence for compliance with ISO 26262, IEC 61508, and
   other applicable safety standards"
-- line 23: "Safety Requirements (ASIL-D, ASIL-B)"
+- under "1.2 Scope": "Safety Requirements (ASIL-D, ASIL-B)"
+- and, in a document-control block at the end of the file, a sign-off naming a safety
+  engineer as reviewer, a safety manager as approver, and the status of the document
+  as approved — **an approval that never existed**
 
-This is a conformity claim plus an ASIL-capability claim, both of which this
-corpus forbids. It is also unsupported on two counts. **No corpus record was
+This was a conformity claim, an ASIL-capability claim, and a fabricated human approval,
+all of which this corpus forbids. It was also unsupported on two counts. **No corpus record was
 authored against IEC 61508** and the standard is absent from
 `governance/standards-lock.json` — though the pinned source *does* list IEC 61508
-as a candidate standard and cite IEC 61508-3:2010, so the remedy is to do the
-work or say it was not done, not to pretend the standard is unknown to foxBMS.
-And the ASIL derivation (functional safety concept → technical safety concept)
-does not exist in the corpus. `git ls-tree -r 308028fb` contains no `TRACEABILITY` entry, so the
+as a candidate standard and cite IEC 61508-3:2010, so the remedy was to record the
+non-engagement explicitly, not to pretend the standard is unknown to foxBMS. And the
+`asil` field on `FB2-SAF-SGO-000001` carries no justification, which the corpus's own
+validator flags. `git ls-tree -r 308028fb` contains no `TRACEABILITY` entry, so the
 file is corpus output rather than pinned upstream source.
 
-**The file was NOT modified**, because it lies outside the absolute
-`docs/artifacts/` write boundary. It is recorded instead as finding
-**`FB2-REV-FND-000022`** at
+**The repository owner explicitly authorised amending the file** — it is outside the
+`docs/artifacts/` write boundary, and that authorisation is the sole authority for the
+out-of-boundary write. It was corrected on 2026-09-29 and is recorded as finding
+**`FB2-REV-FND-000022`** at revision 3,
 `docs/artifacts/reviews/findings/finding-000022-root-traceability-document-conformity-claim.json`,
-with severity `high`, category `consistency`, disposition `in_progress`, and a
-resolution naming the five specific changes the repository owner must make.
+with severity `high`, category `consistency`, disposition `accepted`.
+
+**Residual risk, not closed by that disposition:** the file is still hand-authored and
+outside the toolchain's reach, so nothing in CI will detect a regression. The
+authorisation did not extend to relocating or regenerating the file.
 
 ## 10. Cross-Domain Walkthroughs
 
@@ -524,18 +531,19 @@ tool qualification, certification, or target-hardware verification.
 
 | Figure | Source command |
 |---|---|
-| 177 validated artifacts, 21 findings, 0 errors | `corpus.py validate` |
-| 153 records, 283 links, all censuses | `corpus.py load_artifact_index` / `load_links` via the tool's own loaders |
+| 243 validated artifacts, 9 findings, 0 errors | `corpus.py validate` |
+| 219 records, 460 links, all censuses | `corpus.py load_artifact_index` / `load_links` via the tool's own loaders |
 | 15 coverage dimensions and all ratios | `corpus.py coverage` |
 | 8 gates, 23 scenario lines | `corpus.py check` |
-| 11/11 selftests | `corpus.py selftest` |
+| 14/14 selftests | `corpus.py selftest` |
+| every `safety_goal_ref` and payload-field cross-reference resolves; every FTTI allocation closes | `docs/artifacts/tools/check_references.py` |
 | 612/612, 24 modules, 22 features, 23 variants | `corpus.py inventory` |
 | 32/28/4 processes, 15 corrections | `governance/coverage-plan.json` |
 | 94/136, 5 failed, 37 build failures, 332/323/8 assertions | `.work/verification-env/logs/results-strict.json` |
 | 313 / 136 / 177 / 34 headers | `.work/verification-env/logs/hcg-closure.json` |
 | 153 nodes, 283 edges | `exports/manifest.json` |
 | spec-document integrity and determinism | `render_spec_documents.py --check` |
-| conformance claim lines 19 and 23 | `TRACEABILITY_DOCUMENT.md` at repository root, read only |
+| conformity claim and fabricated approval sign-off in the hand-authored root document | `TRACEABILITY_DOCUMENT.md` at repository root, corrected under explicit owner authorisation; finding `FB2-REV-FND-000022` rev 3 |
 
 ## 16. Evidence Links
 

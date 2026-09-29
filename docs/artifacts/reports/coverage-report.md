@@ -24,7 +24,7 @@ above 100% is an over-coverage count, not a score.
 | 3 | standards_mapping | 44 items | 44/44 | 100% | complete (ASPICE 32/32, ISO 12/12) |
 | 4 | source_grounding | all artifacts | 76/154 | 49% | **partial** |
 | 5 | traceability_integrity | 0 dangling | 283/283 | 100% | complete |
-| 6 | semantic_consistency | all checks | 10/10 | 100% | complete (21 findings, 0 errors) |
+| 6 | semantic_consistency | all checks | 10/10 | 100% | complete (9 findings, 0 errors) |
 | 7 | automated_review_coverage | all artifacts | 82/123 | 67% | **partial** |
 | 8 | verification_planning | measures per FSR | 16/7 | 229% | over-covered |
 | 9 | actual_product_evidence | target executions | 0/16 | 0% | **blocked by policy** |
@@ -175,7 +175,7 @@ field is stale; the record list is authoritative.
 | `FB2-REV-000001` in two files | medium | accepted, reported | The artifact index de-duplicates on `(profile, id)`; the validator does not raise a finding. Left in place rather than deleted unrecorded. |
 | Redundant link registry copy | low | accepted, reported | 51 links duplicated inside `corpus/`; de-duplicated by the tool. |
 | Stale `summary.total_features` | low | accepted, reported | Says 20, holds 22. |
-| Conformity claim outside the write boundary | high | **in_progress** | `TRACEABILITY_DOCUMENT.md` at repository root. Recorded as finding `FB2-REV-FND-000022`; the file was **not** modified because it lies outside `docs/artifacts/`. |
+| Conformity claim in the hand-authored root document | high | **accepted** | `TRACEABILITY_DOCUMENT.md` at the repository root. Recorded as finding `FB2-REV-FND-000022`. The repository owner explicitly authorised amending that file, and it was corrected on 2026-09-29 (revision 3 of the finding): the conformity sentence, the IEC 61508 clause rows and a fabricated human-approval sign-off block were removed, and the ASIL values were relabelled hypothetical. The file remains outside the write boundary and outside the toolchain's reach, so it can drift — that residual risk is recorded in the finding. |
 
 ## 7. Feature Coverage
 

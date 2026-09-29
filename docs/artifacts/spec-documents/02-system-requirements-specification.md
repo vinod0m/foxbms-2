@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T12:17:43Z |
+| Generated | 2026-09-29T14:03:49Z |
 
 ## Scope
 
@@ -139,11 +139,11 @@ MSL violations set fatal-error-linked diagnosis entries that force the BMS state
 
 #### `FB2-SAF-SGO-000001` — Cell Voltage Safety Goal
 
-- **Statement**: The BMS shall detect cell voltage limit violations and open all HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events, with a target diagnostic test interval of 10 ms and a target contactor opening time of 30 ms.
+- **Statement**: The BMS shall detect cell voltage limit violations and open all HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events, with a target diagnostic test interval of 10 ms, a target contactor mechanical opening time of 30 ms (FB2-PRM-000005 / FB2-ASM-006) and a resulting 40 ms from the fault request to feedback-confirmed contacto...
 - **Rationale**: Hazard mitigation for FB2-SAF-HAZ-000001
 - **ASIL**: `ASIL_D`
 - **FTTI (total)**: 100 ms
-- **Timing budget allocation**: `afe_acquisition_ms`=25ms, `contactor_command_ms`=5ms, `contactor_mechanical_ms`=30ms, `database_publish_ms`=3ms, `fault_classification_ms`=2ms, `feedback_verification_ms`=5ms, `margin_ms`=20ms, `pec_validation_ms`=2ms, `soa_limit_check_ms`=5ms, `spi_transfer_ms`=5ms, `sys_state_transition_ms`=3ms
+- **Timing budget allocation**: `afe_acquisition_ms`=25ms, `contactor_command_ms`=5ms, `contactor_mechanical_ms`=30ms, `database_publish_ms`=3ms, `fault_classification_ms`=2ms, `feedback_verification_ms`=5ms, `margin_ms`=15ms, `pec_validation_ms`=2ms, `soa_limit_check_ms`=5ms, `spi_transfer_ms`=5ms, `sys_state_transition_ms`=3ms
 - **Safe state**: All HV contactors open, charging disabled, propulsion disabled, fault logged
 - **Degraded state**: Derated charging (0.1C), reduced discharge (0.5C), enhanced monitoring (1 Hz)
 - **Source references**: `FB2-SRC-COD-000004`, `FB2-SRC-COD-000005`, `FB2-SRC-COD-000006`
@@ -184,30 +184,31 @@ MSL violations set fatal-error-linked diagnosis entries that force the BMS state
 
 #### `FB2-SAF-FSR-000003` — FSR: Contactor Opening on SOA Violation
 
-- **Statement**: The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.
-- **Rationale**: Contactor opening is the primary risk reduction measure; 30 ms mechanical opening + 5 ms feedback = 35 ms within FTTI budget
+- **Statement**: The BMS shall command all HV contactors to open within 5 ms of a FAULT state request from SOA/DIAG, shall reach the mechanically open state within 35 ms of that request, and shall confirm the commanded state from the auxiliary feedback within 40 ms of that request.
+- **Rationale**: Contactor opening is the primary risk reduction measure. The chain is three segments, and each segment has its own bound: the coil command within 5 ms, the mechanical opening within 30 ms (FB2-PRM-000005, FB2-ASM-006, worst case over -40 to +85 degC), and the auxiliary feedback confirmation within a further 5 ms. From the FAULT request the mechanically open point is therefore 5 + 30 = 35 ms and th...
 - **ASIL**: `ASIL_D`
 - **Safety goal reference**: `FB2-SAF-SGO-000001`
 - **Acceptance criteria**:
-  - Contactor open latency: Time from FAULT request to contactor feedback open ≤ 30 ms
+  - Contactor open latency: Time from FAULT request to contactor feedback open (auxiliary contacts confirm open) ≤ 40 ms
+  - Contactor mechanically open latency: Time from FAULT request to contactor mechanically open, independent of the feedback segment ≤ 35 ms
   - Feedback verification: Auxiliary contact confirmation ≤ 100% %
   - Weld detection: Weld detection latency ≤ 50 ms
   - Coil de-energize command: Time from FAULT request to SBC coil command ≤ 5 ms
+  - Coil de-energise to mechanically open: Time from SBC coil de-energise command to contactor mechanically open, against the 30 ms worst-case mechanical opening time of FB2-PRM-000005 ≤ 30 ms
 - **Conditions/modes**: `NORMAL`, `CHARGING`, `PRECHARGE`, `DERATING`, `FAULT`
 - **Source references**: `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
 - **Assumption references**: `FB2-ASM-001` (Lithium-ion cell chemistry with nominal voltage 3.7V, operat...), `FB2-ASM-006` (Contactor mechanical opening time <= 30 ms (worst case) at -...), `FB2-ASM-007` (SBC (FS85xx) watchdog is independent of main MCU and can tri...)
 
 #### `FB2-SAF-FSR-000004` — FSR: Independent Hardware Voltage Monitor
 
-- **Statement**: The BMS shall include an independent hardware voltage monitor (ASIL B) that continuously monitors cell voltages and can open HV contactors independently of the main MCU within 50 ms of overvoltage detection.
-- **Rationale**: Provides freedom from interference for ASIL D safety goal; addresses timing budget violation in main path (115 ms > 100 ms FTTI) by providing parallel safety channel
+- **Statement**: The item shall maintain, as a second barrier to the ASIL D cell-voltage safety goal FB2-SAF-SGO-000001, a cell-overvoltage detection and HV-contactor-opening capability that is independent of the main measurement, decision and command path, so that a failure confined to the main path does not remove the overvoltage reaction; the capability shall be allocated ASIL B and shall produce its contactor-open request within 50 ms of the overvoltage it detects.
+- **Rationale**: Provides freedom from interference for the ASIL D safety goal: a main-path-only reaction leaves no tolerance in the 100 ms interval. As allocated in FB2-SAF-SGO-000001 the main path is 85 ms (25 acquisition + 5 SPI + 2 PEC + 3 publish + 5 SOA check + 2 classification + 3 state transition + 5 coil command + 30 mechanical + 5 feedback), which leaves 15 ms. At the 40 ms upper tolerance of FB2-PRM-000...
 - **ASIL**: `ASIL_B`
 - **Safety goal reference**: `FB2-SAF-SGO-000001`
 - **Acceptance criteria**:
-  - Independent detection latency: Time from overvoltage to contactor command ≤ 50 ms
-  - Independence: No shared MCU, power supply, or communication with main path ≤ 100% %
-  - Monitoring coverage: Cells monitored ≤ All cells (or representative subset >= 50%) %
-  - Threshold accuracy: Overvoltage threshold accuracy ≤ 50 mV
+  - Reaction retained under main-path failure: Overvoltage test points at which the contactor-open request is still produced while the main microcontroller is held in reset, with no processing resource, no supply rail and no communication path of ... ≤ 100 % of test points
+  - Independent detection latency: Time from the overvoltage being detected by the independent capability to its contactor-open request ≤ 50 ms
+  - Overvoltage threshold accuracy: Difference between the overvoltage threshold the independent capability realises and the configured cell shutdown threshold ≤ 50 mV
 - **Conditions/modes**: `NORMAL`, `CHARGING`, `PRECHARGE`, `DERATING`, `FAULT`
 - **Source references**: —
 - **Assumption references**: `FB2-ASM-008` (Independent hardware voltage monitor (ASIL B) can be impleme...)
@@ -384,7 +385,7 @@ These are system-level requirements: what the integrated item must do. Each refi
 | detection | Measurement plausibility and spread checks against independent channel... | `AR-002` | 5 | Front-end gain, offset and open-sense-line failures |
 | detection | Safe-operating-area comparison with debounce | `AR-002` | 5 | Confirmed limit violations after two consecutive samples within 100 ms |
 | detection | Contactor auxiliary feedback and weld detection | `AR-004` | 5 | Coil-path failure and welded contacts |
-| detection | Independent hardware threshold monitor | `AR-005` | 50 | All monitored cells, or a representative subset of at least 50% |
+| detection | Independent hardware threshold monitor | `AR-005` | 50 | Every cell the item monitors, detected by the independent hardware monitor independently o... |
 | detection | Link and watchdog supervision | `AR-003` | 5 | Not quantified |
 | reaction | Open all high-voltage contactors, disable charging, latch the fault an... | `AR-004` | 35 | Mode-dependent, and this is the load-bearing caveat of the concept. In MOD-004 (closed, current flowing) opening the contactors removes propulsion fro... |
 | reaction | Open the contactors through the independent path, without waiting for ... | `AR-005` | 50 | The independent path has no mode arbitration. It opens the contactors whenever its threshold is exceeded. In MOD-004 that means a hardware false posit... |
@@ -425,19 +426,19 @@ These are recorded rather than absorbed. Neither the concept nor the conflicting
 
 - **Contradiction**: The safety goal's timing budget allocation sums to 85 ms and its recorded margin is 20 ms, giving 105 ms against a fault-tolerant time interval of 100 ms. The margin is therefore larger than the time available, which means it is an overrun rather than a margin.
   - **Records in conflict**: `FB2-SAF-SGO-000001`, `FB2-SAF-FSC-000001`
-  - **How this concept handles it**: The concept does not adopt the 105 ms figure and does not edit the safety goal. The functional strategy allocation above is written so that the barrier chain fits inside the FTTI, and the arithmetic is carried explicitly into the technical safety concept, which allocates a margin that closes. The contradiction is raised as finding FB2-REV-FND-000025. Resolving it requires a change to FB2-SAF-SGO-000001, which this authoring pass does not make: ch...
+  - **How this concept handles it**: RESOLVED at source. The safety goal's margin is now 15 ms, so its budget closes: 85 ms serial + 15 ms = 100 ms against the 100 ms interval, which is the figure this concept and FB2-SAF-TSC-000001 had already computed independently. The safety goal was revised rather than left in contradiction, and the two records no longer depart from one another. Finding FB2-REV-FND-000025.
   - **Finding**: `FB2-REV-FND-000025`
 - **Contradiction**: FB2-SAF-FSR-000003 requires the contactors open within 30 ms of the fault request with feedback confirmation within a further 5 ms, so its own acceptance criterion (30 ms to feedback open) contradicts its own rationale (30 ms mechanical plus 5 ms feedback, i.e. 35 ms), and the safety goal allocates 5 ms of command plus 30 ms of mechanical time plus 5 ms of feedback verification, i.e. 40 ms, before detection.
   - **Records in conflict**: `FB2-SAF-FSR-000003`, `FB2-SAF-SGO-000001`
-  - **How this concept handles it**: The fault reaction for AR-004 is budgeted here at 35 ms of command-plus-actuation and the technical safety concept shows the arithmetic, which exceeds the 30 ms the requirement states. The concept does not silently restate the requirement's threshold to 40 ms, and it does not shorten the requirement's threshold to fit the budget. It records the conflict and raises finding FB2-REV-FND-000024.
+  - **How this concept handles it**: RESOLVED at source. FB2-SAF-FSR-000003 now states the three points of the chain separately: 5 ms to the coil command, 35 ms to the mechanically open contactor and 40 ms to the feedback-confirmed contactor, which is the 40 ms end-to-end figure this concept identified. Its 'Contactor open latency' criterion, which measures from the fault request to feedback open, now carries the 40 ms it was spending from rather than the 30 ms mechanical figure. Th...
   - **Finding**: `FB2-REV-FND-000024`
 - **Contradiction**: FB2-SAF-FSR-000004 states a functional safety requirement whose text is identical, word for word, to the hardware technical safety requirement FB2-HW-TSR-000004, including the ASIL B allocation and the acceptance criteria.
   - **Records in conflict**: `FB2-SAF-FSR-000004`, `FB2-HW-TSR-000004`
-  - **How this concept handles it**: This concept allocates AR-005 as a hardware element and treats its independence as the reason it exists, which is the reading the Part 5 record should have carried and the Part 3 record should not have. It does not edit either record. The duplication is raised as finding FB2-REV-FND-000027.
+  - **How this concept handles it**: RESOLVED at source. FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 no longer carry the same text. The Part 4 record now states the safety intent and carries only behaviourally decidable criteria; the Part 5 record states the hardware obligation and carries the structural independence and coverage criteria, aligned with the statement this concept already published for FB2-HW-TSR-000004 in the technical concept's technical_safety_requirements block. AR-0...
   - **Finding**: `FB2-REV-FND-000027`
 - **Contradiction**: FB2-SAF-FSR-000004 justifies the independent monitor by a main-path figure of 115 ms against the 100 ms FTTI. No record in the corpus contains 115 ms; the safety goal's own allocation for the main path sums to 85 ms.
   - **Records in conflict**: `FB2-SAF-FSR-000004`, `FB2-SAF-SGO-000001`
-  - **How this concept handles it**: The concept does not adopt 115 ms and does not use it anywhere. It records the independent monitor's justification on the allocation that actually exists (85 ms serial, which does not fit once the reaction chain is added), and raises finding FB2-REV-FND-000026 for the unsourced figure.
+  - **How this concept handles it**: RESOLVED at source, and this block's premise is corrected. The 115 ms figure is not unsourced: it is the sum of a superseded allocation recorded in FB2-REV-000001 (as_is vertical-slice review, embedded finding FB2-FND-000001) as 'FSR-001 specifies 10 Hz (100 ms); FSR-002 specifies 10 ms check; FSR-003 specifies 5 ms contactor; sum = 115 ms'. It is stale, not fabricated, and it described an allocation the corpus has since replaced. FB2-SAF-FSR-000...
   - **Finding**: `FB2-REV-FND-000026`
 
 **What this concept does not establish**
@@ -491,7 +492,7 @@ These are recorded rather than absorbed. Neither the concept nor the conflicting
 | detection | Limit comparison with debounce | `AR-002` | 5 | Confirmed violations after two samples within 100 ms |
 | detection | Plausibility and redundancy comparison | `AR-002` | 5 | Not quantified anywhere in this corpus |
 | detection | Auxiliary contact feedback and weld detection | `AR-004` | 5 | Coil-path failure and welded contacts |
-| detection | Independent hardware threshold monitor | `AR-005` | 50 | Carried unchanged from FB2-SAF-FSR-000004 and FB2-HW-TSR-000004: 'all cells or representat... |
+| detection | Independent hardware threshold monitor | `AR-005` | 50 | Every cell the main measurement chain monitors, measured by the independent divider networ... |
 | reaction | Open all high-voltage contactors, disable charging, latch and log | `AR-004` | 35 | Realised by FB2-SW-SWR-000003 in software and FB2-HW-TSR-000003 in hardware. Mode-dependent: in MOD-004 this removes propulsion, so the software state... |
 | reaction | Open the contactors from the independent path without the main MCU | `AR-005` | 50 | No mode arbitration exists in this path. It acts whenever its threshold is exceeded, which is why its threshold accuracy is a safety requirement and w... |
 | reaction | Enter the latched FAULT mode and refuse to leave it without authorised... | `AR-002` | 3 | Mode-independent. |
@@ -520,7 +521,7 @@ These are recorded rather than absorbed. Neither the concept nor the conflicting
 | **FTTI** | **100** |
 
 - Serial sum: 85 ms · margin: 15 ms
-- **Arithmetic statement**: 25 + 5 + 2 + 3 + 5 + 2 + 3 + 5 + 30 + 5 = 85 ms of serial work. The fault-tolerant time interval is 100 ms, so the margin available is 100 - 85 = 15 ms, and this concept allocates exactly 15 ms of it. The budget therefore closes with no deficit. This is a deliberate departure from FB2-SAF-SGO-000001, which records a 20 ms margin and therefore a 105 ms total against the same 100 ms interval: a margin larger than the time available is an overrun, not a margin. This concept does not adopt that overrun and does not edit the safety goal to remove it; the contradiction is raised as finding FB2-REV-FND-000025 and resolving it is a controlled change to a baselined record. Note also that the serial figure above already contradicts FB2-SAF-FSR-000003, whose acceptance criterion requires the contactors open within 30 ms of the fault request while its own rationale and this allocation both put the c...
+- **Arithmetic statement**: 25 + 5 + 2 + 3 + 5 + 2 + 3 + 5 + 30 + 5 = 85 ms of serial work. The fault-tolerant time interval is 100 ms, so the margin available is 100 - 85 = 15 ms, and this concept allocates exactly 15 ms of it. The budget therefore closes with no deficit. This concept originally recorded that allocation as a deliberate departure from FB2-SAF-SGO-000001, which then carried a 20 ms margin and therefore a 105 ms total against the same 100 ms interval. That departure no longer exists: FB2-SAF-SGO-000001 now records the 15 ms margin as well, so the two records agree and the safety goal's budget closes. The 105 ms was not rounded to 100 ms; the margin was corrected to the value the interval admits, and 85 + 15 = 100. The reaction chain at the end of the budget is 5 ms coil command + 30 ms mechanical opening + 5 ms feedback verification = 40 ms, and FB2-SAF-FSR-000003 now states those three points separa...
 
 **Hardware / software allocation**
 
@@ -553,13 +554,13 @@ These are recorded rather than absorbed. Neither the concept nor the conflicting
 | Debounce on the limit comparison (AR-002) | A false reaction rate below 1e-6 per hour for Gaussian measurement noise with sigma 5 mV, while dete... | `analytical_model` | Consecutive samples are treated as independent. Correlated noise would change the rate materially and nothing ... | `FB2-VER-TMS-000005`, `FB2-VER-EXE-000005` |
 | Measurement plausibility and redundancy comparison (AR-002) | A front-end gain error, an offset error and an open sense line are detected because each produces a ... | `synthetic_assumption` | The redundant channel must be genuinely independent of the channel it checks. FB2-SAF-ANL-000003 records that ... | **none** |
 | Contactor auxiliary feedback and weld detection (AR-004) | A welded contactor is detected within 100 ms of the commanded state disagreeing with the feedback. | `analytical_model` | The auxiliary contact path and the coil drive path share no element that can fail open in both. | `FB2-VER-TMS-000003`, `FB2-VER-EXE-000003` |
-| Independent hardware threshold monitor (AR-005) | All monitored cells, or a representative subset of at least 50%. | `synthetic_assumption` | Assumed (FB2-ASM-008): separate dividers, separate comparator, separate supply and no communication with the m... | **none** |
+| Independent hardware threshold monitor (AR-005) | Every cell the main measurement chain monitors is also measured by the independent divider network a... | `synthetic_assumption` | Assumed (FB2-ASM-008): separate dividers, separate comparator, separate supply and no communication with the m... | **none** |
 
 - *Front-end integrity code on every measurement transfer (AR-0...* — A parity or CRC of the width the front end specifies, applied to every word. The detection property of such a code is a property of its polynomial and width, which is a matter of arithmetic rather than of measurement.
 - *Debounce on the limit comparison (AR-002)* — For a threshold placed several sigma from the noise mean, the probability that two consecutive samples both fall beyond the threshold is the square of the single-sample tail probability. At 20 Hz that yields the stated rate. The arithmetic is a property of the assumed distribution, which is itself an assumption (FB2-ASM-005), so the figure is conditional on that assumption and is not a measurement of the real item.
 - *Measurement plausibility and redundancy comparison (AR-002)* — The mechanisms are self-evident from their design intent and are implemented in the observed source. What is NOT established is their coverage: the corpus contains no fault-injection campaign that quantifies which injected faults are detected and which are not, and no plausibility limit is expressed as a diagnostic-coverage figure.
 - *Contactor auxiliary feedback and weld detection (AR-004)* — The auxiliary contacts are wired independently of the coil drive, so a welded contactor produces a state disagreement that no failure of the drive path can mask. This is a wiring argument, and its validity depends on the wiring being as described, which no inspection record in this corpus establishes.
-- *Independent hardware threshold monitor (AR-005)* — This is the requirement's own wording, carried here unchanged. It is not a measurable coverage statement: 'representative subset' is not defined, the disjunction is not resolvable at review time, and no subset selection method is recorded. The corpus has no basis on which to improve it. Carried as-is and raised as finding FB2-REV-FND-000027 rather than restated as a number this concept cannot defend.
+- *Independent hardware threshold monitor (AR-005)* — The requirement FB2-HW-TSR-000004 now states this coverage as 100 percent of the main chain's monitored cell set, which is decidable on hardware: measure which cells the independent divider network reaches and divide by which cells the main chain reaches. The previous wording of this entry carried the requirement's own disjunction ('all monitored cells, or a representative subset of at least 50%') forward, which was not a measurable coverage statement; finding FB2-REV-FND-000027 recorded that an...
 
 **Hardware interfaces and assumptions**
 
@@ -589,23 +590,23 @@ These are recorded rather than absorbed. Neither the concept nor the conflicting
 
 - **Contradiction**: The timing budget of FB2-SAF-SGO-000001 sums to 105 ms against a 100 ms FTTI (85 ms serial plus a 20 ms margin).
   - **Records in conflict**: `FB2-SAF-SGO-000001`, `FB2-SAF-TSC-000001`
-  - **How this concept handles it**: This concept allocates a 15 ms margin that closes at 100 ms and states the arithmetic. It does not edit the safety goal. Finding FB2-REV-FND-000025.
+  - **How this concept handles it**: RESOLVED at source. FB2-SAF-SGO-000001 now records a 15 ms margin, so its budget closes at 100 ms and this concept's allocation is no longer a departure from it but a restatement of it. The safety goal was revised rather than left in contradiction. Finding FB2-REV-FND-000025.
   - **Finding**: `FB2-REV-FND-000025`
 - **Contradiction**: FB2-SAF-FSR-000003's acceptance criterion (contactors open within 30 ms of the fault request) contradicts its own rationale (30 ms mechanical plus 5 ms feedback, 35 ms) and contradicts this concept's allocation (5 ms command plus 30 ms mechanical plus 5 ms feedback, 40 ms end to end).
   - **Records in conflict**: `FB2-SAF-FSR-000003`, `FB2-SAF-TSC-000001`
-  - **How this concept handles it**: The concept states the 35 ms command-plus-actuation and 40 ms end-to-end figures and does not restate the requirement's 30 ms threshold to fit. Finding FB2-REV-FND-000024.
+  - **How this concept handles it**: RESOLVED at source. FB2-SAF-FSR-000003's 'Contactor open latency' criterion now reads 40 ms, which is the end-to-end figure this concept computed, and a separate criterion states the 35 ms mechanically-open point. The concept's own allocation is unchanged. Finding FB2-REV-FND-000024.
   - **Finding**: `FB2-REV-FND-000024`
 - **Contradiction**: FB2-HW-TSR-000004 restates FB2-SAF-FSR-000004 word for word, so the two records cannot be at different ISO 26262 levels.
   - **Records in conflict**: `FB2-SAF-FSR-000004`, `FB2-HW-TSR-000004`
-  - **How this concept handles it**: The concept allocates AR-005 as pure hardware and names FB2-HW-TSR-000004 as the technical requirement and FB2-SAF-FSR-000004 as the functional one, which is the distinction the two identical texts do not make. It edits neither. Finding FB2-REV-FND-000027.
+  - **How this concept handles it**: RESOLVED at source. FB2-HW-TSR-000004's statement now matches the statement_summary this concept already published for it in the technical_safety_requirements block, and FB2-SAF-FSR-000004 carries a different statement with the functional-level criteria. The two records are now reviewable as two distinct obligations. Finding FB2-REV-FND-000027.
   - **Finding**: `FB2-REV-FND-000027`
 - **Contradiction**: FB2-SAF-FSR-000004's justification cites a 115 ms main path that appears in no record; the safety goal's own allocation for that path is 85 ms.
   - **Records in conflict**: `FB2-SAF-FSR-000004`, `FB2-SAF-SGO-000001`
-  - **How this concept handles it**: The concept does not use the 115 ms figure. It restates the independent monitor's justification on the 85 ms figure that does exist. Finding FB2-REV-FND-000026.
+  - **How this concept handles it**: RESOLVED at source, and this block's premise is corrected. The 115 ms is the sum of a superseded allocation recorded in FB2-REV-000001 embedded finding FB2-FND-000001 (100 ms acquisition period at 10 Hz + 10 ms SOA check + 5 ms contactor), not an unsourced figure. It is stale, not fabricated, and has been removed from FB2-SAF-FSR-000004, FB2-HW-TSR-000004 and FB2-ASM-008. The justification is now stated on the 85 ms figure that does exist and on ...
   - **Finding**: `FB2-REV-FND-000026`
 - **Contradiction**: FB2-SAF-FSR-000004's monitoring-coverage acceptance criterion is a disjunction ('all cells or representative subset >= 50%') and is not measurable.
   - **Records in conflict**: `FB2-SAF-FSR-000004`, `FB2-HW-TSR-000004`
-  - **How this concept handles it**: The concept carries the wording unchanged, labels it synthetic_assumption, records no verification record against it, and raises finding FB2-REV-FND-000027. It does not invent a coverage percentage to replace it.
+  - **How this concept handles it**: RESOLVED at source. The coverage criterion is no longer carried unchanged and no longer labelled synthetic_assumption. FB2-HW-TSR-000004 now states coverage as 100 percent of the cells the main measurement chain monitors, with the population named, and FB2-SAF-FSR-000004 no longer carries a coverage criterion at all because coverage is a hardware allocation property rather than a functional one. The 100 percent figure follows the precedent of FB2...
   - **Finding**: `FB2-REV-FND-000027`
 
 **What this concept does not establish**
@@ -686,4 +687,4 @@ Every requirement above carries `human_approval_status: pending`, `production_au
 
 ---
 
-*Generated: 2026-09-29T12:17:43Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T14:03:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

@@ -1,6 +1,6 @@
 {
  "id": "FB2-REV-FND-000023",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "finding",
  "engineering_domain": "safety",
@@ -29,8 +29,8 @@
    "rationale": "The obligation to record rather than to conceal."
   }
  ],
- "lifecycle_status": "draft",
- "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "lifecycle_status": "reviewed",
+ "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
  "automated_review_status": {
   "schema_valid": true,
   "links_valid": true,
@@ -49,6 +49,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "quality_engineer",
    "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Corrected the dangling safety_goal_ref in FB2-SAF-SEC-000005 (revision 1 -> 2) and, from the corpus-wide reference sweep this finding called for, the same mistyped id in FB2-SAF-TAR-000001 threat THR-008 (revision 1 -> 2). Added docs/artifacts/tools/check_references.py to resolve payload-field ids corpus-wide. Disposition remains 'accepted': the defect was real, the acceptance stands, and the closure is recorded here rather than in the disposition, because the schema has no closed value."
   }
  ],
  "subject_artifact_id": "FB2-SAF-SEC-000005",
@@ -58,5 +64,5 @@
  "disposition": "accepted",
  "impact": "The requirement whose reference is broken is the one covering entropy and third-party component governance, and it is the requirement this pass had the least verification leverage over: its own rationale records that the observed source derives the initial sequence number from a single 32-bit state seeded with a build-time literal, and that an ungoverned component set is an open item. A requirement in that position whose safety allocation points at nothing cannot be traced into a safety argument by a reader who follows the field. The defect is invisible to the link validator because the value is not a link: it is a string inside a required payload field, and no check resolves strings in payload fields.",
  "root_cause": "The value was typed rather than linked. safety_goal_ref is a schema-required string in a record whose siblings use it correctly, and the mistyped id is one character away from the correct one, which is characteristic of hand entry rather than of a stale reference after a rename. The corpus has no check that resolves the string against the artifact index.",
- "resolution": "NOT RESOLVED as a correction, because correcting it means editing a baselined safety requirement and this pass does not edit those records. What this pass DID do, and this is the honest asymmetry: it wrote FB2-VER-TMS-000020 and FB2-VER-EXE-000020 against the requirement, so the requirement's verification state moved from 'no measure at all' to 'measure authored, oracle declared, execution blocked on grounds the record names'. The broken reference is untouched and still broken. Note also that FB2-SAF-SEC-000005 is one of the five security requirements whose findings FB2-REV-FND-000008..12 remain open: authoring a measure for a requirement does not close a finding that asks for verification evidence, because no evidence exists."
+ "resolution": "RESOLVED at source. FB2-SAF-SEC-000005.safety_allocation.safety_goal_ref was corrected from 'FB2-SAF-SCO-000001' to 'FB2-SAF-SCS-000001', the corpus's safety-case skeleton, which is what the requirement's own mitigation prose already said it was traced to. The record moved to revision 2. The corpus-wide reference sweep that this finding required then found a SECOND instance of the same mistyped id, in FB2-SAF-TAR-000001 threat THR-008's affected_safety_goals_or_requirements, which was corrected to 'FB2-SAF-SGO-000001' because that field names safety goals and requirements and every sibling threat in the same TARA already names the cell-voltage safety goal; that record moved to revision 2. Finding 23's evidence said the defect was 'invisible to the link validator'; the sweep found two instances of one mistyped value in two different records, which confirms the root cause as hand entry rather than a stale reference after a rename, and confirms that fixing only the record the finding named would have left the same defect in place elsewhere. A new tool, docs/artifacts/tools/check_references.py, now resolves every id-shaped string in every corpus and scenario record against the artifact index and the four registries, so this class of defect is detectable from now on. Its output at the end of the remediation pass: 1476 id-shaped strings resolved, 0 unresolved, and 4 occurrences of 2 distinct declared-forward references that are NOT typos and are recorded separately as finding FB2-REV-FND-000030. No acceptance criterion, ASIL value, verification approach, threat description, likelihood, impact or residual risk was changed. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
 }

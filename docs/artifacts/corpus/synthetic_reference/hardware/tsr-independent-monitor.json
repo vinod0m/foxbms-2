@@ -1,6 +1,6 @@
 {
  "id": "FB2-HW-TSR-000004",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "hardware",
@@ -49,42 +49,66 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "hw_engineer",
    "description": "Synthetic independent HW monitor (addresses FTTI violation)"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "hw_engineer",
+   "description": "Separated this technical safety requirement (ISO 26262 Part 5) from FB2-SAF-FSR-000004 (Part 4), which carried identical statement, rationale, safety_allocation and acceptance_criteria, and made the shared 'All cells (or representative subset >= 50%)' coverage criterion measurable. Remediation of finding FB2-REV-FND-000027. This record now states the hardware obligation and carries hardware acceptance criteria only: 100 percent coverage of the cells the main measurement chain monitors; the 50 ms chain latency measured at the coil; zero shared supply rails; zero shared threshold references; zero reachable contactor driver stages commanded from the main microcontroller; 50 mV threshold accuracy; and one diagnosis entry per detected failure of the independent chain itself. The structural counts are stated separately per shared resource rather than as the single 'Independence 100% no shared MCU, power supply or communication' criterion the functional record used, because a count of shared rails and a count of shared references are separately decidable on hardware and a single percentage of an undefined denominator is not. The coverage criterion is resolved to 100 percent of the monitored cell set: 'representative subset' was undefined, no selection method is recorded anywhere in the corpus, and FB2-ASM-008's own stated implementation - separate voltage dividers, comparator and contactor drive - is a per-cell network, so 100 percent is the only defensible reading. Feasibility remains an open assumption under FB2-ASM-008 and is not asserted here. The statement is aligned with the hardware obligation FB2-SAF-TSC-000001 already published for this requirement in its technical_safety_requirements block, so the record and the concept now agree. The ASIL (ASIL_B) and safety_goal_ref (FB2-SAF-SGO-000001) are unchanged; the contactors are explicitly excluded from the independence requirement because both paths act on them and claiming otherwise would have been a false claim. Removed the 115 ms figure from the rationale and replaced it with arithmetic derived from the corpus's own parameter registry. Finding FB2-REV-FND-000026 reported 115 ms as appearing in no record; that part of its evidence is corrected here. The figure is real but stale: it is the sum of a superseded allocation recorded in FB2-REV-000001 (as_is vertical-slice review, embedded finding FB2-FND-000001) as 'FSR-001 specifies 10 Hz (100 ms); FSR-002 specifies 10 ms check; FSR-003 specifies 5 ms contactor; sum = 115 ms'. 100 + 10 + 5 = 115. The allocation has since changed - FB2-PRM-000003 now gives afe_acquisition_period_ms = 50 and FB2-SAF-SGO-000001 allocates 25 ms for acquisition - so the figure no longer describes anything in this corpus. The justification is now stated on figures that still hold: the main path is 85 ms of the 100 ms interval; at the 40 ms upper tolerance of FB2-PRM-000005 the contactor chain is 5 + 40 + 5 = 50 ms and the main path is 95 ms; and if detection waits one full acquisition period of FB2-PRM-000003 (50 ms) rather than the 25 ms allocated, the main path is 85 - 25 + 50 = 110 ms and overruns the interval. A main-path-only reaction therefore has no tolerance for a degraded contactor or for one acquisition period, which is the substantive argument for a second barrier and does not need the 115 ms. FB2-ASM-008's rationale carried the same stale figure and was corrected in the same pass."
   }
  ],
- "statement": "The BMS shall include an independent hardware voltage monitor (ASIL B) that continuously monitors cell voltages and can open HV contactors independently of the main MCU within 50 ms of overvoltage detection.",
- "rationale": "Provides freedom from interference for ASIL D safety goal; addresses timing budget violation in main path (115 ms > 100 ms FTTI) by providing parallel safety channel",
+ "statement": "The hardware shall realise the ASIL B overvoltage reaction as a discrete chain separate from the main measurement chain: every cell monitored by the main chain shall be divided by a dedicated divider network into a comparator that holds its own overvoltage threshold reference on a supply rail not shared with the main chain, and the comparator output shall drive a contactor driver stage whose command is not sourced from the main microcontroller. No divider, reference, comparator, driver or supply of this chain shall be common with the main measurement or actuation chain, and the chain shall reach the contactor-open command within 50 ms of the overvoltage it detects. The contactors are common to both paths and are not part of this requirement. Allocated from FB2-SAF-FSR-000004 through FB2-SYS-SYR-000005 to architectural element AR-005 of FB2-SAF-TSC-000001.",
+ "rationale": "Hardware realisation of the second barrier required by FB2-SAF-FSR-000004, decomposed at system level by FB2-SYS-SYR-000005 and allocated to element AR-005 of FB2-SAF-TSC-000001. Freedom from interference for the ASIL D cell-voltage goal rests on this chain sharing no measurement, reference, supply or command resource with the main chain: as allocated in FB2-SAF-SGO-000001 the main path is 85 ms of the 100 ms interval, 95 ms at the 40 ms upper tolerance of FB2-PRM-000005, and 110 ms if detection waits one full acquisition period of FB2-PRM-000003 instead of the 25 ms allocated. Its own budget is 50 ms (FB2-PRM-000007) and it is an alternative to that path, not an addition to it.",
  "classification": "safety",
  "acceptance_criteria": [
   {
-   "criterion": "Independent detection latency",
-   "measure": "Time from overvoltage to contactor command",
+   "criterion": "Independent chain coverage",
+   "measure": "Cells in the pack that the main measurement chain monitors and that the independent divider network also measures, as a fraction of that monitored set",
+   "threshold": "100",
+   "unit": "%"
+  },
+  {
+   "criterion": "Independent chain detection latency",
+   "measure": "Time from the independent comparator's threshold being exceeded to the contactor driver command at the coil",
    "threshold": "50",
    "unit": "ms"
   },
   {
-   "criterion": "Independence",
-   "measure": "No shared MCU, power supply, or communication with main path",
-   "threshold": "100%",
-   "unit": "%"
+   "criterion": "Supply-rail separation",
+   "measure": "Supply rails common to the independent chain and the main measurement chain",
+   "threshold": "0",
+   "unit": "rails"
   },
   {
-   "criterion": "Monitoring coverage",
-   "measure": "Cells monitored",
-   "threshold": "All cells (or representative subset >= 50%)",
-   "unit": "%"
+   "criterion": "Threshold-reference separation",
+   "measure": "Overvoltage threshold references common to the independent chain and the main chain",
+   "threshold": "0",
+   "unit": "references"
   },
   {
-   "criterion": "Threshold accuracy",
-   "measure": "Overvoltage threshold accuracy",
+   "criterion": "Command-source separation",
+   "measure": "Contactor driver stages the independent chain can reach that are commanded from the main microcontroller",
+   "threshold": "0",
+   "unit": "stages"
+  },
+  {
+   "criterion": "Overvoltage threshold accuracy",
+   "measure": "Difference between the overvoltage threshold realised by the independent comparator chain and the configured cell shutdown threshold",
    "threshold": "50",
    "unit": "mV"
+  },
+  {
+   "criterion": "Independent chain diagnosability",
+   "measure": "Diagnosis entries raised per detected failure of the independent chain itself: supply rail out of range, threshold reference out of range, or self-test failure",
+   "threshold": "1",
+   "unit": "entry per detected failure"
   }
  ],
  "verification_approach": "test",

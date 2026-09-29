@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-FSR-000003",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "safety",
@@ -50,23 +50,35 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "safety_engineer",
    "description": "Synthetic FSR with timing budget"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Reconciled the contactor reaction figures, which gave three different numbers for one chain: a 30 ms acceptance threshold, 35 ms in this record's own rationale and 40 ms in the safety goal's timing budget. Root cause was that 30 ms is the mechanical opening time alone - the value of FB2-PRM-000005 and FB2-ASM-006 - while the acceptance criterion it was attached to measures from the FAULT request to the FEEDBACK-open contactor, which additionally includes the coil command and the feedback confirmation. The chain was allocated in the safety goal as contactor_command 5 ms + contactor_mechanical 30 ms + feedback_verification 5 ms = 40 ms, and both the functional and the technical safety concept independently state that 40 ms is the end-to-end figure. Remediation of finding FB2-REV-FND-000024. Changes: (1) the 'Contactor open latency' threshold moves from 30 ms to 40 ms, because that criterion measures FAULT request to feedback open and 40 ms is what the allocated chain costs; (2) a new criterion 'Contactor mechanically open latency' is added at 35 ms for the FAULT request to mechanically open point, so the 30 ms mechanical parameter is no longer asked for under the wrong label; (3) the statement now distinguishes the mechanically open point (35 ms) from the feedback-confirmed point (40 ms); (4) the rationale is rewritten to state the full chain 5 + 30 + 5 = 40 ms and to say why the earlier 35 ms omitted the coil command. The coil de-energise criterion at 5 ms, the feedback-verification criterion and the weld-detection criterion are unchanged. No threshold was loosened to make a test pass: the 40 ms figure is the budget the record was already spending from, and adopting it makes the requirement harder to claim compliance with, not easier. The real foxBMS source was checked first and cannot settle the number - CONT_OpenContactor at src/app/driver/contactor/contactor.c:165-182 requests the state change through SPS_RequestContactorState() and carries no timing constant - so the parameter registry FB2-PRM-000005 is the authority and it was not edited."
   }
  ],
- "statement": "The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.",
- "rationale": "Contactor opening is the primary risk reduction measure; 30 ms mechanical opening + 5 ms feedback = 35 ms within FTTI budget",
+ "statement": "The BMS shall command all HV contactors to open within 5 ms of a FAULT state request from SOA/DIAG, shall reach the mechanically open state within 35 ms of that request, and shall confirm the commanded state from the auxiliary feedback within 40 ms of that request.",
+ "rationale": "Contactor opening is the primary risk reduction measure. The chain is three segments, and each segment has its own bound: the coil command within 5 ms, the mechanical opening within 30 ms (FB2-PRM-000005, FB2-ASM-006, worst case over -40 to +85 degC), and the auxiliary feedback confirmation within a further 5 ms. From the FAULT request the mechanically open point is therefore 5 + 30 = 35 ms and the feedback-confirmed point is 5 + 30 + 5 = 40 ms, which is the same 40 ms the safety goal allocates (contactor_command 5 + contactor_mechanical 30 + feedback_verification 5) and which fits inside the 100 ms fault-tolerant time interval with the 15 ms margin FB2-SAF-SGO-000001 now records. The earlier wording of this record stated a 30 ms threshold against a 35 ms rationale, which contradicted its own 5 ms coil-command criterion and the safety goal's 40 ms; the three figures were true of three different points on one chain and the defect was that a single criterion carried the value belonging to another point. Finding FB2-REV-FND-000024.",
  "classification": "safety",
  "acceptance_criteria": [
   {
    "criterion": "Contactor open latency",
-   "measure": "Time from FAULT request to contactor feedback open",
-   "threshold": "30",
+   "measure": "Time from FAULT request to contactor feedback open (auxiliary contacts confirm open)",
+   "threshold": "40",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Contactor mechanically open latency",
+   "measure": "Time from FAULT request to contactor mechanically open, independent of the feedback segment",
+   "threshold": "35",
    "unit": "ms"
   },
   {
@@ -85,6 +97,12 @@
    "criterion": "Coil de-energize command",
    "measure": "Time from FAULT request to SBC coil command",
    "threshold": "5",
+   "unit": "ms"
+  },
+  {
+   "criterion": "Coil de-energise to mechanically open",
+   "measure": "Time from SBC coil de-energise command to contactor mechanically open, against the 30 ms worst-case mechanical opening time of FB2-PRM-000005",
+   "threshold": "30",
    "unit": "ms"
   }
  ],

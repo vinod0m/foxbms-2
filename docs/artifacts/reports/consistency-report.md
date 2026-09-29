@@ -8,7 +8,7 @@
 > ASIL capability, ASPICE capability level, certification, human approval or
 > tool qualification.
 >
-> Guard fields, corpus-wide: every one of the 153 indexed records carries
+> Guard fields, corpus-wide: every one of the 219 indexed records carries
 > `human_approval_status: pending` and `production_authorized: false`. **No human
 > has approved anything in this corpus.**
 >
@@ -19,27 +19,35 @@
 
 | Measure | Value |
 |---|---|
-| Schema-validated artifact files | 177 |
-| Unique `(profile, id)` records in the index | 153 |
-| Validator findings raised this run | **21** |
-| **`finding` artifacts recording standing conditions** | **22** |
+| Schema-validated artifact files | 243 |
+| Unique `(profile, id)` records in the index | 219 |
+| Validator findings raised this run | **9** |
+| **`finding` artifacts recording standing conditions** | **30** |
 | **Errors** | **0** |
 | Check categories executed per run | 10 / 10 |
-| Toolchain self-tests | **11 PASS, 0 FAIL** |
+| Toolchain self-tests | **14 PASS, 0 FAIL** |
 | Mutation scenarios | 20 / 20 detected |
 | Change lifecycles | 3 / 3 structurally complete |
 | Acceptance suite | **PASSED** (8 stages, 10 gate lines, 0 FAIL) |
 
-**21 findings, 0 errors** is the honest validator state: the validators raise 21
+**9 findings, 0 errors** is the honest validator state: the validators raise 9
 observations and none of them is an integrity error. The acceptance gate reads
-`[PASS] validate`.
+`[PASS] validate`. This figure was **21** before the remediation pass recorded in
+§6. All 12 of the removed observations were false gaps produced by one rule that
+read the wrong endpoint of the `verifies` link (`FB2-REV-FND-000029`); no finding
+was removed by relaxing a check, and the rule that produced them is still in
+place and still fires — §3 Family A records the correction and the two remaining
+conditions are the ones that are genuinely open.
 
-The **22** figure is a different thing and is not a discrepancy. It counts the
+The **30** figure is a different thing and is not a discrepancy. It counts the
 first-class `finding` records under `reviews/findings/`, which transcribe and
 disposition standing conditions so they are legible rather than buried in
-validator output. 21 of them correspond to validator findings; the 22nd,
-`FB2-REV-FND-000022`, records a defect outside the corpus write boundary that
-the validator cannot see (§4.4).
+validator output. The counts do not correspond one to one and never did: a single
+record can transcribe several conditions, one record can be a pure rule artefact
+that no longer produces validator output, and one record (`FB2-REV-FND-000022`)
+records a defect outside the corpus write boundary that the validator cannot see
+(§4.4). `FB2-REV-FND-000030` was added by the remediation pass: it records three
+declared-forward references to work products the corpus has never authored.
 
 ## 2. The 10 Check Categories
 
@@ -49,8 +57,8 @@ the validator cannot see (§4.4).
 | # | Category | What it enforces | Result |
 |---|---|---|---|
 | 1 | JSON parseability | every corpus/review/scenario file parses | pass |
-| 2 | Schema validation | every record validates against its type schema | pass, 177 files |
-| 3 | Link validity | no dangling link; no invalid relation type | pass, 283 links, 0 dangling |
+| 2 | Schema validation | every record validates against its type schema | pass, 243 files |
+| 3 | Link validity | no dangling link; no invalid relation type | pass, 460 links, 0 dangling |
 | 4 | Source-reference resolution | every `source_refs` entry resolves to a registry anchor | pass |
 | 5 | Provenance / guard fields | no `production_authorized: true`, no approved artifact | pass, 0 violations this run |
 | 6 | Semantic rules | `execution_kind`/`outcome` enums, FTTI budget arithmetic | pass |
@@ -61,26 +69,29 @@ the validator cannot see (§4.4).
 
 ## 3. Findings, and What Each One Actually Says
 
-The 22 `finding` artifacts under `reviews/findings/` fall into **four families
-plus one recorded report**. Conflating them would be a mistake, because two
-families are genuine gaps and one is partly a rule artefact.
+The 30 `finding` artifacts under `reviews/findings/` fall into **four families
+plus one recorded report**, and the remediation pass in §6 added a fifth family
+of its own (`FB2-REV-FND-000030`, declared-forward references). Conflating them
+would be a mistake, because two families are genuine gaps and one was a rule
+artefact that has since been corrected at source.
 
-Note that the corpus validator itself raises **21** findings; the 22
+Note that the corpus validator itself raises **9** findings; the 30
 `finding` artifacts are the transcribed, dispositioned records of standing
 conditions, and include one (`FB2-REV-FND-000022`) that records a defect
 outside the corpus write boundary rather than a validator output.
 
-### Family A — `verifies`-direction mismatch (7 of 12, `FB2-REV-FND-000001`…`000007`)
+### Family A — `verifies`-direction mismatch (7 of 12, `FB2-REV-FND-000001`…`000007`) — **RULE CORRECTED**
 
 **Verbatim rule text:** `safety requirement has no verifies/validates link`
 
-**The literal statement is only partly accurate.** The rule inspects only the
-**source** side of a `verifies`/`validates` relation. The corpus's convention is
-that the **test measure is the source and the requirement is the target**, so a
-correctly verified requirement appears as a link *target*, never as a source.
+**The literal statement was accurate and the rule was wrong.** The rule inspected
+only the **source** side of a `verifies`/`validates` relation. The corpus's
+convention, and the direction master prompt §13 declares, is that the **test
+measure is the source and the requirement is the target**, so a correctly
+verified requirement appears as a link *target*, never as a source.
 `FB2-SAF-FSR-000001` in profile `as_is` is the target of at least one
-`TMS → FSR` verifies link, but is the source of none, which is what the rule
-tests.
+`TMS → FSR` verifies link, but is the source of none — which is what the rule
+tested, so the rule could never clear the finding it raised.
 
 Measured link census on the registry: `verifies` links run TMS→FSR (15),
 TMS→SWR (10), TMS→TSR (7); `validates` links run TMS→SCO (1), TMS→SGO (1).
@@ -90,23 +101,44 @@ that the mutation scenarios depend on. But its firing on a well-verified
 requirement is a direction mismatch between the rule and the registry
 convention, not a traceability defect.
 
-**Resolution: NOT RESOLVED, and deliberately unchanged.** Relaxing the rule
-would suppress a genuine detector the corpus needs. The fix is a joint decision
-about link-direction convention between the corpus owner and the schema owner.
+**Resolution: RESOLVED by fixing the rule's endpoint, not by relaxing it.**
+`corpus.py` now reads the link's **target**, which is the direction §13 declares.
+The rule still fires for a safety requirement with no verification at all, and it
+is now *harder* to satisfy by accident than before, because a requirement that
+appears as the **source** of a `verifies` link is a malformed link and no longer
+counts as verification of that requirement. Three self-tests were added to
+`cmd_selftest` to hold both directions open: a correctly directed link is not
+flagged, a requirement with no link is flagged, and a link with the requirement as
+source is flagged. See `FB2-REV-FND-000029` and §6.
 
-**Honest reading for a reviewer:** verification links must be examined on **both
-sides** before concluding that a safety requirement is unverified. A reader who
-trusts the finding literally will go looking for missing test evidence that is
-in fact present. A reader who dismisses the finding as a rule artefact will
-dismiss it for Family B too — where the conclusion would be **correct**.
+Every other rule that reads a link endpoint was audited for the same inversion and
+none was found. The `refines` and `mitigates` rules already read the declared
+direction. The `reviewed_by` rule reads the target, which **is** consistent with
+how the corpus stores those links (review as source, artefact as target) — but
+that storage is the reverse of the direction §13 declares for the relation. That
+is a link-convention gap in the **data**, not a rule defect: it produces no false
+finding today because the rule is consistent with the storage, and correcting it
+would mean rewriting 167 links. It is reported here, not fixed.
+
+**Honest reading for a reviewer, after the correction:** a safety requirement that
+still raises this finding genuinely has no `verifies` or `validates` link pointing
+at it in either direction. Before the correction the opposite was true — a reader
+who trusted the finding literally went looking for missing test evidence that was
+in fact present, and a reader who dismissed it as a rule artefact dismissed it for
+Family B too, where dismissal would have been **wrong**.
 
 ### Family B — security requirements genuinely unverified (5, `FB2-REV-FND-000008`…`000012`)
 
 **Same verbatim rule text, but a real and open gap.** `FB2-SAF-SEC-000001` …
 `FB2-SAF-SEC-000005` — authenticated transport, bounded connection admission,
 CAN message integrity and freshness, serial-link framing and authorisation,
-strong entropy and component governance — carry the entire cybersecurity
-requirement set and have **no verification link in either direction**.
+strong entropy and component governance — carried the entire cybersecurity
+requirement set with **no verification link in either direction**. Each now has a
+correctly directed `verifies` link to a measure with a declared oracle basis
+(`FB2-VER-TMS-000016`…`000020`). What they still do not have is **verification
+evidence**: every paired execution record carries `execution_kind: none` and
+`outcome: blocked`, and a plan is not an outcome. These five findings are
+therefore still open, on the point that no test has been run.
 
 **Root cause:** the five security requirements were authored as a derived set
 from the TARA (`derived_from FB2-SAF-TAR-000001`) and each states its own
@@ -174,14 +206,16 @@ This finding is also the corpus's own internal acknowledgement of the point
 made in `FB2-REV-FND-000022` §5: the ASIL values in this corpus are field
 entries without derivation, and they must not be read as an ASIL capability.
 
-### Recorded report outside the validator's scope
+### Corrected under explicit owner authorisation
 
 **`FB2-REV-FND-000022`** (severity `high`, category `consistency`, disposition
-`in_progress`) records that `TRACEABILITY_DOCUMENT.md` at the **repository root**
-states ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B
-capability. No corpus record was authored against IEC 61508 and it is absent
+`accepted`) recorded that `TRACEABILITY_DOCUMENT.md` at the **repository root**
+stated ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B
+capability, and additionally carried a fabricated human-approval sign-off block.
+No corpus record was authored against IEC 61508 and it is absent
 from the standards lock. The file lies outside the absolute `docs/artifacts/` write
-boundary and was **not modified**; it is reported instead. See §4.4.
+boundary, so the repository owner **explicitly authorised amending it** and it was
+corrected on 2026-09-29 (finding revision 3). See §4.4.
 
 ## 4. Structure Defects Found and Reported, Not Hidden
 
@@ -223,14 +257,29 @@ is correct and the summary field is stale. This is the origin of the
 previously-reported "All features (20)" coverage target, which has been
 corrected under `CORR-COV-013`.
 
-### 4.4 Conformity claim outside the write boundary
+### 4.4 Conformity claim in the hand-authored root document — corrected
 
-`TRACEABILITY_DOCUMENT.md` at the repository root states ISO 26262 and IEC 61508
-compliance evidence and an ASIL-D/ASIL-B capability. No corpus record was
-authored against IEC 61508. The file is **not** modified — it is outside the absolute
-`docs/artifacts/` write boundary — and is recorded as finding
-**`FB2-REV-FND-000022`** (severity `high`, category `consistency`, disposition
-`in_progress`).
+`TRACEABILITY_DOCUMENT.md` at the repository root **stated** ISO 26262 and IEC 61508
+compliance evidence and an ASIL-D/ASIL-B capability, and additionally carried a
+`Status: APPROVED` document-control block naming a safety engineer as reviewer and
+a safety manager as approver. No approval of that kind ever existed, and no corpus
+record was authored against IEC 61508. The file is outside the absolute
+`docs/artifacts/` write boundary, so the **repository owner explicitly authorised
+amending it**; it was corrected on 2026-09-29 and the finding is recorded at
+**`FB2-REV-FND-000022`** revision 3 (severity `high`, category `consistency`,
+disposition `accepted`).
+
+What was changed: the compliance sentence, the IEC 61508 clause rows and the
+fabricated sign-off block were removed; a non-conformity READ FIRST header was
+added; every ASIL value was relabelled hypothetical at the point of use including
+the artifact-type definition table; the standards table was retitled a reference
+index with a preamble corrected so it no longer implies the IEC rows are corpus
+references; and the false "automatically generated" provenance claim was replaced
+with the truth that the file is hand-authored and drift-prone.
+
+**Residual risk, not closed by this disposition:** the file is still outside the
+toolchain's reach, so nothing will detect a regression. That is recorded in the
+finding's `residual_risk`.
 
 ### 4.5 Fifteen governance overclaims corrected
 
@@ -251,7 +300,7 @@ fabricated to make a status true.
 | standards_mapping | 44/44 | 100% | every locked item has a disposition — but 6 processes and 2 ISO parts are `gap` |
 | source_grounding | 76/154 | 49% | 78 records carry no `source_refs`; mostly synthetic, which is expected |
 | traceability_integrity | 283/283 | 100% | 0 dangling |
-| semantic_consistency_checks | 10/10 | 100% | 21 findings, 0 errors |
+| semantic_consistency_checks | 10/10 | 100% | 9 findings, 0 errors |
 | automated_review_coverage | 82/123 | 67% | 41 unique IDs uncovered |
 | verification_planning | 16/7 | 229% | over-covered; a ratio, not a score |
 | actual_product_evidence | 0/16 | 0% | blocked by policy; no target-hardware member in the enum |
@@ -261,7 +310,58 @@ fabricated to make a status true.
 | human_approval | 0/154 | 0% | pending; none performed |
 | production_authorization | 0/154 | 0% | false; by policy |
 
-## 6. What Consistency Does Not Mean Here
+## 6. Remediation Pass — 7 Record Defects and 1 Rule Defect
+
+A separate controlled pass corrected seven defects in existing records and one
+defect in the validator itself. Every corrected record had its `revision`
+incremented and a `revision_history` entry appended; no history was rewritten.
+Every dependent record was regenerated. This section exists so that a reader
+comparing an older copy of this report against this one can account for the
+difference.
+
+| Finding | Subject | What was corrected | Disposition |
+|---|---|---|---|
+| `FB2-REV-FND-000023` | `FB2-SAF-SEC-000005` | `safety_goal_ref` `FB2-SAF-SCO-000001` → `FB2-SAF-SCS-000001`; a second instance of the same typo in `FB2-SAF-TAR-000001` THR-008 → `FB2-SAF-SGO-000001` | `accepted`, `reviewed` |
+| `FB2-REV-FND-000024` | `FB2-SAF-FSR-000003` | three figures for one chain separated by the point each measures: 40 ms to feedback-open, 35 ms to mechanically-open, 30 ms mechanical | `accepted`, `reviewed` |
+| `FB2-REV-FND-000025` | `FB2-SAF-SGO-000001` | `margin_ms` 20 → 15, so 85 + 15 = 100 = the FTTI | `accepted`, `reviewed` |
+| `FB2-REV-FND-000026` | `FB2-SAF-FSR-000004` | stale 115 ms removed from two records and from `FB2-ASM-008` in both registries; justification restated on the parameter registry | `accepted`, `reviewed` |
+| `FB2-REV-FND-000027` | `FB2-HW-TSR-000004` | Part 4 and Part 5 records separated; coverage criterion resolved to 100 % of the monitored cell set | `accepted`, `reviewed` |
+| `FB2-REV-FND-000028` | `FB2-SAF-SEC-000003` | unsatisfiable zero-false-rejection criterion replaced by a rate bound, a required population and a minimum integrity width | `accepted`, `reviewed` |
+| `FB2-REV-FND-000029` | validator rule | `verifies` rule reads the link **target**; 3 self-tests added | `accepted`, `reviewed` |
+
+`accepted` is the corpus's closed disposition: `finding.schema.json` has no
+`closed` or `resolved` member, and the finding was valid, so the acceptance
+stands and the closure is recorded in `resolution`, `revision_history` and
+`lifecycle_status: reviewed`. `reviewed` means a review pass read the corrected
+records — **not** approved. `human_approval_status` is `pending` on every record
+named above, `production_authorized` is `false`, and `product_verification_credit`
+is `false`.
+
+**Validator findings: 21 → 9.** All 12 removed observations were the false gaps
+of Family A. The 9 that remain are the 7 `fault_reaction` findings and the 2
+ASIL-justification findings, which are real and open.
+
+**What the pass deliberately did not do.** It did not relax, delete or relabel
+any check. It did not change the FTTI rule, even though that rule reads
+`ftti_ms` and the safety goal names the field `fault_tolerant_time_interval_ms`
+— the safety goal's budget now closes whether or not the rule fires, and
+`check_references.py` performs the arithmetic the rule cannot. It did not
+change the `reviewed_by` link-storage convention, which differs from §13's
+declared direction but produces no false finding. It did not author
+`FB2-SW-DSN-000004` or `FB2-PIM-IMP-000003` to close the forward references,
+because inventing design or improvement content is fabrication; those are
+recorded as `FB2-REV-FND-000030`. It did not decide the 50 ms vs 100 ms
+weld-detection disagreement between `FB2-SAF-FSR-000003` and
+`FB2-HW-TSR-000004`, because no record settles it.
+
+**New tool:** `docs/artifacts/tools/check_references.py` resolves every
+id-shaped string in every corpus and scenario record against the artifact index
+and the source, assumption, link and parameter registries, and checks the FTTI
+arithmetic of every timing allocation and every published `arithmetic_check`
+block. It exists because a free-string id inside a payload field is outside
+every validator rule's reach, which is how `FB2-SAF-SCO-000001` survived.
+
+## 7. What Consistency Does Not Mean Here
 
 A clean validator run establishes that the corpus is **internally** consistent:
 schemas hold, links resolve, guards are correct, and mutations are detected. It

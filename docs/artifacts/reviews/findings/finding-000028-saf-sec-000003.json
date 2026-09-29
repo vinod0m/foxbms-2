@@ -1,6 +1,6 @@
 {
  "id": "FB2-REV-FND-000028",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "finding",
  "engineering_domain": "verification",
@@ -29,8 +29,8 @@
    "rationale": "The obligation to record rather than to conceal."
   }
  ],
- "lifecycle_status": "draft",
- "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "lifecycle_status": "reviewed",
+ "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
  "automated_review_status": {
   "schema_valid": true,
   "links_valid": true,
@@ -49,6 +49,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "quality_engineer",
    "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Replaced the unsatisfiable zero-false-rejection acceptance criterion in FB2-SAF-SEC-000003 and FB2-SAF-SEC-000004 (both revision 1 -> 2) with a rate bound of 1 per 10^6 genuine frames, a required demonstration population of at least 3 x 10^6, and a minimum integrity value width of 22 bits; regenerated FB2-VER-TMS-000018/19 and FB2-VER-EXE-000018/19 against it. Left every countable, non-collision-prone zero in both records unchanged."
   }
  ],
  "subject_artifact_id": "FB2-SAF-SEC-000003",
@@ -58,5 +64,5 @@
  "disposition": "accepted",
  "impact": "A requirement with an unachievable acceptance criterion cannot be verified, and a verification measure written against it has no possible pass. That is exactly what this pass found while authoring FB2-VER-TMS-000018 and FB2-VER-TMS-000019: the honest thing to do was record the requirement's own zero as the expected outcome and state on the face of the measure that a real implementation would need a rate threshold with a stated bound. Both measures carry that statement in their oracle_detail. A reviewer who ran them would find an unpassable measure and would be right to.",
  "root_cause": "The criteria were written as absolutes because a security requirement is easier to state as 'nothing gets through' than as 'no more than N per million frames at 99.9 percent confidence'. The convenience form is unfalsifiable, which makes it read as strictness and is in fact the opposite: a criterion nobody can meet cannot distinguish a good implementation from a bad one.",
- "resolution": "NOT RESOLVED. Fixing it requires setting a rate and a confidence bound for the integrity value, which is a cryptographic engineering decision about the implementation, and editing the requirements is a controlled change. This pass: (a) recorded the finding; (b) wrote the two measures with the requirement's own zero as the expected outcome and with an explicit statement in each oracle_detail that the zero is unachievable and why, rather than quietly relaxing the criterion in the measure to something that passes; (c) named the criterion in each execution record's what_would_unblock_it list as a decision the project has to take. No acceptance criterion was altered and no verifier rule was weakened."
+ "resolution": "RESOLVED at source, in the requirement rather than in the test measure, which is the correct place: a criterion no correct implementation can meet is a requirement defect. FB2-SAF-SEC-000003's 'Genuine-frame false-rejection rate' criterion was changed from an absolute '0 frames over 24 h' to a bounded rate of 1 rejection per 10^6 genuine frames, demonstrated as 0 rejections over a genuine-frame population of at least 3 x 10^6 in a 24 h campaign, together with a new requirement that the integrity value on the interface be at least 22 bits. FB2-SAF-SEC-000004 received the identical criterion. Both records moved to revision 2. The arithmetic: a keyed integrity value of width w rejects a genuine frame with probability 2^-w, so over a 24 h campaign the expected number of genuine rejections is n * 2^-w, which is non-zero for any practical w - which is why the zero was unachievable. 0 failures in n trials gives a one-sided 95 percent upper confidence bound of 3/n, so 3/n <= 1e-6 requires n >= 3e6, which is where the population comes from. Sustaining a rate at or below 1e-6 across 3e6 frames needs a per-frame probability at or below 3.3e-7, i.e. 2^-w <= 3.3e-7, i.e. w >= 22 bits, which is where the width comes from. The replacement is therefore not a relaxation: it is STRICTER in discriminating power than the zero it replaces, because an always-rejecting implementation scores about 100 percent and fails it by four orders of magnitude, and a 16-bit integrity value gives about 1.5e-5 per frame and also fails it, whereas both would have satisfied the old zero. It is also a harder engineering obligation, because it constrains the width of the integrity value where the zero constrained nothing. The absolute zeros that REMAIN in both records are the ones that are decidable by the check existing - injected frames accepted, replayed frames accepted, length-mismatch frames reaching the callback, unframed bytes passing, control-byte transitions - and those are over countable events on a channel where no collision is involved, so they were deliberately NOT relaxed; the finding itself made this distinction and it was preserved. Dependents regenerated: FB2-VER-TMS-000018 and FB2-VER-TMS-000019 (both revision 1 -> 2) now record the population, the rate bound and the width as expected outcomes and no longer describe the criterion as unachievable; FB2-VER-EXE-000018 and FB2-VER-EXE-000019 (both revision 1 -> 2) no longer list a decision on the criterion as a blocker - it is no longer a decision the project owes - and instead list the engineering prerequisites the revised criterion creates. Both execution records remain execution_kind 'none' and outcome 'blocked': no bus was instrumented, no frame was injected, and nothing in this revision claims that either requirement has been verified. Findings FB2-REV-FND-000008..000012 remain OPEN, because those ask for verification evidence and none exists. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
 }

@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-TAR-000001",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "tara",
  "engineering_domain": "safety",
@@ -88,6 +88,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "cybersecurity_engineer",
    "description": "First issue. Threat set derived by direct reading of the pinned foxBMS 2 source at commit 308028fb (v1.11.0). Closes gap #7 'Cybersecurity - Not addressed' of docs/artifacts/reports/source-vs-synthetic-gap-report.md for the synthetic_reference profile only."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Corrected threats[THR-008].affected_safety_goals_or_requirements from 'FB2-SAF-SCO-000001' to 'FB2-SAF-SGO-000001'. Found by the corpus-wide reference sweep run under finding FB2-REV-FND-000023, which established that the mistyped id was not unique to the requirement record. The field is affected_safety_goals_or_requirements and every sibling threat in this TARA already names the cell-voltage safety goal FB2-SAF-SGO-000001 (THR-001, THR-005, THR-007), so FB2-SAF-SGO-000001 is the value this record means. The threat's description, its attack vector, its MIT-009 mitigation and its explicitly unrated likelihood and residual risk are all unchanged; no likelihood was guessed."
   }
  ],
  "item_and_scope": {
@@ -457,7 +463,7 @@
    "attack_vector": "Assumed: compromise of the development host or of the artefact source from which the pinned Python environment is installed.",
    "impact": "Arbitrary modification of the firmware or of commissioning data, with no runtime detection possible from inside the ECU. This is an engineering-security threat, not a field threat, and it is listed because a TARA that analyses only the on-target interfaces would omit it.",
    "affected_safety_goals_or_requirements": [
-    "FB2-SAF-SCO-000001"
+    "FB2-SAF-SGO-000001"
    ],
    "likelihood_impact_reasoning": "Likelihood cannot be assessed from the repository: this threat depends on the organisational and supply-chain controls around the build and commissioning environment, none of which are described in this corpus. Impact if realised is total for the target device. The threat is recorded with an explicit unrated likelihood rather than with a default, because guessing a likelihood here would be the single most fabricated number in this record.",
    "mitigation_ids": [

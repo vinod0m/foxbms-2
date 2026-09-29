@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T12:17:43Z |
+| Generated | 2026-09-29T14:03:49Z |
 
 ## Scope
 
@@ -373,14 +373,16 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
   1. **Inject 5000 frames with a valid identifier and no valid integrity value** → expected: Zero reach the receive callback; each is diagnosed as an integrity failure
   2. **Replay 500 recorded valid frames out of sequence** → expected: Zero reach the receive callback; each is diagnosed as a counter failure
   3. **Inject 1440 short frames** → expected: Zero reach the receive callback; each is diagnosed as a length failure
-  4. **Run genuine traffic for 24 h alongside the injections** → expected: Zero genuine frames rejected
+  4. **Run genuine traffic for 24 h alongside the injections** → expected: Zero genuine frames rejected over an observed genuine-frame population of at least 3 x 10^6 frames, giving a one-sided 95 percent upper confidence bou...
   5. **Review the diagnosis log** → expected: One entry per rejected frame, and the three failure kinds are distinguishable
 - **Expected outcomes**:
   - `injected_frames_accepted` = 0 (tolerance exact)
   - `replayed_frames_accepted` = 0 (tolerance exact)
   - `short_frames_accepted` = 0 (tolerance exact)
-  - `genuine_frames_rejected` = 0 (tolerance exact)
   - `verification_latency` = 2 (tolerance at most)
+  - `genuine_frames_observed` = 3e6 (tolerance at least)
+  - `genuine_frames_rejected` = 0 (tolerance exact, over a genuine-frame population of at least 3e6, i.e. a one-sided 95 percent upper bound of 1 per 10^6 genuine frames)
+  - `integrity_value_width` = 22 (tolerance at least)
 
 #### `FB2-VER-TMS-000019` — Verification: the serial link acts only on authenticated frames, and the XOFF/XON byte values are demoted to ordinary payload (synthetic_reference)
 
@@ -393,14 +395,16 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
   2. **Send 86400 valid-structure frames with a modified payload** → expected: Zero are accepted; each raises a diagnosis entry
   3. **Send 1440 frames with a declared length that does not match the byte count** → expected: Zero are passed onward; each is diagnosed
   4. **Overflow the receive queue deliberately** → expected: The overflow is detected and one diagnosis entry is raised per event
-  5. **Run genuine traffic for 24 h alongside the injections** → expected: Zero genuine frames rejected
+  5. **Run genuine traffic for 24 h alongside the injections** → expected: Zero genuine frames rejected over an observed genuine-frame population of at least 3 x 10^6 frames, giving a one-sided 95 percent upper confidence bou...
 - **Expected outcomes**:
   - `unframed_bytes_passing` = 0 (tolerance exact)
   - `transmit_state_transitions_from_control_bytes` = 0 (tolerance exact)
   - `modified_payload_frames_accepted` = 0 (tolerance exact)
   - `length_mismatch_frames_passed` = 0 (tolerance exact)
   - `diagnosis_entries_per_overflow` = 1 (tolerance exact)
-  - `genuine_frames_rejected` = 0 (tolerance exact)
+  - `genuine_frames_observed` = 3e6 (tolerance at least)
+  - `genuine_frames_rejected` = 0 (tolerance exact, over a genuine-frame population of at least 3e6, i.e. a one-sided 95 percent upper bound of 1 per 10^6 genuine frames)
+  - `integrity_value_width` = 22 (tolerance at least)
 
 #### `FB2-VER-TMS-000020` — Verification: the initial sequence number is unpredictable across connections and power cycles, and the third-party component inventory is evidenced and checked against an advisory source on a stated ... (synthetic_reference)
 
@@ -664,4 +668,4 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 
 ---
 
-*Generated: 2026-09-29T12:17:43Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T14:03:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

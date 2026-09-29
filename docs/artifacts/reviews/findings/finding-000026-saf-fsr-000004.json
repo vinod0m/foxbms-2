@@ -1,6 +1,6 @@
 {
  "id": "FB2-REV-FND-000026",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "finding",
  "engineering_domain": "safety",
@@ -29,8 +29,8 @@
    "rationale": "The obligation to record rather than to conceal."
   }
  ],
- "lifecycle_status": "draft",
- "lifecycle_status_note": "draft: this record makes a contradiction in a pre-existing record visible and dispositioned. It does not close the condition. No human has confirmed it and human approval of the records it describes remains pending.",
+ "lifecycle_status": "reviewed",
+ "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
  "automated_review_status": {
   "schema_valid": true,
   "links_valid": true,
@@ -49,6 +49,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "quality_engineer",
    "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Removed the stale 115 ms figure from FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 (both revision 1 -> 2) and from FB2-ASM-008.rationale in both assumption registries, and restated the independent monitor's justification on the parameter-registry arithmetic. Corrected this finding's own evidence: 115 ms is traceable to FB2-REV-000001 embedded finding FB2-FND-000001 and is a superseded allocation, not an unsourced figure."
   }
  ],
  "subject_artifact_id": "FB2-SAF-FSR-000004",
@@ -58,5 +64,5 @@
  "disposition": "accepted",
  "impact": "The justification for adding an independent ASIL B hardware channel - a substantial hardware cost and the basis of the ASIL D decomposition - rests on a number that cannot be located or reproduced. A reader checking the arithmetic finds nothing to check, and the most likely reading is that the figure was estimated at some point and never reconciled. The independent monitor may well be justified; the justification as written does not support it.",
  "root_cause": "The figure appears to predate the current allocation and to have survived a later rewrite of the timing budget without being updated. Two records carrying the identical sentence mean the figure has been copied rather than checked twice, so a single unverified number propagated to both the functional and the hardware level.",
- "resolution": "NOT RESOLVED. This pass: (a) recorded the contradiction; (b) wrote FB2-SAF-TSC-000001 restating the independent monitor's justification on the 85 ms figure that does exist, and noted that the 85 ms does not fit once the reaction chain is added - which is the substantive argument for the independent path and does not need the 115 ms at all; (c) registered the referral in INST-004. Neither record carrying the unsourced figure was edited, because both are functional-safety and hardware requirements and correcting a requirement's rationale is a controlled change."
+ "resolution": "RESOLVED at source, and this finding's central piece of evidence is CORRECTED. The finding states that 115 ms 'cannot be reconstructed from the corpus at all'. It can. 115 ms is the sum of a SUPERSEDED allocation recorded in FB2-REV-000001, the as_is vertical-slice review, in its embedded finding FB2-FND-000001: 'FSR-001 specifies 10 Hz (100 ms); FSR-002 specifies 10 ms check; FSR-003 specifies 5 ms contactor; sum = 115 ms > FTTI 100 ms'. 100 + 10 + 5 = 115. The figure is therefore STALE, not fabricated, and it described an allocation the corpus has since replaced - FB2-PRM-000003 now gives afe_acquisition_period_ms = 50 and FB2-SAF-SGO-000001 allocates 25 ms for acquisition. That is a more precise root cause than 'the figure was estimated at some point and never reconciled', and it changes the remedy: the figure does not need reconstructing, it needs deleting. The 115 ms was removed from FB2-SAF-FSR-000004.rationale, from FB2-HW-TSR-000004.rationale, and from FB2-ASM-008.rationale in BOTH assumption registries (docs/artifacts/shared/assumption-registry.json and docs/artifacts/corpus/synthetic_reference/shared/assumption-registry.json) - a third and fourth occurrence the finding did not identify. The justification the 115 ms was carrying is now stated on figures that still hold and that are derived from the parameter registry: the main path is 85 ms of the 100 ms interval; at the 40 ms upper tolerance of FB2-PRM-000005 the contactor chain is 5 + 40 + 5 = 50 ms and the main path is 95 ms, leaving 5 ms; and if detection waits one full acquisition period of FB2-PRM-000003 (50 ms) rather than the 25 ms allocated, the main path is 85 - 25 + 50 = 110 ms and overruns the interval. A main-path-only reaction therefore has no tolerance for a degraded contactor or for one acquisition period, which is the substantive argument for a second barrier and does not need 115 ms at all. FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 moved to revision 2 under this finding and under FB2-REV-FND-000027. The as_is records that hold the 115 ms were NOT edited: FB2-REV-000001 is origin source_observed and records the real project's review, and master prompt section 14 requires source contradictions to be preserved as gaps in as_is. No ASIL, safety_goal_ref, detection latency or threshold accuracy was changed. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
 }

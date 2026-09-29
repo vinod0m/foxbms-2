@@ -1,6 +1,6 @@
 {
  "id": "FB2-VER-TMS-000018",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "test_measure",
  "engineering_domain": "verification",
@@ -63,6 +63,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "cybersecurity_engineer",
    "description": "Security verification measure authored because FB2-SAF-SEC-000003 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Regenerated as a dependent of finding FB2-REV-FND-000028 after FB2-SAF-SEC-000003 revised its genuine-frame false-rejection criterion. The expected outcome genuine_frames_rejected no longer records the requirement's absolute 0; it records the population the rate bound is demonstrated over (>= 3 x 10^6 genuine frames in 24 h) and the pass condition derived from it (0 rejections observed over that population, i.e. a one-sided 95 percent upper confidence bound of 1 x 10^-6 by the rule of three), plus the observed genuine-frame population itself so that the bound can be recomputed by a reviewer rather than taken on trust. A new expected outcome records the integrity value width the requirement now mandates (>= 22 bits). The oracle_detail's known_limitation_in_the_requirement no longer states that the criterion is unachievable, because it is no longer unachievable; it now states what the revised criterion does and does not bound, and names the residual risks that a pass on this measure would NOT cover. Step 4's expected result was restated from 'Zero genuine frames rejected' to the population-plus-bound form for the same reason. Every other expected outcome - the zeros for injected frames accepted, replayed frames accepted, short frames accepted - is UNCHANGED: those are decidable by the check existing and were deliberately not relaxed. The measure remains planned and unexecuted; no execution evidence is claimed by this revision and human_approval_status remains pending."
   }
  ],
  "test_type": "robustness",
@@ -130,7 +136,7 @@
   {
    "step": 4,
    "action": "Run genuine traffic for 24 h alongside the injections",
-   "expected": "Zero genuine frames rejected"
+   "expected": "Zero genuine frames rejected over an observed genuine-frame population of at least 3 x 10^6 frames, giving a one-sided 95 percent upper confidence bound of 1 x 10^-6 on the false-rejection rate by the rule of three"
   },
   {
    "step": 5,
@@ -158,24 +164,38 @@
    "unit": "frames"
   },
   {
-   "signal": "genuine_frames_rejected",
-   "expected_value": "0",
-   "tolerance": "exact",
-   "unit": "frames"
-  },
-  {
    "signal": "verification_latency",
    "expected_value": "2",
    "tolerance": "at most",
    "unit": "ms"
+  },
+  {
+   "signal": "genuine_frames_observed",
+   "expected_value": "3e6",
+   "tolerance": "at least",
+   "unit": "frames in the 24 h campaign"
+  },
+  {
+   "signal": "genuine_frames_rejected",
+   "expected_value": "0",
+   "tolerance": "exact, over a genuine-frame population of at least 3e6, i.e. a one-sided 95 percent upper bound of 1 per 10^6 genuine frames",
+   "unit": "frames"
+  },
+  {
+   "signal": "integrity_value_width",
+   "expected_value": "22",
+   "tolerance": "at least",
+   "unit": "bits"
   }
  ],
  "tolerances": {
   "injected_frames_accepted": "exact",
   "replayed_frames_accepted": "exact",
   "short_frames_accepted": "exact",
-  "genuine_frames_rejected": "exact",
-  "verification_latency": "at most"
+  "verification_latency": "at most",
+  "genuine_frames_observed": "at least",
+  "genuine_frames_rejected": "exact over a population of at least 3e6 frames",
+  "integrity_value_width": "at least"
  },
  "timing": {
   "max_execution_time_ms": 86400000,
@@ -187,8 +207,8 @@
   "kind": "source_grounded",
   "why_this_oracle": "The oracle is the arithmetic of the check itself, taken from the requirement and independent of the item. A counter establishes freshness only if the receiver's expected value is not derivable from observed traffic, which is exactly the property a strict-increment counter with a seeded initial value has and a zero-based counter does not. A frame-integrity value a peer cannot produce without the shared secret establishes authenticity because the receiver recomputes it over the payload and compares; a modified payload necessarily fails the comparison, and a forged one necessarily fails unless the peer holds the key. A data-length check is a direct comparison. Each expected outcome - zero accepted - is a consequence of the check existing, not a number read out of a run.",
   "what_the_oracle_is_not": "It is not a measured reference: no bus was instrumented and nothing was injected. It is not a synthetic assumption: the properties asserted are properties of counter discipline and keyed integrity, both of which hold or fail independently of this item. It is not an analytical model of the bus: bus load, arbitration and error frames are outside it.",
-  "what_it_still_does_not_prove": "The oracle proves the dispatch layer's verdict, not the secrecy of the key. A key that is short, hard-coded, or recoverable from the firmware image satisfies every expected outcome here and still gives no authenticity. It also does not prove the counter's initial value is unpredictable, which is the property FB2-SAF-SEC-000005 addresses and which this measure must not be read as covering.",
-  "known_limitation_in_the_requirement": "The requirement's 'genuine-frame false-rejection rate: 0 frames over 24 h' criterion is not achievable as written. A keyed integrity value of any practical width collides with some payload, so a genuine frame will occasionally be rejected on a correct implementation. The expected outcome above records '0 genuine frames rejected' because that is what the requirement says, and this record states plainly that it is therefore an unachievable criterion rather than a strict oracle: a real implementation would need a rate threshold with a stated bound, not a zero. Raised as finding FB2-REV-FND-000028 rather than resolved by quietly relaxing the measure.",
+  "what_it_still_does_not_prove": "The oracle proves the dispatch layer's verdict, not the secrecy of the key. A key that is short, hard-coded, or recoverable from the firmware image satisfies every expected outcome here and still gives no authenticity. The revised false-rejection bound additionally does not prove the integrity value is well chosen, only that it is at least 22 bits wide and that the observed false-rejection rate over the observed population is consistent with 1 per 10^6. It does not prove the counter's initial value is unpredictable, which is the property FB2-SAF-SEC-000005 addresses and which this measure must not be read as covering.",
+  "known_limitation_in_the_requirement": "The requirement's genuine-frame false-rejection criterion was revised under finding FB2-REV-FND-000028. It used to be an absolute '0 frames over 24 h', which no implementation that genuinely verifies integrity can meet - a keyed integrity value of width w rejects a genuine frame with probability 2^-w, so over a long campaign the expected count is non-zero for any practical w - and which an implementation that rejected every frame would satisfy vacuously. The criterion now bounds the rate at 1 per 10^6 genuine frames, demonstrated as 0 rejections over a genuine-frame population of at least 3 x 10^6, and requires the integrity value to be at least 22 bits. What that does NOT bound: it bounds the rate at the population stated and nowhere else, so a campaign that observes fewer than 3 x 10^6 genuine frames cannot demonstrate it and this measure must record the population it actually observed. It also says nothing about the behaviour of the receiver under an authenticated peer that is entitled to send a frame it is not entitled to send, nothing about resynchronisation after a desynchronising error, and nothing about the secrecy of the key. A key that is short, hard-coded or recoverable from the firmware image satisfies every expected outcome here and still gives no authenticity.",
   "oracle_kind": "source_grounded"
  },
  "cleanup": "Remove the injection node, re-seed nothing (the counter continues), confirm the genuine peer is still accepted and archive the capture with the diagnosis log.",

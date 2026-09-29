@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-TSC-000001",
- "revision": "1",
+ "revision": "3",
  "schema_version": "1.0.0",
  "artifact_type": "safety_concept",
  "engineering_domain": "safety",
@@ -74,6 +74,18 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "First technical safety concept for the synthetic_reference profile. It takes the allocation the functional safety concept FB2-SAF-FSC-000001 decided and states what follows from it technically: which element is hardware and which is software, which existing technical safety requirements carry which part, how the fault-tolerant time interval is spent, on what evidence the diagnostic-coverage assumptions rest, and what the hardware side assumes. Written against the existing FB2-HW-TSR-* and FB2-SW-SWR-* records; where those records contradict this concept the contradiction is recorded as a finding and not resolved by conforming to the wrong record."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Regenerated as a dependent of the remediation of findings FB2-REV-FND-000024, 000025, 000026 and 000027. The ftti_and_timing_budget.arithmetic_check statement and the five contradiction blocks recorded here described conditions in FB2-SAF-SGO-000001, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 that have now been corrected at source. The blocks are retained with their contradiction text unchanged so the record of what was found survives; the arithmetic_check statement no longer describes a departure from the safety goal because there is no longer one - both records now carry 15 ms of margin over 85 ms of serial work. No architectural element, allocated requirement, safety strategy, diagnostic coverage assumption or budget figure in this concept was changed."
+  },
+  {
+   "revision": "3",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Regenerated as a dependent of findings FB2-REV-FND-000025 and FB2-REV-FND-000027. Two entries still described the pre-fix state: safety_strategies.fault_detection[AR-005].coverage_claim and diagnostic_coverage_assumptions[Independent hardware threshold monitor].claimed_coverage both carried the requirement's old unmeasurable disjunction ('all monitored cells, or a representative subset of at least 50%') and labelled it synthetic_assumption, and verification_and_validation_criteria[1] stated that FB2-SAF-SGO-000001 does not pass the FTTI check. All three now reflect the corrected records: the coverage claims state 100 percent of the main chain's monitored cell set as specified by FB2-HW-TSR-000004, and the V&V criterion records that both this concept and the safety goal pass at 100 ms exactly and names the tool that checks it. The coverage entries remain labelled synthetic_assumption and their justification_basis is unchanged, because the requirement being specified is not the same as the coverage being demonstrated and nothing in this corpus demonstrates it. No architectural element, allocation, safety strategy detection budget, reaction budget or diagnostic-coverage mechanism was changed."
   }
  ],
  "concept_stage": "technical_safety_concept",
@@ -226,8 +238,10 @@
     "detects": "A cell voltage beyond the monitor's own threshold",
     "element_id": "AR-005",
     "detection_time_budget_ms": 50,
-    "coverage_claim": "Carried unchanged from FB2-SAF-FSR-000004 and FB2-HW-TSR-000004: 'all cells or representative subset >= 50%', which is not a measurable statement. See finding FB2-REV-FND-000027.",
-    "coverage_claim_evidence": []
+    "coverage_claim": "Every cell the main measurement chain monitors, measured by the independent divider network. Specified by FB2-HW-TSR-000004 as 100 percent of that monitored set. Finding FB2-REV-FND-000027.",
+    "coverage_claim_evidence": [
+     "FB2-HW-TSR-000004 states the criterion as 100 percent of the cells the main measurement chain monitors, with the population named. The criterion is specified, not demonstrated: no schematic, no BOM and no measurement of the independent chain exists in this corpus."
+    ]
    }
   ],
   "fault_reaction": [
@@ -485,7 +499,7 @@
   "arithmetic_check": {
    "serial_sum_ms": 85,
    "margin_ms": 15,
-   "statement": "25 + 5 + 2 + 3 + 5 + 2 + 3 + 5 + 30 + 5 = 85 ms of serial work. The fault-tolerant time interval is 100 ms, so the margin available is 100 - 85 = 15 ms, and this concept allocates exactly 15 ms of it. The budget therefore closes with no deficit. This is a deliberate departure from FB2-SAF-SGO-000001, which records a 20 ms margin and therefore a 105 ms total against the same 100 ms interval: a margin larger than the time available is an overrun, not a margin. This concept does not adopt that overrun and does not edit the safety goal to remove it; the contradiction is raised as finding FB2-REV-FND-000025 and resolving it is a controlled change to a baselined record. Note also that the serial figure above already contradicts FB2-SAF-FSR-000003, whose acceptance criterion requires the contactors open within 30 ms of the fault request while its own rationale and this allocation both put the command-plus-actuation chain at 35 ms; see finding FB2-REV-FND-000024. The independent path AR-005 has its own 50 ms budget and does not draw on this one; the two budgets are alternatives, not a sum."
+   "statement": "25 + 5 + 2 + 3 + 5 + 2 + 3 + 5 + 30 + 5 = 85 ms of serial work. The fault-tolerant time interval is 100 ms, so the margin available is 100 - 85 = 15 ms, and this concept allocates exactly 15 ms of it. The budget therefore closes with no deficit. This concept originally recorded that allocation as a deliberate departure from FB2-SAF-SGO-000001, which then carried a 20 ms margin and therefore a 105 ms total against the same 100 ms interval. That departure no longer exists: FB2-SAF-SGO-000001 now records the 15 ms margin as well, so the two records agree and the safety goal's budget closes. The 105 ms was not rounded to 100 ms; the margin was corrected to the value the interval admits, and 85 + 15 = 100. The reaction chain at the end of the budget is 5 ms coil command + 30 ms mechanical opening + 5 ms feedback verification = 40 ms, and FB2-SAF-FSR-000003 now states those three points separately as 5 ms, 35 ms and 40 ms, so the requirement and this allocation agree. The independent path AR-005 has its own 50 ms budget and does not draw on this one; the two budgets are alternatives, not a sum."
   }
  },
  "diagnostic_coverage_assumptions": [
@@ -536,8 +550,8 @@
   },
   {
    "mechanism": "Independent hardware threshold monitor (AR-005)",
-   "claimed_coverage": "All monitored cells, or a representative subset of at least 50%.",
-   "justification": "This is the requirement's own wording, carried here unchanged. It is not a measurable coverage statement: 'representative subset' is not defined, the disjunction is not resolvable at review time, and no subset selection method is recorded. The corpus has no basis on which to improve it. Carried as-is and raised as finding FB2-REV-FND-000027 rather than restated as a number this concept cannot defend.",
+   "claimed_coverage": "Every cell the main measurement chain monitors is also measured by the independent divider network and compared against its own threshold.",
+   "justification": "The requirement FB2-HW-TSR-000004 now states this coverage as 100 percent of the main chain's monitored cell set, which is decidable on hardware: measure which cells the independent divider network reaches and divide by which cells the main chain reaches. The previous wording of this entry carried the requirement's own disjunction ('all monitored cells, or a representative subset of at least 50%') forward, which was not a measurable coverage statement; finding FB2-REV-FND-000027 recorded that and the requirement has now been revised. The 100 percent figure is STILL not demonstrated by anything in this corpus: it is a requirement, and its feasibility as a full per-cell network remains the open assumption FB2-ASM-008. The basis is therefore still an assumption rather than a measurement or an analytical model, and this entry must not be read as evidence of coverage.",
    "justification_basis": "synthetic_assumption",
    "independence_assumption": "Assumed (FB2-ASM-008): separate dividers, separate comparator, separate supply and no communication with the main chain. Nothing in this corpus demonstrates it, and the absence of a demonstration is itself the largest open assumption of the ASIL D allocation.",
    "common_cause_note": "A common supply rail or a common reference between AR-005 and AR-001 would make the two channels agree in the presence of a shared fault and would defeat the independence the ASIL D argument relies on. FB2-SAF-ANL-000003 records this as an open question.",
@@ -628,9 +642,9 @@
    "record_kind_expected": "This concept plus the FB2-HW-TSR-* and FB2-SW-SWR-* records"
   },
   {
-   "criterion": "The serial timing budget plus its margin does not exceed the FTTI.",
-   "how_it_would_be_checked": "Arithmetic over ftti_and_timing_budget.allocation, compared with ftti_and_timing_budget.ftti_ms. This concept passes at 100 ms exactly; FB2-SAF-SGO-000001 does not.",
-   "record_kind_expected": "This concept's arithmetic_check, and a validator finding when the safety goal's own allocation is checked"
+   "criterion": "The serial timing budget plus its margin does not exceed the FTTI, in every record that publishes one.",
+   "how_it_would_be_checked": "Arithmetic over ftti_and_timing_budget.allocation compared with ftti_and_timing_budget.ftti_ms, and over FB2-SAF-SGO-000001's timing_budget.allocation compared with its fault_tolerant_time_interval_ms. Both records now pass at 100 ms exactly over 85 ms of serial work plus 15 ms of margin. docs/artifacts/tools/check_references.py performs this arithmetic over every timing allocation and every arithmetic_check block in the corpus and fails if any of them does not close.",
+   "record_kind_expected": "This concept's arithmetic_check, FB2-SAF-SGO-000001's timing_budget, and the output of docs/artifacts/tools/check_references.py"
   },
   {
    "criterion": "Each diagnostic-coverage assumption states whether its basis is an analytical model, a measurement, a source fact or an assumption.",
@@ -655,7 +669,7 @@
     "FB2-SAF-SGO-000001",
     "FB2-SAF-TSC-000001"
    ],
-   "how_this_concept_handles_it": "This concept allocates a 15 ms margin that closes at 100 ms and states the arithmetic. It does not edit the safety goal. Finding FB2-REV-FND-000025.",
+   "how_this_concept_handles_it": "RESOLVED at source. FB2-SAF-SGO-000001 now records a 15 ms margin, so its budget closes at 100 ms and this concept's allocation is no longer a departure from it but a restatement of it. The safety goal was revised rather than left in contradiction. Finding FB2-REV-FND-000025.",
    "finding_ref": "FB2-REV-FND-000025"
   },
   {
@@ -664,7 +678,7 @@
     "FB2-SAF-FSR-000003",
     "FB2-SAF-TSC-000001"
    ],
-   "how_this_concept_handles_it": "The concept states the 35 ms command-plus-actuation and 40 ms end-to-end figures and does not restate the requirement's 30 ms threshold to fit. Finding FB2-REV-FND-000024.",
+   "how_this_concept_handles_it": "RESOLVED at source. FB2-SAF-FSR-000003's 'Contactor open latency' criterion now reads 40 ms, which is the end-to-end figure this concept computed, and a separate criterion states the 35 ms mechanically-open point. The concept's own allocation is unchanged. Finding FB2-REV-FND-000024.",
    "finding_ref": "FB2-REV-FND-000024"
   },
   {
@@ -673,7 +687,7 @@
     "FB2-SAF-FSR-000004",
     "FB2-HW-TSR-000004"
    ],
-   "how_this_concept_handles_it": "The concept allocates AR-005 as pure hardware and names FB2-HW-TSR-000004 as the technical requirement and FB2-SAF-FSR-000004 as the functional one, which is the distinction the two identical texts do not make. It edits neither. Finding FB2-REV-FND-000027.",
+   "how_this_concept_handles_it": "RESOLVED at source. FB2-HW-TSR-000004's statement now matches the statement_summary this concept already published for it in the technical_safety_requirements block, and FB2-SAF-FSR-000004 carries a different statement with the functional-level criteria. The two records are now reviewable as two distinct obligations. Finding FB2-REV-FND-000027.",
    "finding_ref": "FB2-REV-FND-000027"
   },
   {
@@ -682,7 +696,7 @@
     "FB2-SAF-FSR-000004",
     "FB2-SAF-SGO-000001"
    ],
-   "how_this_concept_handles_it": "The concept does not use the 115 ms figure. It restates the independent monitor's justification on the 85 ms figure that does exist. Finding FB2-REV-FND-000026.",
+   "how_this_concept_handles_it": "RESOLVED at source, and this block's premise is corrected. The 115 ms is the sum of a superseded allocation recorded in FB2-REV-000001 embedded finding FB2-FND-000001 (100 ms acquisition period at 10 Hz + 10 ms SOA check + 5 ms contactor), not an unsourced figure. It is stale, not fabricated, and has been removed from FB2-SAF-FSR-000004, FB2-HW-TSR-000004 and FB2-ASM-008. The justification is now stated on the 85 ms figure that does exist and on the parameter tolerances around it. Finding FB2-REV-FND-000026.",
    "finding_ref": "FB2-REV-FND-000026"
   },
   {
@@ -691,7 +705,7 @@
     "FB2-SAF-FSR-000004",
     "FB2-HW-TSR-000004"
    ],
-   "how_this_concept_handles_it": "The concept carries the wording unchanged, labels it synthetic_assumption, records no verification record against it, and raises finding FB2-REV-FND-000027. It does not invent a coverage percentage to replace it.",
+   "how_this_concept_handles_it": "RESOLVED at source. The coverage criterion is no longer carried unchanged and no longer labelled synthetic_assumption. FB2-HW-TSR-000004 now states coverage as 100 percent of the cells the main measurement chain monitors, with the population named, and FB2-SAF-FSR-000004 no longer carries a coverage criterion at all because coverage is a hardware allocation property rather than a functional one. The 100 percent figure follows the precedent of FB2-SAF-FSR-000001; the rejected 'representative subset >= 50%' branch had no definition and no selection method anywhere in the corpus, and a subset would leave cells with no barrier against a main-path failure. The feasibility of a full independent divider network remains an open assumption under FB2-ASM-008 and is still not asserted. Finding FB2-REV-FND-000027.",
    "finding_ref": "FB2-REV-FND-000027"
   }
  ],

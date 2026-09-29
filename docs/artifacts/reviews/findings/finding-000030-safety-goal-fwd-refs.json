@@ -1,0 +1,62 @@
+{
+ "id": "FB2-REV-FND-000030",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000030: three declared forward references name work products the corpus has never authored, and no rule resolves a payload-field id",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9",
+   "status": "mapped",
+   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "The obligation to record rather than to conceal."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "draft: this record makes a dangling cross-reference visible and dispositioned. It does not close the condition, no missing work product has been invented to close it, and no human has confirmed it. Human approval of the records it describes remains pending.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Raised while remediating finding FB2-REV-FND-000023. The corpus-wide reference sweep that pass required surfaced three references to ids that no record defines. They are not typos - each names a work product the plan declares and the corpus has not written - so they cannot be repaired by correcting a value, and they are recorded here rather than deleted or satisfied by inventing a record."
+  }
+ ],
+ "subject_artifact_id": "FB2-SW-DSN-000001",
+ "severity": "medium",
+ "category": "traceability",
+ "evidence": "docs/artifacts/tools/check_references.py resolves every id-shaped string in every corpus and scenario record against the artifact index, the source registry, the assumption registries, the link registries and the parameter registries. After the FB2-SAF-SCO-000001 typo was corrected under FB2-REV-FND-000023, three references remained unresolved in four places: (1) FB2-SW-DSN-000001's decomposition[2].child_id names FB2-SW-DSN-000004, and only FB2-SW-DSN-000001..000003 exist - the same reference appears in the as_is and the synthetic_reference copies of the record; (2) FB2-PIM-IMP-000003 is named by project-plan.json work_breakdown[WBS-008].deliverable_records[4] and by measurement-plan.json metrics[MET-06].linked_improvement_records[0], and only FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002 exist. None of these ids has ever existed, so unlike FB2-SAF-SCO-000001 they are not transcriptions of an id that was renamed.",
+ "disposition": "accepted",
+ "impact": "A reader following FB2-SW-DSN-000001's decomposition arrives at a design element that does not exist, and a reader following WBS-008's deliverables or MET-06's linked improvements arrives at a process improvement that does not exist. The traceability report's coverage count for review and for planned deliverables is computed over ids that include these, so the denominators contain entries a reader cannot resolve. The risk of the reverse error is the larger one: because a payload-field id is never resolved by the link validator or by any other rule, a reader cannot tell an intentional forward reference to planned-but-unwritten work from a typo, and this corpus has now demonstrated both - FB2-SAF-SCO-000001 was a typo and these three are not.",
+ "root_cause": "The corpus declares work products in planning artefacts before the artefacts themselves exist, and no record distinguishes a declared-forward reference from a broken one. The link validator only resolves ids expressed as links; a free-string id in a payload field is outside every rule's reach. The gap is structural, not clerical: three separate planning references were written forward and none of them says so.",
+ "resolution": "NOT RESOLVED, and deliberately not resolved by authoring the missing records. Writing FB2-SW-DSN-000004 and FB2-PIM-IMP-000003 would mean inventing design content and improvement content that no source, parameter, assumption or analysis in this corpus constrains; the first would in particular have to invent the architecture of an AFE driver child element and the second the content of an improvement cycle. That is fabrication, not remediation, and master prompt section 14 forbids concealing a contradiction by relabelling or deleting. What this pass did instead: (1) corrected the three references that WERE typos - the two FB2-SAF-SCO-000001 instances under FB2-REV-FND-000023; (2) added docs/artifacts/tools/check_references.py, which resolves every payload-field id and prints any that does not resolve, so this class of defect is visible from now on instead of silent; (3) recorded the three remaining forward references here with an explicit allowlist entry in that tool naming each one, so the tool reports them as declared-forward rather than silently passing them. The remediation is the decision whether to author the two missing records or to mark the three references as planned-not-yet-authored in the records that carry them; both are engineering and planning decisions that no automated pass may take."
+}
