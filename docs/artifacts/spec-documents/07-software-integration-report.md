@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T14:03:49Z |
+| Generated | 2026-09-29T17:10:59Z |
 
 ## Scope
 
@@ -63,9 +63,11 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 - `FB2-VER-EXE-000009`: kind=`actual_host_run`, outcome=`fail`
 - `FB2-VER-EXE-000010`: kind=`actual_host_run`, outcome=`fail`
 - `FB2-VER-EXE-000011`: kind=`actual_host_run`, outcome=`fail`
-- `FB2-VER-EXE-000012`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000012`: kind=`actual_host_run`, outcome=`pass`
 - `FB2-VER-EXE-000013`: kind=`actual_host_run`, outcome=`fail`
 - `FB2-VER-EXE-000014`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000015`: kind=`actual_host_run`, outcome=`fail`
+- `FB2-VER-EXE-000016`: kind=`actual_host_run`, outcome=`fail`
 
 ### Integration Gaps
 
@@ -119,4 +121,4 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 ---
 
-*Generated: 2026-09-29T14:03:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T17:10:59Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

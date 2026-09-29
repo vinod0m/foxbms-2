@@ -1,6 +1,6 @@
 {
  "id": "FB2-SCN-MUT-000009",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "scenario",
  "engineering_domain": "safety",
@@ -28,13 +28,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-10T00:00:00Z",
- "updated_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-10T00:00:00Z",
    "author": "safety_engineer",
    "description": "Mutation scenario: unsupported ASIL downgrade"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Reconciled the expectation with the rule this scenario declares. declared detector 'ASIL assignment validator' -> rule id 'asil_assignment_validator'; expected severity medium -> high; expected description de-duplicated: it had been copy-pasted from SCN-MUT-020 and did not describe this scenario's defect. Severity and category are the rule's values and are authoritative; the rule was not changed to fit this fixture. severity raised from medium to high. The category was already correct. The defect is an ASIL assigned to a safety goal that the goal's own S/E derivation contradicts - a downgrade of a severity-S3 hazardous event. That is a high-severity verification defect. The rule is authoritative and its severity was not lowered to fit the fixture.The scenario's injected defect, its affected artifacts and its declared detector rule are unchanged. This expectation had never been checked: the scenario harness matched any finding of the right severity on the right artifact id, so a standing finding on the same artifact satisfied it. Remediation of finding FB2-REV-FND-000032."
   }
  ],
  "scenario_type": "mutation",
@@ -51,12 +57,12 @@
   "FB2-SAF-SGO-000001"
  ],
  "trigger": "ASIL assignment validation",
- "expected_detector": "ASIL assignment validator",
+ "expected_detector": "asil_assignment_validator",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000009",
-  "severity": "medium",
+  "severity": "high",
   "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "description": "safety goal FB2-SAF-SGO-000001 is assigned ASIL ASIL_B but its own justification derives ASIL ASIL_D from severity S3 and exposure E4; the assignment is not supported by the classification recorded with it"
  },
  "impact_paths": [
   "Lower ASIL reduces required diagnostic coverage",

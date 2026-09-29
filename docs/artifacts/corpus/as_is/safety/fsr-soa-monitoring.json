@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-FSR-000002",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "safety",
@@ -49,13 +49,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "safety_engineer",
    "description": "Back-inferred from SOA and DIAG implementation"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Added the fault_reaction this requirement was missing, derived from the source. The reaction is the real one and it is graded: SOA_CheckVoltages() at src/app/application/soa/soa.c:81-131 compares against a three-tier MOL/RSL/MSL limit set and raises the corresponding DIAG entry, and only the MSL tier is configured DIAG_FATAL_ERROR (src/app/engine/config/diag_cfg.c:126-131) - the RSL tier is DIAG_WARNING and the MOL tier DIAG_INFO, both with DIAG_DELAY_DISCARD. An excursion into the RSL or MOL band therefore produces a recorded diagnosis and no contactor opening. That graded behaviour is a real part of the reaction and is recorded rather than flattened into a single claim. The time figures are given with their basis and are explicitly not the synthetic figures: the debounce in front of the reaction is the DIAG occurrence counter rather than a count maintained by the SOA module, and the delay is DIAG_DELAY_200ms. open_limits records one contradiction that this field does NOT resolve and that a reader must not be left unaware of: this record's statement specifies a debounce of 2 consecutive violations within 100 ms and a 5 ms classification, and FB2-PRM-000006 records soa_debounce_count = 2, but the source implements no counter in the SOA module and configures the MSL tier at 50 events with a 200 ms delay, and no 5 ms classification figure exists in bms_cfg.h or diag_cfg.c. The statement, the acceptance criteria and the parameter registry were deliberately NOT edited: a requirement that does not match its implementation is a different finding from a missing fault reaction, and deciding which of the two is authoritative is a decision this pass has no evidence base for. It is recorded here so the fault_reaction cannot be read as confirming the statement's figures. Statement, rationale, all four acceptance criteria, safety_allocation, the ASIL and the safety goal reference are unchanged and no threshold was relaxed. Human approval remains pending, production_authorized stays false and product_verification_credit stays false."
   }
  ],
  "statement": "The BMS shall monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.",
@@ -82,6 +88,18 @@
   }
  ],
  "verification_approach": "test",
+ "fault_reaction": {
+  "profile_basis": "as_is",
+  "allocated_element_id": "AR-002",
+  "element_owns_reaction": true,
+  "reaction": "Set the corresponding diagnosis entry, and if that entry's configured severity is DIAG_FATAL_ERROR, drive the battery state machine into the latched error state, which opens the HV contactors. The path is: SOA_CheckVoltages() in src/app/application/soa/soa.c:81 compares the per-string minimum and maximum cell voltages against the three-tier limits and calls DIAG_Handler for the tier that was crossed; the DIAG module latches the entry once its occurrence counter passes the configured sensitivity; BMS_IsAnyFatalErrorFlagSet() at src/app/application/bms/bms.c:515-531 walks the fatal-error table built at src/app/engine/diag/diag.c:254-260; BMS_IsBatterySystemStateOkay() at bms.c:534-575 returns STD_NOT_OK after the shortest active delay has elapsed; and the state machine is set to BMS_FSM_STATE_OPEN_CONTACTORS with nextState BMS_FSM_STATE_ERROR at bms.c:1197-1204. Only the MSL tier reaches that path: DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MSL and DIAG_ID_CELL_VOLTAGE_UNDERVOLTAGE_MSL are configured DIAG_FATAL_ERROR, while the RSL tier is DIAG_WARNING and the MOL tier is DIAG_INFO, and both non-MSL tiers carry DIAG_DELAY_DISCARD (src/app/engine/config/diag_cfg.c:126-131). An excursion into the RSL or MOL band therefore produces a recorded diagnosis and no contactor opening, which is a real graded reaction and not an omission.",
+  "triggered_by": "A cell voltage crossing BC_VOLTAGE_MAX_MOL_mV, BC_VOLTAGE_MAX_RSL_mV or BC_VOLTAGE_MAX_MSL_mV, or the corresponding minimum limits, evaluated in SOA_CheckVoltages() at src/app/application/soa/soa.c:89-131. Whether the crossing produces a reaction at all, and which one, is decided by the configured severity of the corresponding entry, not by the comparison.",
+  "reaction_time_budget_ms": 200,
+  "reaction_time_budget_basis": "DIAG_DELAY_200ms from diag_cfg.c:126 and diag_cfg.c:129. This is the delay between the entry becoming active and the state request, and it is the delay for a DIAG_FATAL_ERROR entry, not the whole reaction. The debounce in front of it is a count, not a time: DIAG_SEN_EVENT_50 is a threshold of 49 and DIAG_GetDiagnosisEntryState at src/app/engine/diag/diag.c:287-301 activates the entry when occurrenceCounter > 49. The evaluations are driven once per BMS_Trigger from src/app/application/bms/bms.c:913, and the BMS task period is BMS_STATEMACHINE_TASK_CYCLE_CONTEXT_MS = 10 ms (src/app/application/config/bms_cfg.h:100), so 50 evaluations is of the order of 500 ms and the state request follows roughly 700 ms after a sustained excursion. That figure is read off the configuration, not measured.",
+  "mode_dependence": "Mode-independent as to the mechanism: SOA_CheckVoltages() is called on every BMS_Trigger regardless of mode (bms.c:911-917). The consequence is mode-dependent: opening the contactors in MOD-004, where current is flowing to a moving vehicle, removes propulsion, which is the caveat FB2-SAF-FSC-000001 records against the AR-004 reaction.",
+  "allocation_basis": "FB2-SAF-FSC-000001.fault_reaction entry 3 and FB2-SAF-TSC-000001.fault_reaction allocate the latched FAULT mode to AR-002 at 3 ms. The 3 ms is the synthetic_reference allocation and does NOT describe the real implementation, which has no equivalent 3 ms step: the real path from a sustained excursion to a state request is a counter threshold plus a configured delay, configured at src/app/engine/config/diag_cfg.c:126 and read at bms.c:534-575. Both figures are recorded here rather than one being dropped, because the synthetic figure is what the synthetic concepts allocate and the configured figure is what the source does.",
+  "open_limits": "One contradiction is recorded and it is NOT resolved by this field, because resolving it is a different piece of work with its own evidence requirement. This record's statement specifies 'a debounce of 2 consecutive violations within 100 ms' and 'classify violations within 5 ms of data availability', and FB2-PRM-000006 records soa_debounce_count = 2, which is where those figures come from. The source does not implement them. src/app/application/soa/soa.c implements a three-tier MOL/RSL/MSL comparison with no counter in the SOA module at all, and the debounce that does exist is the DIAG occurrence counter, configured at 50 events for the MSL tier (diag_cfg.c:126). There is no 5 ms classification figure in either bms_cfg.h or diag_cfg.c. The statement, the acceptance criteria and the parameter registry have NOT been edited, because the statement is a requirement and a requirement that does not match the implementation is a different finding from a missing fault reaction, and closing it requires a decision about which of the two is authoritative. It is recorded here so that a reader of this reaction is not left believing that the 100 ms debound and 5 ms classification are implemented behaviour. Also unresolved: no measurement of the counter threshold, the delay or the state transition exists in this corpus."
+ },
  "safety_allocation": {
   "asil": "ASIL_D",
   "safety_goal_ref": "FB2-SAF-SGO-000001",

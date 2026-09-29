@@ -3,13 +3,14 @@
  "expected_findings": [
   {
    "finding_id": "FB2-FND-MUT-000010",
-   "severity": "medium",
+   "severity": "high",
    "category": "verification",
-   "description": "safety requirement has no verifies/validates link",
+   "description": "FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence",
    "affected_ids": [
     "FB2-SAF-FSR-000003"
    ],
-   "expected_detector": "diagnostic_coverage_claim_validator"
+   "expected_detector": "diagnostic_coverage_claim_validator",
+   "note": "Both profile copies of the affected artifact are patched by the harness, which matches artifact ids without regard to profile, so the rule reports the defect on each of them. The same rule, severity and category is emitted for both; the descriptions differ only where a profile records different amounts for the injected defect. The expectation names the record this scenario is about."
   }
  ]
 }

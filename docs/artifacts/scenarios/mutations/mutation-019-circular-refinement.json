@@ -1,6 +1,6 @@
 {
  "id": "FB2-SCN-MUT-000019",
- "revision": "1",
+ "revision": "3",
  "schema_version": "1.0.0",
  "artifact_type": "scenario",
  "engineering_domain": "management",
@@ -28,45 +28,59 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-10T00:00:00Z",
- "updated_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-10T00:00:00Z",
    "author": "traceability_engineer",
    "description": "Mutation scenario: circular refinement chain"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "traceability_engineer",
+   "description": "Corrected the patch so it actually creates a cycle. The previous patch repointed FB2-LNK-SAF-000002 to 'FB2-SAF-SGO-000001 refines FB2-SAF-HAZ-000001'; because no hazard is ever the source of a refines link in this corpus, that edge terminates immediately and the refines graph stayed acyclic. The scenario therefore mutated a link without injecting the circularity it declares, and the refinement cycle detector was never exercised. The patch now closes a real three-node cycle over artefacts that are already connected in the corpus's own refinement chain. A link that no functional safety requirement depends on for its parent was chosen as the carrier so that the cycle is the only defect injected. The declared detector is unchanged. Remediation of finding FB2-REV-FND-000032."
+  },
+  {
+   "revision": "3",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "traceability_engineer",
+   "description": "Reconciled the expectation with the rule this scenario declares. expected description restated as the message the declared rule emits. Severity and category are the rule's values and are authoritative; the rule was not changed to fit this fixture. severity raised from medium to high and the category changed from verification to traceability. A circular refinement chain is a defect of the refinement structure itself, so traceability is the correct category, and a cycle in a refinement order defeats every derivation argument that depends on that order, which is a high-severity defect. The rule is authoritative and was not changed to fit the fixture.The scenario's injected defect, its affected artifacts and its declared detector rule are unchanged. This expectation had never been checked: the scenario harness matched any finding of the right severity on the right artifact id, so a standing finding on the same artifact satisfied it. Remediation of finding FB2-REV-FND-000032."
   }
  ],
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Create circular refines link chain",
+  "description": "Close a cycle in the refines graph by repointing FB2-LNK-CPT-000005 so that the safety goal refines the technical safety concept that refines the functional safety concept that refines the safety goal: FB2-SAF-SGO-000001 -> FB2-SAF-TSC-000001 -> FB2-SAF-FSC-000001 -> FB2-SAF-SGO-000001. The previous version of this patch repointed FB2-LNK-SAF-000002 to FB2-SAF-SGO-000001 refines FB2-SAF-HAZ-000001. A hazard is never the source of a refines link, so that edge was a dead end and no cycle existed: the patch mutated a link without creating the circularity it claims to inject, and the scenario passed only on a neighbouring finding.",
   "affected_links": [
-   "FB2-LNK-SAF-000002"
+   "FB2-LNK-CPT-000005"
   ],
   "operation": "modify",
   "new_value": {
    "relation_type": "refines",
    "source_id": "FB2-SAF-SGO-000001",
-   "target_id": "FB2-SAF-HAZ-000001"
+   "target_id": "FB2-SAF-TSC-000001"
   }
  },
  "affected_ids": [
-  "FB2-SAF-HAZ-000001",
-  "FB2-SAF-SGO-000001"
+  "FB2-SAF-SGO-000001",
+  "FB2-SAF-TSC-000001",
+  "FB2-SAF-FSC-000001"
  ],
  "trigger": "Refinement chain cycle detection",
- "expected_detector": "Refinement cycle detector",
+ "expected_detector": "refinement_cycle_detector",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000019",
-  "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "severity": "high",
+  "category": "traceability",
+  "description": "circular refinement chain detected involving FB2-SAF-FSR-000001"
  },
  "impact_paths": [
-  "Traceability traversal infinite loop",
-  "Impact analysis and reverification selection broken"
+  "The refines chain is no longer a partial order, so no artefact in the cycle can be shown to be derived from the others",
+  "Impact analysis over refines edges would not terminate on the cycle",
+  "Coverage reporting that counts refinement depth would be unbounded for the three artefacts in the cycle"
  ],
- "expected_remediation": "Break cycle by removing or reversing one refines link; ensure DAG structure",
+ "expected_remediation": "Remove the closing edge FB2-SAF-SGO-000001 refines FB2-SAF-TSC-000001; re-run the refinement cycle detector",
  "oracle_manifest_ref": "SCN-MUT-019/oracle-manifest.json"
 }

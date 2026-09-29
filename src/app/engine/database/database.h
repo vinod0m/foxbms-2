@@ -164,9 +164,18 @@ extern void DATA_Task(void);
  * @brief   Stores one data block in database
  * @details This function stores passed data in database and updates timestamp
  *          and previous timestamp in passed struct
+ *          The pointee type is chosen by the caller. This is a generic
+ *          interface over all database entries, so the pointer cannot be
+ *          declared with a single concrete type. The number of bytes copied is
+ *          determined at run time from the uniqueId field of the passed struct
+ *          and the dataLength configured for that entry in #DATA_BLOCK_ID_e.
+ *          The pointer therefore has to reference a #DATA_BLOCK_HEADER_s as
+ *          its first member, and it has to reference an object of exactly the
+ *          type that the referenced database entry was configured with.
  * @warning Do not call this function from inside a critical section, as it is
  *          computationally complex.
- * @param[in,out]  pDataFromSender0 (type: void *)
+ * @param[in,out]  pDataFromSender0 (type: void *, pointee type selected by
+ *                  the caller, see @details)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
 extern STD_RETURN_TYPE_e DATA_Write1DataBlock(void *pDataFromSender0);
@@ -198,12 +207,25 @@ extern STD_RETURN_TYPE_e DATA_Write3DataBlocks(void *pDataFromSender0, void *pDa
  * @brief   Stores four data blocks in database
  * @details This function stores passed data in database and updates timestamp
  *          and previous timestamp in passed struct
+ *          The pointee types are chosen by the caller, and they need not be the
+ *          same as each other. This is a generic interface over all database
+ *          entries, so the pointers cannot be declared with a single concrete
+ *          type. The number of bytes copied per pointer is determined at run
+ *          time from the uniqueId field of the passed struct and the
+ *          dataLength configured for that entry in #DATA_BLOCK_ID_e. Each
+ *          pointer therefore has to reference a #DATA_BLOCK_HEADER_s as its
+ *          first member, and it has to reference an object of exactly the type
+ *          that the referenced database entry was configured with.
  * @warning Do not call this function from inside a critical section, as it is
  *          computationally complex.
- * @param[in,out]  pDataFromSender0 (type: void *)
- * @param[in,out]  pDataFromSender1 (type: void *)
- * @param[in,out]  pDataFromSender2 (type: void *)
- * @param[in,out]  pDataFromSender3 (type: void *)
+ * @param[in,out]  pDataFromSender0 (type: void *, pointee type selected by
+ *                  the caller, see @details)
+ * @param[in,out]  pDataFromSender1 (type: void *, pointee type selected by
+ *                  the caller, see @details)
+ * @param[in,out]  pDataFromSender2 (type: void *, pointee type selected by
+ *                  the caller, see @details)
+ * @param[in,out]  pDataFromSender3 (type: void *, pointee type selected by
+ *                  the caller, see @details)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
 extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(
@@ -216,9 +238,18 @@ extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(
  * @brief   Reads one data block in database by value.
  * @details This function reads data from database and copy this content in
  *          passed struct
+ *          The pointee type is chosen by the caller. This is a generic
+ *          interface over all database entries, so the pointer cannot be
+ *          declared with a single concrete type. The number of bytes copied is
+ *          determined at run time from the uniqueId field of the passed struct
+ *          and the dataLength configured for that entry in #DATA_BLOCK_ID_e.
+ *          The pointer therefore has to reference a #DATA_BLOCK_HEADER_s as
+ *          its first member, and it has to reference an object of exactly the
+ *          type that the referenced database entry was configured with.
  * @warning Do not call this function from inside a critical section, as it is
  *          computationally complex.
- * @param[out]  pDataToReceiver0 (type: void *)
+ * @param[out]  pDataToReceiver0 (type: void *, pointee type selected by the
+ *              caller, see @details)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
 extern STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0);
@@ -249,12 +280,25 @@ extern STD_RETURN_TYPE_e DATA_Read3DataBlocks(void *pDataToReceiver0, void *pDat
  * @brief   Reads four data blocks in database by value.
  * @details This function reads data from database and copy this content in
  *          passed struct
+ *          The pointee types are chosen by the caller, and they need not be the
+ *          same as each other. This is a generic interface over all database
+ *          entries, so the pointers cannot be declared with a single concrete
+ *          type. The number of bytes copied per pointer is determined at run
+ *          time from the uniqueId field of the passed struct and the
+ *          dataLength configured for that entry in #DATA_BLOCK_ID_e. Each
+ *          pointer therefore has to reference a #DATA_BLOCK_HEADER_s as its
+ *          first member, and it has to reference an object of exactly the type
+ *          that the referenced database entry was configured with.
  * @warning Do not call this function from inside a critical section, as it is
  *          computationally complex.
- * @param[out]  pDataToReceiver0 (type: void *)
- * @param[out]  pDataToReceiver1 (type: void *)
- * @param[out]  pDataToReceiver2 (type: void *)
- * @param[out]  pDataToReceiver3 (type: void *)
+ * @param[out]  pDataToReceiver0 (type: void *, pointee type selected by the
+ *              caller, see @details)
+ * @param[out]  pDataToReceiver1 (type: void *, pointee type selected by the
+ *              caller, see @details)
+ * @param[out]  pDataToReceiver2 (type: void *, pointee type selected by the
+ *              caller, see @details)
+ * @param[out]  pDataToReceiver3 (type: void *, pointee type selected by the
+ *              caller, see @details)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
 extern STD_RETURN_TYPE_e DATA_Read4DataBlocks(

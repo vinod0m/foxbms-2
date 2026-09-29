@@ -1,6 +1,6 @@
 {
   "id": "FB2-VER-EXE-000012",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "execution",
   "engineering_domain": "verification",
@@ -28,19 +28,25 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T08:15:33Z",
-  "updated_at": "2026-09-29T08:15:33Z",
+  "updated_at": "2026-09-29T18:41:27+0200",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-09-29T08:15:33Z",
       "author": "verification_engineer",
       "description": "New artifact: a real, reproduced test failure. The corpus had no record of this test at all. Recorded as a failure, not suppressed."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T18:41:27+0200",
+      "author": "verification_engineer",
+      "description": "Updated by a new real SIL host run (fail -> pass). Prior revision retained in full; nothing was rewritten. Root-cause anomaly upgraded from 'probable' to confirmed, citing FB2-REV-FND-000031, with the original wording preserved inside it. Suite-level regression check recorded: 196 pass / 17 fail / 100 build failures, zero regressions, one outcome changed."
     }
   ],
   "test_measure_id": "FB2-VER-TMS-000003",
   "test_measure_revision": "1",
   "execution_kind": "actual_host_run",
-  "outcome": "fail",
+  "outcome": "pass",
   "environment": {
     "hardware": "arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)",
     "software": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]",
@@ -63,24 +69,31 @@
     }
   },
   "input_hashes": {
-    "test_source": "sha256:9304c3a62046d079297bd89ffafa3e14296b5c5e5afab9459bda508cab030cea",
+    "test_source": "sha256:a240ad028baf5990324d29c050329cd2b09cdb5e425e11c5b213f7a8593f8021",
     "ceedling_project_file_shipped": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f",
-    "database_header": "sha256:291456ed775a3505abc613d4fd1291bce83d77d1041e8b7947a8488f459566fc"
+    "database_header": "sha256:6025ce96329edc0eccd423f7b62b2bd59e4ec4d85811bdab86407b8aedb4d6e8",
+    "os_header": "sha256:995226e0c86f520b28204107887d156fdbde41f353bc4f4d30328420ec23731f"
   },
   "output_hashes": {
-    "test_log": "sha256:85df528478dbf4d766018d4607732ae678985d582af71ab85b18003dca144f00"
+    "test_log": "sha256:85df528478dbf4d766018d4607732ae678985d582af71ab85b18003dca144f00",
+    "sil_suite_results_all": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67"
   },
   "logs": [
     {
-      "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__engine__config__test_diag_cfg.txt",
-      "hash": "sha256:85df528478dbf4d766018d4607732ae678985d582af71ab85b18003dca144f00",
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__engine__config__test_diag_cfg.log",
+      "hash": "sha256:b27f576bcb7b5b31a5021b39c8e7b99701afb2662d84126e420cb6be752442c5",
       "type": "stdout"
+    },
+    {
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+      "hash": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67",
+      "type": "custom"
     }
   ],
   "timestamps": {
-    "start": "2026-09-29T10:30:05+0200",
-    "end": "2026-09-29T10:30:05+0200",
-    "duration_ms": 2620
+    "start": "2026-09-29T18:41:27+0200",
+    "end": "2026-09-29T18:41:27+0200",
+    "duration_ms": 0
   },
   "anomalies": [
     {
@@ -124,9 +137,14 @@
       "disposition": "investigating"
     },
     {
-      "description": "Probable root cause, established from the sources and NOT from the host environment: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.",
+      "description": "ROOT CAUSE CONFIRMED at revision 2, no longer probable. The remediation itself is FIXED: the test-side assertion mechanism was corrected and the test is green. Established from source and then DEMONSTRATED, not merely argued: the database access API is correctly polymorphic (34 of the 37 DATA_BLOCK_*_s types in src/ are passed at its call sites, and the copied length is derived at run time from a uniqueId field read out of the caller struct at database.c:213-222), so the void* is required by design and is not a product defect. CMock 2.7.2 falls back to UNITY_TEST_ASSERT_EQUAL_PTR for any void* argument when the array plugin is not loaded (cmock_generator_utils.rb:207-210); conf/unit/app_project_posix.yml loads only :callback and :return_thru_ptr. The correct fix is therefore test-side, not product-side. See finding FB2-REV-FND-000031. Original wording of the observation, retained: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.",
       "severity": "high",
-      "disposition": "investigating"
+      "disposition": "fixed"
+    },
+    {
+      "description": "SIL host re-run at revision 2. The 313-test software-in-the-loop sweep was executed twice, immediately before and immediately after the change, from identical 313-test result sets: 195 pass / 18 fail / 100 build failures before, 196 pass / 17 fail / 100 after; 877 assertions tested in both; assertions passing 819 to 820, failing 55 to 54. Exactly one outcome changed in the entire suite and there were zero regressions: no previously-passing test stopped passing, and all build-failure classifications were unchanged. This record's own test moved fail -> pass. The unchanged outcome is a real failure and is recorded as a failure.",
+      "severity": "low",
+      "disposition": "accepted"
     }
   ],
   "evidence_refs": [
@@ -134,21 +152,20 @@
     "tests/unit/app/engine/config/test_diag_cfg.c"
   ],
   "evidence_files": [
-    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-strict.json",
-    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__engine__config__test_diag_cfg.txt"
+    "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json"
   ],
   "assertions": {
     "tested": 1,
-    "passed": 0,
-    "failed": 1,
+    "passed": 1,
+    "failed": 0,
     "ignored": 0
   },
-  "verbatim_unity_failures": [
-    "At line (90): \"Expected 0x0000000102688000 Was 0x0000000102688098:Function DATA_Write4DataBlocks Argument pDataFromSender0:Function called with unexpected argument value.\""
-  ],
+  "verbatim_unity_failures": [],
   "limitations": [
-    "Host execution on Apple Silicon macOS",
-    "Root cause attribution to the void*-typed database API is an analysis of the sources, not a fix; it has not been re-run under GNU gcc to confirm the same failure occurs there"
+    "Host execution on Apple Silicon macOS; macOS is not a supported foxBMS 2 host platform",
+    "The identical failure is expected under GNU gcc on Linux because it depends only on the void* declaration and the CMock configuration, but this has not been re-run under GNU gcc",
+    "This is a host run and is not target-hardware evidence; no register-map, timing, clocking or electrical behaviour is verified by it",
+    "No MISRA conformance, tool qualification or certification claim is made or implied by this record"
   ],
-  "notes": "Real, reproduced failure. Ceedling target 'test:../../tests/unit/app/engine/config/test_diag_cfg.c', exit code 1, 1 assertions tested, 1 failed. Recorded verbatim. No result was adjusted."
+  "notes": "Real, reproduced run. Outcome fail -> pass at revision 2, from a full 313-test SIL sweep. The unsatisfiable pointer-identity expectation was replaced by a CMock callback performing TEST_ASSERT_EQUAL_MEMORY over the real struct sizes, which is a strictly stronger content assertion than the pointer identity it replaced; the oracle was verified non-vacuous by a deliberate one-bit change that failed at byte 70, after which the deliberate change was reverted. No file under src/ had any executable line changed; the src/ change is Doxygen only. No result was adjusted."
 }

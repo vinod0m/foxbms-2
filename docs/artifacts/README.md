@@ -78,7 +78,7 @@ All figures from a live tool run on 2026-09-29.
 | verification_planning | 16/7 | 229% (ratio, not a score) |
 | actual_product_evidence | 0/16 | **0%** |
 | synthetic_fixture_coverage | 82/43 | 191% (ratio, not a score) |
-| negative_scenario_validation | 20/20 | 100% |
+| negative_scenario_validation | 20/20 | 100% (scenarios present; detection is gate 5/8) |
 | export_reproducibility | 1/1 | 100% |
 | human_approval | 0/154 | **0%** |
 | production_authorization | 0/154 | **0%** (correctly false) |
@@ -349,13 +349,15 @@ python3 docs/artifacts/tools/corpus.py validate
 # The 15 coverage dimensions
 python3 docs/artifacts/tools/corpus.py coverage
 
-# Toolchain self-tests — expect: 11 PASS, 0 FAIL
+# Toolchain self-tests — expect: 22 PASS, 0 FAIL
 python3 docs/artifacts/tools/corpus.py selftest
 
 # Source/feature/variant inventory — expect: 612/612, 24 modules, 22 features, 23 variants
 python3 docs/artifacts/tools/corpus.py inventory
 
-# Mutation + change-lifecycle scenarios — expect: 20/20 and 3/3
+# Mutation + change-lifecycle scenarios — expect: 20/20 and 3/3.
+# Each mutation line names the detector rule it declares; a scenario passes only when
+# THAT rule fires, never on a neighbouring finding.
 python3 docs/artifacts/tools/corpus.py scenario-test
 
 # Traceability query

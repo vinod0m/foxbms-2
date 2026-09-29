@@ -1,5 +1,5 @@
 {
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "safety",
@@ -116,12 +116,33 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "cybersecurity_engineer",
    "description": "First issue. Forward-engineered security requirement 'bounded-connection-admission-resource-budget' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Added the asil_justification that the requirement applicability validator requires and did not find: this record marks safety_allocation.asil as not_applicable, which requirement.schema.json enumerates as the value for a requirement to which no ASIL determination applies, and the rule requires a recorded reason for that marking. The reason had been present only inside safety_allocation.mitigation and safety_allocation.safety_goal_ref, which are required on every requirement whatever its marking and are therefore populated identically on the ASIL_D records; they cannot serve as a justification specific to this marking. The new field states the reason on its own, names what the safety_goal_ref trace does and does not carry, and records the open items where the marking depends on something not yet established. The asil value, the statement, the mitigation, the safety_goal_ref and the revision-relevant content of the record are unchanged. Remediation of the requirement applicability validator finding raised by finding FB2-REV-FND-000032. Nothing in this field asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
   }
  ],
- "real_source_presence": "Control PARTIALLY PRESENT, and the partial presence is stated explicitly. Present: the receive into the service buffer is length-bounded \u2014 src/app/application/ethernet/ethernet.c:157 declares uint8_t rxBuffer[ipconfigTCP_MSS] and :175 passes ipconfigTCP_MSS as the receive length, and :224 does the same on the drain path, so no read can exceed the array (TARA mitigation MIT-003, present_in_source). ABSENT: every admission control. src/app/application/config/ethernet_cfg.h:85 sets the backlog to 1, :94 sets the receive timeout to portMAX_DELAY, src/app/application/ethernet/ethernet.c:292 discards the return value of the queue send, and no per-connection cap, idle timeout or deterministic close exists. Anchors FB2-SRC-COD-000058, FB2-SRC-COD-000062.",
+ "real_source_presence": "Control PARTIALLY PRESENT, and the partial presence is stated explicitly. Present: the receive into the service buffer is length-bounded — src/app/application/ethernet/ethernet.c:157 declares uint8_t rxBuffer[ipconfigTCP_MSS] and :175 passes ipconfigTCP_MSS as the receive length, and :224 does the same on the drain path, so no read can exceed the array (TARA mitigation MIT-003, present_in_source). ABSENT: every admission control. src/app/application/config/ethernet_cfg.h:85 sets the backlog to 1, :94 sets the receive timeout to portMAX_DELAY, src/app/application/ethernet/ethernet.c:292 discards the return value of the queue send, and no per-connection cap, idle timeout or deterministic close exists. Anchors FB2-SRC-COD-000058, FB2-SRC-COD-000062.",
  "real_source_control_status": "partially_present",
  "real_source_control_status_note": "Part of the capability this requirement specifies is present in the real foxBMS 2 source and part is not; see real_source_presence for the itemised split.",
  "derived_from": "FB2-SAF-TAR-000001",
  "verification_status": "not_verified",
- "latent_defect_note": "A separate, configuration-dependent latent defect is recorded in the TARA and is NOT addressed by this requirement: at src/app/application/ethernet/ethernet.c:189 the receive buffer is printed with a %s conversion although the buffer is not guaranteed to be NUL-terminated when a receive fills all ipconfigTCP_MSS bytes. Under the evidenced configuration this code is compiled out, because ipconfigHAS_DEBUG_PRINTF is not defined in the project's FreeRTOSIPConfig.h and therefore takes the default ipconfigDISABLE, which reduces FreeRTOS_debug_printf to a no-op (src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfigDefaults.h:3162-3176). No out-of-bounds read is therefore claimed to be reachable, and this requirement does not claim to fix it. Anchor FB2-SRC-COD-000075."
+ "latent_defect_note": "A separate, configuration-dependent latent defect is recorded in the TARA and is NOT addressed by this requirement: at src/app/application/ethernet/ethernet.c:189 the receive buffer is printed with a %s conversion although the buffer is not guaranteed to be NUL-terminated when a receive fills all ipconfigTCP_MSS bytes. Under the evidenced configuration this code is compiled out, because ipconfigHAS_DEBUG_PRINTF is not defined in the project's FreeRTOSIPConfig.h and therefore takes the default ipconfigDISABLE, which reduces FreeRTOS_debug_printf to a no-op (src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfigDefaults.h:3162-3176). No out-of-bounds read is therefore claimed to be reachable, and this requirement does not claim to fix it. Anchor FB2-SRC-COD-000075.",
+ "asil_justification": {
+  "classification_status": "recorded_reasoning",
+  "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this requirement. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product and not evidence about that product's availability posture.",
+  "requirement_classification": "security",
+  "reason": "This requirement is classified 'security' and it bounds connection admission and the resource budget of a service. ISO 26262 does not allocate an ASIL to a security requirement, so not_applicable is the schema's own enumerated value for that case. The TARA entry THR-003 records the availability impact as currently bounded, and that bound is a property of the threat analysis, not of any ASIL determination.",
+  "open_item": "The bound is contingent. The record states that the affected service is not on a safety path in the real source. If the project adds a safety-relevant service on the same path, the bound no longer holds and this requirement's classification would have to be revisited. This field does not claim the bound is durable.",
+  "what_this_does_not_assert": [
+   "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. Nothing in this field was audited to produce it.",
+   "It does not assert human approval. human_approval_status on this record is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
+   "It does not establish that any ASIL was correctly assigned to any safety requirement in this corpus. It explains only why this requirement is not itself an ASIL-allocated item.",
+   "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose.",
+   "It does not assert an ASPICE capability level for anything."
+  ],
+  "added_in_revision": "2"
+ }
 }

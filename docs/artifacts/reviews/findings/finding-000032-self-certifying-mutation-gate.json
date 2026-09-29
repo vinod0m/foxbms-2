@@ -1,0 +1,79 @@
+{
+ "id": "FB2-REV-FND-000032",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "finding",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Finding FB2-REV-FND-000032: the 20/20 mutation acceptance gate was self-certifying - it accepted any finding of the expected severity on the scenario's affected artifact, so 8 of 20 scenarios passed on standing defects and 4 declared a detector that did not exist, was unreachable, or could not fire on the record the scenario targets",
+ "owner_role": "quality_engineer",
+ "origin": "synthetic",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9",
+   "status": "mapped",
+   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+   "status": "mapped",
+   "rationale": "The obligation to record rather than to conceal. A validation gate that cannot detect what it claims to detect is a measurement that does not measure."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "baselined: the defect is characterised, the true detection state is measured, the gate is repaired, and the repair is regression-tested. This finding does not assert that the mutation suite is complete, that the detector set is correct, or that any human has confirmed the repair. human_approval_status is pending, production_authorized is false and product_verification_credit is false throughout the corpus.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-09-29T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Initial record. The mutation acceptance gate matched findings on severity and category after filtering to the scenario's affected artifact ids. Both criteria are shared across rules and an artifact can carry several unrelated defects, so a standing defect inherited from the corpus satisfied scenarios whose own detector did not exist, was unreachable, or read a field the record did not carry. The state was discovered by clearing the corpus's nine standing validator findings, which dropped validate to 0 findings and made the gate's real state visible as 8 of 20 scenarios failing."
+  }
+ ],
+ "severity": "high",
+ "category": "process",
+ "evidence": "The defect is in docs/artifacts/tools/corpus.py, in the scenario harness. _apply_mutation_and_detect re-ran _validate_links and _validate_semantic_rules on the mutated corpus, then kept every finding whose artifact_id was in the scenario's affected_ids (or whose description mentioned one). cmd_scenario_test then accepted the scenario if ANY of those findings had expected_finding.severity, or had expected_finding.category. Neither the expected description nor expected_detector was consulted at all, and no finding carried an identity for the rule that produced it. The four detectors were proven absent or unreachable by reading the tool: (1) MUT-013 declares 'Requirement applicability validator'; searching corpus.py for an applicability check finds only coverage-plan rendering and variant-applicability output, and no rule reads a non-applicability marking. (2) MUT-003 declares the revision-consistency rule, which lived only inside _validate_artifact, a method _apply_mutation_and_detect never calls. (3) MUT-006 declares the FTTI budget rule, which read d.get('ftti_ms') or d.get('ftti'); the affected record FB2-SAF-SGO-000001 carries neither - it has fault_tolerant_time_interval_ms and timing_budget.total_ftti_ms, while the rule looked for a third spelling. (4) MUT-009 declares the ASIL validator, which fired only on ABSENCE of asil_justification; an unjustified downgrade leaves the justification present and contradicting the assignment, so the rule could only ever have passed on a corpus that had no justification at all. Two patches did not inject the defect they declared. MUT-019 repointed a link to 'FB2-SAF-SGO-000001 refines FB2-SAF-HAZ-000001'; no hazard is ever the source of a refines link, so that edge terminates immediately and the graph stayed acyclic. MUT-020 deleted FB2-LNK-SAF-000014, one of four verifies links covering FB2-SAF-FSR-000002; the other three (FB2-LNK-SAF-000022, FB2-LNK-SAF-000043, FB2-LNK-SAF-000050) remained. The copy-paste that let a standing finding satisfy an expectation is visible in the fixtures: MUT-003, 006, 008, 009, 010, 017, 019 and 020 all carried expected_finding.description 'safety requirement has no verifies/validates link', a string that describes MUT-020's defect and not their own. That text is the message of the verification_traceability_checker rule, so any finding of that rule on the same artifact satisfied eight scenarios. The true state was measured, not estimated. Before the repair, with validate reporting 0 findings, corpus.py check reported 'Acceptance suite: FAILED' with 7/8 gates and 8 failing scenarios: SCN-MUT-003, 006, 009, 010, 013, 017, 019, 020. After the repair, the same command reports 'Acceptance suite: PASSED' with 10/10 gate lines and 23/23 scenario lines, and every mutation line names the rule that fired.",
+ "disposition": "accepted",
+ "impact": "The claim carried by docs/artifacts/reports/final-acceptance-report.md - '20/20 mutation scenarios detect their injected defect' - was false at the time it was written, and was false before any defect in this corpus was repaired. It was the only evidence the acceptance suite offered that the detectors were live rather than dormant, so the whole negative-testing claim rested on it. Concretely: four scenarios asserted the existence of detection that no code implemented, so a rule could be deleted, renamed or broken and the suite would still have reported 20/20. MUT-009's rule was satisfiable only by an unhealthy corpus, so the suite was reporting the corpus's health under  the guise of testing it. MUT-019 and MUT-020 mutated a corpus and detected nothing their scenario declared, which means two of the twenty data points said nothing about detection at all. And because the harness could not distinguish a detection from a coincidence, a future genuine regression that removed a working detector would have been masked by whatever unrelated defect the affected artifact happened to carry - the failure mode is silent in both directions. For the corpus itself the practical effect was smaller: the eight standing findings that had been satisfying the scenarios were real defects, and they were found and corrected by a separate pass. The harm was to the evidence, not to the records - a measurement that could not fail was being cited as a measurement.",
+ "root_cause": "The harness had no way to know which rule produced a finding, so it could only ask a weaker question - did anything go wrong here - and then treat the answer as the stronger one - did the specific thing this scenario tests go wrong. Findings were plain dicts of severity, category, artifact_id and description. There was no stable rule identifier, so the expected_detector field that every scenario has always carried was decorative. Two design decisions compounded it. First, filtering findings down to the scenario's affected_ids was intended to scope the check, but scoping by artifact id is not scoping by cause: an artifact carries every defect it has, and the harness could not tell which of them the mutation introduced. Second, there was no baseline. The harness never computed what the detectors said about the unmutated corpus, so it had no way to subtract a pre-existing finding, and a detector that fired on the clean corpus was indistinguishable from one that fired because of the mutation. The harness's own author had noticed the symptom and recorded it as a property rather than as a defect: reports/scenario-validation-report.md stated that 'SCN-MUT-008 is the detector that currently fires on the baseline ... the detector fires on the clean baseline by construction', and treated 20/20 as evidence the detectors were live. A detector firing on the clean corpus is exactly what makes a broken scenario pass, so the observation was correct and its interpretation inverted. The mutations were also never executed against a corpus whose standing findings were cleared, so the property was never observed end to end.",
+ "resolution": "RESOLVED, and the repair is structural rather than a set of scenario edits. (1) Findings now carry a stable rule identifier. Every findings.add call site names the rule it implements, and the identifiers are declared in one place (RULE_IDS). (2) A scenario is resolved to its declared detector by that identifier, read from the evaluator-only oracle manifest so the reviewed expectation stays outside the ingestible dataset and the existing separation is preserved. (3) _match_scenario_finding requires three things: the declared detector is emitted by a rule in this module, checked against the module's own AST so a detector that does not exist fails loudly; the detector is silent on the unmutated corpus, so a standing defect cannot satisfy it; and the mutation produced a finding from that rule that the baseline did not contain. The baseline is computed once per run and subtracted, which is what removes the possibility of a pre-existing finding standing in for a detection. Severity and category are reported and a mismatch is flagged as a fixture defect, but they no longer decide a verdict. (4) The four absent or unreachable detectors were implemented or made reachable at source, without weakening any of them. The revision rule moved into _check_revision_consistency, called from both the validator and the harness. The FTTI rule now resolves the interval from the parameter registry entry the safety goal is bound to (FB2-PRM-000004, ftti_ms = 100) and reports any declaration on the record that disagrees with it, so the value can no longer be scattered inconsistently; the rule also stops counting the interval itself as a serial budget part and now sums the allocation, which it previously ignored. The ASIL validator re-derives the ASIL from the justification's own severity and exposure ratings using ISO 26262-3:2018 Table 4 and reports an assignment the derivation contradicts, so an unjustified downgrade is detectable on a healthy corpus. A requirement applicability validator was implemented against safety_allocation.asil, whose value not_applicable requirement.schema.json itself enumerates; the reason is read from the asil_justification field the corpus already uses on safety goals, and no field was invented. (5) The two defective patches were corrected so they inject the defect they declare: MUT-019 now closes a real three-node refinement cycle, and MUT-020 removes the only verifies link covering its target. No scenario was deleted and no rule was weakened. (6) Where an expectation disagreed with a rule, the expectation was corrected to state the rule and the reason was written into that scenario's own revision_history. MUT-006, 009, 010, 017 and 019 had severities and categories that understated the defect; the rules were not lowered to fit them. Eight scenarios' expected_finding.description fields were de-duplicated from the verification_traceability_checker message they had been copy-pasted from. (7) Eight new self-tests hold the repair in place. One builds a mutation that makes two rules fire on the same artifact, declares one as the detector, disables it, and requires the scenario to FAIL while the neighbour's finding - same severity, same category, same affected artifact - is still present. That neighbour is precisely what the old harness would have accepted. Another requires a finding already present on the unmutated corpus to be rejected. Another requires a scenario naming an unimplemented detector to fail with the explicit reason. selftest is 22/22. Measured after the repair: validate 0 findings / 0 errors over 246 artifacts; check reports 'Acceptance suite: PASSED' with 10/10 gates and 23/23 scenario lines, each mutation line naming the rule that fired; selftest 22/22; render_spec_documents.py --check reports integrity PASSED. One residual ambiguity is recorded rather than fixed, because the coverage-dimension computations are out of scope for this pass: coverage dimension negative_scenario_validation still counts scenarios PRESENT rather than scenarios PASSING, so it would have read 20/20 while the gate was broken and still reads 20/20. It is not a detection claim. The detection claim is gate [5/8], and final-acceptance-report.md section 2.1 now says so explicitly.",
+ "validator_finding_verbatim": "Not a standing validator finding. The corpus validator reported nothing about this: the harness was green while it was broken. The defect was found by clearing the nine standing validator findings, which dropped validate to 0 findings and exposed the gate's real state, and is recorded here as finding FB2-REV-FND-000032.",
+ "related_records": [
+  "FB2-REV-FND-000029",
+  "FB2-REV-FND-000025",
+  "FB2-REV-FND-000013",
+  "FB2-SCN-MUT-000003",
+  "FB2-SCN-MUT-000006",
+  "FB2-SCN-MUT-000009",
+  "FB2-SCN-MUT-000010",
+  "FB2-SCN-MUT-000013",
+  "FB2-SCN-MUT-000017",
+  "FB2-SCN-MUT-000019",
+  "FB2-SCN-MUT-000020",
+  "FB2-SAF-SGO-000001",
+  "FB2-PRM-000004",
+  "FB2-SAF-SEC-000001",
+  "FB2-SAF-FSR-000004"
+ ]
+}

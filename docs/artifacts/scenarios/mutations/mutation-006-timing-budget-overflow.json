@@ -1,6 +1,6 @@
 {
  "id": "FB2-SCN-MUT-000006",
- "revision": "1",
+ "revision": "3",
  "schema_version": "1.0.0",
  "artifact_type": "scenario",
  "engineering_domain": "safety",
@@ -28,27 +28,40 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-10T00:00:00Z",
- "updated_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-10T00:00:00Z",
    "author": "safety_engineer",
    "description": "Mutation scenario: timing budget exceeds FTTI"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Corrected the patch so it injects the defect it claims to inject. The safety goal FB2-SAF-SGO-000001 keeps its serial budget parts in timing_budget.allocation; the previous patch added three keys at the top level of timing_budget, which the merge accepts but which are not budget parts of the record. The scenario is unchanged in intent - a serial budget that no longer fits inside the fault tolerant time interval - and the declared detector is unchanged. The expected severity and category were also corrected: the rule emits high/consistency, and a budget that cannot be met inside the interval is a consistency defect of a safety goal, not a medium verification observation. Remediation of finding FB2-REV-FND-000032."
+  },
+  {
+   "revision": "3",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Reconciled the expectation with the rule this scenario declares. expected description restated as the message the declared rule emits. Severity and category are the rule's values and are authoritative; the rule was not changed to fit this fixture. severity raised from medium to high and the category changed from verification to consistency to match the rule. A serial budget that cannot be executed inside the fault tolerant time interval means the safety goal's own timing claim does not hold; that is a high-severity consistency defect of a safety goal. The rule is authoritative and its severity was not lowered to fit the fixture.The scenario's injected defect, its affected artifacts and its declared detector rule are unchanged. This expectation had never been checked: the scenario harness matched any finding of the right severity on the right artifact id, so a standing finding on the same artifact satisfied it. Remediation of finding FB2-REV-FND-000032."
   }
  ],
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Increase SOA debounce time to exceed FTTI budget",
+  "description": "Inflate three serial elements of the safety goal's timing budget allocation so that the serial sum exceeds the fault tolerant time interval of 100 ms fixed by FB2-PRM-000004. The previous version of this patch added acquisition/check/reaction keys at the top level of timing_budget. The record keeps its serial parts in timing_budget.allocation, so that patch did not touch the budget it claimed to overflow; it relied on the budget rule also summing top-level numerics, which it did only because the rule was counting timing_budget.total_ftti_ms as a serial part. The patch now inflates allocation entries.",
   "affected_links": [],
   "operation": "modify",
   "new_value": {
    "timing_budget": {
-    "acquisition": 50,
-    "check": 40,
-    "reaction": 40,
-    "margin": 10
+    "allocation": {
+     "afe_acquisition_ms": 150,
+     "soa_limit_check_ms": 90,
+     "fault_classification_ms": 90
+    }
    }
   }
  },
@@ -56,12 +69,12 @@
   "FB2-SAF-SGO-000001"
  ],
  "trigger": "Safety goal timing budget validation",
- "expected_detector": "FTTI budget consistency checker",
+ "expected_detector": "ftti_budget_consistency_checker",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000006",
-  "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "severity": "high",
+  "category": "consistency",
+  "description": "timing budget 383ms exceeds FTTI 100ms (interval resolved from parameter FB2-PRM-000004)"
  },
  "impact_paths": [
   "Safety goal cannot be met within fault tolerant time interval",

@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-SGO-000001",
- "revision": "2",
+ "revision": "4",
  "schema_version": "1.0.0",
  "artifact_type": "safety_goal",
  "engineering_domain": "safety",
@@ -36,6 +36,12 @@
    "reference": "Part 4, Clause 7",
    "status": "mapped",
    "rationale": "Functional safety requirements"
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 6",
+   "status": "mapped",
+   "rationale": "Hazard analysis and ASIL determination of the hazardous event by severity and exposure; the derivation that produces this record's asil field is recorded in asil_justification"
   }
  ],
  "lifecycle_status": "baselined",
@@ -63,6 +69,18 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "Corrected timing_budget.allocation.margin_ms from 20 to 15 so that the recorded budget closes. The ten serial elements of the allocation sum to 85 ms (25+5+2+3+5+2+3+5+30+5) and the fault tolerant time interval is 100 ms, so the margin available is 100-85 = 15 ms; the recorded 20 ms exceeded the time that was available and made the budget total 105 ms against a 100 ms interval. A margin is a derived quantity - the difference between the interval and the work - not a measured one, so 15 ms is the only value the interval admits. Remediation of finding FB2-REV-FND-000025. The two alternative repairs were considered and rejected on the corpus's own evidence: raising the FTTI to 105 ms would contradict FB2-PRM-000004, which fixes ftti_ms = 100 with tolerance min = max = 100 and calibration by safety analysis against the HARA, and would define the interval from the answer; shrinking the serial sum to 80 ms would delete work that traces to a parameter or an assumption. The 85 ms serial figure is unchanged and is the figure FB2-SAF-TSC-000001 already recomputed independently. 15 ms is also the margin the technical safety concept already published, so this change removes the departure between the two records rather than creating one. The 105 ms total was NOT rounded down to 100 ms: the arithmetic now closes because 85 + 15 = 100, not because a number was adjusted to look equal. The FTTI value, all ten serial allocations, the statement, the safe state, the degraded state and the ASIL are unchanged."
+  },
+  {
+   "revision": "3",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Added the asil_justification the ASIL assignment validator required and did not find. The field is a derivation, not a restatement: severity, exposure, controllability and the operational situation are copied from the HE-01 entry of FB2-SAF-HAZ-000001 in this same profile, the ASIL is then RECOMPUTED from the ISO 26262-3:2018 severity/exposure determination table and compared with what this record and the hazard record already claimed. They agree - S3 with E4 gives ASIL_D, and the second hazardous event HE-02 at S2/E3 gives ASIL_B, which is also what that entry already claimed - so there was no contradiction between the S/E/C values and the ASIL to resolve, and neither was changed. What the derivation adds is the working: the reasoning behind each rating, the whole S3 row so the sensitivity of the answer is visible, the inheritance of the higher ASIL from the two events the goal covers, and the consistency check against the allocation beneath it, where an ASIL B second barrier is admissible precisely because it is not the sole means of achieving an ASIL D goal. The field also states what it does not assert, at length and specifically: this is a hypothetical classification inside a fictional reference project, the real foxBMS 2 product has never had a hazard analysis and risk assessment and no ASIL is determined for it, the S/E/C ratings are authored inputs that were not obtained from any exposure analysis, mission profile, fleet statistic, FMEA or measurement, no design is claimed to meet ASIL D, no conformity with ISO 26262 and no certification is claimed, no tool is claimed to be qualified, and no ASPICE capability level is claimed. The exposure rating is flagged as the unevidenced input on which the whole classification turns, because S3 with E3 would be ASIL_C - one class lower - and nothing in this corpus establishes the exposure. Nothing else in the record changed: the asil value, the statement, the safe state, the degraded state, the fault_tolerant_time_interval_ms and the whole timing_budget allocation including the 15 ms margin that FB2-REV-FND-000025 reconciled are untouched. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. Remediation of the ASIL-assignment finding on this record. This is the synthetic_reference copy, the one both safety concepts derive from. Its hazard record states the operational situation to the granularity a C3 assessment requires - 'CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45 degC' rather than 'while charging' - and the field records that specificity as the corpus's own evidence that a controllability assessment was applied rather than asserted. It also states the scope limit explicitly: FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 both carry concept_identity.fictional = true, so the classification describes a fictional reference project and establishes no property of any real product."
+  },
+  {
+   "revision": "4",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Bound the fault tolerant time interval to the parameter that fixes it, so the interval has one authoritative home instead of three. Added the ftti.parameter_ref field naming FB2-PRM-000004. The record previously restated the interval twice on itself - fault_tolerant_time_interval_ms and timing_budget.total_ftti_ms - while the authoritative value lived in the parameter registry as ftti_ms = 100 with tolerance min = max = 100, and neither the record nor the registry pointed at the other. The ftti budget consistency checker read a third spelling, ftti_ms or ftti, which no safety goal in this corpus carried, so it could never fire on this record and SCN-MUT-006 had no detector. The rule now resolves the interval from the bound parameter and requires every declaration on the record to agree with it, so the three spellings are now cross-checked instead of merely coexisting; a drift in any of them is reported. Neither of the two existing declarations was removed: the technical safety concept and several review records read them, and deleting them would move a value rather than bind it. The interval value is unchanged at 100 ms, the ASIL is unchanged at ASIL_D, the ten serial allocations and the 15 ms margin are unchanged, and the budget still closes at 85 + 15 = 100 ms. Nothing here asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. Remediation of finding FB2-REV-FND-000032."
   }
  ],
  "statement": "The BMS shall detect cell voltage limit violations and open all HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events, with a target diagnostic test interval of 10 ms, a target contactor mechanical opening time of 30 ms (FB2-PRM-000005 / FB2-ASM-006) and a resulting 40 ms from the fault request to feedback-confirmed contactor open (FB2-SAF-FSR-000003).",
@@ -70,6 +88,56 @@
   "FB2-SAF-HAZ-000001"
  ],
  "asil": "ASIL_D",
+ "asil_justification": {
+  "classification_status": "hypothetical",
+  "scope_of_this_classification": "This is a classification exercise inside a fictional reference project. It is not an ASIL determination for the real foxBMS 2 product, and it is not evidence about that product's safety architecture. The real product has never had a hazard analysis and risk assessment: no HARA has been performed for it, none is claimed here, and nothing in this field or in any record it names can be read as one.",
+  "method": "ISO 26262-3:2018, hazard analysis and functional safety concept (Part 3, clause 6) followed by the definition of the safety goal and its ASIL (Part 3, clause 7). The clause references are the ones this record's own standards_mappings already carries and the one FB2-SAF-HAZ-000001 carries; they are recorded from the locked standards baseline in docs/artifacts/governance and no clause text was consulted or reproduced. The derivation is: identify the hazardous event from the malfunctioning behaviour; assign severity S and exposure E to the operational situation in which it occurs; read the ASIL from the Part 3 severity/exposure determination table; assign the safety goal the highest ASIL among the hazardous events it covers. Controllability is recorded because the method requires it, but it does not enter the determination table - it fixes the granularity at which the operational situation has to be described so that other items can be reasoned about.",
+  "hazard_ref": "FB2-SAF-HAZ-000001",
+  "hazardous_event_ref": "HE-01",
+  "hazardous_event_description": "Cell overvoltage during charging leading to thermal runaway",
+  "operational_situation": "CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45°C",
+  "severity": {
+   "rating": "S3",
+   "reason": "S3 is the life-threatening-or-fatal band. The consequence recorded for this hazardous event is thermal runaway, and FB2-SAF-HAZ-000001 states its outcome as fire or explosion with fatal injuries, which places it above the severe-but-survivable band that S2 denotes. It is not S0 or S1 because the record does not describe an injury that is light or absent. Severity is judged on the most credible outcome of the hazardous event for the persons at risk, and the rating deliberately does not depend on how likely that outcome is; likelihood is what the exposure rating expresses."
+  },
+  "exposure": {
+   "rating": "E4",
+   "reason": "E4 is the highest exposure band and the one that applies when the operational situation is continuously or very frequently present. The situation recorded here is not a transient manoeuvre but the ordinary state of a pack while it is being charged at high state of charge and high rate, which recurs on every charge cycle and persists for as long as the charge lasts, and the hazard record's own rationale says the exposure is continuous during charging. That is why E4 rather than E3 (medium) or E2 (low).",
+   "evidence_status": "NOT EVIDENCED. The hazard record states no duty cycle, no mission profile, no fleet statistic and no charge-cycle data. The rating is an authored input. This matters to the outcome: S3 with E3 is ASIL_C, so the entire classification is one exposure step away from being a class lower, and the input that decides it is the one input in this derivation with no evidence behind it."
+  },
+  "controllability": {
+   "rating": "C3",
+   "reason": "C3 is the largely-uncontrollable band, and the hazard record's rationale gives the reason: the driver cannot detect or control an individual cell's overvoltage. There is no indication available to a person in the vehicle of which cell is at what voltage, and no action they could take would change it.",
+   "effect_on_this_classification": "None on the ASIL. Controllability does not enter the Part 3 determination table, so it is recorded here without being used to reach the classification. Its effect is elsewhere: a C2 or C3 operational situation has to be described precisely enough that other items can be reasoned about, and FB2-SAF-HAZ-000001 does describe this one to that granularity - by mode, state-of-charge band, charge-rate band and ambient band, rather than as 'while charging'. That the situation is specified that precisely is the corpus's own evidence that a controllability assessment was actually applied rather than asserted."
+  },
+  "derivation": [
+   "1. Malfunctioning behaviour to hazardous event: the malfunctioning behaviour recorded in FB2-SAF-HAZ-000001 - the front end reports an incorrect cell voltage, or the safe-operating-area check fails to detect the limit violation, or the contactor fails to open on the violation, or the BMS fails to request the opening - leads to the hazardous event HE-01, cell overvoltage during charging leading to thermal runaway.",
+   "2. Operational situation: CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45°C.",
+   "3. Severity S3, exposure E4, controllability C3, reasoned above.",
+   "4. ASIL from the Part 3 determination table, severity row S3 and exposure column E4: ASIL_D. The rest of the S3 row, so that the sensitivity of the answer is visible, is S3/E1 gives ASIL_A, S3/E2 gives ASIL_B, S3/E3 gives ASIL_C, S3/E4 gives ASIL_D.",
+   "5. The second hazardous event covered by the same goal, HE-02, is S2/E3, which the same table gives ASIL_B; the hazard record already records that, so the two events are consistent with one table and not with two.",
+   "6. The safety goal inherits the highest ASIL among the hazardous events it covers. The goal's statement names both cell overvoltage and cell undervoltage, so it covers HE-01 and HE-02, and the highest is ASIL_D. Had the goal been scoped to the undervoltage event alone it would be ASIL_B; it is not scoped that way.",
+   "7. Consistency of the ASIL with the allocation beneath it: an ASIL D goal requires strategies of ASIL D, and permits elements of a lower ASIL class only where they are not the sole means of achieving the goal. FB2-SAF-TSC-000001 allocates the main path (AR-001 to AR-004) at ASIL D and the independent path AR-005 at ASIL B, and states that difference in terms as the decomposition the ASIL D goal rests on. That is consistent: AR-005 is a second barrier and not the primary means of achieving the goal, so ASIL B does not lower the goal's ASIL. The converse also holds and is worth stating: if AR-005 were removed, the argument that 85 ms of main path leaves 15 ms of margin, and 95 ms leaves 5 ms, and 110 ms if detection waits a full acquisition period, would no longer be a tolerable allocation, and the goal would have to be re-argued rather than merely re-documented."
+  ],
+  "derived_asil": "ASIL_D",
+  "derived_asil_matches_record": true,
+  "input_provenance": "Severity, exposure and controllability are copied from FB2-SAF-HAZ-000001 in this same profile, and the operational situation and the hazardous event description are copied from the same record's HE-01 entry. Nothing in this field was chosen to reach a conclusion; the conclusion was recomputed from the inputs and then compared with the ASIL the records already carried, and they agree.",
+  "what_this_does_not_assert": [
+   "It does not assert an ASIL for the real foxBMS 2 product. The real product has never had a hazard analysis and risk assessment, and this classification does not substitute for one or make one unnecessary.",
+   "It does not assert that the S3, E4 and C3 ratings are correct. They are authored inputs of a synthetic record describing a fictional reference project - FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 both carry concept_identity.fictional = true - and they were not obtained from an exposure analysis, a mission profile, a fleet statistic, an FMEA of a real cell, a pack design study, or any measurement of any item.",
+   "It does not assert that any design meets ASIL D. The classification creates an obligation on the design below it; it is not evidence that the obligation is discharged. In particular it is not evidence that the reaction fits the 100 ms interval this goal allocates, and the source-observed records in the as_is profile record a reaction chain that is longer than that interval - see the fault_reaction fields of FB2-SAF-FSR-000002 and FB2-SAF-FSR-000003 in that profile, which record the configured debounce counts and delays as they are and record the contradiction with the timing this goal allocates.",
+   "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. No part of ISO 26262-3 was audited to produce it.",
+   "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose, and an automated validation pass is not a qualified tool and not an independent functional-safety confirmation.",
+   "It does not assert an ASPICE capability level for anything.",
+   "It does not assert human approval. human_approval_status on this record and on every record named in it is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
+   "It does not establish independence of the second barrier. The ASIL B allocation of AR-005 that the derivation relies on rests on FB2-ASM-008, which is a declared assumption, and FB2-SAF-TSC-000001 states that the absence of a demonstration of that independence is the largest open assumption of the ASIL D allocation."
+  ],
+  "what_would_change_the_answer": "Two inputs decide this classification and neither is evidenced. If the exposure of the charging situation were established as E3 rather than E4 - for example by a mission profile showing a materially shorter or rarer high-SOC high-rate charging exposure - the same table would give ASIL_C, and the allocation beneath it would have to be revisited. If the pack chemistry limited the credible consequence to a severe but survivable injury, the severity would be S2 and the same table would give ASIL_C at E3 or ASIL_B at E2. Establishing the severity and exposure ratings on evidence is the work that has not been done, and it is the reason this classification is recorded as hypothetical rather than as a determination."
+ },
+ "ftti": {
+  "parameter_ref": "FB2-PRM-000004",
+  "note": "The interval this goal allocates is not defined here. It is the value of parameter FB2-PRM-000004 (ftti_ms = 100 ms, tolerance 100..100, calibrated by safety analysis against the HARA), and this field binds to it so that the ftti budget consistency checker resolves the interval from the parameter registry rather than from a literal restated on the record. fault_tolerant_time_interval_ms and timing_budget.total_ftti_ms remain on the record because other records and the published safety concept read them; the checker requires every declaration to agree with the bound parameter, so a drift in any of them is reported rather than resolved in favour of whichever value it happens to read first."
+ },
  "fault_tolerant_time_interval_ms": 100,
  "safe_state": "All HV contactors open, charging disabled, propulsion disabled, fault logged",
  "degraded_state": "Derated charging (0.1C), reduced discharge (0.5C), enhanced monitoring (1 Hz)",

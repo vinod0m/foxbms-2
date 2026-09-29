@@ -1,6 +1,6 @@
 {
  "id": "FB2-SCN-MUT-000020",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "scenario",
  "engineering_domain": "verification",
@@ -28,30 +28,36 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-10T00:00:00Z",
- "updated_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-10T00:00:00Z",
    "author": "verification_engineer",
    "description": "Mutation scenario: missing verification link"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "Retargeted the patch at a requirement whose only verification it removes. The previous patch deleted FB2-LNK-SAF-000014, one of four verifies links covering FB2-SAF-FSR-000002; three others remained, so the requirement stayed verified and the 'missing verification' defect the scenario declares was never injected. The scenario's intent - a requirement left with no verification - is preserved exactly, and the declared detector is unchanged, by removing the single verifies link FB2-LNK-SEC-000075, which is the only one covering FB2-SAF-SEC-000001. Remediation of finding FB2-REV-FND-000032."
   }
  ],
  "scenario_type": "mutation",
  "baseline_ref": "BAS-REF-001",
  "patch": {
-  "description": "Remove verifies link from test measure to safety requirement",
+  "description": "Remove the only verifies link that covers safety requirement FB2-SAF-SEC-000001, so the requirement is left with no verification. The previous version of this patch deleted FB2-LNK-SAF-000014, which covers FB2-SAF-FSR-000002; that requirement is covered by three further verifies links (FB2-LNK-SAF-000022, FB2-LNK-SAF-000043, FB2-LNK-SAF-000050), so deleting one of the four left it verified and the declared defect was never injected.",
   "affected_links": [
-   "FB2-LNK-SAF-000014"
+   "FB2-LNK-SEC-000075"
   ],
   "operation": "delete"
  },
  "affected_ids": [
-  "FB2-VER-TMS-000001",
-  "FB2-SAF-FSR-000002"
+  "FB2-VER-TMS-000016",
+  "FB2-SAF-SEC-000001"
  ],
  "trigger": "Verification traceability check",
- "expected_detector": "Verification traceability checker",
+ "expected_detector": "verification_traceability_checker",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000020",
   "severity": "medium",
@@ -59,9 +65,9 @@
   "description": "safety requirement has no verifies/validates link"
  },
  "impact_paths": [
-  "Verification traceability broken",
-  "Cannot demonstrate requirement is tested"
+  "FB2-SAF-SEC-000001 is no longer traced to any verification measure",
+  "Verification coverage for that requirement drops to zero and cannot be reported from the link registry"
  ],
- "expected_remediation": "Restore verifies link FB2-LNK-SAF-000014; re-run verification traceability check",
+ "expected_remediation": "Restore verifies link FB2-LNK-SEC-000075 from FB2-VER-TMS-000016 to FB2-SAF-SEC-000001; re-run the verification traceability checker",
  "oracle_manifest_ref": "SCN-MUT-020/oracle-manifest.json"
 }

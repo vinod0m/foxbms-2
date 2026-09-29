@@ -1,5 +1,5 @@
 {
- "revision": "2",
+ "revision": "3",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "safety",
@@ -129,11 +129,31 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "cybersecurity_engineer",
    "description": "Replaced the absolute '0 genuine frames rejected over 24 h' acceptance criterion with a bounded rate, a stated population the bound is demonstrated over, and a minimum integrity value width that makes the bound achievable. Remediation of finding FB2-REV-FND-000028. The old criterion was unsatisfiable and non-discriminating at the same time: a keyed integrity value of width w rejects a genuine frame with probability 2^-w, so over a 24 h campaign the expected number of genuine rejections is n * 2^-w, non-zero for any practical w; meanwhile an implementation that rejected every frame would satisfy the criterion vacuously, and would also satisfy the other criteria in this record vacuously. The new criterion is 0 rejections observed over a genuine-frame population of at least 3 x 10^6 in a 24 h campaign, which by the rule of three (0 failures in n trials gives a one-sided 95 percent upper bound of 3/n) is a bound of 1 x 10^-6 on the rate; and it requires the integrity value on the interface to be at least 22 bits, which is the width for which 2^-w stays below that rate over that population. The three statements are mutually consistent, so the criterion is now achievable by a correct implementation of adequate width and is not satisfied by an always-rejecting one (~100 percent) or by a 16-bit one (~1.5e-5 per frame). The criterion is therefore STRICTER in discriminating power than the zero it replaces, and it is also a harder engineering obligation, because it constrains the width of the integrity value where the zero constrained nothing. The absolute zeros that remain in this record are the ones that are decidable by the check existing - injected frames accepted, replayed frames accepted, length-mismatch frames reaching the callback, control-byte transitions - and those are over countable events on a channel where no collision is involved, so they are unchanged and were deliberately not relaxed. The verification measure FB2-VER-TMS-000018 and its execution record were regenerated against the new criterion in the same revision set. No ASIL value, safety_goal_ref, statement clause or verification approach was changed."
+  },
+  {
+   "revision": "3",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "cybersecurity_engineer",
+   "description": "Added the asil_justification that the requirement applicability validator requires and did not find: this record marks safety_allocation.asil as not_applicable, which requirement.schema.json enumerates as the value for a requirement to which no ASIL determination applies, and the rule requires a recorded reason for that marking. The reason had been present only inside safety_allocation.mitigation and safety_allocation.safety_goal_ref, which are required on every requirement whatever its marking and are therefore populated identically on the ASIL_D records; they cannot serve as a justification specific to this marking. The new field states the reason on its own, names what the safety_goal_ref trace does and does not carry, and records the open items where the marking depends on something not yet established. The asil value, the statement, the mitigation, the safety_goal_ref and the revision-relevant content of the record are unchanged. Remediation of the requirement applicability validator finding raised by finding FB2-REV-FND-000032. Nothing in this field asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
   }
  ],
  "real_source_presence": "Control ABSENT at the dispatch layer. In the real foxBMS 2 source, src/app/driver/can/can.c:643-692 accepts a frame on hardware mailbox acceptance and on a data-lost indication (retval == CAN_HAL_RETVAL_NO_DATA_LOST at :657), which is a loss report and not a security check, then copies all eight data bytes at :675-682 without comparing the received data-length code against an expected length. src/app/driver/can/can.c:1015-1031 then matches a frame against the configured table on (canNode, id, idType) alone at :1021-1023 and invokes the registered callback at :1025. No rolling counter, integrity field or length check is applied at this layer. SCOPE LIMIT, stated explicitly: the per-message receive callbacks were NOT individually audited for this requirement, so this requirement asserts the absence only at the shared dispatch layer and does not assert that no individual callback performs its own check. A detective control IS present and is credited: CAN receive queue overflow raises DIAG_ID_CAN_RX_QUEUE_FULL (can.c:684-690, configured DIAG_WARNING / DIAG_SEN_EVENT_1 / DIAG_EVALUATION_ENABLED in src/app/engine/config/diag_cfg.c:165), which is TARA mitigation MIT-007. Anchors FB2-SRC-COD-000065, FB2-SRC-COD-000066.",
  "real_source_control_status": "absent",
  "real_source_control_status_note": "The control this requirement specifies is NOT present in the real foxBMS 2 source at commit 308028fb.",
  "derived_from": "FB2-SAF-TAR-000001",
- "verification_status": "not_verified"
+ "verification_status": "not_verified",
+ "asil_justification": {
+  "classification_status": "recorded_reasoning",
+  "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this requirement. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product and not evidence about the integrity of any real safety bus.",
+  "requirement_classification": "security",
+  "reason": "This requirement is classified 'security' and it specifies message integrity and freshness on the safety bus. ISO 26262 does not allocate an ASIL to a security requirement, so not_applicable is the schema's own enumerated value for that case. The trace to the cell-voltage and SOA functional safety requirements records whose assurance is at stake if the bus is compromised. It is not an ASIL allocation and no ASIL flows along it.",
+  "what_this_does_not_assert": [
+   "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. Nothing in this field was audited to produce it.",
+   "It does not assert human approval. human_approval_status on this record is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
+   "It does not establish that any ASIL was correctly assigned to any safety requirement in this corpus. It explains only why this requirement is not itself an ASIL-allocated item.",
+   "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose.",
+   "It does not assert an ASPICE capability level for anything."
+  ],
+  "added_in_revision": "3"
+ }
 }

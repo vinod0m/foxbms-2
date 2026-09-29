@@ -179,7 +179,7 @@ specific defect and asserting that the validator detects it. All 20 pass. Two
 mutation artifacts (`FB2-SCN-MUT-000001`, `FB2-SCN-MUT-000002`) record the first
 two as corpus records.
 
-Coverage: **20/20 mutations; 3/3 change lifecycles.**
+Coverage: **20/20 mutations detected by the rule each declares; 3/3 change lifecycles.**
 
 ## 9. Traceability Limitations
 

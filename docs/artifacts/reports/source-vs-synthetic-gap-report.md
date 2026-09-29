@@ -198,7 +198,7 @@ areas as coverage gaps.
    stated validity.
 5. **Timing budgets** — FTTI allocation with an explicit 20 ms margin.
 6. **Change management** — 3 full lifecycle scenarios, all structurally complete.
-7. **Negative-scenario machinery** — 20/20 mutation scenarios detected.
+7. **Negative-scenario machinery** — 20/20 mutation scenarios detected by the rule each declares (repaired 2026-09-29; see finding `FB2-REV-FND-000032`).
 8. **Adversarial review layer** — challenge and meta review passes that found
    4 high-severity findings, two of them about the original review itself.
 

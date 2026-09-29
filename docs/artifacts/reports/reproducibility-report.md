@@ -23,7 +23,7 @@
 | Source registry pinning | baseline commit check | pinned to `308028fb` |
 | Acceptance suite | `corpus.py check` | `Acceptance suite: PASSED`, 10 gate lines PASS, 0 FAIL |
 | Toolchain self-tests | `corpus.py selftest` | 11 PASS, 0 FAIL |
-| Scenario suite | `corpus.py scenario-test` | 20/20 mutations, 3/3 change lifecycles |
+| Scenario suite | `corpus.py scenario-test` | 20/20 mutations on their own declared detector, 3/3 change lifecycles |
 
 ## 2. How Determinism Was Measured
 
@@ -158,10 +158,10 @@ suite, and the export twice — comparing the two export manifests' content hash
 |---|---|
 | `[1/8] validate` | PASS |
 | `[2/8] inventory` | PASS |
-| `[3/8] negative_scenario_validation = 20/20 mutations` | PASS (20/20) |
+| `[3/8] negative_scenario_validation = 20/20 mutations` | PASS (20/20 scenarios present; detection is `[5/8]`) |
 | `[3/8] change lifecycles = 3/3` | PASS |
 | `[4/8] hazard present` | PASS |
-| `[5/8] scenario-test` | PASS (23/23 lines) |
+| `[5/8] scenario-test` | PASS (23/23 lines; 20/20 mutations detected on their own declared detector) |
 | `[6/8] export` | PASS |
 | `[6/8] deterministic export hashes` | PASS |
 | `[7/8] no production_authorized/approved artifacts` | PASS (0 violations this run) |

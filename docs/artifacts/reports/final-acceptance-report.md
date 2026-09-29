@@ -13,7 +13,7 @@
 > **This is not a conformity statement.** The corpus holds a **structural
 > mapping** to ISO 26262 clause references and to ASPICE process references. It
 > asserts **no ISO 26262 conformity**, no ASIL capability, no certification, no
-> tool qualification and no ASPICE capability level. Every one of the 153
+> tool qualification and no ASPICE capability level. Every one of the 222
 > indexed records carries `human_approval_status: pending`,
 > `production_authorized: false` and `product_verification_credit: false`.
 > **No human has approved anything in this corpus.**
@@ -32,12 +32,12 @@ Recorded by `corpus.py check` gate `[8/8] final status recorded`.
 
 | Stage | Gate | Result |
 |---|---|---|
-| 1/8 | validate | PASS |
-| 2/8 | inventory | PASS |
-| 3/8 | negative_scenario_validation = 20/20 mutations | PASS (20/20) |
-| 3/8 | change lifecycles = 3/3 | PASS |
+| 1/8 | validate | PASS (246 artifacts, 0 findings, 0 errors) |
+| 2/8 | inventory | PASS (612/612 source files) |
+| 3/8 | negative_scenario_validation = 20/20 mutations | PASS (20/20 scenarios **present**) — see §2.1 |
+| 3/8 | change lifecycles = 3/3 | PASS (3/3 present) |
 | 4/8 | hazard present (trace reachability) | PASS |
-| 5/8 | scenario-test | PASS (23/23 scenario lines) |
+| 5/8 | scenario-test | PASS (23/23 scenario lines; 20/20 mutations **detected on their own declared detector**) |
 | 6/8 | export | PASS |
 | 6/8 | deterministic export hashes | PASS |
 | 7/8 | no production_authorized/approved artifacts | PASS (0 violations this run) |
@@ -46,7 +46,122 @@ Recorded by `corpus.py check` gate `[8/8] final status recorded`.
 10 gate lines PASS, 0 FAIL. 23/23 scenario lines pass (20 mutation scenarios
 plus 3 change lifecycles).
 
-`python3 docs/artifacts/tools/corpus.py selftest` → **11 PASS, 0 FAIL**.
+`python3 docs/artifacts/tools/corpus.py selftest` → **22 PASS, 0 FAIL**
+(14 pre-existing + 8 added to test the gate's own soundness; see §2.2).
+
+### 2.1 What the 20/20 in gate 3/8 means, and what it does not
+
+Gate `[3/8]` counts how many mutation scenarios **exist** (`numerator =
+len(mutations on disk)`). It is a coverage-of-scenarios figure and it is
+unaffected by whether those scenarios detect anything. It would have read
+`20/20` at the moment the mutation gate was discovered to be self-certifying,
+and it still reads `20/20`. It is not a detection claim and must not be read
+as one. The detection claim lives entirely in gate `[5/8]`.
+
+This distinction was not stated in earlier revisions of this report, which
+presented `20/20` from dimension 11 as though it were a detection result. It
+is not. The coverage dimension's computation is unchanged.
+
+### 2.2 The mutation gate was self-certifying until finding FB2-REV-FND-000032
+
+Earlier revisions of this report stated, as a measured result:
+
+> 20/20 mutation scenarios detect their injected defect.
+
+**That statement was false when it was written, and it was false before any
+defect in this corpus was repaired.** The harness re-ran the rules on the
+mutated corpus and then kept any finding whose `artifact_id` was one of the
+scenario's `affected_ids`, accepting the scenario when *some* finding of the
+expected severity turned up. Severity and category are shared by many rules
+and the artifact id was shared by whatever defects that artifact happened to
+carry, so a standing defect inherited from the corpus satisfied scenarios
+whose own detector did not exist, was unreachable, or read a field the record
+did not carry. Eight of the twenty scenarios were passing that way; four of
+them had a declared detector that no rule emits or that no rule can reach on
+the record the scenario targets.
+
+The gate now resolves each scenario's declared detector by stable rule id,
+proves the rule is emitted by this module at all, subtracts the findings the
+unmutated corpus already produces, and accepts only a finding **from that
+rule** that the mutation caused. A scenario whose declared detector does not
+exist now fails with an explicit message instead of matching a neighbour.
+
+Three consequences, all of which the numbers above already reflect:
+
+- The 20/20 in gate `[5/8]` is now a detection measurement rather than an
+  existence count. Each line names the rule that fired.
+- Nine scenarios that were passing on their neighbour are unaffected in
+  outcome but are now passing on their own rule.
+- Four scenarios had defective patches that injected nothing their detector
+  could see, or injected something other than what they declared. The patches
+  were corrected; the scenarios were not weakened. See §2.3.
+
+### 2.3 What the mutation scenarios actually exercise
+
+Every scenario's declared detector, the rule that implements it, and the
+finding it produces. "Own detector" means the rule id the scenario declares,
+resolved from the evaluator-only oracle manifest and verified against the rule
+ids this module actually emits.
+
+| Scenario | Declared detector (rule id) | Implemented | Detected on its own rule |
+|---|---|---|---|
+| SCN-MUT-001 | `traceability_checker` | yes | yes |
+| SCN-MUT-002 | `link_forbidden_relation_type` | yes | yes |
+| SCN-MUT-003 | `revision_consistency_checker` | yes | yes — **was unreachable** |
+| SCN-MUT-004 | `parameter_unit_consistency` | yes | yes |
+| SCN-MUT-005 | `hsi_interface_consistency` | yes | yes |
+| SCN-MUT-006 | `ftti_budget_consistency_checker` | yes | yes — **rule could not fire on the record** |
+| SCN-MUT-007 | `parameter_threshold_order` | yes | yes |
+| SCN-MUT-008 | `safety_requirement_completeness_checker` | yes | yes |
+| SCN-MUT-009 | `asil_assignment_validator` | yes | yes — **was undetectable on a healthy corpus** |
+| SCN-MUT-010 | `diagnostic_coverage_claim_validator` | yes | yes |
+| SCN-MUT-011 | `configuration_consistency` | yes | yes |
+| SCN-MUT-012 | `execution_kind_classifier` | yes | yes |
+| SCN-MUT-013 | `requirement_applicability_validator` | yes — **implemented; did not exist** | yes |
+| SCN-MUT-014 | `evidence_reference_validator` | yes | yes |
+| SCN-MUT-015 | `identity_uniqueness_checker` | yes | yes |
+| SCN-MUT-016 | `source_anchor_drift_detector` | yes | yes |
+| SCN-MUT-017 | `production_authorization_governance_checker` | yes | yes |
+| SCN-MUT-018 | `incomplete_propagation` | yes | yes |
+| SCN-MUT-019 | `refinement_cycle_detector` | yes | yes — **patch created no cycle** |
+| SCN-MUT-020 | `verification_traceability_checker` | yes | yes — **patch removed 1 of 4 links** |
+
+The four bolded defects are the ones that made the old 20/20 meaningless for
+those scenarios specifically:
+
+- **SCN-MUT-003** declared the revision-consistency rule, which lived inside
+  `_validate_artifact`. The scenario harness never calls schema validation, so
+  the rule was unreachable by construction. The rule now lives in
+  `_check_revision_consistency` and is called from both paths.
+- **SCN-MUT-006** declared the FTTI budget rule, which read `ftti_ms` or
+  `ftti`. No safety goal in this corpus carries either field, so the rule
+  `continue`d on every record it was pointed at. The rule now resolves the
+  interval from the parameter registry entry the safety goal is now bound to
+  (`FB2-PRM-000004`, `ftti_ms = 100`) and cross-checks every declaration of it
+  on the record, so the value can no longer be scattered inconsistently.
+- **SCN-MUT-009** declared the ASIL validator, which fired only on *absence*
+  of a justification. An unjustified downgrade leaves the justification
+  present and saying otherwise, so the rule could only ever have passed on a
+  corpus that had no justification at all — it was testing the corpus's health
+  and passing on the condition it claimed to detect. The rule now re-derives
+  the ASIL from the severity and exposure ratings the justification itself
+  records, using ISO 26262-3:2018 Table 4, and reports an assignment the
+  derivation contradicts.
+- **SCN-MUT-013** declared a requirement applicability validator that no rule
+  implemented. The patch it carried set an undeclared top-level
+  `applicability` property that nothing reads. The data model *can* express
+  non-applicability — `requirement.schema.json` enumerates `not_applicable` as
+  a value of `safety_allocation.asil` — so the rule was implemented against
+  that field, reading the reason from the `asil_justification` field the
+  corpus already uses on safety goals. No field was invented.
+- **SCN-MUT-019** repointed a link to `SGO refines HAZ`. No hazard is ever
+  the source of a `refines` link, so the edge terminated immediately and the
+  graph stayed acyclic: the patch mutated a link without creating the
+  circularity it declares. It now closes a real three-node cycle.
+- **SCN-MUT-020** deleted one of the four `verifies` links covering
+  `FB2-SAF-FSR-000002`; three others remained, so the requirement stayed
+  verified and the missing-verification defect was never injected. It now
+  removes the only `verifies` link covering `FB2-SAF-SEC-000001`.
 
 ## 3. The 15 Coverage Dimensions
 
@@ -59,116 +174,131 @@ score.
 | 1 | scope_accounting | 1/1 | 100% | complete | source/feature/variant inventories present |
 | 2 | artifact_population | 13/13 | 100% | complete | 13 families populated |
 | 3 | standards_mapping | 44/44 | 100% | complete | ASPICE 32/32, ISO parts 12/12 |
-| 4 | source_grounding | 76/154 | 49% | **partial** | 102 source anchors available; 78 records carry no `source_refs` |
-| 5 | traceability_integrity | 283/283 | 100% | complete | 0 dangling links |
+| 4 | source_grounding | 80/223 | 36% | **partial** | 102 source anchors available; 143 records carry no `source_refs` |
+| 5 | traceability_integrity | 460/460 | 100% | complete | 0 dangling links |
 | 6 | semantic_consistency_checks | 10/10 | 100% | complete | 10 check categories per run |
-| 7 | automated_review_coverage | 82/123 | 67% | **partial** | 12 review records; `reviewed_by` links consistent with `reviewed_ids` |
-| 8 | verification_planning | 16/7 | 229% | over-covered | 16 test measures for 7 FSRs; a ratio, not a score |
-| 9 | actual_product_evidence | 0/16 | 0% | **blocked by policy** | 0 target-hardware executions; see §7 |
-| 10 | synthetic_fixture_coverage | 82/43 | 191% | over-covered | 82 `synthetic_reference` records against a target of 43 |
-| 11 | negative_scenario_validation | 20/20 | 100% | complete | plus 3/3 change lifecycles |
+| 7 | automated_review_coverage | 144/187 | 77% | **partial** | 15 review records; `reviewed_by` links consistent with `reviewed_ids` |
+| 8 | verification_planning | 25/7 | 357% | over-covered | 25 test measures for 7 FSRs; a ratio, not a score |
+| 9 | actual_product_evidence | 0/25 | 0% | **blocked by policy** | 0 target-hardware executions; see §7 |
+| 10 | synthetic_fixture_coverage | 148/43 | 344% | over-covered | 148 `synthetic_reference` records against a target of 43 |
+| 11 | negative_scenario_validation | 20/20 | 100% | scenarios **present**; detection is gate 5/8, see §2.1 | plus 3/3 change lifecycles |
 | 12 | final_status | `synthetic_ready_with_limitations` | — | — | recorded status |
 | 13 | export_reproducibility | 1/1 | 100% | complete | export manifest present |
-| 14 | human_approval | 0/154 | 0% | **pending by policy** | every record pending; none performed |
-| 15 | production_authorization | 0/154 | 0% | **false by policy** | every record `production_authorized=false` |
+| 14 | human_approval | 0/223 | 0% | **pending by policy** | every record pending; none performed |
+| 15 | production_authorization | 0/223 | 0% | **false by policy** | every record `production_authorized=false` |
 
 ### Note on the three different denominators
 
 The corpus contains three legitimately different population counts, and a
 reader comparing them will otherwise think one is wrong:
 
-- **154** — artifact *files* carrying an `id` under `corpus/` and `reviews/`.
+- **223** — artifact *files* carrying an `id` under `corpus/` and `reviews/`.
   Used as the denominator for `source_grounding`, `human_approval` and
   `production_authorization`.
-- **153** — unique `(profile, id)` records in the tool's artifact index. One
-  less than 154 because the record `FB2-REV-000001` exists in two files
+- **222** — unique `(profile, id)` records in the tool's artifact index. One
+  less than 223 because the record `FB2-REV-000001` exists in two files
   (`corpus/as_is/reviews/records/review-vertical-slice.json` and
   `reviews/records/review-vertical-slice.json`); the index de-duplicates on
   `(profile, id)` and keeps the first. The duplicate is reported in §8.
-- **123** — unique artifact *IDs* across both profiles. Lower than 153 because
+- **187** — unique artifact *IDs* across both profiles. Lower than 222 because
   most requirement, design and verification IDs deliberately exist in both
   `as_is` and `synthetic_reference`; profile isolation is a design decision, not
   duplication. Used as the denominator for `automated_review_coverage`.
 
-A fourth number, **177**, is printed by `validate`: that is schema-validated
-files, being 154 corpus/review files plus 23 scenario files.
+A fourth number, **246**, is printed by `validate`: that is schema-validated
+files, being 223 corpus/review files plus 23 scenario files.
 
 ## 4. Record Census
 
-**153 unique records** in the artifact index. Every count below is computed from
-the tool's own index, not from a directory listing.
+**222 unique `(profile, id)` records** in the tool's artifact index. Every count
+below is computed from the tool's own index by a live run of
+`corpus.py load_artifact_index`, not from a directory listing.
 
 ### By artifact type
 
 | Type | Count | | Type | Count |
 |---|---|---|---|---|
-| requirement | 26 | | scenario | 5 |
-| review | 12 | | change | 3 |
-| execution | 25 | | safety_analysis | 4 |
-| test_measure | 16 | | hazard | 2 |
-| deviation | 26 | | safety_goal | 2 |
-| finding | 22 | | safety_case | 1 |
-| design | 8 | | tara | 1 |
-| **Total** | **153** | | | |
+| execution | 36 | | stakeholder_need | 5 |
+| requirement | 34 | | use_case | 4 |
+| finding | 31 | | safety_analysis | 4 |
+| deviation | 26 | | change | 3 |
+| test_measure | 25 | | hazard | 2 |
+| review | 15 | | safety_goal | 2 |
+| design | 8 | | safety_concept | 2 |
+| post_development_record | 6 | | process_improvement | 2 |
+| process_record | 6 | | project_plan | 1 |
+| scenario | 5 | | risk_register | 1 |
+| | | | item_definition | 1 |
+| | | | safety_case | 1 |
+| | | | tara | 1 |
+| | | | measurement_plan | 1 |
+| **Total** | **222** | | | |
 
 ### By engineering domain
 
 | Domain | Count | | Domain | Count |
 |---|---|---|---|---|
-| verification | 64 | | management | 7 |
+| verification | 87 | | management | 11 |
 | software | 40 | | hardware | 7 |
-| safety | 30 | | system | 3 |
-| supporting | 2 | | **Total** | **153** |
+| safety | 38 | | production | 2 |
+| system | 21 | | decommissioning | 1 |
+| supporting | 12 | | operation | 1 |
+| | | | release | 1 |
+| | | | service | 1 |
+| **Total** | **222** | | | |
 
 ### By profile
 
 | Profile | Count |
 |---|---|
-| `synthetic_reference` | 82 |
-| `as_is` | 71 |
-| **Total** | **153** |
+| `synthetic_reference` | 148 |
+| `as_is` | 74 |
+| **Total** | **222** |
 
 ### By lifecycle status
 
 | Lifecycle | Count |
 |---|---|
-| draft | 73 |
-| reviewed | 51 |
-| baselined | 29 |
-| **Total** | **153** |
+| draft | 96 |
+| reviewed | 63 |
+| baselined | 63 |
+| **Total** | **222** |
 
 ### By origin
 
-| Origin | Count | Meaning |
-|---|---|---|
-| synthetic | 60 | invented for this reference project; not observed in source |
-| source_observed | 57 | read out of the pinned source tree |
-| derived | 36 | computed from other records |
+| Origin | Count |
+|---|---|
+| synthetic | 126 |
+| source_observed | 60 |
+| derived | 36 |
+| **Total** | **222** |
 
 ### Guard fields — corpus-wide
 
-| Field | Value | Count |
-|---|---|---|
-| `human_approval_status` | `pending` | 153 / 153 |
-| `production_authorized` | `false` | 153 / 153 |
-| `product_verification_credit` | `false` | 153 / 153 |
+Every one of the 222 records carries `human_approval_status: pending`,
+`production_authorized: false` and `product_verification_credit: false`. The
+validator raises a finding on any record that does not, and `validate` reports
+0 findings.
 
 ## 5. Traceability
 
-**283 links**, **0 dangling**. De-duplicated by `(profile, link_id)` across all
+**460 links**, **0 dangling**. De-duplicated by `(profile, link_id)` across all
 registries.
 
 | Relation type | Count | | Relation type | Count |
 |---|---|---|---|---|
-| reviewed_by | 167 | | implements | 6 |
-| verifies | 32 | | mitigates | 2 |
-| result_of | 16 | | validates | 2 |
-| changes | 16 | | allocated_to | 13 |
-| supports | 16 | | refines | 13 |
-| **Total** | **283** | | | |
+| reviewed_by | 229 | | depends_on | 12 |
+| verifies | 47 | | implements | 6 |
+| refines | 41 | | mitigates | 3 |
+| allocated_to | 40 | | | |
+| supports | 29 | | | |
+| result_of | 25 | | | |
+| changes | 16 | | | |
+| validates | 12 | | | |
+| **Total** | **460** | | | |
 
-By profile: `as_is` 111, `synthetic_reference` 172.
-By review state: reviewed 231, pending 52.
+By profile: `as_is` 111, `synthetic_reference` 349.
+By review state: reviewed 408, pending 52.
 
 ## 6. Governance State
 
@@ -455,7 +585,7 @@ The inventory is complete: all 612 discovered source files are accounted for.
 
 ## 12. Export and Reproducibility
 
-- Export: **153 nodes, 283 edges** to `docs/artifacts/exports/`
+- Export: **222 nodes, 460 edges** to `docs/artifacts/exports/`
 - `exports/manifest.json` present; content hashes identical across two
   consecutive exports (gate `[6/8] deterministic export hashes` PASS)
 - `render_spec_documents.py --check` → `INTEGRITY CHECK PASSED`, 10/10 documents
@@ -489,7 +619,7 @@ The inventory is complete: all 612 discovered source files are accounted for.
 10. **`feature-inventory.json` `summary.total_features` is stale** at 20 against
     22 actual records (§6).
 11. **A conformity claim exists outside the write boundary** (§9).
-12. **Human approval pending** for all 153 records. No human has approved any
+12. **Human approval pending** for all 222 records. No human has approved any
     artifact, and none is production-authorized.
 
 ## 14. Final Determination
@@ -498,12 +628,17 @@ The inventory is complete: all 612 discovered source files are accounted for.
 
 ### What supports the status
 
-- All 8 acceptance gates pass; 23/23 scenario lines pass; 11/11 selftests pass.
+- All 8 acceptance gates pass; 23/23 scenario lines pass; 22/22 selftests pass.
 - 13/13 artifact families populated.
 - 44/44 standards-mapping items carry an explicit disposition.
-- 283/283 links resolve; 0 dangling.
+- 460/460 links resolve; 0 dangling.
 - 10/10 semantic consistency check categories execute; 0 errors.
-- 20/20 mutation scenarios detect their injected defect.
+- 20/20 mutation scenarios are detected **by the rule each one declares**, after
+  the gate was repaired to assert against that rule. Before finding
+  FB2-REV-FND-000032 the gate accepted any finding of the expected severity on
+  the scenario's affected artifact, and 8 of the 20 were passing on standing
+  defects; four declared a detector that did not exist, was unreachable, or
+  could not fire on the record the scenario targets. See §2.1-§2.3.
 
 ### What prevents `synthetic_ready`
 
@@ -531,17 +666,17 @@ tool qualification, certification, or target-hardware verification.
 
 | Figure | Source command |
 |---|---|
-| 243 validated artifacts, 9 findings, 0 errors | `corpus.py validate` |
-| 219 records, 460 links, all censuses | `corpus.py load_artifact_index` / `load_links` via the tool's own loaders |
+| 246 validated artifacts, 0 findings, 0 errors | `corpus.py validate` |
+| 222 records, 460 links, all censuses | `corpus.py load_artifact_index` / `load_links` via the tool's own loaders |
 | 15 coverage dimensions and all ratios | `corpus.py coverage` |
-| 8 gates, 23 scenario lines | `corpus.py check` |
-| 14/14 selftests | `corpus.py selftest` |
+| 8 gates, 23 scenario lines, 20/20 mutations detected on their own declared detector | `corpus.py check` |
+| 22/22 selftests, including 8 that break the mutation gate on purpose | `corpus.py selftest` |
 | every `safety_goal_ref` and payload-field cross-reference resolves; every FTTI allocation closes | `docs/artifacts/tools/check_references.py` |
 | 612/612, 24 modules, 22 features, 23 variants | `corpus.py inventory` |
 | 32/28/4 processes, 15 corrections | `governance/coverage-plan.json` |
 | 94/136, 5 failed, 37 build failures, 332/323/8 assertions | `.work/verification-env/logs/results-strict.json` |
 | 313 / 136 / 177 / 34 headers | `.work/verification-env/logs/hcg-closure.json` |
-| 153 nodes, 283 edges | `exports/manifest.json` |
+| 222 nodes, 460 edges | `exports/manifest.json` |
 | spec-document integrity and determinism | `render_spec_documents.py --check` |
 | conformity claim and fabricated approval sign-off in the hand-authored root document | `TRACEABILITY_DOCUMENT.md` at repository root, corrected under explicit owner authorisation; finding `FB2-REV-FND-000022` rev 3 |
 

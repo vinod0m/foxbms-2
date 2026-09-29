@@ -1,6 +1,6 @@
 {
  "id": "FB2-SYS-SYR-000006",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "system",
@@ -53,6 +53,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "system_engineer",
    "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them."
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "system_engineer",
+   "description": "Added the asil_justification that the requirement applicability validator requires and did not find: this record marks safety_allocation.asil as not_applicable, which requirement.schema.json enumerates as the value for a requirement to which no ASIL determination applies, and the rule requires a recorded reason for that marking. The reason had been present only inside safety_allocation.mitigation and safety_allocation.safety_goal_ref, which are required on every requirement whatever its marking and are therefore populated identically on the ASIL_D records; they cannot serve as a justification specific to this marking. The new field states the reason on its own, names what the safety_goal_ref trace does and does not carry, and records the open items where the marking depends on something not yet established. The asil value, the statement, the mitigation, the safety_goal_ref and the revision-relevant content of the record are unchanged. Remediation of the requirement applicability validator finding raised by finding FB2-REV-FND-000032. Nothing in this field asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
   }
  ],
  "statement": "The item shall acquire the pack current and the temperature of every monitored cell group, shall mark a measurement invalid when it cannot be trusted, and shall compare each valid value against the plausible operating envelope before using it in a supervisory decision.",
@@ -116,5 +122,20 @@
   "Synthetic. This requirement describes a hypothetical programme and establishes nothing about the real foxBMS project.",
   "System-level only. It does not carry the hardware or software detail, which lives in FB2-HW-TSR-* and FB2-SW-SWR-*. Where this record and those records disagree, neither is silently preferred and the disagreement is raised as a finding.",
   "Not verified against the product. Every measure that touches its allocated requirements is a synthetic fixture or a blocked record; see the FB2-VER-EXE-* set."
- ]
+ ],
+ "asil_justification": {
+  "classification_status": "recorded_reasoning",
+  "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this requirement. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product, whose acquisition of pack current and cell temperature has never been allocated an ASIL by anyone.",
+  "requirement_classification": "interface",
+  "reason": "This requirement is classified 'interface'. It specifies acquisition, validity marking and plausibility comparison for measurement values; it does not itself specify a reaction to a hazardous event, and no safety goal in this corpus allocates the current and temperature paths to one. ISO 26262 allocates an ASIL to a requirement derived from a hazardous event of the safety goal, and there is no such derivation recorded here, so not_applicable is the schema's own enumerated value for that case.",
+  "open_item": "The absence of a recorded derivation is a property of this corpus, not a demonstrated property of the product. If a future HARA were to identify a hazardous event on the current or temperature path, this requirement would have to be allocated to that goal and the marking here would be wrong. This field records the present state of the allocation and does not claim the absence is permanent.",
+  "what_this_does_not_assert": [
+   "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. Nothing in this field was audited to produce it.",
+   "It does not assert human approval. human_approval_status on this record is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
+   "It does not establish that any ASIL was correctly assigned to any safety requirement in this corpus. It explains only why this requirement is not itself an ASIL-allocated item.",
+   "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose.",
+   "It does not assert an ASPICE capability level for anything."
+  ],
+  "added_in_revision": "2"
+ }
 }

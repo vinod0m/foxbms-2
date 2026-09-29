@@ -378,10 +378,16 @@ extern OS_STD_RETURN_e OS_ClearNotificationIndexed(uint32_t indexToClear);
  *          The queue needs to be implement in a FreeRTOS compatible way.
  *          This function must not be called from within an interrupt service
  *          routine (due to the FreeRTOS compatibility of the the wrapper).
+ *          The pointee type is chosen by the caller and is fixed by the item
+ *          size the queue was created with. The wrapper is generic over that
+ *          item type by design, so the parameter is a #void * pointer. The
+ *          pointee has to reference an object of exactly the type and size the
+ *          queue was created for.
  * @param   xQueue      FreeRTOS compatible queue handle that should be posted
  *                      to
  * @param   pvBuffer    Pointer to the buffer into which the received item is
- *                      posted to.
+ *                      posted to. Pointee type selected by the caller, see
+ *                      @details.
  * @param   ticksToWait ticks to wait
  * @return  #OS_SUCCESS if an item was successfully received, otherwise
  *          #OS_FAIL.
@@ -393,9 +399,15 @@ extern OS_STD_RETURN_e OS_ReceiveFromQueue(OS_QUEUE xQueue, void *const pvBuffer
  * @details This function needs to implement the wrapper to OS specific queue
  *          posting.
  *          The queue needs to be implement in a FreeRTOS compatible way.
+ *          The pointee type is chosen by the caller and is fixed by the item
+ *          size the queue was created with. The wrapper is generic over that
+ *          item type by design, so the parameter is a #void * pointer. The
+ *          pointee has to reference an object of exactly the type and size the
+ *          queue was created for.
  * @param   xQueue          FreeRTOS compatible queue handle that should be
  *                          posted to.
  * @param   pvItemToQueue   Pointer to the item to be posted in the queue.
+ *                          Pointee type selected by the caller, see @details.
  * @param   ticksToWait     ticks to wait
  * @return #OS_SUCCESS if the item was successfully posted, otherwise #OS_FAIL.
  */

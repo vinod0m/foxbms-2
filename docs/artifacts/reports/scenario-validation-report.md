@@ -8,102 +8,160 @@
 
 > Structural negative-testing results only. Nothing here asserts ISO 26262
 > conformity, ASIL capability, ASPICE capability level, certification, human
-> approval or tool qualification. All 153 indexed records are
+> approval or tool qualification. All 222 indexed records are
 > `human_approval_status: pending` and `production_authorized: false`.
 >
-> Every number is from a live `corpus.py scenario-test` run on 2026-09-29
-> (`generated_at` 2026-09-29T09:37:17Z).
+> Every number is from a live `corpus.py scenario-test` run on 2026-09-29.
+
+> **This report was rewritten on 2026-09-29.** An earlier revision of this file
+> stated that 20/20 mutation scenarios detected their injected defect, and
+> asserted that "the harness matches on severity *and* category, so a scenario
+> cannot pass by accident because an unrelated finding happened to fire". **Both
+> statements were false.** The harness did match on severity and category, but
+> only *after* filtering findings down to the scenario's affected artifact ids,
+> and severity and category are shared by many rules. A standing defect on the
+> same artifact satisfied the expectation. See §3 and finding
+> `FB2-REV-FND-000032`.
 
 ## 1. Overview
 
 20 isolated mutation scenarios and 3 change-lifecycle demonstrations. All are
-applied in-memory by the harness and all are detected or validated.
+applied in-memory by the harness.
 
 | Measure | Value |
 |---|---|
 | Mutation scenarios required | 20 |
 | Mutation scenarios present | **20** |
-| Mutation scenarios detected | **20 / 20** |
+| Mutation scenarios detected **by the rule each one declares** | **20 / 20** |
+| Mutation scenarios detected on a *neighbouring* rule instead | **0** |
+| Scenarios whose declared detector no rule implements | **0** |
 | Change lifecycles present | **3** |
 | Change lifecycles structurally complete | **3 / 3** |
 | Total scenario lines | **23** |
 | Lines passing | **23** |
 | Lines failing | **0** |
+| Findings on the unmutated corpus (baseline) | **0** |
 
 The `negative_scenario_validation` coverage dimension reads **20/20** and its
-detail string is `20/20 mutations; 3/3 change lifecycles`. Two acceptance gates
-depend on this: `negative_scenario_validation = 20/20 mutations` and
-`change lifecycles = 3/3`. Both pass.
+detail string is `20/20 mutations; 3/3 change lifecycles`. That dimension counts
+scenarios **present on disk**; it is not a detection measurement and is
+unaffected by whether the scenarios detect anything. The detection measurement
+is gate `[5/8] scenario-test`.
 
-## 2. Mutation Scenarios
+## 2. How a Scenario Is Decided
 
-Each scenario injects one specific defect into an in-memory copy of the corpus
-and asserts that the validator raises a finding of at least the expected
-severity and category. **A scenario only passes if the expected finding is
-actually detected** — the harness matches on severity *and* category, so a
-scenario cannot pass by accident because an unrelated finding happened to fire.
+A mutation scenario passes only if all three of the following hold.
 
-| Scenario ID | Injected defect | Expected severity / category | Result |
-|---|---|---|---|
-| SCN-MUT-001 | Missing parent link in refinement chain | high / traceability | PASS |
-| SCN-MUT-002 | Invalid link type | high / traceability | PASS |
-| SCN-MUT-003 | Stale revision reference | medium / verification | PASS |
-| SCN-MUT-004 | Unit/scaling mismatch in parameter | medium / consistency | PASS |
-| SCN-MUT-005 | HW/SW pin/polarity mismatch in HSI | high / traceability | PASS |
-| SCN-MUT-006 | Timing budget exceeds FTTI | medium / verification | PASS |
-| SCN-MUT-007 | Threshold order contradiction | high / consistency | PASS |
-| SCN-MUT-008 | Missing fault reaction | medium / verification | PASS |
-| SCN-MUT-009 | Unsupported ASIL downgrade | medium / verification | PASS |
-| SCN-MUT-010 | False diagnostic coverage claim | medium / verification | PASS |
-| SCN-MUT-011 | Invalid configuration combination | high / consistency | PASS |
-| SCN-MUT-012 | Fabricated evidence classification | medium / evidence | PASS |
-| SCN-MUT-013 | Unjustified non-applicability | medium / verification | PASS |
-| SCN-MUT-014 | Dangling evidence reference | high / provenance | PASS |
-| SCN-MUT-015 | Duplicate artifact ID within profile | high / traceability | PASS |
-| SCN-MUT-016 | Source anchor drift | high / provenance | PASS |
-| SCN-MUT-017 | Unsafe workflow promotion | medium / verification | PASS |
-| SCN-MUT-018 | Incomplete change propagation | high / traceability | PASS |
-| SCN-MUT-019 | Circular refinement chain | medium / verification | PASS |
-| SCN-MUT-020 | Missing verification link | medium / verification | PASS |
+1. **The declared detector exists.** The scenario's detector is resolved by
+   stable rule id from its evaluator-only oracle manifest
+   (`scenarios/evaluator-only/SCN-MUT-0NN/oracle-manifest.json`). The tool
+   computes the set of rule ids this module actually emits, from its own AST,
+   and a scenario naming anything outside that set fails with an explicit
+   "not emitted by any rule" message.
+2. **The declared detector is silent on the unmutated corpus.** If the rule
+   already fires before the mutation, the scenario would be satisfied by a
+   standing defect rather than by the defect it injects. That is a failure, and
+   it is reported as one.
+3. **After the mutation, that rule produced a finding the baseline did not
+   contain.** Findings are identified by `(rule, artifact_id, category,
+   description)`, and the baseline set is subtracted, so a finding that already
+   existed cannot be counted as a detection.
 
-Severity distribution of the injected defects: **8 high**, **12 medium**.
+Severity and category from the expectation are **reported** and a mismatch is
+flagged as a fixture defect, but they are not used to pass a scenario. The
+rule is authoritative for both.
 
-## 3. Why These Scenarios Matter More Than Their Count
+### 2.1 Proof the gate is not self-certifying
 
-A negative-scenario suite that passes is only evidence that the detectors fire
-when the scenario set says they should. The scenarios in this corpus are
-load-bearing in three specific ways, and each of them is a detector the corpus
-genuinely depends on:
+`corpus.py selftest` contains a test that builds one mutation making two
+different rules fire on the same artifact, declares one of them as the
+detector, and then disables that detector. The scenario must **fail** while the
+neighbour's finding — which shares the expected severity, the expected category
+and the affected artifact id, and would therefore have satisfied the previous
+harness — is still present. A companion test asserts that a finding already
+present on the unmutated corpus cannot satisfy a scenario. A third asserts that
+a scenario naming a detector no rule emits fails with the "not emitted by any
+rule" reason rather than matching a neighbour.
 
-1. **SCN-MUT-008 (missing fault reaction) is the detector that currently fires
-   on the baseline.** Seven FSR instances have no `fault_reaction` field, and
-   the validator raises a finding for each (`FB2-REV-FND-000013` …
-   `-000019`). The root cause is that the field was added to the tooling as a
-   mutation detector without a matching authoring requirement in the schema, so
-   the detector fires on the clean baseline by construction. The finding is
-   recorded and the check was deliberately **not** weakened.
+## 3. What the Gate Was Doing Before, and Why It Mattered
 
-2. **SCN-MUT-009 (unsupported ASIL downgrade) is the detector behind
-   `FB2-REV-FND-000020` / `-000021`.** `FB2-SAF-SGO-000001` carries
-   `asil: "ASIL_D"` with no `asil_justification` key, so the corpus does carry
-   an ASIL assignment for which no supporting argument exists. This is the
-   corpus's own internal acknowledgement that the ASIL value is not a
-   determination.
+The previous harness re-ran the rules on the mutated corpus, kept every finding
+whose `artifact_id` was one of the scenario's `affected_ids`, and accepted the
+scenario if any of them had the expected severity. Because severity and
+category are shared across rules, and because the same artifact can carry
+several unrelated defects, a finding that had nothing to do with the scenario's
+injected defect could satisfy it.
 
-3. **SCN-MUT-020 (missing verification link) is the detector behind
-   `FB2-REV-FND-000001` … `-000007`.** The corpus convention is test measure as
-   source, requirement as target, so a verified requirement is never a link
-   source. The rule cannot be satisfied by a verified requirement under that
-   convention, and it fires on 12 records: 7 are this direction artefact, and 5
-   (`FB2-REV-FND-000008` … `-000012`) are **genuine gaps** where the security
-   requirements have no verification link in either direction. This is recorded
-   as `FB2-REV-FND-000001` and the check was left unchanged, because relaxing it
-   would suppress the detector this scenario depends on.
+Three concrete instances, all of which were discovered by clearing the corpus's
+standing findings and watching the mutation gate go red:
 
-Points 1 and 3 are the honest cost of keeping the detectors honest. Both are
-recorded as findings with the reasoning rather than being silenced.
+- **SCN-MUT-003** declared the revision-consistency rule. That rule lived inside
+  `_validate_artifact`, which the scenario harness never calls, so it was
+  unreachable from the scenario path by construction. The rule has been moved
+  into `_check_revision_consistency`, called from both paths.
+- **SCN-MUT-013** declared a "Requirement applicability validator" that no rule
+  implemented; `grep` for an applicability check found only coverage-plan
+  rendering. The scenario had been passing on a neighbouring finding.
+- **SCN-MUT-009** declared the ASIL validator, which fired only on *absence* of
+  a justification. An unjustified downgrade leaves the justification present and
+  contradicting the assignment, so the rule could only ever have passed on a
+  corpus that had **no** justification at all. It was testing the corpus's
+  health and passing on the condition it claimed to detect.
 
-## 4. Change Lifecycle Demonstrations
+The earlier revision of this report presented the first of these as a *feature*
+— "SCN-MUT-008 is the detector that currently fires on the baseline ... the
+detector fires on the clean baseline by construction" — and treated the
+resulting 20/20 as evidence that the detectors were live. It was the opposite:
+a detector firing on the clean baseline is exactly what lets a broken
+scenario pass. The nine standing findings those paragraphs described have since
+been corrected at source, and the baseline now reports **0 findings**, so the
+property can be checked directly on every run.
+
+## 4. Mutation Scenarios
+
+Every scenario, the rule it declares, and the finding that rule produced.
+
+| Scenario ID | Injected defect | Declared detector (rule id) | Emitted severity / category | Result |
+|---|---|---|---|---|
+| SCN-MUT-001 | Missing parent link in refinement chain | `traceability_checker` | high / traceability | PASS |
+| SCN-MUT-002 | Invalid link type | `link_forbidden_relation_type` | high / traceability | PASS |
+| SCN-MUT-003 | Stale revision reference | `revision_consistency_checker` | medium / consistency | PASS |
+| SCN-MUT-004 | Unit/scaling mismatch in parameter | `parameter_unit_consistency` | medium / consistency | PASS |
+| SCN-MUT-005 | HW/SW pin/polarity mismatch in HSI | `hsi_interface_consistency` | high / traceability | PASS |
+| SCN-MUT-006 | Timing budget exceeds FTTI | `ftti_budget_consistency_checker` | high / consistency | PASS |
+| SCN-MUT-007 | Threshold order contradiction | `parameter_threshold_order` | high / consistency | PASS |
+| SCN-MUT-008 | Missing fault reaction | `safety_requirement_completeness_checker` | medium / verification | PASS |
+| SCN-MUT-009 | Unsupported ASIL downgrade | `asil_assignment_validator` | high / verification | PASS |
+| SCN-MUT-010 | False diagnostic coverage claim | `diagnostic_coverage_claim_validator` | high / verification | PASS |
+| SCN-MUT-011 | Invalid configuration combination | `configuration_consistency` | high / consistency | PASS |
+| SCN-MUT-012 | Fabricated evidence classification | `execution_kind_classifier` | medium / evidence | PASS |
+| SCN-MUT-013 | Unjustified non-applicability | `requirement_applicability_validator` | medium / verification | PASS |
+| SCN-MUT-014 | Dangling evidence reference | `evidence_reference_validator` | high / provenance | PASS |
+| SCN-MUT-015 | Duplicate artifact ID within profile | `identity_uniqueness_checker` | high / traceability | PASS |
+| SCN-MUT-016 | Source anchor drift | `source_anchor_drift_detector` | high / provenance | PASS |
+| SCN-MUT-017 | Unsafe workflow promotion | `production_authorization_governance_checker` | high / process | PASS |
+| SCN-MUT-018 | Incomplete change propagation | `incomplete_propagation` | high / traceability | PASS |
+| SCN-MUT-019 | Circular refinement chain | `refinement_cycle_detector` | high / traceability | PASS |
+| SCN-MUT-020 | Missing verification link | `verification_traceability_checker` | medium / verification | PASS |
+
+Severity distribution of the emitted findings: **11 high**, **9 medium**.
+
+### 4.1 Detectors that did not exist, and patches that injected nothing
+
+Four scenarios declared a detector that did not exist or could not fire, and two
+patches did not inject the defect they declared. All six were repaired at
+source; no scenario was retired and no rule was weakened.
+
+| Scenario | Defect | Repair |
+|---|---|---|
+| SCN-MUT-003 | Revision rule unreachable from the scenario path | Rule extracted to `_check_revision_consistency`, called from the validator and the harness |
+| SCN-MUT-006 | FTTI rule read `ftti_ms`/`ftti`; no safety goal carries either | Safety goal now binds its interval to `FB2-PRM-000004` via `ftti.parameter_ref`; the rule resolves from the registry and reports any disagreeing declaration. The patch also moved to `timing_budget.allocation`, where the record keeps its serial parts |
+| SCN-MUT-009 | Rule fired on absence of a justification, so an unjustified *downgrade* was undetectable | Rule re-derives the ASIL from the justification's own severity/exposure ratings via ISO 26262-3:2018 Table 4 and reports an assignment the derivation contradicts |
+| SCN-MUT-013 | No applicability rule existed; patch set an undeclared `applicability` key | Rule implemented against `safety_allocation.asil`, whose value `not_applicable` `requirement.schema.json` itself enumerates. No field was invented |
+| SCN-MUT-019 | Patch repointed a link to `SGO refines HAZ`; a hazard is never a refines source, so no cycle existed | Patch now closes a real three-node cycle over the corpus's existing refinement chain |
+| SCN-MUT-020 | Patch deleted 1 of the 4 `verifies` links covering `FB2-SAF-FSR-000002` | Patch now removes the only `verifies` link covering `FB2-SAF-SEC-000001` |
+
+## 5. Change Lifecycle Demonstrations
 
 Each change lifecycle must carry a complete structural chain. The harness checks
 for the presence of all nine required elements and reports any that are missing.
@@ -120,22 +178,27 @@ Required elements, all present in all three:
 `suspect_links`, `required_updates`, `reverification_selection`,
 `post_change_baseline`.
 
-The change records are linked into the traceability graph: `FB2-MAN-CHG-000001`
-`changes` → `FB2-SAF-HAZ-000001` and `FB2-SAF-SGO-000001`; `FB2-MAN-CHG-000002`
-`changes` → `FB2-SYS-HSI-000001`. That is 16 `changes` links in total.
+A change-lifecycle scenario is a **structural completeness** check. It confirms
+the nine elements are present; it does not assess whether the change decision
+was engineering-correct.
 
-## 5. What This Suite Does and Does Not Establish
+## 6. What This Suite Does and Does Not Establish
 
 | Established | Not established |
 |---|---|
-| All 20 injected defects are detected at the expected severity and category | That the detector set is complete — a defect no scenario models is undetected by construction |
-| All 3 change lifecycles carry a complete structural chain | That the change decisions were engineering-correct; a complete structure can carry a poor decision |
-| The detectors the corpus relies on are live, not dormant | That the corpus is free of defects — 9 validator findings and 30 recorded finding artifacts are open, of which `FB2-REV-FND-000023`…`000029` were corrected at source by a separate remediation pass and `FB2-REV-FND-000030` was raised by it |
-| Negative-scenario coverage is complete against its own target of 20 | Anything about ISO 26262 conformity, ASIL capability or ASPICE capability level |
+| All 20 injected defects are detected by the rule each scenario declares | That the detector set is complete — a defect no scenario models is undetected by construction |
+| All 20 declared detectors are implemented by a rule in `corpus.py` | That a detector is *correct*; a rule can fire on the right defect for the wrong reason, and that is not what a presence check measures |
+| All 3 change lifecycles carry a complete structural chain | That the change decisions were engineering-correct |
+| The mutation gate cannot be satisfied by a standing finding or by a neighbouring rule | That the corpus is free of defects — `validate` reports 0 findings against the rules this corpus implements, and a rule that does not exist cannot report anything |
+| Negative-scenario coverage is complete against its own target of 20 | Anything about ISO 26262 conformity, ASIL capability, tool qualification, ASPICE capability level or human approval |
 
-**Three detectors fire on the clean baseline** (§3), which is the single most
-important thing in this report. A suite in which nothing fires on the baseline
-would be evidence that the detectors were tuned to be silent. These are not.
+**The baseline reports 0 findings.** A suite in which a rule fires on the clean
+corpus cannot distinguish a working detector from a standing defect, and this
+gate no longer can be satisfied by one. `corpus.py selftest` asserts that
+property directly, by requiring a scenario to fail when its own detector is
+disabled.
 
-**No scenario result was adjusted, and no detector was weakened to make a
-scenario pass.**
+**No scenario result was adjusted to make a gate pass, and no detector was
+weakened.** Where an expectation disagreed with a rule, the expectation was
+corrected and the reason recorded in the scenario's own `revision_history`; the
+rules' severities were never lowered to fit a fixture.

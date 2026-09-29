@@ -1,6 +1,6 @@
 {
  "change_lifecycles": 3,
- "generated_at": "2026-09-29T16:13:00Z",
+ "generated_at": "2026-09-29T17:39:35Z",
  "mutation_total_required": 20,
  "mutations_present": 20,
  "results": [
@@ -10,46 +10,28 @@
      "artifact_id": "FB2-SAF-FSR-000001",
      "category": "traceability",
      "description": "FSR has no parent safety goal (missing refines link)",
+     "rule": "traceability_checker",
      "severity": "high"
     },
     {
      "artifact_id": "FB2-SAF-FSR-000001",
      "category": "traceability",
      "description": "FSR has no parent safety goal (missing refines link)",
+     "rule": "traceability_checker",
      "severity": "high"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000001",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000001 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000001",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000001 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
     }
    ],
+   "declared_detector": "traceability_checker",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-001/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "traceability",
-    "description": "FSR FB2-SAF-FSR-000001 has no parent safety goal (missing refines link)",
+    "description": "FSR has no parent safety goal (missing refines link)",
     "finding_id": "FB2-FND-MUT-000001",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/traceability on FB2-SAF-FSR-000001: FSR has no parent safety goal (missing refines link)",
    "scenario_id": "SCN-MUT-001",
    "type": "mutation"
   },
@@ -59,28 +41,21 @@
      "artifact_id": "FB2-LNK-SAF-000014",
      "category": "traceability",
      "description": "relation_type 'related_to' forbidden (not in allowed set)",
+     "rule": "link_forbidden_relation_type",
      "severity": "high"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000002",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000002",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
-     "severity": "medium"
     }
    ],
+   "declared_detector": "link_forbidden_relation_type",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-002/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "traceability",
-    "description": "Link FB2-LNK-SAF-000014 uses invalid relation_type 'related_to' (not in allowed set)",
+    "description": "relation_type 'related_to' forbidden (not in allowed set)",
     "finding_id": "FB2-FND-MUT-000002",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/traceability on FB2-LNK-SAF-000014: relation_type 'related_to' forbidden (not in allowed set)",
    "scenario_id": "SCN-MUT-002",
    "type": "mutation"
   },
@@ -88,24 +63,30 @@
    "actual": [
     {
      "artifact_id": "FB2-SAF-FSR-000001",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000001 has no fault_reaction defined",
+     "category": "consistency",
+     "description": "revision 99 not found in revision_history",
+     "rule": "revision_consistency_checker",
      "severity": "medium"
     },
     {
      "artifact_id": "FB2-SAF-FSR-000001",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000001 has no fault_reaction defined",
+     "category": "consistency",
+     "description": "revision 99 not found in revision_history",
+     "rule": "revision_consistency_checker",
      "severity": "medium"
     }
    ],
+   "declared_detector": "revision_consistency_checker",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-003/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
-    "category": "verification",
-    "description": "safety requirement has no verifies/validates link",
+    "category": "consistency",
+    "description": "revision 99 not found in revision_history",
     "finding_id": "FB2-FND-MUT-000003",
     "severity": "medium"
    },
    "passed": true,
+   "reason": "medium/consistency on FB2-SAF-FSR-000001: revision 99 not found in revision_history",
    "scenario_id": "SCN-MUT-003",
    "type": "mutation"
   },
@@ -115,9 +96,13 @@
      "artifact_id": "FB2-PRM-000001",
      "category": "consistency",
      "description": "parameter FB2-PRM-000001 unit is V but value 4.2 suggests mV (missing scaling)",
+     "rule": "parameter_unit_consistency",
      "severity": "medium"
     }
    ],
+   "declared_detector": "parameter_unit_consistency",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-004/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "consistency",
     "description": "parameter FB2-PRM-000001 unit is V but value 4.2 suggests mV (missing scaling)",
@@ -125,6 +110,7 @@
     "severity": "medium"
    },
    "passed": true,
+   "reason": "medium/consistency on FB2-PRM-000001: parameter FB2-PRM-000001 unit is V but value 4.2 suggests mV (missing scaling)",
    "scenario_id": "SCN-MUT-004",
    "type": "mutation"
   },
@@ -134,16 +120,21 @@
      "artifact_id": "FB2-SYS-HSI-000001",
      "category": "traceability",
      "description": "HSI/HW interface mismatch for signal SPI_CLK (polarity): HSI=CPOL=1, CPHA=1, HW=CPOL=0, CPHA=1",
+     "rule": "hsi_interface_consistency",
      "severity": "high"
     }
    ],
+   "declared_detector": "hsi_interface_consistency",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-005/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "traceability",
-    "description": "HSI/HW interface mismatch for signal SPI_CLK (polarity)",
+    "description": "HSI/HW interface mismatch for signal SPI_CLK (polarity): HSI=CPOL=1, CPHA=1, HW=CPOL=0, CPHA=1",
     "finding_id": "FB2-FND-MUT-000005",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/traceability on FB2-SYS-HSI-000001: HSI/HW interface mismatch for signal SPI_CLK (polarity): HSI=CPOL=1, CPHA=1, HW=CPOL=0, CPHA=1",
    "scenario_id": "SCN-MUT-005",
    "type": "mutation"
   },
@@ -151,24 +142,30 @@
    "actual": [
     {
      "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
+     "category": "consistency",
+     "description": "timing budget 330ms exceeds FTTI 100ms (interval resolved from fault_tolerant_time_interval_ms)",
+     "rule": "ftti_budget_consistency_checker",
+     "severity": "high"
     },
     {
      "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
+     "category": "consistency",
+     "description": "timing budget 383ms exceeds FTTI 100ms (interval resolved from parameter FB2-PRM-000004)",
+     "rule": "ftti_budget_consistency_checker",
+     "severity": "high"
     }
    ],
+   "declared_detector": "ftti_budget_consistency_checker",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-006/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
-    "category": "verification",
-    "description": "safety requirement has no verifies/validates link",
+    "category": "consistency",
+    "description": "timing budget 383ms exceeds FTTI 100ms (interval resolved from parameter FB2-PRM-000004)",
     "finding_id": "FB2-FND-MUT-000006",
-    "severity": "medium"
+    "severity": "high"
    },
    "passed": true,
+   "reason": "high/consistency on FB2-SAF-SGO-000001: timing budget 330ms exceeds FTTI 100ms (interval resolved from fault_tolerant_time_interval_ms)",
    "scenario_id": "SCN-MUT-006",
    "type": "mutation"
   },
@@ -178,16 +175,21 @@
      "artifact_id": "FB2-PRM-000001",
      "category": "consistency",
      "description": "parameter FB2-PRM-000001 threshold order violated: warning=4300, derating=4200, shutdown=4100",
+     "rule": "parameter_threshold_order",
      "severity": "high"
     }
    ],
+   "declared_detector": "parameter_threshold_order",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-007/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "consistency",
-    "description": "parameter FB2-PRM-000001 threshold order violated",
+    "description": "parameter FB2-PRM-000001 threshold order violated: warning=4300, derating=4200, shutdown=4100",
     "finding_id": "FB2-FND-MUT-000007",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/consistency on FB2-PRM-000001: parameter FB2-PRM-000001 threshold order violated: warning=4300, derating=4200, shutdown=4100",
    "scenario_id": "SCN-MUT-007",
    "type": "mutation"
   },
@@ -197,22 +199,28 @@
      "artifact_id": "FB2-SAF-FSR-000002",
      "category": "verification",
      "description": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
+     "rule": "safety_requirement_completeness_checker",
      "severity": "medium"
     },
     {
      "artifact_id": "FB2-SAF-FSR-000002",
      "category": "verification",
      "description": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
+     "rule": "safety_requirement_completeness_checker",
      "severity": "medium"
     }
    ],
+   "declared_detector": "safety_requirement_completeness_checker",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-008/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "verification",
-    "description": "safety requirement has no verifies/validates link",
+    "description": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
     "finding_id": "FB2-FND-MUT-000008",
     "severity": "medium"
    },
    "passed": true,
+   "reason": "medium/verification on FB2-SAF-FSR-000002: safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
    "scenario_id": "SCN-MUT-008",
    "type": "mutation"
   },
@@ -221,23 +229,29 @@
     {
      "artifact_id": "FB2-SAF-SGO-000001",
      "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_B lacks justification",
-     "severity": "medium"
+     "description": "safety goal FB2-SAF-SGO-000001 is assigned ASIL ASIL_B but its own justification derives ASIL ASIL_D from severity S3 and exposure E4; the assignment is not supported by the classification recorded with it",
+     "rule": "asil_assignment_validator",
+     "severity": "high"
     },
     {
      "artifact_id": "FB2-SAF-SGO-000001",
      "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_B lacks justification",
-     "severity": "medium"
+     "description": "safety goal FB2-SAF-SGO-000001 is assigned ASIL ASIL_B but its own justification derives ASIL ASIL_D from severity S3 and exposure E4; the assignment is not supported by the classification recorded with it",
+     "rule": "asil_assignment_validator",
+     "severity": "high"
     }
    ],
+   "declared_detector": "asil_assignment_validator",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-009/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "verification",
-    "description": "safety requirement has no verifies/validates link",
+    "description": "safety goal FB2-SAF-SGO-000001 is assigned ASIL ASIL_B but its own justification derives ASIL ASIL_D from severity S3 and exposure E4; the assignment is not supported by the classification recorded with it",
     "finding_id": "FB2-FND-MUT-000009",
-    "severity": "medium"
+    "severity": "high"
    },
    "passed": true,
+   "reason": "high/verification on FB2-SAF-SGO-000001: safety goal FB2-SAF-SGO-000001 is assigned ASIL ASIL_B but its own justification derives ASIL ASIL_D from severity S3 and exposure E4; the assignment is not supported by the classification recorded with it",
    "scenario_id": "SCN-MUT-009",
    "type": "mutation"
   },
@@ -246,35 +260,29 @@
     {
      "artifact_id": "FB2-SAF-FSR-000003",
      "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000003 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000003",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000003 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000003",
-     "category": "verification",
      "description": "FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence",
+     "rule": "diagnostic_coverage_claim_validator",
      "severity": "high"
     },
     {
      "artifact_id": "FB2-SAF-FSR-000003",
      "category": "verification",
      "description": "FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence",
+     "rule": "diagnostic_coverage_claim_validator",
      "severity": "high"
     }
    ],
+   "declared_detector": "diagnostic_coverage_claim_validator",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-010/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "verification",
-    "description": "safety requirement has no verifies/validates link",
+    "description": "FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence",
     "finding_id": "FB2-FND-MUT-000010",
-    "severity": "medium"
+    "severity": "high"
    },
    "passed": true,
+   "reason": "high/verification on FB2-SAF-FSR-000003: FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence",
    "scenario_id": "SCN-MUT-010",
    "type": "mutation"
   },
@@ -284,16 +292,21 @@
      "artifact_id": "FB2-PRM-000001",
      "category": "consistency",
      "description": "configuration FB2-PRM-000001 enables mutually exclusive options: {'voltage_based', 'none'}",
+     "rule": "configuration_consistency",
      "severity": "high"
     }
    ],
+   "declared_detector": "configuration_consistency",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-011/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "consistency",
-    "description": "configuration FB2-PRM-000001 enables mutually exclusive options",
+    "description": "configuration FB2-PRM-000001 enables mutually exclusive options: {'voltage_based', 'none'}",
     "finding_id": "FB2-FND-MUT-000011",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/consistency on FB2-PRM-000001: configuration FB2-PRM-000001 enables mutually exclusive options: {'voltage_based', 'none'}",
    "scenario_id": "SCN-MUT-011",
    "type": "mutation"
   },
@@ -303,22 +316,28 @@
      "artifact_id": "FB2-VER-EXE-000001",
      "category": "evidence",
      "description": "execution FB2-VER-EXE-000001 claims actual_host_run but origin is 'synthetic' (fabricated evidence classification)",
+     "rule": "execution_kind_classifier",
      "severity": "medium"
     },
     {
      "artifact_id": "FB2-VER-EXE-000001",
      "category": "evidence",
      "description": "execution FB2-VER-EXE-000001 claims actual_host_run but origin is 'synthetic' (fabricated evidence classification)",
+     "rule": "execution_kind_classifier",
      "severity": "medium"
     }
    ],
+   "declared_detector": "execution_kind_classifier",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-012/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "evidence",
-    "description": "claims actual_host_run but origin is 'synthetic' (fabricated evidence classification)",
+    "description": "execution FB2-VER-EXE-000001 claims actual_host_run but origin is 'synthetic' (fabricated evidence classification)",
     "finding_id": "FB2-FND-MUT-000012",
     "severity": "medium"
    },
    "passed": true,
+   "reason": "medium/evidence on FB2-VER-EXE-000001: execution FB2-VER-EXE-000001 claims actual_host_run but origin is 'synthetic' (fabricated evidence classification)",
    "scenario_id": "SCN-MUT-012",
    "type": "mutation"
   },
@@ -327,17 +346,22 @@
     {
      "artifact_id": "FB2-SAF-FSR-000004",
      "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000004 has no fault_reaction defined",
+     "description": "requirement FB2-SAF-FSR-000004 is marked not applicable (safety_allocation.asil) without an asil_justification recording why no ASIL determination applies to it",
+     "rule": "requirement_applicability_validator",
      "severity": "medium"
     }
    ],
+   "declared_detector": "requirement_applicability_validator",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-013/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "verification",
-    "description": "Safety requirement FB2-SAF-FSR-000004 marked non_applicable without justification",
+    "description": "requirement FB2-SAF-FSR-000004 is marked not applicable (safety_allocation.asil) without an asil_justification recording why no ASIL determination applies to it",
     "finding_id": "FB2-FND-MUT-000013",
     "severity": "medium"
    },
    "passed": true,
+   "reason": "medium/verification on FB2-SAF-FSR-000004: requirement FB2-SAF-FSR-000004 is marked not applicable (safety_allocation.asil) without an asil_justification recording why no ASIL determination applies to it",
    "scenario_id": "SCN-MUT-013",
    "type": "mutation"
   },
@@ -347,22 +371,28 @@
      "artifact_id": "FB2-VER-TMS-000001",
      "category": "provenance",
      "description": "artifact FB2-VER-TMS-000001 references non-existent evidence FB2-VER-EXE-999999",
+     "rule": "evidence_reference_validator",
      "severity": "high"
     },
     {
      "artifact_id": "FB2-VER-TMS-000001",
      "category": "provenance",
      "description": "artifact FB2-VER-TMS-000001 references non-existent evidence FB2-VER-EXE-999999",
+     "rule": "evidence_reference_validator",
      "severity": "high"
     }
    ],
+   "declared_detector": "evidence_reference_validator",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-014/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "provenance",
-    "description": "references non-existent evidence FB2-VER-EXE-999999",
+    "description": "artifact FB2-VER-TMS-000001 references non-existent evidence FB2-VER-EXE-999999",
     "finding_id": "FB2-FND-MUT-000014",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/provenance on FB2-VER-TMS-000001: artifact FB2-VER-TMS-000001 references non-existent evidence FB2-VER-EXE-999999",
    "scenario_id": "SCN-MUT-014",
    "type": "mutation"
   },
@@ -370,23 +400,15 @@
    "actual": [
     {
      "artifact_id": "FB2-SAF-FSR-000001",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000001 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000001",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000001 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000001",
      "category": "traceability",
      "description": "duplicate artifact ID FB2-SAF-FSR-000001 within profile synthetic_reference",
+     "rule": "identity_uniqueness_checker",
      "severity": "high"
     }
    ],
+   "declared_detector": "identity_uniqueness_checker",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-015/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "traceability",
     "description": "duplicate artifact ID FB2-SAF-FSR-000001 within profile synthetic_reference",
@@ -394,6 +416,7 @@
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/traceability on FB2-SAF-FSR-000001: duplicate artifact ID FB2-SAF-FSR-000001 within profile synthetic_reference",
    "scenario_id": "SCN-MUT-015",
    "type": "mutation"
   },
@@ -403,16 +426,21 @@
      "artifact_id": "FB2-SAF-ANL-000001",
      "category": "provenance",
      "description": "artifact FB2-SAF-ANL-000001 location symbol 'NONEXISTENT_FUNCTION' drifts from anchor FB2-SRC-COD-000003 symbol 'AFE_CheckPlausibility'",
+     "rule": "source_anchor_drift_detector",
      "severity": "high"
     }
    ],
+   "declared_detector": "source_anchor_drift_detector",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-016/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "provenance",
-    "description": "location symbol 'NONEXISTENT_FUNCTION' drifts from anchor FB2-SRC-COD-000001 symbol 'AFE_GetCellVoltages'",
+    "description": "artifact FB2-SAF-ANL-000001 location symbol 'NONEXISTENT_FUNCTION' drifts from anchor FB2-SRC-COD-000003 symbol 'AFE_CheckPlausibility'",
     "finding_id": "FB2-FND-MUT-000016",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/provenance on FB2-SAF-ANL-000001: artifact FB2-SAF-ANL-000001 location symbol 'NONEXISTENT_FUNCTION' drifts from anchor FB2-SRC-COD-000003 symbol 'AFE_CheckPlausibility'",
    "scenario_id": "SCN-MUT-016",
    "type": "mutation"
   },
@@ -420,36 +448,30 @@
    "actual": [
     {
      "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-SGO-000001",
      "category": "process",
      "description": "artifact FB2-SAF-SGO-000001 has production_authorized=true but human_approval_status != approved",
+     "rule": "production_authorization_governance_checker",
      "severity": "high"
     },
     {
      "artifact_id": "FB2-SAF-SGO-000001",
      "category": "process",
      "description": "artifact FB2-SAF-SGO-000001 has production_authorized=true but human_approval_status != approved",
+     "rule": "production_authorization_governance_checker",
      "severity": "high"
     }
    ],
+   "declared_detector": "production_authorization_governance_checker",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-017/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
-    "category": "verification",
-    "description": "safety requirement has no verifies/validates link",
+    "category": "process",
+    "description": "artifact FB2-SAF-SGO-000001 has production_authorized=true but human_approval_status != approved",
     "finding_id": "FB2-FND-MUT-000017",
-    "severity": "medium"
+    "severity": "high"
    },
    "passed": true,
+   "reason": "high/process on FB2-SAF-SGO-000001: artifact FB2-SAF-SGO-000001 has production_authorized=true but human_approval_status != approved",
    "scenario_id": "SCN-MUT-017",
    "type": "mutation"
   },
@@ -459,59 +481,61 @@
      "artifact_id": "FB2-PRM-000001",
      "category": "traceability",
      "description": "parameter FB2-PRM-000001 changed but dependent artifact FB2-SW-SWR-000002 has no matching revision entry (incomplete propagation)",
+     "rule": "incomplete_propagation",
      "severity": "high"
     }
    ],
+   "declared_detector": "incomplete_propagation",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-018/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "traceability",
-    "description": "parameter FB2-PRM-000001 changed but dependent artifact has no matching revision entry",
+    "description": "parameter FB2-PRM-000001 changed but dependent artifact FB2-SW-SWR-000002 has no matching revision entry (incomplete propagation)",
     "finding_id": "FB2-FND-MUT-000018",
     "severity": "high"
    },
    "passed": true,
+   "reason": "high/traceability on FB2-PRM-000001: parameter FB2-PRM-000001 changed but dependent artifact FB2-SW-SWR-000002 has no matching revision entry (incomplete propagation)",
    "scenario_id": "SCN-MUT-018",
    "type": "mutation"
   },
   {
    "actual": [
     {
-     "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "verification",
-     "description": "safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification",
-     "severity": "medium"
+     "artifact_id": "FB2-SAF-FSR-000001",
+     "category": "traceability",
+     "description": "circular refinement chain detected involving FB2-SAF-FSR-000001",
+     "rule": "refinement_cycle_detector",
+     "severity": "high"
     }
    ],
+   "declared_detector": "refinement_cycle_detector",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-019/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
-    "category": "verification",
-    "description": "safety requirement has no verifies/validates link",
+    "category": "traceability",
+    "description": "circular refinement chain detected involving FB2-SAF-FSR-000001",
     "finding_id": "FB2-FND-MUT-000019",
-    "severity": "medium"
+    "severity": "high"
    },
    "passed": true,
+   "reason": "high/traceability on FB2-SAF-FSR-000001: circular refinement chain detected involving FB2-SAF-FSR-000001",
    "scenario_id": "SCN-MUT-019",
    "type": "mutation"
   },
   {
    "actual": [
     {
-     "artifact_id": "FB2-SAF-FSR-000002",
+     "artifact_id": "FB2-SAF-SEC-000001",
      "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
-     "severity": "medium"
-    },
-    {
-     "artifact_id": "FB2-SAF-FSR-000002",
-     "category": "verification",
-     "description": "safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined",
+     "description": "safety requirement has no verifies/validates link",
+     "rule": "verification_traceability_checker",
      "severity": "medium"
     }
    ],
+   "declared_detector": "verification_traceability_checker",
+   "detector_declared_in": "scenarios/evaluator-only/SCN-MUT-020/oracle-manifest.json",
+   "detector_implemented": true,
    "expected": {
     "category": "verification",
     "description": "safety requirement has no verifies/validates link",
@@ -519,6 +543,7 @@
     "severity": "medium"
    },
    "passed": true,
+   "reason": "medium/verification on FB2-SAF-SEC-000001: safety requirement has no verifies/validates link",
    "scenario_id": "SCN-MUT-020",
    "type": "mutation"
   },

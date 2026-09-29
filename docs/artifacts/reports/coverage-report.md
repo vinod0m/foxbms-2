@@ -29,7 +29,7 @@ above 100% is an over-coverage count, not a score.
 | 8 | verification_planning | measures per FSR | 16/7 | 229% | over-covered |
 | 9 | actual_product_evidence | target executions | 0/16 | 0% | **blocked by policy** |
 | 10 | synthetic_fixture_coverage | 43 artifacts | 82/43 | 191% | over-covered |
-| 11 | negative_scenario_validation | 20 mutations | 20/20 | 100% | complete |
+| 11 | negative_scenario_validation | 20 mutations | 20/20 | 100% | complete (scenarios present; detection measured by gate 5/8) |
 | 12 | final_status | — | `synthetic_ready_with_limitations` | — | recorded |
 | 13 | export_reproducibility | manifest | 1/1 | 100% | complete |
 | 14 | human_approval | — | 0/154 | 0% | **pending by policy** |
@@ -224,5 +224,11 @@ chains for two of them** and partial or parameter-level material for the rest.
    synthetic records with nothing in the pinned source to anchor to.
 9. **HWE.2 and HWE.3 are format-limited** by unreadable CAD binaries.
 
-Negative-scenario coverage is **closed**: 20/20 mutations implemented and
-detected, 3/3 change lifecycles structurally complete.
+Negative-scenario coverage is **closed**: 20/20 mutations implemented, and 20/20
+detected by the rule each one declares, 3/3 change lifecycles structurally
+complete. The distinction matters and is stated in
+`final-acceptance-report.md` §2.1: the `20/20` this dimension reports counts
+scenarios **present**, while the detection measurement is acceptance gate
+`[5/8] scenario-test`. Before 2026-09-29 the gate accepted any finding of the
+expected severity on the scenario's affected artifact, so 8 of the 20 passed on
+standing defects; see finding `FB2-REV-FND-000032`.

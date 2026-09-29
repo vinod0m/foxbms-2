@@ -243,12 +243,19 @@ requirement.
 
 ## 8. Negative Scenario Validation
 
-20 mutation scenarios, **20/20 detected**, and **3/3** change lifecycles
-structurally complete. Recorded in `reports/scenario-validation-report.json`.
+20 mutation scenarios, **20/20 detected by the rule each one declares**, and
+**3/3** change lifecycles structurally complete. Recorded in
+`reports/scenario-validation-report.json`.
 
-Each mutation injects a specific defect and asserts the validator catches it, so
-the detectors the corpus relies on — including the `verifies`-direction rule —
-are shown to be live rather than dormant.
+Each mutation injects a specific defect and asserts that the *specific detector
+named by the scenario* raises a finding the unmutated corpus did not already
+raise. That is a stronger claim than "a finding appeared", and it is the claim
+this report is entitled to make only as of 2026-09-29. Before finding
+`FB2-REV-FND-000032` the harness accepted any finding of the expected severity on
+the scenario's affected artifact, so 8 of the 20 were passing on standing
+defects and 4 declared a detector that did not exist, was unreachable, or could
+not fire on the record the scenario targets. See
+`reports/scenario-validation-report.md` §3.
 
 ## 9. What This Report Does and Does Not Establish
 

@@ -85,8 +85,22 @@ void tearDown(void) {
 }
 
 /*========== Test Cases =====================================================*/
+/** compare the four data blocks by CONTENT rather than by address */
+static STD_RETURN_TYPE_e DIAG_Write4DataBlocksCallback(
+    void *pDataFromSender0,
+    void *pDataFromSender1,
+    void *pDataFromSender2,
+    void *pDataFromSender3,
+    int cmock_num_calls) {
+    (void)cmock_num_calls;
+    TEST_ASSERT_EQUAL_MEMORY(&diag_tableErrorFlags, pDataFromSender0, sizeof(DATA_BLOCK_ERROR_STATE_s));
+    TEST_ASSERT_EQUAL_MEMORY(&diag_tableMolFlags, pDataFromSender1, sizeof(DATA_BLOCK_MOL_FLAG_s));
+    TEST_ASSERT_EQUAL_MEMORY(&diag_tableRslFlags, pDataFromSender2, sizeof(DATA_BLOCK_RSL_FLAG_s));
+    TEST_ASSERT_EQUAL_MEMORY(&diag_tableMslFlags, pDataFromSender3, sizeof(DATA_BLOCK_MSL_FLAG_s));
+    return STD_OK;
+}
+
 void testDIAG_UpdateFlagsInDatabase(void) {
-    DATA_Write4DataBlocks_ExpectAndReturn(
-        &diag_tableErrorFlags, &diag_tableMolFlags, &diag_tableRslFlags, &diag_tableMslFlags, STD_OK);
+    DATA_Write4DataBlocks_Stub(DIAG_Write4DataBlocksCallback);
     DIAG_UpdateFlags();
 }

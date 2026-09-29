@@ -566,7 +566,7 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 | Parameter ↔ consumers | ✅ 100% | 10 params, thresholds, assumptions, config selection |
 | Assumption ↔ consumers | ✅ 100% | 12 assumptions, reverse traceability complete |
 | Change → impact → reverification | ✅ 3/3 lifecycles complete | baselines BAS-REF-002/003/004 |
-| Mutation detection | ✅ 20/20 functional | severity+category matched for every scenario |
+| Mutation detection | ✅ 20/20 on their own declared detector | each scenario is accepted only when the rule it declares (by stable rule id) produces a finding the unmutated corpus did not; repaired 2026-09-29 under finding `FB2-REV-FND-000032`, before which the harness accepted any finding of the expected severity on the affected artifact |
 
 ### 12.3 Known gaps (explicitly documented, not hidden)
 
@@ -577,7 +577,7 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 | 3 | Integration/qualification/validation/component/HIL executions recorded blocked (EXE-000007..011, `outcome: blocked`) | both | Documented gap; stubs linked, executions honestly recorded blocked — no fabricated runs |
 | 4 | FTA/DFA/FFI analyses have empty element/gate lists | synthetic | Skeleton analyses; FMEA fully populated (5 failure modes) |
 | 5 | Safety case skeleton has 1 claim with empty evidence refs | synthetic | Skeleton only |
-| 6 | Multi-defect interaction scenarios not built | corpus tooling | Isolated 20/20 complete; interactions are future extension |
+| 6 | Multi-defect interaction scenarios not built | corpus tooling | Isolated scenarios 20/20 on their own declared detector; interactions are future extension |
 | 7 | Source registry contains some placeholder symbols (`SOA_CheckVoltageLimits` vs actual `SOA_CheckVoltages`) | shared | Known fabrication from initial generation; line ranges AST-verified where possible |
 | 8 | as_is unit-test executions TMS-002..005 recorded blocked (EXE-000002..005) — upstream CI runs not captured; local run infeasible (macOS unsupported, missing HALCoGen codegen + gdb) | as_is | Blocked, not fabricated; unblocking conditions in verification-evidence-report.md |
 | 9 | as_is host-run substantiation (EXE-001) — `sha256:placeholder` hashes, empty `output_hashes` | as_is | Recorded pass not independently substantiated |
@@ -589,9 +589,15 @@ severity/category. All 20 pass; 3/3 change lifecycle demonstrations pass.
 
 Every requirement chain from hazard to test execution is traceable in both profiles via
 typed links with complete metadata (rationale, provenance, review_state, change_suspect_status).
-All 80 links resolve (validated run 2026-09-19, LNK-039..058 included); all source and assumption references resolve; identity is unique per
-profile; the FTTI budget is coherent; 20/20 mutations and 3/3 change lifecycles are detected;
-and the acceptance suite passes all 8 gates.
+All links resolve (validated run 2026-09-29, 460 links, 0 dangling); all source and assumption
+references resolve; identity is unique per profile; the FTTI budget is coherent; 20/20 mutation
+scenarios are detected by the rule each one declares, and 3/3 change lifecycles are structurally
+complete; and the acceptance suite passes all 8 gates.
+
+The mutation-detection claim was repaired on 2026-09-29. It previously read as though
+severity and category matching made accidental passage impossible; it did not, because both are
+shared across rules and the same artifact can carry several unrelated defects. See
+`docs/artifacts/reports/scenario-validation-report.md` §3 and finding `FB2-REV-FND-000032`.
 
 The seven gaps above are explicitly recorded in the corpus (never fabricated): verification
 gaps appear as medium findings, evidence gaps are classified as blocked rather than invented,

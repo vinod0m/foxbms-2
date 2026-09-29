@@ -1,6 +1,6 @@
 {
  "id": "FB2-SCN-MUT-000003",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "scenario",
  "engineering_domain": "safety",
@@ -28,13 +28,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-10T00:00:00Z",
- "updated_at": "2026-09-10T00:00:00Z",
+ "updated_at": "2026-09-29T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-10T00:00:00Z",
    "author": "traceability_engineer",
    "description": "Mutation scenario: stale revision reference"
+  },
+  {
+   "revision": "2",
+   "date": "2026-09-29T00:00:00Z",
+   "author": "traceability_engineer",
+   "description": "Reconciled the expectation with the rule this scenario declares. declared detector 'Revision consistency checker (stale revision)' -> rule id 'revision_consistency_checker'; expected category verification -> consistency; expected description de-duplicated: it had been copy-pasted from SCN-MUT-020 and did not describe this scenario's defect. Severity and category are the rule's values and are authoritative; the rule was not changed to fit this fixture. severity unchanged. The category was verification only because the expectation had been copy-pasted from another scenario; the rule emits consistency, and a current revision that does not appear in the record's own revision history is a consistency defect, not a statement about verification. The rule is authoritative.The scenario's injected defect, its affected artifacts and its declared detector rule are unchanged. This expectation had never been checked: the scenario harness matched any finding of the right severity on the right artifact id, so a standing finding on the same artifact satisfied it. Remediation of finding FB2-REV-FND-000032."
   }
  ],
  "scenario_type": "mutation",
@@ -51,12 +57,12 @@
   "FB2-SAF-FSR-000001"
  ],
  "trigger": "Corpus validation check on revision consistency",
- "expected_detector": "Revision consistency checker (stale revision)",
+ "expected_detector": "revision_consistency_checker",
  "expected_finding": {
   "finding_id": "FB2-FND-MUT-000003",
   "severity": "medium",
-  "category": "verification",
-  "description": "safety requirement has no verifies/validates link"
+  "category": "consistency",
+  "description": "revision 99 not found in revision_history"
  },
  "impact_paths": [
   "Traceability links referencing FB2-SAF-FSR-000001 revision 1 now point to stale revision",

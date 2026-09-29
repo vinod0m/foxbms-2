@@ -25,6 +25,7 @@ import json
 import os
 import re
 import sys
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -86,6 +87,65 @@ BASE_ONLY_TYPES = {
 BASELINE_COMMIT = "308028fb"
 FINAL_STATUS = "synthetic_ready_with_limitations"
 
+# Stable identifiers for every detection rule the tool can emit. The scenario
+# harness resolves a scenario's declared detector against this map, so a rule
+# that is claimed by a scenario but is not implemented fails the scenario with
+# an explicit "declared detector does not exist" message instead of silently
+# matching a neighbouring finding.
+RULE_IDS = {
+    "schema_file_check",
+    "artifact_schema_validation",
+    "base_schema_validation",
+    "unknown_profile",
+    "profile_contamination",
+    "production_authorized_rejected",
+    "human_approval_rejected",
+    "verification_credit_rejected",
+    "revision_consistency_checker",
+    "identity_duplicate_within_profile",
+    "json_unparseable",
+    "schema_missing",
+    "link_invalid_relation_type",
+    "link_forbidden_relation_type",
+    "link_missing_metadata",
+    "link_dangling_endpoint",
+    "provenance_ref_unresolved",
+    "traceability_checker",
+    "safety_goal_mitigates_hazard",
+    "verification_traceability_checker",
+    "execution_kind_orthogonality",
+    "ftti_budget_consistency_checker",
+    "parameter_unit_consistency",
+    "hsi_interface_consistency",
+    "parameter_threshold_order",
+    "safety_requirement_completeness_checker",
+    "asil_assignment_validator",
+    "requirement_applicability_validator",
+    "diagnostic_coverage_claim_validator",
+    "configuration_consistency",
+    "execution_kind_classifier",
+    "evidence_reference_validator",
+    "identity_uniqueness_checker",
+    "source_anchor_drift_detector",
+    "production_authorization_governance_checker",
+    "change_impact_analyzer",
+    "incomplete_propagation",
+    "refinement_cycle_detector",
+    "inventory_source_count",
+    "inventory_modules",
+    "inventory_features",
+}
+
+# ISO 26262-3:2018 Table 4, ASIL determination from severity and exposure.
+# Used to re-derive an ASIL from a record's own recorded S/E ratings so that a
+# downgrade of the ASIL field is detectable without removing the justification.
+ASIL_FROM_SE = {
+    "S0": {"E1": "QM", "E2": "QM", "E3": "QM", "E4": "QM"},
+    "S1": {"E1": "QM", "E2": "QM", "E3": "QM", "E4": "ASIL_A"},
+    "S2": {"E1": "QM", "E2": "QM", "E3": "ASIL_A", "E4": "ASIL_B"},
+    "S3": {"E1": "QM", "E2": "ASIL_A", "E3": "ASIL_C", "E4": "ASIL_D"},
+}
+
 
 def utcnow():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -94,6 +154,28 @@ def utcnow():
 def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+_IMPLEMENTED_RULES = None
+
+
+def _as_ms(value):
+    """Coerce a declared interval/budget value to a number, or None.
+
+    Accepts a bare number and the {"value": n} / {"value_ms": n} envelopes the
+    corpus uses. Returns None for anything that is not a number, so an absent or
+    non-numeric declaration is simply not a declaration.
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return value
+    if isinstance(value, dict):
+        for key in ("value", "value_ms"):
+            inner = value.get(key)
+            if isinstance(inner, (int, float)) and not isinstance(inner, bool):
+                return inner
+    return None
 
 
 def sha256_file(path):
@@ -105,18 +187,39 @@ def sha256_file(path):
 
 
 class Findings:
-    """Accumulates validation findings."""
+    """Accumulates validation findings.
+
+    Every finding carries a stable ``rule`` identifier. That identifier is the
+    only sound way to decide whether a detection is the one a mutation scenario
+    claims to exercise: severity and category are shared by many rules, and the
+    artifact id is shared by whatever defects that artifact happens to carry.
+    The scenario harness matches on ``rule`` (see _match_scenario_finding), so
+    a rule that is not named by a scenario can never satisfy that scenario and
+    a rule that is named but does not exist fails the scenario loudly.
+    """
 
     def __init__(self):
         self.items = []
 
-    def add(self, severity, category, artifact_id, description):
+    def add(self, severity, category, artifact_id, description, rule="unattributed"):
         self.items.append({
             "severity": severity,
             "category": category,
             "artifact_id": artifact_id,
             "description": description,
+            "rule": rule,
         })
+
+    def rule_ids(self):
+        return {f["rule"] for f in self.items}
+
+    def signature(self):
+        """Identity of a finding for baseline subtraction: the finding minus
+        nothing. Two runs of the same rule against the same artifact with the
+        same text are the same finding, so a standing defect that predates a
+        mutation cannot be counted as a detection of that mutation."""
+        return {(f.get("rule"), f.get("artifact_id"), f.get("category"),
+                 f.get("description")) for f in self.items}
 
     @property
     def error_count(self):
@@ -153,7 +256,7 @@ class CorpusTool:
             try:
                 self.schemas[p.name] = load_json(p)
             except Exception as e:
-                self.findings.add("critical", "schema", p.name, f"schema unparseable: {e}")
+                self.findings.add("critical", "schema", p.name, f"schema unparseable: {e}", "schema_file_check")
 
     def iter_corpus_artifacts(self):
         """Yield (path, dict) for every artifact-shaped JSON under corpus/, reviews/, scenarios/."""
@@ -166,7 +269,7 @@ class CorpusTool:
                 try:
                     yield p, load_json(p)
                 except Exception as e:
-                    self.findings.add("critical", "json", str(p), f"unparseable JSON: {e}")
+                    self.findings.add("critical", "json", str(p), f"unparseable JSON: {e}", "json_unparseable")
 
     def iter_scenario_artifacts(self):
         for p in sorted(self.scenarios_dir.rglob("*.json")):
@@ -219,7 +322,8 @@ class CorpusTool:
                 key = (profile, aid)
                 if key in index and index[key][1] != d:
                     self.findings.add("high", "identity", aid,
-                                      f"duplicate artifact id within profile {profile} at {p} and {index[key][0]}")
+                                      f"duplicate artifact id within profile {profile} at {p} and {index[key][0]}",
+                                      "identity_duplicate_within_profile")
                 index[key] = (p, d)
         return index
 
@@ -248,13 +352,14 @@ class CorpusTool:
         claimed = src_inv.get("summary", {}).get("total_source_files")
         if claimed != actual_files:
             self.findings.add("high", "inventory", "source-inventory",
-                              f"source file count mismatch: inventory={claimed} actual={actual_files}")
+                              f"source file count mismatch: inventory={claimed} actual={actual_files}",
+                              "inventory_source_count")
             ok = False
 
         # Module check
         claimed_modules = len(src_inv.get("modules", []))
         if claimed_modules == 0:
-            self.findings.add("medium", "inventory", "source-inventory", "no modules recorded")
+            self.findings.add("medium", "inventory", "source-inventory", "no modules recorded", "inventory_modules")
             ok = False
 
         # Features / variants presence
@@ -262,7 +367,7 @@ class CorpusTool:
         n_var = len(var_inv.get("variants", []))
         if n_feat < 20:
             self.findings.add("medium", "inventory", "feature-inventory",
-                              f"only {n_feat} features (<20)")
+                              f"only {n_feat} features (<20)", "inventory_features")
             ok = False
 
         print(f"Inventory: {claimed}/{actual_files} source files, "
@@ -279,7 +384,7 @@ class CorpusTool:
                 print(f"  \u2713 {name}")
             except Exception as e:
                 print(f"  \u2717 {name}: {e}")
-                self.findings.add("high", "schema", name, f"invalid schema: {e}")
+                self.findings.add("high", "schema", name, f"invalid schema: {e}", "schema_file_check")
                 ok = False
         return ok
 
@@ -317,7 +422,7 @@ class CorpusTool:
         if schema_name:
             schema = self.schemas.get(schema_name)
             if schema is None:
-                self.findings.add("high", "schema", aid, f"schema {schema_name} missing")
+                self.findings.add("high", "schema", aid, f"schema {schema_name} missing", "schema_missing")
                 ok = False
             else:
                 v = schema_cache.get(schema_name)
@@ -326,7 +431,8 @@ class CorpusTool:
                     schema_cache[schema_name] = v
                 for err in sorted(v.iter_errors(d), key=lambda e: e.path):
                     self.findings.add("high", "schema", aid,
-                                      f"schema violation at {'/'.join(map(str, err.path)) or '<root>'}: {err.message}")
+                                      f"schema violation at {'/'.join(map(str, err.path)) or '<root>'}: {err.message}",
+                                      "artifact_schema_validation")
                     ok = False
         else:
             base = self.schemas.get("artifact-base.schema.json")
@@ -337,38 +443,57 @@ class CorpusTool:
                     schema_cache["artifact-base.schema.json"] = v
                 for err in sorted(v.iter_errors(d), key=lambda e: e.path):
                     self.findings.add("high", "schema", aid,
-                                      f"base schema violation at {'/'.join(map(str, err.path)) or '<root>'}: {err.message}")
+                                      f"base schema violation at {'/'.join(map(str, err.path)) or '<root>'}: {err.message}",
+                                      "base_schema_validation")
                     ok = False
 
         # profile isolation + governance semantics
         profile = d.get("profile")
         if profile not in ("as_is", "synthetic_reference") and profile is not None:
-            self.findings.add("high", "profile", aid, f"unknown profile '{profile}'")
+            self.findings.add("high", "profile", aid, f"unknown profile '{profile}'", "unknown_profile")
             ok = False
         if profile == "as_is" and d.get("origin") == "synthetic":
             self.findings.add("high", "provenance", aid,
-                              "as_is artifact with forbidden origin=synthetic (profile contamination)")
+                              "as_is artifact with forbidden origin=synthetic (profile contamination)",
+                              "profile_contamination")
             ok = False
         if d.get("production_authorized") is True:
             self.findings.add("critical", "provenance", aid,
-                              "production_authorized must be false (synthetic corpus)")
+                              "production_authorized must be false (synthetic corpus)",
+                              "production_authorized_rejected")
             ok = False
         if d.get("human_approval_status") == "approved":
             self.findings.add("high", "provenance", aid,
-                              "human_approval_status must remain pending (no human approval performed)")
+                              "human_approval_status must remain pending (no human approval performed)",
+                              "human_approval_rejected")
             ok = False
         if d.get("product_verification_credit") is True:
             self.findings.add("high", "provenance", aid,
-                              "product_verification_credit must be false")
+                              "product_verification_credit must be false",
+                              "verification_credit_rejected")
             ok = False
-        # revision history must contain current revision
+        # revision history must contain current revision. The rule itself lives in
+        # _check_revision_consistency so that the mutation-scenario harness, which
+        # does not run schema validation, exercises exactly the same logic.
+        ok &= self._check_revision_consistency(aid, d)
+        return ok
+
+    def _check_revision_consistency(self, aid, d):
+        """A record's current revision must appear in its own revision history.
+
+        Extracted from _validate_artifact so that the scenario harness and the
+        validator share one implementation. Previously the rule existed only
+        inside _validate_artifact, which _apply_mutation_and_detect never calls,
+        so SCN-MUT-003 could not reach its declared detector at all.
+        """
         rev = str(d.get("revision"))
         hist_revs = [str(h.get("revision")) for h in d.get("revision_history", [])]
         if rev not in hist_revs:
             self.findings.add("medium", "consistency", aid,
-                              f"revision {rev} not found in revision_history")
-            ok = False
-        return ok
+                              f"revision {rev} not found in revision_history",
+                              "revision_consistency_checker")
+            return False
+        return True
 
     def _validate_links(self, links, index):
         ok = True
@@ -378,24 +503,28 @@ class CorpusTool:
             profile = l.get("_profile", "unknown")
             if rt not in ALLOWED_RELATION_TYPES:
                 self.findings.add("high", "traceability", lid,
-                                  f"invalid relation_type '{rt}' (not in allowed set)")
+                                  f"invalid relation_type '{rt}' (not in allowed set)",
+                                  "link_invalid_relation_type")
                 ok = False
             elif rt in STRICT_FORBIDDEN_RELATION_TYPES:
                 # related_to is forbidden in canonical registries; mutations introduce it to test detection
                 self.findings.add("high", "traceability", lid,
-                                  f"relation_type '{rt}' forbidden (not in allowed set)")
+                                  f"relation_type '{rt}' forbidden (not in allowed set)",
+                                  "link_forbidden_relation_type")
                 ok = False
             # required metadata
             for field in ("rationale", "provenance", "review_state", "change_suspect_status"):
                 if field not in l:
-                    self.findings.add("medium", "traceability", lid, f"missing link metadata '{field}'")
+                    self.findings.add("medium", "traceability", lid, f"missing link metadata '{field}'",
+                                  "link_missing_metadata")
                     ok = False
             # endpoints exist - profile-aware lookup
             for end in ("source_id", "target_id"):
                 eid = l.get(end)
                 if eid and (profile, eid) not in index:
                     self.findings.add("high", "traceability", lid,
-                                      f"dangling link endpoint {end}={eid} (profile={profile})")
+                                      f"dangling link endpoint {end}={eid} (profile={profile})",
+                                      "link_dangling_endpoint")
                     ok = False
         return ok
 
@@ -417,12 +546,99 @@ class CorpusTool:
             for ref in d.get("source_refs", []):
                 if anchors and ref not in anchors:
                     self.findings.add("medium", "provenance", aid,
-                                      f"source_ref '{ref}' not in source-registry")
+                                      f"source_ref '{ref}' not in source-registry",
+                                      "provenance_ref_unresolved")
             for ref in d.get("assumption_refs", []):
                 if assumptions and ref not in assumptions:
                     self.findings.add("medium", "provenance", aid,
-                                      f"assumption_ref '{ref}' not in assumption-registry")
+                                      f"assumption_ref '{ref}' not in assumption-registry",
+                                      "provenance_ref_unresolved")
         return ok
+
+    def _resolve_ftti_ms(self, aid, d, param_values):
+        """Resolve the fault tolerant time interval for one safety goal.
+
+        Returns (value_ms, source_description, scatter_findings).
+
+        Precedence, in order:
+          1. `ftti.parameter_ref` - a binding to the parameter registry, which is
+             the authoritative home of a parameter value in this corpus.
+          2. `ftti_ms` / `ftti` - the spellings the rule originally declared.
+          3. `fault_tolerant_time_interval_ms` and
+             `timing_budget.total_ftti_ms` - the spellings FB2-SAF-SGO-000001
+             actually carries.
+
+        Every declaration that is present is compared against the resolved value,
+        so a record that restates the interval inconsistently - the scattering the
+        corpus forbids - is reported rather than silently resolved in its favour.
+        """
+        declarations = {}  # field label -> numeric value
+        ref = None
+        ftti_field = d.get("ftti")
+        if isinstance(ftti_field, dict):
+            ref = ftti_field.get("parameter_ref")
+        for label in ("ftti_ms", "ftti", "fault_tolerant_time_interval_ms"):
+            val = _as_ms(d.get(label))
+            if val is not None:
+                declarations[label] = val
+        budget = d.get("timing_budget")
+        if isinstance(budget, dict):
+            val = _as_ms(budget.get("total_ftti_ms"))
+            if val is not None:
+                declarations["timing_budget.total_ftti_ms"] = val
+
+        resolved = source = None
+        if ref is not None:
+            if ref not in param_values:
+                return None, f"unresolved parameter_ref {ref}", [
+                    f"safety goal {aid} binds its FTTI to parameter {ref}, which is not in any parameter registry"
+                ]
+            resolved = param_values[ref]
+            source = f"parameter {ref}"
+        if resolved is None and declarations:
+            label, value = next(iter(declarations.items()))
+            resolved, source = value, label
+
+        scatter = []
+        if resolved is not None:
+            for label, val in sorted(declarations.items()):
+                if float(val) != float(resolved):
+                    scatter.append(
+                        f"safety goal {aid} declares the FTTI inconsistently: {label}={val} "
+                        f"but the interval is {resolved} ms (from {source}); a parameter value "
+                        f"must have one authoritative home")
+        return resolved, source or "no declared interval", scatter
+
+    def _serial_budget_ms(self, d):
+        """Serial (non-overlapping) time budget parts of a safety goal, in ms.
+
+        Excluded, because none of them is a unit of serial work:
+          - the interval itself and any total (`total_*`, `*_total*`, `ftti*`)
+          - margin and slack entries, which are the headroom left after the work
+          - entries the record itself marks as parallel
+        The allocation sub-object is the corpus's home for the parts and is
+        included; the previous form of this rule ignored it entirely.
+        """
+        def _serial_from(mapping):
+            out = []
+            if not isinstance(mapping, dict):
+                return out
+            for k, v in mapping.items():
+                if not isinstance(v, (int, float)) or isinstance(v, bool):
+                    continue
+                kl = str(k).lower()
+                if "margin" in kl or "slack" in kl or "parallel" in kl:
+                    continue
+                if "total" in kl or "ftti" in kl:
+                    continue
+                out.append(v)
+            return out
+
+        budget = d.get("timing_budget")
+        parts = _serial_from(budget)
+        if isinstance(budget, dict):
+            parts += _serial_from(budget.get("allocation"))
+        return parts
 
     def _validate_semantic_rules(self, index, links):
         """Semantic consistency rules (subset of the 10 check categories)."""
@@ -439,7 +655,8 @@ class CorpusTool:
         for fsr in fsr_ids:
             if fsr not in parent_of:
                 self.findings.add("high", "traceability", fsr,
-                                  "FSR has no parent safety goal (missing refines link)")
+                                  "FSR has no parent safety goal (missing refines link)",
+                                  "traceability_checker")
                 ok = False
         # Rule: safety goal mitigates a hazard
         sgo_ids = [_id(k) for k in index if "-SGO-" in _id(k)]
@@ -447,7 +664,8 @@ class CorpusTool:
         for sgo in sgo_ids:
             if sgo not in mitigates:
                 self.findings.add("medium", "traceability", sgo,
-                                  "safety goal has no mitigates link to hazard")
+                                  "safety goal has no mitigates link to hazard",
+                                  "safety_goal_mitigates_hazard")
         # Rule: requirements of safety classification need verifies or validates link.
         # Endpoint: the requirement is the TARGET of the link. Master prompt section 13 declares
         # "verifies: verification measure -> requirement/design" and "validates: validation measure
@@ -467,7 +685,8 @@ class CorpusTool:
             if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety":
                 if aid not in verified:
                     self.findings.add("medium", "verification", aid,
-                                      "safety requirement has no verifies/validates link")
+                                      "safety requirement has no verifies/validates link",
+                                      "verification_traceability_checker")
         # Rule: execution_kind / outcome orthogonality
         for key, (p, d) in index.items():
             aid = _id(key)
@@ -475,24 +694,53 @@ class CorpusTool:
                 ek = d.get("execution_kind")
                 oc = d.get("outcome")
                 if ek not in (None, "none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"):
-                    self.findings.add("high", "evidence", aid, f"invalid execution_kind '{ek}'")
+                    self.findings.add("high", "evidence", aid, f"invalid execution_kind '{ek}'",
+                                      "execution_kind_orthogonality")
                     ok = False
                 if oc not in (None, "pass", "fail", "inconclusive", "not_run", "blocked"):
-                    self.findings.add("high", "evidence", aid, f"invalid outcome '{oc}'")
+                    self.findings.add("high", "evidence", aid, f"invalid outcome '{oc}'",
+                                      "execution_kind_orthogonality")
                     ok = False
-        # Rule: timing budget coherence for safety goal (FTTI >= sum of serial budget parts)
+        # Rule: FTTI budget consistency checker (MUT-006)
+        # A safety goal must close inside the fault tolerant time interval.
+        #
+        # Two defects in the previous form of this rule are corrected here, and
+        # both corrections make it stricter, not looser:
+        #   1. It read the interval only from `ftti_ms` / `ftti`. No safety goal
+        #      in this corpus carries either spelling, so the rule could never
+        #      fire on its own scenario's record (SCN-MUT-006) - it silently
+        #      `continue`d on every artifact. The interval is now resolved from
+        #      the parameter registry (the authoritative source, FB2-PRM-000004
+        #      ftti_ms = 100) when the record references a parameter, and from
+        #      every field name the corpus actually uses otherwise.
+        #   2. It counted `timing_budget.total_ftti_ms` - the interval itself -
+        #      as one of the serial budget parts, so the sum it compared against
+        #      the interval always contained the interval. It also ignored
+        #      `timing_budget.allocation`, which is where the corpus actually
+        #      keeps the serial parts, so it never summed the real budget. The
+        #      serial sum is now taken from the allocation and from any other
+        #      numeric budget entry, with the interval, totals, margins and
+        #      explicitly parallel entries excluded.
+        # A third check is added: because the corpus forbids scattering a
+        # parameter value, every declaration of the interval on the same record
+        # must agree with the registry and with each other.
+        param_values = {pid: prm.get("value") for pid, prm in self._iter_parameters(index)}
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "safety_goal":
-                ftti = (d.get("ftti_ms") or d.get("ftti") or {}).get("value") if isinstance(d.get("ftti_ms") or d.get("ftti"), dict) else d.get("ftti_ms")
+                ftti, ftti_source, scatter = self._resolve_ftti_ms(aid, d, param_values)
+                for detail in scatter:
+                    self.findings.add("high", "consistency", aid, detail,
+                                      "ftti_budget_consistency_checker")
+                    ok = False
                 if ftti is None:
                     continue
-                budget = d.get("timing_budget") or {}
-                serial = [v for k, v in budget.items()
-                          if isinstance(v, (int, float)) and "parallel" not in k and "margin" not in k]
+                serial = self._serial_budget_ms(d)
                 if serial and sum(serial) > float(ftti):
                     self.findings.add("high", "consistency", aid,
-                                      f"timing budget {sum(serial)}ms exceeds FTTI {ftti}ms")
+                                      f"timing budget {sum(serial)}ms exceeds FTTI {ftti}ms "
+                                      f"(interval resolved from {ftti_source})",
+                                      "ftti_budget_consistency_checker")
                     ok = False
 
         # Load source registry for provenance checks
@@ -511,10 +759,12 @@ class CorpusTool:
                 if unit in ("V", "A", "W", "Hz") and isinstance(value, (int, float)):
                     if unit == "V" and value < 10 and value > 0.1:
                         self.findings.add("medium", "consistency", pid,
-                                          f"parameter {pid} unit is V but value {value} suggests mV (missing scaling)")
+                                          f"parameter {pid} unit is V but value {value} suggests mV (missing scaling)",
+                                          "parameter_unit_consistency")
                     elif unit == "A" and value < 10 and value > 0.1:
                         self.findings.add("medium", "consistency", pid,
-                                          f"parameter {pid} unit is A but value {value} suggests mA (missing scaling)")
+                                          f"parameter {pid} unit is A but value {value} suggests mA (missing scaling)",
+                                          "parameter_unit_consistency")
 
         # Rule: HSI/SW interface consistency checker (MUT-005)
         # Two layers:
@@ -559,7 +809,8 @@ class CorpusTool:
                 if _polarity_mismatch(sig):
                     self.findings.add("high", "traceability", hsi_id,
                                       f"HSI/HW interface mismatch for signal {sig_name} "
-                                      f"(polarity): HSI={sig.get('polarity')}, HW={sig.get('timing')}")
+                                      f"(polarity): HSI={sig.get('polarity')}, HW={sig.get('timing')}",
+                                      "hsi_interface_consistency")
                     continue
                 # (a) cross-check against hardware requirement signals
                 for hw_id, hw in hw_tsr_artifacts.items():
@@ -573,7 +824,8 @@ class CorpusTool:
                             if hv is not None and wv is not None and hv != wv:
                                 self.findings.add("high", "traceability", hsi_id,
                                                   f"HSI/HW interface mismatch for signal {sig_name} "
-                                                  f"({field}): HSI={hv}, HW={wv}")
+                                                  f"({field}): HSI={hv}, HW={wv}",
+                                                  "hsi_interface_consistency")
 
         # Rule: FTTI budget consistency checker (MUT-006) - already implemented above
 
@@ -589,12 +841,14 @@ class CorpusTool:
                 if "max" in name.lower():
                     if not (warning < derating < shutdown):
                         self.findings.add("high", "consistency", pid,
-                                          f"parameter {pid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
+                                          f"parameter {pid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}",
+                                          "parameter_threshold_order")
                         ok = False
                 elif "min" in name.lower():
                     if not (warning > derating > shutdown):
                         self.findings.add("high", "consistency", pid,
-                                          f"parameter {pid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}")
+                                          f"parameter {pid} threshold order violated: warning={warning}, derating={derating}, shutdown={shutdown}",
+                                          "parameter_threshold_order")
                         ok = False
 
         # Rule: Safety requirement completeness checker (MUT-008)
@@ -603,9 +857,27 @@ class CorpusTool:
             if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety" and "-FSR-" in _id(key):
                 if "fault_reaction" not in d or not d.get("fault_reaction"):
                     self.findings.add("medium", "verification", aid,
-                                      f"safety requirement {aid} has no fault_reaction defined")
+                                      f"safety requirement {aid} has no fault_reaction defined",
+                                      "safety_requirement_completeness_checker")
 
         # Rule: ASIL assignment validator (MUT-009)
+        #
+        # Three checks, in increasing strength:
+        #   1. the ASIL is one of the declared values;
+        #   2. an assigned ASIL carries a justification;
+        #   3. the assigned ASIL agrees with the classification the justification
+        #      itself derives.
+        #
+        # Check 3 is the one that makes this scenario meaningful. Checks 1 and 2
+        # alone can only be satisfied by the corpus being unhealthy: an unjustified
+        # downgrade is precisely a downgrade whose justification is *still present
+        # and says otherwise*, so a presence-only rule never fires on the injected
+        # defect and only fires on a corpus that has no justification at all. The
+        # scenario therefore passed on the very condition it claimed to test. The
+        # rule now re-derives the ASIL from the severity and exposure ratings the
+        # justification records, using ISO 26262-3:2018 Table 4, and compares it
+        # with the ASIL the record actually carries. A downgrade that leaves the
+        # derivation standing is now detected on a healthy corpus.
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "safety_goal":
@@ -614,10 +886,78 @@ class CorpusTool:
                     valid_asils = ["ASIL_A", "ASIL_B", "ASIL_C", "ASIL_D", "QM"]
                     if asil not in valid_asils:
                         self.findings.add("high", "verification", aid,
-                                          f"safety goal {aid} has invalid ASIL '{asil}'")
-                    if "asil_justification" not in d or not d.get("asil_justification"):
+                                          f"safety goal {aid} has invalid ASIL '{asil}'",
+                                          "asil_assignment_validator")
+                    justification = d.get("asil_justification")
+                    if not justification:
                         self.findings.add("medium", "verification", aid,
-                                          f"safety goal {aid} ASIL {asil} lacks justification")
+                                          f"safety goal {aid} ASIL {asil} lacks justification",
+                                          "asil_assignment_validator")
+                    else:
+                        sev = ((justification.get("severity") or {}).get("rating")
+                               if isinstance(justification.get("severity"), dict)
+                               else justification.get("severity"))
+                        exp = ((justification.get("exposure") or {}).get("rating")
+                               if isinstance(justification.get("exposure"), dict)
+                               else justification.get("exposure"))
+                        derived = None
+                        if sev and exp:
+                            row = ASIL_FROM_SE.get(str(sev).upper().strip())
+                            derived = row.get(str(exp).upper().strip()) if row else None
+                            if derived is None:
+                                self.findings.add("medium", "verification", aid,
+                                                  f"safety goal {aid} justification records severity "
+                                                  f"'{sev}'/exposure '{exp}', which is not a row/column of the "
+                                                  f"ISO 26262-3 ASIL determination table, so the ASIL "
+                                                  f"cannot be re-derived from it",
+                                                  "asil_assignment_validator")
+                        stated_derived = justification.get("derived_asil")
+                        if derived is not None and stated_derived and stated_derived != derived:
+                            self.findings.add("high", "verification", aid,
+                                              f"safety goal {aid} justification claims derived ASIL "
+                                              f"'{stated_derived}' but severity {sev} with exposure {exp} "
+                                              f"gives {derived}",
+                                              "asil_assignment_validator")
+                            ok = False
+                        if derived is not None and derived != asil:
+                            self.findings.add("high", "verification", aid,
+                                              f"safety goal {aid} is assigned ASIL {asil} but its own "
+                                              f"justification derives ASIL {derived} from severity {sev} "
+                                              f"and exposure {exp}; the assignment is not supported by the "
+                                              f"classification recorded with it",
+                                              "asil_assignment_validator")
+                            ok = False
+
+        # Rule: Requirement applicability validator (MUT-013)
+        #
+        # A requirement whose ASIL allocation is recorded as not applicable is
+        # claiming that no ASIL determination applies to it. That claim needs a
+        # recorded reason, exactly as an ASIL assignment does; without one the
+        # claim is unfalsifiable and the requirement silently drops out of every
+        # ASIL-derived view of the corpus.
+        #
+        # The marking is read from the field the schema itself declares.
+        # requirement.schema.json enumerates "not_applicable" as a value of
+        # safety_allocation.asil, so non-applicability is expressible in this data
+        # model and no new field had to be introduced. The justification is read
+        # from asil_justification, the field the corpus already uses for exactly
+        # this purpose on safety goals.
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if d.get("artifact_type") != "requirement":
+                continue
+            allocation = d.get("safety_allocation")
+            if not isinstance(allocation, dict):
+                continue
+            declared_asil = str(allocation.get("asil", "")).strip().lower()
+            if declared_asil != "not_applicable":
+                continue
+            if not d.get("asil_justification"):
+                self.findings.add("medium", "verification", aid,
+                                  f"requirement {aid} is marked not applicable (safety_allocation.asil) "
+                                  f"without an asil_justification recording why no ASIL determination "
+                                  f"applies to it",
+                                  "requirement_applicability_validator")
 
         # Rule: Diagnostic coverage claim validator (MUT-010)
         for key, (p, d) in index.items():
@@ -627,7 +967,8 @@ class CorpusTool:
                 if coverage:
                     if "diagnostic_coverage_evidence" not in d or not d.get("diagnostic_coverage_evidence"):
                         self.findings.add("high", "verification", aid,
-                                          f"FSR {aid} claims diagnostic coverage '{coverage}' without evidence")
+                                          f"FSR {aid} claims diagnostic coverage '{coverage}' without evidence",
+                                          "diagnostic_coverage_claim_validator")
 
         # Rule: Configuration consistency checker (MUT-011)
         # Checks configuration/combination fields on parameter-shaped artifacts,
@@ -645,7 +986,8 @@ class CorpusTool:
                     for excl in MUTUALLY_EXCLUSIVE:
                         if excl.issubset(set(config)):
                             self.findings.add("high", "consistency", aid,
-                                              f"configuration {aid} enables mutually exclusive options: {excl}")
+                                              f"configuration {aid} enables mutually exclusive options: {excl}",
+                                              "configuration_consistency")
                 return
             if not isinstance(config, dict):
                 return
@@ -654,7 +996,8 @@ class CorpusTool:
                     for excl in MUTUALLY_EXCLUSIVE:
                         if excl.issubset(set(val_opt)):
                             self.findings.add("high", "consistency", aid,
-                                              f"configuration {aid} enables mutually exclusive options: {excl}")
+                                              f"configuration {aid} enables mutually exclusive options: {excl}",
+                                              "configuration_consistency")
 
         for key, (p, d) in index.items():
             aid = _id(key)
@@ -676,15 +1019,18 @@ class CorpusTool:
                     evidence = d.get("evidence_refs") or []
                     if not evidence:
                         self.findings.add("high", "evidence", aid,
-                                          f"execution {aid} claims actual_host_run but has no evidence")
+                                          f"execution {aid} claims actual_host_run but has no evidence",
+                                          "execution_kind_classifier")
                     elif origin not in ("source_observed", None):
                         self.findings.add("medium", "evidence", aid,
                                           f"execution {aid} claims actual_host_run but origin is '{origin}' "
-                                          f"(fabricated evidence classification)")
+                                          f"(fabricated evidence classification)",
+                                          "execution_kind_classifier")
                 elif ek == "synthetic_fixture":
                     if "evidence_refs" not in d or not d.get("evidence_refs"):
                         self.findings.add("medium", "evidence", aid,
-                                          f"execution {aid} claims synthetic_fixture but lacks evidence")
+                                          f"execution {aid} claims synthetic_fixture but lacks evidence",
+                                          "execution_kind_classifier")
 
         # Rule: Evidence reference validator (MUT-014)
         # Build a set of all artifact IDs in the index
@@ -696,7 +1042,8 @@ class CorpusTool:
                     # Allow file paths as evidence references (they start with tests/ or src/)
                     if ref not in all_artifact_ids and not (isinstance(ref, str) and (ref.startswith("tests/") or ref.startswith("src/") or ref.endswith(".c") or ref.endswith(".h"))):
                         self.findings.add("high", "provenance", aid,
-                                          f"artifact {aid} references non-existent evidence {ref}")
+                                          f"artifact {aid} references non-existent evidence {ref}",
+                                          "evidence_reference_validator")
 
         # Rule: Identity uniqueness checker (profile-aware) (MUT-015)
         id_counts = {}
@@ -708,7 +1055,8 @@ class CorpusTool:
         for (profile, aid), count in id_counts.items():
             if count > 1:
                 self.findings.add("high", "traceability", aid,
-                                  f"duplicate artifact ID {aid} within profile {profile}")
+                                  f"duplicate artifact ID {aid} within profile {profile}",
+                                  "identity_uniqueness_checker")
 
         # Rule: Source anchor drift detector (MUT-016)
         sr = self.sources_dir / "source-registry.json"
@@ -722,7 +1070,8 @@ class CorpusTool:
                 for ref in d["source_refs"]:
                     if ref not in sources_registry:
                         self.findings.add("high", "provenance", aid,
-                                          f"artifact {aid} references non-existent source anchor {ref}")
+                                          f"artifact {aid} references non-existent source anchor {ref}",
+                                          "source_anchor_drift_detector")
             # location drift: a declared location.symbol must match the anchor's symbol
             loc = d.get("location")
             if isinstance(loc, dict):
@@ -749,7 +1098,8 @@ class CorpusTool:
                     if symbol_mismatch and path_mismatch:
                         self.findings.add("high", "provenance", aid,
                                           f"artifact {aid} location symbol '{declared_symbol}' drifts from "
-                                          f"anchor {ref} symbol '{anchor_symbol}'")
+                                          f"anchor {ref} symbol '{anchor_symbol}'",
+                                          "source_anchor_drift_detector")
                         drift_reported = True
 
         # Rule: Production authorization governance checker (MUT-017)
@@ -758,7 +1108,8 @@ class CorpusTool:
             if d.get("production_authorized") is True:
                 if d.get("human_approval_status") != "approved":
                     self.findings.add("high", "process", aid,
-                                      f"artifact {aid} has production_authorized=true but human_approval_status != approved")
+                                      f"artifact {aid} has production_authorized=true but human_approval_status != approved",
+                                      "production_authorization_governance_checker")
 
         # Rule: Change impact analyzer (MUT-018)
         # A changed parameter value must be reflected in the revision of every
@@ -773,7 +1124,8 @@ class CorpusTool:
                 required = d.get("required_updates") or []
                 if not suspect and not required:
                     self.findings.add("medium", "traceability", aid,
-                                      f"change {aid} has no suspect_links or required_updates")
+                                      f"change {aid} has no suspect_links or required_updates",
+                                      "change_impact_analyzer")
         # dependents of parameters: requirement/design/test artifacts that mention
         # a parameter id in parameter_refs, assumption_refs or references lists
         dependents = {}
@@ -810,7 +1162,8 @@ class CorpusTool:
                     if not dep_changed:
                         self.findings.add("high", "traceability", pid,
                                           f"parameter {pid} changed but dependent artifact "
-                                          f"{dep_id} has no matching revision entry (incomplete propagation)")
+                                          f"{dep_id} has no matching revision entry (incomplete propagation)",
+                                          "incomplete_propagation")
 
         # Rule: Refinement cycle detector (MUT-019)
         refines_graph = {}
@@ -836,7 +1189,8 @@ class CorpusTool:
             if node not in visited:
                 if has_cycle(node, visited, set()):
                     self.findings.add("high", "traceability", node,
-                                      f"circular refinement chain detected involving {node}")
+                                      f"circular refinement chain detected involving {node}",
+                                      "refinement_cycle_detector")
                     break
 
         return ok
@@ -2780,14 +3134,138 @@ class CorpusTool:
                         patched.add(prm["id"])
         return patched
 
+    # ------------------------------------------------- scenario detector plumbing
+
+    @contextmanager
+    def _suppress_rule(self, rule_id):
+        """Drop every finding emitted by one rule, for the duration of the block.
+
+        Used only by the self-tests, to demonstrate that a scenario's verdict
+        depends on its own declared detector and cannot be satisfied by a
+        neighbouring rule's finding. It models the rule not existing; it does
+        not change the rule.
+        """
+        original = self._run_detectors
+
+        def _filtered(index, links):
+            original(index, links)
+            self.findings.items = [f for f in self.findings.items if f.get("rule") != rule_id]
+
+        self._run_detectors = _filtered
+        try:
+            yield
+        finally:
+            self._run_detectors = original
+
+    @staticmethod
+    def _implemented_rules():
+        """Rule ids that some findings.add() call site in this file actually emits.
+
+        Derived from this module's own AST rather than from the RULE_IDS
+        declaration, so a scenario that names a detector no rule emits is a
+        detectable condition instead of a silent pass. Computed once per process.
+        """
+        global _IMPLEMENTED_RULES
+        if _IMPLEMENTED_RULES is not None:
+            return _IMPLEMENTED_RULES
+        import ast
+        src = Path(__file__).read_text(encoding="utf-8")
+        found = set()
+        for node in ast.walk(ast.parse(src)):
+            if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                    and node.func.attr == "add"
+                    and getattr(node.func.value, "attr", None) == "findings"):
+                continue
+            for arg in node.args[4:]:
+                if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                    found.add(arg.value)
+        _IMPLEMENTED_RULES = found
+        return found
+
+    def _run_detectors(self, index, links):
+        """Run every detector reachable from the scenario harness.
+
+        The revision-consistency rule is included explicitly. It used to live
+        only inside _validate_artifact, which this harness never called, so
+        SCN-MUT-003's declared detector was unreachable by construction.
+        """
+        self._validate_links(links, index)
+        self._validate_semantic_rules(index, links)
+        for key, (p, d) in index.items():
+            aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
+            if isinstance(d, dict) and d.get("revision") is not None:
+                self._check_revision_consistency(aid, d)
+
+    def _baseline_findings(self):
+        """Findings produced by the unmutated corpus. Used to subtract standing
+        defects from a scenario's detections (see _match_scenario_finding)."""
+        self.findings = Findings()
+        self._run_detectors(self.load_artifact_index(), self.load_links())
+        return self.findings
+
+    def _declared_detector(self, scenario):
+        """The rule id a scenario claims to exercise.
+
+        Read from the evaluator-only oracle manifest, because that is where the
+        reviewed expectations live; the ingestible scenario file carries a
+        human-readable label for the same rule. Returns None when neither names
+        a detector, which fails the scenario loudly.
+        """
+        ref = scenario.get("oracle_manifest_ref")
+        if ref:
+            mpath = self.scenarios_dir / "evaluator-only" / ref
+            if mpath.exists():
+                manifest = load_json(mpath)
+                for f in manifest.get("expected_findings", []):
+                    det = f.get("expected_detector")
+                    if det:
+                        return det, str(mpath.relative_to(self.artifacts_dir))
+        det = scenario.get("expected_detector")
+        if det:
+            return det, "scenario.expected_detector (no oracle manifest entry)"
+        return None, None
+
+    def _match_scenario_finding(self, detector, actual, baseline_sigs):
+        """Decide whether `detector` produced a detection caused by this mutation.
+
+        Three conditions, all required:
+
+          1. the detector is implemented. A scenario whose declared detector no
+             rule emits fails with an explicit message. This is what makes a
+             missing detector visible instead of letting a neighbouring rule's
+             finding stand in for it.
+          2. the detector does not already fire on the unmutated corpus. If it
+             does, the scenario is being satisfied by a standing defect and proves
+             nothing about its injected defect; that is reported as a failure.
+          3. after the mutation the detector produced a finding that was not in
+             the baseline. Baseline subtraction is what removes the possibility
+             of a pre-existing finding on the same artifact satisfying the
+             expectation - the self-certifying behaviour that this gate had.
+        """
+        if detector not in self._implemented_rules():
+            return False, (f"declared detector '{detector}' is not emitted by any rule in "
+                           f"{Path(__file__).name}; the scenario's defect is not detectable as written")
+        standing = [s for s in baseline_sigs if s[0] == detector]
+        if standing:
+            ids = sorted({s[1] for s in standing})
+            return False, (f"declared detector '{detector}' already fires on the unmutated corpus "
+                           f"for {ids}; the scenario would be satisfied by a standing defect, not by "
+                           f"its injected defect")
+        for f in actual:
+            if f.get("rule") == detector:
+                return True, f"{f['severity']}/{f['category']} on {f['artifact_id']}: {f['description']}"
+        return False, (f"declared detector '{detector}' is implemented and silent on the baseline but "
+                       f"produced no finding after the mutation; the patch did not inject a defect this "
+                       f"detector can see")
+
     def _apply_mutation_and_detect(self, scenario):
-        """Apply scenario patch to an in-memory corpus and return actual findings."""
+        """Apply a scenario patch to an in-memory corpus and return the findings
+        the detectors produce, with their rule ids."""
         patch = scenario.get("patch", {})
         op = patch.get("operation")
         affected_links = set(patch.get("affected_links", []))
         affected_ids = set(scenario.get("affected_ids", []))
         new_value = patch.get("new_value", {})
-        actual = []
 
         links = self.load_links()
         index = self.load_artifact_index()
@@ -2816,15 +3294,10 @@ class CorpusTool:
             if aid:
                 index[(prof, aid, "mutation")] = ("<mutation>", add)
 
-        # re-run relevant detection
-        self._validate_links(links, index)
-        self._validate_semantic_rules(index, links)
-        # filter findings to those referencing affected ids/links
-        affected = affected_ids | affected_links
-        for f in self.findings.items:
-            if f["artifact_id"] in affected or any(a in f["description"] for a in affected):
-                actual.append(f)
-        return actual
+        # re-run detection over the mutated corpus
+        self.findings = Findings()
+        self._run_detectors(index, links)
+        return list(self.findings.items)
 
     def cmd_scenario_test(self, scenario_id=None):
         muts = sorted((self.scenarios_dir / "mutations").glob("mutation-*.json"))
@@ -2841,29 +3314,57 @@ class CorpusTool:
         all_ok = True
         passed_mutations = 0
         results = []
+        # Standing defects are computed once. A scenario may only be satisfied by
+        # a finding that this mutation caused; see _match_scenario_finding.
+        baseline = self._baseline_findings()
+        baseline_sigs = baseline.signature()
         for p, d in all_scn:
             self.findings = Findings()  # fresh per scenario
             sid = d.get("scenario_id", p.stem)
             if d.get("scenario_type") == "mutation":
                 actual = self._apply_mutation_and_detect(d)
                 expected = d.get("expected_finding", {})
-                matched = False
-                for a in actual:
-                    if (expected.get("severity") in (None, a["severity"])
-                            and (not expected.get("category") or a["category"] == expected["category"])):
-                        matched = True
+                detector, detector_source = self._declared_detector(d)
+                if detector is None:
+                    matched, reason = False, (
+                        "scenario declares no detector: neither the oracle manifest nor "
+                        "expected_detector names a rule, so there is nothing to assert against")
+                else:
+                    matched, reason = self._match_scenario_finding(
+                        detector, actual, baseline_sigs)
                 status = "PASS" if matched else "FAIL"
                 if matched:
                     passed_mutations += 1
-                if not matched:
-                    all_ok = False
-                    print(f"  {status} {sid}: expected {expected.get('severity')} severity; "
-                          f"detected {len(actual)} matching-scope findings")
                 else:
-                    print(f"  {status} {sid}: expected {expected.get('severity')} severity; "
-                          f"detected {len(actual)} matching-scope findings")
+                    all_ok = False
+                # Severity/category agreement with the fixture is reported, never
+                # used to pass. Firing on the right rule is the detection; a
+                # fixture that states the wrong severity or category is a fixture
+                # defect, and is surfaced rather than absorbed by the gate.
+                emitted = next((f for f in actual if f.get("rule") == detector), None)
+                if emitted is not None:
+                    exp_sev, exp_cat = expected.get("severity"), expected.get("category")
+                    if (exp_sev and exp_sev != emitted["severity"]) or \
+                       (exp_cat and exp_cat != emitted["category"]):
+                        print(f"  {status} {sid}: declared detector '{detector}' -> detected on its "
+                              f"own rule; {len(actual)} finding(s) total after mutation")
+                        print(f"       FIXTURE MISMATCH: expectation says {exp_sev}/{exp_cat}, the rule "
+                              f"emits {emitted['severity']}/{emitted['category']}. The rule is authoritative; "
+                              f"the expectation must be corrected to state it.")
+                    else:
+                        print(f"  {status} {sid}: declared detector '{detector}' -> detected on its "
+                              f"own rule ({emitted['severity']}/{emitted['category']} on "
+                              f"{emitted['artifact_id']}); {len(actual)} finding(s) total after mutation")
+                else:
+                    print(f"  {status} {sid}: declared detector '{detector}' ({detector_source}): {reason}")
+                    print(f"       {len(actual)} finding(s) total after mutation: "
+                          + (", ".join(sorted({f.get('rule', '?') for f in actual})) or "none"))
                 results.append({"scenario_id": sid, "type": "mutation",
-                                "expected": expected, "actual": actual, "passed": matched})
+                                "declared_detector": detector,
+                                "detector_declared_in": detector_source,
+                                "detector_implemented": detector in self._implemented_rules(),
+                                "expected": expected, "actual": actual,
+                                "passed": matched, "reason": reason})
             else:
                 # change lifecycle: validate structural completeness
                 required = ["baseline_before", "trigger", "impact_analysis", "decision",
@@ -3101,6 +3602,215 @@ class CorpusTool:
             sr = load_json(self.sources_dir / "source-registry.json")
             return sr.get("repository_commit", "").startswith(BASELINE_COMMIT)
 
+        # ------------------------------------------------------------------
+        # Regression tests for the acceptance gate's own soundness. These exist
+        # because the gate used to be self-certifying: it accepted any finding
+        # of the expected severity on the scenario's affected artifact ids, so
+        # a standing defect inherited from the corpus satisfied scenarios whose
+        # own detector did not exist, was unreachable, or read a field the
+        # record did not carry. A test that only ever passes does not protect
+        # against that; these deliberately break the gate and require it to
+        # notice.
+        # ------------------------------------------------------------------
+
+        def _load_scenario(sid):
+            for sp in sorted((self.scenarios_dir / "mutations").glob("mutation-*.json")):
+                sd = load_json(sp)
+                if sd.get("scenario_id") == sid:
+                    return sd
+            raise KeyError(sid)
+
+        def t_scenarios_fire_on_their_own_detector():
+            # Every mutation scenario's declared detector must exist, must be
+            # silent on the unmutated corpus, and must fire after its own
+            # mutation. None may be satisfied by a neighbouring rule.
+            baseline = self._baseline_findings()
+            bsigns = baseline.signature()
+            bad = []
+            for sp in sorted((self.scenarios_dir / "mutations").glob("mutation-*.json")):
+                sd = load_json(sp)
+                sid = sd.get("scenario_id")
+                detector, _ = self._declared_detector(sd)
+                if detector is None:
+                    bad.append(f"{sid}: no declared detector")
+                    continue
+                self.findings = Findings()
+                actual = self._apply_mutation_and_detect(sd)
+                ok, reason = self._match_scenario_finding(detector, actual, bsigns)
+                if not ok:
+                    bad.append(f"{sid}: {reason}")
+                others = sorted({f.get("rule") for f in actual if f.get("rule") != detector})
+                if others:
+                    # Not a failure by itself, but the scenario must not be
+                    # passing because of one of these.
+                    bad.append(f"{sid}: unrelated rules also fired {others}; "
+                               f"verdict must rest on '{detector}' alone")
+            return not bad
+
+        def t_scenario_fails_when_own_detector_disabled():
+            # The core proof. Build a mutation that makes two different rules
+            # fire on the same artifact, declare one of them as the scenario's
+            # detector, then disable that detector. The scenario must fail while
+            # the other rule's finding is still present - and that other finding
+            # is exactly what the previous harness would have accepted, because
+            # it shares the expected severity and category and sits on the same
+            # affected artifact id. This is the self-certifying match, isolated.
+            declared = "diagnostic_coverage_claim_validator"
+            neighbour = "safety_requirement_completeness_checker"
+            inline = {
+                "scenario_id": "SCN-MUT-INLINE-PROBE",
+                "scenario_type": "mutation",
+                "affected_ids": ["FB2-SAF-FSR-000003"],
+                "expected_detector": declared,
+                "expected_finding": {"finding_id": "PROBE", "severity": "medium",
+                                     "category": "verification"},
+                "patch": {"operation": "modify", "affected_links": [],
+                          "new_value": {"fault_reaction": None,
+                                        "diagnostic_coverage": "99%"}},
+            }
+            baseline = self._baseline_findings()
+            bsigns = baseline.signature()
+            self.findings = Findings()
+            before = self._apply_mutation_and_detect(inline)
+            rules_before = {f["rule"] for f in before}
+            ok_before, _ = self._match_scenario_finding(declared, before, bsigns)
+            with self._suppress_rule(declared):
+                self.findings = Findings()
+                after = self._apply_mutation_and_detect(inline)
+            surviving = [f for f in after if f["artifact_id"] in set(inline["affected_ids"])]
+            ok_after, reason = self._match_scenario_finding(declared, after, bsigns)
+            # the surviving neighbour is what the old criterion would have matched
+            old_criterion_would_pass = any(
+                f["severity"] == inline["expected_finding"]["severity"]
+                and f["category"] == inline["expected_finding"]["category"]
+                for f in surviving)
+            return (rules_before == {declared, neighbour} and ok_before
+                    and not ok_after and bool(surviving)
+                    and {f["rule"] for f in surviving} == {neighbour}
+                    and old_criterion_would_pass
+                    and "produced no finding" in reason)
+
+        def t_scenario_with_unknown_detector_fails_loudly():
+            sd = dict(_load_scenario("SCN-MUT-010"))
+            sd["oracle_manifest_ref"] = "SCN-MUT-010/oracle-manifest.json"
+            detector = "a_rule_that_does_not_exist"
+            ok, reason = self._match_scenario_finding(detector, [], set())
+            return (not ok) and "not emitted by any rule" in reason
+
+        def t_scenario_rejected_when_standing_finding_would_satisfy_it():
+            # A finding that already exists on the unmutated corpus must not be
+            # able to satisfy a scenario. This is the exact failure mode the
+            # old harness permitted.
+            detector = "diagnostic_coverage_claim_validator"
+            standing = {(detector, "FB2-SAF-FSR-000003", "verification",
+                         "FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence")}
+            actual = [{"rule": detector, "severity": "high", "category": "verification",
+                       "artifact_id": "FB2-SAF-FSR-000003",
+                       "description": "FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence"}]
+            ok, reason = self._match_scenario_finding(detector, actual, standing)
+            return (not ok) and "already fires on the unmutated corpus" in reason
+
+        def t_requirement_applicability_rule():
+            # The new rule must fire on a not-applicable marking that carries no
+            # justification and stay silent when one is present. The marking is
+            # read from safety_allocation.asil, the field requirement.schema.json
+            # enumerates; no undeclared property is consulted.
+            def _run(rec):
+                self.findings = Findings()
+                index = {("synthetic_reference", "FB2-SAF-SEC-TEST-1"): ("synthetic_reference", rec)}
+                self._validate_semantic_rules(index, [])
+                return [f for f in self.findings.items
+                        if f["rule"] == "requirement_applicability_validator"]
+            base = {"id": "FB2-SAF-SEC-TEST-1", "artifact_type": "requirement",
+                    "engineering_domain": "safety", "profile": "synthetic_reference",
+                    "safety_allocation": {"asil": "not_applicable",
+                                          "safety_goal_ref": "FB2-SAF-SGO-000001",
+                                          "mitigation": "m"}}
+            unflagged = _run(dict(base))
+            justified = _run(dict(base, asil_justification={"reason": "because"}))
+            allocated = _run(dict(base, safety_allocation=dict(base["safety_allocation"],
+                                                               asil="ASIL_B")))
+            return (len(unflagged) == 1 and not justified and not allocated)
+
+        def t_asil_downgrade_detected_despite_justification():
+            # The rule must reject an ASIL the record's own justification
+            # contradicts, even though a justification is present. A
+            # presence-only check could never do this: it fires on absence, so
+            # it would have been satisfied by an unhealthy corpus and blind to
+            # the injected downgrade on a healthy one.
+            def _run(asil):
+                self.findings = Findings()
+                rec = {"id": "FB2-SAF-SGO-TEST-1", "artifact_type": "safety_goal",
+                       "profile": "synthetic_reference", "asil": asil,
+                       "asil_justification": {
+                           "severity": {"rating": "S3"}, "exposure": {"rating": "E4"},
+                           "derived_asil": "ASIL_D"}}
+                self._validate_semantic_rules({("synthetic_reference", "FB2-SAF-SGO-TEST-1"):
+                                               ("synthetic_reference", rec)}, [])
+                return [f for f in self.findings.items if f["rule"] == "asil_assignment_validator"]
+            honest = _run("ASIL_D")
+            downgraded = _run("ASIL_B")
+            no_justification = Findings()
+            self.findings = no_justification
+            self._validate_semantic_rules(
+                {("synthetic_reference", "FB2-SAF-SGO-TEST-2"): ("synthetic_reference",
+                 {"id": "FB2-SAF-SGO-TEST-2", "artifact_type": "safety_goal",
+                  "profile": "synthetic_reference", "asil": "ASIL_D"})}, [])
+            absent = [f for f in no_justification.items if f["rule"] == "asil_assignment_validator"]
+            return (not honest and len(downgraded) == 1
+                    and "derives ASIL ASIL_D" in downgraded[0]["description"]
+                    and downgraded[0]["severity"] == "high"
+                    and len(absent) == 1)
+
+        def t_ftti_resolved_from_bound_parameter_and_scatter_reported():
+            # The interval is resolved from the bound parameter registry entry,
+            # and a literal on the record that disagrees with it is reported
+            # rather than silently preferred.
+            self.findings = Findings()
+            index = {("synthetic_reference", "FB2-PRM-TEST-4"): ("synthetic_reference", {
+                "id": "FB2-PRM-TEST-4", "artifact_type": "parameter", "name": "ftti_ms",
+                "value": 100, "unit": "ms"})}
+            goal = {"id": "FB2-SAF-SGO-TEST-3", "artifact_type": "safety_goal",
+                    "profile": "synthetic_reference",
+                    "ftti": {"parameter_ref": "FB2-PRM-TEST-4"},
+                    "fault_tolerant_time_interval_ms": 100,
+                    "timing_budget": {"total_ftti_ms": 100,
+                                      "allocation": {"acquire_ms": 60, "react_ms": 25}}}
+            index[("synthetic_reference", "FB2-SAF-SGO-TEST-3")] = ("synthetic_reference", goal)
+            self._validate_semantic_rules(index, [])
+            clean = [f for f in self.findings.items
+                     if f["rule"] == "ftti_budget_consistency_checker"]
+            # 60 + 25 = 85 must not be reported, and the interval must not be
+            # counted as a serial part: no total, no margin, no ftti key.
+            self.findings = Findings()
+            goal2 = json.loads(json.dumps(goal))
+            goal2["fault_tolerant_time_interval_ms"] = 250  # drifted literal
+            index[("synthetic_reference", "FB2-SAF-SGO-TEST-3")] = ("synthetic_reference", goal2)
+            self._validate_semantic_rules(index, [])
+            scattered = [f for f in self.findings.items
+                         if f["rule"] == "ftti_budget_consistency_checker"]
+            self.findings = Findings()
+            goal3 = json.loads(json.dumps(goal))
+            goal3["timing_budget"]["allocation"]["react_ms"] = 90  # 60 + 90 > 100
+            index[("synthetic_reference", "FB2-SAF-SGO-TEST-3")] = ("synthetic_reference", goal3)
+            self._validate_semantic_rules(index, [])
+            overflow = [f for f in self.findings.items
+                        if f["rule"] == "ftti_budget_consistency_checker"]
+            return (not clean and len(scattered) == 1
+                    and "inconsistently" in scattered[0]["description"]
+                    and len(overflow) == 1
+                    and "exceeds FTTI 100" in overflow[0]["description"])
+
+        def t_revision_rule_reachable_from_scenario_path():
+            # The revision rule must be reachable from the mutation harness, not
+            # only from schema validation. SCN-MUT-003 depends on this.
+            sd = _load_scenario("SCN-MUT-003")
+            self.findings = Findings()
+            actual = self._apply_mutation_and_detect(sd)
+            mine = [f for f in actual if f["rule"] == "revision_consistency_checker"]
+            return bool(mine) and all("revision 99 not found in revision_history" == f["description"]
+                                      for f in mine)
+
         print("Running corpus toolchain self-tests...")
         check("valid schema accepted", t_valid_schema)
         check("invalid schema rejected", t_invalid_schema)
@@ -3118,6 +3828,22 @@ class CorpusTool:
         check("production_authorized=true rejected", t_authorized_rejected)
         check("export roundtrip deterministic", t_export_roundtrip)
         check("source registry pinned to baseline commit", t_source_drift)
+        check("every mutation scenario fires on its own declared detector",
+              t_scenarios_fire_on_their_own_detector)
+        check("scenario fails when its own detector is disabled (gate is not self-certifying)",
+              t_scenario_fails_when_own_detector_disabled)
+        check("scenario with an unimplemented detector fails loudly",
+              t_scenario_with_unknown_detector_fails_loudly)
+        check("standing finding cannot satisfy a scenario",
+              t_scenario_rejected_when_standing_finding_would_satisfy_it)
+        check("requirement applicability rule fires without justification, silent with it",
+              t_requirement_applicability_rule)
+        check("unjustified ASIL downgrade detected despite a present justification",
+              t_asil_downgrade_detected_despite_justification)
+        check("FTTI resolved from bound parameter; scatter and overflow reported",
+              t_ftti_resolved_from_bound_parameter_and_scatter_reported)
+        check("revision rule reachable from the scenario harness",
+              t_revision_rule_reachable_from_scenario_path)
         return all(passed for _, passed in tests)
 
 

@@ -298,17 +298,17 @@ fabricated to make a status true.
 | scope_accounting | 1/1 | 100% | complete |
 | artifact_population | 13/13 | 100% | complete |
 | standards_mapping | 44/44 | 100% | every locked item has a disposition — but 6 processes and 2 ISO parts are `gap` |
-| source_grounding | 76/154 | 49% | 78 records carry no `source_refs`; mostly synthetic, which is expected |
-| traceability_integrity | 283/283 | 100% | 0 dangling |
-| semantic_consistency_checks | 10/10 | 100% | 9 findings, 0 errors |
-| automated_review_coverage | 82/123 | 67% | 41 unique IDs uncovered |
-| verification_planning | 16/7 | 229% | over-covered; a ratio, not a score |
-| actual_product_evidence | 0/16 | 0% | blocked by policy; no target-hardware member in the enum |
-| synthetic_fixture_coverage | 82/43 | 191% | over-covered |
-| negative_scenario_validation | 20/20 | 100% | plus 3/3 change lifecycles |
+| source_grounding | 80/223 | 36% | 143 records carry no `source_refs`; mostly synthetic, which is expected |
+| traceability_integrity | 460/460 | 100% | 0 dangling |
+| semantic_consistency_checks | 10/10 | 100% | 0 findings, 0 errors |
+| automated_review_coverage | 144/187 | 77% | 43 unique IDs uncovered |
+| verification_planning | 25/7 | 357% | over-covered; a ratio, not a score |
+| actual_product_evidence | 0/25 | 0% | blocked by policy; no target-hardware member in the enum |
+| synthetic_fixture_coverage | 148/43 | 344% | over-covered |
+| negative_scenario_validation | 20/20 | 100% | scenarios **present**; detection is gate 5/8 — plus 3/3 change lifecycles |
 | export_reproducibility | 1/1 | 100% | manifest present, hashes stable |
-| human_approval | 0/154 | 0% | pending; none performed |
-| production_authorization | 0/154 | 0% | false; by policy |
+| human_approval | 0/223 | 0% | pending; none performed |
+| production_authorization | 0/223 | 0% | false; by policy |
 
 ## 6. Remediation Pass — 7 Record Defects and 1 Rule Defect
 

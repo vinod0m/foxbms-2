@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-29T14:03:49Z |
+| Generated | 2026-09-29T17:10:59Z |
 
 ## Scope
 
@@ -528,7 +528,7 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 
 ##### Execution `FB2-VER-EXE-000012` — Execution: DIAG flag table update (tests/unit/app/engine/config/test_diag_cfg.c) - real macOS host run, FAILING
 
-- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **PASS**
 - **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
 - **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/engine/config/test_diag_cfg.c`
 
@@ -543,6 +543,18 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - **Test measure**: `FB2-VER-TMS-000003` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
 - **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
 - **Evidence refs**: `tests/unit/app/engine/database/database.h`, `tests/unit/app/engine/diag/test_diag.c`
+
+##### Execution `FB2-VER-EXE-000015` — Execution: foxBMS 2 SIL host unit-test sweep, all 313 tests (macOS arm64)
+
+- **Test measure**: `FB2-VER-TMS-000001..000005` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `tests/unit/app/driver/spi/test_spi.c`, `tests/unit/app/driver/mcu/test_mcu.c`, `src/app/driver/spi/spi.c`, `src/app/driver/mcu/mcu.c`
+
+##### Execution `FB2-VER-EXE-000016` — Execution: 200 HALCoGen-blocked tests under the SIL harness (macOS arm64)
+
+- **Test measure**: `FB2-VER-TMS-000004` | **Execution kind**: `actual_host_run` | **Outcome**: **FAIL**
+- **Environment**: arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0); ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]; tools: ceedling 1.1.9-2209dc2, cexception 1.3.5, clang 17.0.0, cmock 2.7.2, gcc 17.0.0, ruby 4.0.7, unity 2.7.2
+- **Evidence refs**: `FB2-VER-EXE-000015`, `tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c`
 
 ##### Execution `FB2-VER-EXE-000001` — Execution: FB2-VER-TMS-000001 (synthetic_fixture)
 
@@ -668,4 +680,4 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 
 ---
 
-*Generated: 2026-09-29T14:03:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-09-29T17:10:59Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

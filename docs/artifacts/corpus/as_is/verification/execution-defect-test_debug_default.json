@@ -1,6 +1,6 @@
 {
   "id": "FB2-VER-EXE-000011",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "execution",
   "engineering_domain": "verification",
@@ -28,13 +28,19 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T08:15:33Z",
-  "updated_at": "2026-09-29T08:15:33Z",
+  "updated_at": "2026-09-29T18:41:27+0200",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-09-29T08:15:33Z",
       "author": "verification_engineer",
       "description": "New artifact: a real, reproduced test failure. The corpus had no record of this test at all. Recorded as a failure, not suppressed."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T18:41:27+0200",
+      "author": "verification_engineer",
+      "description": "Updated by a new real SIL host run (fail -> fail). Prior revision retained in full; nothing was rewritten. Root-cause anomaly upgraded from 'probable' to confirmed, citing FB2-REV-FND-000031, with the original wording preserved inside it. Suite-level regression check recorded: 196 pass / 17 fail / 100 build failures, zero regressions, one outcome changed."
     }
   ],
   "test_measure_id": "FB2-VER-TMS-000003",
@@ -65,22 +71,28 @@
   "input_hashes": {
     "test_source": "sha256:111c206a275b1ba64e7e0b5dbf25d61c234798eb89c38d00b437b17b4d0b451e",
     "ceedling_project_file_shipped": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f",
-    "database_header": "sha256:291456ed775a3505abc613d4fd1291bce83d77d1041e8b7947a8488f459566fc"
+    "database_header": "sha256:6025ce96329edc0eccd423f7b62b2bd59e4ec4d85811bdab86407b8aedb4d6e8",
+    "os_header": "sha256:995226e0c86f520b28204107887d156fdbde41f353bc4f4d30328420ec23731f"
   },
   "output_hashes": {
-    "test_log": "sha256:3c46a13146399b2504be1f0b4d708983b4695198770c4a36a04da447bc5e79d0"
+    "sil_suite_results_all": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67"
   },
   "logs": [
     {
-      "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__driver__afe__debug__default__test_debug_default.txt",
-      "hash": "sha256:3c46a13146399b2504be1f0b4d708983b4695198770c4a36a04da447bc5e79d0",
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__driver__afe__debug__default__test_debug_default.log",
+      "hash": "sha256:fad4d1769ce4d549cfce7005084e446a5a6d686ed73a79d8ed29971181108046",
       "type": "stdout"
+    },
+    {
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+      "hash": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67",
+      "type": "custom"
     }
   ],
   "timestamps": {
-    "start": "2026-09-29T10:29:05+0200",
-    "end": "2026-09-29T10:29:05+0200",
-    "duration_ms": 1120
+    "start": "2026-09-29T18:41:27+0200",
+    "end": "2026-09-29T18:41:27+0200",
+    "duration_ms": 0
   },
   "anomalies": [
     {
@@ -124,9 +136,14 @@
       "disposition": "investigating"
     },
     {
-      "description": "Probable root cause, established from the sources and NOT from the host environment: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.",
+      "description": "ROOT CAUSE CONFIRMED at revision 2, no longer probable. The remediation itself is DEFERRED to the test owner: it is identified and proven, but applying it to this test is a test-ownership change rather than a mechanical edit, and it has NOT been applied. Established from source and then DEMONSTRATED, not merely argued: the database access API is correctly polymorphic (34 of the 37 DATA_BLOCK_*_s types in src/ are passed at its call sites, and the copied length is derived at run time from a uniqueId field read out of the caller struct at database.c:213-222), so the void* is required by design and is not a product defect. CMock 2.7.2 falls back to UNITY_TEST_ASSERT_EQUAL_PTR for any void* argument when the array plugin is not loaded (cmock_generator_utils.rb:207-210); conf/unit/app_project_posix.yml loads only :callback and :return_thru_ptr. The correct fix is therefore test-side, not product-side. See finding FB2-REV-FND-000031. Original wording of the observation, retained: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.",
       "severity": "high",
-      "disposition": "investigating"
+      "disposition": "deferred"
+    },
+    {
+      "description": "SIL host re-run at revision 2. The 313-test software-in-the-loop sweep was executed twice, immediately before and immediately after the change, from identical 313-test result sets: 195 pass / 18 fail / 100 build failures before, 196 pass / 17 fail / 100 after; 877 assertions tested in both; assertions passing 819 to 820, failing 55 to 54. Exactly one outcome changed in the entire suite and there were zero regressions: no previously-passing test stopped passing, and all build-failure classifications were unchanged. This record's own test moved fail -> fail. The unchanged outcome is a real failure and is recorded as a failure.",
+      "severity": "low",
+      "disposition": "accepted"
     }
   ],
   "evidence_refs": [
@@ -134,8 +151,7 @@
     "tests/unit/app/driver/afe/debug/default/test_debug_default.c"
   ],
   "evidence_files": [
-    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-strict.json",
-    "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__driver__afe__debug__default__test_debug_default.txt"
+    "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json"
   ],
   "assertions": {
     "tested": 11,
@@ -144,11 +160,13 @@
     "ignored": 0
   },
   "verbatim_unity_failures": [
-    "At line (245): \"Expected 0x0000000100F68174 Was 0x0000000100F68000:Function DATA_Write4DataBlocks Argument pDataFromSender0:Function called with unexpected argument value.\""
+    "At line (245): \"Expected 0x00000001028CC174 Was 0x00000001028CC000:Function DATA_Write4DataBlocks Argument pDataFromSender0:Function called with unexpected argument value.\""
   ],
   "limitations": [
-    "Host execution on Apple Silicon macOS",
-    "Root cause attribution to the void*-typed database API is an analysis of the sources, not a fix; it has not been re-run under GNU gcc to confirm the same failure occurs there"
+    "Host execution on Apple Silicon macOS; macOS is not a supported foxBMS 2 host platform",
+    "The identical failure is expected under GNU gcc on Linux because it depends only on the void* declaration and the CMock configuration, but this has not been re-run under GNU gcc",
+    "This is a host run and is not target-hardware evidence; no register-map, timing, clocking or electrical behaviour is verified by it",
+    "No MISRA conformance, tool qualification or certification claim is made or implied by this record"
   ],
-  "notes": "Real, reproduced failure. Ceedling target 'test:../../tests/unit/app/driver/afe/debug/default/test_debug_default.c', exit code 1, 11 assertions tested, 1 failed. Recorded verbatim. No result was adjusted."
+  "notes": "Real, reproduced run. Outcome fail -> fail at revision 2, from a full 313-test SIL sweep. The same unsatisfiable void* pointer-identity assertion remains. The per-test CMock-callback remedy verified on test_diag_cfg.c has NOT been applied here; applying it to this test is a test-ownership change, not a mechanical edit. No assertion was weakened. No result was adjusted."
 }

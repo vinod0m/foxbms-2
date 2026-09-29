@@ -817,6 +817,33 @@ def emit_02(v, out):
             L.append(f"- **Statement**: {esc(d.get('statement','N/A'), 400)}")
             L.append(f"- **Rationale**: {esc(d.get('rationale','Hazard mitigation for FB2-SAF-HAZ-000001'), 400)}")
             L.append(f"- **ASIL**: `{d.get('asil','?')}`")
+            aj = d.get("asil_justification") or {}
+            if aj:
+                L.append(f"- **ASIL classification status**: `{esc(aj.get('classification_status','?'), 40)}` "
+                         f"(hypothetical; not an ASIL determination for the real product)")
+                L.append(f"- **ASIL derivation**: {esc(aj.get('method','not recorded'), 400)}")
+                L.append(f"  - hazardous event `{esc(aj.get('hazardous_event_ref','?'), 20)}` of "
+                         f"`{esc(aj.get('hazard_ref','?'), 30)}`, operational situation: "
+                         f"{esc(aj.get('operational_situation','?'), 160)}")
+                for _dim in ("severity", "exposure", "controllability"):
+                    _v = aj.get(_dim) or {}
+                    _extra = ""
+                    if _dim == "exposure" and _v.get("evidence_status"):
+                        _extra = f" Evidence status: {esc(_v.get('evidence_status'), 160)}"
+                    L.append(f"  - **{_dim}** `{esc(_v.get('rating','?'), 12)}`: "
+                             f"{esc(_v.get('reason','not recorded'), 420)}{_extra}")
+                for _i, _step in enumerate(aj.get("derivation") or [], 1):
+                    L.append(f"  {esc(_i)}. {esc(_step, 500)}")
+                L.append(f"  - derived ASIL `{esc(aj.get('derived_asil','?'), 12)}`; matches the recorded "
+                         f"`{esc(d.get('asil','?'), 12)}`: {aj.get('derived_asil_matches_record')}")
+                _not = aj.get("what_this_does_not_assert") or []
+                if _not:
+                    L.append("  - **This classification does not assert:**")
+                    for _n in _not:
+                        L.append(f"    - {esc(_n, 420)}")
+                if aj.get("what_would_change_the_answer"):
+                    L.append(f"  - **What would change the answer**: "
+                             f"{esc(aj.get('what_would_change_the_answer'), 500)}")
             tb = d.get("timing_budget", {})
             ftti = d.get("fault_tolerant_time_interval_ms", tb.get("total_ftti_ms", "?"))
             L.append(f"- **FTTI (total)**: {ftti} ms")
@@ -853,6 +880,29 @@ def emit_02(v, out):
                 L.append("- **Acceptance criteria**: not specified in corpus")
             cm = d.get("conditions_modes", [])
             L.append(f"- **Conditions/modes**: " + (", ".join(f"`{m}`" for m in cm) if cm else "not specified in corpus"))
+            fr = d.get("fault_reaction") or {}
+            if fr:
+                owns = fr.get("element_owns_reaction")
+                L.append(f"- **Fault reaction** (allocated element `{esc(fr.get('allocated_element_id','?'), 12)}`, "
+                         f"owns reaction: {owns}): {esc(fr.get('reaction','not recorded'), 700)}")
+                L.append(f"  - triggered by: {esc(fr.get('triggered_by','not recorded'), 400)}")
+                if fr.get("reaction_time_budget_ms") is not None:
+                    _b = fr.get("reaction_time_budget_basis")
+                    _line = f"  - reaction time budget: {fr.get('reaction_time_budget_ms')} ms"
+                    if _b:
+                        _line += f" — basis: {esc(_b, 400)}"
+                    L.append(_line)
+                for _h in fr.get("reaction_held_by") or []:
+                    L.append(f"  - reaction held by `{esc(_h.get('element_id','?'), 12)}`: "
+                             f"{esc(_h.get('reaction','?'), 200)} within "
+                             f"{_h.get('reaction_time_budget_ms')} ms "
+                             f"(allocated by {esc(_h.get('allocated_by','?'), 120)})")
+                if fr.get("mode_dependence"):
+                    L.append(f"  - mode dependence: {esc(fr.get('mode_dependence'), 500)}")
+                if fr.get("allocation_basis"):
+                    L.append(f"  - allocation basis: {esc(fr.get('allocation_basis'), 500)}")
+                if fr.get("open_limits"):
+                    L.append(f"  - open limits: {esc(fr.get('open_limits'), 900)}")
             L.append(f"- **Source references**: " + (", ".join(f"`{r}`" for r in d.get("source_refs", [])) or "—"))
             L.append(f"- **Assumption references**: " + (", ".join(f"`{r}` ({esc(v.asm_stmt(r),60)})" for r in d.get("assumption_refs", [])) or "—"))
             L.append("")
