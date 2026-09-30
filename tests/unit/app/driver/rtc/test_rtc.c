@@ -104,12 +104,17 @@ void testRTC_Trigger(void) {
     I2C_Write_ExpectAndReturn(RTC_I2C_INTERFACE, RTC_I2C_ADDRESS, 1u, expectedI2cWriteBuffer, STD_OK);
     I2C_ReadDma_ExpectAndReturn(
         RTC_I2C_INTERFACE, RTC_I2C_ADDRESS, RTC_NUMBER_OF_TIME_DATA_BYTES, expectedI2cReadBuffer, STD_OK);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_RTC_CLOCK_INTEGRITY_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
+    /* DIAG_Handler returns DIAG_RETURNTYPE_e (src/app/engine/diag/diag.h:121, :78),
+     * not STD_RETURN_TYPE_e. STD_OK and DIAG_HANDLER_RETURN_OK are both 0, so the
+     * mismatch is silent on the target; -Wenum-conversion under the shipped
+     * -Werror is what exposes it. */
+    DIAG_Handler_ExpectAndReturn(
+        DIAG_ID_RTC_CLOCK_INTEGRITY_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     OS_EnterTaskCritical_Expect();
     OS_ExitTaskCritical_Expect();
     OS_DelayTaskUntil_Expect(&currentTime, 2u);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
 
     RTC_Trigger();
 }
@@ -128,7 +133,7 @@ void testRTC_Initialize(void) {
         expectedI2cWriteBuffer,
         STD_OK);
     OS_DelayTaskUntil_Expect(&currentTime, 2u);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     RTC_Initialize();
 
     OS_GetTickCount_ExpectAndReturn(0u);
@@ -141,7 +146,7 @@ void testRTC_Initialize(void) {
         STD_OK);
     OS_GetTickCount_ExpectAndReturn(0u);
     OS_DelayTaskUntil_Expect(&currentTime, 2u);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     RTC_Initialize();
 
     OS_GetTickCount_ExpectAndReturn(0u);
@@ -149,7 +154,7 @@ void testRTC_Initialize(void) {
     I2C_WriteDma_ExpectAndReturn(RTC_I2C_INTERFACE, RTC_I2C_ADDRESS, 1u, expectedI2cWriteBuffer, STD_OK);
     I2C_Read_ExpectAndReturn(RTC_I2C_INTERFACE, RTC_I2C_ADDRESS, 1u, expectedI2cReadBuffer, STD_OK);
     OS_DelayTaskUntil_Expect(&currentTime, 2u);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     RTC_Initialize();
 }
 
@@ -161,8 +166,13 @@ void testRTC_InitializeSystemTimeWithRtc(void) {
     I2C_Write_ExpectAndReturn(RTC_I2C_INTERFACE, RTC_I2C_ADDRESS, 1u, expectedI2cWriteBuffer, STD_OK);
     I2C_ReadDma_ExpectAndReturn(
         RTC_I2C_INTERFACE, RTC_I2C_ADDRESS, RTC_NUMBER_OF_TIME_DATA_BYTES, expectedI2cReadBuffer, STD_OK);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
-    DIAG_Handler_ExpectAndReturn(DIAG_ID_RTC_CLOCK_INTEGRITY_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+    DIAG_Handler_ExpectAndReturn(DIAG_ID_I2C_RTC_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
+    /* DIAG_Handler returns DIAG_RETURNTYPE_e (src/app/engine/diag/diag.h:121, :78),
+     * not STD_RETURN_TYPE_e. STD_OK and DIAG_HANDLER_RETURN_OK are both 0, so the
+     * mismatch is silent on the target; -Wenum-conversion under the shipped
+     * -Werror is what exposes it. */
+    DIAG_Handler_ExpectAndReturn(
+        DIAG_ID_RTC_CLOCK_INTEGRITY_ERROR, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     OS_EnterTaskCritical_Expect();
     OS_ExitTaskCritical_Expect();
 

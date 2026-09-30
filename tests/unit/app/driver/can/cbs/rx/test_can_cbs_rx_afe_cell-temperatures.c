@@ -257,6 +257,13 @@ void testCANRX_CellTemperatures(void) {
     /* ======= Routine tests =============================================== */
     uint64_t messageData    = 0u;
     uint64_t pCanSignalData = 0u;
+    /* Expected queue payload. CANRX_CellTemperatures() posts the address of a
+     * function-local CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s
+     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c:181), not of
+     * the CAN frame, so the expectation has to be an object of that type. With
+     * :when_ptr: :compare_data the mock memcmps it; passing &messageData here
+     * compared 8 bytes of the wrong object -- and 6 bytes past the end of it. */
+    CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s expectedQueuePayload = {0};
 
     /* ======= RT1/2 =======*/
     CAN_ENDIANNESS_e canEndianness = CAN_BIG_ENDIAN;
@@ -284,7 +291,12 @@ void testCANRX_CellTemperatures(void) {
             canEndianness);
     }
 
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_canToAfeCellTemperaturesQueue, (void *)&messageData, 0, OS_SUCCESS);
+    OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
+        ftsk_canToAfeCellTemperaturesQueue,
+        (void *)&expectedQueuePayload,
+        sizeof(expectedQueuePayload),
+        0,
+        OS_SUCCESS);
     DIAG_Handler_ExpectAndReturn(DIAG_ID_CAN_RX_QUEUE_FULL, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     TEST_ASSERT_EQUAL_INT16(0, CANRX_CellTemperatures(validTestMessage, canData, &can_kShim));
 
@@ -312,7 +324,12 @@ void testCANRX_CellTemperatures(void) {
             &pCanSignalData,
             canEndianness);
     }
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_canToAfeCellTemperaturesQueue, (void *)&messageData, 0u, OS_FAIL);
+    OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
+        ftsk_canToAfeCellTemperaturesQueue,
+        (void *)&expectedQueuePayload,
+        sizeof(expectedQueuePayload),
+        0u,
+        OS_FAIL);
     DIAG_Handler_ExpectAndReturn(DIAG_ID_CAN_RX_QUEUE_FULL, DIAG_EVENT_NOT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     TEST_ASSERT_EQUAL_INT16(0, CANRX_CellTemperatures(validTestMessage, canData, &can_kShim));
 }

@@ -1044,8 +1044,22 @@ class CorpusTool:
             aid = _id(key)
             if "evidence_refs" in d:
                 for ref in d["evidence_refs"]:
-                    # Allow file paths as evidence references (they start with tests/ or src/)
-                    if ref not in all_artifact_ids and not (isinstance(ref, str) and (ref.startswith("tests/") or ref.startswith("src/") or ref.endswith(".c") or ref.endswith(".h"))):
+                    if ref in all_artifact_ids:
+                        continue
+                    # A ref that is not an artifact id must be a real file on disk.
+                    # The previous implementation pattern-matched a prefix/extension
+                    # allowlist (tests/, src/, *.c, *.h) and therefore accepted
+                    # non-existent files under those prefixes while rejecting every
+                    # legitimate reference to another evidence type. Existence is now
+                    # checked directly, which accepts a wider set of genuine
+                    # references AND catches dangling ones everywhere.
+                    if isinstance(ref, str) and (ref.endswith(os.sep) or "/" in ref
+                                                 or os.path.splitext(ref)[1]):
+                        if not os.path.exists(self.root / ref):
+                            self.findings.add("high", "provenance", aid,
+                                              f"artifact {aid} references non-existent evidence {ref}",
+                                              "evidence_reference_validator")
+                    else:
                         self.findings.add("high", "provenance", aid,
                                           f"artifact {aid} references non-existent evidence {ref}",
                                           "evidence_reference_validator")

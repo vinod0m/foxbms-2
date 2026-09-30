@@ -257,6 +257,11 @@ void testCANRX_CellVoltages(void) {
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2 =======*/
     uint64_t messageData           = 0u;
+    /* Expected queue payload -- see the note in
+     * test_can_cbs_rx_afe_cell-temperatures.c. The product posts a
+     * function-local CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s
+     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c). */
+    CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s expectedQueuePayload = {0};
     uint64_t pCanSignalMuxValue    = 0u;
     uint64_t pCanSignalInvalidFlag = 0u;
     uint64_t pCanSignalVoltage     = 0u;
@@ -290,7 +295,12 @@ void testCANRX_CellVoltages(void) {
             &pCanSignalVoltage,
             CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
     }
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_canToAfeCellVoltagesQueue, (void *)&messageData, 0, OS_SUCCESS);
+    OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
+        ftsk_canToAfeCellVoltagesQueue,
+        (void *)&expectedQueuePayload,
+        sizeof(expectedQueuePayload),
+        0,
+        OS_SUCCESS);
     DIAG_Handler_ExpectAndReturn(DIAG_ID_CAN_RX_QUEUE_FULL, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     TEST_ASSERT_EQUAL_INT16(0, CANRX_CellVoltages(validTestMessage, canData, &can_kShim));
 
@@ -323,7 +333,12 @@ void testCANRX_CellVoltages(void) {
             &pCanSignalVoltage,
             CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
     }
-    OS_SendToBackOfQueue_ExpectAndReturn(ftsk_canToAfeCellVoltagesQueue, (void *)&messageData, 0, OS_FAIL);
+    OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
+        ftsk_canToAfeCellVoltagesQueue,
+        (void *)&expectedQueuePayload,
+        sizeof(expectedQueuePayload),
+        0,
+        OS_FAIL);
     DIAG_Handler_ExpectAndReturn(DIAG_ID_CAN_RX_QUEUE_FULL, DIAG_EVENT_NOT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
     TEST_ASSERT_EQUAL_INT16(0, CANRX_CellVoltages(validTestMessage, canData, &can_kShim));
 }

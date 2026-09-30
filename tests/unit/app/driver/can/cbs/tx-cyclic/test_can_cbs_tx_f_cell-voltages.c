@@ -89,7 +89,7 @@ TEST_INCLUDE_PATH("../../src/app/task/config")
 
 uint64_t testMessageData[10u] = {0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 9u};
 
-float_t testSignalData[4u] = {0.0f, 1.0f, 2.0f, 3.0f};
+float_t testSignalData[9u] = {[0] = 0u, [1] = 1u, [2] = 2u};
 
 float_t testCellVoltage0             = 4200.0f;
 float_t testCellVoltage1             = 3500.0f;

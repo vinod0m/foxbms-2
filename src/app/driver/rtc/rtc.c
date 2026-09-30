@@ -269,7 +269,20 @@ static void RTC_AdjustTime(void) {
     /* Convert tm struct to timer in seconds since epoch */
     rtcTimeFromTimerEpochFormat = mktime(&rtcTimeFromTimerTmFormat);
 
-    if (abs(rtcTimeFromIcEpochFormat - rtcTimeFromTimerEpochFormat) > RTC_MAX_DIFFERENCE_BETWEEN_TIMER_AND_IC_s) {
+    /* abs() takes an int, but the difference of two time_t values is a time_t
+     * (a long on every platform this builds for). Passing the wide value
+     * truncates it, and abs(INT_MIN) is undefined. Compare the two signed
+     * directions instead. For every representable difference other than INT_MIN
+     * the result is identical to abs(d) > LIMIT; at INT_MIN, where the old
+     * expression was undefined, the new one is correct.
+     *
+     * Reported by clang as -Wabsolute-value, promoted to an error by the
+     * shipped -Werror. GCC does not diagnose it, which is why it survived every
+     * upstream gcc build. */
+    const time_t rtcTimeDifferenceInSeconds = rtcTimeFromIcEpochFormat - rtcTimeFromTimerEpochFormat;
+
+    if ((rtcTimeDifferenceInSeconds > (time_t)RTC_MAX_DIFFERENCE_BETWEEN_TIMER_AND_IC_s) ||
+        (rtcTimeDifferenceInSeconds < -((time_t)RTC_MAX_DIFFERENCE_BETWEEN_TIMER_AND_IC_s))) {
         /* Difference  between RTC timer and RTC IC higher than limit: adjust RTC timer */
         RTC_InitializeSystemTimeWithRtc();
     }

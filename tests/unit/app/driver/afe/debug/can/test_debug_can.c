@@ -295,9 +295,22 @@ void testDECAN_ConvertIndexForTemperature(void) {
 void testDECAN_ReceiveCanCellVoltages(void) {
     /* ======= Assertion tests ============================================= */
     /* ======= AT1/1: test if the function can be successfully run or not */
-    uint64_t messageData = 0u;
-    OS_ReceiveFromQueue_ExpectAndReturn(
-        ftsk_canToAfeCellVoltagesQueue, &messageData, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* Expected queue payload. DECAN_ReceiveCanCellVoltages() fills a
+     * function-local CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s
+     * (src/app/driver/afe/debug/can/debug_can.c), so the expectation must be an
+     * object of that type: with :when_ptr: :compare_data the mock memcmps it,
+     * and &messageData was an 8-byte object of a different type. */
+    CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s expectedQueuePayload = {0};
+    OS_ReceiveFromQueue_ExpectAndReturn(ftsk_canToAfeCellVoltagesQueue, &expectedQueuePayload, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* pvBuffer is an OUT-parameter: nothing has been written into it when the
+     * expectation is checked, so there is no content to compare here. The mock
+     * fills it via ReturnThruPtr below and the product's processing of it is what
+     * the following assertions check. */
+    OS_ReceiveFromQueue_IgnoreArg_pvBuffer();
+    /* Deliver that payload to the product, so the DATA_*_Expect assertions
+     * below check the product's processing of a KNOWN queue item rather than
+     * of whatever the stack happened to hold. */
+    OS_ReceiveFromQueue_ReturnThruPtr_pvBuffer(&expectedQueuePayload);
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
@@ -316,9 +329,18 @@ void testDECAN_ReceiveCanCellVoltages(void) {
 void testDECAN_ReceiveCanCellTemperatures(void) {
     /* ======= Assertion tests ============================================= */
     /* ======= AT1/1: test if the function can be successfully run or not */
-    uint64_t messageData = 0u;
-    OS_ReceiveFromQueue_ExpectAndReturn(
-        ftsk_canToAfeCellTemperaturesQueue, &messageData, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* Expected queue payload -- see testDECAN_ReceiveCanCellVoltages. */
+    CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s expectedQueuePayload = {0};
+    OS_ReceiveFromQueue_ExpectAndReturn(ftsk_canToAfeCellTemperaturesQueue, &expectedQueuePayload, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* pvBuffer is an OUT-parameter: nothing has been written into it when the
+     * expectation is checked, so there is no content to compare here. The mock
+     * fills it via ReturnThruPtr below and the product's processing of it is what
+     * the following assertions check. */
+    OS_ReceiveFromQueue_IgnoreArg_pvBuffer();
+    /* Deliver that payload to the product, so the DATA_*_Expect assertions
+     * below check the product's processing of a KNOWN queue item rather than
+     * of whatever the stack happened to hold. */
+    OS_ReceiveFromQueue_ReturnThruPtr_pvBuffer(&expectedQueuePayload);
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
@@ -355,16 +377,37 @@ void testDECAN_Initialize(void) {
 void testDECAN_TriggerAfe(void) {
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    uint64_t messageData = 0u;
-    OS_ReceiveFromQueue_ExpectAndReturn(
-        ftsk_canToAfeCellVoltagesQueue, &messageData, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* Expected queue payload -- see testDECAN_ReceiveCanCellVoltages. */
+    CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s expectedQueuePayload = {0};
+    OS_ReceiveFromQueue_ExpectAndReturn(ftsk_canToAfeCellVoltagesQueue, &expectedQueuePayload, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* pvBuffer is an OUT-parameter: nothing has been written into it when the
+     * expectation is checked, so there is no content to compare here. The mock
+     * fills it via ReturnThruPtr below and the product's processing of it is what
+     * the following assertions check. */
+    OS_ReceiveFromQueue_IgnoreArg_pvBuffer();
+    /* Deliver that payload to the product, so the DATA_*_Expect assertions
+     * below check the product's processing of a KNOWN queue item rather than
+     * of whatever the stack happened to hold. */
+    OS_ReceiveFromQueue_ReturnThruPtr_pvBuffer(&expectedQueuePayload);
     DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltage, STD_OK);
     DATA_Read1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, STD_OK);
     DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, STD_OK);
 
-    messageData = 0u;
-    OS_ReceiveFromQueue_ExpectAndReturn(
-        ftsk_canToAfeCellTemperaturesQueue, &messageData, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* Second receive in this test case, on the temperatures queue. Reset the
+     * expected payload the same way the first one is initialised, so the two
+     * queue items are distinguishable rather than both all-zero. */
+    expectedQueuePayload = (CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s){0};
+    CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s expectedTemperaturePayload = {0};
+    OS_ReceiveFromQueue_ExpectAndReturn(ftsk_canToAfeCellTemperaturesQueue, &expectedTemperaturePayload, DECAN_CAN2AFE_QUEUE_TIMEOUT_MS, OS_SUCCESS);
+    /* pvBuffer is an OUT-parameter: nothing has been written into it when the
+     * expectation is checked, so there is no content to compare here. The mock
+     * fills it via ReturnThruPtr below and the product's processing of it is what
+     * the following assertions check. */
+    OS_ReceiveFromQueue_IgnoreArg_pvBuffer();
+    /* Deliver that payload to the product, so the DATA_*_Expect assertions
+     * below check the product's processing of a KNOWN queue item rather than
+     * of whatever the stack happened to hold. */
+    OS_ReceiveFromQueue_ReturnThruPtr_pvBuffer(&expectedQueuePayload);
     DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperature, STD_OK);
     DATA_Read1DataBlock_ExpectAndReturn(&decan_cellTemperatureFromRead, STD_OK);
     DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperatureFromRead, STD_OK);

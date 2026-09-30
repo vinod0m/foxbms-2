@@ -108,13 +108,23 @@ void testDIAG_ErrorOvercurrentChargeInvalidInput(void) {
 }
 
 void testDIAG_ErrorOvercurrentCharge(void) {
-    /* Start with 1 as we test reset first */
-    diag_kpkDatabaseShim.pTableMsl->cellChargeOvercurrent[BS_NR_OF_STRINGS]   = 1;
-    diag_kpkDatabaseShim.pTableRsl->cellChargeOvercurrent[BS_NR_OF_STRINGS]   = 1;
-    diag_kpkDatabaseShim.pTableMol->cellChargeOvercurrent[BS_NR_OF_STRINGS]   = 1;
-    diag_kpkDatabaseShim.pTableMsl->stringChargeOvercurrent[BS_NR_OF_STRINGS] = 1;
-    diag_kpkDatabaseShim.pTableRsl->stringChargeOvercurrent[BS_NR_OF_STRINGS] = 1;
-    diag_kpkDatabaseShim.pTableMol->stringChargeOvercurrent[BS_NR_OF_STRINGS] = 1;
+    /* Start with 1 as we test reset first.
+     *
+     * Element 0, not [BS_NR_OF_STRINGS]. The arrays are declared
+     * `uint8_t cellChargeOvercurrent[BS_NR_OF_STRINGS]`
+     * (src/app/engine/config/database_cfg.h:521, :541, :561) and
+     * `uint8_t stringChargeOvercurrent[BS_NR_OF_STRINGS]`, so BS_NR_OF_STRINGS
+     * is one past the end: clang reports "array index 1 is past the end of the
+     * array (that has type 'uint8_t[1]')" under the shipped -Werror. The
+     * product indexes these with a string/module index in range
+     * (src/app/engine/diag/cbs/diag_cbs_current.c:89, :98, :107), so the
+     * out-of-bounds write is the test's, not the product's. */
+    diag_kpkDatabaseShim.pTableMsl->cellChargeOvercurrent[0u]   = 1;
+    diag_kpkDatabaseShim.pTableRsl->cellChargeOvercurrent[0u]   = 1;
+    diag_kpkDatabaseShim.pTableMol->cellChargeOvercurrent[0u]   = 1;
+    diag_kpkDatabaseShim.pTableMsl->stringChargeOvercurrent[0u] = 1;
+    diag_kpkDatabaseShim.pTableRsl->stringChargeOvercurrent[0u] = 1;
+    diag_kpkDatabaseShim.pTableMol->stringChargeOvercurrent[0u] = 1;
     diag_kpkDatabaseShim.pTableMsl->packChargeOvercurrent                     = 1;
 
     DIAG_ErrorOvercurrentCharge(

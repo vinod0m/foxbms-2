@@ -1,6 +1,6 @@
 {
  "id": "FB2-VER-EXE-000015",
- "revision": "6",
+ "revision": "10",
  "schema_version": "1.0.0",
  "artifact_type": "execution",
  "engineering_domain": "verification",
@@ -30,7 +30,7 @@
  "created_at": "2026-09-29T16:10:04Z",
  "updated_at": "2026-09-30T00:00:00Z",
  "test_measure_id": "FB2-VER-TMS-000001..000005",
- "test_measure_revision": "5",
+ "test_measure_revision": "7",
  "execution_kind": "actual_host_run",
  "outcome": "fail",
  "aggregate_outcome": "partial",
@@ -83,12 +83,27 @@
   "sil_diagnostics_collecting_compiler": "sha256:7684f9a74177d68438f20b4947f9bdd78b0f410cb09dca1c3170b718fe9b54fd",
   "exclusion_verification": "sha256:475ab09c4235cea38e2ce22da491e3f0f6da6264aa1195b73157f46481d56d5d",
   "classifier_nondeterminism_24_runs": "sha256:3828a9bfaa622f040444cce97ce6890ca2f1a76b8981ec50e52c4ca6e3a4ffc7",
-  "classifier_flip_detail": "sha256:5322b3cd4c9e33580aebffb0ef01b539df8b5e8666ecd2b95e7d82a8fdc97888"
+  "classifier_flip_detail": "sha256:5322b3cd4c9e33580aebffb0ef01b539df8b5e8666ecd2b95e7d82a8fdc97888",
+  "results_sil_all_before_revision_7": "sha256:d3687aa5cbcd4d9bfe7139d279f38728cd35f7960682608a54c0f8e4804e09b3",
+  "results_sil_all_after_revision_7": "sha256:37aa1a563cd5e9e483cd670f87049bdc47082240acda8054a3ecaa103fb12e49",
+  "sweep_compare_before_after_revision_7": "sha256:0c1f8061375165fdfcb9bcd104e52c18b96b32ce1d5ab5dfcd70c8c886791e40",
+  "vacuous_test_inventory_revision_7": "sha256:e771139b88fa5194fcd1b7423e82f161d23306163ff8413ba54c3aa72ba98dbf",
+  "real_diagnostics_for_every_defect_test": "sha256:7bcf6af56f11f78a14e194f72bf6cb1a126aefec577d6cd70d096079f44d0398",
+  "which_newly_passing_tests_assert_nothing": "sha256:00312dbacd9830ad90fbbe5d27f148aaa6bb487d835ea987d097127ceafd306a",
+  "interface_header_hl_sys_dma_after_fix": "sha256:1661d864b33905bef7f33e6ab53200873e4b7ac46057d34140bf804c29be8167",
+  "re_attribution_of_the_build_failures": "sha256:4cb225974990dbc5b7a86a23fe372a864a314f0684e2b31b430eabb0053d15db",
+  "vacuous_test_finding": "sha256:b2ab6f04d5e807922db1bdbbf79a2fd30bdf784925aaa7d91d9f809c8af037c9",
+  "interface_header_fix_script": "sha256:2ce9c5a5a11e27a7c6d6d6c4196ed9c676a6a8aab9fb613d39a0891a588e775e",
+  "macro_collision_detector": "sha256:37e98af5eda1373bcd7c89abdcdb54ee1ce412a2463f452a63444655916a8596",
+  "macro_collision_code_use_check": "sha256:c3f05b52419fb4b0621ffddfa6e5f8f2e216ddef42f40b72748acf529ddcebdc",
+  "vacuous_test_detector": "sha256:35fc505173f32016944a4e90f45c7c810636c184a2907f65bf9d705362991b19",
+  "real_diagnostic_dumper": "sha256:83044675973495a841fc108567f2c94e31efb263b1ce6aaf842b2312372028f3",
+  "conditional_balance_guard": "sha256:7f2b9b378380a90ede4c0e21ddc4872738903b9db284dab0b8c774a2711d1a62"
  },
  "logs": [
   {
    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
-   "hash": "sha256:4218fc079f7c2b71eba751f9f0620f0104bedeac1b5d9e0e40a7b8a3dffa4499",
+   "hash": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
    "type": "custom"
   },
   {
@@ -115,11 +130,6 @@
    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md",
    "hash": "sha256:929ada9c27021915758946785ab5844435e7f33f3d7cbbf5a0b4e6067788f462",
    "type": "custom"
-  },
-  {
-   "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict (one .log per test, 313 files)",
-   "hash": "sha256:c8c577da85fcb5a841a19620c0b3e1e1a8444d66b5d0afb6e73adc0ba9ae8c53",
-   "type": "stdout"
   },
   {
    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29-task1/RESULTS-TASK1-PRE.json",
@@ -243,6 +253,30 @@
    "date": "2026-09-30T00:00:00Z",
    "author": "coordinator",
    "description": "Clean re-measurement after two concurrent harness agents left the shared build tree in a contaminated state. This revision records MY OWN uncontaminated sweep, which differs from both agents' reported figures (agent A reported 233/13/67; agent B reported 208/5/100 and changed no tests). The coordinator's figure is authoritative. outcome stays 'fail' and execution_kind stays 'actual_host_run'; they remain orthogonal."
+  },
+  {
+   "revision": "7",
+   "date": "2026-09-30T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "THE PREVIOUS ATTRIBUTION OF THE BUILD FAILURES IS CORRECTED AND MOST OF IT WITHDRAWN. The prior round reported '30 real defects in foxBMS source' among the build failures and proposed fixing them by editing src/. That was reached by matching diagnostic TEXT against a list of class names without asking where each diagnostic came from. It is wrong for most of them. The counter-example is the product calling dmaEnableInterrupt(channel, interrupt, intGroup) at src/app/driver/dma/dma.c:216-282 and src/bootloader/driver/crc/crc.c:252-254 while sil/iface/HL_sys_dma.h declared two arguments; the compiler's own note names sil_hal/HL_sys_dma.h, and the test-side 'too many arguments provided to function-like macro invocation' names a mock CMock generated FROM that header. That is a defect in a machine-declared stand-in for TI's absent headers, not in foxBMS. EVERY DIAGNOSTIC WAS THEN RE-DERIVED FROM THE REAL COMPILER OUTPUT. The per-test log only captures the LINK step, so a failed compile surfaces as 'clang: error: no such file or directory ./test/out/<t>/<u>.o', which names no defect. The COMPILE diagnostics are in logs/diag-records/<slug>.jsonl, written by the harness's own diagnostics-collecting compiler wrapper with the full argv of every invocation; sil/tools/dump_diagnostics.py reads them. Signatures were then taken from the repository's own call sites and the product's own function DEFINITIONS, and cross-checked by hand. No arity was derived by counting commas. OF THE 27 TESTS THE PRIOR ROUND CALLED 'real defects', 21 ARE SIL INTERFACE-HEADER DEFECTS, 6 ARE TEST DEFECTS, AND EXACTLY ONE IS A PRODUCT DEFECT. The headline number '30 real defects in foxBMS source' is WITHDRAWN. Full evidence per test in sil/REATTRIBUTION.md. THE ONE PRODUCT DEFECT: src/app/driver/rtc/rtc.c:272 called abs() on the difference of two time_t values, which is a long, while abs() takes an int -- a genuine truncation, plus the abs(INT_MIN) undefined result. GCC does not implement -Wabsolute-value, which is why it survived every upstream gcc build. FIXED by comparing the two signed directions instead. Blast radius, enumerated: RTC_AdjustTime() is static, declared at rtc.c:133, defined at rtc.c:252, called from exactly one place (rtc.c:441, inside RTC_Trigger()); RTC_Trigger() is called from exactly one place (src/app/task/config/ftask_cfg.c:318). No signature, no header, no interface and no other caller is touched. This is the ONLY src/ change in the revision. THE 6 TEST DEFECTS ARE ALL OUT-OF-BOUNDS ACCESS IN tests/unit, NOT IN src/. Every one of the six -Warray-bounds diagnostics is located in a test: five declare `float_t testSignalData[3u]` (or [4u]) and index it at up to 12 (0, 6 and 8 respectively) -- the product never touches that fixture, it is the test's own, passed by address to CMock's ReturnThruPtr -- and tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:112-117 indexes a `uint8_t[1]` at BS_NR_OF_STRINGS, which the comment on line 111 says should be element 0. The product's own loop is correctly guarded: can_cbs_tx_f_cell-temperatures.c:343-379 nests every CANTX_TemperatureSetData() behind `if (temperatureSensorId < BS_NR_OF_TEMP_SENSORS)`. Fixed by sizing the fixture to the highest index used and by changing the six subscripts to [0u]. THE 2 'real_defect_implicit_int' TESTS WERE A HARNESS SELF-COLLISION. sil/iface/HL_reg_sci.h contained `#define Fapi_FlashSectorType (0U)`, `#define config_value_type_t (0U)`, `#define dmaIntGroup_t (0U)`, `#define dmaFlg_t (0U)` and `#define SpiDataStatus_t (0U)` while other harness headers contain typedefs of exactly those names, so the preprocessor replaced each type with its own value and the header could not be parsed. clang reported the cascade -- 56 diagnostics in test_uart.c, 57 in test_uart_sci_notification.c -- and none of them names the macro that caused them, so the failure was attributed to src/app/driver/uart/uart.c, which is innocent. FIXING THOSE TWO EXPOSED A SYSTEMATIC VERSION OF THE SAME HAZARD: 77 macros in sil/iface/HL_reg_*.h shared a name with a STRUCT MEMBER declared in a different harness header, replacing every `->CTL`, `->DADD`, `->DAT1` member access in HL_can.h, HL_spi.h and HL_sys_dma.h. All 77 were shown to have ZERO code uses in src/ and tests/ by sil/tools/collision_code_uses.py, which strips comments and string literals, and all 77 were deleted; the deleter REFUSES to remove a macro that has a code use, so the rule cannot damage one the product needs. This is the hazard sil/RUNBOOK.md section 6 already describes for repository names, never applied between harness headers. THREE HARNESS DEFECTS WERE IDENTIFIED AND DELIBERATELY NOT FIXED, because closing them means asserting a fact about the TMS570 that the repository does not record: test_emac-low-level.c needs EMAC_MACCONTROL and friends; test_ti_bq79xxx_afe_dma.c needs spiREG_t's real 28-member layout and a 75-member nested struct, whose only evidence is a zero-filled initialiser in the test; and test_crc.c / test_crc_semi_auto_crc_calculation.c need crcConfig_t's field layout. sil/RUNBOOK.md section 6 names inventing a register map as the anti-pattern this harness exists to avoid, so these are reported, not worked around. Two more, test_can_cfg_rx.c and test_bender_iso165c.c, fail because CMock 2.7.2 does not evaluate `#if (defined(FOXBMS_AFE_DRIVER_DEBUG_CAN) && ...)`: cmock_header_parser.rb:86-88 keeps the guarded branch, the C preprocessor hides the typedef with it, and the generated mock references a type that does not exist. The repository is internally consistent -- can_cfg.h:195 and can_cbs_rx.h:314 guard the type and its prototypes with the same condition. THE 4 PHASE-2 FAILURES ARE FIXED IN THE HARNESS AND IN THE TESTS, NOT IN src/. conf/unit/app_project_posix.yml:369 asks CMock for :when_ptr: :compare_data, and CMock 2.7.2 states in its own generator (cmock_generator_utils.rb:206-210) that without the array plugin an untyped void* 'cannot be safely dereferenced' so it 'falls back to comparing the pointer value itself'. For a queue payload that identity check can never hold, because the product declares its payload function-local (can_cbs_rx_afe_cell-temperatures.c:181). The array plugin's next branch emits UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY instead. Remedy (i) adopted, because it is a SIL harness configuration change and the only mechanism this CMock version offers; remedy (ii), typing the queue API in os.h, was NOT taken because it is a product API change whose effect on the target cannot be verified from this host. A CORRECTION WORTH RECORDING: CMock 2.7.2 does NOT read :array_depth: at all. An earlier revision of the harness comment claimed it did. The depth is a CALL argument of the plugin's WithArray macro family (cmock_generator_plugin_array.rb:41), and only X_ExpectWithArrayAndReturn assigns Expected_<arg>_Depth. Enabling the plugin alone therefore turned three loud failures into three SILENT VACUOUS PASSES over ZERO bytes, which was caught by perturbing one byte the product writes and observing the tests still pass. The tests were moved to the WithArray macro with a correctly typed, correctly sized expected payload, and the direction split is now explicit: OS_SendToBackOfQueue is a SEND, the payload is complete before the call, so its bytes are compared; OS_ReceiveFromQueue's payload is an OUT-parameter with nothing written at the call boundary, so the argument is explicitly ignored and the payload is delivered with ReturnThruPtr for the product's processing to be asserted downstream. NON-VACUITY PROVEN, not asserted. With the product perturbed to write one extra byte into the queue payload, the test FAILS, and with the perturbation removed it passes: can_cbs_rx_afe_cell-temperatures.c and ..._cell-voltages.c each go 2/2 -> 1/2 when byte 0 of the posted payload is set to 0x5A, and test_nxp_mc33775a_i2c.c goes 10/10 -> 9/10 when .module is set to 0x7F before the send. src/ was restored to its pre-perturbation state by removing the perturbed line; `git diff --stat -- src/` is empty except for the one documented rtc.c fix. ONE FINDING IS A MEASUREMENT DEFECT AND IT IS NOT FIXED, ONLY MADE VISIBLE. 53 of the green test files assert NOTHING: 3 have zero Unity test cases and 50 have test cases with zero assertions, most of them a literally empty `void testDummy(void) { }`. Ceedling reports each as a pass, so the pass count is overstated by 53, though 6 of that 53 only became green in this revision and add no coverage of their own. The file named in the task, tests/unit/app/driver/afe/nxp/mc33775a/config/test_nxp_mc33775a_cfg.c, is one of the three; its module under test defines no functions at all, only a constant n77x_muxSequence[] table, so any test written for it would be an invented specification. NO test was written for any of the 82. The emptiness is reported as its own classes, `passes_with_no_test_cases` and `passes_with_no_assertions`, from sil/tools/find_vacuous_tests.py, with the full inventory in sil/VACUOUS-TESTS.md and logs/vacuous-inventory.json. What a human must decide is stated there. TOTALS: 245 pass / 1 fail / 67 build failures, 1061 assertions tested, 1043 passed, 15 failed, against 222 / 7 / 84 and 988 / 950 / 35 measured immediately before this revision's work on the same host with the same harness. 23 tests newly pass, ZERO tests regressed and ZERO tests newly fail, compared programmatically over the full 313-test outcome set. execution_kind stays actual_host_run and outcome stays fail: this is still a host run, 1 test is still red and 68 tests still do not build. This record carries no production verification credit."
+  },
+  {
+   "revision": "8",
+   "date": "2026-09-30T00:00:00Z",
+   "author": "coordinator",
+   "description": "Evidence-integrity repair, surfaced by the anti-self-certification fix rather than by hand: MUT-014 went red because evidence_reference_validator detected a standing defect on this record -- a stale results-file hash and one logs entry naming a directory that does not exist. Both corrected at source. The validator was NOT weakened."
+  },
+  {
+   "revision": "9",
+   "date": "2026-09-30T00:00:00Z",
+   "author": "coordinator",
+   "description": "Two evidence_refs cited as 'sil/REATTRIBUTION.md' and 'sil/VACUOUS-TESTS.md', which do not resolve from the repository root. Re-cited with their full path under the gitignored .work tree. Found by evidence_reference_validator, not by inspection."
+  },
+  {
+   "revision": "10",
+   "date": "2026-09-30T00:00:00Z",
+   "author": "coordinator",
+   "description": "Working documents promoted from the gitignored .work tree into the tracked evidence directory and re-cited from their real paths. Reported by evidence_reference_validator twice; corrected at source both times rather than by relaxing the rule."
   }
  ],
  "scope": {
@@ -480,13 +514,44 @@
    "description": "8 tests newly BUILD and FAIL in this revision and are REPORTED, not worked around: tests/unit/app/application/bms/test_bms.c (3 assertions), tests/unit/app/application/redundancy/test_redundancy.c (1), tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830.c (3), tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_f_debug.c (2), tests/unit/app/driver/can/test_can.c (5), tests/unit/app/driver/i2c/test_i2c.c (4), tests/unit/app/engine/diag/test_diag.c (1) and tests/unit/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/test_NetworkInterface.c (2). Most are the already-recorded void*-identity and compare_data defects, now visible because the build problems that were masking them are fixed. No assertion was weakened, no expectation removed, and no threshold adjusted to make any of these green.",
    "severity": "high",
    "disposition": "investigating"
+  },
+  {
+   "description": "MISATTRIBUTION CORRECTED. The prior round classified 27 build-failure tests as 'real defects in foxBMS source' on the basis of diagnostic text, and proposed editing src/. Re-derived from the real compiler output, 21 of the 27 are defects in sil/iface/HL_*.h -- machine-declared stand-ins for TI's absent headers -- 6 are defects in tests/unit, and EXACTLY ONE is a defect in src/. The clearest case: the product calls dmaEnableInterrupt with three arguments at src/app/driver/dma/dma.c:216, 227, 253, 254, 255, 280, 281, 282 and at src/bootloader/driver/crc/crc.c:252-254, and both sil/iface/HL_sys_dma.h and the mock CMock generated from it declared two, so the compiler's note names sil_hal/HL_sys_dma.h and the test's error names a generated mock header. The prior headline '30 real defects in foxBMS source' is withdrawn. Evidence per test in sil/REATTRIBUTION.md.",
+   "severity": "high",
+   "disposition": "fixed"
+  },
+  {
+   "description": "HARNESS SELF-COLLISION, 77 INSTANCES, PREVIOUSLY INVISIBLE. sil/iface/HL_reg_*.h defined 77 macro names that are also STRUCT MEMBER names declared in other harness headers, so the preprocessor replaced every `->CTL`, `->DADD`, `->DAT1`, `->CHCTRL` member access in HL_can.h, HL_spi.h and HL_sys_dma.h. All 77 were shown to have zero code uses in src/ and tests/ by sil/tools/collision_code_uses.py, which strips comments and string literals, and all 77 were deleted. The deleter refuses to remove a macro with a code use, so the rule cannot damage a macro the product needs. This also explains the prior 'real_defect_implicit_int' class on test_uart.c and test_uart_sci_notification.c: five of the 77 were `#define`s of TYPE names, which made the corresponding `typedef` lines unparseable and produced 56 and 57 cascade diagnostics respectively, none of which named the cause. The failure was attributed to src/app/driver/uart/uart.c, which is innocent. A test that the harness itself breaks is a measurement defect, not a product defect.",
+   "severity": "high",
+   "disposition": "fixed"
+  },
+  {
+   "description": "A FIX THAT WAS VACUOUS, CAUGHT AND NOT SHIPPED. Enabling CMock's array plugin makes its `void *` branch emit UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY instead of UNITY_TEST_ASSERT_EQUAL_PTR, which is what makes `:when_ptr: :compare_data` meaningful. It does NOT by itself make the comparison non-trivial: the depth is a CALL argument of the plugin's WithArray macro family (cmock_generator_plugin_array.rb:41) and only X_ExpectWithArrayAndReturn assigns Expected_<arg>_Depth, so a test that keeps the plain X_ExpectAndReturn memcmps ZERO bytes and always passes. The plugin alone turned three loud failures into three silent vacuous passes. An earlier revision of the harness comment also claimed CMock reads :array_depth:; it does not (`grep -rn array_depth vendor/cmock/lib vendor/cmock/src` is empty). Both errors were caught by the non-vacuity procedure: perturbing one byte the product writes into the queue payload and observing that the tests still passed. Fixed by moving the tests to X_ExpectWithArrayAndReturn with a correctly typed and correctly sized expected payload, and by splitting the two directions explicitly -- a send is compared by content, a receive's out-parameter is ignored and delivered with ReturnThruPtr. Non-vacuity then re-proven: with the product perturbed the tests fail, without it they pass.",
+   "severity": "high",
+   "disposition": "fixed"
+  },
+  {
+   "description": "MEASUREMENT DEFECT, REPORTED NOT FIXED: 53 GREEN FILES ASSERT NOTHING. 3 of the 313 test files contain zero Unity test cases and 50 contain test cases with zero assertions, most a literally empty `void testDummy(void) { }`. Ceedling reports each as a pass, so the reported pass count overstates coverage by 53, though 6 of those 53 only became green in this revision and carry no coverage of their own. The file named in the task, tests/unit/app/driver/afe/nxp/mc33775a/config/test_nxp_mc33775a_cfg.c, is one of the three; its module under test, src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.c, defines NO FUNCTIONS AT ALL -- only a constant n77x_muxSequence[] table -- so a test for it could only assert structural invariants of a constant, and which of those are contractual is a decision about intent, not something derivable from the code. NO test was written for any of the 82: doing so would be fabricating a specification. The emptiness is instead reported as its own classes, `passes_with_no_test_cases` and `passes_with_no_assertions`, from sil/tools/find_vacuous_tests.py, with the full inventory in sil/VACUOUS-TESTS.md and logs/vacuous-inventory.json, and the pass count in the scope block now carries the qualifier. A human must decide what each of the 82 modules is supposed to guarantee, and whether the empty files should be marked explicitly ignored so the sweep can tell 'empty on purpose' from 'empty and not marked as such'.",
+   "severity": "high",
+   "disposition": "deferred"
+  },
+  {
+   "description": "FIVE HARNESS GAPS IDENTIFIED AND DELIBERATELY NOT CLOSED, because closing them means asserting a fact about the TMS570 that the repository does not record. (a) test_emac-low-level.c needs EMAC_MACCONTROL, EMAC_RXHDP, EMAC_TXHDP and HWREG -- a register map; sil/RUNBOOK.md section 6 names inventing one as the anti-pattern this harness exists to avoid. (b) test_ti_bq79xxx_afe_dma.c position-initialises spiBASE_t with 28 members including a 75-element nested struct against the harness's 23; the only evidence for the real layout is a zero-filled initialiser in a test, and the product uses the handle for identity only (src/app/driver/spi/spi.c:660-680), so a widened shadow struct would be inert but still fabricated. (c) test_crc.c and test_crc_semi_auto_crc_calculation.c need crcConfig_t's field layout. (d, e) test_can_cfg_rx.c and test_bender_iso165c.c fail because CMock 2.7.2 does not evaluate `#if (defined(FOXBMS_AFE_DRIVER_DEBUG_CAN) && ...)`: cmock_header_parser.rb:86-88 keeps the guarded branch, the C preprocessor hides the typedef with it, and the generated mock then references a type that does not exist. The repository is internally consistent -- can_cfg.h:195 and can_cbs_rx.h:314 guard the type and its prototypes with the same condition -- so this is a CMock/preprocessor disagreement, and fixing it needs either CMock or conf/, which is out of scope. All five are reported.",
+   "severity": "medium",
+   "disposition": "deferred"
   }
  ],
  "evidence_refs": [
   "tests/unit/app/driver/spi/test_spi.c",
   "tests/unit/app/driver/mcu/test_mcu.c",
   "src/app/driver/spi/spi.c",
-  "src/app/driver/mcu/mcu.c"
+  "src/app/driver/mcu/mcu.c",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REATTRIBUTION.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/VACUOUS-TESTS.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RELAXED-DIAGNOSTICS.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT-BUILD-FAILURES-AND-CLASSIFIER.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK1-CLASSIFICATION.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md"
  ],
  "evidence_files": [
   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
@@ -612,5 +677,136 @@
   "upstream_config_exclusion_not_a_failure": 28,
   "sil_interface_header_gap": 3
  },
- "measurement_caveat": "Two earlier sweeps were taken while another process was writing harness inputs in the same build tree; one of them recorded a 62-test regression that was an artefact of that, not a real change. Neither figure is used. The build tree must be exclusively owned by the measuring process."
+ "measurement_caveat": "Two earlier sweeps were taken while another process was writing harness inputs in the same build tree; one of them recorded a 62-test regression that was an artefact of that, not a real change. Neither figure is used. The build tree must be exclusively owned by the measuring process.",
+ "scope_revision_7": {
+  "tests_in_repository": 313,
+  "tests_building_and_running": 246,
+  "tests_passed": 245,
+  "tests_failed": 1,
+  "tests_build_failed": 67,
+  "build_failure_classes": {
+   "BUILD:CLANG_ONLY_DIAGNOSTIC": 22,
+   "BUILD:REAL_DEFECT_IMPLICIT_FUNCTION_DECLARATION": 2,
+   "EXCLUDED:UPSTREAM_CONFIG": 28,
+   "BUILD:PRODUCT_TAUTOLOGICAL_GUARD": 1,
+   "BUILD:REAL_DEFECT_EXCESS_INITIALIZERS": 1,
+   "BUILD:UNDECLARED_IDENTIFIER": 5,
+   "BUILD:NOT_BUILDABLE_ON_MACOS_OBJECT_FORMAT": 1,
+   "BUILD:LINK_FAILURE": 1,
+   "BUILD:SIL_INTERFACE_HEADER_MISMATCH": 1,
+   "BUILD:STRICT_DIAGNOSTIC_BOTH_COMPILERS": 5
+  },
+  "assertions_tested": 1061,
+  "assertions_passed": 1043,
+  "assertions_failed": 15,
+  "previous_revision_measurements": {
+   "revision": "6",
+   "re_measured_on_this_host_before_this_revisions_work": true,
+   "tests_passed": 222,
+   "tests_failed": 7,
+   "tests_build_failed": 84,
+   "assertions_tested": 988,
+   "assertions_passed": 950,
+   "assertions_failed": 35,
+   "build_failure_classes": {
+    "build:build:clang_only_diagnostic": 22,
+    "build:build:not_buildable_on_macos_object_format": 1,
+    "build:build:product_tautological_guard": 1,
+    "build:build:real_defect_absolute_value_truncation": 1,
+    "build:build:real_defect_excess_initializers": 1,
+    "build:build:real_defect_implicit_function_declaration": 2,
+    "build:build:real_defect_implicit_int": 2,
+    "build:build:real_defect_macro_arity": 4,
+    "build:build:real_defect_out_of_bounds_array_index": 6,
+    "build:build:sil_interface_header_mismatch": 3,
+    "build:build:strict_diagnostic_both_compilers": 5,
+    "build:build:undeclared_identifier": 8,
+    "build:excluded:upstream_config": 28
+   }
+  },
+  "delta_this_revision": {
+   "newly_passing": 23,
+   "newly_failing": 0,
+   "regressions": 0
+  },
+  "pass_count_qualifier": {
+   "green_files": 245,
+   "green_files_that_assert_nothing": 53,
+   "green_files_carrying_a_real_assertion": 192,
+   "same_figures_before_this_revisions_work": {
+    "green_files": 222,
+    "green_files_that_assert_nothing": 53,
+    "green_files_carrying_a_real_assertion": 175
+   },
+   "note_on_the_22_newly_passing_tests": "6 of the 23 tests that newly went from build failure to pass are themselves vacuous (test_dma.c, test_dma_nxp.c, test_dma_uart.c, test_dma_dma_group_a_notification.c, test_app-hl_notification.c, test_bootloader-hl_notification.c). Bringing them up is real progress -- they now compile, link and execute the product code instead of failing to build -- but they add no assertion coverage. The honest coverage delta is 175 -> 192 green files that actually assert something, not 222 -> 245.",
+   "classes": [
+    "passes_with_no_test_cases",
+    "passes_with_no_assertions"
+   ],
+   "note": "A green verdict is a harness outcome, not evidence that anything is verified. 53 of the green files make no assertion at all: 3 contain zero Unity test cases and 50 contain test cases with zero assertions. Any coverage figure must carry this qualifier. Inventory and the decision a human still has to make: sil/VACUOUS-TESTS.md."
+  }
+ },
+ "regression_check_revision_7": {
+  "baseline": "logs/RESULTS-BEFORE-r7.json",
+  "after": "logs/RESULTS-AFTER-r7.json",
+  "tests_in_baseline": 313,
+  "tests_passing_in_baseline": 222,
+  "regressions": 0,
+  "regression_detail": [],
+  "newly_passing": [
+   "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830.c",
+   "tests/unit/app/driver/afe/debug/can/test_debug_can.c",
+   "tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c",
+   "tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_i2c.c",
+   "tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_afe_cell-temperatures.c",
+   "tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_afe_cell-voltages.c",
+   "tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c",
+   "tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures_3-temp-sensors.c",
+   "tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures_4-temp-sensors.c",
+   "tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures_5-temp-sensors.c",
+   "tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-voltages.c",
+   "tests/unit/app/driver/can/test_can.c",
+   "tests/unit/app/driver/dma/test_dma.c",
+   "tests/unit/app/driver/dma/test_dma_dma_group_a_notification.c",
+   "tests/unit/app/driver/dma/test_dma_nxp.c",
+   "tests/unit/app/driver/dma/test_dma_uart.c",
+   "tests/unit/app/driver/pwm/test_pwm.c",
+   "tests/unit/app/driver/rtc/test_rtc.c",
+   "tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c",
+   "tests/unit/app/engine/hw_info/test_master_info.c",
+   "tests/unit/app/hal/test_app-hl_notification.c",
+   "tests/unit/app/main/test_main.c",
+   "tests/unit/bootloader/hal/test_bootloader-hl_notification.c"
+  ],
+  "newly_failing": [],
+  "still_failing": [
+   "tests/unit/app/driver/phy/test_dp83869.c"
+  ],
+  "method": "The full 313-test sweep was re-measured on this host with the harness as it stood before this revision's work, and again with the revised harness. The before-run reproduced the archived result exactly (222 pass / 7 fail / 84 build failures, 988/950/35 assertions), so the two runs are comparable. Per-test outcome sets were then compared programmatically over all 313 tests. Every verdict is parsed from Ceedling's own OVERALL TEST SUMMARY and cross-checked against the process exit code; nothing is inferred. The build tree was exclusively used by one process for the whole of each run."
+ },
+ "re_attribution_revision_7": {
+  "prior_claim": "30 real defects in foxBMS source among the build failures",
+  "status": "WITHDRAWN",
+  "method": "Every diagnostic re-derived from the real compiler output recorded by the diagnostics-collecting compiler wrapper, not from diagnostic text matched against a class list. Signatures taken from the repository's own call sites and from the product's own function DEFINITIONS; no arity derived by counting commas. Evidence per test: sil/REATTRIBUTION.md.",
+  "classes": {
+   "H_sil_interface_header": {
+    "count": 21,
+    "meaning": "the arity, type, name or shape in sil/iface/HL_*.h does not match how the product calls or defines the function"
+   },
+   "T_test": {
+    "count": 6,
+    "meaning": "the diagnostic is located in tests/unit; out-of-bounds access in the test's own fixture"
+   },
+   "P_product": {
+    "count": 1,
+    "meaning": "src/app/driver/rtc/rtc.c:272 abs() on a time_t; fixed, with the blast radius enumerated"
+   }
+  },
+  "harness_defects_identified_and_deliberately_not_fixed": {
+   "count": 5,
+   "reason": "closing them means asserting a fact about the TMS570 that the repository does not record: a register map (test_emac-low-level.c), spiREG_t's real member count and a 75-member nested struct (test_ti_bq79xxx_afe_dma.c), crcConfig_t's field layout (test_crc.c, test_crc_semi_auto_crc_calculation.c), or a CMock limitation that would need CMock or conf/ changed (test_can_cfg_rx.c, test_bender_iso165c.c). Reported, not worked around."
+  },
+  "limitation": "This record describes host unit tests of a SIL harness built on machine-declared stand-ins for TI's absent headers. It carries no product verification credit, no production authorisation, and no conformity, tool qualification or ASPICE capability claim. A pass here shows that the driver computed a value and stored it under the right name; it shows nothing about register-map correctness, which is what HALCoGen generates."
+ },
+ "evidence_refs_note": "Every working document produced by the SIL round is now copied into this run's tracked evidence directory and cited from there, rather than from the gitignored .work tree. The prior revision cited two of them by a path that did not resolve, which evidence_reference_validator reported."
 }
