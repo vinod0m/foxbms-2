@@ -1,68 +1,84 @@
 {
- "id": "FB2-REV-FND-000024",
- "revision": "2",
- "schema_version": "1.0.0",
- "artifact_type": "finding",
- "engineering_domain": "safety",
- "profile": "synthetic_reference",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "Finding FB2-REV-FND-000024: the contactor reaction requirement contradicts itself: a 30 ms acceptance threshold against a 35 ms chain in its own rationale and 40 ms in the safety goal's budget",
- "owner_role": "quality_engineer",
- "origin": "synthetic",
- "source_refs": [],
- "assumption_refs": [],
- "standards_mappings": [
-  {
-   "standard_id": "ASPICE_PAM_41",
-   "reference": "SUP.9",
-   "status": "mapped",
-   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  "id": "FB2-REV-FND-000024",
+  "revision": "3",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "safety",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Finding FB2-REV-FND-000024: the contactor reaction requirement contradicts itself: a 30 ms acceptance threshold against a 35 ms chain in its own rationale and 40 ms in the safety goal's budget",
+  "owner_role": "quality_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SUP.9",
+      "status": "mapped",
+      "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+      "status": "mapped",
+      "rationale": "The obligation to record rather than to conceal."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
   },
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
-   "status": "mapped",
-   "rationale": "The obligation to record rather than to conceal."
-  }
- ],
- "lifecycle_status": "reviewed",
- "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-29T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "quality_engineer",
-   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Reconciled the three contactor-reaction figures to the chain points they each measure: FB2-SAF-FSR-000003 revision 1 -> 2 (40 ms to feedback open, 35 ms to mechanically open, 30 ms mechanical), and regenerated the dependents FB2-HW-TSR-000003, FB2-SAF-SGO-000001, FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001. Consulted the real source via graft before deciding; the source carries no timing constant, so the parameter registry is the authority. The 50 ms vs 100 ms weld-detection disagreement between the two records was left undecided and is reported."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "CORRECTED 2026-09-30T00:00:00Z against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: CLOSED. Disposition migrated from 'accepted' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    }
+  ],
+  "subject_artifact_id": "FB2-SAF-FSR-000003",
+  "severity": "high",
+  "category": "consistency",
+  "evidence": "Three figures in the corpus disagree about the same reaction. FB2-SAF-FSR-000003 states: acceptance criterion 'Contactor open latency, Time from FAULT request to contactor feedback open, 30 ms'; rationale '30 ms mechanical opening + 5 ms feedback = 35 ms within FTTI budget'; and the safety goal's timing_budget.allocation gives contactor_command 5 + contactor_mechanical 30 + feedback_verification 5 = 40 ms after the fault request. The requirement's own threshold is therefore 10 ms tighter than its own arithmetic and 5 ms tighter than the budget it is spending from. FB2-SAF-FSR-000003 also states a 5 ms coil de-energise criterion, which is consistent with the 5 ms contactor_command allocation, so the requirement is internally coherent on the command and incoherent on the completion.",
+  "disposition": "resolved",
+  "impact": "A requirement whose threshold is tighter than its own mechanism's budget will fail, and when it fails the failure will look like a defect in the contactor driver rather than a defect in the requirement, so the engineering effort goes to the wrong place. It also makes the safety goal's 100 ms interval unverifiable at the end of the chain: the existing acceptance criteria, taken together, claim a reaction that is faster than the sum of the recorded parts. Any verification measure written against FB2-SAF-FSR-000003 inherits an unachievable threshold.",
+  "root_cause": "The requirement was written with a round 30 ms target derived from the mechanical opening time alone (FB2-ASM-006 states 30 ms worst case), and the command and feedback segments were added to the rationale and to the safety goal's budget without the threshold being recomputed. The 30 ms figure is a plausible-looking round number that survived because nothing reconciled the three places it appears.",
+  "resolution": "RESOLVED, and the vocabulary member is corrected from 'accepted' to 'resolved'. Re-verified on 2026-09-30T00:00:00Z: FB2-SAF-FSR-000003's acceptance criteria now carry 'Contactor open latency / Time from FAULT request to contactor feedback open (auxiliary contacts confirm open) / 40 ms', plus a separate 'Contactor mechanically open latency' criterion at 35 ms and a 'Coil de-energise to mechanically open' criterion at 30 ms that asks for FB2-PRM-000005's value under its own label.\n\nThe reasoning this record used still holds and is the reason the fix is not a loose number: 30 ms is the mechanical opening time alone, 35 ms is command-plus-actuation and was wrong where it appeared because it omitted the 5 ms coil-command segment the same requirement budgets separately, and 40 ms is the figure for the quantity the criterion actually names. The threshold was made HARDER to claim compliance with, not easier, and the real foxBMS source was consulted first and cannot settle the number - CONT_OpenContactor carries no timing constant - so FB2-PRM-000005 is the authority and it was not edited. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+    "date": "2026-09-30T00:00:00Z",
+    "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+    "audit_class": "CLOSED",
+    "condition_still_holds": false,
+    "disposition_before": "accepted",
+    "revision_before": "2",
+    "evidence": "the asserted condition is a 30 ms 'Time from FAULT request to contactor feedback open' against a 35 ms rationale and a 40 ms budget. Measured: the criterion 'Contactor open latency' now carries threshold '40'; the mechanical-only point is now a separate criterion at '30' ms and the 30 ms mechanical figure is asked for under its own label (['Coil de-energise to mechanically open']). The record is at revision 3."
   },
-  {
-   "revision": "2",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "quality_engineer",
-   "description": "Reconciled the three contactor-reaction figures to the chain points they each measure: FB2-SAF-FSR-000003 revision 1 -> 2 (40 ms to feedback open, 35 ms to mechanically open, 30 ms mechanical), and regenerated the dependents FB2-HW-TSR-000003, FB2-SAF-SGO-000001, FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001. Consulted the real source via graft before deciding; the source carries no timing constant, so the parameter registry is the authority. The 50 ms vs 100 ms weld-detection disagreement between the two records was left undecided and is reported."
-  }
- ],
- "subject_artifact_id": "FB2-SAF-FSR-000003",
- "severity": "high",
- "category": "consistency",
- "evidence": "Three figures in the corpus disagree about the same reaction. FB2-SAF-FSR-000003 states: acceptance criterion 'Contactor open latency, Time from FAULT request to contactor feedback open, 30 ms'; rationale '30 ms mechanical opening + 5 ms feedback = 35 ms within FTTI budget'; and the safety goal's timing_budget.allocation gives contactor_command 5 + contactor_mechanical 30 + feedback_verification 5 = 40 ms after the fault request. The requirement's own threshold is therefore 10 ms tighter than its own arithmetic and 5 ms tighter than the budget it is spending from. FB2-SAF-FSR-000003 also states a 5 ms coil de-energise criterion, which is consistent with the 5 ms contactor_command allocation, so the requirement is internally coherent on the command and incoherent on the completion.",
- "disposition": "accepted",
- "impact": "A requirement whose threshold is tighter than its own mechanism's budget will fail, and when it fails the failure will look like a defect in the contactor driver rather than a defect in the requirement, so the engineering effort goes to the wrong place. It also makes the safety goal's 100 ms interval unverifiable at the end of the chain: the existing acceptance criteria, taken together, claim a reaction that is faster than the sum of the recorded parts. Any verification measure written against FB2-SAF-FSR-000003 inherits an unachievable threshold.",
- "root_cause": "The requirement was written with a round 30 ms target derived from the mechanical opening time alone (FB2-ASM-006 states 30 ms worst case), and the command and feedback segments were added to the rationale and to the safety goal's budget without the threshold being recomputed. The 30 ms figure is a plausible-looking round number that survived because nothing reconciled the three places it appears.",
- "resolution": "RESOLVED at source, on evidence rather than convenience. Three figures were in play and each was a true statement about a DIFFERENT point on one chain; the defect was that a single acceptance criterion carried the value belonging to another point. 30 ms is the mechanical opening time alone - the value of FB2-PRM-000005 (tolerance 20..40, timing_budget worst_case) and of FB2-ASM-006. 35 ms is command-plus-actuation (5 + 30) and was WRONG where it appeared, because it omitted the coil-command segment that the same requirement budgets separately at 5 ms and that the safety goal budgets as contactor_command_ms = 5. 40 ms is 5 + 30 + 5 and is the correct figure for the quantity the criterion actually names, 'Time from FAULT request to contactor feedback open'. The real foxBMS source was consulted first and cannot settle the number: CONT_OpenContactor at src/app/driver/contactor/contactor.c:165-182 only requests the state change through SPS_RequestContactorState() and carries no timing constant, so FB2-PRM-000005 is the authority and it was NOT edited. Two of the corpus's own records already said 40 ms is the end-to-end figure - FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 both state '5 ms command plus 30 ms mechanical plus 5 ms feedback, 40 ms' - so the choice follows the corpus rather than the editor. Changes, all in FB2-SAF-FSR-000003 (revision 1 -> 2): the 'Contactor open latency' threshold moved from 30 ms to 40 ms; a new criterion 'Contactor mechanically open latency' was added at 35 ms; a new criterion 'Coil de-energise to mechanically open' was added at 30 ms so that FB2-PRM-000005's value is asked for under its own label; the statement now distinguishes the mechanically open point from the feedback-confirmed point; the rationale states the full chain and says why the earlier 35 ms was wrong. The 5 ms coil criterion, the feedback criterion and the weld-detection criterion are unchanged. The threshold was made HARDER to claim compliance with, not easier: 30 ms was unreachable, 40 ms is reachable and is the budget the record was already spending from. Dependent regenerated: FB2-HW-TSR-000003 (revision 1 -> 2) whose rationale cited 'FSR-003 30 ms latency budget' now states the three segments and the 35 ms and 40 ms points; FB2-SAF-SGO-000001's statement now names 30 ms as the mechanical opening time of FB2-PRM-000005 and 40 ms as the resulting end-to-end figure; FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001 had their contradiction blocks updated. NOT RESOLVED, and deliberately left open in a different record: FB2-SAF-FSR-000003 states a 50 ms weld-detection latency and FB2-HW-TSR-000003 states 100 ms for the same quantity. No record settles which is intended, so neither figure was changed and the disagreement is now named in FB2-HW-TSR-000003's measure text rather than silently harmonised. That is a separate finding of the same class, not this one. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
 }

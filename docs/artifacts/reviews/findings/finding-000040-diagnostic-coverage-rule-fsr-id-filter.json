@@ -1,0 +1,67 @@
+{
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "management",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "owner_role": "data_quality_engineer",
+  "origin": "derived",
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-30T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-30T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "id": "FB2-REV-FND-000040",
+  "title": "Finding FB2-REV-FND-000040: the diagnostic-coverage claim validator carries the same '-FSR-' id filter as the fault_reaction rule had, and is currently inert rather than correct",
+  "severity": "medium",
+  "category": "process",
+  "disposition": "accepted",
+  "impact": "Today, no measurable harm, and it is important to say that plainly rather than inflate it. The rule reads the field diagnostic_coverage and the field diagnostic_coverage_evidence. No FB2-SAF-SEC-* record claims diagnostic coverage, so the filter currently excludes nothing that would have been reported: the rule is inert on this corpus, not wrong on it. The harm is prospective and specific. If a future security requirement claims a diagnostic coverage figure - and the security concept does have a diagnostic story, since the requirements mandate a diagnosis entry per rejected frame - the rule would silently decline to check the claim, and the silence would look identical to the silence this finding was raised about in FB2-REV-FND-000039. A check that is inert until the day it is needed, and wrong on that day, is a trap with a long fuse.",
+  "root_cause": "The same authoring decision as FB2-REV-FND-000039, reached independently in a second rule: the population was narrowed by id substring rather than by declared type and domain. The two rules were written at different times for different fields and neither was reconciled against the other, which is the general failure mode - scope expressed in a place no check reads.",
+  "evidence": "MEASURED. The rule as it stands in docs/artifacts/tools/corpus.py: `if d.get(\"artifact_type\") == \"requirement\" and d.get(\"engineering_domain\") == \"safety\" and \"-FSR-\" in _id(key)`, then read diagnostic_coverage, and report if diagnostic_coverage is claimed without diagnostic_coverage_evidence. Corpus-wide scan: diagnostic_coverage is claimed by FSR records and by no SEC record, so 0 requirements are excluded that would otherwise have been reported. The filter is reproducible from the source line alone, and docs/artifacts/tests/rule_scope_probe.py prints it under 'ADJACENT RULE NOTED, NOT CHANGED'.",
+  "resolution": "ACKNOWLEDGED AND NOT FIXED, deliberately, and the reason is scope rather than difficulty. The change to make is a one-clause deletion identical to the one applied in FB2-REV-FND-000039, and it is exactly the kind of change that should not be made in a pass whose authorisation covers one specific rule. Making it here would mean widening a second rule on the strength of a symptom that does not currently manifest, with no measurement showing what the widened rule would report on this corpus.\n\nThe recommended change, for whoever owns the rule set: remove the `\"-FSR-\" in _id(key)` clause so the population is declared type and declared domain, and add the same four self-tests that were added for MUT-008 - the excluded class is reported, the previously reported class is still reported, the domain boundary is still respected, and a record that satisfies the rule is silent. Applying that recipe to this rule is safe today precisely because the recipe was proved on a rule where the widening had a visible effect.\n\nWhat is NOT done and should not be inferred: no check was weakened, no record was relabelled, and no claim is made that this rule is currently reporting everything it should. It may well be - on this corpus it reports nothing either way - but 'reports nothing on a corpus where nothing is wrong' is not the same as 'would report the defect', and the difference is the whole content of this finding. No human has confirmed this analysis; human approval of this record remains pending. No tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SUP.9",
+      "status": "mapped",
+      "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+      "status": "mapped",
+      "rationale": "The obligation to record rather than to conceal."
+    }
+  ],
+  "lifecycle_status_note": "'draft': raised by the finding-closure pass and verified by re-derivation from the live corpus. No human reviewer has confirmed this record and human_approval_status remains pending. This record makes no MISRA conformance claim, no tool-qualification claim, no certification claim and no ASPICE capability-level claim of any kind.",
+  "disposition_note": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+    "date": "2026-09-30T00:00:00Z",
+    "method": "docs/artifacts/tests/audit_findings.py and docs/artifacts/tests/rule_scope_probe.py",
+    "raised_by": "finding-closure pass over the 38 pre-existing records"
+  },
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "New record raised by the finding-closure pass. It records a condition that pass discovered while re-deriving the conditions the 38 existing records assert, and that would otherwise have been lost - either because it was a rule defect that no record named, or because closing the record that did name its neighbourhood would have quietly carried it away with it. ACKNOWLEDGED AND NOT FIXED, deliberately, and the reason is scope rather than difficulty. The change to make is a one-clause deletion identical to the one applied in FB2-REV-FND-000039, and it is exactly the kind of change that should not be made in a pass whose authorisation covers one specific rule. Making it here would mean widening a second rule on the strength of a symptom that does not currently manifest, with no measurement showing what the widened rule would report on this corpus. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    }
+  ]
+}

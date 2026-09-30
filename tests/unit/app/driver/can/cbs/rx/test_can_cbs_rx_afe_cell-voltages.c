@@ -256,18 +256,62 @@ void testCANRX_CellVoltages(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2 =======*/
-    uint64_t messageData           = 0u;
+    /* The signal values the frame helper and the signal helper are told to
+     * report. Nothing here is a value the product could produce on its own: each
+     * one is what the mock delivers, and everything the product posts to the
+     * queue is derived from them. That derivation is the logic under test, and
+     * it is only observable if the delivered values are non-zero and distinct.
+     * Derivation, read from the module under test
+     * src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c:127,138,150:
+     *     pCellVoltages->muxValue        = (uint8_t)pCanSignalMuxValue
+     *     pCellVoltages->invalidFlag[i]  = ((uint8_t)pCanSignalInvalidFlag > 0u)
+     *     pCellVoltages->cellVoltage[i]  = (uint16_t)pCanSignalVoltage
+     * The bit starts and lengths are already checked by the Expect arguments
+     * below, so what is added here is the value-level half: the truncations, the
+     * boolean conversion and the per-index mapping. */
+    const uint64_t deliveredMessageData = 0x0123456789ABCDEFULL;
+    uint64_t messageData                = 0x0123456789ABCDEFULL;
+    /* Out-parameter probe for CAN_RxGetMessageDataFromCanData. That argument has
+     * the same before-the-write property as pCanSignal below: CMock compares it
+     * BEFORE the mock writes it, and the module under test declares
+     * 'uint64_t messageData = 0u;' and passes its address
+     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c:167), so at the
+     * check the product's buffer is still all zero. Zero is the only value this
+     * probe can hold and it says nothing; it is kept as a separate object so that
+     * the frame value the product carries onwards can still be asserted, which it
+     * is, nine times, by the messageData arguments below. */
+    uint64_t messageDataOutProbe = 0u;
+    uint64_t deliveredMuxValue   = (uint64_t)TEST_FULL_8_BITS;
+    /* One addressable value per extraction call. A _ReturnThruPtr stores the
+     * ADDRESS of the value and the mock copies out of it when the PRODUCT calls,
+     * so a reused loop variable would make all four calls see the last value
+     * written and the fixture would silently lose the index mapping. */
+    uint64_t deliveredInvalidFlag[CAN_NUM_OF_VOLTAGES_IN_CAN_CELL_VOLTAGES_MSG];
+    uint64_t deliveredVoltage[CAN_NUM_OF_VOLTAGES_IN_CAN_CELL_VOLTAGES_MSG];
+    for (uint8_t i = 0u; i < CAN_NUM_OF_VOLTAGES_IN_CAN_CELL_VOLTAGES_MSG; i++) {
+        deliveredInvalidFlag[i] = (uint64_t)(i % 2u);         /* -> false,true,false,true */
+        deliveredVoltage[i] = (uint64_t)((i + 1u) * 1000u);  /* -> 1000,2000,3000,4000 */
+    }
     /* Expected queue payload -- see the note in
      * test_can_cbs_rx_afe_cell-temperatures.c. The product posts a
      * function-local CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s
-     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c). */
-    CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s expectedQueuePayload = {0};
+     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c:168). It used to
+     * be {0}, which made the comparison a memcmp of zero bytes against zero bytes:
+     * no signal value ever entered it, so the whole packing path was unobserved.
+     * It now holds what the module under test must produce from the delivered
+     * values above. */
+    CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s expectedQueuePayload = {
+        .muxValue    = (uint8_t)TEST_FULL_8_BITS,
+        .invalidFlag = {false, true, false, true},
+        .cellVoltage = {1000, 2000, 3000, 4000},
+    };
     uint64_t pCanSignalMuxValue    = 0u;
     uint64_t pCanSignalInvalidFlag = 0u;
     uint64_t pCanSignalVoltage     = 0u;
     CAN_ENDIANNESS_e canEndianness = CAN_BIG_ENDIAN;
 
-    CAN_RxGetMessageDataFromCanData_Expect(&messageData, canData, canEndianness);
+    CAN_RxGetMessageDataFromCanData_Expect(&messageDataOutProbe, canData, canEndianness);
+    CAN_RxGetMessageDataFromCanData_ReturnThruPtr_pMessage(&deliveredMessageData);
     /* Get the mux value */
     CAN_RxGetSignalDataFromMessageData_Expect(
         messageData,
@@ -275,25 +319,26 @@ void testCANRX_CellVoltages(void) {
         canrx_kCanCellVoltageMuxLength,
         &pCanSignalMuxValue,
         CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
+    CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredMuxValue);
     /* Get the invalid flag */
     for (uint8_t i = 0; i < CAN_NUM_OF_VOLTAGES_IN_CAN_CELL_VOLTAGES_MSG; i++) {
-        pCanSignalInvalidFlag = 0u;
         CAN_RxGetSignalDataFromMessageData_Expect(
             messageData,
             canrx_kCanCellVoltageInvalidFlagBitStart[i],
             canrx_kCanCellVoltageInvalidFlagLength,
             &pCanSignalInvalidFlag,
             CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredInvalidFlag[i]);
     }
     /* Get the voltages */
     for (uint8_t i = 0; i < CAN_NUM_OF_VOLTAGES_IN_CAN_CELL_VOLTAGES_MSG; i++) {
-        pCanSignalInvalidFlag = 0u;
         CAN_RxGetSignalDataFromMessageData_Expect(
             messageData,
             canrx_kCanCellVoltageBitStart[i],
             canrx_kCanCellVoltageLength,
             &pCanSignalVoltage,
             CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredVoltage[i]);
     }
     OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
         ftsk_canToAfeCellVoltagesQueue,
@@ -305,33 +350,45 @@ void testCANRX_CellVoltages(void) {
     TEST_ASSERT_EQUAL_INT16(0, CANRX_CellVoltages(validTestMessage, canData, &can_kShim));
 
     /* ======= RT2/2 =======*/
-    CAN_RxGetMessageDataFromCanData_Expect(&messageData, canData, canEndianness);
-    /* Get the mux value */
+    CAN_RxGetMessageDataFromCanData_Expect(&messageDataOutProbe, canData, canEndianness);
+    CAN_RxGetMessageDataFromCanData_ReturnThruPtr_pMessage(&deliveredMessageData);
+    /* Get the mux value. pCanSignal is an OUT-parameter of the mocked helper and
+     * it cannot be asserted at the call boundary: CMock compares that argument
+     * BEFORE it writes it, and the module under test re-zeroes its scratch local
+     * immediately before every call
+     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c:116 and :131,
+     * :143), so the comparison is 0 against 0 whatever the packing does. It is
+     * left in place unchanged rather than silenced; what the product does with the
+     * extracted signal is asserted by the queue-payload comparison below, from the
+     * value this call delivers. The four scalar arguments of the same expectation
+     * -- messageData, bit start, bit length and endianness -- are real assertions
+     * and are unchanged. */
     CAN_RxGetSignalDataFromMessageData_Expect(
         messageData,
         canrx_kCanCellVoltageMuxBitStart,
         canrx_kCanCellVoltageMuxLength,
         &pCanSignalMuxValue,
         CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
+    CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredMuxValue);
     /* Get the invalid flag */
     for (uint8_t i = 0; i < CAN_NUM_OF_VOLTAGES_IN_CAN_CELL_VOLTAGES_MSG; i++) {
-        pCanSignalInvalidFlag = 0u;
         CAN_RxGetSignalDataFromMessageData_Expect(
             messageData,
             canrx_kCanCellVoltageInvalidFlagBitStart[i],
             canrx_kCanCellVoltageInvalidFlagLength,
             &pCanSignalInvalidFlag,
             CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredInvalidFlag[i]);
     }
     /* Get the voltages */
     for (uint8_t i = 0; i < CAN_NUM_OF_VOLTAGES_IN_CAN_CELL_VOLTAGES_MSG; i++) {
-        pCanSignalInvalidFlag = 0u;
         CAN_RxGetSignalDataFromMessageData_Expect(
             messageData,
             canrx_kCanCellVoltageBitStart[i],
             canrx_kCanCellVoltageLength,
             &pCanSignalVoltage,
             CANRX_AFE_CELL_VOLTAGES_ENDIANNESS);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredVoltage[i]);
     }
     OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
         ftsk_canToAfeCellVoltagesQueue,

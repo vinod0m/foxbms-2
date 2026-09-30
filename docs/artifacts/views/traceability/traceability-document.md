@@ -1,6 +1,6 @@
 # Traceability — the corpus traceability document (generated)
 
-Generated: 2026-09-29T19:02:11Z | Baseline: BAS-REF-001 | 223 artifacts, 460 links
+Generated: 2026-09-30T02:23:00Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
 
 ## Provenance and status of this file
 
@@ -29,7 +29,7 @@ This is the traceability document for the foxBMS 2 lifecycle artifact corpus. It
 
 It reports three different populations and does not merge them:
 
-- **223 artifacts, 460 links** — records and links in the tool's index, the population every count below is drawn from.
+- **233 artifacts, 460 links** — records and links in the tool's index, the population every count below is drawn from.
 - Records that exist in both profiles appear once per profile. The same identifier in `as_is` and in `synthetic_reference` is two different records by design, and are counted separately.
 - A coverage ratio is a ratio, not a score. Where the denominator is a target rather than a population, the table says so in its own column.
 
@@ -43,7 +43,7 @@ Computed from the artifact index at render time.
 | `design` | 3 | 5 | 8 |
 | `deviation` | 26 | 0 | 26 |
 | `execution` | 16 | 20 | 36 |
-| `finding` | 8 | 24 | 32 |
+| `finding` | 14 | 28 | 42 |
 | `hazard` | 1 | 1 | 2 |
 | `item_definition` | 0 | 1 | 1 |
 | `measurement_plan` | 0 | 1 | 1 |
@@ -63,9 +63,9 @@ Computed from the artifact index at render time.
 | `tara` | 0 | 1 | 1 |
 | `test_measure` | 5 | 20 | 25 |
 | `use_case` | 0 | 4 | 4 |
-| **Total** | 74 | 149 | 223 |
+| **Total** | 80 | 153 | 233 |
 
-223 records carry an `id` and are therefore countable. Registry container files (parameter and assumption registries) carry no top-level `id` and are counted separately below; they are not lifecycle artifacts.
+233 records carry an `id` and are therefore countable. Registry container files (parameter and assumption registries) carry no top-level `id` and are counted separately below; they are not lifecycle artifacts.
 
 ### Non-record registries
 
@@ -82,7 +82,7 @@ Counted from the index. This is the population-wide position of the four guard f
 
 | `human_approval_status` | `production_authorized` | `product_verification_credit` | Records |
 |---|---|---|---|
-| pending | false | false | 223 |
+| pending | false | false | 233 |
 
 
 No record in this corpus carries a human approval: 0 records are in any state other than `pending`. No record is authorized for production: 0 records are in any state other than `false`. Automated review performed by this toolchain is not organizational independence and is not a human confirmation. Nothing in this document can change those two numbers.
@@ -169,18 +169,18 @@ Recomputed by the same function `corpus.py coverage` prints, at render time. Not
 | `scope_accounting` | 1/1 | **presence** | source/feature/variant inventories present — 1 if the source inventory file carries a claimed file count; it does not compare that claim against the tree, which acceptance gate [2/8] inventory does |
 | `artifact_population` | 13/13 | **measured** | families populated: ['change', 'design', 'deviation', 'execution', 'hazard', 'requirement', 'review', 'safety_analysis', 'safety_case', 'safety_goal'… — artifact families that hold at least one record |
 | `standards_mapping` | 44/44 | **counted** | ASPICE processes 32/32, ISO parts 12/12 — ASPICE processes and ISO parts that carry a recorded disposition in the coverage plan; it is a count of plan entries, not a count of satisfied mappings — read the disposition tally above for that |
-| `source_grounding` | 80/224 | **measured** | artifacts with source_refs (102 anchors available) — records carrying at least one `source_refs` entry |
+| `source_grounding` | 80/234 | **measured** | artifacts with source_refs (102 anchors available) — records carrying at least one `source_refs` entry |
 | `traceability_integrity` | 460/460 | **measured** | 460 links, 0 dangling (link validation re-run for this figure) — links that are not dangling, from a link validation re-run for this figure |
 | `semantic_consistency_checks` | 10/10 | **constant** | 10 check categories executed per run — 10 by declaration in the tool; it states how many categories the tool runs, not a measured result |
-| `automated_review_coverage` | 144/188 | **measured** | 144/188 artifacts covered by 15 review records; reviewed_by links consistent with reviewed_ids — unique indexed ids covered by a review record or a `reviewed_by` link |
+| `automated_review_coverage` | 144/198 | **measured** | 144/198 artifacts covered by 15 review records; reviewed_by links consistent with reviewed_ids — unique indexed ids covered by a review record or a `reviewed_by` link |
 | `verification_planning` | 25/7 | **measured** | 25 test measures for 7 FSRs — test measures per safety requirement; a ratio, not a score, and over 100% means over-covered |
 | `actual_product_evidence` | 0/25 | **measured** | 0 target-hardware executions: execution_kind has no target-hardware member, so none can be claimed (blocked, not fabricated); of 36 execution records… — test measures backed by an execution whose `execution_kind` names the product's own hardware |
-| `synthetic_fixture_coverage` | 149/43 | **counted** | 149 synthetic_reference artifacts (target 43) — `synthetic_reference` records against a fixed target of 43, so a ratio above 100% is over-coverage, not a score |
+| `synthetic_fixture_coverage` | 153/43 | **counted** | 153 synthetic_reference artifacts (target 43) — `synthetic_reference` records against a fixed target of 43, so a ratio above 100% is over-coverage, not a score |
 | `negative_scenario_validation` | 20/20 | **measured** | 20/20 mutations passed (executed and detected by their own declared rule); 3/3 change lifecycles — mutation scenarios that PASS when executed: the rule each declares is implemented, is silent on the unmutated corpus, and produces a finding the baseline did not contain |
 | `final_status` | `synthetic_ready_with_limitations` | — | recorded status |
 | `export_reproducibility` | 1/1 | **presence** | export manifest present — 1 if the export manifest file exists; the hash stability is measured separately by acceptance gate [6/8] |
-| `human_approval` | 0/224 | **constant** | all artifacts pending human approval (none performed) — 0 by corpus policy; every record is `pending`. The policy is enforced by the `human_approval_rejected` rule, not measured by this dimension |
-| `production_authorization` | 0/224 | **constant** | production_authorized=false for all artifacts (by policy) — 0 by corpus policy; every record is `false`. The policy is enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
+| `human_approval` | 0/234 | **constant** | all artifacts pending human approval (none performed) — 0 by corpus policy; every record is `pending`. The policy is enforced by the `human_approval_rejected` rule, not measured by this dimension |
+| `production_authorization` | 0/234 | **constant** | production_authorized=false for all artifacts (by policy) — 0 by corpus policy; every record is `false`. The policy is enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
 
 
 ## Negative-scenario validation

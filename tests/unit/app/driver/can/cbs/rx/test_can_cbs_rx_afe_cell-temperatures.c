@@ -255,25 +255,81 @@ void testCANRX_CellTemperatures(void) {
     TEST_ASSERT_FAIL_ASSERT(CANRX_CellTemperatures(validTestMessage, canData, NULL_PTR));
 
     /* ======= Routine tests =============================================== */
-    uint64_t messageData    = 0u;
-    uint64_t pCanSignalData = 0u;
+    /* The signal values the frame helper and the signal helper are told to
+     * report. Nothing here is a value the product could produce on its own: each
+     * one is what the mock delivers, and everything the product posts to the
+     * queue is derived from them. That derivation is the logic under test, and
+     * it is only observable if the delivered values are non-zero and distinct.
+     * Derivation, read from the module under test
+     * src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c:140,151,163:
+     *     pCellTemperatures->muxValue            = (uint8_t)pCanSignalMuxValue
+     *     pCellTemperatures->invalidFlag[i]      = ((uint8_t)pCanSignalInvalidFlag > 0u)
+     *     pCellTemperatures->cellTemperature[i]  = (int8_t)pCanSignalTemperature
+     * The bit starts and lengths are already checked by the Expect arguments
+     * below, so what is added here is the value-level half: the truncations, the
+     * boolean conversion and the per-index mapping. */
+    const uint64_t deliveredMessageData = 0x0123456789ABCDEFULL;
+    uint64_t messageData               = 0x0123456789ABCDEFULL;
+    uint64_t pCanSignalData            = 0u;
+    /* Out-parameter probe for CAN_RxGetMessageDataFromCanData. That argument has
+     * the same before-the-write property as pCanSignal below: CMock compares it
+     * BEFORE the mock writes it, and the module under test declares
+     * 'uint64_t messageData = 0u;' and passes its address
+     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c:180), so at
+     * the check the product's buffer is still all zero. Zero is the only value
+     * this probe can hold and it says nothing; it is kept as a separate object so
+     * that the frame value the product carries onwards can still be asserted,
+     * which it is, thirteen times, by the messageData arguments below. */
+    uint64_t messageDataOutProbe = 0u;
+    uint64_t deliveredMuxValue   = (uint64_t)TEST_FULL_8_BITS;
+    /* One addressable value per extraction call. A _ReturnThruPtr stores the
+     * ADDRESS of the value and the mock copies out of it when the PRODUCT calls,
+     * so a reused loop variable would make all six calls see the last value
+     * written and the fixture would silently lose the index mapping. */
+    uint64_t deliveredInvalidFlag[CAN_NUM_OF_TEMPERATURES_IN_CAN_CELL_TEMPERATURES_MSG];
+    uint64_t deliveredTemperature[CAN_NUM_OF_TEMPERATURES_IN_CAN_CELL_TEMPERATURES_MSG];
+    for (uint8_t i = 0u; i < CAN_NUM_OF_TEMPERATURES_IN_CAN_CELL_TEMPERATURES_MSG; i++) {
+        deliveredInvalidFlag[i] = (uint64_t)(i % 2u);         /* -> false,true,false,true,false,true */
+        deliveredTemperature[i] = (uint64_t)((i + 1u) * 10u); /* -> 10,20,30,40,50,60, all inside int8_t */
+    }
     /* Expected queue payload. CANRX_CellTemperatures() posts the address of a
      * function-local CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s
      * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c:181), not of
      * the CAN frame, so the expectation has to be an object of that type. With
      * :when_ptr: :compare_data the mock memcmps it; passing &messageData here
-     * compared 8 bytes of the wrong object -- and 6 bytes past the end of it. */
-    CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s expectedQueuePayload = {0};
+     * compared 8 bytes of the wrong object -- and 6 bytes past the end of it.
+     * It used to be {0}, which made the comparison a memcmp of twenty zero bytes
+     * against twenty zero bytes: no signal value ever entered it, so the whole
+     * packing path was unobserved. It now holds what the module under test must
+     * produce from the delivered values above. */
+    CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s expectedQueuePayload = {
+        .muxValue        = (uint8_t)TEST_FULL_8_BITS,
+        .invalidFlag     = {false, true, false, true, false, true},
+        .cellTemperature = {10, 20, 30, 40, 50, 60},
+    };
 
     /* ======= RT1/2 =======*/
     CAN_ENDIANNESS_e canEndianness = CAN_BIG_ENDIAN;
-    CAN_RxGetMessageDataFromCanData_Expect(&messageData, canData, canEndianness);
+    CAN_RxGetMessageDataFromCanData_Expect(&messageDataOutProbe, canData, canEndianness);
+    CAN_RxGetMessageDataFromCanData_ReturnThruPtr_pMessage(&deliveredMessageData);
+    /* pCanSignal is an OUT-parameter of the mocked helper and it cannot be
+     * asserted here: CMock compares that argument BEFORE it writes the
+     * out-parameter, and the module under test re-zeroes its scratch local
+     * immediately before every call
+     * (src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c:129 and
+     * :144, :156), so the comparison is 0 against 0 whatever the packing does.
+     * It is left in place unchanged rather than silenced; what the product does
+     * with the extracted signal is asserted by the queue-payload comparison
+     * below, from the value this call delivers. The four scalar arguments of the
+     * same expectation -- messageData, bit start, bit length and endianness --
+     * are real assertions and are unchanged. */
     CAN_RxGetSignalDataFromMessageData_Expect(
         messageData,
         canrx_kCanCellTemperatureMuxBitStart,
         canrx_kCanCellTemperatureMuxLength,
         &pCanSignalData,
         canEndianness);
+    CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredMuxValue);
     for (uint8_t i = 0; i < CAN_NUM_OF_TEMPERATURES_IN_CAN_CELL_TEMPERATURES_MSG; i++) {
         CAN_RxGetSignalDataFromMessageData_Expect(
             messageData,
@@ -281,6 +337,7 @@ void testCANRX_CellTemperatures(void) {
             canrx_kCanCellTemperatureInvalidFlagLength,
             &pCanSignalData,
             canEndianness);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredInvalidFlag[i]);
     }
     for (uint8_t i = 0; i < CAN_NUM_OF_TEMPERATURES_IN_CAN_CELL_TEMPERATURES_MSG; i++) {
         CAN_RxGetSignalDataFromMessageData_Expect(
@@ -289,6 +346,7 @@ void testCANRX_CellTemperatures(void) {
             canrx_kCanCellTemperatureLength,
             &pCanSignalData,
             canEndianness);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredTemperature[i]);
     }
 
     OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
@@ -301,13 +359,15 @@ void testCANRX_CellTemperatures(void) {
     TEST_ASSERT_EQUAL_INT16(0, CANRX_CellTemperatures(validTestMessage, canData, &can_kShim));
 
     /* ======= RT2/2 =======*/
-    CAN_RxGetMessageDataFromCanData_Expect(&messageData, canData, canEndianness);
+    CAN_RxGetMessageDataFromCanData_Expect(&messageDataOutProbe, canData, canEndianness);
+    CAN_RxGetMessageDataFromCanData_ReturnThruPtr_pMessage(&deliveredMessageData);
     CAN_RxGetSignalDataFromMessageData_Expect(
         messageData,
         canrx_kCanCellTemperatureMuxBitStart,
         canrx_kCanCellTemperatureMuxLength,
         &pCanSignalData,
         canEndianness);
+    CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredMuxValue);
     for (uint8_t i = 0; i < CAN_NUM_OF_TEMPERATURES_IN_CAN_CELL_TEMPERATURES_MSG; i++) {
         CAN_RxGetSignalDataFromMessageData_Expect(
             messageData,
@@ -315,6 +375,7 @@ void testCANRX_CellTemperatures(void) {
             canrx_kCanCellTemperatureInvalidFlagLength,
             &pCanSignalData,
             canEndianness);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredInvalidFlag[i]);
     }
     for (uint8_t i = 0; i < CAN_NUM_OF_TEMPERATURES_IN_CAN_CELL_TEMPERATURES_MSG; i++) {
         CAN_RxGetSignalDataFromMessageData_Expect(
@@ -323,6 +384,7 @@ void testCANRX_CellTemperatures(void) {
             canrx_kCanCellTemperatureLength,
             &pCanSignalData,
             canEndianness);
+        CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal(&deliveredTemperature[i]);
     }
     OS_SendToBackOfQueue_ExpectWithArrayAndReturn(
         ftsk_canToAfeCellTemperaturesQueue,

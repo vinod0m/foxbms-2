@@ -12,3 +12,23 @@ __pycache__/
 *.parquet
 *.sqlite
 *.db
+
+# Deliverables that the root Sphinx rule would otherwise exclude
+#
+# The root .gitignore carries `*.html` at line 36 for the Sphinx build tree, and
+# it is a pre-existing rule of the project, so it is left exactly as it is. It
+# does, however, also exclude reports/e2e-engineering-document.html, which is the
+# deliverable of the html-e2e-engineering-document sprint, and that file would
+# therefore never be committed.
+#
+# This is a path-specific negation rather than `!*.html`. A blanket negation would
+# re-include every generated HTML page under docs/artifacts/, which is the class
+# of file the root rule exists to keep out: the visual-check scratch output next
+# door (docs/artifacts/diagrams/*.visual-check.html) is produced by tooling and
+# must stay ignored. Only the one deliverable is named.
+#
+# No `!reports/` or `!*/` line is needed and none is added: git cannot re-include
+# a path whose parent DIRECTORY is excluded, but reports/ is not excluded by any
+# rule, so the single path negation is sufficient. Verified with
+# `git check-ignore -v` on this file and on two controls.
+!reports/e2e-engineering-document.html

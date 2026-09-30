@@ -1,6 +1,6 @@
 # Standards mapping — ASPICE processes and ISO 26262 parts (generated view)
 
-Generated: 2026-09-29T19:02:11Z | Baseline: BAS-REF-001 | 223 artifacts, 460 links
+Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
 
 ## Provenance and status of this file
 

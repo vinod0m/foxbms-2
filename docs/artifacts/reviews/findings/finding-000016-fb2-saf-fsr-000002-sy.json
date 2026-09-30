@@ -1,6 +1,6 @@
 {
   "id": "FB2-REV-FND-000016",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "finding",
   "engineering_domain": "verification",
@@ -29,13 +29,19 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T00:00:00Z",
-  "updated_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-09-29T00:00:00Z",
       "author": "quality_engineer",
       "description": "First-class record of the standing validator finding 'safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined' raised against FB2-SAF-FSR-000002 in profile synthetic_reference. Transcribed from the validator, not paraphrased."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "CORRECTED 2026-09-30T00:00:00Z against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: STALE. Disposition migrated from 'accepted' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
     }
   ],
   "subject_artifact_id": "FB2-SAF-FSR-000002",
@@ -44,8 +50,18 @@
   "severity": "medium",
   "category": "verification",
   "evidence": "Validator finding verbatim: 'safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined'. Confirmed by direct inspection: the key 'fault_reaction' is absent from the whole document of FB2-SAF-FSR-000002 in profile synthetic_reference, so the rule's condition is exactly met. The requirement text is (SOA limit monitoring, debounce 2-in-100 ms, classify within 5 ms), and it states the detection or actuation bound in prose inside 'statement' rather than in a structured field. A corpus-wide recursive check found the key absent from all seven FSR instances across both profiles.",
-  "disposition": "accepted",
+  "disposition": "resolved",
   "impact": "The corpus holds no machine-readable record of what the system must DO on detection of any of its safety faults: no reaction time, no reaction target, and no degraded-mode statement per requirement. The information exists only as prose. That has a concrete consequence beyond tidiness: a checker cannot compare a stated reaction time against a requirement, which is precisely how an incorrect timing claim survived into the safety case. FB2-SAF-SCS-000001 asserts a 70 ms chain that is both arithmetically wrong and inconsistent with the requirements it cites, and with no structured reaction-time field there is nothing for a validator to contradict it with.",
   "root_cause": "The requirement schema never made fault_reaction a required field, so the records are schema-valid and no author was ever asked to populate it. The field was added to the tooling as a mutation detector (MUT-008) without a matching authoring requirement, so the detector fires on the baseline by construction. This is a tooling-ahead-of-specification gap rather than an authoring lapse by any individual.",
-  "resolution": "NOT RESOLVED. Resolving it means adding a fault_reaction field to the requirement schema and populating it across all seven FSR instances from the existing requirement prose. That is a schema change plus authoring work, both outside the scope of a finding record. The check was NOT weakened and no requirement was relabelled or reclassified to dodge it. The finding stands as a real gap in machine-checkable safety content."
+  "resolution": "RESOLVED. The condition this record detected was real: the safety-requirement completeness rule (MUT-008, safety_requirement_completeness_checker) requires a machine-readable fault_reaction on every safety-domain requirement, and at the time this record was raised FB2-SAF-FSR-000002 in profile synthetic_reference had none. The reaction existed only as prose inside `statement`, which is why a checker could not compare a stated reaction time against a requirement - the concrete harm this record's impact field named.\n\nWHAT FIXED IT: a populated `fault_reaction` object authored onto FB2-SAF-FSR-000002 at revision 2, recorded in that record's own revision_history. For the synthetic_reference copies the block is a full allocation - allocated_element_id, element_owns_reaction, reaction, triggered_by, reaction_time_budget_ms, mode_dependence, allocation_basis and open_limits - traced to the element FB2-SAF-FSC-000001 allocates the reaction to. For the as_is copies it is the honest answer instead: those records have origin source_observed, so the reaction is copied from the observed source rather than from the synthetic concept, and where the element owns no reaction the block says so and says why. That asymmetry is the point of the block and is why it was worth authoring rather than suppressing.\n\nEVIDENCE, re-derived on 2026-09-30T00:00:00Z: FB2-SAF-FSR-000002 in profile synthetic_reference carries a populated fault_reaction object with fields ['allocated_element_id', 'allocation_basis', 'element_owns_reaction', 'mode_dependence', 'open_limits', 'reaction', 'reaction_time_budget_ms', 'triggered_by']. The rule is silent on it. The rule was NOT weakened to achieve this and no requirement was reclassified to dodge it - the opposite happened, see below.\n\nTHE RULE ALSO GOT WIDER WHILE THIS WAS BEING FIXED, and that is the part this record could not have known. MUT-008 used to carry a third condition, `\"-FSR-\" in id`, which made it structurally incapable of reporting the five FB2-SAF-SEC-* security requirements - a different class of safety-domain requirement, carrying the whole cybersecurity concept, which this rule was always meant to cover. The filter has been removed; the rule's scope was widened and nothing was narrowed. Four self-tests now pin that widened scope from both sides. Recorded as FB2-REV-FND-000039. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+    "date": "2026-09-30T00:00:00Z",
+    "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+    "audit_class": "STALE",
+    "condition_still_holds": false,
+    "disposition_before": "accepted",
+    "revision_before": "1",
+    "evidence": "the asserted condition is 'no fault_reaction'. The record carries a populated fault_reaction object at revision 2 with fields ['allocated_element_id', 'allocation_basis', 'element_owns_reaction', 'mode_dependence', 'open_limits', 'reaction', 'reaction_time_budget_ms', 'triggered_by']. The finding was never updated after the field was authored."
+  },
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
 }

@@ -857,9 +857,34 @@ class CorpusTool:
                         ok = False
 
         # Rule: Safety requirement completeness checker (MUT-008)
+        #
+        # SCOPE WIDENED, and only widened. This rule used to carry a third
+        # condition, `"-FSR-" in _id(key)`, alongside the two that define its
+        # population (`artifact_type == "requirement"` and
+        # `engineering_domain == "safety"`). That id pattern is a genuine blind
+        # spot, not a distinction: it made the rule structurally incapable of
+        # reporting the five FB2-SAF-SEC-* security requirements, which are
+        # safety-domain requirements carrying the whole cybersecurity concept and
+        # which each state a reaction to a detected attack in their own
+        # statement. Its sibling rule two paragraphs above
+        # (verification_traceability_checker) selects the same population with no
+        # id filter at all, so before this change the two rules disagreed about
+        # what a "safety requirement" is, and the disagreement happened to fall
+        # on the side of silence for the security chain.
+        #
+        # The filter is removed, not relaxed. Nothing that was reported before
+        # stops being reported: the population only grows, from the FSR records
+        # to every safety-domain requirement, so the rule is strictly harder to
+        # satisfy. The selection is by declared type and declared domain, not by
+        # how an id happens to be spelled, which is what makes it survive the
+        # addition of a future requirement class. Three self-tests in
+        # cmd_selftest pin the widened scope in both directions: an FSR with no
+        # fault_reaction is still reported, a security requirement with no
+        # fault_reaction is now reported, and a requirement outside the safety
+        # domain is still not reported. See finding FB2-REV-FND-000039.
         for key, (p, d) in index.items():
             aid = _id(key)
-            if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety" and "-FSR-" in _id(key):
+            if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety":
                 if "fault_reaction" not in d or not d.get("fault_reaction"):
                     self.findings.add("medium", "verification", aid,
                                       f"safety requirement {aid} has no fault_reaction defined",
@@ -4002,6 +4027,22 @@ class CorpusTool:
             # The requirement is therefore the TARGET. A correctly directed link must NOT raise
             # the 'no verifies/validates link' finding. Regression test for finding
             # FB2-REV-FND-000029, where the rule read source_id and so could never clear.
+            #
+            # SCOPED TO THIS RULE, deliberately. The assertion used to be
+            # `not any(f["artifact_id"] == ...)`, i.e. "no rule at all may flag this
+            # record". That was over-broad rather than strict: it only held because
+            # the fault_reaction rule (MUT-008) used to exclude every FB2-SAF-SEC-*
+            # record behind its `-FSR-` id filter, so the synthetic record happened
+            # to be invisible to it. Widening MUT-008 to cover the security
+            # requirement class (finding FB2-REV-FND-000039) made the record
+            # legitimately flaggable by a DIFFERENT rule, and the over-broad
+            # assertion then failed. Narrowing the assertion to the verifies rule
+            # does not weaken it: the verifies rule is what this test is about, and
+            # MUT-008's coverage of the same record class is now pinned by four
+            # dedicated tests (t_fault_reaction_rule_*). Matching on the rule id as
+            # well as the description makes the test say what it means, so a future
+            # rule firing on this record can no longer be mistaken for a regression
+            # here, and a regression here can no longer hide behind another rule.
             self.findings = Findings()
             index = {("synthetic_reference", "FB2-SAF-SEC-999999"): ("synthetic_reference", {
                 "id": "FB2-SAF-SEC-999999", "artifact_type": "requirement",
@@ -4011,7 +4052,10 @@ class CorpusTool:
                       "rationale": "r", "provenance": "derived", "review_state": "reviewed",
                       "change_suspect_status": False}]
             self._validate_semantic_rules(index, links)
-            return not any(f["artifact_id"] == "FB2-SAF-SEC-999999" for f in self.findings.items)
+            return not any(f["artifact_id"] == "FB2-SAF-SEC-999999"
+                           and f["rule"] == "verification_traceability_checker"
+                           and "no verifies/validates link" in f["description"]
+                           for f in self.findings.items)
 
         def t_unverified_safety_requirement_flagged():
             # The rule's intent must survive the endpoint fix: a safety requirement with no
@@ -4042,6 +4086,63 @@ class CorpusTool:
             return any(f["artifact_id"] == "FB2-SAF-SEC-999997"
                        and "no verifies/validates link" in f["description"]
                        for f in self.findings.items)
+
+        # --- scope of the safety-requirement completeness rule (MUT-008) ----
+        # The rule lost its `"-FSR-" in id` filter (finding FB2-REV-FND-000039).
+        # These three tests pin the widened scope from both sides, so a future edit
+        # cannot quietly re-narrow it and cannot over-widen it either.
+
+        def _fault_reaction_index(*specs):
+            idx = {}
+            for aid, domain in specs:
+                idx[("synthetic_reference", aid)] = ("synthetic_reference", {
+                    "id": aid, "artifact_type": "requirement",
+                    "engineering_domain": domain, "profile": "synthetic_reference"})
+            return idx
+
+        def _no_fault_reaction_finding(art_id, index):
+            self.findings = Findings()
+            self._validate_semantic_rules(index, [])
+            return any(f["artifact_id"] == art_id
+                       and "no fault_reaction" in f["description"]
+                       for f in self.findings.items)
+
+        def t_fault_reaction_rule_covers_sec_requirements():
+            # The regression this finding is about: FB2-SAF-SEC-* is a safety-domain
+            # requirement class, and the old `-FSR-` id filter made the rule
+            # structurally unable to report it. It must now be reported.
+            return _no_fault_reaction_finding(
+                "FB2-SAF-SEC-999996",
+                _fault_reaction_index(("FB2-SAF-SEC-999996", "safety")))
+
+        def t_fault_reaction_rule_still_covers_fsr_requirements():
+            # Nothing that was reported before the widening stops being reported.
+            # If this ever fails, the widening was a narrowing in disguise.
+            return all(_no_fault_reaction_finding(
+                aid, _fault_reaction_index((aid, "safety")))
+                for aid in ("FB2-SAF-FSR-999995", "FB2-SAF-FSR-999994"))
+
+        def t_fault_reaction_rule_respects_domain_boundary():
+            # Widening the population must not make the rule report requirements
+            # outside the safety engineering domain, which are governed by other
+            # rules and would be a false positive here.
+            return not _no_fault_reaction_finding(
+                "FB2-SYS-SYR-999993",
+                _fault_reaction_index(("FB2-SYS-SYR-999993", "system")))
+
+        def t_fault_reaction_rule_silent_when_field_present():
+            # A security requirement that DOES carry a fault_reaction is not
+            # reported. Without this, the rule would be indistinguishable from one
+            # that simply reports the whole class, and widening would have bought
+            # nothing but noise.
+            self.findings = Findings()
+            index = _fault_reaction_index(("FB2-SAF-SEC-999992", "safety"))
+            index[("synthetic_reference", "FB2-SAF-SEC-999992")][1]["fault_reaction"] = {
+                "reaction": "x", "added_in_revision": "1"}
+            self._validate_semantic_rules(index, [])
+            return not any(f["artifact_id"] == "FB2-SAF-SEC-999992"
+                           and "no fault_reaction" in f["description"]
+                           for f in self.findings.items)
 
         def t_profile_contamination():
             self.findings = Findings()
@@ -4340,6 +4441,14 @@ class CorpusTool:
         check("safety requirement with no verification link flagged", t_unverified_safety_requirement_flagged)
         check("verifies link with requirement as source does not count as verification",
               t_verifies_source_endpoint_not_counted)
+        check("fault_reaction rule covers security requirements (widened scope)",
+              t_fault_reaction_rule_covers_sec_requirements)
+        check("fault_reaction rule still covers FSR requirements (nothing lost)",
+              t_fault_reaction_rule_still_covers_fsr_requirements)
+        check("fault_reaction rule still respects the safety-domain boundary",
+              t_fault_reaction_rule_respects_domain_boundary)
+        check("fault_reaction rule silent when the field is present",
+              t_fault_reaction_rule_silent_when_field_present)
         check("profile contamination detected", t_profile_contamination)
         check("production_authorized=true rejected", t_authorized_rejected)
         check("export roundtrip deterministic", t_export_roundtrip)

@@ -1,87 +1,93 @@
 {
- "id": "FB2-VER-EXE-000018",
- "revision": "2",
- "schema_version": "1.0.0",
- "artifact_type": "execution",
- "engineering_domain": "verification",
- "profile": "synthetic_reference",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "Execution: FB2-VER-TMS-000018 (blocked - FB2-SAF-SEC-000003 has no executable security harness in this corpus)",
- "owner_role": "cybersecurity_engineer",
- "origin": "synthetic",
- "source_refs": [],
- "assumption_refs": [],
- "standards_mappings": [],
- "lifecycle_status": "draft",
- "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-29T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "cybersecurity_engineer",
-   "description": "Honest blocked-execution record for FB2-VER-TMS-000018, the measure that would verify FB2-SAF-SEC-000003. the security test harness for this corpus does not exist: there is no target hardware, no protocol analyser, no packet capture path and no injection tooling, and building any of them would require modifying hardware or code that this corpus may not touch. A second node that can transmit arbitrary frames on the item's bus does not exist, and the 24 h campaign the measure specifies cannot be run without it."
+  "id": "FB2-VER-EXE-000018",
+  "revision": "3",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Execution: FB2-VER-TMS-000018 (blocked - FB2-SAF-SEC-000003 has no executable security harness in this corpus)",
+  "owner_role": "cybersecurity_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
   },
-  {
-   "revision": "2",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "verification_engineer",
-   "description": "Regenerated as a dependent of finding FB2-REV-FND-000028. The what_would_unblock_it entry that asked for 'a decision on the false-rejection criterion' is removed: the criterion has been revised and is now achievable, so it is no longer a blocker and no longer a decision the project owes. It is replaced by the engineering prerequisite the revised criterion actually creates - the integrity value on the interface must be at least 22 bits for the rate bound to be satisfiable, and a 24 h campaign must observe at least 3 x 10^6 genuine frames for the bound to be demonstrable at all. The three genuine blockers (the bench, the injection node, the capture and log comparator) are unchanged. execution_kind remains 'none' and outcome remains 'blocked': no bus was instrumented, no frame was injected and no measurement exists. Nothing in this revision claims that the requirement has been verified; the requirement still has a verification plan and no verification evidence, and findings FB2-REV-FND-000008..12 remain open on exactly that point."
-  }
- ],
- "test_measure_id": "FB2-VER-TMS-000018",
- "test_measure_revision": "1",
- "execution_kind": "none",
- "outcome": "blocked",
- "environment": {
-  "hardware": "none - no target hardware and no instrumented bus in this corpus",
-  "software": "not applicable",
-  "tools": [],
-  "configuration": "not applicable",
-  "tool_versions": {
-   "none": "0.0.0"
-  }
- },
- "input_hashes": {},
- "output_hashes": {},
- "logs": [],
- "timestamps": {
-  "start": "2026-09-29T00:00:00Z",
-  "end": "2026-09-29T00:00:00Z",
-  "duration_ms": 0
- },
- "anomalies": [],
- "evidence_refs": [
-  "FB2-VER-TMS-000018",
-  "FB2-SAF-SEC-000003"
- ],
- "blocked_reason": "the security test harness for this corpus does not exist: there is no target hardware, no protocol analyser, no packet capture path and no injection tooling, and building any of them would require modifying hardware or code that this corpus may not touch. A second node that can transmit arbitrary frames on the item's bus does not exist, and the 24 h campaign the measure specifies cannot be run without it.",
- "what_would_unblock_it": [
-  "A bus bench with the item fitted and a controllable second node.",
-  "An injection node that holds no copy of the shared secret.",
-  "A 24 h capture capability and an automated diagnosis-log comparator.",
-  "An integrity value of at least 22 bits on the interface, without which the requirement's revised 1-per-10^6 false-rejection bound cannot be met by any implementation, and a 24 h campaign that observes at least 3 x 10^6 genuine frames, without which the bound cannot be demonstrated."
- ],
- "limitations": [
-  "No run occurred. duration_ms is 0 because no process started.",
-  "No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.",
-  "The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.",
-  "Carries no product verification credit."
- ],
- "notes": "Recorded so that the requirement's verification state is visible as planned-and-unexecuted. The five findings FB2-REV-FND-000008..12 remain open on the point that the requirement has no verification evidence; this measure is the work that would close them, and doing the work is outside what this corpus may do. Under finding FB2-REV-FND-000028 the requirement's unsatisfiable zero-false-rejection criterion was revised, so the criterion is no longer listed as a blocker; what replaced it is an engineering prerequisite, not a decision. The measure against FB2-SAF-SEC-000003 remains planned and unexecuted and this record still claims no evidence."
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "cybersecurity_engineer",
+      "description": "Honest blocked-execution record for FB2-VER-TMS-000018, the measure that would verify FB2-SAF-SEC-000003. the security test harness for this corpus does not exist: there is no target hardware, no protocol analyser, no packet capture path and no injection tooling, and building any of them would require modifying hardware or code that this corpus may not touch. A second node that can transmit arbitrary frames on the item's bus does not exist, and the 24 h campaign the measure specifies cannot be run without it."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Regenerated as a dependent of finding FB2-REV-FND-000028. The what_would_unblock_it entry that asked for 'a decision on the false-rejection criterion' is removed: the criterion has been revised and is now achievable, so it is no longer a blocker and no longer a decision the project owes. It is replaced by the engineering prerequisite the revised criterion actually creates - the integrity value on the interface must be at least 22 bits for the rate bound to be satisfiable, and a 24 h campaign must observe at least 3 x 10^6 genuine frames for the bound to be demonstrable at all. The three genuine blockers (the bench, the injection node, the capture and log comparator) are unchanged. execution_kind remains 'none' and outcome remains 'blocked': no bus was instrumented, no frame was injected and no measurement exists. Nothing in this revision claims that the requirement has been verified; the requirement still has a verification plan and no verification evidence, and findings FB2-REV-FND-000008..12 remain open on exactly that point."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "Updated the cross-record note in `notes` so it stops asserting a condition that is no longer true. FB2-REV-FND-000008..12 are resolved on the missing-link condition; the verification gap is unchanged and is recorded as FB2-REV-FND-000041. execution_kind 'none' and outcome 'blocked' are UNCHANGED, as is blocked_reason - this record still reports that the measure was not run. No result, pass, verdict or evidence claim was added or altered, human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000018",
+  "test_measure_revision": "1",
+  "execution_kind": "none",
+  "outcome": "blocked",
+  "environment": {
+    "hardware": "none - no target hardware and no instrumented bus in this corpus",
+    "software": "not applicable",
+    "tools": [],
+    "configuration": "not applicable",
+    "tool_versions": {
+      "none": "0.0.0"
+    }
+  },
+  "input_hashes": {},
+  "output_hashes": {},
+  "logs": [],
+  "timestamps": {
+    "start": "2026-09-29T00:00:00Z",
+    "end": "2026-09-29T00:00:00Z",
+    "duration_ms": 0
+  },
+  "anomalies": [],
+  "evidence_refs": [
+    "FB2-VER-TMS-000018",
+    "FB2-SAF-SEC-000003"
+  ],
+  "blocked_reason": "the security test harness for this corpus does not exist: there is no target hardware, no protocol analyser, no packet capture path and no injection tooling, and building any of them would require modifying hardware or code that this corpus may not touch. A second node that can transmit arbitrary frames on the item's bus does not exist, and the 24 h campaign the measure specifies cannot be run without it.",
+  "what_would_unblock_it": [
+    "A bus bench with the item fitted and a controllable second node.",
+    "An injection node that holds no copy of the shared secret.",
+    "A 24 h capture capability and an automated diagnosis-log comparator.",
+    "An integrity value of at least 22 bits on the interface, without which the requirement's revised 1-per-10^6 false-rejection bound cannot be met by any implementation, and a 24 h campaign that observes at least 3 x 10^6 genuine frames, without which the bound cannot be demonstrated."
+  ],
+  "limitations": [
+    "No run occurred. duration_ms is 0 because no process started.",
+    "No output hash is recorded because no output exists. Filling it with a placeholder would manufacture evidence.",
+    "The measure itself carries an oracle basis. A planned oracle is not a verified result, and this record must not be read as evidence that the oracle was ever exercised.",
+    "Carries no product verification credit."
+  ],
+  "notes": "SUPERSEDED IN PART, 2026-09-30. Findings FB2-REV-FND-000008..12 have been resolved on the condition they asserted - the absence of a verifies link - and the five links FB2-LNK-SEC-000075/000078/000081/000084/000087 now exist, one per requirement, authored with this measure. The verification gap those findings' impact field described is NOT closed and is now recorded separately as FB2-REV-FND-000041: this execution still carries execution_kind 'none' and outcome 'blocked', and the requirement's verification_status is still 'not_verified'. The measure is the plan; this record is why the absence of a result is visible rather than inferred."
 }

@@ -1,0 +1,67 @@
+{
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "owner_role": "data_quality_engineer",
+  "origin": "derived",
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-30T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-30T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "id": "FB2-REV-FND-000041",
+  "title": "Finding FB2-REV-FND-000041: the five security requirements are verification-PLANNED and not verification-ACHIEVED - their measures and executions exist, every execution is outcome 'blocked', and closing FB2-REV-FND-000008..12 on the link condition must not be read as closing the verification gap",
+  "severity": "high",
+  "category": "verification",
+  "disposition": "accepted",
+  "impact": "The entire cybersecurity concept in this corpus rests on five requirements with acceptance criteria that are individually well formed - a bounded false-rejection rate with a stated confidence basis, a 100 ms budget-breach response time, a 22-bit integrity width, an entropy distinctness requirement - and not one of them has been executed. No injection campaign, no protocol capture, no 24-hour observation and no advisory check exists. The measures have oracles, which is better than nothing and is genuinely unusual care, but an oracle nobody has run is a plan. A reader who sees 'FB2-SAF-SEC-000003 is verified by FB2-VER-TMS-000018' and stops there will conclude the requirement is verified. It is not. The controls are also absent or partial in the real foxBMS 2 source, which each requirement's own real_source_presence block records, so there is in any case nothing in the product to test against.",
+  "root_cause": "A finding about a missing link and a finding about missing evidence are different findings, and the corpus had only the first. The link condition was real and has been fixed - five verifies links now exist. The evidence condition is untouched: the five measures were authored with declared oracles and the five executions were authored to make the absence visible, and every one of those executions carries execution_kind 'none' and outcome 'blocked'. A blocked execution is an honest record, not a defect in itself; the defect is that nothing in the corpus's own counting distinguished 'planned-and-blocked' from 'planned-and-run', and the finding that was resolved on the link would otherwise have quietly taken the verification gap with it.",
+  "evidence": "MEASURED. FB2-VER-TMS-000016..000020 exist, each with an oracle_detail block whose kind is declared rather than assumed: source_grounded for 000016, 000018 and 000019, analytical_model for 000017, and synthetic_assumption for 000020 - the last recorded honestly, because unpredictability of an initial sequence number is not observable from outside the implementation and the measure says so instead of borrowing an oracle it does not have. FB2-VER-EXE-000016..000020 exist and each carries execution_kind 'none' and outcome 'blocked'. Their recorded blocked_reason is specific and correct: the security test harness for this corpus does not exist - no target hardware, no protocol analyser, no packet capture path, no injection tooling - and the requirement constrains a service the hypothetical project has planned but not built, so there is nothing to test against. Corroborating: verification_status on all five security requirements is 'not_verified', and the TARA record FB2-SAF-TAR-000001 states the limitation in its own text - the derived security requirements are forward-engineered for a hypothetical project and have no verification evidence in this corpus.",
+  "resolution": "ACKNOWLEDGED AND NOT CLOSED, and this is the honest end state rather than a gap in the record. Nothing in this corpus can execute these measures and nothing should be written that pretends otherwise. Authoring a pass result would be fabricating evidence, which is the one thing the corpus's guard fields and this record's own existence exist to prevent.\n\nWHY IT IS A SEPARATE RECORD AND NOT A SENTENCE IN A RESOLVED ONE. FB2-REV-FND-000008..12 have been resolved on the condition they assert, which is the absence of a verifies link, and their resolutions now say so and cite the links. A reader who stops there would conclude the security concept is verified. It is not. Under the disposition vocabulary in docs/artifacts/governance/finding-disposition-vocabulary.md, a resolved record may not carry an open remainder in prose - the remainder becomes its own record with its own id - precisely so that a closed finding cannot quietly hold an open defect. This is that record.\n\nWHAT IS IN PLACE. The planning half is complete and honest: five requirements with decidable acceptance criteria, five measures with declared oracles, five executions that exist precisely so the absence is visible rather than inferred, a recorded blocked_reason on each, and a TARA that states the limitation. The blocked executions are the right artefact. A corpus that had omitted them would look healthier and be less true.\n\nWHAT WOULD CLOSE IT, precisely, and it is a product and infrastructure decision rather than a documentation one. For FB2-VER-EXE-000016, 000018 and 000019: a security test harness with a protocol analyser or capture path and injection tooling, plus a build of the service these requirements constrain, which the hypothetical project has not built. For FB2-VER-EXE-000017: the same, since its oracle is a resource model that has to be exercised against a real service to mean anything. For FB2-VER-EXE-000020: nothing in this corpus can supply it, because the measure's own oracle_detail records that unpredictability is not observable from outside - closing that one requires either an implementation to inspect or a different kind of evidence, and its honest disposition may well be that the oracle is wrong rather than that the work is missing. Each of these is a decision for the project owner, and none is a finding this corpus can close by writing a file.\n\nWHAT IS NOT CLAIMED. This record claims no human approval, no tool qualification, no certification, no ISO 26262 conformity and no ASPICE capability level. The five security requirements are not verified, their controls are absent or partial in the real foxBMS 2 source at the pinned baseline commit, and no assertion here should be read as a statement about the product's security architecture.",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SUP.9",
+      "status": "mapped",
+      "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+      "status": "mapped",
+      "rationale": "The obligation to record rather than to conceal."
+    }
+  ],
+  "lifecycle_status_note": "'draft': raised by the finding-closure pass and verified by re-derivation from the live corpus. No human reviewer has confirmed this record and human_approval_status remains pending. This record makes no MISRA conformance claim, no tool-qualification claim, no certification claim and no ASPICE capability-level claim of any kind.",
+  "disposition_note": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+    "date": "2026-09-30T00:00:00Z",
+    "method": "docs/artifacts/tests/audit_findings.py and docs/artifacts/tests/rule_scope_probe.py",
+    "raised_by": "finding-closure pass over the 38 pre-existing records"
+  },
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "New record raised by the finding-closure pass. It records a condition that pass discovered while re-deriving the conditions the 38 existing records assert, and that would otherwise have been lost - either because it was a rule defect that no record named, or because closing the record that did name its neighbourhood would have quietly carried it away with it. ACKNOWLEDGED AND NOT CLOSED, and this is the honest end state rather than a gap in the record. Nothing in this corpus can execute these measures and nothing should be written that pretends otherwise. Authoring a pass result would be fabricating evidence, which is the one thing the corpus's guard fields and this record's own existence exist to prevent. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    }
+  ]
+}

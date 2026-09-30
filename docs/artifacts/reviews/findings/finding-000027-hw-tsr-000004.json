@@ -1,68 +1,84 @@
 {
- "id": "FB2-REV-FND-000027",
- "revision": "2",
- "schema_version": "1.0.0",
- "artifact_type": "finding",
- "engineering_domain": "system",
- "profile": "synthetic_reference",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "Finding FB2-REV-FND-000027: a hardware technical safety requirement and a functional safety requirement are the same sentence, and their shared acceptance criterion is not measurable",
- "owner_role": "quality_engineer",
- "origin": "synthetic",
- "source_refs": [],
- "assumption_refs": [],
- "standards_mappings": [
-  {
-   "standard_id": "ASPICE_PAM_41",
-   "reference": "SUP.9",
-   "status": "mapped",
-   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  "id": "FB2-REV-FND-000027",
+  "revision": "3",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "system",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Finding FB2-REV-FND-000027: a hardware technical safety requirement and a functional safety requirement are the same sentence, and their shared acceptance criterion is not measurable",
+  "owner_role": "quality_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SUP.9",
+      "status": "mapped",
+      "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+      "status": "mapped",
+      "rationale": "The obligation to record rather than to conceal."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
   },
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
-   "status": "mapped",
-   "rationale": "The obligation to record rather than to conceal."
-  }
- ],
- "lifecycle_status": "reviewed",
- "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-29T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "quality_engineer",
-   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Separated FB2-SAF-FSR-000004 (Part 4, safety intent, behaviourally decidable criteria) from FB2-HW-TSR-000004 (Part 5, hardware obligation, structural and coverage criteria), both revision 1 -> 2, and resolved the shared coverage criterion to 100 percent of the main measurement chain's monitored cell set. Regenerated the AR-005 coverage claims in FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001 that had carried the old disjunction forward."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "CORRECTED 2026-09-30T00:00:00Z against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: CLOSED. Disposition migrated from 'accepted' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    }
+  ],
+  "subject_artifact_id": "FB2-HW-TSR-000004",
+  "severity": "medium",
+  "category": "cross_domain",
+  "evidence": "FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 have identical statement text, identical rationale text, identical safety_allocation including asil = ASIL_B, and identical acceptance_criteria. ISO 26262 places the functional requirement at Part 3 and the technical requirement at Part 4/5, and a technical requirement is a decomposition of the functional one: it should state what the hardware must do where the functional statement states what the item must achieve. Identical text means neither record can be reviewed as a distinct obligation and a reader cannot tell which is authoritative. Separately, the shared acceptance criterion 'Monitoring coverage, Cells monitored, All cells (or representative subset >= 50%), 50, %' is a disjunction containing an undefined term: 'representative subset' is not defined, no subset selection method is recorded, and the two branches are not comparable, so the criterion cannot be checked at review time.",
+  "disposition": "resolved",
+  "impact": "Two obligations at two ISO 26262 levels are indistinguishable, so the review that should confirm the hardware decomposition cannot be performed. The unmeasurable coverage criterion is worse: it appears in the ASIL B element that the ASIL D goal's decomposition depends on, and no verification measure can ever produce a pass or a fail against 'all cells or a representative subset'. FB2-SAF-TSC-000001 could not improve the wording without inventing a coverage percentage it cannot defend, so it carries the wording unchanged, labels it synthetic_assumption, records no verification reference against it, and raises this finding.",
+  "root_cause": "The hardware requirement was authored at the same level as the functional one and in the same words, before the system requirements existed that would have decomposed the functional statement into hardware and software obligations. With no intermediate level to decompose at, the nearest available text was the functional statement itself.",
+  "resolution": "RESOLVED, and the vocabulary member is corrected from 'accepted' to 'resolved'. Re-verified on 2026-09-30T00:00:00Z: FB2-SAF-FSR-000004 (Part 4, functional, ASIL B) and FB2-HW-TSR-000004 (Part 5, hardware, ASIL B) no longer carry the same sentence. The two records are now genuinely different obligations at different ISO 26262 levels, and the unmeasurable coverage criterion is measurable: 'representative subset >= 50%' was replaced by 100 percent of the cells the main measurement chain monitors, because 'representative subset' is undefined, no selection method is recorded anywhere in the corpus, and a subset would leave cells with no barrier against a main-path failure. The structural properties - how many rails, references, driver stages and comparators are shared - moved to the hardware record as separate counts per resource, because a count of shared rails and a count of shared references are separately decidable and a single percentage over an undefined denominator is not.\n\nThe feasibility of a full independent divider network is still an open assumption under FB2-ASM-008 and is not asserted by this resolution. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+    "date": "2026-09-30T00:00:00Z",
+    "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+    "audit_class": "CLOSED",
+    "condition_still_holds": false,
+    "disposition_before": "accepted",
+    "revision_before": "2",
+    "evidence": "the asserted condition is that the two records carry the same sentence. Measured: the statements differ (456 vs 867 chars) and so do the acceptance criteria (3 vs 7). Revisions 3 and 2."
   },
-  {
-   "revision": "2",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "quality_engineer",
-   "description": "Separated FB2-SAF-FSR-000004 (Part 4, safety intent, behaviourally decidable criteria) from FB2-HW-TSR-000004 (Part 5, hardware obligation, structural and coverage criteria), both revision 1 -> 2, and resolved the shared coverage criterion to 100 percent of the main measurement chain's monitored cell set. Regenerated the AR-005 coverage claims in FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001 that had carried the old disjunction forward."
-  }
- ],
- "subject_artifact_id": "FB2-HW-TSR-000004",
- "severity": "medium",
- "category": "cross_domain",
- "evidence": "FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 have identical statement text, identical rationale text, identical safety_allocation including asil = ASIL_B, and identical acceptance_criteria. ISO 26262 places the functional requirement at Part 3 and the technical requirement at Part 4/5, and a technical requirement is a decomposition of the functional one: it should state what the hardware must do where the functional statement states what the item must achieve. Identical text means neither record can be reviewed as a distinct obligation and a reader cannot tell which is authoritative. Separately, the shared acceptance criterion 'Monitoring coverage, Cells monitored, All cells (or representative subset >= 50%), 50, %' is a disjunction containing an undefined term: 'representative subset' is not defined, no subset selection method is recorded, and the two branches are not comparable, so the criterion cannot be checked at review time.",
- "disposition": "accepted",
- "impact": "Two obligations at two ISO 26262 levels are indistinguishable, so the review that should confirm the hardware decomposition cannot be performed. The unmeasurable coverage criterion is worse: it appears in the ASIL B element that the ASIL D goal's decomposition depends on, and no verification measure can ever produce a pass or a fail against 'all cells or a representative subset'. FB2-SAF-TSC-000001 could not improve the wording without inventing a coverage percentage it cannot defend, so it carries the wording unchanged, labels it synthetic_assumption, records no verification reference against it, and raises this finding.",
- "root_cause": "The hardware requirement was authored at the same level as the functional one and in the same words, before the system requirements existed that would have decomposed the functional statement into hardware and software obligations. With no intermediate level to decompose at, the nearest available text was the functional statement itself.",
- "resolution": "RESOLVED at source. The two records are now genuinely different obligations at different ISO 26262 levels, and the unmeasurable coverage criterion is measurable. FB2-SAF-FSR-000004 (Part 4, functional, ASIL B, derived from the ASIL D goal FB2-SAF-SGO-000001) now states the safety intent - a second barrier that acts when the main path has failed - and carries only acceptance criteria a test can decide from the item's observable behaviour: the reaction is retained at 100 percent of overvoltage test points while the main microcontroller is held in reset, the independent detection latency of 50 ms, and the 50 mV threshold accuracy. FB2-HW-TSR-000004 (Part 5, hardware, ASIL B, allocated from FSR-000004 through FB2-SYS-SYR-000005 to element AR-005) now states the hardware obligation and carries hardware acceptance criteria only: 100 percent coverage of the cells the main measurement chain monitors, 50 ms chain latency measured at the coil, zero shared supply rails, zero shared threshold references, zero reachable contactor driver stages commanded from the main microcontroller, 50 mV threshold accuracy, and one diagnosis entry per detected failure of the independent chain. Both records moved to revision 2. The structural properties moved to the hardware record because they are design properties, and they are stated as separate counts per shared resource rather than as one 'Independence 100% no shared MCU, power supply or communication' criterion over an undefined denominator, because a count of shared rails and a count of shared references are separately decidable and a single percentage is not. The coverage criterion was resolved to 100 percent of the monitored cell set: the 'representative subset >= 50%' branch was rejected because 'representative subset' is undefined, no selection method is recorded anywhere in the corpus, a subset would leave cells with no barrier against a main-path failure, and FB2-ASM-008's own stated implementation - separate voltage dividers, comparator and contactor drive - is a per-cell network. The 100 percent figure follows the precedent FB2-SAF-FSR-000001 already uses ('All cell voltages acquired / Cell count match / 100 / %'). The finding said this concept 'could not improve the wording without inventing a coverage percentage it cannot defend'; the 100 percent figure is not invented, it is the primary branch of the disjunction that was already there, and the feasibility of a full independent divider network is NOT asserted - FB2-ASM-008 still records it as requiring PCB space, a separate power domain and additional BOM cost with 'Feasibility to be confirmed', and that assumption is unchanged. The two records could therefore be separated, so they were separated rather than merged. The TSR statement is aligned with the statement FB2-SAF-TSC-000001 had already published for it, so the record and the concept now agree, and the contactors are explicitly excluded from the independence requirement because both paths act on them. The ASIL of both records is unchanged at ASIL_B. Dependents regenerated: FB2-SAF-TSC-000001's safety_strategies and diagnostic_coverage_assumptions entries for AR-005, and FB2-SAF-FSC-000001's safety_strategies entry for AR-005, all of which had carried the old disjunction forward. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
 }

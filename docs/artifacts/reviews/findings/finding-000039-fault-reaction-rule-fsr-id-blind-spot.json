@@ -1,0 +1,67 @@
+{
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "management",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "owner_role": "data_quality_engineer",
+  "origin": "derived",
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-30T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-30T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "id": "FB2-REV-FND-000039",
+  "title": "Finding FB2-REV-FND-000039: the safety-requirement completeness rule filtered on the id substring '-FSR-', so it was structurally incapable of reporting the five FB2-SAF-SEC-* security requirements - a blind spot in the opposite direction to the one FB2-REV-FND-000029 fixed",
+  "severity": "high",
+  "category": "process",
+  "disposition": "resolved",
+  "impact": "The cost of this defect is a permanently under-reported defect class, which is the failure mode that trains a reader to discount a number. Five safety-domain requirements carrying the whole cybersecurity concept were outside a completeness rule that exists to check safety-domain requirements, and nothing in the corpus said so. Had this been found later, after a reader had learned to trust that 'validate reports 0 findings' meant the corpus was clean on this axis, the reader would have been actively misled. The defect also made the security set structurally different from the cell-voltage set in a way nothing recorded: an FSR carried a machine-readable fault reaction and a SEC did not, and a reader comparing the two would have had no way to tell that the difference was an artefact of a filter rather than of authoring.",
+  "root_cause": "The rule's population was expressed as two declared properties plus a spelling. `artifact_type == \"requirement\"` and `engineering_domain == \"safety\"` define the class; `\"-FSR-\" in id` was added as a third condition and is not a property of the record at all, it is a property of how the id happens to be written. That is why it survived: an id filter looks like a scope restriction and behaves like one, and the sibling rule two paragraphs above - the safety-requirement verification rule - selects the identical population with no id filter. The two rules disagreed about what a safety requirement is, and the disagreement happened to fall on the side of silence for the entire cybersecurity concept. The blind spot was invisible from the outside in a specific way: the rule reported zero findings on a corpus where the five security requirements genuinely carried no fault_reaction, so the number looked healthy.",
+  "evidence": "MEASURED, not inferred, by docs/artifacts/tests/rule_scope_probe.py, which loads the corpus, exercises the rules in memory and writes nothing. The rule as it stood: `if d.get(\"artifact_type\") == \"requirement\" and d.get(\"engineering_domain\") == \"safety\" and \"-FSR-\" in _id(key)`. Live corpus: 0 requirements flagged. The five security requirements exist, carry engineering_domain 'safety' and artifact_type 'requirement', and none carried a fault_reaction, so the correct count under the rule's own stated intent was 5 and the rule reported 0. The counterfactual is the decisive part: an id filter is not a distinction, it is a wall, and the test for a wall is whether removing the record changes the outcome. Removing everything else about the security requirements - their links, their acceptance criteria, their fields - changes nothing, because the filter runs before any of it. Contrast the sibling rule verification_traceability_checker, whose population condition is the first two clauses with no third, and for which the same probe DOES flag all five security requirements the moment their verifies links are removed from an in-memory copy of the registries. One rule covers the class and one does not, and the difference is a substring.",
+  "resolution": "RESOLVED, by widening the rule's scope and by nothing else. The third condition `\"-FSR-\" in _id(key)` has been removed from docs/artifacts/tools/corpus.py's safety_requirement_completeness_checker. The rule's population is now selected by declared type and declared engineering domain alone, which is what makes it survive the addition of a future requirement class rather than needing a third substring each time.\n\nNOTHING WAS WEAKENED. The population only grows, from the FSR records to every safety-domain requirement, so the rule is strictly harder to satisfy than before and strictly more sensitive. Four self-tests were added to cmd_selftest and all four pass, pinning the widened scope from both sides so that a future edit cannot quietly re-narrow it and cannot over-widen it either: a security requirement with no fault_reaction IS reported; an FSR with no fault_reaction is STILL reported, so nothing previously reported stopped being reported; a requirement outside the safety engineering domain is still NOT reported, which is what a widening is allowed to cost; and a security requirement that DOES carry a fault_reaction is silent, which is what distinguishes a working rule from one that just reports the class.\n\nWHAT THE WIDENING IMMEDIATELY SURFACED, and how it was handled. With the filter gone the rule reported 5 findings, all five of them true. The honest response to a check that starts firing is to do the work, not to re-narrow the rule. A fault_reaction block was therefore authored onto each of the five security requirements, transcribed from text each record already carried - its own statement for the reaction and its trigger, its own acceptance criteria for the diagnosability obligation and for the reaction-time bound where one exists, its own conditions_modes for mode dependence - and recording three absences rather than filling them: neither FB2-SAF-FSC-000001 nor FB2-SAF-TSC-000001 allocates a fault reaction to any element for the security chain, so element_owns_reaction is false; the safety goal's timing budget has no cybersecurity leg, so no reaction-time budget is stated; and the controls' real-source status and unverified verification leg are carried through unchanged. No acceptance criterion, ASIL value, statement, rationale, verification approach, verification status or guard field was altered. The corpus validator is back to 0 findings - and that 0 is now a different, stronger statement than it was, because the rule that produces it now covers the class it was always described as covering.\n\nONE EXISTING SELF-TEST WAS NARROWED, and it is worth being explicit about because narrowing a test is exactly what this corpus forbids. The test 'correctly directed verifies link (requirement as target) not flagged' asserted `not any(f[\"artifact_id\"] == ...)`, i.e. that NO rule at all may flag its synthetic record. That was over-broad rather than strict: it held only because MUT-008's id filter made that record invisible to the fault_reaction rule, so a different rule firing on it was a false failure rather than a real one. The assertion was scoped to the verifies rule by rule id and description, which is what the test's own name and comment always said it was testing. This does not weaken coverage: the verifies rule's negative case is still pinned exactly, and MUT-008's coverage of the same record class is now pinned by four dedicated tests that did not exist before. The trade is stated rather than assumed.\n\nRELATED AND DELIBERATELY NOT FIXED HERE: the diagnostic_coverage_claim_validator rule (MUT-010) carries the same `-FSR-` id filter. It is recorded as FB2-REV-FND-000040 and was not changed, because that rule reads diagnostic_coverage, which is claimed by FSR records and by no security requirement, so the filter is currently inert rather than silently dropping a live defect. Inert is not the same as correct and the record says so.",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SUP.9",
+      "status": "mapped",
+      "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+      "status": "mapped",
+      "rationale": "The obligation to record rather than to conceal."
+    }
+  ],
+  "lifecycle_status_note": "'draft': raised by the finding-closure pass and verified by re-derivation from the live corpus. No human reviewer has confirmed this record and human_approval_status remains pending. This record makes no MISRA conformance claim, no tool-qualification claim, no certification claim and no ASPICE capability-level claim of any kind.",
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+    "date": "2026-09-30T00:00:00Z",
+    "method": "docs/artifacts/tests/audit_findings.py and docs/artifacts/tests/rule_scope_probe.py",
+    "raised_by": "finding-closure pass over the 38 pre-existing records"
+  },
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "New record raised by the finding-closure pass. It records a condition that pass discovered while re-deriving the conditions the 38 existing records assert, and that would otherwise have been lost - either because it was a rule defect that no record named, or because closing the record that did name its neighbourhood would have quietly carried it away with it. RESOLVED, by widening the rule's scope and by nothing else. The third condition `\"-FSR-\" in _id(key)` has been removed from docs/artifacts/tools/corpus.py's safety_requirement_completeness_checker. The rule's population is now selected by declared type and declared engineering domain alone, which is what makes it survive the addition of a future requirement class rather than needing a third substring each time. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    }
+  ]
+}

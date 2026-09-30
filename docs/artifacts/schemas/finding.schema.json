@@ -56,13 +56,14 @@
         "disposition": {
           "type": "string",
           "enum": [
+            "resolved",
             "accepted",
             "rejected",
             "deferred",
             "partial",
             "in_progress"
           ],
-          "description": "Disposition of the finding"
+          "description": "Disposition of the finding. The six members are six distinct states and are not interchangeable. Definitions are normative and live in docs/artifacts/governance/finding-disposition-vocabulary.md; the short form: 'resolved' = the asserted condition no longer holds and the record says so, with the fix named; 'accepted' = the finding is upheld as a real defect that is acknowledged and NOT fixed, with the work identified and left to an owner; 'rejected' = the finding is not upheld, with the reason; 'deferred' = upheld and deliberately not addressed now, with the trigger that would bring it back; 'partial' = some of the condition is closed and the remainder is stated item by item; 'in_progress' = remediation is under way and named. 'resolved' was added because 'accepted' was doing at least three different jobs across the corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine."
         },
         "impact": {
           "type": "string",

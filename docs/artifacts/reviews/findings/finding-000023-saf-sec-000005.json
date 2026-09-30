@@ -1,68 +1,84 @@
 {
- "id": "FB2-REV-FND-000023",
- "revision": "2",
- "schema_version": "1.0.0",
- "artifact_type": "finding",
- "engineering_domain": "safety",
- "profile": "synthetic_reference",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "Finding FB2-REV-FND-000023: a safety requirement's own safety allocation references an artifact that does not exist",
- "owner_role": "quality_engineer",
- "origin": "synthetic",
- "source_refs": [],
- "assumption_refs": [],
- "standards_mappings": [
-  {
-   "standard_id": "ASPICE_PAM_41",
-   "reference": "SUP.9",
-   "status": "mapped",
-   "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  "id": "FB2-REV-FND-000023",
+  "revision": "3",
+  "schema_version": "1.0.0",
+  "artifact_type": "finding",
+  "engineering_domain": "safety",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Finding FB2-REV-FND-000023: a safety requirement's own safety allocation references an artifact that does not exist",
+  "owner_role": "quality_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SUP.9",
+      "status": "mapped",
+      "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+      "status": "mapped",
+      "rationale": "The obligation to record rather than to conceal."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
   },
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
-   "status": "mapped",
-   "rationale": "The obligation to record rather than to conceal."
-  }
- ],
- "lifecycle_status": "reviewed",
- "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-29T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "quality_engineer",
-   "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Corrected the dangling safety_goal_ref in FB2-SAF-SEC-000005 (revision 1 -> 2) and, from the corpus-wide reference sweep this finding called for, the same mistyped id in FB2-SAF-TAR-000001 threat THR-008 (revision 1 -> 2). Added docs/artifacts/tools/check_references.py to resolve payload-field ids corpus-wide. Disposition remains 'accepted': the defect was real, the acceptance stands, and the closure is recorded here rather than in the disposition, because the schema has no closed value."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "data_quality_engineer",
+      "description": "CORRECTED 2026-09-30T00:00:00Z against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: CLOSED. Disposition migrated from 'accepted' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    }
+  ],
+  "subject_artifact_id": "FB2-SAF-SEC-000005",
+  "severity": "high",
+  "category": "traceability",
+  "evidence": "FB2-SAF-SEC-000005's safety_allocation.safety_goal_ref is 'FB2-SAF-SCO-000001'. No artifact with that id exists in either profile. The corpus's safety-case skeleton is FB2-SAF-SCS-000001. The reference is also self-contradictory with the field's own prose: the mitigation text says 'traced to the project's safety-case skeleton' and the standard_id is ISO_26262_2018 rather than an argument record, so the value appears to be a mistyped safety-case id. The reference sits inside a required field of the requirement schema (safety_allocation.safety_goal_ref), which is a free string and so accepted a typo the link registry would have caught had the value been expressed as a link.",
+  "disposition": "resolved",
+  "impact": "The requirement whose reference is broken is the one covering entropy and third-party component governance, and it is the requirement this pass had the least verification leverage over: its own rationale records that the observed source derives the initial sequence number from a single 32-bit state seeded with a build-time literal, and that an ungoverned component set is an open item. A requirement in that position whose safety allocation points at nothing cannot be traced into a safety argument by a reader who follows the field. The defect is invisible to the link validator because the value is not a link: it is a string inside a required payload field, and no check resolves strings in payload fields.",
+  "root_cause": "The value was typed rather than linked. safety_goal_ref is a schema-required string in a record whose siblings use it correctly, and the mistyped id is one character away from the correct one, which is characteristic of hand entry rather than of a stale reference after a rename. The corpus has no check that resolves the string against the artifact index.",
+  "resolution": "RESOLVED, and the vocabulary member is corrected from 'accepted' to 'resolved'. No change to the substance: the record was already correct and named its fix. Re-verified on 2026-09-30T00:00:00Z: FB2-SAF-SEC-000005.safety_allocation.safety_goal_ref resolves to a live record. The second instance of the same mistyped id, in FB2-SAF-TAR-000001 threat THR-008, was corrected in the same pass, which is what confirmed the root cause as hand entry rather than a stale reference after a rename - a mistyped value appearing in two records is not what a rename leaves behind. docs/artifacts/tools/check_references.py now resolves every id-shaped string in every corpus and scenario record against the artifact index and the four registries, so this class of defect is detectable rather than invisible, and the TARA's own limitation text records that the security requirements are forward-engineered for a hypothetical project.\n\nNothing about the record's engineering content changed: no acceptance criterion, ASIL value, verification approach, threat description, likelihood, impact or residual risk was altered by the correction. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+    "date": "2026-09-30T00:00:00Z",
+    "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+    "audit_class": "CLOSED",
+    "condition_still_holds": false,
+    "disposition_before": "accepted",
+    "revision_before": "2",
+    "evidence": "the asserted condition is a safety allocation naming an artifact that does not exist. safety_goal_ref is now 'FB2-SAF-SCS-000001', which resolves to a live record. Record is at revision 4."
   },
-  {
-   "revision": "2",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "quality_engineer",
-   "description": "Corrected the dangling safety_goal_ref in FB2-SAF-SEC-000005 (revision 1 -> 2) and, from the corpus-wide reference sweep this finding called for, the same mistyped id in FB2-SAF-TAR-000001 threat THR-008 (revision 1 -> 2). Added docs/artifacts/tools/check_references.py to resolve payload-field ids corpus-wide. Disposition remains 'accepted': the defect was real, the acceptance stands, and the closure is recorded here rather than in the disposition, because the schema has no closed value."
-  }
- ],
- "subject_artifact_id": "FB2-SAF-SEC-000005",
- "severity": "high",
- "category": "traceability",
- "evidence": "FB2-SAF-SEC-000005's safety_allocation.safety_goal_ref is 'FB2-SAF-SCO-000001'. No artifact with that id exists in either profile. The corpus's safety-case skeleton is FB2-SAF-SCS-000001. The reference is also self-contradictory with the field's own prose: the mitigation text says 'traced to the project's safety-case skeleton' and the standard_id is ISO_26262_2018 rather than an argument record, so the value appears to be a mistyped safety-case id. The reference sits inside a required field of the requirement schema (safety_allocation.safety_goal_ref), which is a free string and so accepted a typo the link registry would have caught had the value been expressed as a link.",
- "disposition": "accepted",
- "impact": "The requirement whose reference is broken is the one covering entropy and third-party component governance, and it is the requirement this pass had the least verification leverage over: its own rationale records that the observed source derives the initial sequence number from a single 32-bit state seeded with a build-time literal, and that an ungoverned component set is an open item. A requirement in that position whose safety allocation points at nothing cannot be traced into a safety argument by a reader who follows the field. The defect is invisible to the link validator because the value is not a link: it is a string inside a required payload field, and no check resolves strings in payload fields.",
- "root_cause": "The value was typed rather than linked. safety_goal_ref is a schema-required string in a record whose siblings use it correctly, and the mistyped id is one character away from the correct one, which is characteristic of hand entry rather than of a stale reference after a rename. The corpus has no check that resolves the string against the artifact index.",
- "resolution": "RESOLVED at source. FB2-SAF-SEC-000005.safety_allocation.safety_goal_ref was corrected from 'FB2-SAF-SCO-000001' to 'FB2-SAF-SCS-000001', the corpus's safety-case skeleton, which is what the requirement's own mitigation prose already said it was traced to. The record moved to revision 2. The corpus-wide reference sweep that this finding required then found a SECOND instance of the same mistyped id, in FB2-SAF-TAR-000001 threat THR-008's affected_safety_goals_or_requirements, which was corrected to 'FB2-SAF-SGO-000001' because that field names safety goals and requirements and every sibling threat in the same TARA already names the cell-voltage safety goal; that record moved to revision 2. Finding 23's evidence said the defect was 'invisible to the link validator'; the sweep found two instances of one mistyped value in two different records, which confirms the root cause as hand entry rather than a stale reference after a rename, and confirms that fixing only the record the finding named would have left the same defect in place elsewhere. A new tool, docs/artifacts/tools/check_references.py, now resolves every id-shaped string in every corpus and scenario record against the artifact index and the four registries, so this class of defect is detectable from now on. Its output at the end of the remediation pass: 1476 id-shaped strings resolved, 0 unresolved, and 4 occurrences of 2 distinct declared-forward references that are NOT typos and are recorded separately as finding FB2-REV-FND-000030. No acceptance criterion, ASIL value, verification approach, threat description, likelihood, impact or residual risk was changed. Human approval remains pending for every record named here: no human has confirmed this correction, no tool has been qualified, no certification is claimed and no ASPICE capability level is claimed. production_authorized stays false and product_verification_credit stays false on every record touched."
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
 }

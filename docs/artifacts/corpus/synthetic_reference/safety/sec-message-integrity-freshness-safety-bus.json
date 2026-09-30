@@ -1,159 +1,180 @@
 {
- "revision": "3",
- "schema_version": "1.0.0",
- "artifact_type": "requirement",
- "engineering_domain": "safety",
- "profile": "synthetic_reference",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "owner_role": "cybersecurity_engineer",
- "origin": "synthetic",
- "lifecycle_status": "draft",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-29T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
- "classification": "security",
- "conditions_modes": [
-  "NORMAL",
-  "CHARGING",
-  "DISCHARGE",
-  "PRECHARGE",
-  "DEGRADED",
-  "COMMISSIONING"
- ],
- "feasibility_dependencies": [
-  "FB2-SAF-SEC-000001",
-  "FB2-SAF-SEC-000002"
- ],
- "id": "FB2-SAF-SEC-000003",
- "title": "SEC-000003: Message-level integrity and freshness for safety-relevant CAN messages",
- "statement": "For every CAN identifier whose payload influences a safety function, the BMS master software shall verify, before the payload is passed to its receive callback, a rolling counter that establishes freshness, an integrity check that a bus peer cannot produce without the shared secret, and a data-length code matching the length expected for that identifier; a frame failing any of the three shall be rejected before the callback is invoked and shall raise a diagnosis entry.",
- "rationale": "Dispatch on identifier alone means that any node that can transmit on the bus can present a frame that the master accepts as genuine, because an identifier is not a credential. This is the highest-consequence exposure identified in the TARA, because the affected identifiers carry the cell voltage, cell temperature and pack current signals on which the safety requirements depend. All three checks are required and none is redundant: without the counter an authentic frame can be replayed indefinitely; without the integrity check the counter is forgeable by any bus peer; without the length check a short frame can be interpreted as if trailing bytes were meaningful (TARA threat THR-005, TARA mitigation MIT-004).",
- "acceptance_criteria": [
-  {
-   "criterion": "Injected frame acceptance",
-   "measure": "Frames with a valid identifier and no valid counter, integrity or length, accepted by the dispatch layer in a 24 h injection campaign",
-   "threshold": "0",
-   "unit": "frames"
-  },
-  {
-   "criterion": "Replay rejection",
-   "measure": "Previously recorded valid frames re-presented out of sequence and accepted",
-   "threshold": "0",
-   "unit": "frames"
-  },
-  {
-   "criterion": "Length mismatch rejection",
-   "measure": "Frames whose data-length code differs from the configured length for that identifier and which reach the callback",
-   "threshold": "0",
-   "unit": "frames"
-  },
-  {
-   "criterion": "Verification latency",
-   "measure": "Time from end of frame reception to the integrity verdict being available",
-   "threshold": "2",
-   "unit": "ms"
-  },
-  {
-   "criterion": "Rejection diagnosability",
-   "measure": "Diagnosis entries raised per rejected frame, distinguishing counter, integrity and length failures",
-   "threshold": "1",
-   "unit": "entry per rejected frame"
-  },
-  {
-   "criterion": "Genuine-frame false-rejection rate",
-   "measure": "Genuine frames rejected under nominal bus conditions over a 24 h campaign whose observed genuine-frame population is at least 3 x 10^6 frames. Pass is 0 rejections observed over that population, which is a one-sided 95 percent upper confidence bound of 1 x 10^-6 on the rate by the rule of three (3/n <= 1e-6 for n >= 3e6). The integrity value used on this interface shall be at least 22 bits, which is the width for which a per-frame false rejection probability of 2^-w stays below the rate this criterion bounds over that population.",
-   "threshold": "1 per 10^6 genuine frames",
-   "unit": "rejections per 10^6 genuine frames"
-  }
- ],
- "safety_allocation": {
-  "asil": "not_applicable",
-  "safety_goal_ref": "FB2-SAF-FSR-000001",
-  "mitigation": "Security mitigation supporting the freedom-from-interference assumption of the cell-voltage and SOA requirements. asil is recorded as not_applicable because this is a security requirement and ISO 26262 does not allocate an ASIL to it; the trace to the FSR records the requirement whose assurance is at stake, not an ASIL allocation."
- },
- "assumptions": [
-  "FB2-ASM-004",
-  "FB2-ASM-011"
- ],
- "verification_approach": "test",
- "source_refs": [
-  "FB2-SRC-COD-000065",
-  "FB2-SRC-COD-000066"
- ],
- "assumption_refs": [
-  "FB2-ASM-004",
-  "FB2-ASM-011"
- ],
- "standards_mappings": [
-  {
-   "standard_id": "ISO_SAE_21434_2021",
-   "reference": "Clause 15.4 (mitigation concept); asset-integrity protection per Clause 8.5",
-   "status": "unverified",
-   "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists, no conformance is claimed and no review has taken place."
-  },
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 4, Clause 7 and Part 6, Clause 7 (protection of safety mechanisms from unintended effects)",
-   "status": "partially_mapped",
-   "rationale": "The interference path is identified; the corresponding safety-mechanism protection analysis is not part of this corpus."
-  },
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 6, Clause 9 (diagnostic coverage)",
-   "status": "gap",
-   "rationale": "The rejection diagnosability criterion has no verification evidence in this corpus."
-  }
- ],
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "cybersecurity_engineer",
-   "description": "First issue. Forward-engineered security requirement 'message-integrity-freshness-safety-bus' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001."
-  },
-  {
-   "revision": "2",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "cybersecurity_engineer",
-   "description": "Replaced the absolute '0 genuine frames rejected over 24 h' acceptance criterion with a bounded rate, a stated population the bound is demonstrated over, and a minimum integrity value width that makes the bound achievable. Remediation of finding FB2-REV-FND-000028. The old criterion was unsatisfiable and non-discriminating at the same time: a keyed integrity value of width w rejects a genuine frame with probability 2^-w, so over a 24 h campaign the expected number of genuine rejections is n * 2^-w, non-zero for any practical w; meanwhile an implementation that rejected every frame would satisfy the criterion vacuously, and would also satisfy the other criteria in this record vacuously. The new criterion is 0 rejections observed over a genuine-frame population of at least 3 x 10^6 in a 24 h campaign, which by the rule of three (0 failures in n trials gives a one-sided 95 percent upper bound of 3/n) is a bound of 1 x 10^-6 on the rate; and it requires the integrity value on the interface to be at least 22 bits, which is the width for which 2^-w stays below that rate over that population. The three statements are mutually consistent, so the criterion is now achievable by a correct implementation of adequate width and is not satisfied by an always-rejecting one (~100 percent) or by a 16-bit one (~1.5e-5 per frame). The criterion is therefore STRICTER in discriminating power than the zero it replaces, and it is also a harder engineering obligation, because it constrains the width of the integrity value where the zero constrained nothing. The absolute zeros that remain in this record are the ones that are decidable by the check existing - injected frames accepted, replayed frames accepted, length-mismatch frames reaching the callback, control-byte transitions - and those are over countable events on a channel where no collision is involved, so they are unchanged and were deliberately not relaxed. The verification measure FB2-VER-TMS-000018 and its execution record were regenerated against the new criterion in the same revision set. No ASIL value, safety_goal_ref, statement clause or verification approach was changed."
-  },
-  {
-   "revision": "3",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "cybersecurity_engineer",
-   "description": "Added the asil_justification that the requirement applicability validator requires and did not find: this record marks safety_allocation.asil as not_applicable, which requirement.schema.json enumerates as the value for a requirement to which no ASIL determination applies, and the rule requires a recorded reason for that marking. The reason had been present only inside safety_allocation.mitigation and safety_allocation.safety_goal_ref, which are required on every requirement whatever its marking and are therefore populated identically on the ASIL_D records; they cannot serve as a justification specific to this marking. The new field states the reason on its own, names what the safety_goal_ref trace does and does not carry, and records the open items where the marking depends on something not yet established. The asil value, the statement, the mitigation, the safety_goal_ref and the revision-relevant content of the record are unchanged. Remediation of the requirement applicability validator finding raised by finding FB2-REV-FND-000032. Nothing in this field asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
-  }
- ],
- "real_source_presence": "Control ABSENT at the dispatch layer. In the real foxBMS 2 source, src/app/driver/can/can.c:643-692 accepts a frame on hardware mailbox acceptance and on a data-lost indication (retval == CAN_HAL_RETVAL_NO_DATA_LOST at :657), which is a loss report and not a security check, then copies all eight data bytes at :675-682 without comparing the received data-length code against an expected length. src/app/driver/can/can.c:1015-1031 then matches a frame against the configured table on (canNode, id, idType) alone at :1021-1023 and invokes the registered callback at :1025. No rolling counter, integrity field or length check is applied at this layer. SCOPE LIMIT, stated explicitly: the per-message receive callbacks were NOT individually audited for this requirement, so this requirement asserts the absence only at the shared dispatch layer and does not assert that no individual callback performs its own check. A detective control IS present and is credited: CAN receive queue overflow raises DIAG_ID_CAN_RX_QUEUE_FULL (can.c:684-690, configured DIAG_WARNING / DIAG_SEN_EVENT_1 / DIAG_EVALUATION_ENABLED in src/app/engine/config/diag_cfg.c:165), which is TARA mitigation MIT-007. Anchors FB2-SRC-COD-000065, FB2-SRC-COD-000066.",
- "real_source_control_status": "absent",
- "real_source_control_status_note": "The control this requirement specifies is NOT present in the real foxBMS 2 source at commit 308028fb.",
- "derived_from": "FB2-SAF-TAR-000001",
- "verification_status": "not_verified",
- "asil_justification": {
-  "classification_status": "recorded_reasoning",
-  "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this requirement. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product and not evidence about the integrity of any real safety bus.",
-  "requirement_classification": "security",
-  "reason": "This requirement is classified 'security' and it specifies message integrity and freshness on the safety bus. ISO 26262 does not allocate an ASIL to a security requirement, so not_applicable is the schema's own enumerated value for that case. The trace to the cell-voltage and SOA functional safety requirements records whose assurance is at stake if the bus is compromised. It is not an ASIL allocation and no ASIL flows along it.",
-  "what_this_does_not_assert": [
-   "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. Nothing in this field was audited to produce it.",
-   "It does not assert human approval. human_approval_status on this record is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
-   "It does not establish that any ASIL was correctly assigned to any safety requirement in this corpus. It explains only why this requirement is not itself an ASIL-allocated item.",
-   "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose.",
-   "It does not assert an ASPICE capability level for anything."
+  "revision": "4",
+  "schema_version": "1.0.0",
+  "artifact_type": "requirement",
+  "engineering_domain": "safety",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
   ],
-  "added_in_revision": "3"
- }
+  "owner_role": "cybersecurity_engineer",
+  "origin": "synthetic",
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "classification": "security",
+  "conditions_modes": [
+    "NORMAL",
+    "CHARGING",
+    "DISCHARGE",
+    "PRECHARGE",
+    "DEGRADED",
+    "COMMISSIONING"
+  ],
+  "feasibility_dependencies": [
+    "FB2-SAF-SEC-000001",
+    "FB2-SAF-SEC-000002"
+  ],
+  "id": "FB2-SAF-SEC-000003",
+  "title": "SEC-000003: Message-level integrity and freshness for safety-relevant CAN messages",
+  "statement": "For every CAN identifier whose payload influences a safety function, the BMS master software shall verify, before the payload is passed to its receive callback, a rolling counter that establishes freshness, an integrity check that a bus peer cannot produce without the shared secret, and a data-length code matching the length expected for that identifier; a frame failing any of the three shall be rejected before the callback is invoked and shall raise a diagnosis entry.",
+  "rationale": "Dispatch on identifier alone means that any node that can transmit on the bus can present a frame that the master accepts as genuine, because an identifier is not a credential. This is the highest-consequence exposure identified in the TARA, because the affected identifiers carry the cell voltage, cell temperature and pack current signals on which the safety requirements depend. All three checks are required and none is redundant: without the counter an authentic frame can be replayed indefinitely; without the integrity check the counter is forgeable by any bus peer; without the length check a short frame can be interpreted as if trailing bytes were meaningful (TARA threat THR-005, TARA mitigation MIT-004).",
+  "acceptance_criteria": [
+    {
+      "criterion": "Injected frame acceptance",
+      "measure": "Frames with a valid identifier and no valid counter, integrity or length, accepted by the dispatch layer in a 24 h injection campaign",
+      "threshold": "0",
+      "unit": "frames"
+    },
+    {
+      "criterion": "Replay rejection",
+      "measure": "Previously recorded valid frames re-presented out of sequence and accepted",
+      "threshold": "0",
+      "unit": "frames"
+    },
+    {
+      "criterion": "Length mismatch rejection",
+      "measure": "Frames whose data-length code differs from the configured length for that identifier and which reach the callback",
+      "threshold": "0",
+      "unit": "frames"
+    },
+    {
+      "criterion": "Verification latency",
+      "measure": "Time from end of frame reception to the integrity verdict being available",
+      "threshold": "2",
+      "unit": "ms"
+    },
+    {
+      "criterion": "Rejection diagnosability",
+      "measure": "Diagnosis entries raised per rejected frame, distinguishing counter, integrity and length failures",
+      "threshold": "1",
+      "unit": "entry per rejected frame"
+    },
+    {
+      "criterion": "Genuine-frame false-rejection rate",
+      "measure": "Genuine frames rejected under nominal bus conditions over a 24 h campaign whose observed genuine-frame population is at least 3 x 10^6 frames. Pass is 0 rejections observed over that population, which is a one-sided 95 percent upper confidence bound of 1 x 10^-6 on the rate by the rule of three (3/n <= 1e-6 for n >= 3e6). The integrity value used on this interface shall be at least 22 bits, which is the width for which a per-frame false rejection probability of 2^-w stays below the rate this criterion bounds over that population.",
+      "threshold": "1 per 10^6 genuine frames",
+      "unit": "rejections per 10^6 genuine frames"
+    }
+  ],
+  "safety_allocation": {
+    "asil": "not_applicable",
+    "safety_goal_ref": "FB2-SAF-FSR-000001",
+    "mitigation": "Security mitigation supporting the freedom-from-interference assumption of the cell-voltage and SOA requirements. asil is recorded as not_applicable because this is a security requirement and ISO 26262 does not allocate an ASIL to it; the trace to the FSR records the requirement whose assurance is at stake, not an ASIL allocation."
+  },
+  "assumptions": [
+    "FB2-ASM-004",
+    "FB2-ASM-011"
+  ],
+  "verification_approach": "test",
+  "source_refs": [
+    "FB2-SRC-COD-000065",
+    "FB2-SRC-COD-000066"
+  ],
+  "assumption_refs": [
+    "FB2-ASM-004",
+    "FB2-ASM-011"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_SAE_21434_2021",
+      "reference": "Clause 15.4 (mitigation concept); asset-integrity protection per Clause 8.5",
+      "status": "unverified",
+      "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists, no conformance is claimed and no review has taken place."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 7 and Part 6, Clause 7 (protection of safety mechanisms from unintended effects)",
+      "status": "partially_mapped",
+      "rationale": "The interference path is identified; the corresponding safety-mechanism protection analysis is not part of this corpus."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (diagnostic coverage)",
+      "status": "gap",
+      "rationale": "The rejection diagnosability criterion has no verification evidence in this corpus."
+    }
+  ],
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "cybersecurity_engineer",
+      "description": "First issue. Forward-engineered security requirement 'message-integrity-freshness-safety-bus' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "cybersecurity_engineer",
+      "description": "Replaced the absolute '0 genuine frames rejected over 24 h' acceptance criterion with a bounded rate, a stated population the bound is demonstrated over, and a minimum integrity value width that makes the bound achievable. Remediation of finding FB2-REV-FND-000028. The old criterion was unsatisfiable and non-discriminating at the same time: a keyed integrity value of width w rejects a genuine frame with probability 2^-w, so over a 24 h campaign the expected number of genuine rejections is n * 2^-w, non-zero for any practical w; meanwhile an implementation that rejected every frame would satisfy the criterion vacuously, and would also satisfy the other criteria in this record vacuously. The new criterion is 0 rejections observed over a genuine-frame population of at least 3 x 10^6 in a 24 h campaign, which by the rule of three (0 failures in n trials gives a one-sided 95 percent upper bound of 3/n) is a bound of 1 x 10^-6 on the rate; and it requires the integrity value on the interface to be at least 22 bits, which is the width for which 2^-w stays below that rate over that population. The three statements are mutually consistent, so the criterion is now achievable by a correct implementation of adequate width and is not satisfied by an always-rejecting one (~100 percent) or by a 16-bit one (~1.5e-5 per frame). The criterion is therefore STRICTER in discriminating power than the zero it replaces, and it is also a harder engineering obligation, because it constrains the width of the integrity value where the zero constrained nothing. The absolute zeros that remain in this record are the ones that are decidable by the check existing - injected frames accepted, replayed frames accepted, length-mismatch frames reaching the callback, control-byte transitions - and those are over countable events on a channel where no collision is involved, so they are unchanged and were deliberately not relaxed. The verification measure FB2-VER-TMS-000018 and its execution record were regenerated against the new criterion in the same revision set. No ASIL value, safety_goal_ref, statement clause or verification approach was changed."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "cybersecurity_engineer",
+      "description": "Added the asil_justification that the requirement applicability validator requires and did not find: this record marks safety_allocation.asil as not_applicable, which requirement.schema.json enumerates as the value for a requirement to which no ASIL determination applies, and the rule requires a recorded reason for that marking. The reason had been present only inside safety_allocation.mitigation and safety_allocation.safety_goal_ref, which are required on every requirement whatever its marking and are therefore populated identically on the ASIL_D records; they cannot serve as a justification specific to this marking. The new field states the reason on its own, names what the safety_goal_ref trace does and does not carry, and records the open items where the marking depends on something not yet established. The asil value, the statement, the mitigation, the safety_goal_ref and the revision-relevant content of the record are unchanged. Remediation of the requirement applicability validator finding raised by finding FB2-REV-FND-000032. Nothing in this field asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
+    },
+    {
+      "revision": "4",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "cybersecurity_engineer",
+      "description": "Added the fault_reaction block that the safety-requirement completeness validator (MUT-008, safety_requirement_completeness_checker) requires and did not find. That rule used to carry an id filter '-FSR-' in id which made it structurally incapable of reporting this record, while its sibling verification_traceability_checker selected the same population - requirement plus engineering_domain equals safety - with no id filter at all. The filter has been removed from the rule, which widened its scope and weakened nothing; see finding FB2-REV-FND-000039. The block authored here is transcribed from this record's own statement, acceptance_criteria and conditions_modes, and records three absences honestly rather than filling them: neither safety concept allocates a fault reaction to any element for the security chain (element_owns_reaction is therefore false), the safety goal's timing budget has no cybersecurity leg so no reaction-time budget is stated, and the control's real-source status and unverified verification leg are carried through. No acceptance criterion, ASIL value, statement, rationale, verification approach or verification status was changed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human has approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    }
+  ],
+  "real_source_presence": "Control ABSENT at the dispatch layer. In the real foxBMS 2 source, src/app/driver/can/can.c:643-692 accepts a frame on hardware mailbox acceptance and on a data-lost indication (retval == CAN_HAL_RETVAL_NO_DATA_LOST at :657), which is a loss report and not a security check, then copies all eight data bytes at :675-682 without comparing the received data-length code against an expected length. src/app/driver/can/can.c:1015-1031 then matches a frame against the configured table on (canNode, id, idType) alone at :1021-1023 and invokes the registered callback at :1025. No rolling counter, integrity field or length check is applied at this layer. SCOPE LIMIT, stated explicitly: the per-message receive callbacks were NOT individually audited for this requirement, so this requirement asserts the absence only at the shared dispatch layer and does not assert that no individual callback performs its own check. A detective control IS present and is credited: CAN receive queue overflow raises DIAG_ID_CAN_RX_QUEUE_FULL (can.c:684-690, configured DIAG_WARNING / DIAG_SEN_EVENT_1 / DIAG_EVALUATION_ENABLED in src/app/engine/config/diag_cfg.c:165), which is TARA mitigation MIT-007. Anchors FB2-SRC-COD-000065, FB2-SRC-COD-000066.",
+  "real_source_control_status": "absent",
+  "real_source_control_status_note": "The control this requirement specifies is NOT present in the real foxBMS 2 source at commit 308028fb.",
+  "derived_from": "FB2-SAF-TAR-000001",
+  "verification_status": "not_verified",
+  "fault_reaction": {
+    "allocated_element_id": null,
+    "element_owns_reaction": false,
+    "reaction": "Reject the frame before the receive callback is invoked, and raise a diagnosis entry. This is the requirement's own sentence: 'a frame failing any of the three shall be rejected before the callback is invoked and shall raise a diagnosis entry'. The placement of the rejection is the substance of the reaction - it is upstream of the callback, so a frame that fails the counter, the integrity check or the data-length check never reaches the code that unpacks a cell voltage, a cell temperature or a pack current. The consequence for the safety chain is that the value is never published, and the safety requirements that depend on it therefore see the ABSENCE of a fresh value rather than a wrong one, which is the condition FB2-SAF-FSR-000001's fault_reaction already describes for a failed acquisition.",
+    "triggered_by": "A rolling-counter check that fails (replay or out-of-sequence frame); an integrity check that a bus peer cannot produce without the shared secret fails (forged or corrupted frame); or a data-length code that differs from the configured length for that identifier (short or over-long frame).",
+    "diagnosis": "One diagnosis entry per rejected frame, distinguishing the counter, integrity and length failures. Transcribed from this record's own acceptance criterion 'Rejection diagnosability / Diagnosis entries raised per rejected frame, distinguishing counter, integrity and length failures / 1 / entry per rejected frame'. The distinction is itself part of the reaction, not a reporting nicety: a rejection that cannot say which of the three checks failed cannot be trended or diagnosed.",
+    "reaction_time_bound": "'Verification latency / Time from end of frame reception to the integrity verdict being available / 2 ms'. Transcribed from this record's own acceptance criterion. It bounds the detection that precedes the rejection, not the rejection itself, and no criterion in this record bounds the time from the verdict to the callback being skipped. The two decidability criteria - 'Injected frame acceptance / 0 frames', 'Replay rejection / 0 frames' and 'Length mismatch rejection / 0 frames' - bound the reaction's correctness over a 24 h campaign, not its latency.",
+    "mode_dependence": "Mode-independent, and the record is explicit that it must be. The CAN identifiers this requirement protects 'influence a safety function', so the frames it rejects carry cell voltage, cell temperature and pack current - signals the safety chain acts on in every one of this record's conditions_modes (NORMAL, CHARGING, DISCHARGE, PRECHARGE, DEGRADED, COMMISSIONING). A rejection policy that varied by mode would be a mode dependent hole in the same signal path, so the statement attaches no mode qualifier and neither does this reaction.",
+    "allocation_basis": "NO ELEMENT ALLOCATES A FAULT REACTION FOR THE SECURITY CHAIN. FB2-SAF-FSC-000001.safety_strategies.fault_reaction lists four reactions and allocates them to AR-002, AR-004, AR-005 and AR-006; FB2-SAF-TSC-000001.fault_reaction lists the same four. None of them is a reaction to a detected security attack, and FB2-SAF-TSC-000001.safety_strategies.fault_detection lists five detection mechanisms, none of which is a communication-integrity or authentication check. The security chain therefore has no element-level reaction budget anywhere in this corpus. That is a real gap and it is recorded as one rather than closed by inventing an allocation. The reaction this field states is the one this requirement's own statement mandates and the one its own acceptance criteria decide; who carries it technically, and within what time, is not derivable from any record that exists.",
+    "budget_absence_note": "No reaction_time_budget_ms is stated, and that is deliberate rather than an omission. The safety goal FB2-SAF-SGO-000001.timing_budget.allocation has ten entries, none of which is a cybersecurity leg, and neither safety concept allocates one to the security chain, so there is no interval in this corpus against which a security reaction time could be checked. The decidable bounds that DO exist are stated in reaction_time_bound, transcribed from this record's own acceptance criteria. Inventing a millisecond figure here would create a number with nothing to verify it against, which is the failure mode finding FB2-REV-FND-000025 was raised about.",
+    "derivation": "Transcribed, not invented. reaction, triggered_by, diagnosis, reaction_time_bound and mode_dependence are each quoted or paraphrased from text this record already carried at revision 3: its own statement, its own acceptance_criteria and its own conditions_modes. The numeric bound in reaction_time_bound is a threshold this record's own acceptance criteria already stated; where the record states no such bound, this field says so rather than supplying one. No acceptance criterion, ASIL value, verification approach, verification_status, statement or rationale was altered by adding this field.",
+    "unverified_leg_note": "The verification leg is absent in the real source and the record says so: real_source_control_status is 'absent'. This block therefore describes what the requirement specifies, not what the foxBMS 2 product does. No measurement, no timing analysis and no injection campaign exists in this corpus for any part of it.",
+    "open_limits": "The control is absent from the real foxBMS 2 source: real_source_control_status on this record is 'absent'. The verification leg is a plan, not an outcome: verification_status is not_verified, and the false-rejection criterion in this record is a bounded rate whose demonstration depends on an observed genuine-frame population of at least 3 x 10^6 frames that no campaign in this corpus has produced. The reaction has no element-level allocation in either safety concept and no reaction-time budget, because FB2-SAF-SGO-000001.timing_budget has no cybersecurity leg. One coupling is recorded rather than resolved: this requirement's feasibility_dependencies list FB2-SAF-SEC-000001 and FB2-SAF-SEC-000002, so the integrity scheme is assumed to be deployed over an authenticated transport, and the shared secret's own lifecycle is not specified by any record in this corpus.",
+    "added_in_revision": "4"
+  },
+  "asil_justification": {
+    "classification_status": "recorded_reasoning",
+    "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this requirement. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product and not evidence about the integrity of any real safety bus.",
+    "requirement_classification": "security",
+    "reason": "This requirement is classified 'security' and it specifies message integrity and freshness on the safety bus. ISO 26262 does not allocate an ASIL to a security requirement, so not_applicable is the schema's own enumerated value for that case. The trace to the cell-voltage and SOA functional safety requirements records whose assurance is at stake if the bus is compromised. It is not an ASIL allocation and no ASIL flows along it.",
+    "what_this_does_not_assert": [
+      "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. Nothing in this field was audited to produce it.",
+      "It does not assert human approval. human_approval_status on this record is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
+      "It does not establish that any ASIL was correctly assigned to any safety requirement in this corpus. It explains only why this requirement is not itself an ASIL-allocated item.",
+      "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose.",
+      "It does not assert an ASPICE capability level for anything."
+    ],
+    "added_in_revision": "3"
+  }
 }
