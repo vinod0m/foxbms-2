@@ -398,8 +398,40 @@ void testDMA_Initialize(void) {
     /* This build has no FOXBMS_AFE_DRIVER_NXP, so the only place that consults
      * SPI_GetSpiIndex() - the SPI4 transmit-interrupt skip at dma.c:214 - is
      * not compiled, and the function under test must not ask which SPI node is
-     * the slave at all. */
-    TEST_ASSERT_EQUAL_INT32(0, SPI_GetSpiIndex_CallCount());
+     * the slave at all.
+     *
+     * That requirement is asserted by CMock itself and nothing here is needed
+     * to assert it. SPI_GetSpiIndex is a mock with no _Expect registration for
+     * it anywhere in this file, and the project sets :cmock:
+     * fail_on_unexpected_calls: TRUE (conf/unit/app_project_posix.yml:375), so
+     * the first call fails the test with "Function SPI_GetSpiIndex:Called more
+     * times than expected." (cmock_generator.rb:353).
+     *
+     * It was previously written as
+     *     TEST_ASSERT_EQUAL_INT32(0, SPI_GetSpiIndex_CallCount());
+     * which asserted nothing. CMock's <fn>_CallCount() returns
+     * Mock.<fn>_CallbackCalls (cmock_generator_plugin_callback.rb:81-83), and
+     * that counter is incremented only on the path taken when a callback or
+     * stub pointer has been installed (same file, line 43, inside
+     * generate_call(), which is only reached from mock_implementation() and
+     * mock_implementation_precheck(), both guarded by
+     * "if (Mock.<fn>_CallbackFunctionPointer != NULL)"). No callback is
+     * registered for SPI_GetSpiIndex, so the counter is a constant 0 and the
+     * assertion could not fail.
+     *
+     * Measured, not argued: with (void)SPI_GetSpiIndex(spiREG4) injected into
+     * the compiled #else branch of src/app/driver/dma/dma.c, this test went red
+     * with three failures, the first being testDMA_Initialize at test_dma.c:231
+     * "Function SPI_GetSpiIndex:Called more times than expected." - and the
+     * _CallCount assertion at the old line 402 did not fire, exactly as a
+     * constant-0 counter predicts. That is why the oracle that does work is the
+     * one relied on here.
+     *
+     * Do not "fix" this by registering SPI_GetSpiIndex_Stub() with a counting
+     * callback instead. With :cmock: callback_after_arg_check FALSE
+     * (conf/unit/app_project_posix.yml:377) a stub returns from the mock before
+     * the argument, ordering and call-count checks, which would replace a strict
+     * oracle with a manual one and let an unexpected call pass. */
 }
 
 /** @brief   the SPI transmit control packet takes its destination from the

@@ -107,7 +107,43 @@
 /*========== Unit Testing Framework Directives ==============================*/
 
 TEST_INCLUDE_PATH("../../tests/unit/app/main/helper")
-TEST_INCLUDE_PATH("C:/ti/Hercules/HALCoGen/v04.07.01/drivers/TMS570LC4357ZWT/SYSTEM570v000")
+/* The HALCoGen headers this test used to name explicitly,
+ *      TEST_INCLUDE_PATH("C:/ti/Hercules/HALCoGen/v04.07.01/drivers/"
+ *                        "TMS570LC4357ZWT/SYSTEM570v000")
+ * are already on the include path of both shipped Ceedling projects
+ * (conf/unit/app_project_posix.yml and app_project_win32.yml, under
+ * ":paths: :include:", as the recursive include of the variant's generated
+ * header directory, annotated "# HALCoGen"), because the unit-test driver runs
+ * HALCoGen with the build variant directory as its working directory and the
+ * generated headers land in that include/ directory
+ * (cli/cmd_embedded_ut/embedded_ut_impl.py:324-334).
+ * An absolute Windows TI installation path is therefore a redundant second
+ * route to the same files, and it is not merely redundant: Ceedling resolves
+ * TEST_INCLUDE_PATH eagerly and aborts the whole run with "'<path>' ... not
+ * found" during "Collecting Essential Test Context", before a single
+ * translation unit is compiled, on any host that does not have that TI
+ * installation. It is removed rather than repointed, because repointing it at
+ * a host-relative directory would hard-code this verification environment's
+ * layout into a test that also has to build in the project's own build.
+ *
+ * WHAT IS UNDER TEST, AND WHAT IS SUBSTITUTED
+ * --------------------------------------------
+ * The code under test is foxBMS's own src/app/main/fstartup.c. Every TI HAL
+ * entry point it calls is mocked here (the MockHL_* headers below), so this
+ * test never executes TI startup code and asserts nothing about it.
+ *
+ * What the mocked boundary is compiled against is host-dependent:
+ *   - in a project build, the real HALCoGen output (HL_esm.h, HL_reg_esm.h,
+ *     HL_reg_system.h, HL_system.h, HL_sys_common.h, HL_sys_core.h,
+ *     HL_sys_mpu.h, HL_sys_vim.h, HL_hal_stdtypes.h,
+ *     HL_errata_SSWF021_45.h);
+ *   - in the SIL host unit-test harness, host-declared stand-ins for the
+ *     subset of that surface this module uses. Those stand-ins declare
+ *     signatures only. They carry no register offset, base address or bit
+ *     mask, so nothing here validates the register map.
+ * Read a failure in this test as a defect in fstartup.c's control flow, never
+ * as a statement about the Hercules device.
+ */
 
 /*========== Definitions and Implementations for Unit Test ==================*/
 

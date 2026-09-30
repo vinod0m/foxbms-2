@@ -194,7 +194,28 @@ void testFTSK_RunUserCodeEngine(void) {
 void testFTSK_InitializeUserCodePreCyclicTasks(void) {
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    SYS_SetStateRequest_ExpectAndReturn(SYS_STATE_INITIALIZATION_REQUEST, STD_NOT_OK);
+    /* RT1/2 must make the FAS_ASSERT in FTSK_InitializeUserCodePreCyclicTasks
+     * fire, so the mocked return value has to differ from the SYS_OK that the
+     * assert compares against (ftask_cfg.c:240). The value is not arbitrary:
+     * SYS_CheckStateRequest() answers SYS_STATE_INITIALIZATION_REQUEST with
+     * SYS_ALREADY_INITIALIZED on the rejected branch, i.e. when
+     * sys_state.currentState is not SYS_FSM_STATE_UNINITIALIZED (sys.c:669,
+     * the assignment; the test is at sys.c:666). That is exactly the condition
+     * the assert's own comment says must never hold (ftask_cfg.c:235-239), and
+     * SYS_ALREADY_INITIALIZED is the enumerator documented as "Initialization
+     * of SYS module already finished" (sys.h:123).
+     * SYS_BUSY_OK is not a candidate: it is declared at sys.h:120 and is never
+     * assigned anywhere in src/. The type must be SYS_RETURN_TYPE_e (sys.h:168,
+     * sys.h:118-124); STD_NOT_OK is a STD_RETURN_TYPE_e (fstd_types.h:84) and
+     * clang rejects the mismatch under -Werror,-Wenum-conversion.
+     * SYS_SetStateRequest returns SYS_CheckStateRequest's verdict unchanged
+     * (sys.c:691-702: the local is initialised to SYS_ILLEGAL_REQUEST, is
+     * overwritten by SYS_CheckStateRequest, and is returned), so the two
+     * values below are exactly the two values the product can produce for an
+     * initialization request from the uninitialized state and from any other
+     * state respectively. They are genuinely different, so RT1/2 and RT2/2 do
+     * not share a value. */
+    SYS_SetStateRequest_ExpectAndReturn(SYS_STATE_INITIALIZATION_REQUEST, SYS_ALREADY_INITIALIZED);
     PEX_Initialize_Expect();
     PEX_SetPinDirectionOutput_Expect(PEX_PORT_EXPANDER3, PEX_PORT_0_PIN_0);
     PEX_SetPin_Expect(PEX_PORT_EXPANDER3, PEX_PORT_0_PIN_0);
@@ -208,7 +229,13 @@ void testFTSK_InitializeUserCodePreCyclicTasks(void) {
     TEST_ASSERT_FAIL_ASSERT(FTSK_InitializeUserCodePreCyclicTasks());
 
     /* ======= RT2/2: Test implementation */
-    SYS_SetStateRequest_ExpectAndReturn(SYS_STATE_INITIALIZATION_REQUEST, STD_OK);
+    /* RT2/2 is the documented normal case: SYS_CheckStateRequest() returns
+     * SYS_OK for SYS_STATE_INITIALIZATION_REQUEST while the state machine is
+     * still SYS_FSM_STATE_UNINITIALIZED (sys.c:667), which is what the
+     * FAS_ASSERT at ftask_cfg.c:240 requires. Reaching that branch also
+     * requires sys_state.stateRequest == SYS_STATE_NO_REQUEST (sys.c:663),
+     * the precondition the assert's comment states. */
+    SYS_SetStateRequest_ExpectAndReturn(SYS_STATE_INITIALIZATION_REQUEST, SYS_OK);
     PEX_Initialize_Expect();
     PEX_SetPinDirectionOutput_Expect(PEX_PORT_EXPANDER3, PEX_PORT_0_PIN_0);
     PEX_SetPin_Expect(PEX_PORT_EXPANDER3, PEX_PORT_0_PIN_0);
@@ -219,7 +246,34 @@ void testFTSK_InitializeUserCodePreCyclicTasks(void) {
 
     LED_SetToggleTime_Expect(LED_NORMAL_OPERATION_ON_OFF_TIME_ms);
     /* ======= RT2/2: Call function under test */
-    FTSK_InitializeUserCodePreCyclicTasks();
+    /* The call is wrapped in TEST_ASSERT_PASS_ASSERT, and that wrapper is load
+     * bearing, not decoration. Measured: with the bare call, replacing the
+     * SYS_OK above with SYS_ALREADY_INITIALIZED left this file at
+     * "TESTED: 9 PASSED: 9 FAILED: 0" - the wrong value did not fail anything.
+     *
+     * Why. Under UNITY_UNIT_TEST, FAS_ASSERT(x) expands to
+     *     if (!(x)) Throw(0)
+     * (src/app/main/include/fassert.h:248-252). CException's Throw() only
+     * longjmps when a Try frame is registered on this thread id
+     * (CException.c:28-31: `if (CExceptionFrames[MY_ID].pFrame) longjmp(...)`),
+     * and when no frame is registered it falls through to
+     * CEXCEPTION_NO_CATCH_HANDLER, which is defined as nothing at all
+     * (CException.h:55-57). RT1/2 above establishes a Try frame via
+     * TEST_ASSERT_FAIL_ASSERT and, on the way out, Catch restores the previous
+     * (NULL) frame (CException.h:106). So the throw in RT2/2 lands with no frame
+     * installed, longjmp is skipped, and control RETURNS to the statement after
+     * the Throw inside FTSK_InitializeUserCodePreCyclicTasks - LED_SetToggleTime
+     * is called and the test proceeds to pass.
+     *
+     * TEST_ASSERT_PASS_ASSERT installs a Try frame, so the same throw now
+     * longjmps into its Catch and reports "Code under test failed an
+     * assertion" (tests/unit/support/test_assert_helper.h:92-101, Try at line 95
+     * and the message at line 99). That is what makes RT2/2 assert anything: it
+     * checks the product does NOT trap, which is the property the test's own
+     * docstring claims for it (RT2/2, "Pass assertion on initialize", this
+     * file's header comment).
+     */
+    TEST_ASSERT_PASS_ASSERT(FTSK_InitializeUserCodePreCyclicTasks());
 }
 
 void testFTSK_RunUserCodeCyclic1ms(void) {

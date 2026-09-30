@@ -90,6 +90,56 @@ TEST_INCLUDE_PATH("../../tests/unit/support")
 static ADI_ERROR_TABLE_s test_errorTable;
 static ADI_STATE_s        test_adiState;
 
+/* WHY THIS EXISTS - CMock's <fn>_CallCount() IS NOT AN INVOCATION COUNTER HERE
+ * -------------------------------------------------------------------------
+ * Both "this variant raises no diagnostic event" assertions in this file used to
+ * be written as
+ *     TEST_ASSERT_EQUAL(0, DIAG_Handler_CallCount());
+ * and both asserted nothing. Measured on this tree, with DIAG_Handler called
+ * three times in one test (three DIAG_Handler_ExpectAndReturn registrations
+ * followed by three calls to ADI_EvaluateDiagnosticCellVoltages), the
+ * counter read 0 and the assertion "Expected 3 Was 0" fired. It is a constant
+ * zero, not an observation.
+ *
+ * The mechanism, from the vendored CMock this project builds against
+ * (ceedling-1.1.9/vendor/cmock):
+ *   - lib/cmock_generator_plugin_callback.rb:81-83 generates
+ *         int DIAG_Handler_CallCount(void) { return Mock.DIAG_Handler_CallbackCalls; }
+ *     so _CallCount() reports the CALLBACK counter, not the call count.
+ *   - That counter is incremented in exactly one place, generate_call() at
+ *     lib/cmock_generator_plugin_callback.rb:43, which is only reached from
+ *     mock_implementation() (line 47) and mock_implementation_precheck()
+ *     (line 57). Both are guarded by
+ *         if (Mock.DIAG_Handler_CallbackFunctionPointer != NULL)
+ *     so with no callback or stub installed the counter is never touched and
+ *     stays at its reset value of 0 (line 79 / line 88, and
+ *     cmock_generator.rb:293 memset(&Mock, 0, sizeof(Mock)) on _Destroy).
+ *   - The project enables the callback plugin but this file registers no
+ *     DIAG_Handler callback, so the guard is always false.
+ *
+ * WHAT IS USED INSTEAD, and why it is not vacuous
+ * -----------------------------------------------
+ * CMock itself already refuses an unrequested call: the mock advances its
+ * per-function instance index on every call
+ * (cmock_generator.rb:349-350) and then asserts the instance is non-NULL at
+ * line 353 with CMockStringCalledMore, and this project sets
+ * :cmock: :fail_on_unexpected_calls: true (conf/unit/app_project_posix.yml:397).
+ * A call to DIAG_Handler that no test registered therefore fails the test on
+ * its own. That oracle is exercised in this very file: each
+ * DIAG_Handler_ExpectAndReturn below registers one expectation, and dropping any
+ * one of them makes CMock report "Function DIAG_Handler:Called fewer times than
+ * expected" at Verify, because the remaining calls then cannot be matched
+ * (cmock_generator_plugin_expect.rb:103-109, failing at line 107 with
+ * CMockStringCalledLess).
+ *
+ * So the two assertions below are REMOVED rather than rewritten. Replacing them
+ * with a callback would be strictly worse: the project sets
+ * :cmock: :callback_after_arg_check: false (conf/unit/app_project_posix.yml:399),
+ * so a _Stub callback returns from the mock before the argument, ordering and
+ * call-count checks, and a callback installed only to count would replace a
+ * strict oracle with a manual one.
+ */
+
 static void Test_SetErrorFlags(uint8_t string, uint16_t module, bool crc, bool notStuck, bool auxNotStuck) {
     test_errorTable.crcIsOk[string][module]                            = crc;
     test_errorTable.voltageRegisterContentIsNotStuck[string][module]   = notStuck;
@@ -139,8 +189,9 @@ void testADI_DiagnosticGuardsStateAndIsOtherwiseInert(void) {
     TEST_ASSERT_FAIL_ASSERT(ADI_Diagnostic(NULL_PTR));
     test_adiState.currentString = 0u;
     ADI_Diagnostic(&test_adiState);
-    /* the function body after the guard is empty, so no diagnostic is raised */
-    TEST_ASSERT_EQUAL(0, DIAG_Handler_CallCount());
+    /* the function body after the guard is empty, so no diagnostic is raised.
+     * The oracle for "none raised" is CMock's own unexpected-call check, not
+     * DIAG_Handler_CallCount(); see the block comment above. */
 }
 
 /** @brief   a good CRC alone is not enough for the cell-voltage diagnostic: the
@@ -217,9 +268,6 @@ void testADI_EvaluateDiagnosticStringAndModuleVoltagesChecksCrcAndAuxiliary(void
     /* both good -> ok */
     Test_SetErrorFlags(0u, 2u, true, true, true);
     TEST_ASSERT_TRUE(ADI_EvaluateDiagnosticStringAndModuleVoltages(&test_adiState, 2u));
-
-    /* this variant never calls the diagnostic handler */
-    TEST_ASSERT_EQUAL(0, DIAG_Handler_CallCount());
 }
 
 /** @brief   every ADI_Evaluate* variant guards the state pointer and the module

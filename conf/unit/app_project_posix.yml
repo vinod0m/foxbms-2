@@ -95,9 +95,31 @@
   :libraries: []
 
 :files:
-  :test:
-    # this file can only be tested on Windows due to HALCoGen availability
-    - -:./../../tests/unit/app/main/test_fstartup.c
+  # No :test: file is excluded any more.
+  #
+  # tests/unit/app/main/test_fstartup.c used to be excluded here with the
+  # comment "this file can only be tested on Windows due to HALCoGen
+  # availability". What actually made it unbuildable on this platform was not
+  # HALCoGen availability: the test hard-coded an absolute Windows TI
+  # installation path,
+  #     TEST_INCLUDE_PATH("C:/ti/Hercules/HALCoGen/v04.07.01/drivers/"
+  #                       "TMS570LC4357ZWT/SYSTEM570v000")
+  # and Ceedling resolves TEST_INCLUDE_PATH eagerly, so on any host without
+  # that TI installation it aborted the entire run with
+  # "'<path>' ... not found" during "Collecting Essential Test Context",
+  # before compiling anything.
+  #
+  # Those headers are already on the include path: the recursive include of the
+  # variant's generated header directory above, annotated "# HALCoGen", is where
+  # the unit-test driver puts HALCoGen's output
+  # (cli/cmd_embedded_ut/embedded_ut_impl.py:324-334 runs HALCoGen with the
+  # build variant directory as its working directory and then reads
+  # base_dir/include/*.h). The test file no longer names a TI installation
+  # path at all, so nothing about its HALCoGen dependency has changed - only
+  # the unbuildable absolute path has been removed. The remaining HL_* include
+  # requirement is the same project-wide one the other ~250 app tests already
+  # have, so this file is no longer special in that respect.
+  :test: []
   :source: []
 
 :defines:
