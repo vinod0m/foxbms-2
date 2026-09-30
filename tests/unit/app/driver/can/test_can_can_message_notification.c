@@ -186,7 +186,9 @@ void canUpdateID(canBASE_t *node, uint32 messageBox, uint32 msgBoxArbitVal) {
  * 'canGetDataReturnValue'.
  */
 uint32_t canGetDataReturnValue = 0u;
+uint32_t canGetDataCalls        = 0u;
 uint32 canGetData(canBASE_t *node, uint32 messageBox, uint8 *const data) {
+    canGetDataCalls++;
     return canGetDataReturnValue;
 }
 /* The return value of 'canGetID' determines the function flow in
@@ -195,18 +197,55 @@ uint32 canGetData(canBASE_t *node, uint32 messageBox, uint8 *const data) {
  * 'canGetIDReturnValue'.
  */
 uint32_t canGetIDReturnValue = 0u;
+uint32_t canGetIDCalls        = 0u;
 uint32 canGetID(canBASE_t *node, uint32 messageBox) {
+    canGetIDCalls++;
     return canGetIDReturnValue;
 }
 
 /*========== Setup and Teardown =============================================*/
 void setUp(void) {
+    canGetDataCalls = 0u;
+    canGetIDCalls   = 0u;
 }
 
 void tearDown(void) {
 }
 
 /*========== Test Cases =====================================================*/
+/* canMessageNotification() dispatches a mailbox to the transmit handler while
+ * the mailbox index is within the transmit range and to the receive handler
+ * beyond it (src/app/driver/can/can.c:985-989). The transmit handler is inert in
+ * this build (can.c:909-914), while the receive handler reads the mailbox
+ * through canGetData() (can.c:654), so the observable that distinguishes the two
+ * branches is whether the mailbox is read at all.
+ */
 void testcanMessageNotification(void) {
+    /* the transmit branch is taken for a mailbox inside the transmit range, so
+     * the mailbox is never read */
     canMessageNotification(NULL_PTR, 0u);
+    TEST_ASSERT_EQUAL_UINT32(0u, canGetDataCalls);
+    TEST_ASSERT_EQUAL_UINT32(0u, canGetIDCalls);
+}
+
+/** @brief   the boundary mailbox index is still a transmit mailbox
+ *         (can.c:985)
+ */
+void testcanMessageNotificationTransmitBoundary(void) {
+    canMessageNotification(NULL_PTR, CAN_NR_OF_TX_MESSAGE_BOX);
+    TEST_ASSERT_EQUAL_UINT32(0u, canGetDataCalls);
+    TEST_ASSERT_EQUAL_UINT32(0u, canGetIDCalls);
+}
+
+/** @brief   the first mailbox beyond the transmit range is a receive mailbox and
+ *         is read exactly once (can.c:986-987)
+ */
+void testcanMessageNotificationReceiveBranch(void) {
+    /* canGetData answers CAN_HAL_RETVAL_DATA_LOST, so the receive handler stops
+     * after reading the mailbox (can.c:656) */
+    canGetDataReturnValue = CAN_HAL_RETVAL_DATA_LOST;
+    canMessageNotification(NULL_PTR, CAN_NR_OF_TX_MESSAGE_BOX + 1u);
+    TEST_ASSERT_EQUAL_UINT32(1u, canGetDataCalls);
+    /* the queue was never started, so no identifier is extracted */
+    TEST_ASSERT_EQUAL_UINT32(0u, canGetIDCalls);
 }

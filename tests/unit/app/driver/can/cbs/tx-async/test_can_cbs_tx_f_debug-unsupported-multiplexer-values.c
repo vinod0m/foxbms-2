@@ -135,7 +135,62 @@ const CAN_SHIM_s can_kShim = {
 };
 
 /*========== Setup and Teardown =============================================*/
+/* CANTX_DebugUnsupportedMultiplexerVal() writes two 16 bit signals into one
+ * message word and hands the result to CAN_DataSend()
+ * (src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-unsupported-multiplexer-values.c:82-102).
+ * Its whole contract is that wire layout, so it is asserted directly rather
+ * than only through the mock's argument checks. */
+/* The product builds the message word in a function-local of its own
+ * translation unit (module :84), so the test cannot address it; what it can do
+ * is remember the pointer the first signal writer was handed and require the
+ * second one to be handed the same word. */
+static uint64_t *test_messageWordSeen;
+static uint8_t   test_signalCalls;
+static uint8_t   test_copyCalls;
+
+static void CAN_TxSetMessageDataWithSignalDataCallback(
+    uint64_t *pMessageData,
+    uint64_t startBit,
+    uint8_t length,
+    uint64_t value,
+    CAN_ENDIANNESS_e endianness,
+    int cmock_num_calls) {
+    (void)cmock_num_calls;
+    if (test_signalCalls == 0u) {
+        test_messageWordSeen = pMessageData;
+        /* message id: start bit 0, length 16 (module :67-68) */
+        TEST_ASSERT_EQUAL_UINT64(0u, startBit);
+        TEST_ASSERT_EQUAL_UINT8(16u, length);
+    } else if (test_signalCalls == 1u) {
+        /* multiplexer value: start bit 16, length 16 (module :69-70) */
+        TEST_ASSERT_EQUAL_UINT64(16u, startBit);
+        TEST_ASSERT_EQUAL_UINT8(16u, length);
+    }
+    /* both signals must go into the same message word */
+    TEST_ASSERT_EQUAL_PTR(test_messageWordSeen, pMessageData);
+    TEST_ASSERT_EQUAL(CAN_BIG_ENDIAN, endianness);
+    test_signalCalls++;
+}
+
+static void CAN_TxSetCanDataWithMessageDataCallback(
+    uint64_t message,
+    uint8_t *pCanData,
+    CAN_ENDIANNESS_e endianness,
+    int cmock_num_calls) {
+    (void)cmock_num_calls;
+    /* the two signal writers are mocked and do not write, so the word handed to
+     * the copy step must still be the one the callback sequence started from:
+     * nothing else may have written into it (module :84) */
+    TEST_ASSERT_EQUAL_UINT32((uint32_t)*test_messageWordSeen, (uint32_t)message);
+    TEST_ASSERT_NOT_NULL(pCanData);
+    TEST_ASSERT_EQUAL(CAN_BIG_ENDIAN, endianness);
+    test_copyCalls++;
+}
+
 void setUp(void) {
+    test_messageWordSeen = NULL_PTR;
+    test_signalCalls     = 0u;
+    test_copyCalls       = 0u;
 }
 
 void tearDown(void) {
@@ -147,11 +202,14 @@ void testCANTX_DebugUnsupportedMultiplexerVal(void) {
     uint32_t testMessageId               = 2u;
     uint32_t testInvalidMultiplexerValue = 22u;
 
-    uint64_t testMessage = 0;
-    CAN_TxSetMessageDataWithSignalData_Expect(&testMessage, 0, 16, testMessageId, CAN_BIG_ENDIAN);
-    CAN_TxSetMessageDataWithSignalData_Expect(&testMessage, 16, 16, testInvalidMultiplexerValue, CAN_BIG_ENDIAN);
-    CAN_TxSetCanDataWithMessageData_Expect(testMessage, &testData[0], CAN_BIG_ENDIAN);
+    CAN_TxSetMessageDataWithSignalData_Stub(CAN_TxSetMessageDataWithSignalDataCallback);
+    CAN_TxSetCanDataWithMessageData_Stub(CAN_TxSetCanDataWithMessageDataCallback);
     CAN_DataSend_ExpectAndReturn(
         CAN_NODE_1, TEST_UNSUPPORTED_MULTIPLEXER, TEST_UNSUPPORTED_MULTIPLEXER_IDENTIFIER_TYPE, &testData[0], STD_OK);
     CANTX_DebugUnsupportedMultiplexerVal(testMessageId, testInvalidMultiplexerValue);
+
+    /* exactly two signals are laid down: the id and the multiplexer value
+     * (module :88-97) */
+    TEST_ASSERT_EQUAL_UINT8(2u, test_signalCalls);
+    TEST_ASSERT_EQUAL_UINT8(1u, test_copyCalls);
 }

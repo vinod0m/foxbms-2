@@ -990,14 +990,48 @@ class CorpusTool:
                                   "requirement_applicability_validator")
 
         # Rule: Diagnostic coverage claim validator (MUT-010)
+        #
+        # SCOPE WIDENED, and only widened. This rule carried the same third
+        # condition, `"-FSR-" in _id(key)`, that MUT-008 carried until finding
+        # FB2-REV-FND-000039 removed it there. The two rules were written at
+        # different times for different fields and neither was reconciled
+        # against the other, so the corpus held two different answers to "what is
+        # a safety requirement" for the same record class.
+        #
+        # The filter was left in place on the argument that no FB2-SAF-SEC-*
+        # record claims diagnostic coverage, so it was inert rather than
+        # actively harmful. Inert is not the same as correct: the security
+        # concept does have a diagnostic story -- those requirements mandate a
+        # diagnosis entry per rejected frame -- so a future security
+        # requirement claiming a diagnostic coverage figure would be silently
+        # unchecked, and that silence would be indistinguishable from the silence
+        # FB2-REV-FND-000039 was raised about. A check that is inert until the
+        # day it is needed, and wrong on that day, is a trap with a long fuse.
+        #
+        # The filter is removed, not relaxed, so the population only grows and
+        # the rule is strictly harder to satisfy. The finding text is
+        # generalised from "FSR" to "safety requirement" because the population
+        # is no longer FSR-only; keeping the FSR wording would have been a
+        # second, quieter way of encoding the same assumption.
+        #
+        # MEASURED on the corpus as it stands (2026-09-30): the widened rule
+        # reports NOTHING, because no safety-domain requirement of either class
+        # currently carries a diagnostic_coverage field - 0 of the 12. That is a
+        # real result, not evidence of a working rule: "reports nothing on a
+        # corpus where nothing is wrong" is not "would report the defect". Four
+        # self-tests in cmd_selftest therefore pin the rule from both sides, so
+        # its liveness is established by construction rather than by trust: the
+        # excluded class is reported, the previously reported class is still
+        # reported, the domain boundary is still respected, and a requirement
+        # that carries the evidence is silent. See finding FB2-REV-FND-000040.
         for key, (p, d) in index.items():
             aid = _id(key)
-            if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety" and "-FSR-" in _id(key):
+            if d.get("artifact_type") == "requirement" and d.get("engineering_domain") == "safety":
                 coverage = d.get("diagnostic_coverage")
                 if coverage:
                     if "diagnostic_coverage_evidence" not in d or not d.get("diagnostic_coverage_evidence"):
                         self.findings.add("high", "verification", aid,
-                                          f"FSR {aid} claims diagnostic coverage '{coverage}' without evidence",
+                                          f"safety requirement {aid} claims diagnostic coverage '{coverage}' without evidence",
                                           "diagnostic_coverage_claim_validator")
 
         # Rule: Configuration consistency checker (MUT-011)
@@ -4144,6 +4178,82 @@ class CorpusTool:
                            and "no fault_reaction" in f["description"]
                            for f in self.findings.items)
 
+        # --- scope of the diagnostic-coverage claim validator (MUT-010) ----
+        # This rule lost its `"-FSR-" in id` filter (finding FB2-REV-FND-000040).
+        #
+        # These four tests exist because of a measurement that could not be used
+        # as evidence of a working rule. The widened rule reports NOTHING on the
+        # current corpus: no safety-domain requirement of either class carries a
+        # diagnostic_coverage field at all, so the filter's removal changed the
+        # reported count from zero to zero. That is a true statement about the
+        # corpus and a useless statement about the rule, so the rule's liveness
+        # has to be established by construction instead. Without them, a future
+        # edit could re-narrow the population and the suite would stay green,
+        # because on this corpus there is nothing for the narrowed rule to miss.
+        # The counterfactual is the whole point: remove the evidence field from
+        # an in-memory record and the rule must fire.
+
+        def _diagnostic_coverage_index(*specs):
+            # specs are (id, domain); the record claims a coverage figure with no
+            # evidence unless the caller adds one, which is the defect state.
+            idx = {}
+            for aid, domain in specs:
+                idx[("synthetic_reference", aid)] = ("synthetic_reference", {
+                    "id": aid, "artifact_type": "requirement",
+                    "engineering_domain": domain, "profile": "synthetic_reference",
+                    "diagnostic_coverage": "99%"})
+            return idx
+
+        def _coverage_without_evidence_finding(art_id, index):
+            self.findings = Findings()
+            self._validate_semantic_rules(index, [])
+            return any(f["artifact_id"] == art_id
+                       and f["rule"] == "diagnostic_coverage_claim_validator"
+                       and "without evidence" in f["description"]
+                       for f in self.findings.items)
+
+        def t_diagnostic_coverage_rule_covers_sec_requirements():
+            # The regression this finding is about. FB2-SAF-SEC-* is a
+            # safety-domain requirement class and the old `-FSR-` id filter made
+            # the rule structurally unable to report it, so a security
+            # requirement claiming a diagnostic coverage figure with no evidence
+            # would have gone unchecked. It must now be reported.
+            return _coverage_without_evidence_finding(
+                "FB2-SAF-SEC-999991",
+                _diagnostic_coverage_index(("FB2-SAF-SEC-999991", "safety")))
+
+        def t_diagnostic_coverage_rule_still_covers_fsr_requirements():
+            # Nothing that was reported before the widening stops being reported.
+            # If this ever fails, the widening was a narrowing in disguise. This is
+            # also the class SCN-MUT-010 exercises, so it is the one whose
+            # regression would be visible in the acceptance gate.
+            return all(_coverage_without_evidence_finding(
+                aid, _diagnostic_coverage_index((aid, "safety")))
+                for aid in ("FB2-SAF-FSR-999990", "FB2-SAF-FSR-999989"))
+
+        def t_diagnostic_coverage_rule_respects_domain_boundary():
+            # Widening the population must not make the rule report requirements
+            # outside the safety engineering domain, which are governed by other
+            # rules and would be a false positive here.
+            return not _coverage_without_evidence_finding(
+                "FB2-SYS-SYR-999988",
+                _diagnostic_coverage_index(("FB2-SYS-SYR-999988", "system")))
+
+        def t_diagnostic_coverage_rule_silent_when_evidence_present():
+            # The counterfactual, in the direction that keeps the rule honest in
+            # the other direction: a claim that DOES carry evidence is silent.
+            # Without this, the rule would be indistinguishable from one that
+            # reports every safety requirement regardless of its evidence, and
+            # widening would have bought nothing but noise.
+            self.findings = Findings()
+            index = _diagnostic_coverage_index(("FB2-SAF-SEC-999987", "safety"))
+            index[("synthetic_reference", "FB2-SAF-SEC-999987")][1][
+                "diagnostic_coverage_evidence"] = "covered by the rejection-path counter"
+            self._validate_semantic_rules(index, [])
+            return not any(f["artifact_id"] == "FB2-SAF-SEC-999987"
+                           and f["rule"] == "diagnostic_coverage_claim_validator"
+                           for f in self.findings.items)
+
         def t_profile_contamination():
             self.findings = Findings()
             schema_cache = {}
@@ -4449,6 +4559,14 @@ class CorpusTool:
               t_fault_reaction_rule_respects_domain_boundary)
         check("fault_reaction rule silent when the field is present",
               t_fault_reaction_rule_silent_when_field_present)
+        check("diagnostic_coverage rule covers security requirements (widened scope)",
+              t_diagnostic_coverage_rule_covers_sec_requirements)
+        check("diagnostic_coverage rule still covers FSR requirements (nothing lost)",
+              t_diagnostic_coverage_rule_still_covers_fsr_requirements)
+        check("diagnostic_coverage rule still respects the safety-domain boundary",
+              t_diagnostic_coverage_rule_respects_domain_boundary)
+        check("diagnostic_coverage rule silent when evidence is present",
+              t_diagnostic_coverage_rule_silent_when_evidence_present)
         check("profile contamination detected", t_profile_contamination)
         check("production_authorized=true rejected", t_authorized_rejected)
         check("export roundtrip deterministic", t_export_roundtrip)

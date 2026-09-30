@@ -135,15 +135,107 @@ uint8_t i2c_rxLastByteInterface1 = 0u;
 uint8_t i2c_rxLastByteInterface2 = 0u;
 
 /*========== Setup and Teardown =============================================*/
+/* This build has FOXBMS_UART_SUPPORT=1, so the SCI4 block of DMA_Initialize()
+ * is compiled as well (src/app/driver/dma/dma.c:172-:192 for the control
+ * packet, :297-:317 for the configuration). Every count below is read out of
+ * those lines.
+ *
+ * The counts are taken in callbacks rather than in CMock's own <fn>_CallCount():
+ * that counter is the number of calls ROUTED THROUGH A CALLBACK, so it reads 0
+ * for a mock that was only satisfied from <fn>_Expect() registrations. An
+ * AddCallback() is registered instead of a Stub(), because AddCallback leaves
+ * CMock's argument, ordering and call-count checks in place, while a Stub()
+ * returns from the mock before them. */
+#define TEST_DMA_N_SPI ((uint32_t)DMA_NUMBER_SPI_INTERFACES)
+
+/* dmaEnable(): one call, dma.c:194 */
+#define TEST_DMA_N_ENABLE (1u)
+/* dmaReqAssign(): two per SPI interface (dma.c:200, :202), two each for I2C1
+ * (:246, :248) and I2C2 (:273, :275), one for SCI4 (:301) */
+#define TEST_DMA_N_REQ_ASSIGN ((2u * TEST_DMA_N_SPI) + 4u + 1u)
+/* dmaEnableInterrupt(): two per SPI interface (dma.c:222, :227), three each for
+ * I2C1 (:253, :254, :255) and I2C2 (:280, :281, :282), one for SCI4 (:306) */
+#define TEST_DMA_N_ENABLE_INTR ((2u * TEST_DMA_N_SPI) + 6u + 1u)
+/* dmaSetCtrlPacket(): two per SPI interface (dma.c:233, :236), two each for
+ * I2C1 (:261, :264) and I2C2 (:288, :291), one for SCI4 (:313) */
+#define TEST_DMA_N_CTRL_PACKET ((2u * TEST_DMA_N_SPI) + 4u + 1u)
+/* dmaSetChEnable(): two per SPI interface (dma.c:239, :240), two each for I2C1
+ * (:267, :268) and I2C2 (:294, :295), one for SCI4 (:316) */
+#define TEST_DMA_N_CH_ENABLE ((2u * TEST_DMA_N_SPI) + 4u + 1u)
+
+#define TEST_DMA_MAX_CTRL_PACKETS TEST_DMA_N_CTRL_PACKET
+
+static uint32_t test_dmaCountEnable;
+static uint32_t test_dmaCountReqAssign;
+static uint32_t test_dmaCountEnableInterrupt;
+static uint32_t test_dmaCountCtrlPacket;
+static uint32_t test_dmaCountChEnable;
+
+static dmaChannel_t test_dmaPacketChannel[TEST_DMA_MAX_CTRL_PACKETS];
+static g_dmaCTRL    test_dmaPacketValue[TEST_DMA_MAX_CTRL_PACKETS];
+
+static void dmaEnableCountCallback(int n) {
+    (void)n;
+    test_dmaCountEnable++;
+}
+static void dmaReqAssignCountCallback(dmaChannel_t channel, dmaRequest_t req, int n) {
+    (void)channel;
+    (void)req;
+    (void)n;
+    test_dmaCountReqAssign++;
+}
+static void dmaEnableInterruptCountCallback(
+    dmaChannel_t channel,
+    dmaInterrupt_t interrupt,
+    dmaIntGroup_t intGroup,
+    int n) {
+    (void)channel;
+    (void)interrupt;
+    (void)intGroup;
+    (void)n;
+    test_dmaCountEnableInterrupt++;
+}
+static void dmaSetChEnableCountCallback(dmaChannel_t channel, dmaTriggerType_t trigger, int n) {
+    (void)channel;
+    (void)trigger;
+    (void)n;
+    test_dmaCountChEnable++;
+}
+static void dmaSetCtrlPacketRecordCallback(dmaChannel_t channel, g_dmaCTRL controlPacket, int n) {
+    (void)n;
+    TEST_ASSERT_LESS_THAN_UINT32(TEST_DMA_MAX_CTRL_PACKETS, test_dmaCountCtrlPacket);
+    test_dmaPacketChannel[test_dmaCountCtrlPacket] = channel;
+    test_dmaPacketValue[test_dmaCountCtrlPacket]  = controlPacket;
+    test_dmaCountCtrlPacket++;
+}
+
 void setUp(void) {
+    test_dmaCountEnable          = 0u;
+    test_dmaCountReqAssign       = 0u;
+    test_dmaCountEnableInterrupt = 0u;
+    test_dmaCountCtrlPacket      = 0u;
+    test_dmaCountChEnable        = 0u;
+    dmaEnable_AddCallback(dmaEnableCountCallback);
+    dmaReqAssign_AddCallback(dmaReqAssignCountCallback);
+    dmaEnableInterrupt_AddCallback(dmaEnableInterruptCountCallback);
+    dmaSetChEnable_AddCallback(dmaSetChEnableCountCallback);
+    dmaSetCtrlPacket_AddCallback(dmaSetCtrlPacketRecordCallback);
 }
 
 void tearDown(void) {
 }
 
+
 /*========== Test Cases =====================================================*/
 
-void testDMA_Initialize(void) {
+/** @brief   registers the exact HAL call sequence DMA_Initialize() makes, so
+ *           every test case runs the same single code path
+ * @details the sequence is taken from src/app/driver/dma/dma.c: the SPI loop
+ *          at :198-:241, I2C1 at :246-:268, I2C2 at :273-:295 and SCI4 at
+ *          :301-:316. Keeping it in one helper means a change in the driver's
+ *          order or arguments still fails every case.
+ */
+static void test_dmaExpectInitializationSequence(void) {
 
     /* DMA control packets configuration for SPI  */
     g_dmaCTRL dma_controlPacketSpiTx = {
@@ -318,6 +410,79 @@ void testDMA_Initialize(void) {
 
     dmaSetCtrlPacket_Expect((dmaChannel_t)DMA_CHANNEL_SCI4_TX, dma_controlPacketSci4Tx);
     dmaSetChEnable_Expect((dmaChannel_t)DMA_CHANNEL_SCI4_TX, (dmaTriggerType_t)DMA_HW);
+}
 
+void testDMA_Initialize(void) {
+    test_dmaExpectInitializationSequence();
     DMA_Initialize();
+
+    /* ======= test output verification ==================================== */
+    /* dmaEnable() is called exactly once, dma.c:194 */
+    TEST_ASSERT_EQUAL_UINT32(TEST_DMA_N_ENABLE, test_dmaCountEnable);
+    /* One dmaReqAssign() per DMA request line: Tx and Rx of every SPI interface
+     * (dma.c:200, :202), Tx and Rx of I2C1 and I2C2 (dma.c:246, :248, :273,
+     * :275) and the transmit line of SCI4 (dma.c:301). */
+    TEST_ASSERT_EQUAL_UINT32(TEST_DMA_N_REQ_ASSIGN, test_dmaCountReqAssign);
+    /* One dmaEnableInterrupt() per armed interrupt, which includes the
+     * block-transfer-complete interrupt on the SCI4 transmit channel, dma.c:306 */
+    TEST_ASSERT_EQUAL_UINT32(TEST_DMA_N_ENABLE_INTR, test_dmaCountEnableInterrupt);
+    /* One control packet per channel, which includes the SCI4 transmit channel,
+     * dma.c:313 */
+    TEST_ASSERT_EQUAL_UINT32(TEST_DMA_N_CTRL_PACKET, test_dmaCountCtrlPacket);
+    /* One hardware trigger per channel, which includes the SCI4 transmit
+     * channel, dma.c:316 */
+    TEST_ASSERT_EQUAL_UINT32(TEST_DMA_N_CH_ENABLE, test_dmaCountChEnable);
+}
+
+/** @brief   the SCI4 transmit control packet is addressed to the transmit data
+ *           register of the UART and works 8 bit wide
+ * @details dma.c:308 sets the destination of the SCI4 transmit packet to
+ *          `&(UART_REG->TD) + DMA_BIG_ENDIAN_ADDRESS_8BIT`, and dma.c:309-:310
+ *          then narrow the access width that dma.c:185-:186 already set to 8
+ *          bit. UART_REG is sciREG4 (src/app/driver/config/uart_cfg.h:67).
+ */
+void testDMA_InitializeSci4TransmitPacketIsAddressedAtTheUartTransmitRegister(void) {
+    test_dmaExpectInitializationSequence();
+    DMA_Initialize();
+
+    /* the last control packet of DMA_Initialize() is the SCI4 one, dma.c:313 */
+    const uint32_t sci4Packet = (TEST_DMA_N_CTRL_PACKET - 1u);
+    TEST_ASSERT_EQUAL_UINT32((uint32_t)DMA_CHANNEL_SCI4_TX, (uint32_t)test_dmaPacketChannel[sci4Packet]);
+    TEST_ASSERT_EQUAL_UINT32(
+        (uint32_t)(&(UART_REG->TD)) + DMA_BIG_ENDIAN_ADDRESS_8BIT, test_dmaPacketValue[sci4Packet].DADD);
+    TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_8_BIT, test_dmaPacketValue[sci4Packet].RDSIZE);
+    TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_8_BIT, test_dmaPacketValue[sci4Packet].WRSIZE);
+}
+
+/** @brief   the SPI packets keep their 16 bit access width even in the build
+ *           that also configures the UART
+ * @details dma.c:229-:230 address the SPI transmit and receive data registers
+ *          with the 16 bit offset, and the access sizes come from dma.c:106,
+ *          :107, :125 and :126. The UART block only narrows the SCI4 packet
+ *          (dma.c:309-:310), so this catches a narrowing that leaked into the
+ *          SPI or I2C packets.
+ */
+void testDMA_InitializeSpiPacketsKeepTheirSixteenBitAccessWidth(void) {
+    test_dmaExpectInitializationSequence();
+    DMA_Initialize();
+
+    for (uint32_t i = 0u; i < TEST_DMA_N_SPI; i++) {
+        TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_16_BIT, test_dmaPacketValue[(2u * i)].RDSIZE);
+        TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_16_BIT, test_dmaPacketValue[(2u * i)].WRSIZE);
+        TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_16_BIT, test_dmaPacketValue[(2u * i) + 1u].RDSIZE);
+        TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_16_BIT, test_dmaPacketValue[(2u * i) + 1u].WRSIZE);
+        TEST_ASSERT_EQUAL_UINT32(
+            (uint32_t)(&(dma_spiInterfaces[i]->DAT1)) + DMA_BIG_ENDIAN_ADDRESS_16BIT,
+            test_dmaPacketValue[(2u * i)].DADD);
+        TEST_ASSERT_EQUAL_UINT32(
+            (uint32_t)(&(dma_spiInterfaces[i]->BUF)) + DMA_BIG_ENDIAN_ADDRESS_16BIT,
+            test_dmaPacketValue[(2u * i) + 1u].SADD);
+    }
+
+    /* the I2C packets are addressed at the 8 bit offset and stay 8 bit wide,
+     * dma.c:145, :146, :257, :258, :164, :165, :284, :285 */
+    for (uint32_t k = (2u * TEST_DMA_N_SPI); k < (TEST_DMA_N_CTRL_PACKET - 1u); k++) {
+        TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_8_BIT, test_dmaPacketValue[k].RDSIZE);
+        TEST_ASSERT_EQUAL_UINT32((uint32_t)ACCESS_8_BIT, test_dmaPacketValue[k].WRSIZE);
+    }
 }

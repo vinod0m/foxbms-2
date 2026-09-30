@@ -83,6 +83,16 @@ TEST_INCLUDE_PATH("../../src/app/driver/phy")
 #define PHY_POWER_DOWN_REG_DIR  (gioPORTB->DIR)
 #define PHY_POWER_DOWN_PIN      (6u)
 
+/* The hardware-reset pin expectation below uses gioPORTA->DOUT rather than a
+ * literal GIOA base address. Both name the same register: the product's own
+ * phy_cfg.h spells the reset register `gioPORTA->DOUT`, and the TI header that
+ * defines gioPORTA resolves it to GIO_BASE_PORTA, which is the 0xFFF7BC34 this
+ * test used to hard-code. Spelling it the way the product spells it keeps the
+ * assertion on the same register while removing a raw silicon address from a
+ * host test - and it is the same idiom this file already uses for gioPORTB
+ * above. The pin index stays a literal, because the pin is the statement under
+ * test and a macro would let a product change to it pass unnoticed. */
+
 static DATA_BLOCK_PHY_s tablePhy = {.header.uniqueId = DATA_BLOCK_ID_PHY};
 
 /*========== Setup and Teardown =============================================*/
@@ -130,9 +140,9 @@ void helper_SwReset(uint16_t *resetComplete, uint16_t *n_resetComplete) {
 }
 
 void helper_HardwareReset(void) {
-    IO_PinReset_Expect(&((gioPORT_t *)0xFFF7BC34u)->DOUT, 1u);
+    IO_PinReset_Expect(&gioPORTA->DOUT, 1u);
     OS_DelayTask_Expect(1u);
-    IO_PinSet_Expect(&((gioPORT_t *)0xFFF7BC34u)->DOUT, 1u);
+    IO_PinSet_Expect(&gioPORTA->DOUT, 1u);
     OS_DelayTask_Expect(2u);
 }
 
@@ -886,9 +896,9 @@ void testPHY_HardwareReset(void) {
     /* ======= Assertion tests ============================================= */
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    IO_PinReset_Expect(&((gioPORT_t *)0xFFF7BC34u)->DOUT, 1u);
+    IO_PinReset_Expect(&gioPORTA->DOUT, 1u);
     OS_DelayTask_Expect(1u);
-    IO_PinSet_Expect(&((gioPORT_t *)0xFFF7BC34u)->DOUT, 1u);
+    IO_PinSet_Expect(&gioPORTA->DOUT, 1u);
     OS_DelayTask_Expect(2u);
     /* ======= RT1/1: Call function under test */
     PHY_ResetHardware();

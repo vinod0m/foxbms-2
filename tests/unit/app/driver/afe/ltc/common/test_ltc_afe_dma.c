@@ -66,6 +66,8 @@
 
 #include "ltc_afe_dma.h"
 
+#include "test_assert_helper.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -78,6 +80,7 @@ TEST_INCLUDE_PATH("../../src/app/driver/afe/ltc/common/config")
 TEST_INCLUDE_PATH("../../src/app/driver/config")
 TEST_INCLUDE_PATH("../../src/app/driver/io")
 TEST_INCLUDE_PATH("../../src/app/driver/spi")
+TEST_INCLUDE_PATH("../../tests/unit/support")
 
 /*========== Definitions and Implementations for Unit Test ==================*/
 uint8_t ltc_RXPECbuffer[LTC_N_BYTES_FOR_DATA_TRANSMISSION] = {0};
@@ -127,6 +130,11 @@ LTC_STATE_s ltc_stateBase = {
     .dummyByte_ongoing       = STD_NOT_OK,
 };
 
+/* AFE_DmaCallback() compares the reported spi index against the index of the
+ * SPI node the LTC is configured on (src/app/driver/afe/ltc/common/ltc_afe_dma.c:90-92),
+ * so the fixture has to give ltc_stateBase a non-null SPI interface. */
+SPI_INTERFACE_CONFIG_s test_ltcSpiInterface = {0};
+
 /* - configuring dma control packets   */
 g_dmaCTRL afe_ltcDmaControlPacketTx = {
     .SADD      = 0u,                                /* source address             */
@@ -168,12 +176,83 @@ g_dmaCTRL afe_ltcDmaControlPacketRx = {
 
 /*========== Setup and Teardown =============================================*/
 void setUp(void) {
+    ltc_stateBase.transmit_ongoing      = false;
+    ltc_stateBase.ltcData.pSpiInterface = &test_ltcSpiInterface;
 }
 
 void tearDown(void) {
 }
 
 /*========== Test Cases =====================================================*/
+/** @brief   AFE_IsTransmitOngoing() rejects a null state (ltc_afe_dma.c:78) and
+ *          otherwise reports the stored flag (:79)
+ */
+void testAFE_IsTransmitOngoing(void) {
+    TEST_ASSERT_FAIL_ASSERT(AFE_IsTransmitOngoing(NULL_PTR));
 
-void testDummy(void) {
+    ltc_stateBase.transmit_ongoing = false;
+    TEST_ASSERT_FALSE(AFE_IsTransmitOngoing(&ltc_stateBase));
+
+    ltc_stateBase.transmit_ongoing = true;
+    TEST_ASSERT_TRUE(AFE_IsTransmitOngoing(&ltc_stateBase));
+}
+
+/** @brief   AFE_SetTransmitOngoing() rejects a null state (ltc_afe_dma.c:83) and
+ *          otherwise raises the flag and never lowers it (:84)
+ */
+void testAFE_SetTransmitOngoing(void) {
+    TEST_ASSERT_FAIL_ASSERT(AFE_SetTransmitOngoing(NULL_PTR));
+
+    ltc_stateBase.transmit_ongoing = false;
+    AFE_SetTransmitOngoing(&ltc_stateBase);
+    TEST_ASSERT_TRUE(AFE_IsTransmitOngoing(&ltc_stateBase));
+
+    /* the setter only ever sets; a second call must not clear the flag */
+    AFE_SetTransmitOngoing(&ltc_stateBase);
+    TEST_ASSERT_TRUE(AFE_IsTransmitOngoing(&ltc_stateBase));
+}
+
+/** @brief   AFE_DmaCallback() only accepts the SPI index of SPI1 or SPI4
+ *         (ltc_afe_dma.c:89) and clears the transmit flag only for the SPI node
+ *         the LTC runs on (:90-92)
+ */
+void testAFE_DmaCallbackAcceptsOnlySpi1AndSpi4(void) {
+    /* SPI_GetSpiIndex(spiREG1) and SPI_GetSpiIndex(spiREG4) are both evaluated
+     * by the guard, so both are answered on every call */
+    SPI_GetSpiIndex_ExpectAndReturn(spiREG1, 0u);
+    SPI_GetSpiIndex_ExpectAndReturn(spiREG4, 1u);
+    TEST_ASSERT_FAIL_ASSERT(AFE_DmaCallback(2u));
+}
+
+/** @brief   the completion interrupt of the SPI node the LTC runs on clears the
+ *         transmit flag (ltc_afe_dma.c:90-92)
+ * @details The LTC is configured on the node whose index SPI_GetSpiIndex()
+ *          answers 0 here, and the reported completion index is 0, so the
+ *          `if` in the module is taken.
+ */
+void testAFE_DmaCallbackClearsTransmitOngoingForConfiguredNode(void) {
+    /* the guard compares against SPI1 first; that comparison succeeds, so the
+     * SPI4 comparison is short-circuited away */
+    SPI_GetSpiIndex_ExpectAndReturn(spiREG1, 0u);
+    /* the `if` compares against the configured node, which also reports 0 */
+    SPI_GetSpiIndex_ExpectAndReturn(test_ltcSpiInterface.pNode, 0u);
+
+    ltc_stateBase.transmit_ongoing = true;
+    AFE_DmaCallback(0u);
+    TEST_ASSERT_FALSE(AFE_IsTransmitOngoing(&ltc_stateBase));
+}
+
+/** @brief   a completion interrupt of the other accepted SPI node leaves the
+ *         transmit flag alone (ltc_afe_dma.c:89 passes, :91 does not match)
+ */
+void testAFE_DmaCallbackLeavesTransmitOngoingForOtherAcceptedNode(void) {
+    /* SPI1 does not match the reported index 1, so SPI4 is evaluated and matches */
+    SPI_GetSpiIndex_ExpectAndReturn(spiREG1, 0u);
+    SPI_GetSpiIndex_ExpectAndReturn(spiREG4, 1u);
+    /* the `if` compares index 1 against the configured node, which is 0 */
+    SPI_GetSpiIndex_ExpectAndReturn(test_ltcSpiInterface.pNode, 0u);
+
+    ltc_stateBase.transmit_ongoing = true;
+    AFE_DmaCallback(1u);
+    TEST_ASSERT_TRUE(AFE_IsTransmitOngoing(&ltc_stateBase));
 }

@@ -68,6 +68,7 @@
 
 #include "can_cbs_tx_cyclic.h"
 #include "can_cfg_tx-cyclic-message-definitions.h"
+#include "test_assert_helper.h"
 
 /*========== Unit Testing Framework Directives ==============================*/
 TEST_SOURCE_FILE("can_cbs_tx_f_bms-state-details.c")
@@ -218,7 +219,9 @@ void test_BmsStateDetails(void) {
     CAN_TxSetCanDataWithMessageData_Expect(
         testMessageData[10u], testCanDataZeroArray, CANTX_BMS_STATE_DETAILS_ENDIANNESS);
 
-    CANTX_BmsStateDetails(testMessage, testCanDataZeroArray, NULL_PTR, &can_kShim);
+    /* the callback reports success on the happy path
+     * (src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_bms-state-details.c:363) */
+    TEST_ASSERT_EQUAL(0u, CANTX_BmsStateDetails(testMessage, testCanDataZeroArray, NULL_PTR, &can_kShim));
 }
 
 void testSetTimingViolation(void) {
@@ -291,4 +294,105 @@ void testSetTimingViolation(void) {
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[9u], 12u, 1u, 1u, CANTX_BMS_STATE_DETAILS_ENDIANNESS);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[10u]);
     TEST_CANTX_SetTimingViolation100MsAlgoRec(&testMessageData[9u], &testRecordedTimingViolations);
+}
+
+/** @brief   CANTX_BmsStateDetails() guards the message identity, the data
+ *          pointer, the (unused) multiplexer pointer and the shim, and reports
+ *          success
+ * @details The guards are
+ *            - message.id       == CANTX_BMS_STATE_DETAILS_ID
+ *              (src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_bms-state-details.c:334)
+ *            - message.idType   == CANTX_BMS_STATE_DETAILS_ID_TYPE (:335)
+ *            - message.dlc      == CAN_FOXBMS_MESSAGES_DEFAULT_DLC (:336)
+ *            - pCanData         != NULL_PTR (:337)
+ *            - pMuxId           == NULL_PTR (:338)
+ *            - kpkCanShim       != NULL_PTR (:339)
+ *          and it returns 0u on success (:363).
+ */
+void testBmsStateDetailsRejectsWrongMessageIdentity(void) {
+    CAN_MESSAGE_PROPERTIES_s testMessage = {
+        .id         = CANTX_BMS_STATE_DETAILS_ID,
+        .idType     = CANTX_BMS_STATE_DETAILS_ID_TYPE,
+        .dlc        = CANTX_BMS_STATE_DETAILS_DLC,
+        .endianness = CANTX_BMS_STATE_DETAILS_ENDIANNESS,
+    };
+    uint8_t testCanDataZeroArray[CANTX_BMS_STATE_DETAILS_DLC] = {0u};
+
+    /* AT1: wrong message id (module :334) */
+    testMessage.id = CANTX_BMS_STATE_DETAILS_ID + 1u;
+    TEST_ASSERT_FAIL_ASSERT(CANTX_BmsStateDetails(testMessage, testCanDataZeroArray, NULL_PTR, &can_kShim));
+    testMessage.id = CANTX_BMS_STATE_DETAILS_ID;
+
+    /* AT2: wrong identifier type (module :335) */
+    testMessage.idType = CAN_EXTENDED_IDENTIFIER_29_BIT;
+    TEST_ASSERT_FAIL_ASSERT(CANTX_BmsStateDetails(testMessage, testCanDataZeroArray, NULL_PTR, &can_kShim));
+    testMessage.idType = CANTX_BMS_STATE_DETAILS_ID_TYPE;
+
+    /* AT3: wrong dlc (module :336) */
+    testMessage.dlc = CAN_FOXBMS_MESSAGES_DEFAULT_DLC + 1u;
+    TEST_ASSERT_FAIL_ASSERT(CANTX_BmsStateDetails(testMessage, testCanDataZeroArray, NULL_PTR, &can_kShim));
+    testMessage.dlc = CANTX_BMS_STATE_DETAILS_DLC;
+}
+
+/** @brief   CANTX_BmsStateDetails() rejects a null data pointer, a non-null
+ *          multiplexer pointer and a null shim (module :337-339)
+ */
+void testBmsStateDetailsRejectsNullAndNonNullPointers(void) {
+    CAN_MESSAGE_PROPERTIES_s testMessage = {
+        .id         = CANTX_BMS_STATE_DETAILS_ID,
+        .idType     = CANTX_BMS_STATE_DETAILS_ID_TYPE,
+        .dlc        = CANTX_BMS_STATE_DETAILS_DLC,
+        .endianness = CANTX_BMS_STATE_DETAILS_ENDIANNESS,
+    };
+    uint8_t testCanDataZeroArray[CANTX_BMS_STATE_DETAILS_DLC] = {0u};
+    uint8_t testMuxId                                         = 0u;
+
+    /* AT4: null CAN data pointer (module :337) */
+    TEST_ASSERT_FAIL_ASSERT(CANTX_BmsStateDetails(testMessage, NULL_PTR, NULL_PTR, &can_kShim));
+
+    /* AT5: pMuxId is unused and must be NULL_PTR (module :338) */
+    TEST_ASSERT_FAIL_ASSERT(CANTX_BmsStateDetails(testMessage, testCanDataZeroArray, &testMuxId, &can_kShim));
+
+    /* AT6: null shim (module :339) */
+    TEST_ASSERT_FAIL_ASSERT(CANTX_BmsStateDetails(testMessage, testCanDataZeroArray, NULL_PTR, NULL_PTR));
+}
+
+/** @brief   every timing-violation helper guards both of its arguments
+ * @details module :159-160, :164-165, :170-171, :176-177, :182-183 for the
+ *          current-violation helpers and :248-249, :253-254, :259-260,
+ *          :265-266, :271-272 for the recorded-violation helpers.
+ */
+void testSetTimingViolationHelpersRejectNullArguments(void) {
+    uint64_t testMessageData[2u] = {0u};
+    SYSM_TIMING_VIOLATION_RESPONSE_s testRecordedTimingViolations = {0u};
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolationEngine(NULL_PTR, &can_kShim));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolationEngine(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation1ms(NULL_PTR, &can_kShim));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation1ms(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation10Ms(NULL_PTR, &can_kShim));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation10Ms(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100Ms(NULL_PTR, &can_kShim));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100Ms(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100MsAlgo(NULL_PTR, &can_kShim));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100MsAlgo(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolationEngineRec(NULL_PTR, &testRecordedTimingViolations));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolationEngineRec(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation1MsRec(NULL_PTR, &testRecordedTimingViolations));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation1MsRec(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation10MsRec(NULL_PTR, &testRecordedTimingViolations));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation10MsRec(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100MsRec(NULL_PTR, &testRecordedTimingViolations));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100MsRec(&testMessageData[0u], NULL_PTR));
+
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100MsAlgoRec(NULL_PTR, &testRecordedTimingViolations));
+    TEST_ASSERT_FAIL_ASSERT(TEST_CANTX_SetTimingViolation100MsAlgoRec(&testMessageData[0u], NULL_PTR));
 }

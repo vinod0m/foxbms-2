@@ -64,6 +64,10 @@
 #include "foxmath.h"
 #include "state_estimation.h"
 
+#include "battery_system_cfg.h"
+
+#include "test_assert_helper.h"
+
 /*========== Unit Testing Framework Directives ==============================*/
 TEST_SOURCE_FILE("soc_none.c")
 TEST_SOURCE_FILE("soe_counting.c")
@@ -88,7 +92,71 @@ void setUp(void) {
 void tearDown(void) {
 }
 
-void testDummy(void) {
+/*========== Test Cases =====================================================*/
+/* This file builds soc_none.c, soe_counting.c and soh_none.c. The two "none"
+ * drivers are the stand-ins used when no state estimation is configured, and
+ * their whole contract is what the guards and the single returned value below
+ * pin:
+ *   SE_InitializeStateOfCharge  soc_none.c:72-76
+ *   SE_CalculateStateOfCharge   soc_none.c:78-80
+ *   SE_GetStateOfChargeFromVoltage soc_none.c:81-84
+ *   SE_InitializeStateOfHealth  soh_none.c:71-74
+ *   SE_CalculateStateOfHealth   soh_none.c:76-78 */
+
+/** @brief   SE_InitializeStateOfCharge() rejects a null data block and a string
+ *         index outside the configured range (soc_none.c:73 and :75)
+ */
+void testSE_InitializeStateOfChargeGuardsItsArguments(void) {
+    DATA_BLOCK_SOC_s socValues = {.header.uniqueId = DATA_BLOCK_ID_SOC};
+
+    TEST_ASSERT_FAIL_ASSERT(SE_InitializeStateOfCharge(NULL_PTR, true, 0u));
+    TEST_ASSERT_FAIL_ASSERT(SE_InitializeStateOfCharge(&socValues, true, BS_NR_OF_STRINGS));
 }
 
-/*========== Test Cases =====================================================*/
+/** @brief   SE_InitializeStateOfCharge() accepts the last configured string and
+ *         does not write anything into the data block (soc_none.c:72-76)
+ */
+void testSE_InitializeStateOfChargeAcceptsTheLastString(void) {
+    DATA_BLOCK_SOC_s socValues = {.header.uniqueId = DATA_BLOCK_ID_SOC};
+
+    SE_InitializeStateOfCharge(&socValues, true, BS_NR_OF_STRINGS - 1u);
+    SE_InitializeStateOfCharge(&socValues, false, 0u);
+}
+
+/** @brief   SE_CalculateStateOfCharge() rejects a null data block (soc_none.c:79)
+ */
+void testSE_CalculateStateOfChargeGuardsItsArgument(void) {
+    DATA_BLOCK_SOC_s socValues = {.header.uniqueId = DATA_BLOCK_ID_SOC};
+
+    TEST_ASSERT_FAIL_ASSERT(SE_CalculateStateOfCharge(NULL_PTR));
+    SE_CalculateStateOfCharge(&socValues);
+}
+
+/** @brief   SE_GetStateOfChargeFromVoltage() reports 0 % for any cell voltage,
+ *         because no estimation is configured (soc_none.c:82)
+ */
+void testSE_GetStateOfChargeFromVoltageIsZero(void) {
+    TEST_ASSERT_EQUAL_FLOAT(0.0f, SE_GetStateOfChargeFromVoltage(0));
+    TEST_ASSERT_EQUAL_FLOAT(0.0f, SE_GetStateOfChargeFromVoltage(4200));
+    TEST_ASSERT_EQUAL_FLOAT(0.0f, SE_GetStateOfChargeFromVoltage(-1000));
+}
+
+/** @brief   SE_InitializeStateOfHealth() rejects a null data block and a string
+ *         index outside the configured range (soh_none.c:72 and :73)
+ */
+void testSE_InitializeStateOfHealthGuardsItsArguments(void) {
+    DATA_BLOCK_SOH_s sohValues = {.header.uniqueId = DATA_BLOCK_ID_SOH};
+
+    TEST_ASSERT_FAIL_ASSERT(SE_InitializeStateOfHealth(NULL_PTR, 0u));
+    TEST_ASSERT_FAIL_ASSERT(SE_InitializeStateOfHealth(&sohValues, BS_NR_OF_STRINGS));
+    SE_InitializeStateOfHealth(&sohValues, BS_NR_OF_STRINGS - 1u);
+}
+
+/** @brief   SE_CalculateStateOfHealth() rejects a null data block (soh_none.c:77)
+ */
+void testSE_CalculateStateOfHealthGuardsItsArgument(void) {
+    DATA_BLOCK_SOH_s sohValues = {.header.uniqueId = DATA_BLOCK_ID_SOH};
+
+    TEST_ASSERT_FAIL_ASSERT(SE_CalculateStateOfHealth(NULL_PTR));
+    SE_CalculateStateOfHealth(&sohValues);
+}
