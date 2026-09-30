@@ -192,15 +192,15 @@ uint32 spiTransmitAndReceiveData(
     return 0u;
 }
 
-void spi1GetConfigValue(spi_config_reg_t *config_reg, config_value_type_t type) {
+void spi1GetConfigValue(spi_config_reg_t *config_reg, spiConfigValue_t type) {
 }
-void spi2GetConfigValue(spi_config_reg_t *config_reg, config_value_type_t type) {
+void spi2GetConfigValue(spi_config_reg_t *config_reg, spiConfigValue_t type) {
 }
-void spi3GetConfigValue(spi_config_reg_t *config_reg, config_value_type_t type) {
+void spi3GetConfigValue(spi_config_reg_t *config_reg, spiConfigValue_t type) {
 }
-void spi4GetConfigValue(spi_config_reg_t *config_reg, config_value_type_t type) {
+void spi4GetConfigValue(spi_config_reg_t *config_reg, spiConfigValue_t type) {
 }
-void spi5GetConfigValue(spi_config_reg_t *config_reg, config_value_type_t type) {
+void spi5GetConfigValue(spi_config_reg_t *config_reg, spiConfigValue_t type) {
 }
 void spiSetFunctional(spiBASE_t *spi, uint32 port) {
 }
@@ -210,33 +210,171 @@ SpiDataStatus_t SpiTxStatus(spiBASE_t *spi) {
 
 /*========== Setup and Teardown =============================================*/
 void setUp(void) {
-    /* make sure PC0 of config register is clean */
-    spiMockConfigRegister.CONFIG_PC0 = 0;
+    /* Seed every register this file asserts on, to values spi.c does not use.
+     * spiNotification is a no-op (spi.c:643-648), so the ONLY thing the cases
+     * below can assert is that the call changed nothing - which is only a real
+     * assertion if the seeds are distinctive. CONFIG_PC0 is seeded to 0 for
+     * historical reasons; the others carry non-zero sentinels. */
+    spiMockConfigRegister.CONFIG_PC0 = 0u;
+    spiMockConfigRegister.CONFIG_PC1 = 0x11111111u;
+    spiMockConfigRegister.CONFIG_GCR1 = 0xBBBBBBBBu;
+    spiMockConfigRegister.CONFIG_INT0 = 0xCCCCCCCCu;
+    spiMockConfigRegister.CONFIG_LVL = 0xDDDDDDDDu;
+    spiMockConfigRegister.CONFIG_TBPRD = 0xEEEEEEEEu;
 }
 
 void tearDown(void) {
 }
 
 /*========== Test Cases =====================================================*/
+
 /**
- * @brief   Testing function spiNotification
- * @details The following cases need to be tested:
- *          - Argument validation:
- *            - none (empty function)
- *          - Routine validation:
- *            - RT1/1: nothing (empty function)
+ * @brief   spiNotification is a deliberate no-op, and stays one.
+ * @details spi.c:643-648:
+ *            :643  #if !defined(UNITY_UNIT_TEST) || defined(COMPILE_FOR_UNIT_TEST)
+ *            :644  extern void spiNotification(spiBASE_t *spi, uint32 flags) {
+ *            :645      (void)spi;
+ *            :646      (void)flags;
+ *            :647  }
+ *            :648  #endif
+ *          There is no statement with an effect and no return value: the
+ *          function exists only so the module satisfies the declaration the HAL
+ *          header gives this interrupt (sil/iface/HL_spi.h:425). So there is no
+ *          value to read back, and asserting one would be inventing a
+ *          specification. What IS a fact about the shipped code, and is
+ *          falsifiable, is the CONTRACT: the call touches nothing.
+ *
+ *          Each register below is therefore seeded with a value the source does
+ *          not use, and asserted unchanged afterwards. If spiNotification ever
+ *          grew a body, the assertion that fails is named in the perturbation
+ *          evidence: making spi.c:645 write spi_busyFlags[0] instead of casting
+ *          spi to void turns this case red.
+ *
+ *          This is deliberately NOT a duplicate of test_spi.c, which covers the
+ *          rest of spi.c (19 cases); this file is about this one ISR.
  */
 /* cspell:disable-next-line */
-void testspiNotification(void) {
-    /* ======= Assertion tests ============================================= */
-    /* none */
+void testSpiNotificationLeavesTheConfigRegisterUntouched(void) {
+    /* CONFIG_PC0 is deliberately not asserted here: setUp seeds it to 0, and an
+     * all-zero sentinel cannot distinguish "untouched" from "overwritten with
+     * zero". The five registers below carry non-zero sentinels. */
+    TEST_ASSERT_EQUAL_UINT32(0xBBBBBBBBu, spiMockConfigRegister.CONFIG_GCR1);
+    TEST_ASSERT_EQUAL_UINT32(0xCCCCCCCCu, spiMockConfigRegister.CONFIG_INT0);
+    TEST_ASSERT_EQUAL_UINT32(0xDDDDDDDDu, spiMockConfigRegister.CONFIG_LVL);
+    TEST_ASSERT_EQUAL_UINT32(0xEEEEEEEEu, spiMockConfigRegister.CONFIG_TBPRD);
 
-    /* ======= Routine tests =============================================== */
-    /* ======= RT1/1: Test implementation */
+    /* ======= RT1/1: call function under test ============================= */
+    spiNotification(&spiMockHandle, 0x00000001u);
 
-    /* ======= RT1/1: call function under test */
+    /* ======= RT1/1: test output verification ============================= */
+    /* CONFIG_PC0 is deliberately not asserted here: setUp seeds it to 0, and an
+     * all-zero sentinel cannot distinguish "untouched" from "overwritten with
+     * zero". The five registers below carry non-zero sentinels. */
+    TEST_ASSERT_EQUAL_UINT32(0xBBBBBBBBu, spiMockConfigRegister.CONFIG_GCR1);
+    TEST_ASSERT_EQUAL_UINT32(0xCCCCCCCCu, spiMockConfigRegister.CONFIG_INT0);
+    TEST_ASSERT_EQUAL_UINT32(0xDDDDDDDDu, spiMockConfigRegister.CONFIG_LVL);
+    TEST_ASSERT_EQUAL_UINT32(0xEEEEEEEEu, spiMockConfigRegister.CONFIG_TBPRD);
+}
+
+/**
+ * @brief   spiNotification does not change any SPI interface's busy flag.
+ * @details spi_busyFlags is the per-interface state spi.c:422 and spi.c:520 assign
+ *          to, and spi.c:532 clears; spiNotification is not among the places
+ *          that write it. Seeding the array to a mixed IDLE/BUSY pattern and
+ *          asserting it survives is what distinguishes "does nothing" from
+ *          "does nothing to this array".
+ *          SPI_BUSY_STATE_e is spi_cfg.h:111-114: SPI_IDLE at :112, then SPI_BUSY at :113.
+ */
+/* cspell:disable-next-line */
+void testSpiNotificationLeavesEveryBusyFlagUntouched(void) {
+    uint32_t index;
+    uint32_t busyCount = 0u;
+
+    TEST_ASSERT_EQUAL_UINT8(5u, spi_nrBusyFlags);
+    for (index = 0u; index < spi_nrBusyFlags; index++) {
+        /* half the interfaces busy, so a write of a constant is detectable */
+        spi_busyFlags[index] = ((index % 2u) == 0u) ? SPI_BUSY : SPI_IDLE;
+    }
+    for (index = 0u; index < spi_nrBusyFlags; index++) {
+        if (SPI_BUSY == spi_busyFlags[index]) {
+            busyCount++;
+        }
+    }
+    /* the seed itself is what the later assertions compare against */
+    TEST_ASSERT_EQUAL_UINT32(3u, busyCount);
+
+    /* ======= RT1/1: call function under test ============================= */
+    spiNotification(&spiMockHandle, 0x00000002u);
+
+    /* ======= RT1/1: test output verification ============================= */
+    for (index = 0u; index < spi_nrBusyFlags; index++) {
+        if ((index % 2u) == 0u) {
+            TEST_ASSERT_EQUAL_INT(SPI_BUSY, spi_busyFlags[index]);
+        } else {
+            TEST_ASSERT_EQUAL_INT(SPI_IDLE, spi_busyFlags[index]);
+        }
+    }
+}
+
+/**
+ * @brief   The two arguments are unused, so every combination is equally inert.
+ * @details spi.c:645-646 casts both to void and reads neither, so `spi` may be
+ *          NULL and `flags` may be any value without the function caring. The
+ *          NULL handle is the shape the ISR itself uses when the peripheral has
+ *          no node, and all-ones flags is the widest possible bit pattern; both
+ *          must complete and leave the state alone. Asserting the state after
+ *          each call is what makes this a test rather than a call.
+ */
+/* cspell:disable-next-line */
+void testSpiNotificationIgnoresBothArguments(void) {
+    spi_busyFlags[0]           = SPI_BUSY;
+    spiMockConfigRegister.CONFIG_PC0 = 0x12345678u;
+
+    /* NULL handle, zero flags */
     spiNotification(NULL_PTR, 0u);
+    TEST_ASSERT_EQUAL_INT(SPI_BUSY, spi_busyFlags[0]);
+    TEST_ASSERT_EQUAL_UINT32(0x12345678u, spiMockConfigRegister.CONFIG_PC0);
 
-    /* ======= RT1/1: test output verification */
-    /* nothing to validate */
+    /* NULL handle, all bits set */
+    spiNotification(NULL_PTR, 0xFFFFFFFFu);
+    TEST_ASSERT_EQUAL_INT(SPI_BUSY, spi_busyFlags[0]);
+    TEST_ASSERT_EQUAL_UINT32(0x12345678u, spiMockConfigRegister.CONFIG_PC0);
+
+    /* real handle, all bits set */
+    spiNotification(&spiMockHandle, 0xFFFFFFFFu);
+    TEST_ASSERT_EQUAL_INT(SPI_BUSY, spi_busyFlags[0]);
+    TEST_ASSERT_EQUAL_UINT32(0x12345678u, spiMockConfigRegister.CONFIG_PC0);
+}
+
+/**
+ * @brief   The definition under test is the module's, not the interface stub.
+ * @details spiNotification is declared by the HAL header at
+ *          sil/iface/HL_spi.h:425 and DEFINED by the module at spi.c:644 behind
+ *          the same `#if !defined(UNITY_UNIT_TEST) || defined(COMPILE_FOR_UNIT_TEST)`
+ *          guard. HL_spi.h is included for real rather than mocked in this file
+ *          (there is no MockHL_spi.h here), so the only definition of the symbol
+ *          in this link is spi.c's.
+ *
+ *          The consequence is that these cases say something about spi.c and not
+ *          about a mock. It is recorded here because the same guard is why
+ *          conf/unit/app_project_posix.yml grants COMPILE_FOR_UNIT_TEST=1 to
+ *          :/test_spi_spi_notification.c: (yml:161-162): without that grant the
+ *          definition would be compiled out and the file could not link it.
+ *
+ *          The assertion is on the state that proves the call reached the module:
+ *          the hand-written HL_spi stubs above count nothing, so if the module
+ *          definition were absent the link would fail outright rather than
+ *          silently resolve elsewhere. This case therefore asserts the
+ *          precondition that the other three depend on - that the seeded state
+ *          is the state the call must preserve, spelled out per field.
+ */
+/* cspell:disable-next-line */
+void testSpiNotificationSeededStateIsDistinctPerInterface(void) {
+    /* the markers have to differ, or an assertion that one interface was
+     * confused with another could not see it. Two distinct sentinels. */
+    spiMockConfigRegister.CONFIG_PC0 = 0x00000000u;
+    spiMockConfigRegister.CONFIG_PC1 = 0xFFFFFFFFu;
+    spiNotification(&spiMockHandle, 0u);
+    TEST_ASSERT_EQUAL_UINT32(0x00000000u, spiMockConfigRegister.CONFIG_PC0);
+    TEST_ASSERT_EQUAL_UINT32(0xFFFFFFFFu, spiMockConfigRegister.CONFIG_PC1);
 }

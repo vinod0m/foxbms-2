@@ -158,7 +158,78 @@ void tearDown(void) {
 
 /*========== Test Cases =====================================================*/
 
-void testFTSK_RunUserCodeAfe(void) {
+/**
+ * @brief   FTSK_RunUserCodeAfe runs the measurement control step.
+ * @details src/app/task/config/ftask_cfg.c:323-328:
+ *            :323  #if (FOXBMS_AFE_DRIVER_TYPE_NO_FSM == 1)
+ *            :324  void FTSK_RunUserCodeAfe(void) {
+ *            :326      MEAS_Control();
+ *            :327  }
+ *            :328  #endif
+ *          The whole body is that one call. The claim is therefore that
+ *          MEAS_Control is reached, and MEAS_Control_Expect() is the assertion:
+ *          CMock fails the case if the call does not happen ("Called fewer times
+ *          than expected") AND if it happens without an expectation ("Called more
+ *          times than expected"). So the expectation constrains the count from
+ *          both sides.
+ *
+ *          MEAS_Control_CallCount() is deliberately NOT used. In this build the
+ *          generated mock defines it as `return
+ *          Mock.MEAS_Control_CallbackCalls;`, and that counter is only
+ *          incremented on the callback path, inside the generated
+ *          `if (!CallbackBool && CallbackFunctionPointer != NULL) { ...
+ *          return; }` block - so a call made through a normal expectation leaves
+ *          it at 0. Both of those are in a GENERATED file
+ *          (mocks/test_ftask_cfg_afe/Mockmeas.c), which Ceedling deletes between
+ *          runs, so they are described rather than cited by line here; the
+ *          behaviour was read out of the generated source and reproduced above
+ *          verbatim. A call
+ *          made through a normal expectation therefore leaves it at 0, so
+ *          asserting on it reads as "not called" when the call did happen. That
+ *          was measured, not assumed: the first version of this case asserted
+ *          MEAS_Control_CallCount() == 1 and failed with "Expected 1 Was 0"
+ *          against a test whose MEAS_Control_Expect() was satisfied.
+ *
+ *          This test is compiled with FOXBMS_AFE_DRIVER_TYPE_NO_FSM=1, granted at
+ *          conf/unit/app_project_posix.yml:206-207, which is what makes the :323
+ *          guard true and the function exist at all.
+ */
+/* cspell:disable-next-line */
+void testFTSK_RunUserCodeAfeRunsMeasControl(void) {
+    /* the guard at ftask_cfg.c:323 is satisfied in this build, so the
+     * function under test is the one the source declares, not an absent one */
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_AFE_DRIVER_TYPE_NO_FSM);
+
+    /* ======= RT1/1: call function under test ============================= */
     MEAS_Control_Expect();
     FTSK_RunUserCodeAfe();
+
+    /* ======= RT1/1: test output verification ============================= */
+    /* Reaching this point IS the verification: had MEAS_Control not been
+     * called, CMock_Verify at the end of the case would have failed it. */
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_AFE_DRIVER_TYPE_NO_FSM);
+}
+
+/**
+ * @brief   Each invocation runs exactly one measurement control step.
+ * @details Two expectations and two invocations. CMock matches calls to
+ *          expectations in order and fails on an unmatched extra call, so green
+ *          here means each FTSK_RunUserCodeAfe ran exactly one MEAS_Control and
+ *          the module does not accumulate state between calls. A body that
+ *          called MEAS_Control twice would fail the second invocation with
+ *          "Called more times than expected"; a body that called it zero times
+ *          would fail with "Called fewer times than expected".
+ */
+/* cspell:disable-next-line */
+void testFTSK_RunUserCodeAfeRunsOneMeasControlPerInvocation(void) {
+    /* ======= RT1/1: call function under test ============================= */
+    MEAS_Control_Expect();
+    FTSK_RunUserCodeAfe();
+    MEAS_Control_Expect();
+    FTSK_RunUserCodeAfe();
+
+    /* ======= RT1/1: test output verification ============================= */
+    /* both expectations were consumed exactly once; see the case above for why
+     * the call-count accessor is not used */
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_AFE_DRIVER_TYPE_NO_FSM);
 }

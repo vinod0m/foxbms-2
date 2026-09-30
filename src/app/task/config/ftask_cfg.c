@@ -304,11 +304,7 @@ extern void FTSK_RunUserCodeCyclic100ms(void) {
 
 extern void FTSK_RunUserCodeCyclicAlgorithm100ms(void) {
     /* user code */
-    static uint8_t ftsk_cyclicAlgorithm100msCounter = 0;
-
     ALGO_MainFunction();
-
-    ftsk_cyclicAlgorithm100msCounter++;
 }
 
 void FTSK_RunUserCodeI2c(void) {

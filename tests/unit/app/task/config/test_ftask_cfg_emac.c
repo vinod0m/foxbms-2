@@ -167,13 +167,117 @@ void tearDown(void) {
 extern void NIC_Receive(void);
 
 /*========== Test Cases =====================================================*/
+/**
+ * @brief   FTSK_RunUserCodeUart handles flow control, then blocks until the
+ *          notification that the UART task has work.
+ * @details src/app/task/config/ftask_cfg.c:330-338:
+ *            :330  #if defined(FOXBMS_UART_SUPPORT) && FOXBMS_UART_SUPPORT == 1
+ *            :331  void FTSK_RunUserCodeUart(void) {
+ *            :334      UART_HandleFlowControl();
+ *            :336      (void)OS_NotifyTake(pdTRUE, portMAX_DELAY);
+ *            :337  }
+ *            :338  #endif
+ *          Both arguments of OS_NotifyTake are asserted as resolved literals
+ *          rather than as the macros the source writes, so a wrong macro cannot
+ *          satisfy the expectation:
+ *            pdTRUE is ((BaseType_t)1) at
+ *              src/os/freertos/freertos/include/projdefs.h:53
+ *            portMAX_DELAY: src/os/freertos/freertos/include/FreeRTOSConfig.h:75
+ *              sets configTICK_TYPE_WIDTH_IN_BITS to TICK_TYPE_WIDTH_32_BITS,
+ *              which selects the 32-bit arm of
+ *              src/os/freertos/freertos/portable/ccs/arm_cortex-r5/portmacro.h:59-60
+ *              `#define portMAX_DELAY ( TickType_t ) 0xFFFFFFFFF`. TickType_t is
+ *              uint32_t there (portmacro.h:58), so the value is 0xFFFFFFFF.
+ *              That was confirmed by asking the compiler, not by reading alone.
+ *
+ *          This test is compiled with FOXBMS_UART_SUPPORT=1, granted at
+ *          conf/unit/app_project_posix.yml:208-210.
+ */
+/* cspell:disable-next-line */
 void testFTSK_RunUserCodeUart(void) {
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_UART_SUPPORT);
+
+    /* ======= RT1/1: call function under test ============================= */
     UART_HandleFlowControl_Expect();
-    OS_NotifyTake_ExpectAndReturn(pdTRUE, portMAX_DELAY, 1u);
+    /* pdTRUE == 1, portMAX_DELAY == 0xFFFFFFFF on this configuration */
+    OS_NotifyTake_ExpectAndReturn(1, 0xFFFFFFFFu, 1u);
     FTSK_RunUserCodeUart();
+
+    /* ======= RT1/1: test output verification ============================= */
+    /* Reaching this point IS the verification: both expectations had to be
+     * consumed, in order. UART_HandleFlowControl_CallCount() is deliberately
+     * not used - in this build it returns the CALLBACK call count, which stays
+     * 0 for a call made through a normal expectation
+     * (mocks/test_ftask_cfg_emac/Mockuart.h). The argument values above are
+     * compared by CMock, so pdTRUE and portMAX_DELAY are checked as literals
+     * rather than as the macros the source writes. */
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_UART_SUPPORT);
 }
 
+/**
+ * @brief   FTSK_RunUserCodeEmac drains the ethernet receive path, once.
+ * @details src/app/task/config/ftask_cfg.c:340-344:
+ *            :340  #if (defined(FOXBMS_TCP_SUPPORT) && (FOXBMS_TCP_SUPPORT == 1))
+ *            :341  void FTSK_RunUserCodeEmac(void) {
+ *            :343      NIC_Receive();
+ *            :344  }
+ *            :345  #endif
+ *          NIC_Receive is declared in the module that this test mocks for real
+ *          (src/os/freertos/freertos-plus/.../NetworkInterface), and takes no
+ *          arguments, so the whole claim is that it is reached exactly once.
+ *          This test is compiled with FOXBMS_TCP_SUPPORT=1, granted at
+ *          conf/unit/app_project_posix.yml:208-210.
+ */
+/* cspell:disable-next-line */
 void testFTSK_RunUserCodeEmac(void) {
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_TCP_SUPPORT);
+
+    /* ======= RT1/1: call function under test ============================= */
     NIC_Receive_Expect();
     FTSK_RunUserCodeEmac();
+
+    /* ======= RT1/1: test output verification ============================= */
+    /* NIC_Receive takes no arguments, so the expectation IS the claim: it was
+     * reached exactly once. See the UART case for why the call-count accessor
+     * is not used. */
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_TCP_SUPPORT);
+}
+
+/**
+ * @brief   The two entry points do not call each other's work.
+ * @details UART_HandleFlowControl at ftask_cfg.c:334 and NIC_Receive at :343 are
+ *          in separate functions with separate guards, so an EMAC invocation
+ *          must not reach the UART flow-control step and vice versa. Neither
+ *          case sets an expectation on the other mock, so CMock turns a stray
+ *          call into a failure; the counts below make that visible from the
+ *          other side as well.
+ */
+/* cspell:disable-next-line */
+void testFTSK_RunUserCodeEmacDoesNotRunTheUartFlowControlStep(void) {
+    /* ======= RT1/1: call function under test ============================= */
+    NIC_Receive_Expect();
+    FTSK_RunUserCodeEmac();
+
+    /* ======= RT1/1: test output verification ============================= */
+    /* No expectation was set on the UART mocks, so if the EMAC entry point had
+     * reached either of them CMock would have failed this case with "Called
+     * more times than expected". Being green is the assertion. */
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_TCP_SUPPORT);
+}
+
+/**
+ * @brief   The UART entry point stops after its two calls: no ethernet work.
+ * @details The complement of the case above, for ftask_cfg.c:331-337.
+ */
+/* cspell:disable-next-line */
+void testFTSK_RunUserCodeUartDoesNotRunTheEthernetReceiveStep(void) {
+    /* ======= RT1/1: call function under test ============================= */
+    UART_HandleFlowControl_Expect();
+    OS_NotifyTake_ExpectAndReturn(1, 0xFFFFFFFFu, 1u);
+    FTSK_RunUserCodeUart();
+
+    /* ======= RT1/1: test output verification ============================= */
+    /* No expectation was set on NIC_Receive, so reaching it would have failed
+     * the case. Being green is the assertion. */
+    TEST_ASSERT_EQUAL_INT(1, FOXBMS_UART_SUPPORT);
 }

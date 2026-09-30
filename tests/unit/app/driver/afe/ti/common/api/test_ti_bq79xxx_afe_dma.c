@@ -61,6 +61,7 @@
 #include "Mockos.h"
 #include "Mockspi.h"
 
+#include "afe_dma.h"
 #include "test_assert_helper.h"
 
 /*========== Unit Testing Framework Directives ==============================*/
@@ -88,46 +89,26 @@ OS_TASK_HANDLE ftsk_taskHandleAfe;
 #define TEST_SPI_INTERFACE_5 (4u)
 
 /* clang-format off */
-spiBASE_t spiReg1 = {
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    {
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    },
-    0u
-};
-spiBASE_t spiReg2 = {
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    {
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    },
-    0u
-};
-spiBASE_t spiReg3 = {
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    {
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    },
-    0u
-};
-spiBASE_t spiReg4 = {
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    {
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    },
-    0u
-};
-spiBASE_t spiReg5 = {
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    {
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-        0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    },
-    0u
-};
+/* The five peripheral shadows below are all-zero register images.
+ *
+ * They were previously written out as ~105 positional elements in a nested
+ * `{ ... }` shape. That shape does not describe the register block this build
+ * compiles against: sil/iface/HL_spi.h:114-137 declares spiREG_t as TWENTY-THREE
+ * flat uint32_t members (GCR0..ADDR) with no nested structure, so a positional
+ * list of that length is 82 elements of excess initialiser, which is what
+ * -Wexcess-initializers was reporting at five sites.
+ *
+ * Every element of the old form was 0u, so `{0}` is the same value: it
+ * zero-initialises all members, is independent of how many members the struct
+ * has, and cannot drift from the declaration the way a hand-counted list does.
+ * A designated initialiser is also what tools/run.sh's own notes call for, for
+ * the same reason.
+ */
+spiBASE_t spiReg1 = {0};
+spiBASE_t spiReg2 = {0};
+spiBASE_t spiReg3 = {0};
+spiBASE_t spiReg4 = {0};
+spiBASE_t spiReg5 = {0};
 /* clang-format on */
 
 spiBASE_t *dma_spiInterfaces[DMA_NUMBER_SPI_INTERFACES] = {
@@ -151,5 +132,141 @@ void tearDown(void) {
 }
 
 /*========== Test Cases =====================================================*/
-void testDummy(void) {
+
+/**
+ * @brief   TI_SPI_INDEX is SPI_SPI1_INDEX, which is 0.
+ * @details ti_bq79xxx_afe_dma.c:65 defines TI_SPI_INDEX as
+ *          `(SPI_SPI1_INDEX)`, and src/app/driver/config/spi_cfg.h:73 defines
+ *          SPI_SPI1_INDEX as `(0u)`. The whole body of AFE_DmaCallback compares
+ *          against that macro, so its numeric value is the fact every case
+ *          below turns on; it is asserted here as a literal.
+ */
+/* cspell:disable-next-line */
+void testTiAfeDmaCallbackExpectsSpiInterfaceOne(void) {
+    TEST_ASSERT_EQUAL_UINT8(0u, (uint8_t)SPI_SPI1_INDEX);
+}
+
+/**
+ * @brief   The one index the callback accepts is accepted silently.
+ * @details ti_bq79xxx_afe_dma.c:78-80:
+ *              void AFE_DmaCallback(uint8_t spiIndex) {
+ *                  FAS_ASSERT(spiIndex == TI_SPI_INDEX);
+ *              }
+ *          Under UNITY_UNIT_TEST, FAS_ASSERT is `if (!(x)) Throw(0)`
+ *          (src/app/main/include/fassert.h:248-252), so a satisfied assertion
+ *          returns normally. TEST_ASSERT_PASS_ASSERT from
+ *          tests/unit/support/test_assert_helper.h:92-101 is the house helper
+ *          for exactly this: it fails the case if a CException escapes.
+ *
+ *          There is no other behaviour to check - the function body is one
+ *          assertion and nothing else - so "returns without throwing" is the
+ *          complete claim, and it is falsifiable: see the perturbation evidence
+ *          for the case where the comparison is inverted.
+ */
+/* cspell:disable-next-line */
+void testTiAfeDmaCallbackAcceptsSpiInterfaceOne(void) {
+    TEST_ASSERT_PASS_ASSERT(AFE_DmaCallback(TEST_SPI_INTERFACE_1));
+}
+
+/**
+ * @brief   Every other interface index is rejected by the assertion.
+ * @details Same source. With TI_SPI_INDEX == 0, the indices this driver does
+ *          NOT own - SPI2 through SPI5, declared in this file as
+ *          TEST_SPI_INTERFACE_2..5 - must each raise a CException.
+ *          TEST_ASSERT_FAIL_ASSERT (test_assert_helper.h:74-82) requires the
+ *          throw, so a callback that silently accepted a foreign interface
+ *          would fail the case rather than pass it quietly.
+ *          Each index is asserted separately, so one accepted interface cannot
+ *          be masked by the others.
+ */
+/* cspell:disable-next-line */
+void testTiAfeDmaCallbackRejectsEveryOtherSpiInterface(void) {
+    TEST_ASSERT_FAIL_ASSERT(AFE_DmaCallback(TEST_SPI_INTERFACE_2));
+    TEST_ASSERT_FAIL_ASSERT(AFE_DmaCallback(TEST_SPI_INTERFACE_3));
+    TEST_ASSERT_FAIL_ASSERT(AFE_DmaCallback(TEST_SPI_INTERFACE_4));
+    TEST_ASSERT_FAIL_ASSERT(AFE_DmaCallback(TEST_SPI_INTERFACE_5));
+}
+
+/**
+ * @brief   The rejection carries exception id 0, which is what FAS_ASSERT throws.
+ * @details src/app/main/include/fassert.h:250-252 expands the failed assertion to `Throw(0)`, so the
+ *          caught exception id is 0. Asserting the id rather than merely
+ *          "something was thrown" pins the failure to this assertion: an
+ *          unrelated CException raised deeper inside would carry a different id
+ *          and fail here.
+ *          Catch is spelled out rather than using the helper because the helper
+ *          discards the id (test_assert_helper.h:80-81 has an empty Catch).
+ */
+/* cspell:disable-next-line */
+void testTiAfeDmaCallbackRejectionThrowsExceptionIdZero(void) {
+    CEXCEPTION_T e      = 0x7FFFFFFF;
+    bool didThrow       = false;
+
+    Try {
+        AFE_DmaCallback(TEST_SPI_INTERFACE_2);
+    }
+    Catch(e) {
+        didThrow = true;
+    }
+    const CEXCEPTION_T caught = e;
+
+    TEST_ASSERT_TRUE_MESSAGE(didThrow, "AFE_DmaCallback must reject a foreign interface");
+    TEST_ASSERT_EQUAL_INT(0, (int)caught);
+}
+
+/**
+ * @brief   The accepted index produces no exception at all.
+ * @details The complement of the case above, asserted explicitly rather than
+ *          left to TEST_ASSERT_PASS_ASSERT: if no throw happened then `caught`
+ *          must still hold the sentinel it was initialised with, so a silent
+ *          path cannot be confused with a throw of id 0.
+ */
+/* cspell:disable-next-line */
+void testTiAfeDmaCallbackAcceptanceThrowsNothing(void) {
+    CEXCEPTION_T e      = 0x7FFFFFFF;
+    bool didThrow       = false;
+
+    Try {
+        AFE_DmaCallback(TEST_SPI_INTERFACE_1);
+    }
+    Catch(e) {
+        didThrow = true;
+    }
+    const CEXCEPTION_T caught = e;
+
+    TEST_ASSERT_FALSE_MESSAGE(didThrow, "AFE_DmaCallback must accept its own interface");
+    TEST_ASSERT_EQUAL_INT(0x7FFFFFFF, (int)caught);
+}
+
+/**
+ * @brief   The boundary is exactly one index wide, not "index 0 and nothing else".
+ * @details Sweeps the whole uint8_t range the parameter admits: 0 is accepted,
+ *          every one of the other 255 values is rejected. This is the property
+ *          the four cases above sample, expressed without sampling, so an
+ *          off-by-one in the comparison (>= instead of ==, or a cast to a
+ *          narrower type) cannot hide between the sampled values.
+ *          TEST_SPI_INTERFACE_1 is the accepted one because SPI_SPI1_INDEX is 0.
+ */
+/* cspell:disable-next-line */
+void testTiAfeDmaCallbackAcceptsExactlyOneOfAll256Indices(void) {
+    uint32_t index;
+    uint32_t accepted = 0u;
+
+    for (index = 0u; index < 256u; index++) {
+        CEXCEPTION_T e      = 0x7FFFFFFF;
+        bool didThrow       = false;
+        Try {
+            AFE_DmaCallback((uint8_t)index);
+        }
+        Catch(e) {
+            didThrow = true;
+        }
+        if (!didThrow) {
+            accepted++;
+            /* the only accepted index must be the configured one */
+            TEST_ASSERT_EQUAL_UINT32(0u, index);
+        }
+    }
+
+    TEST_ASSERT_EQUAL_UINT32(1u, accepted);
 }
