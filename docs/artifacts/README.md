@@ -342,14 +342,20 @@ links; supersession/deletion/tombstones defined in schemas.
 By profile: `as_is` 117, `synthetic_reference` 372.
 By review state: reviewed 414, pending 75.
 
-> **A measured traceability weakness, stated rather than implied.** Every link
-> carries both endpoint revisions, yet **326 of the 489 links record an endpoint
-> revision that differs from the endpoint artefact's current revision, and all
-> 489 carry `change_suspect_status: false`.** The corpus therefore holds 326
-> links whose recorded endpoint revision is stale, and marks none of them
-> suspect. Link *resolution* is verified (0 dangling); link *currency* is not
-> maintained. This is the reason `SUP.11 Traceability Management` is recorded
-> `partially_mapped` rather than `mapped`.
+> **Link currency is now maintained, and 326 links await re-examination.** Every
+> link carries both endpoint revisions. 423 of them had drifted from the current
+> revision of the artefact they name; **all 423 have been advanced to current**,
+> each with a per-link `provenance_repair` record naming the previous value, the
+> revisions skipped, and their date, author and description — so a reader can
+> see exactly what content a link now names that it did not name when authored.
+> **326 of 489 links are now marked `change_suspect_status: true`.** That flag
+> means *an endpoint was advanced past the revision this link was authored
+> against, and no re-examination of the link is recorded* — it is a statement
+> about re-examination, not a claim that the link is wrong. Link *resolution* is
+> verified (0 dangling) and link *currency* is machine-enforced by two validator
+> rules, `link_endpoint_revision_stale` and `link_derived_field_contradiction`.
+> The 326 awaiting re-examination are themselves why `SUP.11 Traceability
+> Management` stays `partially_mapped` rather than `mapped`.
 
 **Every link has:** ID, endpoints with revisions, relation type,
 profile/scenario/variant context, rationale, provenance, review state, change

@@ -112,6 +112,8 @@ RULE_IDS = {
     "link_forbidden_relation_type",
     "link_missing_metadata",
     "link_dangling_endpoint",
+    "link_endpoint_revision_stale",
+    "link_derived_field_contradiction",
     "provenance_ref_unresolved",
     "traceability_checker",
     "safety_goal_mitigates_hazard",
@@ -583,6 +585,142 @@ class CorpusTool:
                                       f"dangling link endpoint {end}={eid} (profile={profile})",
                                       "link_dangling_endpoint")
                     ok = False
+        return ok
+
+    # ------------------------------------------------- link currency / derived fields
+    #
+    # Added 2026-10-01. Link RESOLUTION was verified: _validate_links checks that
+    # each endpoint id exists in the link's own profile. Link CURRENCY was not
+    # verified by anything. That is how this corpus came to hold 326 of its 489
+    # links recording an endpoint revision that no longer matches the artefact it
+    # names, and all 489 carrying a `change_suspect_status` that was a blanket
+    # default rather than a derived fact.
+    #
+    # Two rules live here, and they are related:
+    #
+    #   link_endpoint_revision_stale
+    #       source_revision / target_revision must equal the CURRENT revision of
+    #       the endpoint artefact in the link's own profile.
+    #
+    #   link_derived_field_contradiction
+    #       Every field on a link that this tool DERIVES from the corpus data
+    #       must equal what the derivation produces. `change_suspect_status` is
+    #       such a field. This rule exists because nothing stopped a writer from
+    #       assigning a derived value: a hand-set flag is indistinguishable from
+    #       a computed one once it is on disk, so the only sound check is to
+    #       recompute it and compare.
+    #
+    # The derivation of change_suspect_status, and why it reads previous_revision:
+    #
+    #   A link is change-suspect when an endpoint it names has been revised PAST
+    #   the revision the link was authored against, and no re-examination of the
+    #   relationship has been recorded. This is the corpus's own definition, not
+    #   an imported one. FB2-MAN-CHG-000001.suspect_link_rationale states that
+    #   "suspect means 'the reasoning must be re-shown', not 'the link is wrong'",
+    #   and .suspect_link_registry_state states that the flag "becomes true ... at
+    #   which point the registry flag and this record's suspect list must agree",
+    #   with the precondition that "no affected artifact has been revised". So the
+    #   trigger is an endpoint revision having moved, and the flag is a statement
+    #   about re-examination, not about whether the link is well formed.
+    #
+    #   The revision a link was AUTHORED AGAINST is preserved in the link's own
+    #   provenance_repair.endpoint_revision_refreshes[].previous_revision where a
+    #   refresh has been recorded, and is the recorded endpoint revision otherwise.
+    #   It has to be read from there: once an endpoint revision has been advanced
+    #   to the artefact's current revision, the recorded field no longer differs
+    #   from the current one, and a derivation that compared the recorded field to
+    #   the current revision would report "no link is stale and none is suspect"
+    #   for a corpus in which 326 links had their endpoints advanced without being
+    #   re-examined. Comparing the authored-against revision is the only reading
+    #   that keeps the finding visible after the repair.
+    #
+    #   Note what the derivation does NOT read: `provenance_repair.re_examined`.
+    #   That field is documentation of the state of the record, not an input. If
+    #   it were an input, setting it to true would be a second way to clear the
+    #   flag by hand, which is the exact hole this rule closes. A link is cleared
+    #   by a review that examines the current revisions of both endpoints and
+    #   records that examination -- not by a repair.
+
+    LINK_ENDPOINT_SIDES = (("source", "source_id", "source_revision"),
+                           ("target", "target_id", "target_revision"))
+
+    def _link_authored_revision(self, link, role, revkey):
+        """The revision of this endpoint the link was authored against.
+
+        The recorded endpoint revision, unless a provenance repair has preserved
+        the superseded value, in which case that superseded value is what the
+        link was authored against and the recorded field has since been advanced.
+        """
+        recorded = link.get(revkey)
+        repair = link.get("provenance_repair")
+        if isinstance(repair, dict):
+            for entry in repair.get("endpoint_revision_refreshes") or []:
+                if isinstance(entry, dict) and entry.get("endpoint_role") == role:
+                    prev = entry.get("previous_revision")
+                    if prev is not None:
+                        return str(prev)
+        return None if recorded is None else str(recorded)
+
+    def _derive_change_suspect_status(self, link, index):
+        """(derived_value, reasons). Pure function of the link record and the
+        current revisions of its endpoint artefacts. Reads no stored verdict."""
+        profile = link.get("_profile", "unknown")
+        reasons = []
+        for role, idkey, revkey in self.LINK_ENDPOINT_SIDES:
+            aid = link.get(idkey)
+            entry = index.get((profile, aid))
+            if entry is None:
+                continue                      # dangling endpoint: _validate_links owns it
+            current = entry[1].get("revision")
+            if current is None:
+                continue
+            authored = self._link_authored_revision(link, role, revkey)
+            if authored is not None and str(authored) != str(current):
+                reasons.append(
+                    f"{role} {aid} was authored against revision {authored} and is now "
+                    f"revision {current}; no re-examination of this link is recorded")
+        return (bool(reasons), reasons)
+
+    def _validate_link_currency(self, links, index):
+        """Currency of every link endpoint, and agreement of every derived link
+        field with what the corpus data derives. See the comment block above."""
+        ok = True
+        for l in links:
+            lid = l.get("link_id", "<no-id>")
+            profile = l.get("_profile", "unknown")
+            for role, idkey, revkey in self.LINK_ENDPOINT_SIDES:
+                aid = l.get(idkey)
+                entry = index.get((profile, aid))
+                if entry is None:
+                    continue
+                current = entry[1].get("revision")
+                recorded = l.get(revkey)
+                if current is not None and recorded is not None \
+                        and str(recorded) != str(current):
+                    self.findings.add(
+                        "high", "traceability", lid,
+                        f"stale {role} endpoint revision: {idkey}={aid} is at revision "
+                        f"{current} in profile {profile} but the link records {recorded}",
+                        "link_endpoint_revision_stale")
+                    ok = False
+            derived, reasons = self._derive_change_suspect_status(l, index)
+            stored = l.get("change_suspect_status")
+            if not isinstance(stored, bool):
+                self.findings.add(
+                    "medium", "traceability", lid,
+                    f"change_suspect_status must be a boolean, found {stored!r}",
+                    "link_derived_field_contradiction")
+                ok = False
+            elif stored != derived:
+                self.findings.add(
+                    "high", "traceability", lid,
+                    f"stored change_suspect_status={stored} contradicts the derived value "
+                    f"{derived}"
+                    + (": " + "; ".join(reasons) if derived else
+                       " (no endpoint has advanced past the revision this link was "
+                       "authored against, so the link is not suspect)"),
+                    "link_derived_field_contradiction")
+                ok = False
         return ok
 
     def _validate_provenance_refs(self, index):
@@ -1896,6 +2034,7 @@ class CorpusTool:
         links = self.load_links()
         ok &= self._validate_no_duplicate_ids()
         ok &= self._validate_links(links, index)
+        ok &= self._validate_link_currency(links, index)
         ok &= self._validate_provenance_refs(index)
         if not quiet:
             print("Running semantic consistency rules...")
@@ -4521,6 +4660,7 @@ class CorpusTool:
         living in a function nothing called.
         """
         self._validate_links(links, index)
+        self._validate_link_currency(links, index)
         self._validate_semantic_rules(index, links)
         for key, (p, d) in index.items():
             aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
