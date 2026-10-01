@@ -1,0 +1,181 @@
+{
+  "id": "FB2-SW-IMP-000005",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: I2C driver with DMA read, write and write-read transfers under privilege elevation (i2c.c)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000041",
+    "FB2-SRC-COD-000042",
+    "FB2-SRC-COD-000043"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the I2C driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "gap",
+      "rationale": "There is no software design artefact for the I2C driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored to cover a module the as_is corpus anchors through three deviations (FB2-SW-DEV-000011, -000012, -000013) and for which it holds no design artefact at all."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/i2c/i2c.c",
+      "symbol": "I2C_ReadDma",
+      "line_range": "415-508",
+      "content_hash": "sha256:ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/i2c/i2c.c",
+      "symbol": "I2C_WriteDma",
+      "line_range": "510-597",
+      "content_hash": "sha256:ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/i2c/i2c.c",
+      "symbol": "I2C_WriteReadDma",
+      "line_range": "599-764",
+      "content_hash": "sha256:ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": null,
+    "design_level": null,
+    "relationship": "No design artefact in the as_is profile describes the I2C driver, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source: I2C_ReadDma (i2c.c:415-508), I2C_WriteDma (510-597) and I2C_WriteReadDma (599-764) each assert their preconditions (non-null buffers, nrBytes greater than one where a DMA receive is involved, slave address below 128), clear the pending notifications, and proceed only when the bus-busy bit is clear. Each then selects the DMA channel by comparing the interface pointer against i2cREG1 and i2cREG2 and trapping on anything else, enters a task critical section, calls FSYS_RaisePrivilege to obtain write access to the DMA configuration registers, and writes the destination pointer and the transfer count into dmaRAMREG->PCP[channel].IDADDR and .ITCOUNT before enabling the channel. The pointer write is the site of the in-source integer-to-pointer cast that deviations FB2-SW-DEV-000011, -000012 and -000013 record. So the driver provides an asynchronous transfer over a shared peripheral with a privilege transition into a critical section.",
+    "design_gap_reason": "The as_is profile contains no software design artefact for the I2C driver. Its three design records cover the AFE driver, the SOA module and the contactor driver, none of which describes I2C transport, and deviations FB2-SW-DEV-000011, -000012 and -000013 each record the module as gap_no_design_artifact_in_profile. Attaching this module to an existing design would assert I2C design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13."
+  },
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the I2C driver. The AFE driver's port-expander access and the RTC's register access both use this module, but the as_is requirements that name those subsystems are about measurement accuracy and timekeeping, neither of which is delivered by the transport here. realises_requirements is empty rather than populated with a requirement this code does not serve.",
+  "anchor_refs": [
+    "FB2-SRC-COD-000041",
+    "FB2-SRC-COD-000042",
+    "FB2-SRC-COD-000043"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "I2C-IMP-DMA-RECV",
+      "description": "Configures the DMA receive channel for the selected I2C interface and starts the transfer into a caller buffer, after entering a critical section and elevating privilege to write the DMA registers.",
+      "kind": "transfer",
+      "evidence_symbol": "I2C_ReadDma",
+      "evidence_line_range": "445-460"
+    },
+    {
+      "behaviour_id": "I2C-IMP-DMA-SEND",
+      "description": "Configures the DMA transmit channel for the selected interface and starts the transfer out of a caller buffer under the same critical-section and privilege sequence.",
+      "kind": "transfer",
+      "evidence_symbol": "I2C_WriteDma",
+      "evidence_line_range": "510-597"
+    },
+    {
+      "behaviour_id": "I2C-IMP-WRITE-READ",
+      "description": "Performs a combined write-then-read transfer by configuring both the transmit and the receive DMA channels for the same interface, which is the access pattern the RTC and the port expander use.",
+      "kind": "transfer",
+      "evidence_symbol": "I2C_WriteReadDma",
+      "evidence_line_range": "599-764"
+    },
+    {
+      "behaviour_id": "I2C-IMP-CHANNEL-SELECT",
+      "description": "Maps the interface pointer to its DMA channel by identity comparison against the two known peripherals and traps on an unrecognised interface, so a mis-wired call cannot silently target a channel.",
+      "kind": "arbitration",
+      "evidence_symbol": "I2C_ReadDma",
+      "evidence_line_range": "434-443"
+    },
+    {
+      "behaviour_id": "I2C-IMP-PRIVILEGE",
+      "description": "Elevates privilege for the duration of the DMA register programming so the peripheral configuration registers can be written from user mode, asserting that the elevation succeeded.",
+      "kind": "privilege_transition",
+      "evidence_symbol": "I2C_ReadDma",
+      "evidence_line_range": "447-452"
+    },
+    {
+      "behaviour_id": "I2C-IMP-BUS-IDLE-GATE",
+      "description": "Refuses to start a transfer while the bus-busy bit is set, and clears the start, stop and repeat-mode bits before configuring the transfer.",
+      "kind": "flow_control",
+      "evidence_symbol": "I2C_ReadDma",
+      "evidence_line_range": "427-432"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "task",
+      "entry_points": [
+        "I2C_Read",
+        "I2C_Write",
+        "I2C_WriteRead",
+        "I2C_ReadDma",
+        "I2C_WriteDma",
+        "I2C_WriteReadDma"
+      ],
+      "shared_state": "The two I2C peripherals and the DMA channels assigned to them. Each transfer wraps its DMA register programming in OS_EnterTaskCritical and a privilege elevation, which is the source's own protection against a context switch inside the register sequence; the polling variants additionally wait on the interface's own status with the module's timeout helpers I2C_WaitTransmit, I2C_WaitStop and I2C_WaitReceive."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the I2C driver code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met, and in particular the bus-error, arbitration-loss and NACK paths this driver does not handle are not claimed to be handled. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "i2c.c was read at the pinned commit with 'git show 308028fb:src/app/driver/i2c/i2c.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000041, -000042 and -000043 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The three function spans were cross-read against 'graft skeleton src/app/driver/i2c/i2c.c', which reports I2C_ReadDma at L415-L508, I2C_WriteDma at L510-L597 and I2C_WriteReadDma at L599-L764 independently of this authoring pass.",
+    "limitations": [
+      "Behaviour was verified by reading the code. No I2C transfer was performed, no bus was instrumented, and no timing measurement of this driver exists in this corpus.",
+      "The DMA channel identifiers and the register field names inside these functions are peripheral-specific values whose authoritative definition is the device header, not this file. They are referenced by name and not restated with values here, so that this record cannot become a second, unverifiable copy of the peripheral's register map.",
+      "i2c.c is unmodified between the pin and the working tree, so the same ranges and hash hold for the checked-out file."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000041, -000042 and -000043 name I2C_ReadDma, I2C_WriteDma and I2C_WriteReadDma in i2c.c, and are the same three anchors deviations FB2-SW-DEV-000011, -000012 and -000013 reference. No new anchor was created."
+}

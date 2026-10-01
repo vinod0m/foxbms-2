@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schema_version": "1.0.0",
-  "created_at": "{{BUILD_TIMESTAMP}}",
-  "updated_at": "{{BUILD_TIMESTAMP}}",
-  "repository_commit": "{{REPOSITORY_COMMIT}}",
+  "created_at": "2026-09-08T10:12:59Z",
+  "updated_at": "2026-10-01T04:27:00Z",
+  "repository_commit": "308028fb13d046ba29b98886895c2e17937b1437",
   "standards_lock_ref": "governance/standards-lock.json",
   "process_inventory": [
     {
@@ -22,8 +22,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - the five stakeholder need records FB2-SYS-NED-000001..000005, the four use case records FB2-SYS-UC-000001..000004 and the Part 3 item definition FB2-SAF-ITE-000001 now exist in the synthetic_reference profile. They are declared, not elicited: every need carries is_a_real_elicitation = false, and no workshop, interview or questionnaire was held. 'mapped' here means the expectation has backing records, not that the elicitation was performed on real stakeholders. The as_is profile remains at gap: the NOTE-gap.md source finding for that profile is unchanged and still true (corrected earlier under CORR-COV-001, which stays open for as_is).",
-      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-001 (partially superseded 2026-09-29: the synthetic_reference expectation is now backed by FB2-SYS-NED-*, FB2-SYS-UC-* and FB2-SAF-ITE-000001; the as_is half of the same correction remains open and true)."
+      "disposition": "partially_mapped - Stakeholder Needs and Use Cases have backing records with real content: FB2-SYS-NED-000001..000005 (5 stakeholder_need records) and FB2-SYS-UC-000001..000004 (4 use_case records), joined by the Part 3 item definition FB2-SAF-ITE-000001 and the project plan FB2-MAN-PLN-000001. Two of the three expected families are present. Operational Scenarios: ABSENT - no record carries an operational scenario, and the five SCN-* records in the corpus are mutation and change-lifecycle harness scenarios, not operational scenarios. The needs are also declared rather than elicited: each carries is_a_real_elicitation = false, and no workshop, interview or questionnaire was held. The as_is profile remains at gap; corpus/as_is/system/NOTE-gap.md is unchanged and still true.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence for the demotion: no operational-scenario record exists in either profile, and the elicitation activity the process names did not occur for the records that do exist. This supersedes the SYS.1 status recorded under CORR-COV-001; the as_is half of CORR-COV-001 remains open and true. No expectation was narrowed and no artefact was fabricated."
     },
     {
       "process_id": "SYS.2",
@@ -41,8 +41,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - the eight system requirement records FB2-SYS-SYR-000001..000008 now exist in the synthetic_reference profile, each refining a stakeholder need, a use-case obligation or the safety goal and each allocating to existing FB2-HW-TSR-* and FB2-SW-SWR-* records rather than restating them. Every one is covered in the requirement-to-test matrix through its allocation. The as_is profile remains at gap for the reason recorded in corpus/as_is/system/NOTE-gap.md, which was left untouched.",
-      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-002 (partially superseded 2026-09-29: the synthetic_reference expectation is now backed by FB2-SYS-SYR-000001..000008; the as_is half remains open and corpus/as_is/system/NOTE-gap.md is unchanged)."
+      "disposition": "partially_mapped - System requirements have backing records: FB2-SYS-SYR-000001..000008, each carrying a statement, a rationale, a classification and acceptance criteria, plus the change record FB2-MAN-CHG-000001 and the software requirement records FB2-SW-SWR-000001..000003 that name SYS.2 in their mappings. Two of the three expected families are absent. System Modes/States: ABSENT - no record in either profile carries a system mode or state model. Interface Requirements at system level: ABSENT - the only interface specification in the corpus is FB2-SYS-HSI-000001, which is filed under SYS.3 and is scoped to the cell-voltage interface. The analysis activity the process names is also not evidenced: the as_is records are origin `derived` and were produced by back-inferring requirements from existing code, which is the opposite direction to requirements analysis. The as_is profile remains at gap.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the eight system requirement records exist, but two of the three expected families do not exist anywhere in the corpus, and no record records the derivation from a stakeholder need or use-case obligation, so the analysis itself is asserted rather than shown. Supersedes the SYS.2 status recorded under CORR-COV-002; its as_is half remains open."
     },
     {
       "process_id": "SYS.3",
@@ -60,7 +60,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - HSI authority created; allocation documented"
+      "disposition": "partially_mapped - Two of the three expected families have backing records. HSI Specification: FB2-SYS-HSI-000001, whose own `design_level` is `interface_specification`, carries the electrical interface (SPI signals with polarity, direction, startup default, invalid state and timing), the logical database interface, an electrical budget, an end-to-end timing budget, four fault indications with conditions and reactions, two recorded design decisions with alternatives and rationale, and a per-variant applicability table. HW/SW Allocation: present, but only inside the two safety-concept records FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001, which allocate the safety goal across six architectural elements; no allocation record exists on its own. System Architecture: ABSENT - no record in either profile describes the system architecture; the closest record is the HSI interface specification, which is one interface rather than the architecture. The previous disposition text read `mapped - HSI authority created; allocation documented` and named no artefact at all.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the expected System Architecture family has no backing record, and the process name appears in the mappings of FB2-MAN-PLN-000001, FB2-SAF-FSC-000001, FB2-SAF-TSC-000001 and FB2-SYS-HSI-000001 without a system-architecture record existing among them."
     },
     {
       "process_id": "SYS.4",
@@ -78,7 +79,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "partially_mapped - integration planning stub FB2-VER-TMS-000007 + blocked execution record FB2-VER-EXE-000007 (outcome blocked, harness not in corpus scope); as_is has implicit integration"
+      "disposition": "partially_mapped - Backing records name SYS.4 in their mappings: the test measures FB2-VER-TMS-000001..000008 area and the design record FB2-SYS-HSI-000001. Integration Plan: ABSENT - no integration plan record exists. Integration Test Specification: ABSENT - FB2-VER-TMS-000007 is a planning stub, not a specification. Integration Test Results: ABSENT - the execution record FB2-VER-EXE-000007 is `execution_kind: none` / `outcome: blocked`, so nothing ran. The previous text said `as_is has implicit integration`, which is an inference from the existence of code, not a record.",
+      "disposition_reason": "Substantive audit CORR-COV-016. The status token is unchanged but the disposition is restated: all three expected families are either absent or blocked, so nothing beyond a planning stub exists. The text is written out because the previous one-liner named only two records and left the third expected family unaddressed."
     },
     {
       "process_id": "SYS.5",
@@ -96,7 +98,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "partially_mapped - qualification planning stub FB2-VER-TMS-000008 + blocked execution record FB2-VER-EXE-000008; HIL stub FB2-VER-TMS-000011 + blocked execution FB2-VER-EXE-000011 (no target hardware)"
+      "disposition": "partially_mapped - Backing records: 15 test measures and 8 execution records carry SYS.5 or SYS.4/SYS.5 in their mappings. Qualification Test Plan: ABSENT. Qualification Test Specification: ABSENT - the measures are one-liners per measure rather than a specification. Qualification Test Results: ABSENT - every synthetic_reference execution is either `execution_kind: none` / `outcome: blocked` (22 records) or `execution_kind: synthetic_fixture` / `outcome: pass` (6 records, none of which retains any evidence file). The HIL stub FB2-VER-TMS-000011 and its execution FB2-VER-EXE-000011 are blocked for want of target hardware, and that blocker is real.",
+      "disposition_reason": "Substantive audit CORR-COV-016. Status token unchanged; the disposition is restated because the previous text implied the planning stubs and the HIL stub were the substance of the mapping, and measured against the expected families they are not. The 6 synthetic_fixture executions that read `pass` retain no evidence; see the known-limitations section of the coverage report."
     },
     {
       "process_id": "SWE.1",
@@ -113,7 +116,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - synthetic_reference SW requirements created per module; as_is back-inferred"
+      "disposition": "partially_mapped - Software Requirements Specification has backing records with real content: FB2-SW-SWR-000001..000003 in both profiles, each carrying a statement, a rationale, a classification, acceptance criteria with measure/threshold/unit, a verification approach, an ASIL allocation whose scope is explicitly labelled `reconstructed_back_inference`, and conditions and modes. SW Interface Requirements: ABSENT - no record carries a software interface requirement; the software requirements state database publish targets but no interface requirement record exists. The analysis activity the process names did not occur: the as_is requirements are `origin: derived` and their revision history reads `Back-inferred from AFE driver implementation`, and the synthetic_reference requirements restate the same three modules. Six further records name SWE.1 in their mappings without adding to this: the three FSR records in both profiles, the project plan FB2-MAN-PLN-000001 and the technical safety concept FB2-SAF-TSC-000001.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: no software interface requirement record exists, and requirements back-inferred from an implementation are the opposite direction to requirements analysis, so the process's defining activity is absent even though requirements-shaped records exist. The previous text - `synthetic_reference SW requirements created per module; as_is back-inferred` - named no artefact and is superseded by the text above."
     },
     {
       "process_id": "SWE.2",
@@ -131,7 +135,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - SW architecture documented per module; interfaces specified"
+      "disposition": "partially_mapped - Backing records: FB2-SW-DSN-000001..000003 in both profiles, each with `design_level: architecture`, responsibilities, a decomposition, interfaces with per-signal type, unit, range and rate, a behaviour model expressed as a state machine with triggers, guards and actions, constraints, budgets, a failure-response table, recorded design decisions with alternatives and rationale, and an implementation mapping to named symbols in the pinned source. Software Architecture: present in substance. Interface Specifications: PARTIAL - the `interfaces` field is a signal table (name, type, unit, range, rate, direction) and carries no protocol, ownership or stakeholder agreement, and no separate interface specification record exists. Component Design: the decomposition names children but does not design them. The as_is records were extracted from existing code rather than produced by an architectural design activity, and the synthetic_reference records are modelled on them.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the expected Interface Specifications family has no record, the design records are a reconstruction of an existing implementation rather than the product of an architectural design process, and the previous text - `SW architecture documented per module; interfaces specified` - overstated an interface signal table as interface specifications."
     },
     {
       "process_id": "SWE.3",
@@ -149,7 +154,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - source code inventoried; detailed design extracted; unit tests mapped"
+      "disposition": "gap - NO ARTEFACT REFERENCES SWE.3. Measured over the corpus by extracting every `standards_mappings[].reference` string from every one of the 263 indexed records and testing each string for the token SWE.3: SWE.3 occurs ZERO times across the 106 distinct reference strings. The expected families are all absent. Detailed Design: no record declares SWE.3; the 8 `design` records carry `design_level: architecture` and their mappings name SWE.2, not SWE.3. Source Code: no record is a source-code artefact; the 14 `implementation` records and the 26 `deviation` records name SWE.4 in their mappings, not SWE.3. Unit Test Specifications: no record exists; the 33 `test_measure` records name SWE.4, SWE.5 or SWE.6. The previous text - `mapped - source code inventoried; detailed design extracted; unit tests mapped` - named no artefact, and the three clauses describe three other processes' backing records.",
+      "disposition_reason": "Demoted from mapped to gap by the substantive audit CORR-COV-016. This is the worst case in the file and is the reason the audit was run: a disposition asserted `mapped` while not one artefact in the corpus referenced the process at all. The expectation is retained in full; nothing was deleted or narrowed. Closing it honestly means authoring a detailed-design record, a source-code record and a unit-test specification that each declare SWE.3 in their own `standards_mappings`, which is work for a future pass and is not simulated here."
     },
     {
       "process_id": "SWE.4",
@@ -167,7 +173,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "partially_mapped - unit tests inventoried; as_is TMS-002..005 blocked execution records (upstream CI runs not captured), single host-run unsubstantiated; component stub TMS-010 + blocked EXE-000010"
+      "disposition": "partially_mapped - SW Unit Verification Measures have backing records with real content: FB2-VER-TMS-000001..000005 (as_is) and FB2-VER-TMS-000001..000016 (synthetic_reference) carry structured steps and oracles, and 15 host-run execution records in the as_is profile carry real environment, input hashes, output hashes, per-test log digests and assertion counts. Unit Test Specifications: ABSENT - the measures are the specification's substitute and none is declared as a unit test specification. Unit Test Results: PARTIAL AND MISLEADING AS STATED - the 15 host-run executions are the SIL/host harness over 313 CeeDling targets, not the upstream Unity/CMock unit suite, which this corpus has never executed; the upstream CI runs were not captured. FB2-VER-TMS-000010 is a component stub whose execution FB2-VER-EXE-000010 records a real product defect rather than a unit result. The 26 `deviation` records carry SWE.4 in their mappings and document justified deviations from coding guidelines, which is real and is not unit verification.",
+      "disposition_reason": "Substantive audit CORR-COV-016. Status token unchanged; the disposition is restated because the previous text said `unit tests inventoried`, which conflated foxBMS's Unity/CMock unit suite (never executed by this corpus) with the SIL host harness (executed, 313 targets). The distinction is stated rather than left implicit."
     },
     {
       "process_id": "SWE.5",
@@ -185,7 +192,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "partially_mapped - integration approach documented (database/task model, build system); integration stub FB2-VER-TMS-000007 + blocked execution record FB2-VER-EXE-000007"
+      "disposition": "partially_mapped - Backing records: the test measures FB2-VER-TMS-000001..000005 and FB2-VER-TMS-000007, the host-run execution records FB2-VER-EXE-000001..000007, and the change record FB2-MAN-CHG-000001. SW Integration Plan: ABSENT - the previous text claimed the integration approach is `documented (database/task model, build system)`, which rests on the design records FB2-SW-DSN-000001..000003 and not on an integration plan; no integration plan record exists. SW Integration Test Specification: ABSENT - FB2-VER-TMS-000007 is a planning stub. SW Integration Test Results: ABSENT - FB2-VER-EXE-000007 is `execution_kind: none` / `outcome: blocked`.",
+      "disposition_reason": "Substantive audit CORR-COV-016. Status token unchanged; the disposition is restated because the previous text asserted a documented integration approach on the strength of records that belong to SWE.2, and because all three expected families are absent or blocked."
     },
     {
       "process_id": "SWE.6",
@@ -203,7 +211,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "partially_mapped - qualification planning stub FB2-VER-TMS-000008 + blocked execution record FB2-VER-EXE-000008 (no qualification environment)"
+      "disposition": "partially_mapped - Backing records: FB2-VER-TMS-000008 (the system-qualification stub) and the five network-security qualification measures FB2-VER-TMS-000016..000020, which carry structured steps, oracles and stated oracle blindness. SW Qualification Test Plan: ABSENT. SW Qualification Test Specification: ABSENT. SW Qualification Test Results: ABSENT - FB2-VER-EXE-000008 is `execution_kind: none` / `outcome: blocked`, and the five security measures likewise have no executed result. The five security measures are the most substantial part of what exists here: they state what a passing run would have to observe and what the oracle cannot see.",
+      "disposition_reason": "Substantive audit CORR-COV-016. Status token unchanged; the disposition is restated so the five security measures, which were not named at all in the previous text, are recorded, and so the three absent expected families are stated."
     },
     {
       "process_id": "HWE.1",
@@ -220,7 +229,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - HW requirements derived from design packages; synthetic created"
+      "disposition": "partially_mapped - Hardware Requirements Specification has backing records: FB2-HW-TSR-000001..000003 in both profiles and FB2-HW-TSR-000004 in the synthetic_reference profile, each carrying a statement, acceptance criteria with measure/threshold/unit and a safety allocation. HW Interface Requirements: ABSENT as a hardware record - the only interface specification is FB2-SYS-HSI-000001, which is a system-domain record. Requirements analysis was not performed: the as_is requirements are `origin: derived` and were derived from design packages, and the synthetic_reference requirements were authored for a fictional project. No record names an elicitation source, an analyst or an analysis date. The change record FB2-MAN-CHG-000001 and the technical safety concept FB2-SAF-TSC-000001 also name HWE.1 in their mappings.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: no hardware interface requirement record exists, and the requirements were derived from design packages rather than analysed from higher-level requirements. The previous text - `HW requirements derived from design packages; synthetic created` - named no artefact and is superseded."
     },
     {
       "process_id": "HWE.2",
@@ -238,7 +248,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "partially_mapped - design packages inventoried; architecture extracted where readable"
+      "disposition": "partially_mapped - Backing records: the seven `requirement` records FB2-HW-TSR-000001..000004 that carry HWE.1, HWE.2 in their mappings. Hardware Architecture: ABSENT - no record describes a hardware architecture. Block Diagrams: ABSENT. Interface Schematics: ABSENT and NOT VERIFIABLE FROM THIS REPOSITORY - the schematic sources are Altium `.SchDoc` design files that live in the separate `foxBMS2_hw` repository (anchors FB2-SRC-HW-000001..000003, whose `content_hash` and `location.file_hash` both read `unresolved`). The previous text - `design packages inventoried; architecture extracted where readable` - described an extraction step over files this repository cannot show.",
+      "disposition_reason": "Substantive audit CORR-COV-016. Status token unchanged; the disposition is restated because no hardware architecture, block diagram or interface schematic record exists in this corpus, and the external design files the previous text relied on are unverifiable from here. Ten non-review records cite those three anchors and carry that limitation."
     },
     {
       "process_id": "HWE.3",
@@ -257,7 +268,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "partially_mapped - design packages referenced; detailed analysis limited by CAD format"
+      "disposition": "gap - NO ARTEFACT REFERENCES HWE.3. Measured the same way as SWE.3: across the 106 distinct `standards_mappings[].reference` strings in the corpus, HWE.3 occurs ZERO times. All four expected families are absent. Schematics: ABSENT - the Altium `.SchDoc` files live in `foxBMS2_hw`, not in this repository. PCB Layout: ABSENT. BOM: ABSENT. Component Specifications: ABSENT.",
+      "disposition_reason": "Demoted from partially_mapped to gap by the substantive audit CORR-COV-016. Evidence: no record references the process, so there is no backing artefact of any kind, and the CAD-format limitation explains why none can be authored here rather than partially discharging the expectation. The expectation is retained in full. Superseded text, recorded here because the generated standards-mapping view counts the substring 'partially_mapped' in any disposition and would otherwise report a count that disagrees with the tally: `partially_mapped - design packages referenced; detailed analysis limited by CAD format`. That text named no record and described files this repository does not contain."
     },
     {
       "process_id": "HWE.4",
@@ -275,7 +287,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "gap - synthetic test specs created; as_is lacks explicit HW test records"
+      "disposition": "gap - NO ARTEFACT REFERENCES HWE.4, measured across all 106 distinct `standards_mappings[].reference` strings. All three expected families are absent: no hardware integration plan, no hardware test specification and no hardware test result. The previous text said `synthetic test specs created; as_is lacks explicit HW test records`; the synthetic test specifications that text relied on do not name HWE.4 and no hardware integration or test record exists in either profile.",
+      "disposition_reason": "Status token unchanged; the disposition is restated by the substantive audit CORR-COV-016 so the reason is the measured absence of every expected family rather than a partial story about the as_is profile. The gap is honest and is not closed here."
     },
     {
       "process_id": "VAL.1",
@@ -293,7 +306,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - the planning stub FB2-VER-TMS-000009 and its blocked execution remain, and four real validation measures are added: FB2-VER-TMS-000012 (no false reaction over a full charge), FB2-VER-TMS-000013 (driver-facing outcome of a genuine overvoltage reaction under traction), FB2-VER-TMS-000014 (degraded operation remains usable and announced) and FB2-VER-TMS-000015 (a technician can commission and service without energising incorrectly). Each validates a stakeholder need or a use case against a named operational scenario, each states its oracle basis and what that oracle cannot see, and each carries a blocked execution with the specific missing environment named. All four executions are execution_kind 'none' / outcome 'blocked'. The status describes planning completeness; no validation has been executed."
+      "disposition": "partially_mapped - Backing records: the planning stub FB2-VER-TMS-000009 and four real validation measures, FB2-VER-TMS-000012 (no false reaction over a full charge), FB2-VER-TMS-000013 (driver-facing outcome of a genuine overvoltage reaction under traction), FB2-VER-TMS-000014 (degraded operation remains usable and announced) and FB2-VER-TMS-000015 (a technician can commission and service without energising incorrectly), plus the four use-case records and two post-development records that name VAL.1 in their mappings. Validation Plan: ABSENT. Validation Test Specification: PARTIAL - the four measures validate a named stakeholder need or use case against a named operational scenario and each states its oracle basis and what that oracle cannot see; none is a specification in the sense of Part 4/6 verification. Validation Results: ABSENT - all four executions are `execution_kind: none` / `outcome: blocked`, and every other synthetic_reference execution is blocked too. Zero validations have been executed. No target-hardware validation exists and none can: `execution_kind` has no target-hardware member.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the expectation that defines validation - results - is entirely absent; four blocked executions were being read as delivery. The previous text said `The status describes planning completeness; no validation has been executed`, which is true and still belongs here, but it was attached to a `mapped` status that a reader would take as a completed mapping."
     },
     {
       "process_id": "ACQ.4",
@@ -310,7 +324,8 @@
         "PA1.1",
         "PA2.1"
       ],
-      "disposition": "mapped - supplier inventory created; synthetic monitoring records"
+      "disposition": "partially_mapped - Backing records: the supporting process record FB2-SUP-SPL-000001 (9,553 bytes, `aspice_process_id: ACQ.4`) and the post-development record FB2-PRD-EOL-000001. Supplier List: PRESENT as a fictional inventory - four components are named with a monitoring interval. Monitoring Records: PRESENT as ONE fictional cycle whose participants are declared `is_a_real_person: false` and whose decision is a `synthetic_decision:` label. Supplier Assessments: ABSENT - the record's own `definition` field states that it does not include a component inventory checked against an advisory source because no advisory source was consulted, and its inputs section states `No supplier is under contract; see the limitation`. Nothing engineering happened for a real item. The record was authored on 2026-09-29 and its own revision history says why: `Supporting-process record authored because the generated view reported ACQ.4 as a coverage gap`.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the third expected family, Supplier Assessments, does not exist, and the process record itself states both that no supplier is under contract and that no supplier has submitted anything. A process definition with a fictional instance is not supplier monitoring."
     },
     {
       "process_id": "SPL.2",
@@ -327,8 +342,8 @@
         "PA1.1",
         "PA2.1"
       ],
-      "disposition": "mapped - the three expected artifact families now exist as records rather than being inferred from a version history: the release and configuration identification record FB2-REL-RLS-000001 (identification scheme, configuration items, release checklist steps and acceptance criteria), the process record FB2-SUP-CHC-000001 for the supporting half of the release process, and the release-facing content of FB2-PRD-CAL-000001 and FB2-PRD-EOL-000001. Every one states that no step was executed and that it authorises no production activity. The status moves from partially_mapped because two of the three families were absent; it is not 'mapped' in any sense that implies a release happened.",
-      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-003 (superseded 2026-09-29 by FB2-REL-RLS-000001 and the supporting records it names)."
+      "disposition": "partially_mapped - Backing records: the post-development records FB2-REL-RLS-000001 (15,412 bytes), FB2-PRD-CAL-000001 and FB2-PRD-EOL-000001, and the supporting process record FB2-SUP-CHC-000001. Release Plan: PRESENT - FB2-REL-RLS-000001 carries a scope statement, a configuration-identification scheme naming every configuration item with how its identifier is established, numbered procedures each with a record produced, an acceptance condition and a decision point, and acceptance criteria. Release Checklist: PRESENT - the same record's procedures and acceptance criteria are the checklist. Release Notes: ABSENT - no record carries release-note content. Nothing was released: FB2-REL-RLS-000001 records `evidence_state.any_step_executed: false` with the reason that no production line, vehicle, charging site, workshop, fleet or recycling facility exists anywhere in this corpus, and states `The release it describes has not happened`.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the Release Notes family does not exist, and every one of the six post-development records carries `any_step_executed: false`, so the process is documented and not performed. The previous text claimed all three families now exist as records; two do."
     },
     {
       "process_id": "SUP.1",
@@ -346,7 +361,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - QA approach documented; synthetic review records"
+      "disposition": "partially_mapped - Backing records: the supporting process record FB2-SUP-QAP-000001 (10,606 bytes, `aspice_process_id: SUP.1`), the three `review` records and the two `process_improvement` records that name SUP.1 in their mappings. QA Plan: PRESENT as the process record's definition, acceptance criteria and `process_performance_measurement`. Review Records: PRESENT - 15 review records with 49 embedded findings - but NOT as an independent review: the record's own `accountable_role.independence` field states `every review record in it is an automated review produced by the same process that produced the artifacts, and no human reviewer exists`, recorded as risk RSK-003 in FB2-MAN-RSK-000001. Audit Records: ABSENT - no audit of the corpus has been performed by anyone, human or otherwise. The process record also records two non-conformances against its own acceptance criteria.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the Audit Records family does not exist, and the independence the QA process requires is stated in the record and explicitly not achieved. The previous text - `QA approach documented; synthetic review records` - named no artefact."
     },
     {
       "process_id": "SUP.8",
@@ -365,7 +381,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - Git + Waf as CM; synthetic CM records"
+      "disposition": "partially_mapped - Backing records: the supporting process record FB2-SUP-CFM-000001 (9,891 bytes, `aspice_process_id: SUP.8`), the two `change` records and the `requirement` record FB2-HW-TSR-000001 that name SUP.8 in their mappings. CM Plan: PRESENT as the fictional configuration control board's definition. Configuration Items: PRESENT - BAS-REF-001 and its configuration_items. Baselines: PRESENT - the record's `performed_instances` establish BAS-REF-001 revision 2 and its communication record COM-002 lists the 41 records added. Change Control: PRESENT but DEFERRED to a different record - FB2-SUP-CFM-000001 states `A change to a baselined item goes through the change-control process and not through this one; this process identifies and baselines, that one decides`, so this record discharges no change control of its own. Status Accounting: PARTIAL AND NOT ENFORCED - the record's own `limitations` state `Currency of a link's recorded revisions is not automated. The process describes the control and does not claim the tooling enforces it.` Measured: 326 of the corpus's 489 links record an endpoint revision that differs from the endpoint artefact's current revision, and all 489 links carry `change_suspect_status: false`, so the corpus never marks such a link suspect. That is the concrete content the missing status accounting would have produced.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: change control is deferred to another record, and the status accounting the process defines is not performed - the 326-of-489 link-revision measurement is the missing output, stated rather than asserted."
     },
     {
       "process_id": "SUP.9",
@@ -383,7 +400,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - GitHub issues as evidence; synthetic problem records"
+      "disposition": "partially_mapped - Backing records: 13 `finding` records, each carrying a root cause and a resolution (FB2-REV-FND-000023..000030, -000032, -000039..000042), plus the supporting process record FB2-SUP-PRB-000001 and the change record FB2-MAN-CHG-000001. Problem Reports: PRESENT - 42 `finding` artefacts exist in total, 13 of them mapped to SUP.9, each with symptom, evidence, impact, root cause and resolution. Resolution Records: PRESENT - each finding carries a resolution, and the pairing rule in FB2-SUP-PRB-000001 keeps a `not resolved` finding at disposition `accepted` rather than `closed`. Trend Analysis: ABSENT - the process record's own `limitations` state `The trend this process is supposed to produce cannot be produced from a corpus of one intake cycle. No trend line is drawn from a single cycle and none is claimed.` All 13 problems were raised by this corpus's own automated review of itself; none originated outside it.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the Trend Analysis family does not exist, and the backing record states in its own words that it cannot be produced from one intake cycle. The problem-report and resolution content is real and is what the demotion is not about."
     },
     {
       "process_id": "SUP.10",
@@ -401,7 +419,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - PR/commit history as evidence; synthetic change lifecycle demos"
+      "disposition": "partially_mapped - Backing records: the three `change` records FB2-MAN-CHG-000001..000003 (35,784 / 40,793 / 32,309 bytes), the supporting process record FB2-SUP-CHC-000001 and the requirement record FB2-SAF-SEC-000005. Change Requests: PRESENT - three full change records, each with a trigger, an impact analysis with a rationale, a decision with maker/date/disposition, new_revisions, suspect_links, required_updates and a reverification selection. Impact Analyses: PRESENT in each record's `impact_analysis`. Change Decisions: PRESENT in each record's `decision`. The change-lifecycle scenario suite SCN-CHG-001..003 content-validates 19 of 19 required checks on each of the three records, measured live. Against the real product: NOTHING - all three changes are fictional changes to the hypothetical Project Northcell, and no change request against the pinned foxBMS source was raised, decided, implemented or reverified.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the three expected families are present with substantial content, but only for a fictional project, so no change request management was performed on the product the corpus is about. The previous text - `PR/commit history as evidence; synthetic change lifecycle demos` - named no artefact."
     },
     {
       "process_id": "SUP.11",
@@ -419,7 +438,8 @@
         "PA2.1",
         "PA3.1"
       ],
-      "disposition": "mapped - corpus implements traceability; matrices generated"
+      "disposition": "partially_mapped - Backing records: the three `change` records FB2-MAN-CHG-000001..000003, whose `suspect_links`, `required_updates` and `reverification_selection` arrays name FB2-SUP-CHC-000001, SUP.8, SUP.9, SUP.10, SUP.11 in their mappings. Traceability Matrix: PRESENT - docs/artifacts/exports/trace-matrix.csv. Traceability Links: PRESENT - 489 typed links across 11 relation types, 0 dangling, every one carrying a rationale, provenance, review_state and both endpoint revisions. Coverage Reports: PRESENT - reports/coverage-report.md and coverage-report.json, regenerated from the records. Link currency: NOT PERFORMED - measured, 326 of the 489 links record an endpoint revision that differs from the endpoint artefact's current revision, and all 489 carry `change_suspect_status: false`, so the corpus contains 326 links whose recorded endpoint revision is stale and not one of them is marked suspect. The supporting process record FB2-SUP-CFM-000001 states the same limitation in its own words. Link ordering and de-duplication are deterministic and verified; what is not performed is the control that would detect a moved endpoint.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the three expected families exist and are machine-verified, but the control that makes a traceability matrix trustworthy - keeping it current - is not performed, and the 326-of-489 measurement is the size of what that control would have found."
     },
     {
       "process_id": "MAN.3",
@@ -439,7 +459,7 @@
         "PA3.1"
       ],
       "disposition": "mapped - the project plan FB2-MAN-PLN-000001 carries a six-phase lifecycle model, an eight-package work breakdown with named accountable roles and dated phases, a schedule with a critical path and per-package float, six gates each with entry and exit criteria and a synthetic_decision label, a resource assignment, five actual-against-planned progress records and three communication records. The scope statement FB2-MAN-SCO-000001 is not counted toward this status.",
-      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-006 (superseded 2026-09-29 by FB2-MAN-PLN-000001)."
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-006 (superseded 2026-09-29 by FB2-MAN-PLN-000001). CORR-COV-016 re-examined this disposition and did not change it. Evidence for sufficiency: FB2-MAN-PLN-000001 (24,465 bytes, artifact_type project_plan) carries a six-phase lifecycle model, an eight-package work breakdown with named accountable roles and dated phases, a schedule with a critical path and per-package float, six gates each with entry and exit criteria and a synthetic_decision label, a resource assignment, five actual-against-planned progress records and three communication records. All four expected families - Project Plan, Schedule, Resource Plan, Progress Reports - have content in that one record. What is NOT claimed: the project is fictional, no progress record was independently confirmed, and this is a structural mapping disposition only."
     },
     {
       "process_id": "MAN.5",
@@ -457,7 +477,7 @@
         "PA2.1"
       ],
       "disposition": "mapped - the risk register FB2-MAN-RSK-000001 carries eight entries across schedule, resource, technical, supplier, quality, organisational, compliance and reuse categories, each with an ordinal-pair exposure on a stated scale, an owner, dated mitigation actions and a residual exposure with its argument. Two entries have a residual exposure equal to their inherent because no action was taken, and that is recorded rather than presented as progress. Not counted: FB2-SAF-TAR-000001, which is a cybersecurity threat analysis and not a project risk register.",
-      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-007 (superseded 2026-09-29 by FB2-MAN-RSK-000001)."
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-007 (superseded 2026-09-29 by FB2-MAN-RSK-000001). CORR-COV-016 re-examined this disposition and did not change it. Evidence for sufficiency: FB2-MAN-RSK-000001 (artifact_type risk_register) carries eight entries across schedule, resource, technical, supplier, quality, organisational, compliance and reuse categories, each with an ordinal-pair exposure on a stated scale, an owner, dated mitigation actions and a residual exposure with its argument; two entries have a residual equal to their inherent because no action was taken, which is recorded rather than presented as progress. All three expected families - Risk Register, Risk Analyses, Mitigation Plans - are present. FB2-SAF-TAR-000001 is correctly excluded: it is a cybersecurity threat analysis, not a project risk register. What is NOT claimed: the register is synthetic."
     },
     {
       "process_id": "MAN.6",
@@ -474,8 +494,8 @@
         "PA1.1",
         "PA2.1"
       ],
-      "disposition": "mapped - the measurement plan FB2-MAN-MSM-000001 adds what the 100 acceptance criteria on requirement records never had: a named population with its exclusions and its known bias, six collection rules with cadence and collector role, six metrics each with a definition, unit, formula, baseline, target, control limit and action on breach, an analysis method that requires every charted point to be an observation record, and six synthetic observations with their derivations. The status moves from partially_mapped because the absence of a plan is now closed; the 100 acceptance criteria remain what they always were, product verification criteria, and the plan separates them explicitly.",
-      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-008 (superseded 2026-09-29 by FB2-MAN-MSM-000001)."
+      "disposition": "mapped - the measurement plan FB2-MAN-MSM-000001 adds what the 100 acceptance criteria on requirement records never had: a named population with its exclusions and its known bias, six collection rules with cadence and collector role, six metrics each with a definition, unit, formula, baseline, target, control limit and action on breach, an analysis method that requires every charted point to be an observation record, and six synthetic observations with their derivations. The status is higher than the partial value it replaced because the absence of a plan is now closed; the 100 acceptance criteria remain what they always were, product verification criteria, and the plan separates them explicitly.",
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-008 (superseded 2026-09-29 by FB2-MAN-MSM-000001). CORR-COV-016 re-examined this disposition and did not change it. Evidence for sufficiency: FB2-MAN-MSM-000001 (artifact_type measurement_plan) adds what the acceptance criteria on requirement records never had: a named population with its exclusions and its known bias, six collection rules with cadence and collector role, six metrics each with a definition, unit, formula, baseline, target, control limit and action on breach, an analysis method that requires every charted point to be an observation record, and six observations with their derivations. Two further records name MAN.6 in their mappings (FB2-PIM-IMP-000001/000002). All three expected families - Measurement Plan, Metrics Definitions, Measurement Results - are present. What is NOT claimed: the six observations are synthetic and the 100 acceptance criteria remain product verification criteria, which the plan separates explicitly."
     },
     {
       "process_id": "PIM.3",
@@ -493,7 +513,7 @@
         "PA2.1"
       ],
       "disposition": "mapped - three improvement-related records now exist: FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002, each carrying a baseline, a hypothesis with a falsification condition, the change made and an effectiveness evaluation with the arithmetic written out, plus counter-evidence and a verdict. Verdict distribution: one partially_effective, one insufficient_evidence, and no effective. A process-improvement set with no effective improvement in it is the honest outcome for a corpus whose improvements were authored after the problems they address.",
-      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-009 (superseded 2026-09-29 by FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002)."
+      "disposition_reason": "Updated 2026-09-29 when the missing engineering work was authored rather than the status being re-labelled. The earlier correction and the record that prompted it are retained here. CORR-COV-009 (superseded 2026-09-29 by FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002). CORR-COV-016 re-examined this disposition and did not change it. Evidence for sufficiency: FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002 (artifact_type process_improvement) each carry a baseline, a hypothesis with a falsification condition, the change made and an effectiveness evaluation with the arithmetic written out, plus counter-evidence and a verdict. Verdict distribution: one partially_effective, one insufficient_evidence, none effective - which is the honest outcome for improvements authored after the problems they address, and is left as it is. All three expected families - Improvement Proposals, Improvement Records, Effectiveness Evaluation - are present."
     },
     {
       "process_id": "REU.2",
@@ -510,7 +530,8 @@
         "PA1.1",
         "PA2.1"
       ],
-      "disposition": "mapped - reuse inventory created; assessments for vendor code"
+      "disposition": "partially_mapped - Backing record: the supporting process record FB2-SUP-RUS-000001 (9,818 bytes, `aspice_process_id: REU.2`). Reuse Strategy: PRESENT as the record's definition and purpose. Reuse Records: PRESENT as a reuse inventory of four elements with upstream, version and modification state. Reuse Assessments: PARTIAL - the record's own `definition` states `It does not complete a reuse assessment for any individual element`, and its `accountable_role.independence` field states the stated independence `cannot hold` for the vendor front-end drivers, because the project's own engineers modified them in the observed source. The record was authored on 2026-09-29 and its own revision history reads `Supporting-process record authored because the generated view reported REU.2 as a coverage gap`.",
+      "disposition_reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: reuse assessments are explicitly not completed for any element, and the independence the process requires is stated as unachievable for the elements that matter. The previous text - `reuse inventory created; assessments for vendor code` - named no artefact."
     },
     {
       "process_id": "MLE.1",
@@ -559,14 +580,46 @@
   ],
   "iso26262_coverage": {
     "part_1_vocabulary": "referenced",
-    "part_2_management": "mapped - safety plan, roles, tailoring",
-    "part_3_concept": "mapped - item definition FB2-SAF-ITE-000001, functional safety concept FB2-SAF-FSC-000001 and technical safety concept FB2-SAF-TSC-000001 now exist alongside the pre-existing hazard FB2-SAF-HAZ-000001 and safety goal FB2-SAF-SGO-000001. The two concepts allocate the safety goal to six architectural elements, state the item-related assumptions, the detection, reaction and degraded-operation strategies, the inside/outside safety scope, the interfaces to other safety-related items, the hardware/software allocation, the technical safety requirements that follow from it, a timing budget that closes, and diagnostic-coverage assumptions each labelled with the kind of evidence it rests on. All three are synthetic and unapproved; writing them exposed four contradictions in the pre-existing records, which were raised as findings FB2-REV-FND-000023..000027 and NOT corrected in place. Note that FB2-MAN-SPL-000001 remains a safety PLAN in the management domain and is not one of these concepts. Supersedes the partially_mapped text under CORR-COV-010.",
-    "part_4_system": "mapped - the HSI interface authority FB2-SYS-HSI-000001 is joined by eight system requirement records FB2-SYS-SYR-000001..000008, which allocate to the existing FB2-HW-TSR-* and FB2-SW-SWR-* records and are covered in the requirement-to-test matrix through those allocations. The technical safety concept FB2-SAF-TSC-000001, previously named as absent in the CORR-COV-002 and CORR-COV-005 text, now exists. Two honest gaps remain inside Part 4 and are not closed by this status: the timing budget of FB2-SAF-SGO-000001 does not close (FB2-REV-FND-000025) and the contactor reaction requirement contradicts itself (FB2-REV-FND-000024). Both are findings against baselined records and both need a controlled change; 'mapped' describes record presence, not arithmetic closure.",
-    "part_5_hardware": "partially_mapped - HW requirements, architecture, FMEDA (synthetic)",
-    "part_6_software": "partially_mapped - SW requirements, architecture and detailed design are backed; unit verification is only partially mapped, because SWE.4 is recorded partially_mapped with blocked execution records (CORR-COV-011)",
-    "part_7_production": "mapped - six post-development lifecycle records now exist, one per area the generated view searches: release and configuration identification FB2-REL-RLS-000001, production control and end-of-line test FB2-PRD-EOL-000001 (six named test stations), calibration and programming FB2-PRD-CAL-000001 (six parameters referenced to the canonical registry), field monitoring and incident handling FB2-OPS-MON-000001 (five signals, four incident classes), installation operation and service FB2-SVC-SVC-000001 (five procedures with safety warnings), and decommissioning and recycling FB2-DEC-DCM-000001 (five end-of-life assumptions, one of them recorded explicitly as having no control). Every record states that none of its steps was executed and that it authorises nothing on real equipment. 'mapped' means documented, not performed. Supersedes the gap text under CORR-COV-004.",
-    "part_8_supporting": "mapped - six supporting-process records now exist, each naming its process id explicitly and each carrying a definition, inputs, outputs, an accountable role with its independence stated, at least two acceptance criteria, at least one performed instance with fictional participants and a synthetic_decision label, and communication records: SUP.1 FB2-SUP-QAP-000001, SUP.8 FB2-SUP-CFM-000001, SUP.9 FB2-SUP-PRB-000001, SUP.10 FB2-SUP-CHC-000001, ACQ.4 FB2-SUP-SPL-000001, REU.2 FB2-SUP-RUS-000001. MAN.6 and PIM.3 are populated by FB2-MAN-MSM-000001 and FB2-PIM-IMP-000001/000002. Every performed instance records at least one non-conformance against its own acceptance criteria, because the criteria are real and the instances are honest. The QA record's independence is stated and NOT achieved: every review in this corpus is an automated review by the runtime that wrote the artifacts, which master-prompt clause 2.9 says is not organisational independence; that is risk RSK-003. Supersedes the gap text under CORR-COV-012.",
-    "part_9_asils": "mapped - ASIL assignment methodology, safety analyses (FMEA, FTA)",
+    "part_2_management": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - the only backing record is FB2-MAN-SPL-000001, and it is not a safety plan. Its `artifact_type` is `design` and its `design_level` is `architecture`; it was filed under design.schema.json with the same field set as the software design records. Its `decomposition`, `interfaces`, `behavior_model`, `budgets`, `failure_response` and `implementation_mapping` fields are ALL empty. Its `responsibilities` field is a list of seven activity headings (`Define safety activities and milestones`, `Assign safety roles and responsibilities`, ...) and assigns none of them to a role. Roles: ABSENT as a record - no record assigns a safety role to a person or role identity for this project. Tailoring: ABSENT - no record states what was tailored or why. Confirmation measures and their independence: the record's own `constraints` field says `Independent confirmation for ASIL D (not achieved in synthetic)` and its DEC-SAF-002 decision selects `Synthetic AI-assisted review (human pending)` with the rationale `Corpus is synthetic; real assessment not applicable`. The record's revision history is one line: `Synthetic safety plan`.",
+      "reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016, on measured evidence rather than on the audit of the ASPICE processes alone: a disposition reading `mapped - safety plan, roles, tailoring` was resting on a record that carries none of those three things and is not even typed as a safety plan. No safety-plan record was authored to make this true, which is the point."
+    },
+    "part_3_concept": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - Backing records are real and substantial: the item definition FB2-SAF-ITE-000001, the functional safety concept FB2-SAF-FSC-000001 (36,125 bytes) and the technical safety concept FB2-SAF-TSC-000001 (48,044 bytes), alongside the hazard FB2-SAF-HAZ-000001 and the safety goal FB2-SAF-SGO-000001. The two concepts allocate the safety goal across six architectural elements, state the item-related assumptions, the detection, reaction and degraded-operation strategies, the inside/outside safety scope, the interfaces to other safety-related items, the hardware/software allocation, the technical safety requirements that follow from it, a timing budget and diagnostic-coverage assumptions labelled with the kind of evidence each rests on. The concept is not closed: FB2-REV-FND-000024 (high, recorded `resolved`) is the contactor reaction requirement contradicting itself - a 30 ms acceptance threshold against a longer stated reaction - and FB2-REV-FND-000025 (high, recorded `resolved`) is the timing budget's arithmetic not closing. Writing the concepts exposed four further contradictions, FB2-REV-FND-000023..000027, which were raised and NOT corrected in place. All three concept records are synthetic and unapproved.",
+      "reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: a concept whose own timing budget does not close and whose contactor reaction requirement contradicts itself is not a complete concept phase, whatever the size of the record. The previous text recorded `mapped` while its own second sentence named two open high-severity findings against the concept."
+    },
+    "part_4_system": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - Backing records: the HSI interface authority FB2-SYS-HSI-000001, eight system requirement records FB2-SYS-SYR-000001..000008, the technical safety concept FB2-SAF-TSC-000001, the safety goal FB2-SAF-SGO-000001 and the hardware technical safety requirements FB2-HW-TSR-000001..000004. System-level architecture: ABSENT - no record describes the system architecture, and the HSI record's own `design_level` is `interface_specification`, which is one interface rather than the architecture. System modes and states: ABSENT - no record carries a system mode or state model. The two high findings named in part_3_concept both sit inside this part: FB2-REV-FND-000024 (the contactor reaction requirement contradicts itself) and FB2-REV-FND-000025 (the timing budget's arithmetic does not close).",
+      "reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence follows from the measured SYS.2 and SYS.3 demotions: two of this part's expected families have no backing record, and two open high-severity findings sit inside it. The previous text itself said `mapped describes record presence, not arithmetic closure`, which is a reason not to read it as `mapped`."
+    },
+    "part_5_hardware": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - HW requirements FB2-HW-TSR-000001..000004 exist in both profiles. Hardware architecture, block diagrams and interface schematics: ABSENT, and the schematic sources are Altium `.SchDoc` files in the separate `foxBMS2_hw` repository whose anchors FB2-SRC-HW-000001..000003 read `content_hash: unresolved` and `hash_status: external_design_file_unverifiable_from_this_repository`. FMEDA and quantitative hardware analysis: ABSENT - the four safety_analysis records are FMEA, FTA, dependent-failure and freedom-from-interference analyses, none of them FMEDA, and all four are synthetic.",
+      "reason": "Status token unchanged. Restated by the substantive audit CORR-COV-016 so the three families that do not exist are named, and so the external-repository limitation on the hardware provenance is stated here rather than only in the source registry."
+    },
+    "part_6_software": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - SW requirements FB2-SW-SWR-000001..000003, architecture FB2-SW-DSN-000001..000003 and 26 justified coding-guideline deviations exist. Software interface requirements: ABSENT. System and software architecture as products of a design activity: the as_is design records were extracted from existing code rather than designed. Unit verification: PARTIAL - 33 test measures and 15 host-run execution records exist, but the upstream Unity/CMock unit suite was never executed by this corpus and the 15 runs are the SIL host harness over 313 CeeDling targets, not that suite. No coverage run exists; the SIL runbook records that explicitly.",
+      "reason": "Status token unchanged. Restated by the substantive audit CORR-COV-016 so the absent families are named and so the host-harness-versus-upstream-unit-suite distinction is recorded."
+    },
+    "part_7_production": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - six post-development records now exist, one per area: FB2-REL-RLS-000001 (release and configuration identification, 15,412 bytes), FB2-PRD-EOL-000001 (production control and end-of-line test, six named test stations), FB2-PRD-CAL-000001 (calibration and programming, six parameters referenced to the canonical registry), FB2-OPS-MON-000001 (field monitoring and incident handling, five signals, four incident classes), FB2-SVC-SVC-000001 (installation, operation and service, five procedures with safety warnings) and FB2-DEC-DCM-000001 (decommissioning and recycling, five end-of-life assumptions, one of them recorded explicitly as having no control). Every one of the six records carries `evidence_state.any_step_executed: false`, and each carries an `operational_authorisation_statement` declaring itself fictional and authorising nothing on real equipment. The content is real and the performance is zero: production was not performed, operation was not monitored, service was not delivered, nothing was released and nothing was decommissioned.",
+      "reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: measured across all six records - `any_step_executed` is `false` on every one. The previous text said `'mapped' means documented, not performed`, which is a correct statement attached to an incorrect status token; a process that has not been performed is partially mapped at best."
+    },
+    "part_8_supporting": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - six supporting-process records exist, each naming its process id explicitly and each carrying a definition, inputs, outputs, an accountable role with its independence stated, acceptance criteria, at least one performed instance with fictional participants and a synthetic_decision label, and communication records: SUP.1 FB2-SUP-QAP-000001, SUP.8 FB2-SUP-CFM-000001, SUP.9 FB2-SUP-PRB-000001, SUP.10 FB2-SUP-CHC-000001, ACQ.4 FB2-SUP-SPL-000001, REU.2 FB2-SUP-RUS-000001. MAN.6 and PIM.3 are populated by FB2-MAN-MSM-000001 and FB2-PIM-IMP-000001/000002. Every performed instance records at least one non-conformance against its own acceptance criteria, which is the honest outcome. Two measured shortfalls: the QA record's independence is stated and NOT achieved - every review in this corpus is an automated review by the runtime that wrote the artefacts, which is risk RSK-003 in FB2-MAN-RSK-000001 - and five of the six process records are recorded `partially_mapped` in `process_inventory` after the substantive audit, because each is missing one of its expected artefact families (SUP.1 has no audit records, SUP.8 defers change control and does not perform status accounting, SUP.9 has no trend analysis, SUP.10 performed nothing on the real product, ACQ.4 has no supplier assessments and REU.2 completed no reuse assessment). No supporting process is `mapped`.",
+      "reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: this part rests entirely on the six supporting-process records, and five of the six processes they describe are themselves `partially_mapped`. Leaving this part at `mapped` while its own backing processes are not would be the same class of error the audit exists to remove."
+    },
+    "part_9_asils": {
+      "decision": "partially_mapped",
+      "disposition": "partially_mapped - ASIL field values are recorded and traceable: `FB2-SAF-SGO-000001` carries `asil: ASIL_D` and `FB2-SAF-FSR-000004` carries `safety_allocation.asil: ASIL_B`. ASIL assignment methodology: ABSENT - no record states how an ASIL was derived. Justification: ABSENT - FB2-SAF-SGO-000001 carries no `safety_allocation`, no `asil_allocation_scope` and no justification field of any kind, unlike FB2-SW-SWR-000001..000003 which each carry an `asil_allocation_scope` declaring `classification_kind: reconstructed_back_inference` and `is_a_determination_for_the_real_product: false`. Safety analyses exist: four `safety_analysis` records (FMEA, FTA, dependent failure, freedom from interference), all synthetic. The values are field entries on synthetic records and are not ASIL determinations; nothing here is evidence of ASIL capability.",
+      "reason": "Demoted from mapped to partially_mapped by the substantive audit CORR-COV-016. Evidence: the expectation that makes an ASIL field meaningful - a methodology and a justification - does not exist for the safety goal, measured directly. The analyses that do exist do not close the gap because none of them is an ASIL determination record."
+    },
     "part_10_guidelines": "referenced - methodology guidance",
     "part_11_semiconductors": {
       "decision": "not_applicable",
@@ -777,11 +830,32 @@
         "iso26262_coverage part_3_concept, part_6_software, part_7_production and part_8_supporting are all gap or partially_mapped after the corrections above",
         "docs/artifacts/views/supporting-processes/supporting-processes.md reports SUP.1, SUP.8, SUP.9, SUP.10, MAN.6 and PIM.3 as coverage gaps"
       ]
+    },
+    {
+      "correction_id": "CORR-COV-016",
+      "date": "2026-10-01",
+      "target": "every process_inventory entry with disposition mapped or partially_mapped, plus every iso26262_coverage entry with decision mapped or partially_mapped",
+      "status_before": "across the 28 applicable ASPICE processes: 12 mapped, 10 partially_mapped, 6 gap. Across the 10 applicable ISO 26262 parts: 6 mapped, 2 partially_mapped, 2 referenced.",
+      "status_after": "across the 28 applicable ASPICE processes: 4 mapped, 21 partially_mapped, 3 gap. Across the 10 applicable ISO 26262 parts: 0 mapped, 8 partially_mapped, 2 referenced.",
+      "reported_as": "A nominal-mapping audit. Every process was re-derived from the corpus by extracting each artefact's own standards_mappings[].reference strings rather than by reading the disposition text, then testing whether the backing records carry the engineering the process defines.",
+      "reason": "A disposition may read `mapped` only when a backing record carries the engineering content that process defines. Three failure classes were found and each was demoted: (a) SWE.3 was recorded `mapped` while ZERO artefacts in the corpus reference it in any standards_mappings[].reference string - the worst case, and the clearest evidence that the disposition text had been written from intent rather than from the records; (b) records exist with the right artifact_type but one of the process's own expected_artifacts families has no record at all, which is partially mapped and was recorded as mapped; (c) a record exists and is substantial, but the activity the process names was not performed - declared rather than elicited, back-inferred rather than analysed, documented rather than executed, or performed only on a fictional project. Nothing was upgraded and no expectation was deleted or narrowed. Four processes kept `mapped` because their backing record was examined and does carry the process's defining engineering content.",
+      "evidence": [
+        "SWE.3: 0 occurrences across the 106 distinct standards_mappings[].reference strings extracted from the 183 of 263 indexed records that carry standards_mappings (80 carry none). Same measurement gives HWE.3 = 0 and HWE.4 = 0, so all three are `gap`.",
+        "SUP.11: 326 of the 489 links record an endpoint revision that differs from the endpoint artefact's current revision, and all 489 carry change_suspect_status: false - the status accounting the process defines would have produced 326 findings and produced none.",
+        "SUP.8: FB2-SUP-CFM-000001 states in its own `limitations` field that link-revision currency is not automated and that the process 'does not claim the tooling enforces it'.",
+        "SUP.9: FB2-SUP-PRB-000001 states in its own `limitations` field that the trend cannot be produced from a corpus of one intake cycle.",
+        "SUP.1: FB2-SUP-QAP-000001 states in its own accountable_role.independence field that every review is an automated review by the runtime that wrote the artefacts, and no human reviewer exists.",
+        "ACQ.4: FB2-SUP-SPL-000001 states that no advisory source was consulted and that no supplier is under contract; REU.2: FB2-SUP-RUS-000001 states it completes no reuse assessment for any element.",
+        "SPL.2 / ISO part_7: all six post_development_record artefacts carry evidence_state.any_step_executed = false.",
+        "ISO part_2: FB2-MAN-SPL-000001 has artifact_type `design`, design_level `architecture`, empty decomposition, interfaces, behavior_model, budgets, failure_response and implementation_mapping, and a `responsibilities` list of seven activity headings that assigns none of them to a role. It is not a safety plan and carries no roles and no tailoring.",
+        "ISO part_9: FB2-SAF-SGO-000001 carries asil ASIL_D with no safety_allocation, no asil_allocation_scope and no justification field.",
+        "HWE.2: anchors FB2-SRC-HW-000001..000003 read hash_status `external_design_file_unverifiable_from_this_repository` and content_hash `unresolved`; the Altium design files live in the separate foxBMS2_hw repository."
+      ]
     }
   ],
-  "corrections_note": "Every entry above keeps its original expectation, expected_artifacts list and capability_attributes. Only the status was corrected, and the reason and evidence are recorded here and in the sibling disposition_reason fields. No entry was deleted, no expectation was narrowed, and no artifact was fabricated to make a status true. A status in this file is a structural mapping claim only; it is not conformity, not human approval and not an ASPICE capability level. Two of the ten corrections (CORR-COV-008 on MAN.6 and CORR-COV-011 on ISO Part 6) did not land on the status the originally reported reality suggested, because verification against disk found evidence on both sides of the claim; in both cases the divergence is stated in the reason rather than resolved in whichever direction is more convenient. No entry was disposed of with not_applicable: the only not_applicable entries in this file are the four MLE processes, each of which carries an explicit rationale and a reference_decision as the master prompt requires.",
-  "corrections_count": 15,
-  "last_corrected": "2026-09-29",
+  "corrections_note": "Every entry above keeps its original expectation, expected_artifacts list and capability_attributes. Only the status was corrected, and the reason and evidence are recorded here and in the sibling disposition_reason fields. No entry was deleted, no expectation was narrowed, and no artifact was fabricated to make a status true. A status in this file is a structural mapping claim only; it is not conformity, not human approval and not an ASPICE capability level. CORR-COV-001..015 were a first pass on 2026-09-29 that read each disposition and checked it against the records. CORR-COV-016, 2026-10-01, was a second pass that ignored the disposition text entirely: it derived every process's backing set from each artefact's own standards_mappings[].reference and then asked whether those records carry the engineering the process defines. That pass demoted 23 of the 28 applicable ASPICE processes and 8 of the 10 applicable ISO parts, and it found SWE.3 recorded `mapped` with zero referencing artefacts. No status was raised by it. The ISO parts were audited too, even though the process inventory was the stated scope, because leaving a status `mapped` that the same evidence shows to be false would have been the error this pass exists to remove.",
+  "corrections_count": 16,
+  "last_corrected": "2026-10-01",
   "capability_dimension": {
     "level_1_performed": {
       "description": "All applicable processes have synthetic examples of performed outcomes",
@@ -825,5 +899,61 @@
     "process": "UNMET TARGET, not a claim of delivery. The inventory records 28 applicable processes, not 27 (32 entries less 4 explicitly not_applicable MLE processes). Six applicable processes hold no record of any kind: SYS.1, SYS.2 (no stakeholder or system requirement record exists at all), MAN.3 (a project scope statement only), MAN.5 (a TARA threat table only), MAN.6 (no measurement plan) and PIM.3 (no improvement record). Separately, and as a narrower and different claim, the generated view docs/artifacts/views/supporting-processes/supporting-processes.md reports that no process-DEFINITION record exists for SUP.1, SUP.8, SUP.9, SUP.10, MAN.6 or PIM.3, while those four SUP dispositions below still read mapped on the strength of the review, change and configuration evidence that does exist. That internal disagreement is left visible rather than resolved here, because those four dispositions were outside the scope of this correction.",
     "process_status": "partially_mapped",
     "process_reason": "Corrected 2026-09-29 under CORR-COV-014. The prior text read 'All 27 applicable processes have synthetic work products'. The count was wrong: the process_inventory holds 32 entries of which 28 are recorded applicable and 4 are explicitly not_applicable, so 27 was never correct. The delivery claim was also false. The text is restated as an unmet target so the expectation stays visible without asserting delivery. Six processes are recorded as zero-record; a second, narrower gap is reported by the generated supporting-processes view for six supporting families. The two are not merged, because they are different claims and the process_inventory entries for SUP.1, SUP.8, SUP.9 and SUP.10 were not in the scope of this correction."
+  },
+  "repository_commit_meaning": "The commit the SOURCE registry is pinned to, and the only thing this field has ever meant anywhere in the corpus: `sources/source-registry.json.repository_commit`, `exports/manifest.json.repository_commit` and every `as_is` anchor's `location.commit` all carry this same value. It is foxBMS 2 v1.11.0, dated 2026-04-20, and `git merge-base --is-ancestor 308028fb13d046ba29b98886895c2e17937b1437 HEAD` returns true, so the pinned source really is an ancestor of the tree this corpus was authored in. It is NOT the commit the corpus content was authored at; see `corpus_authored_at_commit` below. The distinction matters because an `as_is` record cites a blob at THIS commit while every corpus judgement about it was made 18 months later against a working tree at HEAD.",
+  "corpus_authored_at_commit": "2a408d573b41c2f3ab75edccb31f28768adcf9f2",
+  "corpus_authored_at_commit_meaning": "The commit the corpus working tree was authored on top of: `git log -1` at the time of writing, 'fix: remove C:/ti paths, correct the SYS enum, replace a dead CMock counter', committed 2026-10-01T01:03:14+02:00. 74 commits touch docs/artifacts; the most recent commit under docs/artifacts/corpus is 1a2d898e9db9b7c8c7b3cd92e97f1749b8eb0028 (2026-09-30). Every number in every report in docs/artifacts/reports/ was measured against this tree, not against 308028fb13d046ba29b98886895c2e17937b1437. The two values are deliberately kept in two fields so that neither is read as the other: the corpus content does NOT exist at 308028fb13d046ba29b98886895c2e17937b1437, and the pinned source at 308028fb13d046ba29b98886895c2e17937b1437 contains none of it (`git ls-tree -r 308028fb13d046ba29b98886895c2e17937b1437` has no docs/artifacts entry).",
+  "placeholders_replaced": {
+    "date": "2026-10-01",
+    "replaced": [
+      {
+        "field": "created_at",
+        "was": "{{BUILD_TIMESTAMP}}",
+        "now": "2026-09-08T10:12:59Z",
+        "how_derived": "commit date of the commit that first added this file, 8aaa774edc6b0c67f9af657fe94b76171a981200 (2026-09-08T12:12:59+02:00), normalised to UTC"
+      },
+      {
+        "field": "updated_at",
+        "was": "{{BUILD_TIMESTAMP}}",
+        "now": "2026-10-01T04:27:00Z",
+        "how_derived": "`date -u +%Y-%m-%dT%H:%M:%SZ` at the moment this edit was written"
+      },
+      {
+        "field": "repository_commit",
+        "was": "{{REPOSITORY_COMMIT}}",
+        "now": "308028fb13d046ba29b98886895c2e17937b1437",
+        "how_derived": "sources/source-registry.json .repository_commit, verbatim; the companion field corpus_authored_at_commit carries the commit this corpus was authored at"
+      }
+    ],
+    "why": "Three literal template macros sat in a canonical governance record. They were never rendered, so any reader or tool reading this file received the strings '{{BUILD_TIMESTAMP}}' and '{{REPOSITORY_COMMIT}}' as data."
+  },
+  "disposition_tally_2026_10_01": {
+    "note": "Recorded so a reader does not have to re-derive it. The acceptance gate measures standards_mapping by whether a disposition names an artefact that resolves, which is a different question from whether the status is favourable; see the coverage report.",
+    "aspice_applicable_processes": {
+      "partially_mapped": 21,
+      "gap": 3,
+      "mapped": 4,
+      "not_applicable": 4
+    },
+    "aspice_total_entries": 32,
+    "iso26262_parts": {
+      "part_1_vocabulary": "referenced",
+      "part_2_management": "partially_mapped",
+      "part_3_concept": "partially_mapped",
+      "part_4_system": "partially_mapped",
+      "part_5_hardware": "partially_mapped",
+      "part_6_software": "partially_mapped",
+      "part_7_production": "partially_mapped",
+      "part_8_supporting": "partially_mapped",
+      "part_9_asils": "partially_mapped",
+      "part_10_guidelines": "referenced - methodology guidance",
+      "part_11_semiconductors": "not_applicable",
+      "part_12_motorcycles": "not_applicable"
+    },
+    "iso26262_tally": {
+      "referenced": 1,
+      "partially_mapped": 8,
+      "not_applicable": 2
+    }
   }
 }

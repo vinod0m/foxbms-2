@@ -1,0 +1,176 @@
+{
+  "id": "FB2-VER-TMS-000025",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Test: the end-to-end fault-reaction budget FB2-SYS-SYR-000003 allocates, computed from the waits the pinned source actually configures",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [
+    "FB2-ASM-006",
+    "FB2-ASM-007"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 9 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Authored because FB2-SYS-SYR-000003 had no verification. Its oracle is analytical rather than source-grounded because the decisive comparison is between two numbers that no run of the item would produce together: the interval the requirement allocates and the sum of the waits the configuration applies."
+    }
+  ],
+  "test_type": "qualification",
+  "objective": "Compute whether the reaction chain the pinned source implements can close inside the interval FB2-SYS-SYR-000003 allocates, and record the arithmetic. The oracle is the sum of the configured waits the source actually applies between the stages of opening, taken from the application configuration at the pinned commit, compared against the allocated interval and against the contactor-mechanical figure the parameter registry records. The measure is expected to fail, and recording that it fails - with the arithmetic shown - is the honest result rather than a defect in the measure.",
+  "referenced_requirements": [
+    "FB2-SYS-SYR-000003"
+  ],
+  "referenced_designs": [
+    "FB2-SW-DSN-000003"
+  ],
+  "preconditions": [
+    "The application configuration's waits are the ones the pinned source applies.",
+    "The parameter registry's contactor-mechanical figure is the reference project's declared figure for the mechanical stage."
+  ],
+  "environment": {
+    "hardware": "no hardware; the measure is a computation over the pinned source's configuration and the parameter registry",
+    "software": "not applicable - nothing is executed",
+    "tools": [],
+    "configuration": "BAS-REF-001 parameter registry plus src/app/application/config/bms_cfg.h at the pinned commit"
+  },
+  "stimuli": [
+    {
+      "signal": "Configured wait after opening a precharge contactor",
+      "value": "the configured value in the application configuration",
+      "timing": "single evaluation"
+    },
+    {
+      "signal": "Configured wait after opening a string contactor",
+      "value": "the configured value in the application configuration",
+      "timing": "single evaluation"
+    },
+    {
+      "signal": "Configured short retry time",
+      "value": "the configured value in the application configuration",
+      "timing": "single evaluation"
+    },
+    {
+      "signal": "Configured string-open give-up timeout",
+      "value": "the configured value in the application configuration",
+      "timing": "single evaluation"
+    },
+    {
+      "signal": "Task cycle time the waits are measured against",
+      "value": "the configured task cycle in the application configuration",
+      "timing": "single evaluation"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Read the configured waits and the task cycle time from the application configuration at the pinned commit.",
+      "expected": "Five values are obtained."
+    },
+    {
+      "step": 2,
+      "action": "Compute the earliest time at which a contactor can be confirmed open, given that the waits are counted in whole task cycles.",
+      "expected": "A lower bound is obtained and it is greater than the allocated interval."
+    },
+    {
+      "step": 3,
+      "action": "Add the reference project's declared contactor-mechanical figure to that lower bound.",
+      "expected": "A total reaction time is obtained."
+    },
+    {
+      "step": 4,
+      "action": "Compare the total against the interval the requirement allocates and against the fault-tolerant time interval in the parameter registry.",
+      "expected": "The comparison is recorded, and the over-run is recorded as a number rather than as a verdict."
+    },
+    {
+      "step": 5,
+      "action": "Compute the largest mechanical opening time that would still fit inside the allocated interval.",
+      "expected": "A single boundary figure is recorded."
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "earliest_confirmed_open_lower_bound_ms",
+      "expected_value": "at least the wait after opening a precharge contactor",
+      "tolerance": "at least",
+      "unit": "ms"
+    },
+    {
+      "signal": "reaction_time_exceeds_allocated_interval_end_to_end_reaction_ms",
+      "expected_value": "greater than the allocated interval",
+      "tolerance": "outside",
+      "unit": "ms"
+    },
+    {
+      "signal": "largest_mechanical_time_still_fitting_max_mechanical_time_ms",
+      "expected_value": "recorded",
+      "tolerance": "exact",
+      "unit": "ms"
+    }
+  ],
+  "tolerances": {
+    "earliest_confirmed_open_lower_bound_ms": "at least",
+    "reaction_time_exceeds_allocated_interval_end_to_end_reaction_ms": "outside",
+    "largest_mechanical_time_still_fitting_max_mechanical_time_ms": "exact"
+  },
+  "timing": {
+    "max_execution_time_ms": 1000,
+    "setup_time_ms": 0,
+    "teardown_time_ms": 0
+  },
+  "oracle_basis": "analytical_model",
+  "oracle_detail": {
+    "kind": "analytical_model",
+    "why_this_oracle": "The oracle is a sum of configured values. The waits are read from the source's own configuration headers at the pinned commit, so they are not assumptions about the reference project; the mechanical figure is a parameter, and the measure says so. The comparison is arithmetic, and the arithmetic is the same whether or not the item is ever built, which is what makes it an analytical oracle rather than a measurement.",
+    "what_the_oracle_is_not": "It is not a measured reference: no contactor was opened and no timing was observed. It is not source_grounded: the contactor-mechanical figure is a registry parameter, not a property of the source. It is not a synthetic assumption about behaviour: what is assumed is a number in a parameter table, and the measure names it.",
+    "what_it_still_does_not_prove": "It does not prove the reaction would actually take the computed time: the computation is a lower bound from configured waits, not a worst case, and a real run could be faster or slower. It does not prove the reference project's contactor meets the mechanical figure, because no part of this corpus has measured a contactor. And it does not establish that the requirement is wrong; it establishes that the interval it allocates and the waits the source applies are not reconciled anywhere.",
+    "residual_risk": "The whole computation rests on configured values that the reference project may change. It is therefore a finding about the current configuration, not a permanent verdict, and the measure is written so that re-running it after a change produces a different number rather than a different opinion.",
+    "oracle_kind": "analytical_model"
+  },
+  "cleanup": "None: a computation changes no state.",
+  "regression_selection": "Re-run on every change to the application's configured waits, to the task cycle time, to the contactor-mechanical parameter, or to the interval the requirement allocates. This measure is the corpus's early-warning indicator for a timing-budget contradiction between the requirement and the configuration.",
+  "limitations": [
+    "The expected outcome of this measure is an over-run, and it is stated as such in the expected outcomes. A reader must not read the record as a pass.",
+    "The computation is a lower bound from configured waits, not a worst-case timing analysis, and no stack, no interrupt latency and no scheduler jitter is included.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+    "This is a synthetic measure for the hypothetical reference project. It does not assert that the real foxBMS reaction is late; it asserts that the reference project's allocated interval and the waits the reused configuration applies are not reconciled."
+  ]
+}

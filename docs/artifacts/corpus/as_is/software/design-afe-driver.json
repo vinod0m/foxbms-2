@@ -12,7 +12,7 @@
  ],
  "title": "Design: AFE Driver Architecture (LTC Family)",
  "owner_role": "sw_engineer",
- "origin": "source_observed",
+ "origin": "derived",
  "source_refs": [
   "FB2-SRC-COD-000001",
   "FB2-SRC-COD-000002"
@@ -260,5 +260,6 @@
    "symbol": "LTC_6813_ReadVoltages",
    "status": "implemented"
   }
- ]
+ ],
+ "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchors FB2-SRC-COD-000001 and -000002 previously named AFE_GetCellVoltages and AFE_GetCellTemperatures, neither of which exists; they now name AFE_StartMeasurement (afe.h:124) and AFE_RequestTemperatureRead (afe.h:131), which start a measurement cycle and request a temperature read. The revision history says 'Extracted from AFE driver source', and implementation_mapping asserts LTC_AFE_TriggerMeasurement, LTC_AFE_DMA_RxCallback, LTC_PEC_Calculate and LTC_6813_ReadVoltages are 'implemented'; graft grep finds none of those four names anywhere in the repository, and one of the two named source files (src/app/driver/afe/ltc/common/ltc_afe.c) does not exist. The extraction claim cannot stand, so the record is labelled derived."
 }

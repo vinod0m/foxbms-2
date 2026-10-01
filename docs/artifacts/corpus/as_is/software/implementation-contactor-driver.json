@@ -1,0 +1,231 @@
+{
+  "id": "FB2-SW-IMP-000003",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: Contactor actuation request and auxiliary feedback monitoring (contactor.c)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000008",
+    "FB2-SRC-COD-000013",
+    "FB2-SRC-COD-000027"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the contactor actuation and feedback code is. Makes no claim that it was verified and asserts no ASIL classification."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "partially_mapped",
+      "rationale": "Supplies design-to-code traceability. Verification evidence lives in the FB2-VER-TMS-* measures."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored because no artefact of type implementation existed. The design record FB2-SW-DSN-000003 asserts implementation_mapping symbols CONTACTOR_StateMachine, CONTACTOR_CheckFeedback, SBC_FS8X_SetContactor and DIAG_CBS_Contactor; none of those four names occurs anywhere in the repository. The real symbols are CONT_CheckFeedback, CONT_OpenContactor / CONT_CloseContactor, SPS_RequestContactorState (in the SPS module, not in this file) and DIAG_StringContactorFeedback / DIAG_PrechargeContactorFeedback. This record names only symbols that exist."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source_partial",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_CheckFeedback",
+      "line_range": "125-163",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_OpenContactor",
+      "line_range": "165-182",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_CloseContactor",
+      "line_range": "184-201",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_GetContactorState",
+      "line_range": "246-259",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_GetFeedbackOfAllContactors",
+      "line_range": "86-106",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_OpenAllContactors",
+      "line_range": "236-244",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/engine/diag/cbs/diag_cbs_contactor.c",
+      "symbol": "DIAG_StringContactorFeedback",
+      "line_range": "73-100",
+      "content_hash": "sha256:a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": "FB2-SW-DSN-000003",
+    "design_level": "detailed_design",
+    "relationship": "This module is where FB2-SW-DSN-000003's two lowest-level responsibilities are actually carried, and it is not where the rest of that design is. The mechanism, read from the pinned source: CONT_OpenContactor (contactor.c:165-182) and CONT_CloseContactor (184-201) each scan the static cont_contactorStates array for the matching (stringIndex, type) pair, set currentSet to CONT_SWITCH_OFF or CONT_SWITCH_ON, and call SPS_RequestContactorState(channel, SPS_CHANNEL_OFF/ON). Neither function touches a coil, a register or a timing constant, and neither carries a deadline; the actual actuation is the SPS module's, configured through the FS8x SBC driver whose watchdog refresh path is anchored as FB2-SRC-COD-000027. CONT_GetFeedbackOfAllContactors (86-106) reads each contactor's feedback from the source its configuration names - current feedback through SPS_GetChannelCurrentFeedback, or a normally-open or normally-closed port-expander input through SPS_GetChannelPexFeedback - and, for a contactor configured with no feedback at all, substitutes the set state for the feedback, which is the one case in which the feedback monitor below cannot detect a welded contactor. CONT_CheckFeedback (125-163) then compares currentSet against feedback per contactor and raises DIAG_ID_STRING_PLUS_CONTACTOR_FEEDBACK, DIAG_ID_STRING_MINUS_CONTACTOR_FEEDBACK or DIAG_ID_PRECHARGE_CONTACTOR_FEEDBACK with DIAG_EVENT_OK or DIAG_EVENT_NOT_OK accordingly, which the DIAG callbacks at diag_cbs_contactor.c:73-100 turn into the feedback error flags. So the design's 'auxiliary feedback monitored' and 'weld/stuck detected' responsibilities are realised as a comparison plus a diagnosis event; the OPEN -> PRECHARGE -> CLOSE -> HOLD sequence, the precharge timer, the voltage threshold and the FRAM cycle counter are not in this file.",
+    "partial_coverage": [
+      "The design's state machine is not in this module. contactor.c contains no state machine, no state variable and no transition; its functions are stateless request and query operations over the cont_contactorStates array. The contactor sequencing the design describes is in the application layer's BMS_Trigger (src/app/application/bms/bms.c:898-1691), whose BMS_FSM_STATE_PRECHARGE and BMS_FSM_STATE_OPEN_CONTACTORS substates perform the open-precharge-first and one-at-a-time sequences. That is recorded because the design record attributes the state machine to this driver, and the source places it elsewhere.",
+      "The design's 'Emergency open on FAULT request: < 5 ms from fault request' is not realised here. CONT_OpenContactor carries no timing constant and does not measure elapsed time. The configured waits the sequencing layer applies are BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE = 50 ms, BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR = 10 ms, BMS_FSM_SHORTTIME = 1 ms and BMS_STRING_OPEN_TIMEOUT = 1000 ms, all in src/app/application/config/bms_cfg.h.",
+      "The design's 'Cycle count persisted to FRAM' is not realised here and is not realised anywhere in this module: the string fram does not occur in contactor.c at the pinned commit.",
+      "The design's 'Precharge timeout: configurable (default 5 s)' and 'Voltage threshold: configurable (default 95% pack voltage)' are not present in this module; the timeout constant that does exist is BMS_STRING_OPEN_TIMEOUT = 1000 ms in the application layer, which is neither 5 s nor expressed as a percentage.",
+      "The design's 'Feedback debounce: 10 ms' is not in this module. CONT_CheckFeedback raises a DIAG event every call; any debouncing is the DIAG layer's occurrence counter.",
+      "For a contactor whose feedbackPinType is CONT_HAS_NO_FEEDBACK, CONT_GetFeedbackOfAllContactors sets feedback equal to currentSet, so the comparison in CONT_CheckFeedback is tautological for that contactor and cannot raise a feedback error. The design's weld and stuck-open detection is therefore real only for configured feedback sources, and the record says so rather than leaving 'weld/stuck-open detection' unqualified."
+    ]
+  },
+  "realises_requirements": [
+    {
+      "requirement_id": "FB2-SW-SWR-000003",
+      "how_realised": "The actuation-request and feedback-comparison halves of the requirement's statement are present: CONT_CloseContactor and CONT_OpenContactor issue the request to the SPS channel, and CONT_CheckFeedback compares the requested state against the feedback actually read and raises the matching diagnosis entry on mismatch. The state-machine half of the statement is not in this module.",
+      "figure_provenance": "mixed_read_and_modelled"
+    }
+  ],
+  "anchor_refs": [
+    "FB2-SRC-COD-000008",
+    "FB2-SRC-COD-000013",
+    "FB2-SRC-COD-000027"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "CONT-IMP-REQUEST",
+      "description": "Records the requested contactor state and forwards it to the SPS channel that drives that contactor, keyed on the (string, contactor type) pair.",
+      "kind": "state_transition",
+      "evidence_symbol": "CONT_OpenContactor",
+      "evidence_line_range": "165-182"
+    },
+    {
+      "behaviour_id": "CONT-IMP-FEEDBACK-READ",
+      "description": "Reads each contactor's feedback from the source its configuration selects: current sense, normally-open port-expander input, normally-closed port-expander input, or the set state itself when no feedback is configured.",
+      "kind": "arbitration",
+      "evidence_symbol": "CONT_GetFeedbackOfAllContactors",
+      "evidence_line_range": "86-106"
+    },
+    {
+      "behaviour_id": "CONT-IMP-FEEDBACK-COMPARE",
+      "description": "Compares requested against actual state per contactor and raises the string-plus, string-minus or precharge feedback diagnosis entry with an OK or NOT_OK event.",
+      "kind": "validation",
+      "evidence_symbol": "CONT_CheckFeedback",
+      "evidence_line_range": "125-163"
+    },
+    {
+      "behaviour_id": "CONT-IMP-FEEDBACK-FLAG",
+      "description": "Turns the raised feedback diagnosis event into the per-string feedback error flags the rest of the application reads.",
+      "kind": "diagnostic_raise",
+      "evidence_symbol": "DIAG_StringContactorFeedback",
+      "evidence_line_range": "73-100"
+    },
+    {
+      "behaviour_id": "CONT-IMP-QUERY",
+      "description": "Returns the electrical state of a contactor to its caller by consulting the current set state and the last read feedback.",
+      "kind": "arbitration",
+      "evidence_symbol": "CONT_GetContactorState",
+      "evidence_line_range": "246-259"
+    },
+    {
+      "behaviour_id": "CONT-IMP-OPEN-ALL",
+      "description": "Requests every configured contactor open, which is the call the application layer uses when it abandons normal operation.",
+      "kind": "state_transition",
+      "evidence_symbol": "CONT_OpenAllContactors",
+      "evidence_line_range": "236-244"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "task",
+      "entry_points": [
+        "CONT_CheckFeedback",
+        "CONT_OpenContactor",
+        "CONT_CloseContactor",
+        "CONT_GetContactorState"
+      ],
+      "shared_state": "cont_contactorStates, the static registry array that CONT_OpenContactor / CONT_CloseContactor write (currentSet) and CONT_GetFeedbackOfAllContactors / CONT_CheckFeedback / CONT_GetContactorState read. CONT_CheckFeedback is called from BMS_Trigger (bms.c:918) on every BMS task cycle, in the same task as the sequencing that issues the open and close requests; the module contains no critical section of its own, which is safe only because both writer and reader are in that one task."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the contactor actuation-request and feedback code is, and states explicitly which of FB2-SW-DSN-000003's responsibilities are not in that module. It is not evidence that FB2-SW-SWR-000003 is met: the requirement's 5 ms emergency-open figure and its OPEN -> PRECHARGE -> CLOSE -> HOLD sequence are not established by anything listed here, and the corpus records elsewhere that the real reaction chain is governed by bms_cfg.h waits that are longer than the interval the requirement allocates. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "Each file was read at the pinned commit with 'git show 308028fb:path'; each content_hash is the sha256 of that pinned blob, and for contactor.c and diag_cbs_contactor.c it equals the value the existing anchors FB2-SRC-COD-000008 and FB2-SRC-COD-000013 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin, and each range was confirmed within the file. The contactor.c spans were cross-read against 'graft skeleton src/app/driver/contactor/contactor.c'.",
+    "limitations": [
+      "The DIAG_StringContactorFeedback range 73-100 is the definition span of that callback; the whole file's callbacks extend to line 125, which is where the precharge feedback callback ends. The narrower range is deliberate and covers only the string-feedback callback named here.",
+      "Behaviour was verified by reading the code. Nothing was executed; no contactor was actuated and no feedback was measured, and the corpus authorises neither.",
+      "contactor.c is unmodified between the pin and the working tree, so the same ranges and the same hash hold for the checked-out file."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000008 names CONT_CheckFeedback in contactor.c, FB2-SRC-COD-000013 names the contactor feedback diagnosis callbacks in diag_cbs_contactor.c, FB2-SRC-COD-000027 names FS8x_WD_Refresh in the FS8x SBC driver, which is the watchdog path whose independence FB2-ASM-007 relies on and which this module's actuation requests feed. No new anchor was created. The design record's four asserted implementation symbols do not exist anywhere in the repository and were not carried forward."
+}

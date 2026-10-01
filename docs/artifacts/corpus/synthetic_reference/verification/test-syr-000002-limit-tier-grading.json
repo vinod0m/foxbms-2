@@ -1,0 +1,175 @@
+{
+  "id": "FB2-VER-TMS-000023",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Test: an excursion into each safe-operating-area tier produces the graded reaction the pinned source actually configures, and only the safety-limit tier reaches the fault reaction",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [
+    "FB2-SRC-COD-000004",
+    "FB2-SRC-COD-000009"
+  ],
+  "assumption_refs": [
+    "FB2-ASM-001",
+    "FB2-ASM-005"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 9 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Authored because FB2-SYS-SYR-000002 had no verification. Split from FB2-VER-TMS-000024 because the tier grading is a property of the source that can be falsified against it, whereas the debounce the same requirement demands has no counterpart in the source at all."
+    }
+  ],
+  "test_type": "integration",
+  "objective": "Establish, against the pinned source rather than against the item's output, which of FB2-SYS-SYR-000002's reactions the code can produce. SOA_CheckVoltages compares each string's extremes against three nested tiers per direction - operating, recommended safety and maximum safety - and raises a diagnosis entry per crossed tier; the configuration table then decides what each entry means. Reading the configuration at the pinned commit shows the maximum-safety entries configured as fatal errors with a delay and the two outer tiers configured as a warning and an information entry with the delay discarded, so an excursion into an outer band is recorded and produces no contactor opening. The measure records that grading as the source-grounded part of the requirement.",
+  "referenced_requirements": [
+    "FB2-SYS-SYR-000002"
+  ],
+  "referenced_designs": [
+    "FB2-SW-DSN-000002"
+  ],
+  "preconditions": [
+    "The reference project's limit configuration is loaded from the parameter registry.",
+    "The diagnosis configuration table is the one in the pinned source, which is what determines the grading."
+  ],
+  "environment": {
+    "hardware": "POSIX host (Linux) running the unit-test build, with the SOA module linked and the diagnosis handler stubbed to record every entry raised",
+    "software": "foxBMS 2 application firmware built with the unit-test configuration",
+    "tools": [
+      "GCC",
+      "CMock",
+      "Unity"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml"
+  },
+  "stimuli": [
+    {
+      "signal": "Cell voltage at or above each tier threshold",
+      "value": "one injection per tier: at the operating-limit threshold, between operating and recommended-safety, between recommended-safety and maximum-safety, and above maximum-safety",
+      "timing": "one injection per measurement cycle, tier order from least to most severe"
+    },
+    {
+      "signal": "Diagnosis configuration read-back",
+      "value": "the severity and delay recorded for each of the three over-voltage entries",
+      "timing": "once, before the injections"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Read the configuration table and record the severity and delay configured for each of the three over-voltage diagnosis entries.",
+      "expected": "Three entries are recorded with distinct severities and distinct delay settings."
+    },
+    {
+      "step": 2,
+      "action": "Inject a maximum cell voltage just above the operating-limit threshold and record every diagnosis entry raised.",
+      "expected": "Exactly one entry is raised, and it is the operating-limit one."
+    },
+    {
+      "step": 3,
+      "action": "Inject a maximum cell voltage between the recommended-safety and maximum-safety thresholds.",
+      "expected": "Two entries are raised, and the maximum-safety entry is not among them."
+    },
+    {
+      "step": 4,
+      "action": "Inject a maximum cell voltage above the maximum-safety threshold.",
+      "expected": "Three entries are raised, including the maximum-safety one, which is the entry configured as a fatal error."
+    },
+    {
+      "step": 5,
+      "action": "Return the voltage below the operating-limit threshold and record the entries again.",
+      "expected": "The entries are cleared with the clear event rather than left latched."
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "entries_raised_at_operating_limit",
+      "expected_value": "1",
+      "tolerance": "exact",
+      "unit": "entries"
+    },
+    {
+      "signal": "entries_raised_below_maximum_safety",
+      "expected_value": "2",
+      "tolerance": "exact",
+      "unit": "entries"
+    },
+    {
+      "signal": "entries_raised_at_maximum_safety",
+      "expected_value": "3",
+      "tolerance": "exact",
+      "unit": "entries"
+    },
+    {
+      "signal": "tiers_configured_as_fatal_error",
+      "expected_value": "1",
+      "tolerance": "exact",
+      "unit": "tiers"
+    }
+  ],
+  "tolerances": {
+    "entries_raised_at_operating_limit": "exact",
+    "entries_raised_below_maximum_safety": "exact",
+    "entries_raised_at_maximum_safety": "exact",
+    "tiers_configured_as_fatal_error": "exact"
+  },
+  "timing": {
+    "max_execution_time_ms": 60000,
+    "setup_time_ms": 30000,
+    "teardown_time_ms": 15000
+  },
+  "oracle_basis": "source_grounded",
+  "oracle_detail": {
+    "kind": "source_grounded",
+    "why_this_oracle": "The oracle is the grading the pinned configuration states, read from diag_cfg.c at the pinned commit and from the nested comparison structure of SOA_CheckVoltages. FB2-SYS-SYR-000002 requires the item to distinguish a recoverable degradation from a limit violation, and whether the source can make that distinction at all is a question about the configuration, not about a run: a configuration in which every tier were fatal could not distinguish anything, and the source's is not that.",
+    "what_the_oracle_is_not": "It is not a measured reference: no configuration was read out of a running system. It is not an analytical model: no arithmetic model of the reaction chain was computed. It is not a synthetic assumption: the grading is a property of the configuration table that exists.",
+    "what_it_still_does_not_prove": "It does not prove the reference project's degraded mode is reached from the outer tiers. It shows the outer tiers do not open contactors; whether the reference project does anything else with them is a separate question this oracle does not answer. It also says nothing about timing, which is the criterion covered by FB2-VER-TMS-000025.",
+    "residual_risk": "A source-grounded oracle here is only as good as the read of the configuration table. The table is generated from the configuration headers, and a mismatch between the header and the table would not be caught by reading the table alone.",
+    "oracle_kind": "source_grounded"
+  },
+  "cleanup": "Clear the injected states, restore the stubbed diagnosis handler, and re-read the configuration table to confirm it is unchanged.",
+  "regression_selection": "Re-run on every change to diag_cfg.c, to the diagnosis severity enumeration, to the SOA tier thresholds, or to the SOA comparison structure. Also re-run on any change to the fault-reaction aggregation, because this measure establishes the grading the aggregation then acts on.",
+  "limitations": [
+    "This measure verifies the reaction's grading, not its timing and not its debounce. Those are separate measures with separate oracles and this one must not be read as covering them.",
+    "It does not establish that the outer tiers constitute the reference project's degraded mode; it establishes only that they do not reach the fault reaction in this configuration.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+    "This is a synthetic measure for the hypothetical reference project."
+  ]
+}

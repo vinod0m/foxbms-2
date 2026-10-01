@@ -8,7 +8,7 @@
 
 > Structural negative-testing results only. Nothing here asserts ISO 26262
 > conformity, ASIL capability, ASPICE capability level, certification, human
-> approval or tool qualification. All 222 indexed records are
+> approval or tool qualification. All **263** indexed records are
 > `human_approval_status: pending` and `production_authorized: false`.
 >
 > Every number is from a live `corpus.py scenario-test` run on 2026-09-29.

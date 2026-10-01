@@ -1,0 +1,165 @@
+{
+  "id": "FB2-VER-TMS-000024",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Test: the debounce and the degraded-to-fault boundary FB2-SYS-SYR-000002 demands, against an explicitly labelled synthetic assumption",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [
+    "FB2-SRC-COD-000004"
+  ],
+  "assumption_refs": [
+    "FB2-ASM-001",
+    "FB2-ASM-005"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 9 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Authored because FB2-SYS-SYR-000002 had no verification and because its debounce criterion is exactly the criterion the corpus's own FB2-SAF-FSR-000002 fault_reaction field records as unimplemented in the source. Split from FB2-VER-TMS-000023 so that the part of the requirement with a source-grounded oracle and the part with only an assumed one are never verified by the same record."
+    }
+  ],
+  "test_type": "unit",
+  "objective": "Verify the two parts of FB2-SYS-SYR-000002 that have no counterpart in the pinned source and can therefore only be judged against a stated assumption: that a classification requires two consecutive violations within 100 ms, and that a numerical or named rule separates the degraded reaction from the fault reaction. The oracle is declared a synthetic assumption and the assumption is stated in the record rather than hidden in a fixture: the debounce the reference project specifies is the debounce it would have to build, and the boundary value would have to be declared before it could be tested. The measure's value is that it makes the absence concrete - the source implements no SOA debounce at all, and the diagnosis layer's occurrence counter is a different mechanism with different parameters, so the requirement's debounce criterion is not merely untested here, it is unimplemented in the code the reference project would reuse.",
+  "referenced_requirements": [
+    "FB2-SYS-SYR-000002"
+  ],
+  "referenced_designs": [
+    "FB2-SW-DSN-000002"
+  ],
+  "preconditions": [
+    "The assumption about the reference project's debounce behaviour is stated in this record and is not derived from any observation.",
+    "The degraded-to-fault boundary is stated as a value to be declared, not as a value that exists."
+  ],
+  "environment": {
+    "hardware": "no hardware and no software execution; the measure is a specification review of a requirement against an absence in the source",
+    "software": "not applicable - nothing is executed",
+    "tools": [],
+    "configuration": "BAS-REF-001 parameter registry and the pinned source's SOA module and diagnosis configuration"
+  },
+  "stimuli": [
+    {
+      "signal": "Consecutive violation sequence",
+      "value": "a modelled sequence of 1, then 2, consecutive violations inside and outside a 100 ms window",
+      "timing": "synthetic sequence, not derived from a run"
+    },
+    {
+      "signal": "Declared degraded-to-fault boundary",
+      "value": "a value the reference project would have to state before it could be tested",
+      "timing": "not applicable"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Search the pinned SOA module for any counter, debounce or consecutive-violation state.",
+      "expected": "No such state is found, which is recorded as the condition the measure exists to make visible."
+    },
+    {
+      "step": 2,
+      "action": "Read the diagnosis configuration's occurrence threshold and delay for the maximum-safety over-voltage entry and compare them with the requirement's two-in-100-ms debounce.",
+      "expected": "The two mechanisms are recorded side by side and shown not to be the same: different layer, different granularity, different parameters."
+    },
+    {
+      "step": 3,
+      "action": "State, against the assumption this record declares, the classification outcome for a sequence of one violation, of two violations inside the window, and of two violations outside it.",
+      "expected": "Three outcomes are stated, and the second one depends entirely on the assumption rather than on the source."
+    },
+    {
+      "step": 4,
+      "action": "State what the degraded-to-fault boundary must be before this criterion can be verified at all.",
+      "expected": "A single declared value or named rule is required, and its absence is recorded as the reason the criterion is unverifiable rather than as a pass."
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "soa_debounce_state_found_in_source",
+      "expected_value": "0",
+      "tolerance": "exact",
+      "unit": "occurrences"
+    },
+    {
+      "signal": "consecutive_violations_required_by_requirement",
+      "expected_value": "2",
+      "tolerance": "exact",
+      "unit": "violations"
+    },
+    {
+      "signal": "verdict_depends_on_declared_assumption_classification_outcome_is_assumption_dependent",
+      "expected_value": "true",
+      "tolerance": "exact",
+      "unit": "bool"
+    },
+    {
+      "signal": "degraded_to_fault_boundary_declared_declared_boundary_value",
+      "expected_value": "not_declared",
+      "tolerance": "exact",
+      "unit": "n/a"
+    }
+  ],
+  "tolerances": {
+    "soa_debounce_state_found_in_source": "exact",
+    "consecutive_violations_required_by_requirement": "exact",
+    "verdict_depends_on_declared_assumption_classification_outcome_is_assumption_dependent": "exact",
+    "degraded_to_fault_boundary_declared_declared_boundary_value": "exact"
+  },
+  "timing": {
+    "max_execution_time_ms": 1000,
+    "setup_time_ms": 0,
+    "teardown_time_ms": 0
+  },
+  "oracle_basis": "synthetic_assumption",
+  "oracle_detail": {
+    "kind": "synthetic_assumption",
+    "why_this_oracle": "The oracle is an assumption this record states outright: that the reference project, once built, would count consecutive violations per cell and classify only on the second one inside a 100 ms window. The expected outcomes follow from that stated assumption and from nothing else. No measurement, no model and no source property is being appealed to, which is precisely why the record names this kind rather than borrowing a stronger-sounding one.",
+    "what_the_oracle_is_not": "It is not source_grounded: the pinned source contains no debounce, so nothing about the classification outcome can be read off it. It is not an analytical model: no model of the counter's timing was computed. It is not a measured reference: nothing was measured.",
+    "what_it_still_does_not_prove": "It does not prove the reference project can implement the debounce without introducing a new failure mode, and it does not prove the diagnosis layer's occurrence counter cannot be configured to behave equivalently - which, if it could, would make the requirement satisfiable without new code and would make the proposed counter in FB2-SW-IMP-000002 unnecessary. That question is open and is recorded as open.",
+    "residual_risk": "An assumption-labelled oracle can only ever confirm that the requirement is internally consistent with the assumed behaviour. It cannot detect that the assumption is the wrong shape of behaviour, which is the failure mode that matters most here.",
+    "oracle_kind": "synthetic_assumption"
+  },
+  "cleanup": "None: nothing is executed and no state is changed.",
+  "regression_selection": "Re-run when the requirement's debounce parameters change, when the reference project's debounce implementation exists, and whenever the diagnosis layer's occurrence-threshold mechanism is reconfigured - because a configuration change there could make the requirement satisfiable without any new code and would invalidate the premise of this measure.",
+  "limitations": [
+    "This measure's oracle is an assumption this record declares. A pass here means the requirement is consistent with the assumed behaviour, and means nothing about the real product or about whether the assumption is the right one.",
+    "The debounce criterion is unimplemented in the pinned source, so this criterion is not merely unverified - it is unsatisfied by the code the reference project would reuse.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+    "This is a synthetic measure for the hypothetical reference project."
+  ]
+}

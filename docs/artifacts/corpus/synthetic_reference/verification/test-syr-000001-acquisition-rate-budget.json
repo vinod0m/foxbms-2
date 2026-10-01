@@ -1,0 +1,160 @@
+{
+  "id": "FB2-VER-TMS-000022",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Test: the configured measurement period yields at least the acquisition rate FB2-SYS-SYR-000001 requires, computed rather than measured",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [
+    "FB2-ASM-004"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 9 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Authored because FB2-SYS-SYR-000001 had no verification. Split from FB2-VER-TMS-000021 because the rate criterion has a different oracle kind from the integrity criterion, and master prompt section 11 requires that a source-grounded oracle, an analytical model, a synthetic assumption and a measured reference be distinguishable. Merging them would have let a passing integrity check imply a passing rate check."
+    }
+  ],
+  "test_type": "qualification",
+  "objective": "Compute whether the reference project's configured measurement period meets the acquisition-rate criterion of FB2-SYS-SYR-000001, and record the arithmetic rather than an observation. The criterion is at least 20 acquisitions per second in every monitoring mode; the parameter registry records the acquisition period as 50 ms (FB2-PRM-000003); 1/0.050 s is 20 per second exactly, so the criterion is met with zero margin at the configured value and fails for any period longer than 50 ms. The measure exists because the criterion's figure is a modelled parameter and not a figure any code or measurement in this corpus establishes, which is a different kind of claim from the integrity criterion and needs a different oracle.",
+  "referenced_requirements": [
+    "FB2-SYS-SYR-000001"
+  ],
+  "referenced_designs": [
+    "FB2-SW-DSN-000001"
+  ],
+  "preconditions": [
+    "The parameter registry entry for the acquisition period is the authoritative configured value for the reference project.",
+    "The measurement is a computation over that value, not a run."
+  ],
+  "environment": {
+    "hardware": "no hardware; the measure is a computation over the parameter registry and the source's task configuration",
+    "software": "not applicable - no software is executed",
+    "tools": [],
+    "configuration": "BAS-REF-001 parameter registry plus the application task configuration in the pinned source"
+  },
+  "stimuli": [
+    {
+      "signal": "configured acquisition period",
+      "value": "the registry value for the AFE acquisition period",
+      "timing": "single evaluation"
+    },
+    {
+      "signal": "task period actually configured for the AFE-triggering task",
+      "value": "the configured task cycle time in the pinned source",
+      "timing": "single evaluation"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Read the configured acquisition period from the parameter registry.",
+      "expected": "A single period value is obtained, in milliseconds."
+    },
+    {
+      "step": 2,
+      "action": "Read the configured task cycle time for the task that triggers the measurement from the pinned source.",
+      "expected": "A single task cycle value is obtained, in milliseconds."
+    },
+    {
+      "step": 3,
+      "action": "Compute the acquisitions per second implied by each value as 1000 divided by the period.",
+      "expected": "Two rates are produced and compared with each other."
+    },
+    {
+      "step": 4,
+      "action": "Compare the smaller rate against the requirement's threshold and record the margin.",
+      "expected": "The comparison and the margin are recorded, including that the margin is zero at the registry value."
+    },
+    {
+      "step": 5,
+      "action": "Compute the longest period that would still satisfy the criterion.",
+      "expected": "A single boundary period is recorded, being the period at which the rate equals exactly the threshold."
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "acquisitions_per_second_at_registry_period",
+      "expected_value": "20",
+      "tolerance": "at least",
+      "unit": "Hz"
+    },
+    {
+      "signal": "margin_above_requirement",
+      "expected_value": "0",
+      "tolerance": "at least",
+      "unit": "Hz"
+    },
+    {
+      "signal": "longest_period_still_meeting_criterion",
+      "expected_value": "50",
+      "tolerance": "at most",
+      "unit": "ms"
+    }
+  ],
+  "tolerances": {
+    "acquisitions_per_second_at_registry_period": "at least",
+    "margin_above_requirement": "at least",
+    "longest_period_still_meeting_criterion": "at most"
+  },
+  "timing": {
+    "max_execution_time_ms": 1000,
+    "setup_time_ms": 0,
+    "teardown_time_ms": 0
+  },
+  "oracle_basis": "analytical_model",
+  "oracle_detail": {
+    "kind": "analytical_model",
+    "why_this_oracle": "The oracle is the arithmetic of the requirement itself. FB2-SYS-SYR-000001 asks for at least 20 acquisitions per second; the reference project records a 50 ms acquisition period; 1000/50 is 20. No item needs to run for the comparison to have a verdict, and the verdict is sensitive to exactly one input, which is what makes recording that input the substantive part of the measure.",
+    "what_the_oracle_is_not": "It is not a measured reference: no measurement cycle was counted. It is not source_grounded: the 50 ms figure is a registry parameter, not something read out of the pinned source's code. It is not a synthetic assumption in the sense of an assumed behaviour: the assumption is about a configuration value, and it is recorded as a parameter rather than asserted as a fact about code.",
+    "what_it_still_does_not_prove": "It does not prove that the reference project can achieve that period. Meeting a rate needs the task to be schedulable at that period and the acquisition to complete within it, and neither is established here. It also says nothing about jitter, which a zero-margin rate makes relevant: at exactly the threshold there is no allowance for a late cycle.",
+    "residual_risk": "The whole verdict turns on one authored parameter. If the reference project's real period were 55 ms, the criterion would fail and every conclusion downstream of the rate would change.",
+    "oracle_kind": "analytical_model"
+  },
+  "cleanup": "None: no state is changed by a computation.",
+  "regression_selection": "Re-run whenever the acquisition-period parameter changes, whenever the AFE-triggering task's cycle time changes, and whenever the requirement's rate threshold changes. Also re-run on any change that alters acquisition cost, because a rate that was achievable at the current cost may not remain so.",
+  "limitations": [
+    "The rate criterion is verified by computation only. No cycle was counted and no jitter was observed.",
+    "The verdict is zero-margin at the registry value, which is reported as a finding in its own right rather than presented as a pass with headroom.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked' because the measure's own arithmetic has not been independently reproduced by a second reader.",
+    "This is a synthetic measure for the hypothetical reference project. It asserts nothing about the real product's achievable acquisition rate."
+  ]
+}

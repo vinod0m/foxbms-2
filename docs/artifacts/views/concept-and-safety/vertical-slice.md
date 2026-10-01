@@ -1,6 +1,6 @@
 # Concept and safety — cell voltage vertical slice (generated view)
 
-Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
+Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
 
 ## Provenance and status of this file
 
@@ -29,7 +29,7 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-SAF-HAZ-000001 (as_is) — Cell Overvoltage / Undervoltage Hazard
 
-- type: `hazard` | revision: `1` | lifecycle: `reviewed`
+- type: `hazard` | revision: `2` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 
 ### FB2-SAF-HAZ-000001 (synthetic_reference) — Cell Overvoltage / Undervoltage Hazard
@@ -51,8 +51,8 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-SAF-FSR-000001 (as_is) — FSR: Cell Voltage Acquisition and Validation
 
-- type: `requirement` | revision: `2` | lifecycle: `reviewed`
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- type: `requirement` | revision: `3` | lifecycle: `reviewed`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall acquire all cell voltages from AFE slaves at a minimum rate of 20 Hz with PEC/CRC validation, and publish validated data to the database within 25 ms of acquisition trigger.
 
 ### FB2-SAF-FSR-000001 (synthetic_reference) — FSR: Cell Voltage Acquisition and Validation
@@ -63,8 +63,8 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-SAF-FSR-000002 (as_is) — FSR: SOA Voltage Limit Monitoring with Debounce
 
-- type: `requirement` | revision: `2` | lifecycle: `reviewed`
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- type: `requirement` | revision: `3` | lifecycle: `reviewed`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.
 
 ### FB2-SAF-FSR-000002 (synthetic_reference) — FSR: SOA Voltage Limit Monitoring with Debounce
@@ -75,8 +75,8 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-SAF-FSR-000003 (as_is) — FSR: Contactor Opening on SOA Violation
 
-- type: `requirement` | revision: `2` | lifecycle: `reviewed`
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- type: `requirement` | revision: `3` | lifecycle: `reviewed`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.
 
 ### FB2-SAF-FSR-000003 (synthetic_reference) — FSR: Contactor Opening on SOA Violation
@@ -93,8 +93,8 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-HW-TSR-000001 (as_is) — TSR: AFE Cell Voltage Measurement Accuracy
 
-- type: `requirement` | revision: `1` | lifecycle: `reviewed`
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- type: `requirement` | revision: `2` | lifecycle: `reviewed`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE shall measure cell voltages with ±1.5 mV accuracy (including calibration) over -40°C to +85°C for 2.5V-4.2V range.
 
 ### FB2-HW-TSR-000001 (synthetic_reference) — TSR: AFE Cell Voltage Measurement Accuracy
@@ -105,8 +105,8 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-SW-SWR-000001 (as_is) — SWR: AFE Driver - Cell Voltage Acquisition
 
-- type: `requirement` | revision: `1` | lifecycle: `reviewed`
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- type: `requirement` | revision: `2` | lifecycle: `reviewed`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE driver shall trigger SPI/DMA acquisition of all cell voltages at 20 Hz, validate PEC/CRC, and publish to database within 5 ms of acquisition complete.
 
 ### FB2-SW-SWR-000001 (synthetic_reference) — SWR: AFE Driver - Cell Voltage Acquisition
@@ -118,7 +118,7 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 ### FB2-SW-DSN-000001 (as_is) — Design: AFE Driver Architecture (LTC Family)
 
 - type: `design` | revision: `1` | lifecycle: `reviewed`
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 
 ### FB2-SW-DSN-000001 (synthetic_reference) — Design: AFE Driver Architecture (LTC Family)
 
@@ -142,12 +142,12 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-VER-EXE-000001 (synthetic_reference) — Execution: FB2-VER-TMS-000001 (synthetic_fixture)
 
-- type: `execution` | revision: `1` | lifecycle: `reviewed`
+- type: `execution` | revision: `2` | lifecycle: `reviewed`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 
 ### FB2-REV-000001 (as_is) — Review: Cell Voltage Protection Vertical Slice
 
-- type: `review` | revision: `1` | lifecycle: `reviewed`
+- type: `review` | revision: `2` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 
 ### Chain diagram

@@ -1,0 +1,198 @@
+{
+  "id": "FB2-SW-IMP-000009",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: Cross-cutting application runtime services - interrupt masking, privilege elevation and datatype/bit-field utilities (main/include/fassert.h, fsystem.h, general.h)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000047",
+    "FB2-SRC-COD-000048",
+    "FB2-SRC-COD-000049",
+    "FB2-SRC-COD-000050",
+    "FB2-SRC-COD-000051"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 8 (programming guidelines for the language) and Clause 9 (implementation-level items these headers exist to support)",
+      "status": "partially_mapped",
+      "rationale": "These headers carry the assertion macro, the privilege transition and the datatype utilities the rest of the application is written against. This record states what they are; it does not assert that using them is compliant with any coding guideline."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "gap",
+      "rationale": "There is no software design artefact for the cross-cutting runtime headers in this profile. The gap is declared rather than closed by attaching them to an unrelated design."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored because no artefact of type implementation existed and the as_is corpus anchors these three application headers through five source anchors and five deviations (FB2-SW-DEV-000017, -000018, -000019, -000020, -000021), with no design artefact covering them."
+    }
+  ],
+  "implementation_kind": "cross_cutting_header",
+  "implementation_status": "in_source",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/main/include/fassert.h",
+      "symbol": "FAS_DisableInterrupts",
+      "line_range": "97-120",
+      "content_hash": "sha256:bb6b152030bf7fe0fb86397bfb085a613d2008d9598b99e3106abb9fe00478a9",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/main/include/fsystem.h",
+      "symbol": "FSYS_RaisePrivilege",
+      "line_range": "66-119",
+      "content_hash": "sha256:6010244017c7d1ea6fed94ac49b689392894bd4438296c3cc46ddc0882468180",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/main/include/general.h",
+      "symbol": "GEN_REPEAT_Ux",
+      "line_range": "212-214",
+      "content_hash": "sha256:a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+      "symbol_role": "macro_definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/main/include/general.h",
+      "symbol": "GEN_STRIP",
+      "line_range": "248-255",
+      "content_hash": "sha256:a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+      "symbol_role": "macro_definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/main/include/general.h",
+      "symbol": "FAS_STATIC_ASSERT",
+      "line_range": "94-102",
+      "content_hash": "sha256:a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+      "symbol_role": "macro_definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": null,
+    "design_level": null,
+    "relationship": "No design artefact in the as_is profile describes these headers, so there is no design for this element to implement and no implements link is asserted. What they provide, read from the pinned source: FAS_DisableInterrupts (fassert.h:97-120) is the assertion-failure path's interrupt masking, which is where deviation FB2-SW-DEV-000017 records the use of a supervisor-call alias for the interrupt-disable instruction. FSYS_RaisePrivilege (fsystem.h:66-119) is the privilege transition the application uses before writing peripheral or DMA registers, and it is the same aliasing pattern deviation FB2-SW-DEV-000018 records. general.h supplies three utilities: FAS_STATIC_ASSERT (94-102), the compile-time datatype and size invariant check that the rest of the corpus uses to state its own register and datatype assumptions, and whose own construction is the subject of deviation FB2-SW-DEV-000019; GEN_REPEAT_Ux (212-214), a macro that repeats a token a fixed number of times, the subject of deviation FB2-SW-DEV-000020; and GEN_STRIP (248-255), a macro that strips the parentheses from an expression's outer wrapper, the subject of deviation FB2-SW-DEV-000021. So this element is the runtime substrate every other implementation in this profile is written against: the assertion behaviour, the privilege model and the compile-time utilities.",
+    "design_gap_reason": "The as_is profile contains no software design artefact for the cross-cutting runtime headers. Its three design records each describe one functional module - the AFE driver, the SOA module and the contactor driver - and none of them describes the assertion, privilege or utility substrate those modules are written against. Deviations FB2-SW-DEV-000017 through -000021 each record these headers as gap_no_design_artifact_in_profile. Attaching them to a functional design would assert a design scope those records do not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13."
+  },
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers these headers. They are substrate rather than delivered function: the assertion macro, the privilege transition and the compile-time utilities constrain how every other requirement is implemented, but no requirement states what they must do. realises_requirements is empty rather than populated with a requirement this code does not serve, and the fact that these headers are unallocated is itself a traceability finding this record makes visible.",
+  "anchor_refs": [
+    "FB2-SRC-COD-000047",
+    "FB2-SRC-COD-000048",
+    "FB2-SRC-COD-000049",
+    "FB2-SRC-COD-000050",
+    "FB2-SRC-COD-000051"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "GEN-IMP-ASSERT-MASK",
+      "description": "Masks interrupts on the assertion-failure path, through a supervisor-call alias rather than a direct privileged instruction.",
+      "kind": "startup",
+      "evidence_symbol": "FAS_DisableInterrupts",
+      "evidence_line_range": "97-120"
+    },
+    {
+      "behaviour_id": "GEN-IMP-PRIVILEGE",
+      "description": "Raises execution privilege for the caller so peripheral and DMA registers become writable, and provides the matching switch back to user mode.",
+      "kind": "privilege_transition",
+      "evidence_symbol": "FSYS_RaisePrivilege",
+      "evidence_line_range": "66-119"
+    },
+    {
+      "behaviour_id": "GEN-IMP-STATIC-ASSERT",
+      "description": "Compile-time assertion of datatype and size invariants, which is how the rest of the source states assumptions about widths and signedness without a runtime check.",
+      "kind": "integrity_check",
+      "evidence_symbol": "FAS_STATIC_ASSERT",
+      "evidence_line_range": "94-102"
+    },
+    {
+      "behaviour_id": "GEN-IMP-REPEAT",
+      "description": "Repeats a token a fixed number of times, used to build register bit masks and per-channel structures declaratively.",
+      "kind": "conversion",
+      "evidence_symbol": "GEN_REPEAT_Ux",
+      "evidence_line_range": "212-214"
+    },
+    {
+      "behaviour_id": "GEN-IMP-STRIP",
+      "description": "Strips the outer parentheses from an expression so a macro argument can be reused without changing its precedence.",
+      "kind": "conversion",
+      "evidence_symbol": "GEN_STRIP",
+      "evidence_line_range": "248-255"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "call_from_task_and_isr",
+      "entry_points": [
+        "FAS_DisableInterrupts",
+        "FSYS_RaisePrivilege",
+        "FAS_STATIC_ASSERT",
+        "GEN_REPEAT_Ux",
+        "GEN_STRIP"
+      ],
+      "shared_state": "The processor's interrupt-mask state and the current privilege level, both of which are processor-wide rather than per-task. That is why FAS_DisableInterrupts masks globally and why FSYS_RaisePrivilege is used only inside critical sections in its callers, as the I2C driver's use recorded in FB2-SW-IMP-000005 shows. The three general.h macros are compile-time only and have no run-time context at all."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the cross-cutting runtime headers are and what they provide. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met, and the five in-source MISRA deviations these headers carry are recorded as deviations, not as evidence of an acceptable position on any coding guideline. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "Each of the three headers was read at the pinned commit with 'git show 308028fb:path'; each content_hash is that pinned blob's sha256 and each equals the value the corresponding existing anchors FB2-SRC-COD-000047 through -000051 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file.",
+    "limitations": [
+      "FAS_STATIC_ASSERT is listed at general.h lines 94-102, the range anchor FB2-SRC-COD-000049 records for the datatype-invariant assertions. The macro is used at many call sites across the source; this location is the macro's definition, not any individual use.",
+      "GEN_REPEAT_Ux and GEN_STRIP are macro definitions. Their expansions were not evaluated and their expansion correctness is not asserted here; what was verified is that the definitions exist at the recorded ranges.",
+      "Behaviour was verified by reading the code. No assertion was triggered, no privilege transition was exercised and no interrupt mask was observed.",
+      "All three headers are unmodified between the pin and the working tree, so the same ranges and hashes hold for the checked-out files."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000047 names FAS_DisableInterrupts in fassert.h, FB2-SRC-COD-000048 names FSYS_RaisePrivilege in fsystem.h, and FB2-SRC-COD-000049, -000050 and -000051 name the FAS_STATIC_ASSERT, GEN_REPEAT_Ux and GEN_STRIP regions of general.h. They are the same five anchors deviations FB2-SW-DEV-000017 through -000021 reference. No new anchor was created."
+}

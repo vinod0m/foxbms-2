@@ -8,46 +8,51 @@
 > ASIL capability, ASPICE capability level, certification, human approval or
 > tool qualification.
 >
-> Guard fields, corpus-wide: every one of the 219 indexed records carries
+> Guard fields, corpus-wide: every one of the **263** indexed records carries
 > `human_approval_status: pending` and `production_authorized: false`. **No human
 > has approved anything in this corpus.**
 >
 > Every number is from a live run of `corpus.py validate` and `corpus.py
-> selftest` on 2026-09-29.
+> selftest` on 2026-10-01.
 
 ## 1. Headline Result
 
-| Measure | Value |
-|---|---|
-| Schema-validated artifact files | 243 |
-| Unique `(profile, id)` records in the index | 219 |
-| Validator findings raised this run | **9** |
-| **`finding` artifacts recording standing conditions** | **30** |
-| **Errors** | **0** |
-| Check categories executed per run | 10 / 10 |
-| Toolchain self-tests | **14 PASS, 0 FAIL** |
-| Mutation scenarios | 20 / 20 detected |
-| Change lifecycles | 3 / 3 structurally complete |
-| Acceptance suite | **PASSED** (8 stages, 10 gate lines, 0 FAIL) |
+| Measure | Value | Which population |
+|---|---|---|
+| Schema-validated artifact files | **286** | `validate`: 263 corpus records + 23 scenario records |
+| Unique `(profile, id)` records in the index | **263** | `load_artifact_index` |
+| Distinct artifact IDs across both profiles | **224** | `automated_review_coverage` denominator |
+| Validator findings raised this run | **4** | provenance observations; **none is an error** |
+| **`finding` artifacts recording standing conditions** | **42** | `artifact_type: finding` |
+| **Errors** | **0** | — |
+| Check categories executed per run | 10 / 10 | declared count of categories |
+| Toolchain self-tests | **48 PASS, 0 FAIL** | — |
+| Mutation scenarios | 20 / 20 detected | executed, each by the rule it declares |
+| Change lifecycles | 3 / 3 structurally complete | 19/19 content checks each |
+| Acceptance suite | **PASSED** (8 stages, 14 gate lines, 0 FAIL) | — |
 
-**9 findings, 0 errors** is the honest validator state: the validators raise 9
-observations and none of them is an integrity error. The acceptance gate reads
-`[PASS] validate`. This figure was **21** before the remediation pass recorded in
-§6. All 12 of the removed observations were false gaps produced by one rule that
-read the wrong endpoint of the `verifies` link (`FB2-REV-FND-000029`); no finding
-was removed by relaxing a check, and the rule that produced them is still in
-place and still fires — §3 Family A records the correction and the two remaining
-conditions are the ones that are genuinely open.
+**4 findings, 0 errors** is the honest validator state: the validators raise 4
+observations and none of them is an integrity error. All four are provenance
+observations — three anchors whose Altium design files live in the external
+`foxBMS2_hw` repository and cannot be hashed from here, and four anchors whose
+symbol is prose rather than a plain identifier, so their occurrence is not
+machine-verifiable. The acceptance gate reads `[PASS] validate`.
 
-The **30** figure is a different thing and is not a discrepancy. It counts the
+That figure was **21** before the remediation pass in §6, and **9** at
+`CORR-COV-015`. It fell because one rule that read the wrong endpoint of the
+`verifies` link was producing false gaps (`FB2-REV-FND-000029`), and because the
+provenance workstream repaired the anchor set. **No finding was removed by
+relaxing a check**, and the `verifies`-direction rule is still in place and still
+fires.
+
+The **42** figure is a different thing and is not a discrepancy. It counts the
 first-class `finding` records under `reviews/findings/`, which transcribe and
 disposition standing conditions so they are legible rather than buried in
 validator output. The counts do not correspond one to one and never did: a single
 record can transcribe several conditions, one record can be a pure rule artefact
 that no longer produces validator output, and one record (`FB2-REV-FND-000022`)
 records a defect outside the corpus write boundary that the validator cannot see
-(§4.4). `FB2-REV-FND-000030` was added by the remediation pass: it records three
-declared-forward references to work products the corpus has never authored.
+(§4.4). By severity: **32 `medium`, 9 `high`, 1 `low`, 0 `critical`.**
 
 ## 2. The 10 Check Categories
 
@@ -57,8 +62,8 @@ declared-forward references to work products the corpus has never authored.
 | # | Category | What it enforces | Result |
 |---|---|---|---|
 | 1 | JSON parseability | every corpus/review/scenario file parses | pass |
-| 2 | Schema validation | every record validates against its type schema | pass, 243 files |
-| 3 | Link validity | no dangling link; no invalid relation type | pass, 460 links, 0 dangling |
+| 2 | Schema validation | every record validates against its type schema | pass, 26 schemas, 286 files |
+| 3 | Link validity | no dangling link; no invalid relation type | pass, **489 links, 0 dangling** |
 | 4 | Source-reference resolution | every `source_refs` entry resolves to a registry anchor | pass |
 | 5 | Provenance / guard fields | no `production_authorized: true`, no approved artifact | pass, 0 violations this run |
 | 6 | Semantic rules | `execution_kind`/`outcome` enums, FTTI budget arithmetic | pass |
@@ -118,7 +123,7 @@ how the corpus stores those links (review as source, artefact as target) — but
 that storage is the reverse of the direction §13 declares for the relation. That
 is a link-convention gap in the **data**, not a rule defect: it produces no false
 finding today because the rule is consistent with the storage, and correcting it
-would mean rewriting 167 links. It is reported here, not fixed.
+would mean rewriting 229 links. It is reported here, not fixed.
 
 **Honest reading for a reviewer, after the correction:** a safety requirement that
 still raises this finding genuinely has no `verifies` or `validates` link pointing
@@ -219,35 +224,46 @@ corrected on 2026-09-29 (finding revision 3). See §4.4.
 
 ## 4. Structure Defects Found and Reported, Not Hidden
 
-### 4.1 Duplicated review record
+### 4.1 Duplicated review record — **closed**
 
-`FB2-REV-000001` exists in two files with identical content:
+`FB2-REV-000001` previously existed in two files with identical content
+(`corpus/as_is/reviews/records/review-vertical-slice.json` and
+`reviews/records/review-vertical-slice.json`), and the index absorbed the second
+silently because de-duplication happens upstream of the duplicate-detection rule.
+**That duplicate has been removed.** `docs/artifacts/reviews/records/` now holds
+**15 files for 15 review records**, and measured over the corpus **every
+`(profile, id)` pair is unique** — the index collapses nothing.
 
-- `docs/artifacts/corpus/as_is/reviews/records/review-vertical-slice.json`
-- `docs/artifacts/reviews/records/review-vertical-slice.json`
-
-**Effect:** the artifact index de-duplicates on `(profile, id)` and keeps the
-first, so no count is inflated. `validate` counts files, so it reports 154
-artifact files against 153 indexed records — the difference is exactly this
-duplicate.
-
-**Why the validator does not flag it:** duplicate detection is a rule inside the
-validator that raises a finding, and the index de-duplication happens upstream of
-it, so the duplicate is absorbed silently. This is a real gap in the validator,
-not a non-issue.
-
-**Action taken: reported, not deleted.** Removing a file is a corpus owner's
-decision, and doing it unrecorded would be the same class of error this report
-exists to prevent. It is recorded in the final acceptance report §8 and in
-`final-acceptance-report.json` under `reported_defects`.
+The validator gap that let it pass silently is unchanged: duplicate detection
+runs inside the validator while index de-duplication runs upstream of it, so a
+future duplicate would again be absorbed without a finding. That is worth fixing
+in the tool and is outside this workstream's boundary.
 
 ### 4.2 Redundant link registry copy
 
 `corpus/synthetic_reference/traceability/link-registry/synthetic_reference/links-cell-voltage.json`
-holds 51 links that are a strict subset of the 172 in the canonical
+holds 51 links that are a strict subset of the **195** in the canonical
 `traceability/link-registry/synthetic_reference/links-cell-voltage.json`. The
 tool de-duplicates on `(profile, link_id)`, so no count is inflated. Reported,
 not deleted.
+
+**Its sibling is not redundant.** `…/links-concept-lifecycle.json` holds 177
+links and the canonical tree has **no counterpart for it** — those links exist in
+exactly one place in the repository. Describing it as a duplicate would have
+invited deleting 177 real links.
+
+### 4.3 Link revision currency — **open, and larger than any defect above**
+
+Measured over all 489 links: **326 record an endpoint revision that differs from
+the endpoint artefact's current revision, and all 489 carry
+`change_suspect_status: false`.** The `change_suspect_status` field is therefore
+a blanket default, not a derived value, and 109 artefacts have moved past
+revision 1 without any link being marked suspect.
+
+This is recorded as `SUP.11 Traceability Management = partially_mapped` and as
+`FB2-REV-FND-000029`'s subject area. It is not a validator finding because no
+rule checks it — the tool verifies that a link *resolves*, never that its
+recorded revision is *current*.
 
 ### 4.3 Stale feature-inventory summary
 
@@ -296,7 +312,15 @@ and reports passes (§5).
 
 `governance/coverage-plan.json` carried 15 status claims that verification
 against disk contradicted. All 15 are now corrected with a recorded reason and
-evidence. Two landed on a *different* status than the originally reported
+evidence. A **sixteenth** correction, `CORR-COV-016`, was recorded on 2026-10-01:
+the first fifteen read each disposition and asked whether the corpus
+contradicted it, which cannot detect a disposition naming a process that **no
+artefact references at all** — the case for `SWE.3`, which sat at `mapped` with
+zero referencing artefacts. `CORR-COV-016` derives every process's backing set
+from each artefact's own `standards_mappings[].reference` and asks whether those
+records carry the engineering the process defines. It demoted 23 of the 28
+applicable ASPICE processes and 8 of the 10 applicable ISO parts and raised
+nothing. Two landed on a *different* status than the originally reported
 reality suggested, because verification found evidence on both sides; both record
 the divergence explicitly. Every `expected_artifacts` and
 `capability_attributes` list was retained unchanged, and no artifact was
@@ -308,18 +332,18 @@ fabricated to make a status true.
 |---|---|---|---|
 | scope_accounting | 1/1 | 100% | complete, **presence** check |
 | artifact_population | 13/13 | 100% | complete |
-| standards_mapping | 44/44 | 100% | every locked item has a disposition — but 6 processes and 2 ISO parts are `gap` |
-| source_grounding | 80/223 | 36% | 143 records carry no `source_refs`; mostly synthetic, which is expected |
-| traceability_integrity | 460/460 | 100% | 0 dangling, from a link validation re-run for this figure |
-| semantic_consistency_checks | 10/10 | 100% | 0 findings, 0 errors — **declared** count, not a measurement |
-| automated_review_coverage | 144/187 | 77% | 43 unique IDs uncovered |
-| verification_planning | 25/7 | 357% | over-covered; a ratio, not a score |
-| actual_product_evidence | 0/25 | 0% | blocked by policy; no target-hardware member in the enum |
-| synthetic_fixture_coverage | 148/43 | 344% | over-covered |
-| negative_scenario_validation | 20/20 | 100% | **measured** (2026-09-29): 20 scenarios executed, 20 detected by their own declared rule; plus 3/3 change lifecycles executed |
+| standards_mapping | **33/38** | 87% | ASPICE 25/28 + ISO 8/10 have a disposition naming a resolving artefact. **Not a favourability score** — the ASPICE disposition tally is 4 `mapped` / 21 `partially_mapped` / 3 `gap` and no ISO part is `mapped` |
+| source_grounding | **99/263** | 38% | 164 records carry no `source_refs`; mostly synthetic, which is expected |
+| traceability_integrity | **489/489** | 100% | 0 dangling, from a link validation re-run for this figure. Resolution yes; **currency no** — see §4.3 |
+| semantic_consistency_checks | 10/10 | 100% | 4 findings, 0 errors — **declared** count, not a measurement |
+| automated_review_coverage | **144/224** | 64% | **80** distinct IDs uncovered |
+| verification_planning | **33/7** | 471% | over-covered; a ratio, not a score |
+| actual_product_evidence | **0/33** | 0% | blocked by policy; no target-hardware member in the enum |
+| synthetic_fixture_coverage | **173/43** | 402% | over-covered |
+| negative_scenario_validation | 20/20 | 100% | **measured**: 20 scenarios executed, 20 detected by their own declared rule; plus 3/3 change lifecycles executed |
 | export_reproducibility | 1/1 | 100% | manifest present (**presence**); hash stability is measured by gate [6/8] |
-| human_approval | 0/223 | 0% | pending; none performed |
-| production_authorization | 0/223 | 0% | false; by policy |
+| human_approval | **0/263** | 0% | pending; none performed |
+| production_authorization | **0/263** | 0% | false; by policy |
 
 ## 6. Remediation Pass — 7 Record Defects and 1 Rule Defect
 
@@ -348,9 +372,16 @@ records — **not** approved. `human_approval_status` is `pending` on every reco
 named above, `production_authorized` is `false`, and `product_verification_credit`
 is `false`.
 
-**Validator findings: 21 → 9.** All 12 removed observations were the false gaps
-of Family A. The 9 that remain are the 7 `fault_reaction` findings and the 2
-ASIL-justification findings, which are real and open.
+**Validator findings: 21 → 9 → 4.** All 12 removed at the remediation pass were
+the false gaps of Family A. The further fall from 9 to 4 came from the
+provenance workstream repairing the anchor set: three anchors whose Altium design
+files live in the external `foxBMS2_hw` repository now report the limitation
+instead of a mismatch, and the 2 ASIL-justification findings are dispositioned
+against the records themselves. **What remains, and is real:** 3 anchors with
+`hash_status: external_design_file_unverifiable_from_this_repository` and
+`symbol_unverifiable_prose` on 4 anchors whose claim is about a whole module, a
+markdown README, `requirements.txt` or a licence header. None is an integrity
+error, which is why `errors=0`.
 
 **What the pass deliberately did not do.** It did not relax, delete or relabel
 any check. It did not change the FTTI rule, even though that rule reads

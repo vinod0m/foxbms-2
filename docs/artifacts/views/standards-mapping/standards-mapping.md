@@ -1,6 +1,6 @@
 # Standards mapping — ASPICE processes and ISO 26262 parts (generated view)
 
-Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
+Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
 
 ## Provenance and status of this file
 
@@ -29,34 +29,34 @@ Derived from `governance/coverage-plan.json` (`process_inventory`). The disposit
 
 | Process | Name | Applicability | Disposition (as recorded) |
 |---|---|---|---|
-| `SYS.1` | Requirements Elicitation | `applicable` | mapped - the five stakeholder need records FB2-SYS-NED-000001..000005, the four use case records FB2-SYS-UC-000001..000004 and the Part 3 item definition FB2-SAF-ITE-000001 now exist in the synthetic_reference profile. … |
-| `SYS.2` | System Requirements Analysis | `applicable` | mapped - the eight system requirement records FB2-SYS-SYR-000001..000008 now exist in the synthetic_reference profile, each refining a stakeholder need, a use-case obligation or the safety goal and each allocating to ex… |
-| `SYS.3` | System Architectural Design | `applicable` | mapped - HSI authority created; allocation documented |
-| `SYS.4` | System Integration and Integration Test | `applicable` | partially_mapped - integration planning stub FB2-VER-TMS-000007 + blocked execution record FB2-VER-EXE-000007 (outcome blocked, harness not in corpus scope); as_is has implicit integration |
-| `SYS.5` | System Qualification Test | `applicable` | partially_mapped - qualification planning stub FB2-VER-TMS-000008 + blocked execution record FB2-VER-EXE-000008; HIL stub FB2-VER-TMS-000011 + blocked execution FB2-VER-EXE-000011 (no target hardware) |
-| `SWE.1` | Software Requirements Analysis | `applicable` | mapped - synthetic_reference SW requirements created per module; as_is back-inferred |
-| `SWE.2` | Software Architectural Design | `applicable` | mapped - SW architecture documented per module; interfaces specified |
-| `SWE.3` | Software Detailed Design and Unit Construction | `applicable` | mapped - source code inventoried; detailed design extracted; unit tests mapped |
-| `SWE.4` | Software Unit Verification | `applicable` | partially_mapped - unit tests inventoried; as_is TMS-002..005 blocked execution records (upstream CI runs not captured), single host-run unsubstantiated; component stub TMS-010 + blocked EXE-000010 |
-| `SWE.5` | Software Integration and Integration Test | `applicable` | partially_mapped - integration approach documented (database/task model, build system); integration stub FB2-VER-TMS-000007 + blocked execution record FB2-VER-EXE-000007 |
-| `SWE.6` | Software Qualification Test | `applicable` | partially_mapped - qualification planning stub FB2-VER-TMS-000008 + blocked execution record FB2-VER-EXE-000008 (no qualification environment) |
-| `HWE.1` | Hardware Requirements Analysis | `applicable` | mapped - HW requirements derived from design packages; synthetic created |
-| `HWE.2` | Hardware Architectural Design | `applicable` | partially_mapped - design packages inventoried; architecture extracted where readable |
-| `HWE.3` | Hardware Detailed Design | `applicable` | partially_mapped - design packages referenced; detailed analysis limited by CAD format |
-| `HWE.4` | Hardware Integration and Test | `applicable` | gap - synthetic test specs created; as_is lacks explicit HW test records |
-| `VAL.1` | Validation | `applicable` | mapped - the planning stub FB2-VER-TMS-000009 and its blocked execution remain, and four real validation measures are added: FB2-VER-TMS-000012 (no false reaction over a full charge), FB2-VER-TMS-000013 (driver-facing o… |
-| `ACQ.4` | Supplier Monitoring | `applicable` | mapped - supplier inventory created; synthetic monitoring records |
-| `SPL.2` | Release Management | `applicable` | mapped - the three expected artifact families now exist as records rather than being inferred from a version history: the release and configuration identification record FB2-REL-RLS-000001 (identification scheme, config… |
-| `SUP.1` | Quality Assurance | `applicable` | mapped - QA approach documented; synthetic review records |
-| `SUP.8` | Configuration Management | `applicable` | mapped - Git + Waf as CM; synthetic CM records |
-| `SUP.9` | Problem Resolution Management | `applicable` | mapped - GitHub issues as evidence; synthetic problem records |
-| `SUP.10` | Change Request Management | `applicable` | mapped - PR/commit history as evidence; synthetic change lifecycle demos |
-| `SUP.11` | Traceability Management | `applicable` | mapped - corpus implements traceability; matrices generated |
+| `SYS.1` | Requirements Elicitation | `applicable` | partially_mapped - Stakeholder Needs and Use Cases have backing records with real content: FB2-SYS-NED-000001..000005 (5 stakeholder_need records) and FB2-SYS-UC-000001..000004 (4 use_case records), joined by the Part 3… |
+| `SYS.2` | System Requirements Analysis | `applicable` | partially_mapped - System requirements have backing records: FB2-SYS-SYR-000001..000008, each carrying a statement, a rationale, a classification and acceptance criteria, plus the change record FB2-MAN-CHG-000001 and th… |
+| `SYS.3` | System Architectural Design | `applicable` | partially_mapped - Two of the three expected families have backing records. HSI Specification: FB2-SYS-HSI-000001, whose own `design_level` is `interface_specification`, carries the electrical interface (SPI signals wit… |
+| `SYS.4` | System Integration and Integration Test | `applicable` | partially_mapped - Backing records name SYS.4 in their mappings: the test measures FB2-VER-TMS-000001..000008 area and the design record FB2-SYS-HSI-000001. Integration Plan: ABSENT - no integration plan record exists. … |
+| `SYS.5` | System Qualification Test | `applicable` | partially_mapped - Backing records: 15 test measures and 8 execution records carry SYS.5 or SYS.4/SYS.5 in their mappings. Qualification Test Plan: ABSENT. Qualification Test Specification: ABSENT - the measures are one… |
+| `SWE.1` | Software Requirements Analysis | `applicable` | partially_mapped - Software Requirements Specification has backing records with real content: FB2-SW-SWR-000001..000003 in both profiles, each carrying a statement, a rationale, a classification, acceptance criteria wit… |
+| `SWE.2` | Software Architectural Design | `applicable` | partially_mapped - Backing records: FB2-SW-DSN-000001..000003 in both profiles, each with `design_level: architecture`, responsibilities, a decomposition, interfaces with per-signal type, unit, range and rate, a behavio… |
+| `SWE.3` | Software Detailed Design and Unit Construction | `applicable` | gap - NO ARTEFACT REFERENCES SWE.3. Measured over the corpus by extracting every `standards_mappings[].reference` string from every one of the 263 indexed records and testing each string for the token SWE.3: SWE.3 occur… |
+| `SWE.4` | Software Unit Verification | `applicable` | partially_mapped - SW Unit Verification Measures have backing records with real content: FB2-VER-TMS-000001..000005 (as_is) and FB2-VER-TMS-000001..000016 (synthetic_reference) carry structured steps and oracles, and 15… |
+| `SWE.5` | Software Integration and Integration Test | `applicable` | partially_mapped - Backing records: the test measures FB2-VER-TMS-000001..000005 and FB2-VER-TMS-000007, the host-run execution records FB2-VER-EXE-000001..000007, and the change record FB2-MAN-CHG-000001. SW Integratio… |
+| `SWE.6` | Software Qualification Test | `applicable` | partially_mapped - Backing records: FB2-VER-TMS-000008 (the system-qualification stub) and the five network-security qualification measures FB2-VER-TMS-000016..000020, which carry structured steps, oracles and stated or… |
+| `HWE.1` | Hardware Requirements Analysis | `applicable` | partially_mapped - Hardware Requirements Specification has backing records: FB2-HW-TSR-000001..000003 in both profiles and FB2-HW-TSR-000004 in the synthetic_reference profile, each carrying a statement, acceptance crit… |
+| `HWE.2` | Hardware Architectural Design | `applicable` | partially_mapped - Backing records: the seven `requirement` records FB2-HW-TSR-000001..000004 that carry HWE.1, HWE.2 in their mappings. Hardware Architecture: ABSENT - no record describes a hardware architecture. Block… |
+| `HWE.3` | Hardware Detailed Design | `applicable` | gap - NO ARTEFACT REFERENCES HWE.3. Measured the same way as SWE.3: across the 106 distinct `standards_mappings[].reference` strings in the corpus, HWE.3 occurs ZERO times. All four expected families are absent. Schemat… |
+| `HWE.4` | Hardware Integration and Test | `applicable` | gap - NO ARTEFACT REFERENCES HWE.4, measured across all 106 distinct `standards_mappings[].reference` strings. All three expected families are absent: no hardware integration plan, no hardware test specification and no … |
+| `VAL.1` | Validation | `applicable` | partially_mapped - Backing records: the planning stub FB2-VER-TMS-000009 and four real validation measures, FB2-VER-TMS-000012 (no false reaction over a full charge), FB2-VER-TMS-000013 (driver-facing outcome of a genui… |
+| `ACQ.4` | Supplier Monitoring | `applicable` | partially_mapped - Backing records: the supporting process record FB2-SUP-SPL-000001 (9,553 bytes, `aspice_process_id: ACQ.4`) and the post-development record FB2-PRD-EOL-000001. Supplier List: PRESENT as a fictional in… |
+| `SPL.2` | Release Management | `applicable` | partially_mapped - Backing records: the post-development records FB2-REL-RLS-000001 (15,412 bytes), FB2-PRD-CAL-000001 and FB2-PRD-EOL-000001, and the supporting process record FB2-SUP-CHC-000001. Release Plan: PRESENT … |
+| `SUP.1` | Quality Assurance | `applicable` | partially_mapped - Backing records: the supporting process record FB2-SUP-QAP-000001 (10,606 bytes, `aspice_process_id: SUP.1`), the three `review` records and the two `process_improvement` records that name SUP.1 in th… |
+| `SUP.8` | Configuration Management | `applicable` | partially_mapped - Backing records: the supporting process record FB2-SUP-CFM-000001 (9,891 bytes, `aspice_process_id: SUP.8`), the two `change` records and the `requirement` record FB2-HW-TSR-000001 that name SUP.8 in … |
+| `SUP.9` | Problem Resolution Management | `applicable` | partially_mapped - Backing records: 13 `finding` records, each carrying a root cause and a resolution (FB2-REV-FND-000023..000030, -000032, -000039..000042), plus the supporting process record FB2-SUP-PRB-000001 and the… |
+| `SUP.10` | Change Request Management | `applicable` | partially_mapped - Backing records: the three `change` records FB2-MAN-CHG-000001..000003 (35,784 / 40,793 / 32,309 bytes), the supporting process record FB2-SUP-CHC-000001 and the requirement record FB2-SAF-SEC-000005.… |
+| `SUP.11` | Traceability Management | `applicable` | partially_mapped - Backing records: the three `change` records FB2-MAN-CHG-000001..000003, whose `suspect_links`, `required_updates` and `reverification_selection` arrays name FB2-SUP-CHC-000001, SUP.8, SUP.9, SUP.10, S… |
 | `MAN.3` | Project Management | `applicable` | mapped - the project plan FB2-MAN-PLN-000001 carries a six-phase lifecycle model, an eight-package work breakdown with named accountable roles and dated phases, a schedule with a critical path and per-package float, six… |
 | `MAN.5` | Risk Management | `applicable` | mapped - the risk register FB2-MAN-RSK-000001 carries eight entries across schedule, resource, technical, supplier, quality, organisational, compliance and reuse categories, each with an ordinal-pair exposure on a state… |
 | `MAN.6` | Measurement | `applicable` | mapped - the measurement plan FB2-MAN-MSM-000001 adds what the 100 acceptance criteria on requirement records never had: a named population with its exclusions and its known bias, six collection rules with cadence and c… |
 | `PIM.3` | Process Improvement | `applicable` | mapped - three improvement-related records now exist: FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002, each carrying a baseline, a hypothesis with a falsification condition, the change made and an effectiveness evaluation wit… |
-| `REU.2` | Reuse Program Management | `applicable` | mapped - reuse inventory created; assessments for vendor code |
+| `REU.2` | Reuse Program Management | `applicable` | partially_mapped - Backing record: the supporting process record FB2-SUP-RUS-000001 (9,818 bytes, `aspice_process_id: REU.2`). Reuse Strategy: PRESENT as the record's definition and purpose. Reuse Records: PRESENT as a … |
 | `MLE.1` | Machine Learning Requirements Analysis | `not_applicable` | not_applicable - explicit non-applicability artifact created per master prompt Section 3 |
 | `MLE.2` | Machine Learning Architectural Design | `not_applicable` | not_applicable |
 | `MLE.3` | Machine Learning Detailed Design and Training | `not_applicable` | not_applicable |
@@ -69,9 +69,9 @@ Derived from `governance/coverage-plan.json` (`process_inventory`). The disposit
 | processes in inventory | 32 | - |
 | applicable | 28 | 32 |
 | not_applicable | 4 | 32 |
-| disposition starts `mapped` | 20 | 32 |
-| disposition contains `partially_mapped` | 9 | 32 |
-| disposition starts `gap` | 1 | 32 |
+| disposition starts `mapped` | 4 | 32 |
+| disposition contains `partially_mapped` | 21 | 32 |
+| disposition starts `gap` | 3 | 32 |
 
 The four MLE processes are recorded as explicitly `not_applicable` with a rationale. Per the master prompt, non-applicability here is a recorded decision, not an absence.
 
@@ -85,14 +85,14 @@ Derived from `governance/coverage-plan.json` (`iso26262_coverage`).
 | `part_11_semiconductors` | `not_applicable` | foxBMS is a BMS platform, not semiconductor development | APP-ISO-11 |
 | `part_12_motorcycles` | `not_applicable` | foxBMS targets automotive/industrial energy storage, not motorcycle-specific | APP-ISO-12 |
 | `part_1_vocabulary` | referenced | referenced | - |
-| `part_2_management` | mapped | mapped - safety plan, roles, tailoring | - |
-| `part_3_concept` | mapped | mapped - item definition FB2-SAF-ITE-000001, functional safety concept FB2-SAF-FSC-000001 and technical safety concept FB2-SAF-TSC-000001 now exist alongside the pre-existing hazard FB2-SAF-HAZ-000001 and safety goal FB2-SAF-SGO-000001. Th… | - |
-| `part_4_system` | mapped | mapped - the HSI interface authority FB2-SYS-HSI-000001 is joined by eight system requirement records FB2-SYS-SYR-000001..000008, which allocate to the existing FB2-HW-TSR-* and FB2-SW-SWR-* records and are covered in the requirement-to-te… | - |
-| `part_5_hardware` | partially_mapped | partially_mapped - HW requirements, architecture, FMEDA (synthetic) | - |
-| `part_6_software` | partially_mapped | partially_mapped - SW requirements, architecture and detailed design are backed; unit verification is only partially mapped, because SWE.4 is recorded partially_mapped with blocked execution records (CORR-COV-011) | - |
-| `part_7_production` | mapped | mapped - six post-development lifecycle records now exist, one per area the generated view searches: release and configuration identification FB2-REL-RLS-000001, production control and end-of-line test FB2-PRD-EOL-000001 (six named test st… | - |
-| `part_8_supporting` | mapped | mapped - six supporting-process records now exist, each naming its process id explicitly and each carrying a definition, inputs, outputs, an accountable role with its independence stated, at least two acceptance criteria, at least one perf… | - |
-| `part_9_asils` | mapped | mapped - ASIL assignment methodology, safety analyses (FMEA, FTA) | - |
+| `part_2_management` | `partially_mapped` | - | - |
+| `part_3_concept` | `partially_mapped` | - | - |
+| `part_4_system` | `partially_mapped` | - | - |
+| `part_5_hardware` | `partially_mapped` | - | - |
+| `part_6_software` | `partially_mapped` | - | - |
+| `part_7_production` | `partially_mapped` | - | - |
+| `part_8_supporting` | `partially_mapped` | - | - |
+| `part_9_asils` | `partially_mapped` | - | - |
 
 ### Standards lock
 

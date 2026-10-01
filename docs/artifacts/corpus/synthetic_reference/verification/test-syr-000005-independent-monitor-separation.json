@@ -1,0 +1,158 @@
+{
+  "id": "FB2-VER-TMS-000027",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Test: the second-barrier voltage monitor FB2-SYS-SYR-000005 requires is separable from the main chain in every one of the four declared ways",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [
+    "FB2-ASM-008"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 9 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Authored because FB2-SYS-SYR-000005 had no verification. It is a synthetic measure by necessity, and it says so rather than borrowing an oracle kind that would make it look better grounded than it is."
+    }
+  ],
+  "test_type": "qualification",
+  "objective": "Verify FB2-SYS-SYR-000005's four independence criteria - zero processing resources, zero shared supply rails, zero shared communication paths and a stated threshold accuracy - against an explicitly labelled synthetic assumption, because the element the requirement describes does not exist in either profile and cannot be inspected. The assumption is the declared one the corpus already carries for this second barrier: that it is implementable with its own divider, comparator and reference. The measure's substantive output is the separation checklist it enumerates, which is what a design review of the barrier would have to work through, and the explicit statement that no part of it has been verified against anything.",
+  "referenced_requirements": [
+    "FB2-SYS-SYR-000005"
+  ],
+  "referenced_designs": [],
+  "preconditions": [
+    "The assumption that the second barrier is implementable with a separate divider, comparator and reference is the one the corpus already declares for this element, and is adopted here unchanged rather than restated as if it were derived.",
+    "No hardware design package for the barrier exists in this corpus."
+  ],
+  "environment": {
+    "hardware": "no hardware: the element does not exist in either profile, so there is nothing to inspect and nothing to run",
+    "software": "not applicable - nothing is executed",
+    "tools": [],
+    "configuration": "the declared assumption only; there is no configuration to apply"
+  },
+  "stimuli": [
+    {
+      "signal": "Divider and comparator chain",
+      "value": "the barrier's own measurement chain",
+      "timing": "not applicable - no such chain exists in this corpus"
+    },
+    {
+      "signal": "Supply rails",
+      "value": "the rails the barrier draws from",
+      "timing": "not applicable"
+    },
+    {
+      "signal": "Communication paths",
+      "value": "the paths the barrier uses to reach the main microcontroller",
+      "timing": "not applicable"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Enumerate what FB2-SYS-SYR-000005 requires the barrier to be independent of, quoting its own acceptance criteria.",
+      "expected": "Four independence requirements are enumerated: processing, supply, communication and threshold accuracy."
+    },
+    {
+      "step": 2,
+      "action": "For each, state the evidence a verification would need and whether this corpus holds any.",
+      "expected": "Four evidence statements are produced, and each records that the corpus holds none."
+    },
+    {
+      "step": 3,
+      "action": "Record the accuracy figure the requirement allocates and state that no measurement of any divider or comparator exists in this corpus.",
+      "expected": "A single figure is recorded as a declared allocation with no supporting measurement."
+    },
+    {
+      "step": 4,
+      "action": "Record what would have to exist before this requirement could be verified rather than merely stated.",
+      "expected": "A list of concrete missing artefacts is produced."
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "independence_requirements_enumerated",
+      "expected_value": "4",
+      "tolerance": "exact",
+      "unit": "requirements"
+    },
+    {
+      "signal": "independence_requirements_with_evidence_in_corpus",
+      "expected_value": "0",
+      "tolerance": "exact",
+      "unit": "requirements"
+    },
+    {
+      "signal": "accuracy_allocation_measured_threshold_accuracy_mV_measured",
+      "expected_value": "not_measured",
+      "tolerance": "exact",
+      "unit": "mV"
+    }
+  ],
+  "tolerances": {
+    "independence_requirements_enumerated": "exact",
+    "independence_requirements_with_evidence_in_corpus": "exact",
+    "accuracy_allocation_measured_threshold_accuracy_mv_measured": "exact"
+  },
+  "timing": {
+    "max_execution_time_ms": 1000,
+    "setup_time_ms": 0,
+    "teardown_time_ms": 0
+  },
+  "oracle_basis": "synthetic_assumption",
+  "oracle_detail": {
+    "kind": "synthetic_assumption",
+    "why_this_oracle": "The oracle is the corpus's own declared assumption for this second barrier and nothing else. The requirement's independence criteria cannot be checked against code or against hardware, because neither exists here, so the only honest oracle is the assumption the corpus already records, applied to enumerate what a verification would need.",
+    "what_the_oracle_is_not": "It is not source_grounded: no source implements this barrier. It is not an analytical model: no electrical or timing model is computed. It is not a measured reference: nothing was measured.",
+    "what_it_still_does_not_prove": "It does not prove the barrier is implementable. The assumption says it is, and the assumption is recorded in the corpus as an assumption precisely because that has not been established. The corpus's own safety goal record names the absence of a demonstration of this barrier's independence as the largest open assumption in its ASIL allocation, and this measure does not improve on that.",
+    "residual_risk": "An assumption-only measure can confirm the requirement is internally coherent and can never confirm the barrier works. A reader who needs the second question answered must read the paired execution record, which reports blocked.",
+    "oracle_kind": "synthetic_assumption"
+  },
+  "cleanup": "None: nothing is executed and no state is changed.",
+  "regression_selection": "Not a regression measure in its present form, because there is nothing to regress against. Re-run when a hardware design package for the barrier exists, when any measurement of it is taken, or when the declared assumption changes - and in all three cases it must be re-authored rather than merely re-run, because a change in any of them changes its oracle kind.",
+  "limitations": [
+    "Nothing in this measure is evidence about the real foxBMS product, and the real product has never had a hazard analysis and risk assessment.",
+    "No hardware for this barrier exists in this corpus, in either profile. The requirement is a requirement of the hypothetical reference project.",
+    "The oracle is a declared assumption. The measure's output is a checklist and a list of missing artefacts, not a verdict.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'."
+  ]
+}

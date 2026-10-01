@@ -1,0 +1,256 @@
+{
+  "id": "FB2-SW-IMP-000001",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation (reference project): LTC 6813-1 AFE measurement cycle, PEC validation and database publication, with a proposed DMA transfer variant not present in foxBMS 2",
+  "owner_role": "sw_engineer",
+  "origin": "synthetic",
+  "source_refs": [
+    "FB2-SRC-COD-000001",
+    "FB2-SRC-COD-000002",
+    "FB2-SRC-COD-000034",
+    "FB2-SRC-COD-000003"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the code for the hypothetical reference project's AFE path is. Makes no claim that it was verified and asserts no ASIL classification for the real product."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "partially_mapped",
+      "rationale": "Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. The synthetic_reference profile had no artefact of type implementation, so the chain from its three software designs to code was not traversable in that profile either. This record reuses the real, verified source locations rather than describing a hypothetical codebase, and declares the one element the reference project's design needs that the pinned source does not contain as an explicit not_in_source proposal rather than presenting it as implemented."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source_with_deviations",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+      "symbol": "LTC_Trigger",
+      "line_range": "833-2964",
+      "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+      "symbol": "LTC_StartVoltageMeasurement",
+      "line_range": "3678-3711",
+      "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+      "symbol": "LTC_CheckPec",
+      "line_range": "3838-3878",
+      "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+      "symbol": "LTC_SaveRxToVoltageBuffer",
+      "line_range": "3064-3150",
+      "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/common/ltc_pec.c",
+      "symbol": "LTC_CalculatePec15",
+      "line_range": "75-115",
+      "content_hash": "sha256:af26f839e70fc0cf1bb1ab47231f3f342895f32871b9489163082d37635d18fa",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+      "symbol": "AFE_StartMeasurement",
+      "line_range": "142-150",
+      "content_hash": "sha256:972adaeef5c8682198672beeb7c90a57fca8b114f9bbe9ee41590f9a19cc7af6",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/spi/spi.c",
+      "symbol": "SPI_TransmitReceiveDataDma",
+      "line_range": "403-511",
+      "content_hash": "sha256:cf3f363240ca36bf2177e90ecdc048672546318db72b1f5d94129deab67d5a92",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+      "symbol": "AFE_DmaCallback",
+      "line_range": "88-93",
+      "content_hash": "sha256:62fbd4b2bb9cf25916aaa8c40bce6419cc9f6962c08a0bfff1dae8bc6749e285",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/dma/dma.c",
+      "symbol": "AFE_DmaCallback",
+      "line_range": "393-400",
+      "content_hash": "sha256:8d4822e23aa934807bed6bf6b50be97753abd96b80c344dccba0b299cf559d3d",
+      "symbol_role": "translation_unit_body",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": "FB2-SW-DSN-000001",
+    "design_level": "architecture",
+    "relationship": "This is where the reference project's FB2-SW-DSN-000001 acquisition, PEC-validation and publication responsibilities are realised. The mechanism is the real one, read from the pinned source and verified there: AFE_StartMeasurement (ltc_afe.c:142-150) submits an LTC_STATE_INIT_REQUEST, entering the LTC_Trigger sequencer; LTC_StartVoltageMeasurement (ltc_6813-1.c:3678-3711) transmits one of the ltc_cmdADCV_* commands, selecting ADC mode and channel count and refusing to transmit otherwise; LTC_CheckPec (3838-3878) recomputes the 15-bit PEC per LTC and records PEC_valid[stringNumber][i], returning STD_NOT_OK on mismatch unless LTC_DISCARD_PEC is set; LTC_SaveRxToVoltageBuffer (3064-3150) reassembles the voltages and writes them into the database block, which DATA_WRITE_DATA then publishes with a header timestamp. The design's DMA decision is also realised, but not by the symbols it names: the transfer is configured by SPI_TransmitReceiveDataDma (spi.c:403-511) and completes through AFE_DmaCallback (ltc_afe_dma.c:88-93), which the DMA driver calls from its receive-complete interrupt when FOXBMS_AFE_DRIVER_LTC is 1 (dma.c:393-400). The reference project reuses this code because it is the behaviour its design describes.",
+    "partial_coverage": [
+      "The design's implementation_mapping asserts LTC_AFE_TriggerMeasurement, LTC_AFE_DMA_RxCallback, LTC_PEC_Calculate and LTC_6813_ReadVoltages as implemented; none of those four names occurs anywhere in the repository, and one of its two named source files, src/app/driver/afe/ltc/common/ltc_afe.c, does not exist - the module is at src/app/driver/afe/ltc/api/ltc_afe.c. The other, ltc_afe_dma.c, does exist and does carry the DMA completion callback, under the name AFE_DmaCallback. The mapping is not repaired here and the disagreement is recorded rather than propagated.",
+      "The design's 'DMA buffer size: 256 bytes per slave' constraint is not evidenced. The realised transfer sizes its DMA channel from the frame length passed to SPI_TransmitReceiveDataDma rather than from a fixed per-slave buffer of that size, and no such buffer was found in the AFE code.",
+      "The design's 'Task period: 100 ms' and 'Stack usage: < 2 KB' constraints are not established by anything in the code and no figure for either is recorded anywhere in this corpus for this module.",
+      "The design's 'database publishing' understates what the code does: the DATA_WRITE_DATA path stamps a header timestamp, so every published block carries an age the design does not mention."
+    ]
+  },
+  "realises_requirements": [
+    {
+      "requirement_id": "FB2-SW-SWR-000001",
+      "how_realised": "Acquisition is triggered through AFE_StartMeasurement into the LTC sequencer; integrity is gated by LTC_CheckPec before parsed values reach the database block; publication is the DATA_WRITE_DATA call whose database handler stamps the block header. In the reference project this mechanism is additionally the place where the proposed DMA variant would replace the SPI transfer.",
+      "figure_provenance": "mixed_read_and_modelled"
+    }
+  ],
+  "anchor_refs": [
+    "FB2-SRC-COD-000001",
+    "FB2-SRC-COD-000002",
+    "FB2-SRC-COD-000034",
+    "FB2-SRC-COD-000003"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "AFE-IMP-TRIGGER",
+      "description": "Starts a measurement cycle by submitting the initial-state request into the driver's step sequencer.",
+      "kind": "state_transition",
+      "evidence_symbol": "AFE_StartMeasurement",
+      "evidence_line_range": "142-150"
+    },
+    {
+      "behaviour_id": "AFE-IMP-ADCV-CMD",
+      "description": "Selects and transmits the ADC measurement command for the configured mode and channel count, refusing to transmit for an unsupported combination.",
+      "kind": "transfer",
+      "evidence_symbol": "LTC_StartVoltageMeasurement",
+      "evidence_line_range": "3678-3711"
+    },
+    {
+      "behaviour_id": "AFE-IMP-PEC-GATE",
+      "description": "Recomputes and compares the 15-bit packet error code per LTC, recording the result so a corrupted frame is marked rather than consumed.",
+      "kind": "integrity_check",
+      "evidence_symbol": "LTC_CheckPec",
+      "evidence_line_range": "3838-3878"
+    },
+    {
+      "behaviour_id": "AFE-IMP-VOLT-REASSEMBLY",
+      "description": "Reassembles the cell voltages from the received byte pairs of each register group into the database block.",
+      "kind": "conversion",
+      "evidence_symbol": "LTC_SaveRxToVoltageBuffer",
+      "evidence_line_range": "3064-3150"
+    },
+    {
+      "behaviour_id": "AFE-IMP-PEC-ALGO",
+      "description": "The CRC-15 algorithm shared by every LTC-family backend in the source.",
+      "kind": "integrity_check",
+      "evidence_symbol": "LTC_CalculatePec15",
+      "evidence_line_range": "75-115"
+    },
+    {
+      "behaviour_id": "AFE-IMP-DMA-XFER",
+      "description": "Configures the paired SPI transmit and receive DMA channels for the frame, elevating privilege for the register write.",
+      "kind": "transfer",
+      "evidence_symbol": "SPI_TransmitReceiveDataDma",
+      "evidence_line_range": "403-511"
+    },
+    {
+      "behaviour_id": "AFE-IMP-DMA-DONE",
+      "description": "Clears the driver's transmit-in-progress flag when the DMA receive-complete interrupt reports that the transfer finished.",
+      "kind": "interrupt_dispatch",
+      "evidence_symbol": "AFE_DmaCallback",
+      "evidence_line_range": "88-93"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "task",
+      "entry_points": [
+        "AFE_StartMeasurement",
+        "AFE_RequestTemperatureRead"
+      ],
+      "shared_state": "ltc_state, the per-driver LTC_STATE_s, with re-entrance guarded by LTC_CheckReEntrance (ltc_6813-1.c:748-761)."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record describes the hypothetical reference project's AFE implementation against the real pinned source. It is not evidence that FB2-SW-SWR-000001 is met in either profile: the requirement's 20 Hz rate, 5 ms publication latency and 100% PEC coverage are not established by anything listed here, and no measurement of them exists. It confers no production authority, no verification credit and no human approval, and it asserts nothing about the real foxBMS product's safety classification."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "Every code_location was read at the pinned commit with 'git show 308028fb:path'; each content_hash is that pinned blob's sha256 and each equals the value the corresponding pre-existing source-registry anchor already carries. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The spans were cross-read against 'graft skeleton' output for the same files.",
+    "limitations": [
+      "The proposed_location entry names a file and a symbol that DO NOT EXIST in the pinned source and are not source anchors. It is a proposal for the hypothetical project and is recorded here precisely so that it cannot be mistaken for a verified location.",
+      "Behaviour was verified by reading the code. Nothing was executed and no timing, coverage or throughput measurement of this module exists in this corpus, in this profile or the other.",
+      "The AFE files involved are unmodified between the pin and the working tree, so the same ranges and hashes hold for the checked-out files."
+    ]
+  },
+  "provenance_note": "This record shares its anchor set with the as_is record of the same id, because both profiles describe the same real source. That is deliberate and is the corpus's controlled-source-registry design: one anchor set, two profiles, and the difference between the profiles is stated in each record rather than encoded in the anchors. No new anchor was created. No not_in_source proposal is carried on this record, because on re-reading the pinned source the design's DMA mechanism is genuinely present: an earlier draft of this record asserted that it was absent, and that assertion was wrong."
+}

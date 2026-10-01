@@ -1,0 +1,194 @@
+{
+  "id": "FB2-SW-IMP-000006",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: EMAC driver - hardware and DMA initialisation, transmit, and the two registered interrupt service routines (emac.c)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000039",
+    "FB2-SRC-COD-000040",
+    "FB2-SRC-COD-000078",
+    "FB2-SRC-COD-000079"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the EMAC driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "gap",
+      "rationale": "There is no software design artefact for the EMAC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored to cover a module the as_is corpus anchors through two deviations (FB2-SW-DEV-000009 and FB2-SW-DEV-000010) and for which it holds no design artefact at all."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/emac/emac.c",
+      "symbol": "EMAC_InitializeHardware",
+      "line_range": "217-294",
+      "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/emac/emac.c",
+      "symbol": "EMAC_Transmit",
+      "line_range": "375-461",
+      "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/emac/emac.c",
+      "symbol": "EMAC_TxInterruptServiceRoutine",
+      "line_range": "585-591",
+      "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/emac/emac.c",
+      "symbol": "EMAC_RxInterruptServiceRoutine",
+      "line_range": "601-608",
+      "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/emac/emac.c",
+      "symbol": "EMAC_InitializeHardware",
+      "line_range": "234-239",
+      "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": null,
+    "design_level": null,
+    "relationship": "No design artefact in the as_is profile describes the EMAC driver, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source: EMAC_InitializeHardware (emac.c:217-294) configures the instance, copies the MAC address in reverse byte order into the interface structure, initialises the controller and MDIO modules, sets the source address and the per-channel address with EMAC_MAC_ADDRESS_MATCH - the destination-address match filter configuration anchor FB2-SRC-COD-000078 records at lines 234-239 - and then calls EMAC_SetupLink, returning EMAC_ERROR_CONNECT if the link cannot be established. EMAC_Transmit (375-461) takes the next free transmit buffer descriptor and hands the packet to the DMA engine. EMAC_TxInterruptServiceRoutine (585-591) is a registered interrupt handler that calls EMAC_TxInterruptHandler and only then acknowledges the interrupt source, which is the ordering deviation FB2-SW-DEV-000009 records. EMAC_RxInterruptServiceRoutine (601-608) is the second registered handler and does not process the frame itself: it gives a counting notification to the receiving task, so the descriptor walk happens in task context rather than in the handler, which is the structural difference deviation FB2-SW-DEV-000010 records. So the driver provides link establishment, buffered transmit and an interrupt-to-task hand-off on receive.",
+    "design_gap_reason": "The as_is profile contains no software design artefact for the EMAC driver. Its three design records cover the AFE driver, the SOA module and the contactor driver, and deviations FB2-SW-DEV-000009 and -000010 each record emac.c as gap_no_design_artifact_in_profile. Attaching this module to an existing design would assert Ethernet design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13."
+  },
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the EMAC driver. The as_is requirement set is the three cell-voltage, contactor and SOA records; none of them states anything about Ethernet transport, and the requirements that do concern a network interface are security requirements in the synthetic_reference profile, which a source-observed as_is record may not claim as its own coverage. realises_requirements is empty rather than populated with a requirement this code does not serve.",
+  "anchor_refs": [
+    "FB2-SRC-COD-000039",
+    "FB2-SRC-COD-000040",
+    "FB2-SRC-COD-000078",
+    "FB2-SRC-COD-000079"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "EMAC-IMP-HW-INIT",
+      "description": "Brings the MAC up, including the destination-address match filter configuration that anchors the interface's frame acceptance behaviour.",
+      "kind": "startup",
+      "evidence_symbol": "EMAC_InitializeHardware",
+      "evidence_line_range": "217-294"
+    },
+    {
+      "behaviour_id": "EMAC-IMP-TX-DESCRIPTOR",
+      "description": "Takes the next available transmit buffer descriptor and submits the packet to the DMA engine.",
+      "kind": "transfer",
+      "evidence_symbol": "EMAC_Transmit",
+      "evidence_line_range": "375-461"
+    },
+    {
+      "behaviour_id": "EMAC-IMP-TX-ISR",
+      "description": "Registered transmit interrupt handler: runs the descriptor handler first and acknowledges the interrupt source afterwards.",
+      "kind": "interrupt_dispatch",
+      "evidence_symbol": "EMAC_TxInterruptServiceRoutine",
+      "evidence_line_range": "585-591"
+    },
+    {
+      "behaviour_id": "EMAC-IMP-RX-ISR",
+      "description": "Registered receive interrupt handler: does not walk descriptors itself, but signals the receiving task with a counting notification so the descriptor processing happens in task context.",
+      "kind": "interrupt_dispatch",
+      "evidence_symbol": "EMAC_RxInterruptServiceRoutine",
+      "evidence_line_range": "601-608"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "interrupt",
+      "entry_points": [
+        "EMAC_TxInterruptServiceRoutine",
+        "EMAC_RxInterruptServiceRoutine"
+      ],
+      "shared_state": "The EMAC transmit and receive buffer descriptor rings, and the EMAC core interrupt source. The transmit handler mutates the descriptor chain and the receive handler only notifies ftsk_taskHandleEmac, so the receive-side descriptor processing is deliberately task-context work."
+    },
+    {
+      "context": "task",
+      "entry_points": [
+        "EMAC_Transmit",
+        "EMAC_EndOfReception",
+        "EMAC_AcknowledgeRxInterrupt"
+      ],
+      "shared_state": "The same receive descriptor ring the receive handler signals work on."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the EMAC driver code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met, and no frame was transmitted or received to establish anything about its behaviour. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "emac.c was read at the pinned commit with 'git show 308028fb:src/app/driver/emac/emac.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000039, -000040, -000078 and -000079 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The function spans were cross-read against 'graft skeleton src/app/driver/emac/emac.c', which reports EMAC_InitializeHardware at L217-L294, EMAC_Transmit at L375-L461, EMAC_TxInterruptServiceRoutine at L585-L591 and EMAC_RxInterruptServiceRoutine at L601-L608 independently of this authoring pass. Note that the registry anchor FB2-SRC-COD-000040 records the receive handler's range as 597-600, which covers its pragma and signature lines rather than its body; the body span 601-608 recorded here is what anchor FB2-SRC-COD-000079 already carries, and both are consistent with the same function.",
+    "limitations": [
+      "The fifth location's symbol is EMAC_InitializeHardware and its range 234-239 is the destination-address match configuration inside that function's body, which is the range anchor FB2-SRC-COD-000078 already records. That anchor spells the symbol as 'EMAC_Initialize', and no symbol of that name exists in emac.c; this record uses the name that does exist rather than reproducing the anchor's. The anchor's own spelling is a source-registry matter and is left for the digest workstream that owns the registry, not altered here.",
+      "Behaviour was verified by reading the code. No Ethernet frame was sent or received, no PHY was linked, and no timing measurement of this driver exists in this corpus.",
+      "emac.c is unmodified between the pin and the working tree, so the same ranges and hash hold for the checked-out file."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000039 and -000040 name the two registered interrupt service routines, FB2-SRC-COD-000078 the destination-address filter configuration and FB2-SRC-COD-000079 the receive handler body, all in emac.c, and are the same four anchors deviations FB2-SW-DEV-000009 and -000010 reference. No new anchor was created."
+}

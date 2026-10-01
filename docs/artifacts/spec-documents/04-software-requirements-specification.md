@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-30T01:21:29Z |
+| Generated | 2026-10-01T05:09:49Z |
 
 ## Scope
 
@@ -112,7 +112,7 @@ The implemented software directly satisfies the following software requirements.
   - Coil drive slew rate: dV/dt at coil terminals ≤ 50 V/ms
   - Feedback latency: Time from contactor state change to SW notification ≤ 2 ms
   - Weld detection: Feedback mismatch detection time ≤ 100 ms
-- **Source references**: `FB2-SRC-HW-000001`, `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000027`
+- **Source references**: `FB2-SRC-HW-000001`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000027`
 - **Assumption references**: `FB2-ASM-009`
 
 #### `FB2-SW-SWR-000003` — SWR: Contactor State Machine and Fault Response
@@ -126,7 +126,7 @@ The implemented software directly satisfies the following software requirements.
   - Fault response latency: Time from FAULT request to coil de-energize command ≤ 5 ms
   - Feedback verification: Auxiliary contact readback after command ≤ 100% %
   - State machine correctness: Valid transitions only ≤ 100% %
-- **Source references**: `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
+- **Source references**: `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
 - **Assumption references**: `FB2-ASM-012`
 
 ## Profile: `synthetic_reference`
@@ -205,7 +205,7 @@ The implemented software directly satisfies the following software requirements.
   - Coil drive slew rate: dV/dt at coil terminals ≤ 50 V/ms
   - Feedback latency: Time from contactor state change to SW notification ≤ 2 ms
   - Weld detection: Feedback mismatch detection time. The criterion is the weld detection budget of the actuated path and is deliberately not the reaction budget of FB2-SAF-FSR-000003, which is 40 ms end to end; see find... ≤ 100 ms
-- **Source references**: `FB2-SRC-HW-000001`, `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000027`
+- **Source references**: `FB2-SRC-HW-000001`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000027`
 - **Assumption references**: `FB2-ASM-009`
 
 #### `FB2-SW-SWR-000003` — SWR: Contactor State Machine and Fault Response
@@ -219,7 +219,7 @@ The implemented software directly satisfies the following software requirements.
   - Fault response latency: Time from FAULT request to coil de-energize command ≤ 5 ms
   - Feedback verification: Auxiliary contact readback after command ≤ 100% %
   - State machine correctness: Valid transitions only ≤ 100% %
-- **Source references**: `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
+- **Source references**: `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
 - **Assumption references**: `FB2-ASM-012`
 
 ### Parent FSR: `FB2-SAF-FSR-000004`
@@ -253,4 +253,4 @@ The implemented software directly satisfies the following software requirements.
 
 ---
 
-*Generated: 2026-09-30T01:21:29Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

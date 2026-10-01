@@ -1,0 +1,207 @@
+{
+  "id": "FB2-SW-IMP-000007",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: RTC driver - periodic trigger, device initialisation, CAN time message consumption and periodic adjustment against the system timer (rtc.c)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000044",
+    "FB2-SRC-COD-000045"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the RTC driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "gap",
+      "rationale": "There is no software design artefact for the RTC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored to cover a module the as_is corpus anchors through two deviations (FB2-SW-DEV-000014 and FB2-SW-DEV-000015) and for which it holds no design artefact at all."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/rtc/rtc.c",
+      "symbol": "RTC_Trigger",
+      "line_range": "420-445",
+      "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/rtc/rtc.c",
+      "symbol": "RTC_Initialize",
+      "line_range": "447-590",
+      "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/rtc/rtc.c",
+      "symbol": "RTC_SetOverCanMessage",
+      "line_range": "241-250",
+      "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/rtc/rtc.c",
+      "symbol": "RTC_AdjustTime",
+      "line_range": "252-276",
+      "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/rtc/rtc.c",
+      "symbol": "RTC_CheckBatteryLowVoltageAlert",
+      "line_range": "278-310",
+      "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/rtc/rtc.c",
+      "symbol": "rtc_i2cWriteBuffer",
+      "line_range": "80-82",
+      "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+      "symbol_role": "translation_unit_body",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": null,
+    "design_level": null,
+    "relationship": "No design artefact in the as_is profile describes the RTC driver, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source: RTC_Trigger (rtc.c:420-445) is the periodic entry point. It calls RTC_Initialize, and only if that returns STD_OK does it proceed: it then calls RTC_SetOverCanMessage to consume a time received over CAN, and it gates two periodic activities on elapsed OS ticks measured against RTC_TIME_BETWEEN_BATTERY_LOW_FLAG_CHECK_min and RTC_TIME_BETWEEN_RTC_TIMER_ADJUSTMENT_min, each scaled by RTC_FACTOR_MIN_TO_MS. RTC_Initialize (447-590) brings up the device over the shared I2C interface, which is where the two module-scope buffers rtc_i2cWriteBuffer and rtc_i2cReadBuffer (80-82) that anchor FB2-SRC-COD-000045 records come in; deviation FB2-SW-DEV-000015 records the sharing of those buffers. RTC_AdjustTime (252-276) compares the device's time against the system timer and re-initialises the system time from the device when they differ by more than RTC_MAX_DIFFERENCE_BETWEEN_TIMER_AND_IC_s. RTC_CheckBatteryLowVoltageAlert (278-310) reads the device's voltage-alert flag. So the driver provides device access, periodic scheduling against the OS tick, and reconciliation of an external time source against the internal one.",
+    "design_gap_reason": "The as_is profile contains no software design artefact for the RTC driver. Its three design records cover the AFE driver, the SOA module and the contactor driver, and deviations FB2-SW-DEV-000014 and -000015 each record rtc.c as gap_no_design_artifact_in_profile. Attaching this module to an existing design would assert timekeeping design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13."
+  },
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the RTC driver. The as_is requirement set is the three cell-voltage, contactor and SOA records, and none of them states anything about real-time clock behaviour, time synchronisation or the low-voltage alert this module implements. realises_requirements is empty rather than populated with a requirement this code does not serve.",
+  "anchor_refs": [
+    "FB2-SRC-COD-000044",
+    "FB2-SRC-COD-000045"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "RTC-IMP-PERIODIC",
+      "description": "Periodic entry point: initialises the device, consumes a CAN-supplied time, and runs the low-voltage check and the time adjustment at their own configured intervals measured against the OS tick.",
+      "kind": "timekeeping",
+      "evidence_symbol": "RTC_Trigger",
+      "evidence_line_range": "420-445"
+    },
+    {
+      "behaviour_id": "RTC-IMP-DEV-INIT",
+      "description": "Brings up the real-time clock device over the shared I2C interface, configuring the prescaler and control register through the module's write buffer.",
+      "kind": "startup",
+      "evidence_symbol": "RTC_Initialize",
+      "evidence_line_range": "447-590"
+    },
+    {
+      "behaviour_id": "RTC-IMP-CAN-TIME",
+      "description": "Consumes a time-of-day message received over CAN and applies it to the device when one is present.",
+      "kind": "timekeeping",
+      "evidence_symbol": "RTC_SetOverCanMessage",
+      "evidence_line_range": "241-250"
+    },
+    {
+      "behaviour_id": "RTC-IMP-RECONCILE",
+      "description": "Compares the device's time against the system timer and re-initialises the system time from the device once the two differ by more than the configured maximum difference.",
+      "kind": "timekeeping",
+      "evidence_symbol": "RTC_AdjustTime",
+      "evidence_line_range": "252-276"
+    },
+    {
+      "behaviour_id": "RTC-IMP-LOW-VOLT",
+      "description": "Reads the device's battery-low voltage alert flag and reports it, which is the RTC's own supply monitoring rather than a pack measurement.",
+      "kind": "validation",
+      "evidence_symbol": "RTC_CheckBatteryLowVoltageAlert",
+      "evidence_line_range": "278-310"
+    },
+    {
+      "behaviour_id": "RTC-IMP-I2C-BUFFERS",
+      "description": "The two module-scope transfer buffers shared by every I2C access this driver makes; their sharing is what deviation FB2-SW-DEV-000014 records.",
+      "kind": "transfer",
+      "evidence_symbol": "rtc_i2cWriteBuffer",
+      "evidence_line_range": "80-82"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "task",
+      "entry_points": [
+        "RTC_Trigger",
+        "RTC_SetSystemTimeRtcFormat",
+        "RTC_IncrementSystemTime"
+      ],
+      "shared_state": "The module-scope I2C buffers rtc_i2cWriteBuffer and rtc_i2cReadBuffer, and the module's own time state. The buffers are shared by every transfer the driver makes, which is safe only while all callers are in one task; the record states that this is a single-context module rather than asserting a protection the code does not visibly implement."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the RTC driver code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met, and no time source, clock drift or synchronisation behaviour was measured. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "rtc.c was read at the pinned commit with 'git show 308028fb:src/app/driver/rtc/rtc.c'; the content_hash recorded is that pinned blob's sha256, which is the value anchors FB2-SRC-COD-000044 and -000045 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The function spans were determined from the pinned content directly.",
+    "limitations": [
+      "IMPORTANT: rtc.c differs between the pinned commit and the current working tree. The working-tree file has 14 lines added inside RTC_AdjustTime relative to the pin, so every line_range in this record is a PINNED-commit range and will not match the checked-out file line-for-line. The content_hash recorded is the pinned blob's, deliberately, because the record's commit field says 308028fb and a hash of different bytes under that commit label would be a false statement. A reader diffing these ranges against the working tree will find RTC_AdjustTime spanning 252-289 rather than 252-276; the added lines are a replacement of an abs() call on a time_t difference with a signed two-sided comparison.",
+      "The source-registry anchors FB2-SRC-COD-000044 and -000045 record the same pinned hash this record does, so the provenance validator's reported mismatch on those two anchors is a worktree-drift report and not a disagreement about what was read.",
+      "Behaviour was verified by reading the code. No real-time clock device was present, no time source was synchronised, and no drift measurement exists in this corpus.",
+      "The RTC register addresses, bit masks and the two module-scope buffer sizes are device-specific values whose authoritative definition is the device header; they are named but their values are not restated here, so this record cannot become a second unverifiable copy of the device's register map."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000044 covers the rtc.c module body and FB2-SRC-COD-000045 the two module-scope I2C buffers, and they are the same two anchors deviations FB2-SW-DEV-000014 and -000015 reference. No new anchor was created."
+}

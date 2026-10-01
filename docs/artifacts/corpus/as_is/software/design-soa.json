@@ -12,7 +12,7 @@
  ],
  "title": "Design: SOA Voltage Monitoring Module",
  "owner_role": "sw_engineer",
- "origin": "source_observed",
+ "origin": "derived",
  "source_refs": [
   "FB2-SRC-COD-000004",
   "FB2-SRC-COD-000009",
@@ -226,5 +226,6 @@
    "symbol": "DIAG_CBS_Voltage",
    "status": "implemented"
   }
- ]
+ ],
+ "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchors FB2-SRC-COD-000004/-000009/-000010 now name real symbols - SOA_CheckVoltages (soa.c:81-146), DIAG_Handler (diag.c:341-475), DIAG_ErrorOvervoltage / DIAG_ErrorUndervoltage / DIAG_ErrorHighVoltageMeasurement (diag_cbs_voltage.c:72-194) - and they do perform the voltage limit monitoring this design record describes. The revision history says 'Extracted from SOA source', and implementation_mapping asserts SOA_CheckVoltageLimits, SOA_CheckCurrentLimits, SOA_CheckTemperatureLimits and DIAG_CBS_Voltage are 'implemented'; graft grep finds none of those four names anywhere in the repository. The architecture is observed but the extraction claim is false, so the record is labelled derived."
 }

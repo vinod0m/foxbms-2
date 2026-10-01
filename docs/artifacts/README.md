@@ -1,8 +1,9 @@
 # foxBMS 2 Lifecycle Artifact Corpus
 
 **Repository:** `/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2`
-**Commit:** `308028fb` (v1.11.0)
-**Last session:** 2026-09-29
+**Source registry pinned to commit:** `308028fb13d046ba29b98886895c2e17937b1437` (foxBMS 2 v1.11.0, 2026-04-20)
+**Corpus authored at commit:** `2a408d573b41c2f3ab75edccb31f28768adcf9f2` (2026-10-01) — the two are different things and neither is the other; see "Two commits, not one" below
+**Figures refreshed:** 2026-10-01
 **Status:** `synthetic_ready_with_limitations`
 
 ---
@@ -12,90 +13,131 @@
 | Label | Meaning |
 |-------|---------|
 | **SYNTHETIC** | This is a synthetic development corpus, NOT a certification package. foxBMS, SoftwareDevLabs and this corpus are NOT ISO 26262 compliant and NOT ASIL certified. The corpus holds a **structural mapping** to clause references; that is not conformity. |
-| **HUMAN_APPROVAL_PENDING** | All 153 indexed records have `human_approval_status: pending`. **No human has approved anything in this corpus.** AI reviews are automated; distinct agent sessions are NOT organisational independence or human confirmation. |
-| **PRODUCTION_UNAUTHORIZED** | All 153 indexed records have `production_authorized: false` and `product_verification_credit: false`. No generated record grants production authority. |
-| **NO_TARGET_HARDWARE_EVIDENCE** | 0 of 16 required target-hardware executions exist. A real macOS **host** run exists (94/136 tests passing) but macOS is **not an upstream-supported foxBMS platform** and a host run is **not** target-hardware evidence. It carries no verification credit. |
-| **AS_IS vs SYNTHETIC_REFERENCE** | Two profiles: `as_is` (faithful reconstruction of pinned sources, 71 records) and `synthetic_reference` (hypothetical automotive BMS project, 82 records). Field-level provenance distinguishes `source_observed` (57), `derived` (36) and `synthetic` (60). |
+| **HUMAN_APPROVAL_PENDING** | All 263 indexed records have `human_approval_status: pending`. **No human has approved anything in this corpus.** AI reviews are automated; distinct agent sessions are NOT organisational independence or human confirmation. |
+| **PRODUCTION_UNAUTHORIZED** | All 263 indexed records have `production_authorized: false` and `product_verification_credit: false`. No generated record grants production authority. |
+| **NO_TARGET_HARDWARE_EVIDENCE** | 0 of 33 required target-hardware executions exist. A real macOS **host** run exists (SIL harness, 313 CeeDling targets attempted, 222 passed) but macOS is **not an upstream-supported foxBMS platform** and a host run is **not** target-hardware evidence. It carries no verification credit. |
+| **AS_IS vs SYNTHETIC_REFERENCE** | Two profiles: `as_is` (faithful reconstruction of pinned sources, 90 records) and `synthetic_reference` (hypothetical automotive BMS project, 173 records). Field-level provenance distinguishes `source_observed` (63), `derived` (53) and `synthetic` (147). |
 | **NO NORMATIVE TEXT** | ISO 26262 and ASPICE PAM normative text NOT reproduced. Only metadata, methodology mappings and clause/process references are used, per rights policy. |
-| **KNOWN_GOVERNANCE_CORRECTIONS** | 15 status claims in `governance/coverage-plan.json` were verified against disk and corrected on 2026-09-29 (`CORR-COV-001` … `CORR-COV-015`). Two landed on a *different* status than first reported, because verification found evidence on both sides; both record the divergence. Every `expected_artifacts` list was retained unchanged and no artifact was fabricated to make a status true. |
+| **KNOWN_GOVERNANCE_CORRECTIONS** | **16** status claims in `governance/coverage-plan.json` are recorded as corrections. `CORR-COV-001`…`CORR-COV-015` (2026-09-29) verified each disposition against disk. `CORR-COV-016` (2026-10-01) went further: it ignored the disposition text, derived every process's backing set from each artefact's own `standards_mappings[].reference`, and asked whether those records carry the engineering the process defines. That pass demoted 23 of the 28 applicable ASPICE processes and 8 of the 10 applicable ISO parts. Nothing was upgraded; no expectation was deleted or narrowed; no artefact was fabricated to make a status true. |
 | **TRACEABILITY_DOCUMENT_IS_TOOL_OWNED** | `TRACEABILITY_DOCUMENT.md` at the **repository root** claimed ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability, and carried a fabricated `Status: APPROVED` sign-off block. The repository owner **explicitly authorised amending it**, and it was corrected by hand on 2026-09-29 (finding `FB2-REV-FND-000022` revision 3). **The durable fix has since been implemented, at revision 4 of that finding:** the document is now **generated** at `views/traceability/traceability-document.md` by `corpus.py render` from the canonical records, carrying the same provenance header and guard-field contract as every other generated view, with every figure computed at render time. The repository-root path and `reports/TRACEABILITY_DOCUMENT.md` are now content-free pointers to it. The drift risk is closed by construction rather than by human discipline. |
+| **KNOWN_EVIDENCE_LIMITATIONS** | Four measured limitations of the evidence base. They are stated here and in full in the *Known Limitations* section of `reports/final-acceptance-report.md`, not only in agent handovers. See that section. |
+
+---
+
+## Two commits, not one
+
+The corpus quotes two different commits and conflating them would be a false
+statement in either direction.
+
+| Field | Value | What it is |
+|---|---|---|
+| Source registry pin | `308028fb13d046ba29b98886895c2e17937b1437` | foxBMS 2 v1.11.0, dated 2026-04-20. This is what `as_is` records cite: every `as_is` source anchor resolves to a blob at *this* commit. `git merge-base --is-ancestor 308028fb HEAD` returns true. |
+| Corpus authored at | `2a408d573b41c2f3ab75edccb31f28768adcf9f2` | dated 2026-10-01. This is the tree every number in every report was measured against. 74 commits touch `docs/artifacts/`. |
+
+The corpus content **does not exist at** `308028fb` (`git ls-tree -r 308028fb`
+has no `docs/artifacts` entry), and the pinned source at `308028fb` was not
+re-audited on every pass. Both facts are recorded in
+`governance/coverage-plan.json` as `repository_commit` (source pin, matching
+`sources/source-registry.json` and `exports/manifest.json`) and
+`corpus_authored_at_commit` (authoring head), each with a `_meaning` field.
 
 ---
 
 ## Current State at a Glance
 
-All figures from a live tool run on 2026-09-29.
+All figures from a live `python3 docs/artifacts/tools/corpus.py` run on
+2026-10-01. Every figure below is labelled with the population it counts,
+because three different populations are legitimately in play.
 
-| Measure | Value |
-|---|---|
-| Acceptance suite | **PASSED** — 8 stages, 10 gate lines, 0 FAIL |
-| Schema-validated artifact files | 177 |
-| Unique `(profile, id)` records | 153 |
-| Traceability links | **283, 0 dangling** |
-| Validator findings / errors | 21 / **0** |
-| Finding artifacts recorded | 22 |
-| Coverage dimensions | 15 |
-| Mutation scenarios | **20 / 20** detected |
-| Change lifecycles | **3 / 3** complete |
-| Toolchain self-tests | **11 PASS, 0 FAIL** |
-| Source inventory | 612/612 files, 24 modules, 22 features, 23 variants |
-| Export | 153 nodes, 283 edges |
-| Review records / unique IDs covered | 12 / 82 of 123 (**67%**) |
-| Target-hardware executions | **0 / 16** |
-| Human approval | **0 / 153** — all pending |
-| Production authorization | **0 / 153** — all false |
+| Measure | Value | Counts which population |
+|---|---|---|
+| Acceptance suite | **PASSED** — 8 stages, 10 gate lines, 0 FAIL | — |
+| Schema-validated artifact files | **286** | population **A** — `validate`: 263 corpus records with an `id` + 23 scenario records |
+| Unique `(profile, id)` records | **263** | population **B** — the tool's `load_artifact_index` |
+| Distinct artifact IDs across both profiles | **224** | population **C** — the `automated_review_coverage` denominator |
+| Traceability links | **489, 0 dangling** | de-duplicated by `(profile, link_id)` |
+| Validator findings / errors | **4 / 0** | findings are provenance observations, all `medium`/`low`, none is an error |
+| Finding artifacts recorded | **42** | population **B**, `artifact_type: finding` |
+| Coverage dimensions | 15 | — |
+| Mutation scenarios | **20 / 20** detected | executed, each by the rule it declares |
+| Change lifecycles | **3 / 3** content-validated | 19/19 required checks each |
+| Toolchain self-tests | **48 PASS, 0 FAIL** | — |
+| Source inventory | 612/612 files, 24 modules, 22 features, 23 variants | `src/**/*.c` and `*.h` |
+| Export | **263 nodes, 489 edges**, 3 content hashes | population **B** and the link registry |
+| Review records / unique IDs covered | **15 / 144 of 224 (64%)** | population **C** denominator |
+| Target-hardware executions | **0 / 33** | population **B** execution records |
+| Human approval | **0 / 263** — all pending | population **B** |
+| Production authorization | **0 / 263** — all false | population **B** |
 
-### Records by type and domain
+### Records by type and domain — population **B** (263 unique `(profile, id)` records)
 
 | By type | | By domain | | By profile | |
 |---|---|---|---|---|---|
-| requirement | 26 | verification | 64 | `synthetic_reference` | 82 |
-| deviation | 26 | software | 40 | `as_is` | 71 |
-| execution | 25 | safety | 30 | | |
-| finding | 22 | management | 7 | **By lifecycle** | |
-| test_measure | 16 | hardware | 7 | draft | 73 |
-| review | 12 | system | 3 | reviewed | 51 |
-| design | 8 | supporting | 2 | baselined | 29 |
-| scenario | 5 | | | | |
-| safety_analysis | 4 | **Total** | **153** | | |
+| execution | 44 | verification | 111 | `synthetic_reference` | 173 |
+| finding | 42 | software | 54 | `as_is` | 90 |
+| requirement | 34 | safety | 38 | | |
+| test_measure | 33 | system | 21 | **By lifecycle** | |
+| deviation | 26 | management | 14 | draft | 126 |
+| review | 15 | supporting | 12 | reviewed | 73 |
+| implementation | 14 | hardware | 7 | baselined | 64 |
+| design | 8 | production | 2 | | |
+| post_development_record | 6 | decommissioning | 1 | **By origin** | |
+| process_record | 6 | operation | 1 | synthetic | 147 |
+| stakeholder_need | 5 | release | 1 | source_observed | 63 |
+| scenario | 5 | service | 1 | derived | 53 |
+| safety_analysis | 4 | **Total** | **263** | | |
+| use_case | 4 | | | | |
 | change | 3 | | | | |
 | hazard | 2 | | | | |
 | safety_goal | 2 | | | | |
-| safety_case | 1 | | | | |
-| tara | 1 | | | | |
+| safety_concept | 2 | | | | |
+| process_improvement | 2 | | | | |
+| project_plan, risk_register, item_definition, safety_case, tara, measurement_plan | 1 each | | | | |
+| **Total** | **263** | | | | |
 
 ### The 15 coverage dimensions
 
-| Dimension | Ratio | % |
-|---|---|---|
-| scope_accounting | 1/1 | 100% |
-| artifact_population | 13/13 | 100% |
-| standards_mapping | 44/44 | 100% |
-| source_grounding | 76/154 | 49% |
-| traceability_integrity | 283/283 | 100% |
-| semantic_consistency_checks | 10/10 | 100% |
-| automated_review_coverage | 82/123 | 67% |
-| verification_planning | 16/7 | 229% (ratio, not a score) |
-| actual_product_evidence | 0/16 | **0%** |
-| synthetic_fixture_coverage | 82/43 | 191% (ratio, not a score) |
-| negative_scenario_validation | 20/20 | 100% (measured: 20 scenarios executed, 20 detected by their own declared rule) |
-| export_reproducibility | 1/1 | 100% |
-| human_approval | 0/154 | **0%** |
-| production_authorization | 0/154 | **0%** (correctly false) |
-| final_status | `synthetic_ready_with_limitations` | — |
+Exactly as printed by `corpus.py coverage` on 2026-10-01. Each row names the
+population its denominator counts, because they differ.
 
-### Three different population counts — all correct
+| Dimension | Ratio | % | Denominator counts |
+|---|---|---|---|
+| scope_accounting | 1/1 | 100% | presence of the three inventories |
+| artifact_population | 13/13 | 100% | 13 declared artefact families |
+| standards_mapping | **33/38** | 87% | 28 applicable ASPICE processes + 10 applicable ISO parts; ASPICE 25/28, ISO 8/10 |
+| source_grounding | **99/263** | 38% | population **B**; 101 anchors available |
+| traceability_integrity | **489/489** | 100% | every link in the registry |
+| semantic_consistency_checks | 10/10 | 100% | declared count of check categories, not a measurement |
+| automated_review_coverage | **144/224** | 64% | population **C**; 15 review records |
+| verification_planning | **33/7** | 471% (ratio, not a score) | 33 test measures for 7 distinct FSR ids |
+| actual_product_evidence | **0/33** | **0%** | population **B** execution records; `execution_kind` has no target-hardware member |
+| synthetic_fixture_coverage | **173/43** | 402% (ratio, not a score) | `synthetic_reference` records against a declared target |
+| negative_scenario_validation | 20/20 | 100% | **measured**: 20 scenarios executed, 20 detected by their own declared rule |
+| export_reproducibility | 1/1 | 100% | presence of the manifest |
+| human_approval | **0/263** | **0%** | population **B** |
+| production_authorization | **0/263** | **0%** | population **B**, correctly false by policy |
+| final_status | `synthetic_ready_with_limitations` | — | — |
 
-| Count | What it measures |
-|---|---|
-| **177** | schema-validated artifact *files* (154 corpus/review + 23 scenario) |
-| **154** | artifact *files* carrying an `id` under `corpus/` + `reviews/` |
-| **153** | unique `(profile, id)` records in the artifact index |
-| **123** | unique artifact *IDs* across both profiles |
+`standards_mapping` measures **whether a disposition names an artefact that
+resolves**, not whether the status is favourable. The figure rose from 16/38 to
+33/38 in this pass because `CORR-COV-016` rewrote each disposition to name the
+record it rests on, which is what recording evidence for a decision means. The
+number that reflects substance went the other way: the ASPICE disposition tally
+moved from **12 `mapped` / 10 `partially_mapped` / 6 `gap`** to
+**4 `mapped` / 21 `partially_mapped` / 3 `gap`**, and the applicable ISO tally
+from 6 `mapped` to **0**.
 
-154 exceeds 153 because `FB2-REV-000001` exists in two files with identical
-content; the index de-duplicates on `(profile, id)`. 153 exceeds 123 because 30
-IDs exist in both profiles by design (profile isolation, not duplication).
+### The three population counts — deliberately not harmonised
+
+| Count | Tool that produces it | What it measures | Why it differs |
+|---|---|---|---|
+| **286** | `validate` | schema-validated artefact **files** carrying an `id` | 263 corpus records + 23 scenario records. Scenarios live under `scenarios/`, not under a profile, so they are not profile-scoped and are not in the index. |
+| **263** | `load_artifact_index` | unique `(profile, id)` records | 267 corpus JSON files are walked; 263 carry an `id`; all 263 `(profile, id)` pairs are unique, so nothing collapses |
+| **224** | `automated_review_coverage` | distinct artifact **IDs** across both profiles | 263 − 224 = **39** ids exist in both `as_is` and `synthetic_reference` by design (profile isolation, not duplication). |
+
+Nothing here is a rounding difference and none of the three is wrong. A report
+that quotes one of them without saying which is the defect this section exists
+to prevent.
 
 ---
 
@@ -109,22 +151,22 @@ docs/artifacts/
 │   ├── execution-plan.md
 │   ├── progress.json
 │   ├── decisions.jsonl
-│   ├── work-queue.json
+│   ├── work-queue.json                 # 96 work-queue entries, all completed
 │   └── resume.md
 ├── governance/                         # Corpus governance
 │   ├── corpus-policy.json
 │   ├── standards-lock.json             # ISO 26262:2018, ASPICE PAM 4.1
 │   ├── scope-and-applicability.json
-│   ├── coverage-plan.json              # 32 processes, 15 corrections
+│   ├── coverage-plan.json              # 32 processes, 16 corrections
 │   ├── role-and-review-policy.json
-│   └── coverage-plan corrections array (CORR-COV-001..015)
+│   └── finding-disposition-vocabulary.md
 ├── sources/                            # Source registry + inventories
-│   ├── source-registry.json            # 102 anchors, pinned to 308028fb
-│   ├── source-inventory.json
+│   ├── source-registry.json            # 101 anchors, pinned to 308028fb
+│   ├── source-inventory.json           # 612 source files, 24 modules
 │   ├── feature-inventory.json          # 22 feature records
-│   ├── variant-matrix.json
+│   ├── variant-matrix.json             # 23 variants
 │   └── permitted-extracts/
-├── schemas/                            # JSON Schemas (draft 2020-12) — 15 files
+├── schemas/                            # JSON Schemas (draft 2020-12) — 26 files
 │   ├── artifact-base.schema.json
 │   ├── assumption.schema.json
 │   ├── change.schema.json
@@ -132,77 +174,102 @@ docs/artifacts/
 │   ├── deviation.schema.json
 │   ├── execution.schema.json
 │   ├── finding.schema.json
+│   ├── implementation.schema.json
+│   ├── item_definition.schema.json
 │   ├── link.schema.json
+│   ├── measurement_plan.schema.json
 │   ├── parameter.schema.json
+│   ├── post_development_record.schema.json
+│   ├── process_improvement.schema.json
+│   ├── process_record.schema.json
+│   ├── project_plan.schema.json
 │   ├── requirement.schema.json
 │   ├── review.schema.json
+│   ├── risk_register.schema.json
+│   ├── safety_concept.schema.json
 │   ├── scenario.schema.json
 │   ├── source_anchor.schema.json
+│   ├── stakeholder_need.schema.json
 │   ├── tara.schema.json
-│   └── test_measure.schema.json
-├── corpus/                             # Canonical engineering records
+│   ├── test_measure.schema.json
+│   └── use_case.schema.json
+├── corpus/                             # 267 JSON files: 263 records + 4 registry containers
 │   ├── shared/
-│   ├── as_is/                          # 71 records
-│   │   ├── hardware/  (3)
-│   │   ├── reviews/records/
-│   │   ├── safety/    (7)
-│   │   ├── software/  (33, incl. 26 deviation records)
-│   │   ├── system/    (NOTE-gap.md only)
-│   │   ├── management/(NOTE-gap.md only)
-│   │   └── verification/ (27, incl. 14 executions)
-│   ├── synthetic_reference/            # 82 records
-│   │   ├── hardware/  (4)
-│   │   ├── management/(7: 3 change, scope, safety plan, finding, review)
-│   │   ├── safety/    (23, incl. TARA + 5 SEC requirements)
-│   │   ├── shared/    (parameter + assumption registries)
-│   │   ├── software/  (7)
-│   │   ├── system/    (3, incl. HSI authority)
-│   │   ├── traceability/link-registry/
-│   │   └── verification/ (37)
-│   └── scenarios/
-│       ├── change-lifecycles/          # 3 scenarios
-│       └── mutations/                  # 20 scenarios
-├── traceability/                       # Canonical typed links — 283 links
+│   ├── as_is/                          # 90 records
+│   ├── synthetic_reference/            # 173 records
+│   └── scenarios/                      # 23 records in 46 JSON files (20 mutations, 3 change lifecycles)
+├── traceability/                       # Canonical typed links — 489 links after de-duplication
 │   ├── link-registry/
-│   │   ├── as_is/                      # 111 links
-│   │   └── synthetic_reference/        # 172 links
+│   │   ├── as_is/                      # 117 links
+│   │   └── synthetic_reference/        # 195 links (cell-voltage) + 177 (concept-lifecycle)
 │   ├── rules/
 │   └── queries/
 ├── reviews/                            # Review records and findings
-│   ├── records/                        # 13 files → 12 unique review records
-│   ├── findings/                       # 22 finding artifacts
+│   ├── records/                        # 15 review records, 49 embedded findings
+│   ├── findings/                       # 42 finding artefacts
 │   └── closure/
 ├── views/                              # Generated human-readable views — 11 files
-│   ├── management/management.md
-│   ├── concept-and-safety/concept-and-safety.md
-│   ├── system/system.md
+│   ├── concept-and-safety/vertical-slice.md
 │   ├── hardware/hardware.md
+│   ├── management/management.md
+│   ├── production-operation-service/lifecycle-continuation.md
 │   ├── software/software.md
 │   ├── verification-validation/verification-validation.md
-│   ├── production-operation-service/lifecycle-continuation.md
 │   ├── supporting-processes/supporting-processes.md
 │   ├── standards-mapping/standards-mapping.md
+│   ├── system/system.md
 │   ├── traceability/traceability.md
 │   └── traceability/traceability-document.md   # the canonical traceability doc
 ├── exports/                            # Portable exports — 4 files
-│   ├── manifest.json                   # content hashes
-│   ├── nodes.jsonl                     # 153 nodes
-│   ├── edges.jsonl                     # 283 edges
+│   ├── manifest.json                   # 263 nodes, 489 edges, 3 content hashes
+│   ├── nodes.jsonl                     # 263 nodes
+│   ├── edges.jsonl                     # 489 edges
 │   └── trace-matrix.csv
 ├── evidence/
-│   ├── actual-runs/
-│   └── synthetic-fixtures/
-├── spec-documents/                     # 10 generated spec documents
+│   ├── actual-runs/                    # TRACKED host-run evidence, sha256-verified
+│   └── synthetic-fixtures/             # EMPTY: no synthetic fixture was ever retained
+├── spec-documents/                     # 10 generated spec documents (.md + .docx)
 ├── tools/                              # Validation tooling
 │   ├── corpus.py                       # main CLI
 │   ├── render_spec_documents.py        # spec-document generator
+│   ├── render_e2e_html.py              # HTML deliverable generator
+│   ├── check_references.py
+│   ├── verify_traceability_document.py
 │   └── repo_model.py
 ├── tests/                              # Corpus toolchain tests
 ├── reports/                            # Reports (see table below)
 ├── diagrams/                           # Interactive diagrams (archify)
-└── .work/                              # Temporary (gitignored)
-    └── verification-env/               # macOS host-run environment + RUNBOOK.md
+└── .work/                              # Temporary (gitignored, NOT in the distribution)
+    ├── verification-env/               # SIL harness + runbook for the first host run
+    └── verification-env/sil/           # SIL harness + logs for the 313-target run
 ```
+
+### The tracked evidence base, and what is not in it
+
+`docs/artifacts/evidence/actual-runs/` **is** tracked and every file in it is
+sha256-verified against the execution records that cite it: 46 log entries,
+46 hashes verified, 0 mismatched, 0 missing; plus 34 `evidence_files` entries,
+0 missing. The SIL headline figures in this README are read directly from
+`docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json`.
+
+`docs/artifacts/.work/` is **gitignored and untracked**. Two consequences are
+stated wherever a published number depends on it, rather than implied:
+
+1. `FB2-VER-EXE-000008`…`FB2-VER-EXE-000012` each carry an
+   `output_hashes.sil_suite_results_all` digest of
+   `sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67`,
+   which resolves to
+   `docs/artifacts/.work/verification-env/sil/logs/RESULTS-POST-fix.json` — a
+   gitignored scratch file — and **not** to the `results-sil-all.json` the same
+   records name in their `logs[]` (`sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589`).
+   `FB2-VER-EXE-000015` goes further and names eight `.work/` paths directly in
+   its `logs[]`.
+2. The first host run's `docs/artifacts/.work/verification-env/RUNBOOK.md` is a
+   local artefact, not a distributed one.
+
+Reproducing the SIL run from a fresh clone: see
+`evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md`,
+which **is** tracked.
 
 ---
 
@@ -254,20 +321,35 @@ links; supersession/deletion/tombstones defined in schemas.
 
 ## Link Semantics
 
-Ten relation types are in use across 283 links.
+**Eleven** relation types are in use across **489** links. Counts below are from
+`load_links`, which de-duplicates on `(profile, link_id)`.
 
 | Relation | Count | Direction |
 |----------|------:|-----------|
-| `reviewed_by` | 167 | artifact → review record |
-| `verifies` | 32 | test measure → requirement (**test measure is the source**) |
-| `result_of` | 16 | execution → the measure it resulted from |
-| `supports` | 16 | analysis / TARA → requirement or goal |
-| `changes` | 16 | change record → artifact it revises |
-| `refines` | 13 | FSR → safety goal; scenario → parent scenario |
-| `allocated_to` | 13 | HW/SW requirement → FSR it satisfies |
-| `implements` | 6 | design → requirement it implements |
-| `mitigates` | 2 | safety goal → hazard |
-| `validates` | 2 | test measure → requirement (validation direction) |
+| `reviewed_by` | 229 | artifact → review record |
+| `verifies` | 55 | test measure → requirement (**test measure is the source**) |
+| `allocated_to` | 46 | HW/SW/system requirement → FSR it satisfies |
+| `refines` | 41 | FSR → safety goal; scenario → parent scenario |
+| `result_of` | 33 | execution → the measure it resulted from |
+| `supports` | 29 | analysis / TARA → requirement or goal |
+| `changes` | 16 | change record → artefact it revises |
+| `implements` | 13 | design → requirement it implements |
+| `validates` | 12 | test measure → requirement (validation direction) |
+| `depends_on` | 12 | artefact → artefact it depends on |
+| `mitigates` | 3 | safety goal → hazard |
+| **Total** | **489** | |
+
+By profile: `as_is` 117, `synthetic_reference` 372.
+By review state: reviewed 414, pending 75.
+
+> **A measured traceability weakness, stated rather than implied.** Every link
+> carries both endpoint revisions, yet **326 of the 489 links record an endpoint
+> revision that differs from the endpoint artefact's current revision, and all
+> 489 carry `change_suspect_status: false`.** The corpus therefore holds 326
+> links whose recorded endpoint revision is stale, and marks none of them
+> suspect. Link *resolution* is verified (0 dangling); link *currency* is not
+> maintained. This is the reason `SUP.11 Traceability Management` is recorded
+> `partially_mapped` rather than `mapped`.
 
 **Every link has:** ID, endpoints with revisions, relation type,
 profile/scenario/variant context, rationale, provenance, review state, change
@@ -284,57 +366,125 @@ suspect status.
 
 ## Evidence Classification
 
-| Execution kind | Description | Present? |
-|----------------|-------------|----------|
-| `none` | No execution planned/performed | 1 record |
-| `actual_host_run` | Executed on a development host — **not target hardware** | 13 records |
-| `actual_simulation_run` | Simulator with captured logs | — |
-| `synthetic_fixture` | Synthetic test data for corpus validation | part of the 12 |
+44 `execution` records exist in population **B**. Measured distribution:
+
+| Execution kind | Description | Records |
+|----------------|-------------|--------:|
+| `actual_host_run` | Executed on a development host — **not target hardware** | **15** (all `as_is`) |
+| `none` | Planned or attempted but nothing ran | **23** (1 `as_is`, 22 `synthetic_reference`) |
+| `synthetic_fixture` | Synthetic test data for corpus validation | **6** (all `synthetic_reference`) |
+| `actual_simulation_run` | Simulator with captured logs | **0** |
 | **target hardware** | — | **no such member exists in the enum** |
 
-| Outcome | Description | `as_is` count |
-|---------|-------------|--------------:|
-| `pass` | All acceptance criteria met | 4 |
-| `fail` | Criteria not met | 9 |
-| `inconclusive` | Incomplete/ambiguous | — |
-| `not_run` | Planned but not executed | — |
-| `blocked` | Cannot execute (missing HW/tools) | 1 |
+| Outcome | Records |
+|---------|--------:|
+| `pass` | 11 (5 `as_is` host runs, 6 `synthetic_fixture`) |
+| `fail` | 10 (all `as_is` host runs) |
+| `blocked` | 23 (1 `as_is`, 22 `synthetic_reference`) |
+| `inconclusive` / `not_run` | 0 |
 
 **Orthogonal:** execution kind ≠ outcome. Planning is not execution.
-Fabricated numbers = `synthetic_fixture`. `actual_product_evidence` is **0/16**
-because `execution_kind` has no target-hardware member, so none can be claimed
-without fabricating one.
+`actual_product_evidence` is **0/33** because `execution_kind` has no
+target-hardware member, so none can be claimed without fabricating one.
+
+> **The 6 `synthetic_fixture` executions retain no evidence at all.** Each of
+> `FB2-VER-EXE-000001`…`FB2-VER-EXE-000006` (profile `synthetic_reference`)
+> records `outcome: pass` with `logs: []` and no evidence file, and
+> `docs/artifacts/evidence/synthetic-fixtures/` holds **no fixture artefact** — its
+> only file is a hand-written `MANIFEST.md` documenting the absence, which states in
+> its own header that it "must never be counted as captured evidence for any test".
+> The fixture they claim
+> to have run was never retained, so the `pass` cannot be checked by anyone,
+> including this corpus. That is why the denominator of
+> `actual_product_evidence` counts all 44 execution records and the tool's own
+> detail string separates host/simulation (15) from `synthetic_fixture`/`none`
+> (29).
 
 ---
 
-## The macOS Host Run
+## The macOS Host Runs
 
-A real test-suite run was performed on the build host on 2026-09-29.
+**This section supersedes the earlier claim that "177 of 313 repository tests
+are blocked on HALCoGen."** That was true of the *first* host run, which selected
+only the 136 test suites whose quoted-`#include` closure reaches no
+HALCoGen-generated header. A **SIL harness** now runs all 313. Both runs are
+reported because the first is the one the older reports describe.
+
+### Run 1 — pre-SIL host run, selection `no_halcogen_dependency`
+
+Source (tracked): `evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-strict.json`,
+generated 2026-09-29T10:30:52+0200.
+
+| Measure | Strict | Relaxed (`results-relaxed.json`) |
+|---|---:|---:|
+| Tests in scope | 136 | 136 |
+| Passed | 94 | 98 |
+| Failed | 5 | 7 |
+| Build failures | 37 | 31 |
+| Assertions tested | 332 | 391 |
+| Assertions passed | 323 | 380 |
+| Assertions failed | 8 | 10 |
+
+The 177 tests outside this selection were blocked on proprietary TI HALCoGen
+output reaching **34 distinct `HL_*.h` headers** (`halcogen-dependency-closure.json`).
+That blocker is now *worked around by a SIL harness*, not by faking TI register
+maps, and it is no longer the reason those 177 suites do not run.
+
+### Run 2 — SIL host run, selection `all` (**the current headline**)
+
+Source (tracked): `evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json`,
+generated 2026-09-30T01:24:18+0200. Harness: "SIL host unit tests (CMock mocks of
+host-declared `HL_*.h` interface headers)".
 
 | Measure | Value |
-|---|---|
-| Platform | Darwin arm64, kernel 27.0.0 |
-| Toolchain | ruby 4.0.7 +PRISM [arm64-darwin27] |
-| Tests in scope | 136 |
-| **Passed** | **94** |
-| **Failed** | **5** |
-| Build failures | 37 |
-| Assertions | 332 tested, 323 passed, 8 failed |
-| Blocked on HALCoGen | **177 of 313** repository tests, across **34 distinct `HL_*.h` headers** |
+|---|---:|
+| CeeDling targets attempted | **313** |
+| **Passed** | **222** |
+| **Failed** | **7** |
+| Build failures | **84** |
+| Assertions tested / passed / failed | 988 / 950 / 35 |
+
+The 84 build failures are classified by the harness, order-independently, on the
+**set of distinct diagnostic codes** — not on any single message:
+
+| Class | n | | Class | n |
+|---|---:|---|---|---:|
+| `excluded:upstream_config` | 28 | | `build:real_defect_macro_arity` | 4 |
+| `build:clang_only_diagnostic` | 22 | | `build:sil_interface_header_mismatch` | 3 |
+| `build:undeclared_identifier` | 8 | | `build:real_defect_implicit_function_declaration` | 2 |
+| `build:real_defect_out_of_bounds_array_index` | 6 | | `build:real_defect_implicit_int` | 2 |
+| `build:strict_diagnostic_both_compilers` | 5 | | 4 more classes, 1 each | 4 |
+| | | | **Sum** | **84** |
+
+313 = 222 passed + 7 failed + 84 build failures, exactly.
+
+**Two populations that must not be conflated.** The harness *attempted 313*
+CeeDling targets. The repository today contains **318** `test_*.c` files under
+`tests/`; the 5 not attempted are `tests/unit-hw/test_tms570_{boot,crc,flash,main}.c`
+— the TMS570 **target-hardware** tests, which is precisely the evidence class
+this corpus cannot produce — plus
+`tests/cli/pre_commit_scripts/test_check_include_guard/test_file.c`, a C sample
+for a Python linter. "313 tests" is the harness's enumeration, not a count of
+every `test_*.c` file in the tree.
 
 **macOS is not an upstream-supported foxBMS platform.** This is a host run and
 carries no target-hardware verification credit.
 
-**The 5 failures are a real defect in the product's test setup, not a harness
-artefact.** `src/app/engine/database/database.h:209` declares the database
+**The 5 failures of the first run are a real defect in the product's test setup, not a harness
+artefact** — a statement that still holds, and it is why
+`FB2-REV-FND-000042` exists: **53 of the 245 green tests in the SIL host run
+assert nothing**, which is a separate and worse finding, recorded against the
+SIL run rather than hidden by it.
+
+Runbook: `evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md` (tracked).
+
+**The root cause of the first run's failures, in full.** `src/app/engine/database/database.h:209` declares the database
 access API with untyped `void *` parameters; the shipped Ceedling config sets
 `:cmock: :when_ptr: :compare_data`, so CMock cannot learn the pointed-to size
 and emits a pointer-**identity** check. The tests pass a pointer to their own
 `static` copy while the code under test passes a different one. This is
 compiler- and platform-independent, so the same five tests are expected to fail
 under GNU gcc on Linux. **No result was adjusted to make a test pass.**
-
-Runbook: `docs/artifacts/.work/verification-env/RUNBOOK.md`.
 
 ---
 
@@ -344,13 +494,13 @@ Runbook: `docs/artifacts/.work/verification-env/RUNBOOK.md`.
 # Full acceptance suite (8 stages) — expect: Acceptance suite: PASSED
 python3 docs/artifacts/tools/corpus.py check
 
-# Schema + link + semantic validation — expect: errors=0
+# Schema + link + semantic + provenance validation — expect: errors=0
 python3 docs/artifacts/tools/corpus.py validate
 
 # The 15 coverage dimensions
 python3 docs/artifacts/tools/corpus.py coverage
 
-# Toolchain self-tests — expect: 22 PASS, 0 FAIL
+# Toolchain self-tests — expect: 48 PASS, 0 FAIL
 python3 docs/artifacts/tools/corpus.py selftest
 
 # Source/feature/variant inventory — expect: 612/612, 24 modules, 22 features, 23 variants
@@ -369,6 +519,10 @@ python3 docs/artifacts/tools/corpus.py impact FB2-PRM-000001
 
 # Spec-document integrity and determinism — expect: INTEGRITY CHECK PASSED
 python3 docs/artifacts/tools/render_spec_documents.py --check
+
+# HTML deliverable integrity — expect: exit 0. IT CURRENTLY EXITS 1, see the
+# note under "Known Gaps and Defects".
+python3 docs/artifacts/tools/render_e2e_html.py --check
 ```
 
 ## How to Regenerate Derived Outputs
@@ -393,21 +547,29 @@ python3 docs/artifacts/tools/corpus.py scenario-test
 
 # Regenerate the 10 spec documents
 python3 docs/artifacts/tools/render_spec_documents.py
+
+# Regenerate the HTML deliverable (tracked; see the note on its --check below)
+python3 docs/artifacts/tools/render_e2e_html.py
 ```
 
 **Determinism:** rendering twice produces byte-identical output apart from the
 `Generated:` line in each view's preamble and the `generated_at` field in
 `exports/manifest.json`. Verified by `diff -r -I '^Generated:'`. No other line is
-excluded.
+excluded. Re-verified on 2026-10-01 after the coverage-plan change: two renders,
+zero differences across all 11 views.
 
 **Anti-drift:** generated prose reads `governance/coverage-plan.json` **live at
 render time** rather than quoting a frozen literal, so correcting the plan
-corrects the views. This was verified empirically by temporarily flipping a
-disposition and observing the view follow it.
+corrects the views. Verified twice: once on 2026-09-29 by temporarily flipping a
+disposition and observing the view follow it, and again on 2026-10-01 when the
+`CORR-COV-016` demotions propagated — `views/standards-mapping/standards-mapping.md`
+moved from 12/10/6 to 4/21/3 without any view being edited.
 
 The `.md` reports in `reports/` are hand-authored but every number in them is
 taken from a live tool run, and each report states which command produced which
-figure.
+figure. **Where a report's figure and the live figure disagreed, the report was
+corrected rather than the live figure — except where the live figure itself was
+the defect, which is recorded as a finding and named in the report.**
 
 ---
 
@@ -461,11 +623,25 @@ and cite IEC 61508-3:2010 in `docs/references.bib`, so the standard is a
 legitimate consideration for the product; the corpus simply never engaged it.
 
 **Coverage:** 32 ASPICE processes (28 applicable, 4 `not_applicable`), 12 ISO
-parts. The acceptance gate verifies 44/44 mapping items — meaning every item has
-an explicit disposition, **not** that the dispositions are favourable:
+parts. Two different figures must not be conflated:
 
-- ASPICE: 12 `mapped`, 10 `partially_mapped`, **6 `gap`** across the 28 applicable
-- ISO parts: 2 `mapped`, 4 `partially_mapped`, **2 `gap`**, 2 `referenced`, 2 `not_applicable`
+| Figure | Value | What it measures |
+|---|---|---|
+| `standards_mapping` (acceptance gate) | **33/38** | how many of the 38 applicable entries name an artefact that resolves — ASPICE 25/28, ISO 8/10. **Not** a statement about favourability. |
+| Disposition tally | **ASPICE: 4 `mapped`, 21 `partially_mapped`, 3 `gap`** over the 28 applicable; **ISO: 0 `mapped`, 8 `partially_mapped`, 2 `referenced`** over the 10 applicable | whether the backing records carry the engineering the process defines. **This is the honest figure.** |
+
+The old `44/44` was the number of keys in the inventory file divided by itself.
+It was replaced by `16/38` on 2026-09-29 (measured by backing) and then rose to
+`33/38` on 2026-10-01, because `CORR-COV-016` rewrote each disposition to name
+the record it rests on. The number that reflects substance moved the other way,
+from 12 `mapped` to 4.
+
+**Only 4 of 28 applicable ASPICE processes survive the audit:** `MAN.3`
+(`FB2-MAN-PLN-000001`), `MAN.5` (`FB2-MAN-RSK-000001`), `MAN.6`
+(`FB2-MAN-MSM-000001`) and `PIM.3` (`FB2-PIM-IMP-000001`/`000002`). Three
+processes are honest `gap`: **`SWE.3` and `HWE.3` and `HWE.4`, none of which any
+artefact in the corpus references in any `standards_mappings[].reference` string.**
+No ISO 26262 part is `mapped`.
 
 **No process in this corpus is assessed at any ASPICE capability level.**
 
@@ -473,34 +649,65 @@ an explicit disposition, **not** that the dispositions are favourable:
 
 ## Known Gaps and Defects
 
-### Governance gaps (verified against disk, corrected 2026-09-29)
+### Process-coverage gaps after the substantive audit (`CORR-COV-016`, 2026-10-01)
 
-| Process / part | Status | What is missing |
+Every row below is measured from the corpus, not asserted. "Backing records"
+means artefacts whose own `standards_mappings[].reference` names the process.
+
+| Process | Status | Backing records | What is actually missing |
+|---|---|---|---|
+| **`SWE.3`** Software Detailed Design and Unit Construction | **`gap`** | **ZERO** | Recorded `mapped` until 2026-10-01 while **no artefact in the corpus referenced it at all**. No detailed-design record (the 8 `design` records are `design_level: architecture` and name SWE.2), no source-code record, no unit-test specification. |
+| **`HWE.3`** Hardware Detailed Design | **`gap`** | **ZERO** | No schematics, PCB layout, BOM or component specification. The Altium design files live in the external `foxBMS2_hw` repository and are unverifiable from here. |
+| `HWE.4` Hardware Integration and Test | **`gap`** | **ZERO** | No HW integration plan, test specification or test result. |
+| `SYS.1` Requirements Elicitation | `partially_mapped` | 5 stakeholder needs, 4 use cases, item definition, project plan | No operational scenario; every need carries `is_a_real_elicitation = false`; `as_is` remains at gap. |
+| `SYS.2` System Requirements Analysis | `partially_mapped` | 8 system requirements | No system modes/states; no system-level interface requirements; requirements back-inferred from code, not analysed. |
+| `SYS.3` System Architectural Design | `partially_mapped` | HSI interface spec, 2 safety concepts, project plan | **No system-architecture record exists.** Allocation lives only inside the safety concepts. |
+| `SWE.1` Software Requirements Analysis | `partially_mapped` | 6 software requirements | No software interface requirements; requirements back-inferred, not analysed. |
+| `SWE.2` Software Architectural Design | `partially_mapped` | 6 design records | Interfaces are signal tables, not interface specifications; records extracted from existing code. |
+| `SWE.4` / `SWE.5` / `SWE.6` | `partially_mapped` | 33 test measures, 15 host-run executions | No unit/integration/qualification **specification**, no **plan** for SWE.5, and the only unit results are from the SIL host harness, not the upstream Unity/CMock suite. |
+| `SYS.4` / `SYS.5` | `partially_mapped` | 23 test measures, 8 executions | No integration or qualification plan or specification; all results blocked. |
+| `HWE.1` / `HWE.2` | `partially_mapped` | 7 hardware requirements | No hardware interface requirements, no hardware architecture, no block diagram, no interface schematic. |
+| `ACQ.4` Supplier Monitoring | `partially_mapped` | 1 process record, 1 post-development record | No supplier assessment — the record states no supplier is under contract and no advisory source was consulted. |
+| `REU.2` Reuse Program Management | `partially_mapped` | 1 process record | No reuse assessment completed for any element; independence unachievable for the modified vendor drivers. |
+| `SPL.2` Release Management | `partially_mapped` | 4 records | No release notes; nothing released — `any_step_executed: false`. |
+| `SUP.1` Quality Assurance | `partially_mapped` | 1 process record, 15 review records | No audit record; independence stated and explicitly not achieved (RSK-003). |
+| `SUP.8` Configuration Management | `partially_mapped` | 1 process record, 4 records | Change control deferred to another record; status accounting not performed. |
+| `SUP.9` Problem Resolution Management | `partially_mapped` | 13 findings, 1 process record | No trend analysis — the record itself says one intake cycle cannot produce one. |
+| `SUP.10` Change Request Management | `partially_mapped` | 3 change records, 1 process record | All three changes are fictional; nothing was raised against the real product. |
+| `SUP.11` Traceability Management | `partially_mapped` | 3 change records, 489 links, coverage reports | Link currency not maintained: **326 of 489 links carry a stale endpoint revision and none is marked suspect.** |
+| `VAL.1` Validation | `partially_mapped` | 5 test measures, 4 use cases, 2 post-development records | No validation plan; **zero validations executed** — all executions blocked. |
+| ISO Part 2 Management | `partially_mapped` | `FB2-MAN-SPL-000001` only | That record has `artifact_type: design`, six empty structural fields, no roles assigned and no tailoring. It is not a safety plan. |
+| ISO Parts 3, 4 | `partially_mapped` | Item definition, FSC, TSC, HSI, 8 system requirements | Concept timing budget does not close (FND-000025); contactor reaction requirement contradicts itself (FND-000024); no system architecture; no modes/states. |
+| ISO Part 7 Production | `partially_mapped` | 6 post-development records | All six carry `any_step_executed: false`. Documented, not performed. |
+| ISO Part 8 Supporting | `partially_mapped` | 6 supporting-process records | Rests entirely on records whose own processes are `partially_mapped`; QA independence not achieved. |
+| ISO Part 9 ASIL | `partially_mapped` | 4 safety analyses, 2 ASIL field values | No ASIL methodology; `FB2-SAF-SGO-000001` carries `ASIL_D` with no justification field at all. |
+
+### Known limitations of the evidence base
+
+These four are true, measured, and belong in the reports rather than only in an
+agent handover.
+
+| # | Limitation | Measured extent |
 |---|---|---|
-| `SYS.1` Requirements Elicitation | `gap` | no stakeholder-needs, use-case or operational-scenario record |
-| `SYS.2` System Requirements Analysis | `gap` | no system requirements record in either profile |
-| `HWE.4` Hardware Integration and Test | `gap` | no `as_is` HW test record |
-| `MAN.3` Project Management | `gap` | only a scope statement; no plan, schedule, resource plan or progress report |
-| `MAN.5` Risk Management | `gap` | only a TARA threat table; no project risk register |
-| `MAN.6` Measurement | `partially_mapped` | 100 acceptance criteria exist on 26 records, but no measurement plan |
-| `PIM.3` Process Improvement | `gap` | no improvement proposal, record or effectiveness evaluation |
-| ISO Part 3 Concept | `partially_mapped` | no functional safety concept, no technical safety concept |
-| ISO Part 6 Software | `partially_mapped` | unit verification only partially mapped |
-| ISO Part 7 Production | `gap` | no production, operation, service or decommissioning record |
-| ISO Part 8 Supporting | `gap` | no supporting-domain process-definition record |
+| 1 | **10 records' hardware provenance rests on Altium design files in an external repository.** Anchors `FB2-SRC-HW-000001..000003` name `.SchDoc` files that live in `foxBMS2_hw`, present neither in this working tree nor in any commit of it. Their `content_hash` and `location.file_hash` both read `unresolved` and their `hash_status` is `external_design_file_unverifiable_from_this_repository`. | **14** records cite them; **10** are non-review records (6 hardware requirements, `FB2-SAF-ANL-000003`, `FB2-SAF-ITE-000001`, `FB2-SAF-TSC-000001`, `FB2-SYS-HSI-000001`) and 4 are the review records that review them. |
+| 2 | **4 anchors have no single machine-checkable symbol.** The provenance checker records `symbol_unverifiable_prose` for these and cannot verify them by symbol match. Their content hashes and line ranges *are* verified. | `FB2-SRC-COD-000044` whole `rtc.c` module body (lines 70–653); `FB2-SRC-COD-000076` the 12-line FreeRTOS **markdown README**; `FB2-SRC-COD-000077` the whole 114-line **`requirements.txt`**; `FB2-SRC-COD-000088` the **licence/copyright header** of `dp83869.c` (lines 1–59). |
+| 3 | **5 execution records carry a suite-results digest belonging to a `.work` scratch file** rather than the evidence file they name. | `FB2-VER-EXE-000008`…`000012`: `output_hashes.sil_suite_results_all = sha256:cbbdee…` resolves to `.work/verification-env/sil/logs/RESULTS-POST-fix.json`, not to the `results-sil-all.json` (`sha256:edd3e70…`) those records cite. `FB2-VER-EXE-000015` additionally names eight `.work/` paths directly in its `logs[]`. |
+| 4 | **6 synthetic executions describe a `synthetic_fixture` run with NO retained evidence.** The fixture never existed. | `FB2-VER-EXE-000001`…`000006` (profile `synthetic_reference`): each records `outcome: pass` with `logs: []` and no evidence file, and each carries a `provenance_repair.unretained_evidence` entry recording that the previous `build/synthetic/*.log` reference was removed rather than replaced. `docs/artifacts/evidence/synthetic-fixtures/` holds **no fixture artefact** — only a `MANIFEST.md` documenting the gap. **That `MANIFEST.md` cites finding `FB2-REV-FND-000143`, and no such record exists in the corpus**: 42 `finding` records exist, numbered up to `FB2-REV-FND-000042`. The gap is therefore recorded only in a hand-written statement, not in a canonical record. |
 
 ### Reported defects
 
 | Defect | Severity | Disposition |
 |---|---|---|
 | `TRACEABILITY_DOCUMENT.md` at repository root claimed ISO 26262 + IEC 61508 compliance, an ASIL-D/ASIL-B capability, and carried a fabricated human-approval sign-off; outside the write boundary | high | **accepted** — `FB2-REV-FND-000022` rev 4; corrected under explicit owner authorisation, then made **tool-owned**: the document is generated at `views/traceability/traceability-document.md` and the root path is a content-free pointer, so the drift risk is closed by construction |
-| `FB2-REV-000001` exists in two files with identical content | medium | accepted, reported; index de-duplicates, validator does not flag it |
-| Redundant link-registry copy under `corpus/` (51 of 172 links) | low | accepted, reported; de-duplicated by the tool |
+| **`render_e2e_html.py --check` fails on 14 records** | medium | **open, tool-side.** Every `artifact_type: implementation` record (10 `as_is`, 4 `synthetic_reference`) has no owning section in the renderer, so its integrity check exits 1 with `UNMAPPED artifact type … has no owning section`. The HTML deliverable itself is regenerated, tracked (the path-specific negation in `docs/artifacts/.gitignore` works: `git check-ignore` returns 1) and passes `--audit-guard` with no affirmative conformity claim. The fix is an owning section in `render_e2e_html.py`, which is outside the write boundary of this workstream. |
+| **326 of 489 links carry a stale endpoint revision and none is marked suspect** | medium | **open.** `SUP.11` demoted to `partially_mapped` for it. |
+| **53 of the 245 green tests in the SIL host run assert nothing** | high | **recorded** — `FB2-REV-FND-000042`, against the SIL run rather than hidden by it |
 | `feature-inventory.json` `summary.total_features` says 20, holds 22 | low | accepted, reported; the tool counts records and reports 22 |
-| 7 FSRs carry no `fault_reaction` field | medium | 7 findings open; schema change needed |
-| 5 security requirements have no verification link in either direction | medium | 5 findings open; real gap |
-| ASIL assignment with no justification | medium | 2 findings open; needs an engineering determination |
+| FSRs carry no `fault_reaction` field | medium | findings open; schema change needed |
+| Security requirements have no verification link in either direction | high | `FB2-REV-FND-000041`, open; the measures now exist but the executions are blocked |
+| ASIL assignment with no justification | medium | open on `FB2-SAF-SGO-000001`; needs an engineering determination, not a corpus edit |
 | `verifies`-direction rule fires on correctly verified requirements | medium | not resolved by design; convention decision owed |
+| Link-registry layout: `corpus/synthetic_reference/.../links-cell-voltage.json` duplicates 51 of the 195 links in the canonical registry | low | accepted, reported; de-duplicated by the tool. **The sibling `links-concept-lifecycle.json` (177 links) is NOT a duplicate** — it is the only copy of the concept-lifecycle links and is load-bearing. |
 
 ---
 
@@ -510,12 +717,13 @@ an explicit disposition, **not** that the dispositions are favourable:
 |--------|-------------|
 | `reports/final-acceptance-report.md` + `.json` | All gates, 15 dimensions, 5 walkthroughs, final status |
 | `reports/coverage-report.md` + `.json` | Population, three-count explanation, census, gaps |
-| `reports/standards-mapping-report.md` | ISO part and ASPICE process dispositions, 15 corrections |
+| `reports/standards-mapping-report.md` | ISO part and ASPICE process dispositions, 16 corrections |
 | `reports/traceability-report.md` | Link statistics, direction convention, worked chains |
 | `reports/consistency-report.md` | 10 check categories, 4 finding families, structure defects |
 | `reports/review-summary.md` | Review coverage, types, findings, limitations |
 | `reports/source-vs-synthetic-gap-report.md` | `as_is` vs `synthetic_reference` gaps by category |
-| `reports/verification-evidence-report.md` | The real macOS host run, 5 failures root-caused, 177 blocked |
+| `reports/verification-evidence-report.md` | Both macOS host runs: 313 SIL targets, and the 5 failures root-caused |
+| `reports/e2e-engineering-document.html` | Single-file HTML deliverable; generated, tracked, guard-audited |
 | `reports/scenario-validation-report.md` + `.json` | 20 mutations, 3 change lifecycles, baseline-firing detectors |
 | `reports/reproducibility-report.md` | Determinism measured by rendering twice and diffing |
 | `reports/TRACEABILITY_DOCUMENT.md` + `.docx` | **Pointer** to the generated traceability document, plus a pandoc conversion of that pointer. Neither carries engineering content |

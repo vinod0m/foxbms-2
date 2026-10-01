@@ -23,7 +23,7 @@ flowchart TD
         SWR["FB2-SW-SWR-000001..000003<br/>software reqs"]
         DSN["FB2-SW-DSN-000001..000003<br/>designs"]
         CODE["src/app/ modules<br/>LTC6813-1, soa.c, contactor.c"]
-        UNIT["313 C unit tests"]
+        UNIT["318 test_*.c files under tests/<br/>SIL harness attempted 313"]
     end
     subgraph HARDWARE["Hardware Level"]
         TSR["FB2-HW-TSR-000001..000004<br/>technical safety reqs"]

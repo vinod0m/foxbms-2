@@ -1,6 +1,6 @@
 {
   "id": "FB2-VER-EXE-000016",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "execution",
   "engineering_domain": "verification",
@@ -28,7 +28,7 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T16:10:04Z",
-  "updated_at": "2026-09-29T16:10:04Z",
+  "updated_at": "2026-10-01T00:00:00Z",
   "test_measure_id": "FB2-VER-TMS-000004",
   "test_measure_revision": "1",
   "execution_kind": "actual_host_run",
@@ -93,11 +93,6 @@
       "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md",
       "hash": "sha256:929ada9c27021915758946785ab5844435e7f33f3d7cbbf5a0b4e6067788f462",
       "type": "custom"
-    },
-    {
-      "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict (one .log per test, 313 files)",
-      "hash": "sha256:c8c577da85fcb5a841a19620c0b3e1e1a8444d66b5d0afb6e73adc0ba9ae8c53",
-      "type": "stdout"
     }
   ],
   "timestamps": {
@@ -111,6 +106,12 @@
       "date": "2026-09-29T16:10:04Z",
       "author": "verification_engineer",
       "description": "New artifact: the subset of the SIL sweep covering exactly the 200 tests the CORRECTED HALCoGen closure marks as blocked. This is the set the superseded FB2-VER-EXE-000004 record described as blocked; that record is superseded by this one and by FB2-VER-EXE-000015."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Provenance repair of the evidence hash and file-reference fields by a separate session (opencode-2026-10-01-provenance-repair); no statement of what the run did was altered. 1 logs[] reference(s) removed because the path never resolved to anything: see provenance_repair.unretained_evidence for each. Nothing was written to make them resolve. The outcome, timestamps, environment, anomalies, evidence_refs, notes and limitations of this record are untouched."
     }
   ],
   "scope": {
@@ -153,5 +154,22 @@
     "93 of the 200 still do not build; 27 of those are excluded by upstream's own configuration and would not build on Windows either.",
     "Not MISRA-conformant, not a qualified tool, no certification claim."
   ],
-  "notes": "The blocked set under the SIL harness, measured. Every test that builds and runs here runs real foxBMS production code from src/."
+  "notes": "The blocked set under the SIL harness, measured. Every test that builds and runs here runs real foxBMS production code from src/.",
+  "provenance_repair": {
+    "session": "opencode-2026-10-01-provenance-repair",
+    "date": "2026-10-01T00:00:00Z",
+    "unretained_evidence": [
+      {
+        "previous_reference": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict (one .log per test, 313 files)",
+        "previous_hash": "sha256:c8c577da85fcb5a841a19620c0b3e1e1a8444d66b5d0afb6e73adc0ba9ae8c53",
+        "named_set": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict",
+        "files_present_at_that_path": 313,
+        "file_extension": ".log",
+        "output_hash_key_still_naming_the_unrecovered_manifest": "per_test_log_manifest",
+        "resolution": "reference removed; no entry is made to name a directory",
+        "note": "The per-test logs this entry describes do exist: 313 .log files are present at docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict and were listed as per_test_log_manifest. What does not exist is the per-test log manifest whose digest was recorded here, in output_hashes.per_test_log_manifest and nowhere else in the repository; the bytes it named are unrecoverable, so no digest can be given for it. Unlike the per-test logs, which were regenerated in place, no manifest was retained or regenerated. The directory and its file count are recorded here instead of a path that does not resolve. Generating a manifest now would add a file to the evidence tree that no run produced, which is left to the corpus owner rather than done silently."
+      }
+    ],
+    "principle": "A hash that identifies a file still present at the path it names has been re-derived from the bytes on disk and the superseded value is recorded above. A hash that identifies something no run ever captured, or an input consumed at a specific moment in the past, is not overwritten: it is retained with both digests recorded, or removed with this note. No file was created to make a reference resolve."
+  }
 }

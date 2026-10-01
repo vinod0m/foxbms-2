@@ -25,6 +25,7 @@ import io
 import json
 import os
 import re
+import subprocess
 import sys
 from contextlib import contextmanager
 from datetime import datetime, timezone
@@ -56,6 +57,7 @@ ARTIFACT_TYPE_SCHEMAS = {
     "review": "review.schema.json",
     "scenario": "scenario.schema.json",
     "change": "change.schema.json",
+    "implementation": "implementation.schema.json",
     "finding": "finding.schema.json",
     "deviation": "deviation.schema.json",
     "tara": "tara.schema.json",
@@ -135,6 +137,27 @@ RULE_IDS = {
     "inventory_source_count",
     "inventory_modules",
     "inventory_features",
+    # --- provenance verification (added: no rule previously verified a digest,
+    # a content hash or a line range, so a fabricated anchor set passed) ---
+    "review_digest_mismatch",
+    "review_digest_placeholder",
+    "review_digest_artifact_unresolved",
+    "source_anchor_content_hash_unverified",
+    "source_anchor_content_hash_mismatch",
+    "source_anchor_file_missing",
+    "source_anchor_symbol_missing",
+    "source_anchor_symbol_unverifiable",
+    "source_anchor_line_range_out_of_bounds",
+    "source_anchor_line_range_unparseable",
+    "evidence_file_missing",
+    "evidence_file_hash_mismatch",
+    # --- governance semantics, runnable independently of schema validation ---
+    "governance_authority_claim",
+    # --- change-lifecycle content (key presence was the whole previous check) ---
+    "change_lifecycle_field_empty",
+    "change_lifecycle_nested_content_missing",
+    "change_lifecycle_reference_unresolved",
+    "change_lifecycle_baseline_malformed",
 }
 
 # ISO 26262-3:2018 Table 4, ASIL determination from severity and exposure.
@@ -244,12 +267,21 @@ class CorpusTool:
         self.exports_dir = self.artifacts_dir / "exports"
         self.views_dir = self.artifacts_dir / "views"
         self.tests_dir = self.artifacts_dir / "tests"
+        self.tools_dir = self.artifacts_dir / "tools"
         self.schemas = {}
         self.findings = Findings()
         # One shared scenario measurement per process. cmd_coverage (step 3/8 of
         # the acceptance suite) and cmd_scenario_test (step 5/8) both need it and
         # must report the same number; see _execute_scenarios.
         self._scenario_run_cache = None
+        # When True the provenance detectors still run and still emit every
+        # finding -- they are never switched off -- but their boolean result is
+        # forced to True so a caller can read the tally without turning red.
+        # Set only by `check --provenance-report-only`. See main().
+        self.provenance_report_only = False
+        # Per-class counts from the last provenance verification run, for the
+        # report; not itself a gate.
+        self.provenance_tally = {}
         self.load_schemas()
 
     # ------------------------------------------------------------------ load
@@ -500,6 +532,26 @@ class CorpusTool:
             return False
         return True
 
+    def _validate_no_duplicate_ids(self):
+        """A duplicate artifact id within one profile makes every id-keyed lookup
+        ambiguous. Report it as an ERROR so validate fails, rather than noting it
+        and carrying on with an arbitrary winner."""
+        seen = {}
+        for p, d in self.iter_corpus_artifacts():
+            aid = d.get("id")
+            if not aid:
+                continue
+            profile = d.get("profile", "unknown")
+            key = (profile, aid)
+            if key in seen and seen[key][1] != d:
+                self.findings.add("high", "identity", aid,
+                                  f"duplicate artifact id within profile {profile} at {p} and {seen[key][0]}",
+                                  "identity_duplicate_within_profile")
+                self.identity_duplicates = True
+            else:
+                seen[key] = (p, d)
+        return not getattr(self, "identity_duplicates", False)
+
     def _validate_links(self, links, index):
         ok = True
         for l in links:
@@ -534,7 +586,15 @@ class CorpusTool:
         return ok
 
     def _validate_provenance_refs(self, index):
-        """source_refs / assumption_refs resolve to registries."""
+        """source_refs / assumption_refs resolve to registries.
+
+        `ok` is now driven by the findings this method emits. It previously
+        returned True unconditionally, so an unresolved provenance reference
+        was printed as a finding and then ignored by every caller: the rule
+        could not fail anything. A dangling provenance reference is a claim
+        about where a requirement came from that does not resolve, so it is
+        reported as an error and the caller is allowed to fail.
+        """
         ok = True
         anchors = set()
         sr = self.sources_dir / "source-registry.json"
@@ -550,15 +610,552 @@ class CorpusTool:
         for aid, (p, d) in index.items():
             for ref in d.get("source_refs", []):
                 if anchors and ref not in anchors:
-                    self.findings.add("medium", "provenance", aid,
+                    self.findings.add("high", "provenance", aid,
                                       f"source_ref '{ref}' not in source-registry",
                                       "provenance_ref_unresolved")
+                    ok = False
             for ref in d.get("assumption_refs", []):
                 if assumptions and ref not in assumptions:
-                    self.findings.add("medium", "provenance", aid,
+                    self.findings.add("high", "provenance", aid,
                                       f"assumption_ref '{ref}' not in assumption-registry",
                                       "provenance_ref_unresolved")
+                    ok = False
         return ok
+
+    # ------------------------------------------------------- provenance verification
+    #
+    # Nothing below existed before. There was no code path anywhere in this tool
+    # that hashed an artefact, compared a recorded digest to the file on disk,
+    # checked a source anchor's content_hash, or checked that a recorded
+    # line_range lies inside the file it names. That is why a source registry
+    # whose anchors point at symbols which do not exist, whose line ranges run
+    # past the end of their files, and whose content_hash is the literal string
+    # "sha256:placeholder" could be published alongside
+    # "Acceptance suite: PASSED".
+    #
+    # Severity is a considered assignment, not a blanket constant:
+    #
+    #   high    - the corpus states something specific that is provably false.
+    #             A digest that does not match the file, a content_hash that does
+    #             not match the file, a symbol that is not in the file it is
+    #             attributed to, a line range past end-of-file, an evidence file
+    #             that does not exist or whose bytes changed. These are false
+    #             statements about the product, not omissions.
+    #   medium  - the corpus declines to make a statement. "sha256:placeholder"
+    #             and the literal digest "placeholder" mean no verification was
+    #             performed. That is unfinished work, and it is reported with the
+    #             same visibility as a falsehood, but it is not the same kind of
+    #             defect and the tally keeps the two classes apart.
+    #
+    # Every check below runs unconditionally and every finding is added to
+    # self.findings, so it participates in `validate`, in the scenario harness
+    # via _run_detectors, and in any gate that counts findings. They cannot be
+    # switched off. They CAN be run in a reporting mode that does not fail --
+    # see self.provenance_report_only -- because the corpus is legitimately red
+    # on them until a separate workstream re-derives the anchors, and a gate
+    # that cannot be looked at is not usable.
+
+    _ANCHOR_PATH_KEYS = ("path", "file", "file_or_executable")
+    _PLAIN_IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+    _LINE_RANGE = re.compile(r"^\s*(\d+)\s*(?:-\s*(\d+)\s*)?$")
+    _PLACEHOLDER_HASHES = {"", "placeholder", "sha256:placeholder", "sha256:", "none", "null"}
+
+    @staticmethod
+    def _expected_sha(value):
+        """Normalise a recorded hash to a bare sha256 hex digest, or None."""
+        if value is None:
+            return None
+        s = str(value).strip()
+        if s.lower().startswith("sha256:"):
+            s = s[7:].strip()
+        return s or None
+
+    def _classify_placeholder_hash(self, value):
+        """True when a recorded hash says 'not verified' rather than naming one.
+
+        Recognises the literal placeholders the corpus uses, case-insensitively,
+        including the prefixed "sha256:placeholder" form, so a placeholder can be
+        counted and reported rather than silently skipped.
+        """
+        s = str(value).strip().lower() if value is not None else ""
+        return (s in self._PLACEHOLDER_HASHES
+                or s.startswith("sha256:placeholder")
+                or s.startswith("placeholder"))
+
+    def _anchor_file(self, location):
+        """The repository-relative file an anchor names, or None.
+
+        The registry spells the file differently per source_type: `path` for
+        code, `file` for hardware, `file_or_executable` for tests. A
+        documentation anchor records a URL, which is not a file in this
+        repository and is therefore not something this offline check can hash;
+        that is reported rather than counted as a pass.
+        """
+        if not isinstance(location, dict):
+            return None
+        for key in self._ANCHOR_PATH_KEYS:
+            v = location.get(key)
+            if isinstance(v, str) and v.strip():
+                return v.strip()
+        return None
+
+    def _load_source_anchors(self):
+        sr = self.sources_dir / "source-registry.json"
+        if not sr.exists():
+            return []
+        return [a for a in load_json(sr).get("anchors", []) if a.get("anchor_id")]
+
+    def _file_sha256(self, rel):
+        fp = self.root / rel
+        try:
+            return sha256_file(fp)
+        except OSError:
+            return None
+
+    def _validate_review_digests(self, index):
+        """Every reviewed_ids[].digest must be the sha256 of the artefact, now.
+
+        Profile-scoped: a digest recorded in an `as_is` review is checked against
+        the `as_is` record with that id, never against the synthetic_reference
+        copy, because cross-profile duplicate ids are a deliberate design
+        decision of this corpus and a digest is a statement about one of them.
+
+        The literal "placeholder" is permitted, but only with a per-entry note
+        saying why. Both the number of permitted placeholders and the number of
+        unnoted ones are reported: a permitted placeholder is a disclosure, not
+        a verification.
+        """
+        ok = True
+        records_dir = self.artifacts_dir / "reviews" / "records"
+        if not records_dir.exists():
+            return ok
+        permitted = unnoted = verified = 0
+        for rp in sorted(records_dir.glob("*.json")):
+            try:
+                rec = load_json(rp)
+            except Exception as e:
+                self.findings.add("critical", "provenance", rp.name,
+                                  f"review record unparseable: {e}", "json_unparseable")
+                ok = False
+                continue
+            profile = rec.get("profile", "unknown")
+            rid = rec.get("id", rp.stem)
+            for entry in rec.get("reviewed_ids", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                aid = entry.get("artifact_id")
+                digest = entry.get("digest")
+                key = (profile, aid)
+                if key not in index:
+                    self.findings.add(
+                        "high", "provenance", rid,
+                        f"reviewed_ids entry '{aid}' does not resolve to any artifact "
+                        f"in profile {profile}", "review_digest_artifact_unresolved")
+                    ok = False
+                    continue
+                if self._classify_placeholder_hash(digest):
+                    note = (entry.get("digest_note") or entry.get("digest_placeholder_note")
+                            or entry.get("note") or entry.get("placeholder_reason"))
+                    if isinstance(note, str) and note.strip():
+                        permitted += 1
+                        self.findings.add(
+                            "medium", "provenance", rid,
+                            f"reviewed_ids digest for '{aid}' is the literal placeholder, "
+                            f"permitted by note: {note.strip()}",
+                            "review_digest_placeholder")
+                    else:
+                        unnoted += 1
+                        self.findings.add(
+                            "medium", "provenance", rid,
+                            f"reviewed_ids digest for '{aid}' is the literal placeholder "
+                            f"and carries no note explaining why", "review_digest_placeholder")
+                    ok = False
+                    continue
+                path = index[key][0]
+                actual = self._file_sha256(str(path)) if not str(path).startswith("<") else None
+                if actual is None:
+                    self.findings.add(
+                        "high", "provenance", rid,
+                        f"reviewed_ids digest for '{aid}' cannot be verified: the artefact "
+                        f"file {path} is not readable", "review_digest_mismatch")
+                    ok = False
+                    continue
+                if actual == str(digest).strip():
+                    verified += 1
+                else:
+                    ok = False
+                    self.findings.add(
+                        "high", "provenance", rid,
+                        f"reviewed_ids digest for '{aid}' does not match the artefact "
+                        f"{path}: recorded {str(digest).strip()[:16]}..., "
+                        f"actual {actual[:16]}...", "review_digest_mismatch")
+        self.provenance_tally["review_digest"] = {
+            "verified": verified, "placeholder_with_note": permitted,
+            "placeholder_without_note": unnoted}
+        return ok
+
+    def _validate_source_anchors(self):
+        """Verify every source anchor against the file it names.
+
+        Three facts are checked, and only the ones the anchor actually claims:
+
+          * the file it names exists;
+          * `content_hash` equals the sha256 of that file. A recorded
+            "sha256:placeholder" is counted and reported as unverified, never
+            skipped, because skipping it is what made the fabricated anchor set
+            invisible;
+          * `line_range` lies inside that file's bounds and, when `symbol` is a
+            plain identifier rather than prose, that identifier occurs in the
+            file.
+
+        A symbol recorded as prose ("module level (...)", "A / B") cannot be
+        checked by substring search, so it is counted and reported as
+        unverifiable rather than silently passed.
+        """
+        ok = True
+        tally = {"anchors": 0, "hash_verified": 0, "hash_unverified_placeholder": 0,
+                 "hash_mismatch": 0, "file_missing": 0, "line_range_ok": 0,
+                 "line_range_out_of_bounds": 0, "line_range_unparseable": 0,
+                 "symbol_checked": 0, "symbol_present": 0, "symbol_absent": 0,
+                 "symbol_unverifiable_prose": 0}
+        for a in self._load_source_anchors():
+            aid = a.get("anchor_id")
+            tally["anchors"] += 1
+            loc = a.get("location") or {}
+            rel = self._anchor_file(loc)
+            if rel is None:
+                # No repository file named (e.g. a documentation anchor records
+                # only a URL). Nothing is claimed about a local file, so there is
+                # nothing to contradict; the content_hash is still judged below.
+                self.provenance_tally.setdefault("anchor_without_local_file", 0)
+                self.provenance_tally["anchor_without_local_file"] += 1
+                actual = None
+            else:
+                fp = self.root / rel
+                if not fp.exists():
+                    tally["file_missing"] += 1
+                    ok = False
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"anchor names file {rel}, which does not exist in the repository",
+                        "source_anchor_file_missing")
+                    actual = None
+                else:
+                    actual = self._file_sha256(rel)
+
+            # content_hash, and the working_file_hash the anchor carries in the
+            # same location block
+            for field, owner in ((a.get("content_hash"), "content_hash"),
+                                 (loc.get("working_file_hash"), "location.working_file_hash"),
+                                 (loc.get("file_hash"), "location.file_hash")):
+                if field is None:
+                    continue
+                label = f"{aid}.{owner}"
+                if self._classify_placeholder_hash(field):
+                    if owner == "content_hash":
+                        tally["hash_unverified_placeholder"] += 1
+                    self.findings.add(
+                        "medium", "provenance", aid,
+                        f"{owner} is '{field}': the anchor records no content hash, so the "
+                        f"provenance of {rel or 'the named source'} is unverified",
+                        "source_anchor_content_hash_unverified")
+                    if owner == "content_hash":
+                        ok = False
+                    continue
+                if actual is None:
+                    continue
+                if self._expected_sha(field) == actual:
+                    if owner == "content_hash":
+                        tally["hash_verified"] += 1
+                else:
+                    if owner == "content_hash":
+                        tally["hash_mismatch"] += 1
+                        ok = False
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"{owner} does not match {rel}: recorded {field}, actual sha256:{actual}",
+                        "source_anchor_content_hash_mismatch")
+
+            if actual is None:
+                continue
+
+            # line_range bounds
+            lr = loc.get("line_range")
+            if lr is not None:
+                m = self._LINE_RANGE.match(str(lr))
+                if not m:
+                    tally["line_range_unparseable"] += 1
+                    self.findings.add(
+                        "medium", "provenance", aid,
+                        f"line_range '{lr}' is not a verifiable line or 'start-end' range",
+                        "source_anchor_line_range_unparseable")
+                else:
+                    # A bare "124" names one line and is bounds-checked as
+                    # 124-124: same verifiability, no exemption taken.
+                    start = int(m.group(1))
+                    end = int(m.group(2)) if m.group(2) else start
+                    n_lines = len((self.root / rel).read_text(
+                        encoding="utf-8", errors="replace").splitlines())
+                    if start < 1 or start > end or end > n_lines:
+                        tally["line_range_out_of_bounds"] += 1
+                        ok = False
+                        self.findings.add(
+                            "high", "provenance", aid,
+                            f"line_range '{lr}' is outside {rel}, which has {n_lines} line(s) "
+                            f"(expected 1..{n_lines})", "source_anchor_line_range_out_of_bounds")
+                    else:
+                        tally["line_range_ok"] += 1
+
+            # symbol occurrence
+            sym = loc.get("symbol")
+            if sym is not None:
+                if self._PLAIN_IDENTIFIER.match(str(sym)):
+                    tally["symbol_checked"] += 1
+                    text = (self.root / rel).read_text(encoding="utf-8", errors="replace")
+                    if re.search(r"\b" + re.escape(str(sym)) + r"\b", text):
+                        tally["symbol_present"] += 1
+                    else:
+                        tally["symbol_absent"] += 1
+                        ok = False
+                        self.findings.add(
+                            "high", "provenance", aid,
+                            f"symbol '{sym}' does not occur in {rel}: the anchor attributes a "
+                            f"code element to a file that does not contain it",
+                            "source_anchor_symbol_missing")
+                else:
+                    tally["symbol_unverifiable_prose"] += 1
+                    self.findings.add(
+                        "medium", "provenance", aid,
+                        f"symbol '{str(sym)[:70]}' is prose, not a plain identifier, so its "
+                        f"occurrence in {rel} is not machine-verifiable",
+                        "source_anchor_symbol_unverifiable")
+        self.provenance_tally["source_anchors"] = tally
+        return ok
+
+    def _validate_evidence_files(self, index):
+        """Every logs[].file / evidence_files[] path must exist; every recorded
+        hash must match the bytes on disk.
+
+        `evidence_files` entries are evidence the corpus offers in support of a
+        claim. A path that does not exist means the evidence is not there; a
+        hash that does not match means the bytes changed after the record was
+        written, so the record is stale. Both are high severity for the same
+        reason as the anchor defects: the record makes a specific, checkable and
+        wrong claim.
+        """
+        ok = True
+        tally = {"log_entries": 0, "log_file_missing": 0, "log_hash_verified": 0,
+                 "log_hash_mismatch": 0, "log_hash_unverified": 0,
+                 "evidence_file_entries": 0, "evidence_file_missing": 0}
+        for key, (path, d) in index.items():
+            aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
+            for entry in d.get("logs", []) or []:
+                if not isinstance(entry, dict) or not entry.get("file"):
+                    continue
+                tally["log_entries"] += 1
+                rel = str(entry["file"])
+                if rel.startswith("<"):
+                    continue
+                fp = self.root / rel
+                if not fp.exists():
+                    tally["log_file_missing"] += 1
+                    ok = False
+                    self.findings.add(
+                        "high", "evidence", aid,
+                        f"logs entry names {rel}, which does not exist",
+                        "evidence_file_missing")
+                    continue
+                recorded = entry.get("hash")
+                if self._classify_placeholder_hash(recorded):
+                    tally["log_hash_unverified"] += 1
+                    self.findings.add(
+                        "medium", "evidence", aid,
+                        f"logs entry {rel} records no usable hash ({recorded!r}): the evidence "
+                        f"file's identity is unverified", "evidence_file_hash_mismatch")
+                    ok = False
+                    continue
+                actual = self._file_sha256(rel)
+                if actual is not None and self._expected_sha(recorded) == actual:
+                    tally["log_hash_verified"] += 1
+                else:
+                    tally["log_hash_mismatch"] += 1
+                    ok = False
+                    self.findings.add(
+                        "high", "evidence", aid,
+                        f"logs entry hash does not match {rel}: recorded {recorded}, "
+                        f"actual sha256:{actual}", "evidence_file_hash_mismatch")
+            for entry in d.get("evidence_files", []) or []:
+                if isinstance(entry, str):
+                    tally["evidence_file_entries"] += 1
+                    if entry.startswith("<"):
+                        continue
+                    if not (self.root / entry).exists():
+                        tally["evidence_file_missing"] += 1
+                        ok = False
+                        self.findings.add(
+                            "high", "evidence", aid,
+                            f"evidence_files entry names {entry}, which does not exist",
+                            "evidence_file_missing")
+        self.provenance_tally["evidence_files"] = tally
+        return ok
+
+    def _validate_provenance_evidence(self, index):
+        """Run every provenance verification above and record the tally.
+
+        ALWAYS returns the true result. It is not consulted by
+        self.provenance_report_only: a rule must never be able to read the flag
+        that decides whether its verdict counts, or "reporting mode" would become
+        a way for the rule itself to pass. The flag is applied by the CALLERS
+        (cmd_validate and cmd_check) to their own return value only, after the
+        verdict has already been computed and printed.
+        """
+        saved, self.provenance_tally = self.provenance_tally, {}
+        ok = True
+        try:
+            ok &= self._validate_review_digests(index)
+            ok &= self._validate_source_anchors()
+            ok &= self._validate_evidence_files(index)
+        finally:
+            tally = self.provenance_tally
+            self.provenance_tally = saved
+            self.provenance_tally = dict(saved)
+            self.provenance_tally.update(tally)
+        return ok
+
+    def _provenance_finding_count(self):
+        return sum(1 for f in self.findings.items if f.get("rule", "").startswith(
+            ("review_digest", "source_anchor_", "evidence_file_", "provenance_ref_")))
+
+    def _report_provenance(self):
+        """Print the per-class provenance tally. Always runs, gates or not."""
+        t = self.provenance_tally
+        rd = t.get("review_digest", {})
+        sa = t.get("source_anchors", {})
+        ev = t.get("evidence_files", {})
+        print("  provenance verification tally:")
+        print(f"    review digests      : {rd.get('verified', 0)} verified against the file on disk, "
+              f"{rd.get('placeholder_with_note', 0)} permitted placeholder(s) with a note, "
+              f"{rd.get('placeholder_without_note', 0)} placeholder(s) with no note")
+        print(f"    source anchors      : {sa.get('anchors', 0)} anchor(s); "
+              f"{sa.get('hash_verified', 0)} content_hash verified, "
+              f"{sa.get('hash_unverified_placeholder', 0)} placeholder, "
+              f"{sa.get('hash_mismatch', 0)} mismatched; "
+              f"{sa.get('file_missing', 0)} name a file that does not exist")
+        print(f"    anchor line ranges  : {sa.get('line_range_ok', 0)} within bounds, "
+              f"{sa.get('line_range_out_of_bounds', 0)} outside the file, "
+              f"{sa.get('line_range_unparseable', 0)} unparseable")
+        print(f"    anchor symbols      : {sa.get('symbol_checked', 0)} plain identifier(s) checked, "
+              f"{sa.get('symbol_present', 0)} present, {sa.get('symbol_absent', 0)} absent from the "
+              f"file they are attributed to; {sa.get('symbol_unverifiable_prose', 0)} recorded as prose")
+        print(f"    evidence files      : {ev.get('log_entries', 0)} log entr(y/ies), "
+              f"{ev.get('log_hash_verified', 0)} hash verified, "
+              f"{ev.get('log_hash_mismatch', 0)} mismatched, "
+              f"{ev.get('log_hash_unverified', 0)} unverified, "
+              f"{ev.get('log_file_missing', 0)} missing; "
+              f"{ev.get('evidence_file_entries', 0)} evidence_files entr(y/ies), "
+              f"{ev.get('evidence_file_missing', 0)} missing")
+
+    def _validate_governance_semantics(self, index):
+        """Governance semantics, independent of schema validation.
+
+        Acceptance gate [7/8] used to count `category == "provenance"` findings
+        in whatever Findings object happened to be in memory. It was always the
+        empty object left by the change-lifecycle branch, which resets
+        self.findings and runs no detector, so the gate reported "0 violations"
+        by construction. This method is the detector the gate runs.
+
+        Four things are asserted on every record in the index:
+          * production_authorized is not true;
+          * product_verification_credit is not true;
+          * human_approval_status is 'pending';
+          * no field anywhere in the record claims production authority.
+
+        The fourth is a key scan, because the first three are only as good as
+        the field names whoever wrote the record chose. A record may say it is
+        approved under a different key and the three named checks would not see
+        it.
+        """
+        ok = True
+        authority_keys = {
+            # production_authorized is deliberately absent: the named check above
+            # already reports it, and listing it here too would report the same
+            # violation twice and inflate the count the gate prints.
+            "production_release", "production_approval",
+            "safety_approval", "authorized_for_production", "approved_for_production",
+            "release_approved", "production_sign_off", "production_authority",
+            "production_release_approved",
+        }
+        grant_values = {True, "true", "yes", "approved", "granted", "authorized",
+                        "released", "production", "production_authorized"}
+
+        def _granted(v):
+            if isinstance(v, bool):
+                return v is True
+            if isinstance(v, str):
+                return v.strip().lower() in grant_values
+            return False
+
+        for key, (path, d) in index.items():
+            aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
+            if not isinstance(d, dict):
+                continue
+            if d.get("production_authorized") is True:
+                self.findings.add(
+                    "critical", "governance", aid,
+                    "production_authorized is true; this corpus is never production authorized",
+                    "governance_authority_claim")
+                ok = False
+            if d.get("product_verification_credit") is True:
+                self.findings.add(
+                    "high", "governance", aid,
+                    "product_verification_credit is true; no record in this corpus carries "
+                    "product verification credit", "governance_authority_claim")
+                ok = False
+            if d.get("human_approval_status") is not None \
+                    and d.get("human_approval_status") != "pending":
+                # Absent is NOT a violation here: whether the field is required
+                # at all is a schema question, judged by _validate_artifact. This
+                # rule judges the VALUE. Treating a missing field as "not pending"
+                # made this detector fire on every partial fixture -- including
+                # the injected artefacts the mutation harness builds -- which
+                # would have made it a standing finding on the baseline and
+                # indistinguishable from a detection.
+                self.findings.add(
+                    "high", "governance", aid,
+                    f"human_approval_status is {d.get('human_approval_status')!r}; no human "
+                    f"approval has been performed on this corpus", "governance_authority_claim")
+                ok = False
+
+            def _scan(node, trail):
+                if isinstance(node, dict):
+                    for k, v in node.items():
+                        if k in authority_keys and _granted(v):
+                            self.findings.add(
+                                "critical", "governance", aid,
+                                f"field '{'/'.join(trail + [k])}' claims production authority "
+                                f"({v!r})", "governance_authority_claim")
+                            return True
+                        if _scan(v, trail + [k]):
+                            return True
+                elif isinstance(node, list):
+                    for i, v in enumerate(node):
+                        if _scan(v, trail + [str(i)]):
+                            return True
+                return False
+
+            if _scan(d, []):
+                ok = False
+        return ok
+
+    def _governance_finding_count(self):
+        return sum(1 for f in self.findings.items
+                   if f["category"] in ("governance", "provenance")
+                   and f.get("rule") in ("governance_authority_claim",
+                                         "production_authorized_rejected",
+                                         "human_approval_rejected",
+                                         "verification_credit_rejected",
+                                         "production_authorization_governance_checker"))
+
 
     def _resolve_ftti_ms(self, aid, d, param_values):
         """Resolve the fault tolerant time interval for one safety goal.
@@ -1297,17 +1894,94 @@ class CorpusTool:
             print(f"Validated {count} artifacts")
             print("Running link validation...")
         links = self.load_links()
+        ok &= self._validate_no_duplicate_ids()
         ok &= self._validate_links(links, index)
         ok &= self._validate_provenance_refs(index)
         if not quiet:
             print("Running semantic consistency rules...")
         ok &= self._validate_semantic_rules(index, links)
         if not quiet:
+            print("Running governance semantics...")
+        ok &= self._validate_governance_semantics(index)
+        if not quiet:
+            print("Running provenance verification (digests, content hashes, line ranges)...")
+        provenance_ok = self._validate_provenance_evidence(index)
+        n_prov = self._provenance_finding_count()
+        self._last_provenance_verdict = (provenance_ok, n_prov)
+        if not quiet:
+            self._report_provenance()
+            if not provenance_ok:
+                print(f"  provenance verdict: FAIL - {n_prov} finding(s)"
+                      + ("  (--provenance-report-only: reported, not gating this run)"
+                         if self.provenance_report_only else ""))
+        if not quiet:
             n = len(self.findings.items)
             print(f"Validation complete: {n} findings, errors={self.findings.error_count}")
-        return ok
+        if self.provenance_report_only:
+            # The provenance verdict above is the real one and has already been
+            # printed. Only the RETURN value is decoupled, so a reader can run
+            # the checks and read every number while the corpus is still being
+            # repaired. Every other failure class still fails this command.
+            return ok
+        return ok and provenance_ok
 
     # ------------------------------------------------------------ 15.4 coverage
+
+    _STANDARDS_REF = re.compile(r"\bFB2-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d+\b")
+
+    def _standards_mapping_measurement(self, cp, index):
+        """Measure standards mapping by backing, not by counting inventory keys.
+
+        A process/part counts as mapped only if the text that claims its
+        disposition names at least one artefact identifier that resolves. The
+        denominator is the applicable inventory; not_applicable entries are
+        reported by id so dropping them is visible.
+        """
+        resolvable = {aid for (_prof, aid) in index} | self._anchor_ids()
+
+        def _backed(entry):
+            text = " ".join(str(entry.get(k, "")) for k in
+                            ("disposition", "disposition_reason", "rationale",
+                             "expected_artifacts", "name"))
+            refs = set(self._STANDARDS_REF.findall(text))
+            return bool(refs & resolvable), sorted(refs)
+
+        proc_backed, proc_unbacked, proc_na = [], [], []
+        for p in cp.get("process_inventory", []):
+            pid = p.get("process_id", "?")
+            if p.get("applicability") == "not_applicable":
+                proc_na.append(pid)
+                continue
+            ok, _refs = _backed(p)
+            (proc_backed if ok else proc_unbacked).append(pid)
+
+        iso_backed, iso_unbacked, iso_na = [], [], []
+        for part, entry in (cp.get("iso26262_coverage") or {}).items():
+            if isinstance(entry, dict) and entry.get("decision") == "not_applicable":
+                iso_na.append(part)
+                continue
+            text = entry if isinstance(entry, str) else json.dumps(entry)
+            refs = set(self._STANDARDS_REF.findall(text))
+            (iso_backed if refs & resolvable else iso_unbacked).append(part)
+
+        numerator = len(proc_backed) + len(iso_backed)
+        denominator = (len(proc_backed) + len(proc_unbacked)
+                       + len(iso_backed) + len(iso_unbacked))
+        detail = (f"{numerator}/{denominator} standards entries are backed by an artefact that "
+                  f"exists in the index. ASPICE: {len(proc_backed)}/{len(proc_backed) + len(proc_unbacked)} "
+                  f"applicable processes backed, {len(proc_na)} declared not_applicable; "
+                  f"ISO 26262: {len(iso_backed)}/{len(iso_backed) + len(iso_unbacked)} applicable "
+                  f"parts backed, {len(iso_na)} declared not_applicable. "
+                  f"UNBACKED (claim a disposition, name no existing artefact): "
+                  f"ASPICE {', '.join(proc_unbacked) or 'none'}; "
+                  f"ISO {', '.join(iso_unbacked) or 'none'}. "
+                  f"This is the honest figure; the previous 44/44 was the size of the "
+                  f"inventory file divided by itself.")
+        return {"numerator": numerator, "denominator": denominator, "detail": detail,
+                "aspice_backed": proc_backed, "aspice_unbacked": proc_unbacked,
+                "aspice_not_applicable": proc_na,
+                "iso_backed": iso_backed, "iso_unbacked": iso_unbacked,
+                "iso_not_applicable": iso_na}
 
     def _negative_scenario_dimension(self):
         """Build negative_scenario_validation from an EXECUTED scenario run.
@@ -1385,12 +2059,34 @@ class CorpusTool:
                                        "detail": f"families populated: {sorted(expected_families & families)}"}
 
         # standards mapping
+        #
+        # MEASURED, not counted. This dimension was
+        #     n_proc + n_iso  over  32 + 12
+        # where n_proc = len(process_inventory) and n_iso = len(iso26262_coverage) or 12.
+        # `iso26262_coverage` is a dict of 12 keys, so len() is 12 whatever it
+        # contains, and the `or 12` meant an EMPTY list also scored 12. The
+        # denominator was the same expression, so the ratio was 44/44 by
+        # construction: it measured how many keys a JSON file has and divided by
+        # itself. A process with disposition "mapped" and no artefact behind it
+        # contributed exactly as much as one backed by records.
+        #
+        # What is honestly measurable: whether the disposition of a process (or
+        # of an ISO 26262 part) is backed by at least one artefact that exists
+        # in the index. So:
+        #     numerator   = entries whose coverage text names >= 1 FB2- id that
+        #                   resolves against the artifact index or the source
+        #                   registry
+        #     denominator = the APPLICABLE inventory. A process or part declared
+        #                   not_applicable is out of scope and is counted and
+        #                   named separately, not silently dropped.
+        # Entries whose coverage text names no artefact id at all are counted as
+        # unbacked, whatever disposition they claim. "mapped" with nothing
+        # behind it is exactly the defect this dimension was hiding.
         cp = load_json(self.governance_dir / "coverage-plan.json")
-        procs = cp.get("process_inventory", [])
-        n_proc = len(procs)
-        n_iso = len(cp.get("iso26262_coverage", [])) or 12
-        dims["standards_mapping"] = {"numerator": n_proc + n_iso, "denominator": 32 + 12,
-                                     "detail": f"ASPICE processes {n_proc}/32, ISO parts {n_iso}/12"}
+        smap = self._standards_mapping_measurement(cp, index)
+        dims["standards_mapping"] = {"numerator": smap["numerator"],
+                                     "denominator": smap["denominator"],
+                                     "detail": smap["detail"]}
 
         # source grounding
         sr = load_json(self.sources_dir / "source-registry.json")
@@ -1570,6 +2266,153 @@ class CorpusTool:
         return dims
 
     # ------------------------------------------------------------ 15.5 trace
+
+    # The §13 path this gate has to resolve. Written as (stage name, predicate
+    # over (artifact_id, record)) in the engineering order the master prompt
+    # gives, so a stage index means the same thing in the ladder, in the report
+    # and in the gate.
+    #
+    # "hw/sw architecture" and "detailed design" are separate entries on purpose.
+    # §13 requires both: architecture allocates, detailed design specifies. In
+    # this corpus both are `design` records, so the architecture predicate is
+    # widened to include the concept records that perform allocation, and the
+    # detailed-design predicate is the strict `design` one. A chain that reaches
+    # architecture but not detailed design is a real, reportable shortfall.
+    TRACE_CHAIN_STAGES = (
+        ("operational scenario", lambda aid, d: d.get("artifact_type") in ("use_case", "stakeholder_need")),
+        ("hazard", lambda aid, d: d.get("artifact_type") == "hazard"),
+        ("safety goal", lambda aid, d: d.get("artifact_type") == "safety_goal"),
+        ("functional safety requirement",
+         lambda aid, d: d.get("artifact_type") == "requirement" and "-FSR-" in aid),
+        ("technical/system requirement",
+         lambda aid, d: d.get("artifact_type") == "requirement"
+         and any(t in aid for t in ("-TSR-", "-SWR-", "-SYR-", "-HSI-", "-SEC-"))),
+        ("hw/sw architecture",
+         lambda aid, d: d.get("artifact_type") in ("design", "safety_concept", "item_definition")),
+        ("detailed design", lambda aid, d: d.get("artifact_type") == "design"),
+        ("implementation", lambda _aid, d: d.get("artifact_type") == "implementation"),
+        ("verification measure", lambda aid, d: d.get("artifact_type") == "test_measure"),
+        ("execution/evidence", lambda aid, d: d.get("artifact_type") == "execution"),
+        ("review", lambda aid, d: d.get("artifact_type") == "review"),
+        ("safety argument", lambda aid, d: d.get("artifact_type") == "safety_case"),
+    )
+
+    # Relations that carry engineering meaning for this traversal. `related_to`
+    # is excluded: the link validator already documents it as the weak link that
+    # satisfies no coverage obligation, so following it here would let the
+    # chain pass over a gap that has been declared but not engineered.
+    TRACE_CHAIN_RELATIONS = {
+        "refines", "allocated_to", "implements", "verifies", "validates",
+        "result_of", "supports", "mitigates", "specified_by", "consumes",
+        "produces", "depends_on", "constrained_by", "reviewed_by", "changes",
+        "supersedes",
+    }
+
+    def _trace_chain(self, index, links, profile, root="FB2-SAF-HAZ-000001"):
+        """Traverse the §13 path from `root` and report the deepest stage reached.
+
+        Breadth-first over the profile's own link graph, following only
+        engineering-meaningful relations and only edges whose BOTH endpoints
+        resolve to a record in the same profile. Direction is deliberately
+        ignored: §13 says "the arrows above describe traversal, not mandatory
+        storage direction", and the corpus stores `mitigates` as
+        goal -> hazard while the chain is hazard -> goal.
+
+        The "implementation" stage has no record type in this corpus: an
+        implementation is a code location, and the corpus represents one as a
+        source-registry anchor named by a record's `source_refs`. That stage is
+        therefore reached when a reached design/concept record names at least
+        one anchor that resolves in the source registry. Whether that anchor's
+        content_hash and symbol are real is a provenance question, judged by
+        _validate_source_anchors -- deliberately not conflated with reachability.
+
+        Required stages are the ones the profile actually instantiates. A stage
+        with zero candidate records anywhere in the profile cannot be traversed
+        by any link graph, and requiring it would be demanding a record the
+        corpus documents as a gap rather than as work. Those stages are reported
+        by name with their zero count so the relaxation is visible, never silent.
+        """
+        prof_index = {aid: d for (prof, aid), (_p, d) in index.items() if prof == profile}
+        adjacency = {}
+        for l in links:
+            if l.get("_profile", "unknown") != profile:
+                continue
+            if l.get("relation_type") not in self.TRACE_CHAIN_RELATIONS:
+                continue
+            src, tgt = l.get("source_id"), l.get("target_id")
+            if src not in prof_index or tgt not in prof_index:
+                continue
+            adjacency.setdefault(src, []).append((tgt, l.get("relation_type")))
+            adjacency.setdefault(tgt, []).append((src, l.get("relation_type")))
+
+        from collections import deque
+        seen = {}
+        if root in prof_index:
+            seen[root] = (None, None, None)
+            queue = deque([root])
+            while queue:
+                node = queue.popleft()
+                for nxt, rel in adjacency.get(node, ()):
+                    if nxt not in seen:
+                        seen[nxt] = (node, rel, None)
+                        queue.append(nxt)
+
+        # stage membership
+        anchor_ids = self._anchor_ids()
+        instantiated, reached, witness = [], {}, {}
+        for si, (name, pred) in enumerate(self.TRACE_CHAIN_STAGES):
+            if pred is None:
+                # Implementation is reached from an architecture or detailed
+                # design record that is ITSELF already reachable and that names
+                # at least one anchor. A hazard record's own source_refs do not
+                # put an implementation downstream of a design, so a design (or
+                # allocation record) must be in the reached set for this stage to
+                # count. Without that condition the stage is satisfied by any
+                # reachable record that happens to cite code.
+                #
+                # The candidate set stays profile-wide, so "instantiated" keeps
+                # meaning "this profile has implementation elements at all" and
+                # is not contaminated by the traversal result; only `hits`
+                # depends on reachability.
+                design_like = (self.TRACE_CHAIN_STAGES[5][1], self.TRACE_CHAIN_STAGES[6][1])
+                cands = {aid for aid, d in prof_index.items()
+                         if any(p(aid, d) for p in design_like)
+                         and any(r in anchor_ids for r in (d.get("source_refs") or []))}
+            else:
+                cands = {aid for aid, d in prof_index.items() if pred(aid, d)}
+            hits = sorted(cands & set(seen))
+            instantiated.append((si, name, len(cands)))
+            if hits:
+                reached[si] = hits
+                witness[si] = hits[0]
+
+        required = [(si, name) for si, name, n in instantiated if n > 0]
+        unmet = [(si, name) for si, name in required if si not in reached]
+        absent = [(si, name, n) for si, name, n in instantiated if n == 0]
+        deepest = max(reached) if reached else None
+        if root not in prof_index:
+            verdict = "broken"
+        elif not unmet:
+            verdict = "full_chain"
+        elif deepest is not None:
+            verdict = f"reached stage {deepest} of {len(self.TRACE_CHAIN_STAGES) - 1}"
+        else:
+            verdict = "broken"
+
+        return {
+            "profile": profile, "root": root, "verdict": verdict,
+            "deepest_stage": deepest,
+            "reachable": len(seen), "links_considered": len(adjacency),
+            "reached": {self.TRACE_CHAIN_STAGES[si][0]: hits for si, hits in reached.items()},
+            "witness": {self.TRACE_CHAIN_STAGES[si][0]: witness[si] for si in witness},
+            "unmet_required": [name for _si, name in unmet],
+            "not_instantiated": [name for _si, name, _n in absent],
+            "ladder": [{"stage": si, "name": name, "instantiated": n,
+                        "reached": len(reached.get(si, ()))} for si, name, n in instantiated],
+        }
+
+    def _anchor_ids(self):
+        return {a.get("anchor_id") for a in self._load_source_anchors()}
 
     def cmd_trace(self, artifact_id):
         index = self.load_artifact_index()
@@ -3668,6 +4511,14 @@ class CorpusTool:
         The revision-consistency rule is included explicitly. It used to live
         only inside _validate_artifact, which this harness never called, so
         SCN-MUT-003's declared detector was unreachable by construction.
+
+        Provenance verification and governance semantics are now run here too.
+        They are detectors in their own right: they are profile- and file-scoped
+        facts about records, not per-mutation predicates, so they belong in the
+        same place every other detector is run from. Routing them through
+        _run_detectors is what makes them participate in `validate`, in the
+        scenario baseline, and in every gate that counts findings -- instead of
+        living in a function nothing called.
         """
         self._validate_links(links, index)
         self._validate_semantic_rules(index, links)
@@ -3675,6 +4526,234 @@ class CorpusTool:
             aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
             if isinstance(d, dict) and d.get("revision") is not None:
                 self._check_revision_consistency(aid, d)
+        self._validate_governance_semantics(index)
+        self._validate_provenance_refs(index)
+        self._validate_provenance_evidence(index)
+
+    _CHANGE_LIFECYCLE_FIELDS = ("baseline_before", "trigger", "impact_analysis", "decision",
+                                "new_revisions", "suspect_links", "required_updates",
+                                "reverification_selection", "post_change_baseline")
+    _BASELINE_ID = re.compile(r"^BAS-[A-Z0-9]+(-[A-Z0-9]+)*-\d+$")
+    _CHANGE_REF = re.compile(
+        r"\b(?:FB2-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d+|VAR-[A-Z0-9]+(?:-[A-Z0-9]+)*|BAS-[A-Z0-9-]+)\b")
+
+    def _reference_universe(self, index, links):
+        """Everything an id-shaped string in this corpus is allowed to name.
+
+        Not every identifier in this corpus is a top-level artifact id: link
+        ids live in the link registries, source anchors in the source registry,
+        parameters inside parameter-registry containers that carry no top-level
+        id at all, variants in the variant matrix. A reference check that only
+        knew about the artifact index would report every one of those as
+        unresolved, so the universe is built from all five registries and then
+        keyed by profile where the corpus keeps profiles apart.
+        """
+        art = {}
+        for (prof, aid) in index:
+            art.setdefault(prof, set()).add(aid)
+            art.setdefault("__any__", set()).add(aid)
+        link_ids = {l.get("link_id") for l in links if l.get("link_id")}
+        anchors = self._anchor_ids()
+        params = set()
+        for prm_path in sorted(self.corpus_dir.rglob("parameter-registry.json")):
+            try:
+                prd = load_json(prm_path)
+            except Exception:
+                continue
+            for prm in prd.get("parameters", []) or []:
+                if isinstance(prm, dict) and prm.get("id"):
+                    params.add(prm["id"])
+        for shared in (self.artifacts_dir / "shared" / "parameter-registry.json",):
+            if shared.exists():
+                for prm in load_json(shared).get("parameters", []) or []:
+                    if isinstance(prm, dict) and prm.get("id"):
+                        params.add(prm["id"])
+        variants = set()
+        vm = self.sources_dir / "variant-matrix.json"
+        if vm.exists():
+            vdoc = load_json(vm)
+            for key in ("variants", "variant_matrix", "entries"):
+                for e in vdoc.get(key, []) or []:
+                    if isinstance(e, str):
+                        variants.add(e)
+                    elif isinstance(e, dict):
+                        vid = e.get("variant_id") or e.get("id")
+                        if vid:
+                            variants.add(vid)
+        return {"artifacts": art, "links": link_ids, "anchors": anchors,
+                "parameters": params, "variants": variants}
+
+    def _resolve_corpus_reference(self, ref, profile, universe):
+        """Resolve one id-shaped reference against the registry universe.
+
+        Returns None when it resolves, or a string explaining what it was
+        looked for in and not found in.
+        """
+        if ref.startswith("FB2-LNK-"):
+            if ref in universe["links"]:
+                return None
+            return "not a link_id in any link registry"
+        if ref.startswith("FB2-SRC-"):
+            if ref in universe["anchors"]:
+                return None
+            return "not an anchor_id in sources/source-registry.json"
+        if ref.startswith("VAR-"):
+            if ref in universe["variants"]:
+                return None
+            return "not a variant in sources/variant-matrix.json"
+        if ref.startswith("BAS-"):
+            # There is no baseline registry in this corpus; BAS-* ids are
+            # declared by the records that use them. Form is checked
+            # separately; there is nothing to resolve them against.
+            return None
+        art = universe["artifacts"]
+        if (profile, ref) in art or ref in art.get("__any__", ()):
+            return None
+        if ref in universe["parameters"]:
+            # A parameter id. Parameter-registry containers carry no top-level
+            # artifact id, so these are legitimately not in the artifact index.
+            return None
+        return f"not an artifact id in profile {profile} or any other profile"
+
+    def _validate_change_lifecycle(self, d, index, links):
+        """Validate the CONTENT of one change-lifecycle scenario.
+
+        Returns (checks, passed). Each check is a dict
+        {check, passed, detail} so both the console line and the persisted
+        report name the individual facts.
+
+        The checks, in order:
+          record is a mapping, and each of the nine required fields is present
+          and non-null;
+          `trigger` carries source, description and date;
+          `impact_analysis` carries non-empty arrays AND a rationale;
+          `decision` carries decision_maker, date, rationale and disposition;
+          every `new_revisions` entry carries artifact_id, old_revision and
+            new_revision, and those artifact ids resolve;
+          `baseline_before` and `post_change_baseline` are well-formed
+            baseline ids;
+          every id referenced in affected_artifacts, suspect_links,
+            required_updates and reverification_selection resolves, per profile.
+        """
+        checks = []
+
+        def add(name, ok, detail=""):
+            checks.append({"check": name, "passed": bool(ok), "detail": detail if not ok else ""})
+
+        add("record is an object", isinstance(d, dict),
+            f"scenario is {type(d).__name__}, not an object")
+        if not isinstance(d, dict):
+            return checks, False
+
+        # 1. required fields present and non-null
+        absent, nulls = [], []
+        for f in self._CHANGE_LIFECYCLE_FIELDS:
+            if f not in d:
+                absent.append(f)
+            elif d[f] is None:
+                nulls.append(f)
+        add("all nine required fields present", not absent, f"absent: {absent}")
+        add("no required field is null", not nulls,
+            f"null: {nulls} -- a present-but-null field carries no content and the "
+            f"previous key-presence check accepted it")
+
+        # 2. trigger
+        trig = d.get("trigger")
+        t_missing = [k for k in ("source", "description", "date")
+                     if not (isinstance(trig, dict) and str(trig.get(k) or "").strip())]
+        add("trigger carries source/description/date", not t_missing,
+            f"trigger is {json.dumps(trig)[:120]}; missing or empty: {t_missing}")
+
+        # 3. impact_analysis
+        ia = d.get("impact_analysis")
+        if isinstance(ia, dict):
+            arr_missing = [k for k in ("affected_artifacts", "affected_links",
+                                       "affected_reviews", "affected_evidence")
+                           if not (isinstance(ia.get(k), list) and ia.get(k))]
+            rationale = ia.get("risk_assessment") or ia.get("rationale")
+            add("impact_analysis arrays non-empty", not arr_missing,
+                f"empty or absent arrays: {arr_missing}")
+            add("impact_analysis carries a rationale",
+                bool(isinstance(rationale, str) and rationale.strip()),
+                "neither risk_assessment nor rationale carries text")
+        else:
+            add("impact_analysis arrays non-empty", False,
+                f"impact_analysis is {json.dumps(ia)[:120]}, not an object with arrays")
+            add("impact_analysis carries a rationale", False,
+                "impact_analysis is not an object")
+
+        # 4. decision
+        dec = d.get("decision")
+        d_missing = [k for k in ("decision_maker", "date", "rationale", "disposition")
+                     if not (isinstance(dec, dict) and str(dec.get(k) or "").strip())]
+        add("decision carries maker/date/rationale/disposition", not d_missing,
+            f"decision is {json.dumps(dec)[:120]}; missing or empty: {d_missing}")
+
+        # 5. new_revisions entries
+        universe = self._reference_universe(index, links)
+        profile = d.get("profile", "unknown")
+        nr = d.get("new_revisions")
+        nr_missing, nr_unresolved = [], []
+        if isinstance(nr, list) and nr:
+            for entry in nr:
+                if not isinstance(entry, dict):
+                    nr_missing.append("entry is not an object")
+                    continue
+                for k in ("artifact_id", "old_revision", "new_revision"):
+                    if not str(entry.get(k) or "").strip():
+                        nr_missing.append(f"{entry.get('artifact_id', '?')}: {k}")
+                aid = entry.get("artifact_id")
+                if aid:
+                    why = self._resolve_corpus_reference(str(aid), profile, universe)
+                    if why:
+                        nr_unresolved.append(f"{aid} ({why})")
+        else:
+            nr_missing.append("new_revisions is empty or not a list")
+        add("new_revisions entries carry artifact_id/old_revision/new_revision",
+            not nr_missing, f"incomplete entries: {nr_missing}")
+        add("new_revisions artifact ids resolve", not nr_unresolved,
+            f"unresolved: {nr_unresolved}")
+
+        # 6. baseline ids
+        for field in ("baseline_before", "post_change_baseline"):
+            val = d.get(field)
+            add(f"{field} is a well-formed baseline id",
+                bool(isinstance(val, str) and self._BASELINE_ID.match(val.strip())),
+                f"{field} is {val!r}; expected the form BAS-<SEGMENT>-<digits>")
+
+        # 7. every referenced id resolves
+        ref_lists = {
+            "impact_analysis.affected_artifacts":
+                (ia.get("affected_artifacts") if isinstance(ia, dict) else None),
+            "suspect_links": d.get("suspect_links"),
+            "required_updates": d.get("required_updates"),
+            "reverification_selection": d.get("reverification_selection"),
+        }
+        for label, entries in ref_lists.items():
+            found, why_bad = set(), {}
+            if isinstance(entries, list):
+                for entry in entries:
+                    for ref in self._CHANGE_REF.findall(str(entry)):
+                        found.add(ref)
+                        why = self._resolve_corpus_reference(ref, profile, universe)
+                        if why:
+                            why_bad[ref] = why
+            add(f"{label}: all referenced ids resolve", not why_bad,
+                f"{len(found)} id(s) referenced, unresolved: "
+                + ", ".join(f"{k} ({v})" for k, v in sorted(why_bad.items())))
+
+        # 8. new_revisions is not empty (a change that revises nothing is not a
+        #    lifecycle demonstration)
+        add("new_revisions is non-empty", bool(nr),
+            "a change lifecycle with no new revision records no change")
+        add("suspect_links is non-empty", bool(d.get("suspect_links")),
+            "a change lifecycle must name the links whose validity is now suspect")
+        add("required_updates is non-empty", bool(d.get("required_updates")),
+            "a change lifecycle must name what has to be updated")
+        add("reverification_selection is non-empty", bool(d.get("reverification_selection")),
+            "a change lifecycle must select the verification to re-run")
+
+        return checks, all(c["passed"] for c in checks)
 
     def _baseline_findings(self):
         """Findings produced by the unmutated corpus. Used to subtract standing
@@ -3832,6 +4911,10 @@ class CorpusTool:
         # a finding that this mutation caused; see _match_scenario_finding.
         baseline = self._baseline_findings()
         baseline_sigs = baseline.signature()
+        # The change-lifecycle reference checks resolve identifiers against the
+        # same corpus the mutation harness uses, loaded once here.
+        cl_index = self.load_artifact_index()
+        cl_links = self.load_links()
         for p, d in all_scn:
             self.findings = Findings()  # fresh per scenario
             sid = d.get("scenario_id", p.stem)
@@ -3880,20 +4963,29 @@ class CorpusTool:
                                 "expected": expected, "actual": actual,
                                 "passed": matched, "reason": reason})
             else:
-                # change lifecycle: validate structural completeness
-                required = ["baseline_before", "trigger", "impact_analysis", "decision",
-                            "new_revisions", "suspect_links", "required_updates",
-                            "reverification_selection", "post_change_baseline"]
-                missing = [k for k in required if k not in d]
-                passed = not missing
+                # change lifecycle: validate CONTENT, not key presence.
+                #
+                # The previous check was `missing = [k for k in required if k not in d]`,
+                # which is satisfied by writing `{"baseline_before": null, "trigger":
+                # null, ...}` nine times over. Nine nulls produced
+                # "[PASS] change lifecycles = 3/3" and, through
+                # dims["negative_scenario_validation"]["detail"], the
+                # "Acceptance suite: PASSED" line. Every check below is a
+                # different fact about the record than "the key is spelled here".
+                checks, passed = self._validate_change_lifecycle(d, cl_index, cl_links)
                 if passed:
                     passed_changes += 1
                 else:
                     all_ok = False
-                lines.append(f"  {'PASS' if passed else 'FAIL'} {sid}: "
-                             f"{'structure complete' if passed else 'missing ' + str(missing)}")
+                lines.append(f"  {'PASS' if passed else 'FAIL'} {sid}: change lifecycle content "
+                             f"- {sum(1 for c in checks if c['passed'])}/{len(checks)} checks passed")
+                for c in checks:
+                    lines.append(f"       {'PASS' if c['passed'] else 'FAIL'} {c['check']}"
+                                 + (f": {c['detail']}" if c["detail"] else ""))
                 results.append({"scenario_id": sid, "type": "change_lifecycle",
-                                "passed": passed, "missing": missing})
+                                "profile": d.get("profile", "unknown"),
+                                "passed": passed, "missing": [c["check"] for c in checks if not c["passed"]],
+                                "checks": checks})
 
         run = {"not_found": False, "lines": lines, "results": results,
                "passed_mutations": passed_mutations, "total_mutations": len(muts),
@@ -3935,12 +5027,77 @@ class CorpusTool:
         print(f"  [{status}] {name}" + (f" - {detail}" if detail else ""))
         return bool(condition)
 
+    def _run_external_reference_check(self):
+        """Run docs/artifacts/tools/check_references.py and gate its verdict.
+
+        That tool exists, is not in the acceptance suite, and exits 0. Its own
+        output separates two classes: `unresolved references` (an identifier that
+        names nothing -- a defect) and `declared forward references` (a planning
+        record naming a work product the corpus has not authored, which the tool
+        records as finding FB2-REV-FND-000030 and treats as reported rather than
+        failed).
+
+        It is wired in on the first class: the number it reports for unresolved
+        references is the gate. That is the class the tool itself calls a
+        failure, so gating on it cannot contradict the tool's semantics. It is
+        deliberately NOT wired in on the declared-forward-reference count: that
+        class is a recorded finding by the tool's own design, and turning a
+        documented finding into a gate failure here would be inventing a rule in
+        a tool this change does not own. The forward-reference count is printed
+        so it is visible in `check` rather than only discoverable by running a
+        separate script.
+
+        The subprocess exit status is deliberately NOT trusted: the tool exits 0
+        with unresolved references present, which is precisely the defect this
+        gate exists to close. The parsed number is the authority.
+        """
+        script = self.tools_dir / "check_references.py"
+        if not script.exists():
+            return False, "check_references.py not found", None
+        try:
+            proc = subprocess.run([sys.executable, str(script)], cwd=str(self.root),
+                                  capture_output=True, text=True, timeout=600)
+        except Exception as e:
+            return False, f"could not run {script.name}: {e}", None
+        out = proc.stdout or ""
+        unresolved = None
+        forward = None
+        for line in out.splitlines():
+            m = re.search(r"unresolved references\s*:\s*(\d+)", line)
+            if m and unresolved is None:
+                unresolved = int(m.group(1))
+            m = re.search(r"declared forward references\s*:\s*(\d+)", line)
+            if m and forward is None:
+                forward = int(m.group(1))
+        if unresolved is None:
+            return False, ("check_references.py produced no parseable "
+                           "'unresolved references' count; its output contract changed"), forward
+        detail = f"{unresolved} unresolved cross-reference(s)"
+        if forward is not None:
+            detail += (f"; {forward} declared forward reference(s) recorded as "
+                       f"FB2-REV-FND-000030 and reported, not gated (see _run_external_reference_check)")
+        return unresolved == 0, detail, forward
+
     def cmd_check(self):
         print("Running corpus acceptance suite...")
         ok = True
+        # Gates that this run must not count toward the verdict, only because
+        # the caller explicitly asked to inspect rather than to gate.
+        advisory = []
 
         print("\n[1/8] validate")
-        ok &= self._gate("validate", self.cmd_validate(quiet=True))
+        validate_ok = self.cmd_validate(quiet=True)
+        # In --provenance-report-only mode cmd_validate has already excluded the
+        # provenance verdict from its return value, so whatever it returns here
+        # is the honest verdict for every OTHER check. The provenance verdict is
+        # restated on the gate line so it cannot be missed.
+        validate_note = ""
+        if self.provenance_report_only:
+            p_ok, p_n = getattr(self, "_last_provenance_verdict", (None, 0))
+            if p_ok is False:
+                validate_note = (f"provenance findings ({p_n}) reported and excluded by "
+                                 f"--provenance-report-only")
+        ok &= self._gate("validate", validate_ok, validate_note)
         print("\n[2/8] inventory")
         ok &= self._gate("inventory", self.cmd_inventory())
         print("\n[3/8] coverage")
@@ -3949,14 +5106,54 @@ class CorpusTool:
         ok &= self._gate("negative_scenario_validation = 20/20 mutations",
                         dims["negative_scenario_validation"]["numerator"] >= 20,
                         f"{dims['negative_scenario_validation']['numerator']}/20")
-        ok &= self._gate("change lifecycles = 3/3",
-                        dims["negative_scenario_validation"]["detail"].endswith("3/3 change lifecycles"))
+        # The change-lifecycle gate used to read the trailing text
+        # "... N/3 change lifecycles" out of the detail string and passed on 3/3.
+        # That string only ever recorded how many records had all nine KEYS.
+        # The number now comes from the executed content validation, which
+        # reports each individual fact.
+        ok &= self._gate("change lifecycles content-verified = 3/3",
+                        self._change_lifecycle_gate(dims),
+                        f"{self._change_lifecycle_passed(dims)}/3 scenarios passed content validation")
+
         print("\n[4/8] trace (hazard -> evidence reachability)")
-        self.findings = Findings()
         index = self.load_artifact_index()
         links = self.load_links()
-        reachable = self._gate("hazard present", any("FB2-SAF-HAZ-000001" == (k[1] if isinstance(k, tuple) else k) for k in index))
-        ok &= reachable
+        # The previous gate loaded `links` and then discarded it; its predicate
+        # was "does the string FB2-SAF-HAZ-000001 appear as a dictionary key",
+        # which is true with the entire link registry removed. This traverses.
+        chain_profiles = sorted({prof for prof, _aid in index})
+        chains = {prof: self._trace_chain(index, links, prof) for prof in chain_profiles}
+        trace_ok = True
+        for prof in chain_profiles:
+            ch = chains[prof]
+            print(f"  profile {prof}: verdict={ch['verdict']}, "
+                  f"{ch['reachable']} record(s) reachable from {ch['root']} "
+                  f"over {ch['links_considered']} linked node(s)")
+            for entry in ch["ladder"]:
+                mark = "reached" if entry["reached"] else (
+                    "NOT INSTANTIATED" if entry["instantiated"] == 0 else "NOT REACHED")
+                witness = ch["witness"].get(entry["name"], "")
+                print(f"      stage {entry['stage']:2} {entry['name']:32} "
+                      f"candidates={entry['instantiated']:3} reached={entry['reached']:3} "
+                      f"{mark}{(' via ' + witness) if witness else ''}")
+            if ch["not_instantiated"]:
+                print(f"      typed root/leaf exception: NOT CLAIMED. Stages with zero "
+                      f"candidate records in this profile, so not traversable by any link "
+                      f"graph and not required: {', '.join(ch['not_instantiated'])}")
+            if ch["unmet_required"]:
+                print(f"      NOT REACHED: {', '.join(ch['unmet_required'])} "
+                      f"-- §13 permits a typed root/leaf exception here; this corpus declares none")
+            trace_ok &= self._gate(
+                f"{prof}: §13 chain reaches every stage this profile instantiates",
+                not ch["unmet_required"],
+                (f"full chain through stage "
+                 f"{max(e['stage'] for e in ch['ladder'] if e['reached'])}; "
+                 f"unmet: {', '.join(ch['unmet_required'])}") if ch["unmet_required"]
+                else "every instantiated stage reached")
+        ok &= self._gate("hazard present in every profile", all(
+            (prof, "FB2-SAF-HAZ-000001") in index for prof in chain_profiles))
+        ok &= trace_ok
+
         print("\n[5/8] scenario tests")
         ok &= self._gate("scenario-test", self.cmd_scenario_test())
         print("\n[6/8] export reproducibility")
@@ -3967,16 +5164,86 @@ class CorpusTool:
         m2 = load_json(self.exports_dir / "manifest.json")
         deterministic = all(h1[k] == m2["content_hashes"][k] for k in h1)
         ok &= self._gate("deterministic export hashes", deterministic)
+
         print("\n[7/8] governance semantics")
-        bad_auth = [f for f in self.findings.items if f["category"] == "provenance"]
-        ok &= self._gate("no production_authorized/approved artifacts (fresh findings)",
-                         not bad_auth, f"{len(bad_auth)} violations this run" if bad_auth else "")
+        # This gate used to read self.findings, which at this point is the EMPTY
+        # Findings object left by the change-lifecycle branch in _execute_scenarios
+        # (it resets self.findings and runs no detector). Counting
+        # category=="provenance" findings in an empty object returns 0 violations
+        # by construction, so the gate could not fail. It now runs the governance
+        # detector over the whole index on a fresh Findings object and counts
+        # what that detector actually found.
+        self.findings = Findings()
+        gov_index = self.load_artifact_index()
+        self._validate_governance_semantics(gov_index)
+        self._validate_semantic_rules(gov_index, links)
+        gov_findings = [f for f in self.findings.items
+                        if f.get("rule") == "governance_authority_claim"
+                        or f.get("rule") == "production_authorization_governance_checker"]
+        ok &= self._gate("no production authority, no verification credit, no human approval",
+                         not gov_findings,
+                         f"{len(gov_findings)} violation(s) this run" if gov_findings
+                         else f"governance detector ran over {len(gov_index)} records")
+        for f in gov_findings[:20]:
+            print(f"      {f['severity']}/{f['category']} {f['rule']} on {f['artifact_id']}: "
+                  f"{f['description']}")
+
+        print("\n[7b/8] provenance verification (digests, content hashes, line ranges)")
+        self.findings = Findings()
+        prov_ok = self._validate_provenance_evidence(gov_index)
+        self._report_provenance()
+        prov_findings = self._provenance_finding_count()
+        # The gate line always states the true verdict, in every mode. Only the
+        # contribution to this run's overall `ok` is decoupled by
+        # --provenance-report-only, so the mode can be used to read the numbers
+        # without a gate ever being made to print PASS.
+        prov_line_ok = self._gate("digests, content hashes and line ranges verify against the files",
+                                 prov_ok,
+                                 f"{prov_findings} provenance finding(s)"
+                                 + ("; --provenance-report-only: this verdict is NOT gating"
+                                    if self.provenance_report_only else ""))
+        if self.provenance_report_only:
+            if not prov_line_ok:
+                advisory.append("provenance verification (--provenance-report-only): the gate "
+                                f"above reports FAIL with {prov_findings} finding(s); that "
+                                "verdict is excluded from the exit code of this run only")
+        else:
+            ok &= prov_line_ok
+        ext_ok, ext_detail, ext_forward = self._run_external_reference_check()
+        ok &= self._gate("external reference check (check_references.py) reports no unresolved references",
+                         ext_ok, ext_detail)
+
         print("\n[8/8] final status")
         ok &= self._gate("final status recorded",
                         dims.get("final_status") == FINAL_STATUS,
                         dims.get("final_status", "?"))
+        if self.provenance_report_only and advisory == []:
+            # Record what was NOT counted, in terms a reader can act on.
+            if not prov_ok:
+                advisory.append("provenance verification (--provenance-report-only: "
+                                f"{prov_findings} finding(s) reported, not gating)")
+        if advisory:
+            print("\nNOT COUNTED TOWARD THIS RUN'S VERDICT (explicitly requested reporting mode):")
+            for a in advisory:
+                print(f"  - {a}")
         print(f"\nAcceptance suite: {'PASSED' if ok else 'FAILED'}")
         return ok
+
+    def _change_lifecycle_passed(self, dims):
+        """How many change lifecycles passed CONTENT validation, from the run."""
+        run = self._scenario_run_cache
+        if not run:
+            return 0
+        return sum(1 for r in run["results"]
+                   if r.get("type") == "change_lifecycle" and r.get("passed"))
+
+    def _change_lifecycle_gate(self, dims):
+        run = self._scenario_run_cache
+        if not run:
+            return False
+        return (run["total_changes"] == 3
+                and all(r.get("passed") for r in run["results"]
+                        if r.get("type") == "change_lifecycle"))
 
     # ------------------------------------------------------------ 15.11-13 tests
 
@@ -4325,12 +5592,31 @@ class CorpusTool:
                 ok, reason = self._match_scenario_finding(detector, actual, bsigns)
                 if not ok:
                     bad.append(f"{sid}: {reason}")
-                others = sorted({f.get("rule") for f in actual if f.get("rule") != detector})
-                if others:
-                    # Not a failure by itself, but the scenario must not be
-                    # passing because of one of these.
-                    bad.append(f"{sid}: unrelated rules also fired {others}; "
-                               f"verdict must rest on '{detector}' alone")
+                # The verdict must rest on the declared rule and nothing else.
+                # Asserted as "the rules this mutation CAUSED are exactly the
+                # declared rule", i.e. excluding the baseline: a standing
+                # defect on an unrelated rule is not this scenario's detection,
+                # and _match_scenario_finding already refuses to count it. The
+                # earlier form of this clause was "no other rule fired at all",
+                # which only held while the corpus produced almost no findings
+                # and which conflated harness integrity with corpus cleanliness.
+                b_rules = {s[0] for s in bsigns}
+                caused = sorted({f.get("rule") for f in actual
+                                 if f.get("rule") not in b_rules})
+                if detector not in caused:
+                    bad.append(f"{sid}: the rules this mutation caused are {caused}, "
+                               f"which does not include the declared rule "
+                               f"{detector!r}")
+                # The verdict rests on the declared rule ALONE, and that is a
+                # property of _match_scenario_finding, not of what else fired: it
+                # returns True only for a finding whose `rule` is the declared
+                # rule and whose signature is absent from the baseline. So a
+                # second rule firing alongside is information, not a defect, and
+                # is not allowed to change this verdict. (The previous clause
+                # here required that NO other rule fire at all. That is not the
+                # property being tested -- it held only while the corpus
+                # produced almost no findings, and it conflated harness
+                # integrity with corpus cleanliness.)
             return not bad
 
         def t_scenario_fails_when_own_detector_disabled():
@@ -4356,21 +5642,26 @@ class CorpusTool:
             }
             baseline = self._baseline_findings()
             bsigns = baseline.signature()
+            b_rules = {s[0] for s in bsigns}
             self.findings = Findings()
             before = self._apply_mutation_and_detect(inline)
-            rules_before = {f["rule"] for f in before}
+            # Only the rules this mutation CAUSED matter. A rule that was
+            # already firing on the unmutated corpus cannot be this probe's
+            # detection, so it is excluded rather than counted as a failure.
+            caused = {f["rule"] for f in before if f["rule"] not in b_rules}
             ok_before, _ = self._match_scenario_finding(declared, before, bsigns)
             with self._suppress_rule(declared):
                 self.findings = Findings()
                 after = self._apply_mutation_and_detect(inline)
-            surviving = [f for f in after if f["artifact_id"] in set(inline["affected_ids"])]
+            surviving = [f for f in after if f["artifact_id"] in set(inline["affected_ids"])
+                         and f["rule"] not in b_rules]
             ok_after, reason = self._match_scenario_finding(declared, after, bsigns)
             # the surviving neighbour is what the old criterion would have matched
             old_criterion_would_pass = any(
                 f["severity"] == inline["expected_finding"]["severity"]
                 and f["category"] == inline["expected_finding"]["category"]
                 for f in surviving)
-            return (rules_before == {declared, neighbour} and ok_before
+            return (caused == {declared, neighbour} and ok_before
                     and not ok_after and bool(surviving)
                     and {f["rule"] for f in surviving} == {neighbour}
                     and old_criterion_would_pass
@@ -4538,6 +5829,393 @@ class CorpusTool:
             ok &= len(buf.getvalue().strip().splitlines()) == len(first["lines"])
             return ok
 
+        # --- provenance verification ------------------------------------------
+        # Each of these pins one provenance class from both sides: a wrong value
+        # must be caught, and the correct value must be silent. A rule that only
+        # knows how to fail is indistinguishable from a rule that is stuck on.
+
+        def _tmp_anchor_dir(self_obj):
+            """A throwaway tree with one real file, for anchor checks."""
+            import tempfile
+            return tempfile.TemporaryDirectory()
+
+        def t_provenance_digest_verified():
+            with _tmp_anchor_dir(self) as tmp:
+                root = Path(tmp)
+                (root / "a.json").write_text('{"id":"X","revision":"1"}', encoding="utf-8")
+                good = sha256_file(root / "a.json")
+                # Drive the detector directly through a stub index so the test
+                # does not depend on any real review record.
+                saved_root, saved_findings = self.root, self.findings
+                try:
+                    self.root = root
+                    rec = {"id": "REV", "profile": "p",
+                           "reviewed_ids": [
+                               {"artifact_id": "X", "digest": good},
+                               {"artifact_id": "X", "digest": "0" * 64}]}
+                    rdir = root / "docs" / "artifacts" / "reviews" / "records"
+                    rdir.mkdir(parents=True)
+                    (rdir / "r.json").write_text(json.dumps(rec), encoding="utf-8")
+                    self.artifacts_dir = root / "docs" / "artifacts"
+                    self.findings = Findings()
+                    self._validate_review_digests({("p", "X"): ("a.json", {})})
+                    mine = [f for f in self.findings.items if f["rule"] == "review_digest_mismatch"]
+                    tally = self.provenance_tally["review_digest"]
+                    return (len(mine) == 1 and tally["verified"] == 1
+                            and "0" * 8 in mine[0]["description"])
+                finally:
+                    self.root, self.findings = saved_root, saved_findings
+                    self.artifacts_dir = saved_root / "docs" / "artifacts"
+
+        def t_provenance_placeholder_needs_note():
+            with _tmp_anchor_dir(self) as tmp:
+                root = Path(tmp)
+                saved_root, saved_findings = self.root, self.findings
+                try:
+                    self.root = root
+                    self.artifacts_dir = root / "docs" / "artifacts"
+                    rdir = self.artifacts_dir / "reviews" / "records"
+                    rdir.mkdir(parents=True)
+                    (rdir / "r.json").write_text(json.dumps(
+                        {"id": "REV", "profile": "p", "reviewed_ids": [
+                            {"artifact_id": "A", "digest": "placeholder"},
+                            {"artifact_id": "B", "digest": "placeholder",
+                             "digest_note": "artifact deliberately not committed; see finding 41"}]}),
+                        encoding="utf-8")
+                    self.findings = Findings()
+                    self._validate_review_digests({("p", "A"): ("a", {}), ("p", "B"): ("b", {})})
+                    tally = self.provenance_tally["review_digest"]
+                    # Both are reported. The noted one is a disclosure; the
+                    # unnoted one is the defect. Neither is skipped.
+                    return (tally["placeholder_with_note"] == 1
+                            and tally["placeholder_without_note"] == 1
+                            and len([f for f in self.findings.items
+                                     if f["rule"] == "review_digest_placeholder"]) == 2)
+                finally:
+                    self.root, self.findings = saved_root, saved_findings
+                    self.artifacts_dir = saved_root / "docs" / "artifacts"
+
+        def _anchor_fixture(self_obj, anchor):
+            """Build a one-anchor source registry inside a temp tree."""
+            import tempfile
+            tmp = tempfile.TemporaryDirectory()
+            root = Path(tmp.name)
+            src = root / "src.c"
+            src.write_text("int real_symbol(void) {\n" + "\n".join(
+                f"    int x{i} = {i};" for i in range(1, 20)) + "\n}\n", encoding="utf-8")
+            reg = root / "reg.json"
+            reg.write_text(json.dumps({"anchors": [anchor]}), encoding="utf-8")
+            return tmp, root, reg
+
+        def _run_anchor_check(self_obj, root):
+            """Run _validate_source_anchors against a temp tree.
+
+            Returns (ok, findings, tally). The findings are captured before the
+            instance state is restored: the self-tests inspect them, and reading
+            self.findings after the restore would inspect the PREVIOUS test's
+            findings instead.
+            """
+            saved = (self_obj.root, self_obj.sources_dir, self_obj.findings,
+                     self_obj._load_source_anchors)
+            self_obj.root = root
+            self_obj.sources_dir = root
+            self_obj.findings = Findings()
+            self_obj._load_source_anchors = lambda: json.loads(
+                (root / "reg.json").read_text(encoding="utf-8"))["anchors"]
+            try:
+                ok = self_obj._validate_source_anchors()
+                return ok, list(self_obj.findings.items), dict(self_obj.provenance_tally)
+            finally:
+                (self_obj.root, self_obj.sources_dir, self_obj.findings,
+                 self_obj._load_source_anchors) = saved
+
+        def t_provenance_anchor_symbol_absent():
+            present = {"anchor_id": "FB2-SRC-COD-999999", "source_type": "code",
+                       "location": {"path": "src.c", "symbol": "real_symbol",
+                                    "line_range": "2-4"}}
+            absent = {"anchor_id": "FB2-SRC-COD-999999", "source_type": "code",
+                      "location": {"path": "src.c", "symbol": "fabricated_symbol",
+                                   "line_range": "2-4"}}
+            tmp, root, _reg = _anchor_fixture(self, absent)
+            try:
+                ok, findings, tally = _run_anchor_check(self, root)
+                at = tally["source_anchors"]
+                caught = [f for f in findings if f["rule"] == "source_anchor_symbol_missing"]
+                good = (not ok and len(caught) == 1
+                        and at["symbol_checked"] == 1 and at["symbol_absent"] == 1)
+            finally:
+                tmp.cleanup()
+            tmp2, root2, _r2 = _anchor_fixture(self, present)
+            try:
+                ok2, findings2, tally2 = _run_anchor_check(self, root2)
+                at2 = tally2["source_anchors"]
+                # The correct symbol must be silent: a rule that can only fail is
+                # not evidence of anything.
+                silent = (ok2 and at2["symbol_present"] == 1 and at2["symbol_absent"] == 0
+                          and not [f for f in findings2
+                                   if f["rule"] == "source_anchor_symbol_missing"])
+            finally:
+                tmp2.cleanup()
+            return good and silent
+
+        def t_provenance_line_range_bounds():
+            anchor = {"anchor_id": "FB2-SRC-COD-999999", "source_type": "code",
+                      "location": {"path": "src.c", "symbol": "real_symbol",
+                                   "line_range": "900-950"}}
+            tmp, root, _reg = _anchor_fixture(self, anchor)
+            try:
+                ok, findings, tally = _run_anchor_check(self, root)
+                at = tally["source_anchors"]
+                bad = (not ok and at["line_range_out_of_bounds"] == 1
+                       and at["line_range_ok"] == 0
+                       and any(f["rule"] == "source_anchor_line_range_out_of_bounds"
+                               for f in findings))
+            finally:
+                tmp.cleanup()
+            inrange = json.loads(json.dumps(anchor))
+            inrange["location"]["line_range"] = "2-4"
+            tmp2, root2, _r2 = _anchor_fixture(self, inrange)
+            try:
+                ok2, _f2, tally2 = _run_anchor_check(self, root2)
+                good = ok2 and tally2["source_anchors"]["line_range_ok"] == 1
+            finally:
+                tmp2.cleanup()
+            return bad and good
+
+        def t_provenance_placeholder_hash_reported():
+            anchor = {"anchor_id": "FB2-SRC-COD-999999", "source_type": "code",
+                      "content_hash": "sha256:placeholder",
+                      "location": {"path": "src.c", "symbol": "real_symbol",
+                                   "line_range": "2-4"}}
+            tmp, root, _reg = _anchor_fixture(self, anchor)
+            try:
+                ok, findings, tally = _run_anchor_check(self, root)
+                at = tally["source_anchors"]
+                unv = [f for f in findings
+                       if f["rule"] == "source_anchor_content_hash_unverified"]
+                # A placeholder is reported (not skipped) and does not pass.
+                return (not ok and at["hash_unverified_placeholder"] == 1
+                        and at["hash_verified"] == 0 and len(unv) == 1
+                        and "no content hash" in unv[0]["description"])
+            finally:
+                tmp.cleanup()
+
+        def t_provenance_evidence_file_missing():
+            index = {("p", "A"): ("a.json", {"id": "A", "logs": [
+                {"file": "does/not/exist.log", "hash": "sha256:" + "0" * 64}],
+                "evidence_files": ["also/missing.json"]})}
+            self.findings = Findings()
+            ok = self._validate_evidence_files(index)
+            tally = self.provenance_tally["evidence_files"]
+            rules = {f["rule"] for f in self.findings.items}
+            return (not ok and tally["log_file_missing"] == 1
+                    and tally["evidence_file_missing"] == 1
+                    and rules == {"evidence_file_missing"})
+
+        def t_provenance_runs_in_detector_pass():
+            # The provenance detectors must be reachable from _run_detectors, so
+            # that every path which counts findings sees them: the validate pass,
+            # the scenario baseline, and the acceptance gates.
+            #
+            # Asserted as a WIRING fact, not as a corpus fact. A test that
+            # asserted "source_anchor_symbol_missing is in the findings" would
+            # pass only while the corpus still has fabricated anchors and would
+            # fail the moment a repair workstream fixed them -- a test whose
+            # green means "the corpus is broken". This one goes green when the
+            # plumbing is right, which is the thing that must not regress.
+            calls = []
+            original = self._validate_provenance_evidence
+            original_gov = self._validate_governance_semantics
+
+            def _spy(idx):
+                calls.append(len(idx))
+                return original(idx)
+
+            def _spy_gov(idx):
+                calls.append(-len(idx))
+                return original_gov(idx)
+
+            self._validate_provenance_evidence = _spy
+            self._validate_governance_semantics = _spy_gov
+            try:
+                self.findings = Findings()
+                self._run_detectors(self.load_artifact_index(), self.load_links())
+                prov_calls = [c for c in calls if c > 0]
+                gov_calls = [c for c in calls if c < 0]
+                rules = self._implemented_rules()
+                return (len(prov_calls) == 1 and len(gov_calls) == 1
+                        and prov_calls[0] == -gov_calls[-1]
+                        and {"review_digest_mismatch", "source_anchor_symbol_missing",
+                             "source_anchor_line_range_out_of_bounds",
+                             "source_anchor_content_hash_unverified",
+                             "evidence_file_missing", "evidence_file_hash_mismatch",
+                             "governance_authority_claim"} <= rules)
+            finally:
+                self._validate_provenance_evidence = original
+                self._validate_governance_semantics = original_gov
+
+        # --- governance gate --------------------------------------------------
+
+        def t_governance_gate_runs_detector():
+            # Inject one authority claim into an in-memory index and prove the
+            # detector the [7/8] gate runs reports it.
+            good = {"id": "OK", "production_authorized": False,
+                    "product_verification_credit": False, "human_approval_status": "pending"}
+            bad = {"id": "BAD", "production_authorized": True,
+                   "product_verification_credit": False, "human_approval_status": "pending"}
+            approver = {"id": "APPROVED", "production_authorized": False,
+                        "product_verification_credit": False, "human_approval_status": "approved"}
+            credit = {"id": "CREDIT", "production_authorized": False,
+                      "product_verification_credit": True, "human_approval_status": "pending"}
+            sneaky = {"id": "SNEAKY", "production_authorized": False,
+                      "product_verification_credit": False, "human_approval_status": "pending",
+                      "release_approved": True}
+            idx = {("p", d["id"]): ("<m>", d) for d in (good, bad, approver, credit, sneaky)}
+            self.findings = Findings()
+            ok = self._validate_governance_semantics(idx)
+            found = {f["artifact_id"] for f in self.findings.items
+                     if f["rule"] == "governance_authority_claim"}
+            n = self._governance_finding_count()
+            # All four injected violations are caught, including the one that
+            # hides in a field the three named checks never look at.
+            return (not ok and n == 4
+                    and found == {"BAD", "APPROVED", "CREDIT", "SNEAKY"})
+
+        def t_governance_gate_was_vacuous():
+            # Pins WHY the repair was needed: after the change-lifecycle branch,
+            # _execute_scenarios leaves self.findings as a fresh, empty object
+            # that no detector has written to. Counting provenance findings in
+            # it returns zero for any corpus whatsoever.
+            self.findings = Findings()
+            empty_before = self._governance_finding_count()
+            self._execute_scenarios("SCN-CHG-001")
+            empty_after = self._governance_finding_count()
+            self.findings = Findings()
+            self._run_detectors(self.load_artifact_index(), self.load_links())
+            after_detector = self._governance_finding_count()
+            return empty_before == 0 and empty_after == 0 and after_detector == 0
+
+        # --- trace chain ------------------------------------------------------
+
+        def t_trace_chain_traversal_reaches_stages():
+            index = self.load_artifact_index()
+            links = self.load_links()
+            ch = self._trace_chain(index, links, "synthetic_reference")
+            reached = set(ch["reached"])
+            # The stages the corpus genuinely links, all of which must be
+            # reached by a real traversal rather than asserted.
+            for stage in ("hazard", "safety goal", "functional safety requirement",
+                          "technical/system requirement", "detailed design",
+                          "verification measure", "execution/evidence", "review"):
+                if stage not in reached:
+                    return False
+            # Every node the traversal reports must be a real record id in the
+            # index, and the traversal must have used links.
+            known = {a for (_p, a) in index}
+            return (ch["reachable"] > 1
+                    and ch["links_considered"] > 0
+                    and all(a in known for hits in ch["reached"].values() for a in hits))
+
+        def t_trace_chain_fails_without_links():
+            index = self.load_artifact_index()
+            ch = self._trace_chain(index, [], "synthetic_reference")
+            # With no links, nothing but the root is reachable, so every
+            # instantiated stage after the hazard is unmet.
+            return (ch["reachable"] == 1
+                    and ch["unmet_required"]
+                    and "safety goal" in ch["unmet_required"]
+                    and ch["verdict"].startswith("reached stage 1"))
+
+        def t_trace_chain_ignores_related_to():
+            index = self.load_artifact_index()
+            links = self.load_links()
+            base = self._trace_chain(index, links, "synthetic_reference")
+            case_ids = [a for (p, a), (_pp, d) in index.items()
+                        if p == "synthetic_reference" and d.get("artifact_type") == "safety_case"]
+            if not case_ids:
+                # Nothing to bridge to in this corpus right now; the structural
+                # half of the assertion still has to hold.
+                return "related_to" not in self.TRACE_CHAIN_RELATIONS
+            # Add a related_to edge from the hazard to a safety case. The stage
+            # must NOT become reachable through it.
+            weak = {"link_id": "WEAK-1", "relation_type": "related_to",
+                    "source_id": "FB2-SAF-HAZ-000001", "target_id": case_ids[0],
+                    "_profile": "synthetic_reference"}
+            widened = self._trace_chain(index, links + [weak], "synthetic_reference")
+            # related_to is not in TRACE_CHAIN_RELATIONS, so the adjacency the
+            # traversal builds cannot include this edge at all: the safety
+            # argument stage is exactly what it was before the weak edge.
+            return ("related_to" not in self.TRACE_CHAIN_RELATIONS
+                    and widened["reached"].get("safety argument")
+                    == base["reached"].get("safety argument"))
+
+        # --- change lifecycle -------------------------------------------------
+
+        def _real_change(scenario_id):
+            for p in sorted((self.scenarios_dir / "change-lifecycles").glob("*.json")):
+                d = load_json(p)
+                if d.get("scenario_id") == scenario_id:
+                    return d
+            raise AssertionError(scenario_id)
+
+        def t_change_lifecycle_rejects_nine_nulls():
+            d = json.loads(json.dumps(_real_change("SCN-CHG-001")))
+            for f in self._CHANGE_LIFECYCLE_FIELDS:
+                d[f] = None
+            index, links = self.load_artifact_index(), self.load_links()
+            checks, passed = self._validate_change_lifecycle(d, index, links)
+            failed = {c["check"] for c in checks if not c["passed"]}
+            return (not passed
+                    and "no required field is null" in failed
+                    and "trigger carries source/description/date" in failed
+                    and "decision carries maker/date/rationale/disposition" in failed
+                    and "post_change_baseline is a well-formed baseline id" in failed)
+
+        def t_change_lifecycle_rejects_unresolved_reference():
+            d = json.loads(json.dumps(_real_change("SCN-CHG-001")))
+            d["required_updates"] = list(d["required_updates"]) + ["Update FB2-NOT-REAL-999999"]
+            index, links = self.load_artifact_index(), self.load_links()
+            checks, passed = self._validate_change_lifecycle(d, index, links)
+            failed = [c for c in checks if not c["passed"]]
+            return (not passed and len(failed) == 1
+                    and failed[0]["check"] == "required_updates: all referenced ids resolve"
+                    and "FB2-NOT-REAL-999999" in failed[0]["detail"])
+
+        # --- standards mapping ------------------------------------------------
+
+        def t_standards_mapping_is_measured():
+            cp = load_json(self.governance_dir / "coverage-plan.json")
+            m = self._standards_mapping_measurement(cp, self.load_artifact_index())
+            # The denominator is the APPLICABLE inventory, computed from the
+            # file rather than hardcoded, and not_applicable entries are named.
+            n_proc = len(cp.get("process_inventory", []))
+            iso = cp.get("iso26262_coverage", {})
+            n_iso_na = sum(1 for v in iso.values()
+                           if isinstance(v, dict) and v.get("decision") == "not_applicable")
+            expected_den = (n_proc - len(m["aspice_not_applicable"])
+                            + len(iso) - n_iso_na)
+            return (m["denominator"] == expected_den
+                    and m["numerator"] == len(m["aspice_backed"]) + len(m["iso_backed"])
+                    and m["numerator"] < 44
+                    and "44/44" in m["detail"]
+                    and len(m["aspice_not_applicable"]) == 4)
+
+        def t_standards_mapping_drops_without_backing():
+            cp = load_json(self.governance_dir / "coverage-plan.json")
+            index = self.load_artifact_index()
+            before = self._standards_mapping_measurement(cp, index)
+            cp2 = json.loads(json.dumps(cp))
+            for p in cp2["process_inventory"]:
+                if p.get("process_id") == "SYS.1":
+                    p["disposition"] = "mapped"
+                    p["disposition_reason"] = ""
+                    p["expected_artifacts"] = []
+                    p["rationale"] = ""
+                    p["name"] = ""
+            after = self._standards_mapping_measurement(cp2, index)
+            return (after["numerator"] == before["numerator"] - 1
+                    and "SYS.1" in after["aspice_unbacked"])
+
         print("Running corpus toolchain self-tests...")
         check("valid schema accepted", t_valid_schema)
         check("invalid schema rejected", t_invalid_schema)
@@ -4591,6 +6269,38 @@ class CorpusTool:
               t_negative_scenario_dimension_is_a_pass_count_not_a_file_count)
         check("coverage dimension and acceptance gate share one scenario measurement",
               t_scenario_run_is_shared_between_gate_and_coverage)
+        check("provenance: a wrong digest is caught and a right one is not",
+              t_provenance_digest_verified)
+        check("provenance: placeholder digest is permitted only with a note",
+              t_provenance_placeholder_needs_note)
+        check("provenance: an anchor whose symbol is absent from its file is caught",
+              t_provenance_anchor_symbol_absent)
+        check("provenance: an out-of-bounds line range is caught",
+              t_provenance_line_range_bounds)
+        check("provenance: placeholder content_hash is reported, not skipped",
+              t_provenance_placeholder_hash_reported)
+        check("provenance: a missing evidence file is caught",
+              t_provenance_evidence_file_missing)
+        check("governance gate runs a detector and goes red on an injected violation",
+              t_governance_gate_runs_detector)
+        check("governance gate was empty by construction before the repair",
+              t_governance_gate_was_vacuous)
+        check("trace chain traversal reaches the stages the corpus actually links",
+              t_trace_chain_traversal_reaches_stages)
+        check("trace chain traversal fails when the link graph is emptied",
+              t_trace_chain_fails_without_links)
+        check("trace chain traversal does not follow the weak related_to relation",
+              t_trace_chain_ignores_related_to)
+        check("change lifecycle: nine null fields are rejected",
+              t_change_lifecycle_rejects_nine_nulls)
+        check("change lifecycle: an unresolved referenced id is rejected",
+              t_change_lifecycle_rejects_unresolved_reference)
+        check("standards_mapping is measured by backing, not by counting inventory keys",
+              t_standards_mapping_is_measured)
+        check("standards_mapping drops when a backing artefact is renamed",
+              t_standards_mapping_drops_without_backing)
+        check("provenance checks run inside _run_detectors, so every finding-counting path sees them",
+              t_provenance_runs_in_detector_pass)
         return all(passed for _, passed in tests)
 
 
@@ -4600,7 +6310,6 @@ def main():
     sub = parser.add_subparsers(dest="command")
 
     sub.add_parser("inventory", help="Build/check source/feature inventories")
-    sub.add_parser("validate", help="Run validation checks")
     sub.add_parser("coverage", help="Compute coverage metrics")
     p_trace = sub.add_parser("trace", help="Query traceability paths")
     p_trace.add_argument("artifact_id")
@@ -4611,8 +6320,17 @@ def main():
     p_exp.add_argument("output_dir", nargs="?", default=None)
     p_scn = sub.add_parser("scenario-test", help="Run scenario tests")
     p_scn.add_argument("scenario_id", nargs="?", default=None)
-    sub.add_parser("check", help="Run complete acceptance suite")
     sub.add_parser("selftest", help="Run toolchain self-tests")
+    p_chk = sub.add_parser("check", help="Run complete acceptance suite")
+    p_chk.add_argument("--provenance-report-only", action="store_true",
+                       help="Run every provenance check and report every finding, but do not "
+                            "let the provenance result change this run's exit code. The "
+                            "provenance gate line still prints [FAIL] when it fails; only the "
+                            "verdict is decoupled, and only in this named mode. Use it while a "
+                            "separate workstream repairs the source registry.")
+    p_val = sub.add_parser("validate", help="Run validation checks")
+    p_val.add_argument("--provenance-report-only", action="store_true",
+                       help="Report provenance defects without failing (see `check --help`)")
 
     args = parser.parse_args()
     if not HAVE_JSONSCHEMA:
@@ -4620,6 +6338,10 @@ def main():
         sys.exit(2)
 
     tool = CorpusTool(root=args.root)
+    if getattr(args, "provenance_report_only", False):
+        tool.provenance_report_only = True
+        print("MODE: --provenance-report-only. Every provenance check runs and every "
+              "finding is reported; the provenance result does not gate this run.")
     rc = 0
     if args.command == "inventory":
         rc = 0 if tool.cmd_inventory() else 1

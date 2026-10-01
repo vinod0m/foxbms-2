@@ -1,0 +1,84 @@
+{
+  "id": "FB2-VER-EXE-000022",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Execution: FB2-VER-TMS-000022 (blocked - the arithmetic is reproducible but this corpus does not run measures, and no second reader has independently reproduced the figures)",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.5 (system verification) execution record",
+      "status": "partially_mapped",
+      "rationale": "This record exists so that the absence of an execution is visible rather than inferred. It reports that nothing was run; it is not evidence that the measure passed."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Honest blocked-execution record for FB2-VER-TMS-000022. the measure is a computation rather than a run, and this corpus does not execute measures: there is no second party that has recomputed the 1000-over-50-milliseconds division and the comparison against the requirement's threshold. The arithmetic is short enough to check by hand, which is why it is recorded here as unverified rather than presented as a result."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000022",
+  "test_measure_revision": "1",
+  "execution_kind": "none",
+  "outcome": "blocked",
+  "environment": {
+    "hardware": "none - no target hardware in this corpus",
+    "software": "not applicable - no software was executed",
+    "tools": [],
+    "configuration": "not applicable",
+    "tool_versions": {
+      "none": "0.0.0"
+    }
+  },
+  "input_hashes": {},
+  "output_hashes": {},
+  "logs": [],
+  "timestamps": {
+    "start": "2026-10-02T00:00:00Z",
+    "end": "2026-10-02T00:00:00Z",
+    "duration_ms": 0
+  },
+  "anomalies": [],
+  "evidence_refs": [
+    "FB2-VER-TMS-000022"
+  ],
+  "blocked_reason": "the measure is a computation rather than a run, and this corpus does not execute measures: there is no second party that has recomputed the 1000-over-50-milliseconds division and the comparison against the requirement's threshold. The arithmetic is short enough to check by hand, which is why it is recorded here as unverified rather than presented as a result.",
+  "what_would_unblock_it": [
+    "An independent recomputation of the rate from the parameter registry and the configured task cycle time, recorded with the values used.",
+    "A decision on whether a corpus-authored computation counts as an execution at all; if it does, the record needs a separate classification from a run."
+  ],
+  "limitations": [
+    "No run occurred and no computation is recorded as having been performed.",
+    "No output hash exists because no output file was produced.",
+    "The measure's expected outcome is zero margin at the registry value, and this record does not confirm even that.",
+    "Carries no product verification credit."
+  ]
+}

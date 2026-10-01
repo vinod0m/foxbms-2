@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-30T01:21:29Z |
+| Generated | 2026-10-01T05:09:49Z |
 
 ## Scope
 
@@ -173,7 +173,7 @@ MSL violations set fatal-error-linked diagnosis entries that force the BMS state
   - mode dependence: Mode-dependent, and in the real implementation the dependence is visible in the code rather than in a comment. The opening sequence is entered from any state that receives a FAULT or error request, and FB2-SAF-FSC-000001 records that in MOD-004, with the contactors closed and current flowing, reaching the safe state removes propulsion from a moving vehicle. The real sequence makes one further mode-dependent decision inside it: a contactor is not opened while the string current is at or above BS_...
   - allocation basis: FB2-SAF-FSC-000001.fault_reaction entry 1 and FB2-SAF-TSC-000001.fault_reaction entry 1 both allocate this reaction to AR-004 at 35 ms, realised by FB2-SW-SWR-000003 in software and FB2-HW-TSR-000003 in hardware. The 40 ms end-to-end figure is FB2-SAF-SGO-000001.timing_budget.allocation (contactor_command_ms 5 + contactor_mechanical_ms 30 + feedback_verification_ms 5) and is reconciled against this record's acceptance criteria under FB2-REV-FND-000024. The real source anchors are FB2-SRC-COD-000...
   - open limits: Four limits are recorded. First, the 30 ms feedback-open criterion and the 100 ms feedback-confirmed criterion in this record's acceptance criteria do not distinguish the mechanically open point from the feedback-confirmed point the way the synthetic_reference copy of this requirement now does, and they carry a 100 ms weld-detection figure against FB2-HW-TSR-000003's 100 ms while the synthetic copy carries 50 ms; neither copy of the weld figure was changed here and the disagreement recorded against FB2-REV-FND-000024 is still open. Second, the real reaction is bounded by a per-string timeout rather than by a total reaction time, and the source carries an unresolved 'TODO: add timeout' on the re-issue branch, so the retry count is unbounded in the code. Third, the 30 ms mechanical figure is FB2-PRM-000005 with an upper tolerance of 40 ms, and FB2-ASM-006 is an assumption about the contact...
-- **Source references**: `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
+- **Source references**: `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
 - **Assumption references**: `FB2-ASM-001` (Lithium-ion cell chemistry with nominal voltage 3.7V, operat...), `FB2-ASM-006` (Contactor mechanical opening time <= 30 ms (worst case) at -...), `FB2-ASM-007` (SBC (FS85xx) watchdog is independent of main MCU and can tri...)
 
 ## Profile: `synthetic_reference`
@@ -282,7 +282,7 @@ MSL violations set fatal-error-linked diagnosis entries that force the BMS state
   - mode dependence: Mode-dependent, and this is the load-bearing caveat of the concept. In MOD-004, with the contactors closed and current flowing, opening them removes propulsion from a moving vehicle, so the item must distinguish a genuine limit violation from a degraded condition and must not enter FAULT for the latter. In MOD-001, MOD-002 and MOD-007 the reaction is unambiguous and immediate; in MOD-006 the state is already latched. Disconnecting a battery is itself an action with consequences and is not uncond...
   - allocation basis: FB2-SAF-FSC-000001.fault_reaction entry 1 ('Open all high-voltage contactors, disable charging, latch the fault and log it', element_id AR-004, reaction_time_budget_ms 35). The same element and budget appear in FB2-SAF-TSC-000001.fault_reaction, which adds that the reaction is realised by FB2-SW-SWR-000003 in software and FB2-HW-TSR-000003 in hardware and that the watchdog that makes it work after a software hang is independent of the main microcontroller (FB2-ASM-007). The five segments come fr...
   - open limits: Three limits are recorded and none is closed by this field. First, this record states a 50 ms weld-detection latency and FB2-HW-TSR-000003 states 100 ms for the same quantity. No record in this corpus decides which is intended, so neither figure was changed and the disagreement was left open rather than harmonised by editing one of the two numbers; FB2-REV-FND-000024 records it as deliberately not resolved. Second, FB2-ASM-007 assumes the safe base controller's watchdog is independent of the main microcontroller and can actuate the contactors on its own; FB2-SAF-TSC-000001.hardware_interfaces_and_assumptions records that this independence is read out of the source and that its behaviour over the full supply and temperature range is not measured, and that if it does not hold, a software hang leaves the contactors in their last commanded state with AR-005 the only remaining path. Third, th...
-- **Source references**: `FB2-SRC-COD-000007`, `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
+- **Source references**: `FB2-SRC-COD-000008`, `FB2-SRC-COD-000009`, `FB2-SRC-COD-000013`
 - **Assumption references**: `FB2-ASM-001` (Lithium-ion cell chemistry with nominal voltage 3.7V, operat...), `FB2-ASM-006` (Contactor mechanical opening time <= 30 ms (worst case) at -...), `FB2-ASM-007` (SBC (FS85xx) watchdog is independent of main MCU and can tri...)
 
 #### `FB2-SAF-FSR-000004` — FSR: Independent Hardware Voltage Monitor
@@ -779,4 +779,4 @@ Every requirement above carries `human_approval_status: pending`, `production_au
 
 ---
 
-*Generated: 2026-09-30T01:21:29Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

@@ -1,6 +1,6 @@
 # Traceability — the corpus traceability document (generated)
 
-Generated: 2026-09-30T02:23:00Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
+Generated: 2026-10-01T05:09:31Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
 
 ## Provenance and status of this file
 
@@ -29,7 +29,7 @@ This is the traceability document for the foxBMS 2 lifecycle artifact corpus. It
 
 It reports three different populations and does not merge them:
 
-- **233 artifacts, 460 links** — records and links in the tool's index, the population every count below is drawn from.
+- **263 artifacts, 489 links** — records and links in the tool's index, the population every count below is drawn from.
 - Records that exist in both profiles appear once per profile. The same identifier in `as_is` and in `synthetic_reference` is two different records by design, and are counted separately.
 - A coverage ratio is a ratio, not a score. Where the denominator is a target rather than a population, the table says so in its own column.
 
@@ -42,9 +42,10 @@ Computed from the artifact index at render time.
 | `change` | 0 | 3 | 3 |
 | `design` | 3 | 5 | 8 |
 | `deviation` | 26 | 0 | 26 |
-| `execution` | 16 | 20 | 36 |
+| `execution` | 16 | 28 | 44 |
 | `finding` | 14 | 28 | 42 |
 | `hazard` | 1 | 1 | 2 |
+| `implementation` | 10 | 4 | 14 |
 | `item_definition` | 0 | 1 | 1 |
 | `measurement_plan` | 0 | 1 | 1 |
 | `post_development_record` | 0 | 6 | 6 |
@@ -61,17 +62,17 @@ Computed from the artifact index at render time.
 | `scenario` | 0 | 5 | 5 |
 | `stakeholder_need` | 0 | 5 | 5 |
 | `tara` | 0 | 1 | 1 |
-| `test_measure` | 5 | 20 | 25 |
+| `test_measure` | 5 | 28 | 33 |
 | `use_case` | 0 | 4 | 4 |
-| **Total** | 80 | 153 | 233 |
+| **Total** | 90 | 173 | 263 |
 
-233 records carry an `id` and are therefore countable. Registry container files (parameter and assumption registries) carry no top-level `id` and are counted separately below; they are not lifecycle artifacts.
+263 records carry an `id` and are therefore countable. Registry container files (parameter and assumption registries) carry no top-level `id` and are counted separately below; they are not lifecycle artifacts.
 
 ### Non-record registries
 
 | Registry | Canonical file | Entries |
 |---|---|---|
-| source anchors | `sources/source-registry.json` | 102 |
+| source anchors | `sources/source-registry.json` | 101 |
 | assumption registry | `shared/assumption-registry.json` | 12 |
 | parameter registry | `shared/parameter-registry.json` | 10 |
 
@@ -82,7 +83,7 @@ Counted from the index. This is the population-wide position of the four guard f
 
 | `human_approval_status` | `production_authorized` | `product_verification_credit` | Records |
 |---|---|---|---|
-| pending | false | false | 233 |
+| pending | false | false | 263 |
 
 
 No record in this corpus carries a human approval: 0 records are in any state other than `pending`. No record is authorized for production: 0 records are in any state other than `false`. Automated review performed by this toolchain is not organizational independence and is not a human confirmation. Nothing in this document can change those two numbers.
@@ -97,29 +98,29 @@ Computed from the canonical link registries at render time.
 
 | Relation type | as_is | synthetic_reference | Total |
 |---|---|---|---|
-| `allocated_to` | 6 | 34 | 40 |
+| `allocated_to` | 9 | 37 | 46 |
 | `changes` | 0 | 16 | 16 |
 | `depends_on` | 0 | 12 | 12 |
-| `implements` | 3 | 3 | 6 |
+| `implements` | 6 | 7 | 13 |
 | `mitigates` | 1 | 2 | 3 |
 | `refines` | 9 | 32 | 41 |
-| `result_of` | 5 | 20 | 25 |
+| `result_of` | 5 | 28 | 33 |
 | `reviewed_by` | 78 | 151 | 229 |
 | `supports` | 0 | 29 | 29 |
 | `validates` | 0 | 12 | 12 |
-| `verifies` | 9 | 38 | 47 |
-| **Total** | 111 | 349 | 460 |
+| `verifies` | 9 | 46 | 55 |
+| **Total** | 117 | 372 | 489 |
 
 Link metadata completeness, counted over the same links:
 
 | Link field | Links carrying it | Links total | Share |
 |---|---|---|---|
-| `rationale` | 460 | 460 | 100% |
-| `provenance` | 460 | 460 | 100% |
-| `review_state` | 460 | 460 | 100% |
-| `change_suspect_status` | 460 | 460 | 100% |
+| `rationale` | 489 | 489 | 100% |
+| `provenance` | 489 | 489 | 100% |
+| `review_state` | 489 | 489 | 100% |
+| `change_suspect_status` | 489 | 489 | 100% |
 
-0 links are marked change-suspect and 52 links are not in `review_state: reviewed`. Neither number is a defect count: both are the state the registries record.
+0 links are marked change-suspect and 75 links are not in `review_state: reviewed`. Neither number is a defect count: both are the state the registries record.
 
 ## Verification reachability
 
@@ -128,7 +129,7 @@ Built from `verifies` and `validates` links in the canonical registries, counted
 | Profile | Requirements | With a verification link | Without one | Ids without one |
 |---|---|---|---|---|
 | as_is | 9 | 9 | 0 | — |
-| synthetic_reference | 25 | 19 | 6 | `FB2-SYS-SYR-000001`; `FB2-SYS-SYR-000002`; `FB2-SYS-SYR-000003`; `FB2-SYS-SYR-000004`; `FB2-SYS-SYR-000005`; `FB2-SYS-SYR-000006` |
+| synthetic_reference | 25 | 25 | 0 | — |
 
 
 ## Standards dispositions
@@ -137,19 +138,18 @@ Read from `governance/coverage-plan.json` and `governance/standards-lock.json` a
 
 | ASPICE process disposition | Processes |
 |---|---|
-| `gap` | 1 |
-| `mapped` | 20 |
+| `gap` | 3 |
+| `mapped` | 4 |
 | `not_applicable` | 4 |
-| `partially_mapped` | 7 |
+| `partially_mapped` | 21 |
 | **Total** | 32 |
 
-`SYS.1` (Requirements Elicitation) is recorded `mapped`; `SYS.2` (System Requirements Analysis) is recorded `mapped`; and `SUP.9` (Problem Resolution Management) is recorded `mapped`.
+`SYS.1` (Requirements Elicitation) is recorded `partially_mapped`; `SYS.2` (System Requirements Analysis) is recorded `partially_mapped`; and `SUP.9` (Problem Resolution Management) is recorded `partially_mapped`.
 
 | ISO 26262 part disposition | Parts |
 |---|---|
-| `mapped` | 6 |
 | `not_applicable` | 2 |
-| `partially_mapped` | 2 |
+| `partially_mapped` | 8 |
 | `referenced` | 2 |
 | **Total** | 12 |
 
@@ -168,19 +168,19 @@ Recomputed by the same function `corpus.py coverage` prints, at render time. Not
 |---|---|---|---|
 | `scope_accounting` | 1/1 | **presence** | source/feature/variant inventories present — 1 if the source inventory file carries a claimed file count; it does not compare that claim against the tree, which acceptance gate [2/8] inventory does |
 | `artifact_population` | 13/13 | **measured** | families populated: ['change', 'design', 'deviation', 'execution', 'hazard', 'requirement', 'review', 'safety_analysis', 'safety_case', 'safety_goal'… — artifact families that hold at least one record |
-| `standards_mapping` | 44/44 | **counted** | ASPICE processes 32/32, ISO parts 12/12 — ASPICE processes and ISO parts that carry a recorded disposition in the coverage plan; it is a count of plan entries, not a count of satisfied mappings — read the disposition tally above for that |
-| `source_grounding` | 80/234 | **measured** | artifacts with source_refs (102 anchors available) — records carrying at least one `source_refs` entry |
-| `traceability_integrity` | 460/460 | **measured** | 460 links, 0 dangling (link validation re-run for this figure) — links that are not dangling, from a link validation re-run for this figure |
+| `standards_mapping` | 33/38 | **counted** | 33/38 standards entries are backed by an artefact that exists in the index. ASPICE: 25/28 applicable processes backed, 4 declared not_applicable; ISO… — ASPICE processes and ISO parts that carry a recorded disposition in the coverage plan; it is a count of plan entries, not a count of satisfied mappings — read the disposition tally above for that |
+| `source_grounding` | 99/263 | **measured** | artifacts with source_refs (101 anchors available) — records carrying at least one `source_refs` entry |
+| `traceability_integrity` | 489/489 | **measured** | 489 links, 0 dangling (link validation re-run for this figure) — links that are not dangling, from a link validation re-run for this figure |
 | `semantic_consistency_checks` | 10/10 | **constant** | 10 check categories executed per run — 10 by declaration in the tool; it states how many categories the tool runs, not a measured result |
-| `automated_review_coverage` | 144/198 | **measured** | 144/198 artifacts covered by 15 review records; reviewed_by links consistent with reviewed_ids — unique indexed ids covered by a review record or a `reviewed_by` link |
-| `verification_planning` | 25/7 | **measured** | 25 test measures for 7 FSRs — test measures per safety requirement; a ratio, not a score, and over 100% means over-covered |
-| `actual_product_evidence` | 0/25 | **measured** | 0 target-hardware executions: execution_kind has no target-hardware member, so none can be claimed (blocked, not fabricated); of 36 execution records… — test measures backed by an execution whose `execution_kind` names the product's own hardware |
-| `synthetic_fixture_coverage` | 153/43 | **counted** | 153 synthetic_reference artifacts (target 43) — `synthetic_reference` records against a fixed target of 43, so a ratio above 100% is over-coverage, not a score |
+| `automated_review_coverage` | 144/224 | **measured** | 144/224 artifacts covered by 15 review records; reviewed_by links consistent with reviewed_ids — unique indexed ids covered by a review record or a `reviewed_by` link |
+| `verification_planning` | 33/7 | **measured** | 33 test measures for 7 FSRs — test measures per safety requirement; a ratio, not a score, and over 100% means over-covered |
+| `actual_product_evidence` | 0/33 | **measured** | 0 target-hardware executions: execution_kind has no target-hardware member, so none can be claimed (blocked, not fabricated); of 44 execution records… — test measures backed by an execution whose `execution_kind` names the product's own hardware |
+| `synthetic_fixture_coverage` | 173/43 | **counted** | 173 synthetic_reference artifacts (target 43) — `synthetic_reference` records against a fixed target of 43, so a ratio above 100% is over-coverage, not a score |
 | `negative_scenario_validation` | 20/20 | **measured** | 20/20 mutations passed (executed and detected by their own declared rule); 3/3 change lifecycles — mutation scenarios that PASS when executed: the rule each declares is implemented, is silent on the unmutated corpus, and produces a finding the baseline did not contain |
 | `final_status` | `synthetic_ready_with_limitations` | — | recorded status |
 | `export_reproducibility` | 1/1 | **presence** | export manifest present — 1 if the export manifest file exists; the hash stability is measured separately by acceptance gate [6/8] |
-| `human_approval` | 0/234 | **constant** | all artifacts pending human approval (none performed) — 0 by corpus policy; every record is `pending`. The policy is enforced by the `human_approval_rejected` rule, not measured by this dimension |
-| `production_authorization` | 0/234 | **constant** | production_authorized=false for all artifacts (by policy) — 0 by corpus policy; every record is `false`. The policy is enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
+| `human_approval` | 0/263 | **constant** | all artifacts pending human approval (none performed) — 0 by corpus policy; every record is `pending`. The policy is enforced by the `human_approval_rejected` rule, not measured by this dimension |
+| `production_authorization` | 0/263 | **constant** | production_authorized=false for all artifacts (by policy) — 0 by corpus policy; every record is `false`. The policy is enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
 
 
 ## Negative-scenario validation
@@ -198,7 +198,7 @@ Measured by executing the suite on this run: 20/20 mutation scenarios passed and
 | `SCN-MUT-007` | `parameter_threshold_order` | implemented | PASS | high/consistency on FB2-PRM-000001: parameter FB2-PRM-000001 threshold order violated: warning=4300, derating=4200, shu… |
 | `SCN-MUT-008` | `safety_requirement_completeness_checker` | implemented | PASS | medium/verification on FB2-SAF-FSR-000002: safety requirement FB2-SAF-FSR-000002 has no fault_reaction defined |
 | `SCN-MUT-009` | `asil_assignment_validator` | implemented | PASS | high/verification on FB2-SAF-SGO-000001: safety goal FB2-SAF-SGO-000001 is assigned ASIL ASIL_B but its own justificati… |
-| `SCN-MUT-010` | `diagnostic_coverage_claim_validator` | implemented | PASS | high/verification on FB2-SAF-FSR-000003: FSR FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence |
+| `SCN-MUT-010` | `diagnostic_coverage_claim_validator` | implemented | PASS | high/verification on FB2-SAF-FSR-000003: safety requirement FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without… |
 | `SCN-MUT-011` | `configuration_consistency` | implemented | PASS | high/consistency on FB2-PRM-000001: configuration FB2-PRM-000001 enables mutually exclusive options: {'none', 'voltage_… |
 | `SCN-MUT-012` | `execution_kind_classifier` | implemented | PASS | medium/evidence on FB2-VER-EXE-000001: execution FB2-VER-EXE-000001 claims actual_host_run but origin is 'synthetic' (f… |
 | `SCN-MUT-013` | `requirement_applicability_validator` | implemented | PASS | medium/verification on FB2-SAF-FSR-000004: requirement FB2-SAF-FSR-000004 is marked not applicable (safety_allocation.a… |

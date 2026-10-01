@@ -1,0 +1,244 @@
+{
+  "id": "FB2-SW-IMP-000010",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: Bootloader - start-up sequence, CAN-driven boot decision state machine, downloaded-image CRC validation and flash sector geometry",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000052",
+    "FB2-SRC-COD-000053",
+    "FB2-SRC-COD-000054",
+    "FB2-SRC-COD-000055",
+    "FB2-SRC-COD-000056"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the bootloader code is. Makes no claim that it was verified, asserts no ASIL classification and claims nothing about whether the bootloader satisfies any ISO 26262 requirement."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "gap",
+      "rationale": "There is no software design artefact for the bootloader in this profile. The gap is declared rather than closed by attaching it to an unrelated design."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored because no artefact of type implementation existed and the as_is corpus anchors the bootloader through five source anchors and five deviations (FB2-SW-DEV-000022 through -000026), with no design artefact covering it."
+    }
+  ],
+  "implementation_kind": "bootloader_component",
+  "implementation_status": "in_source",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/bootloader/main/main.c",
+      "symbol": "main",
+      "line_range": "87-186",
+      "content_hash": "sha256:1ba6e0d69d649553f256d7506e35df31f473b4c652a0abf1dde8ac1a6129646d",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/bootloader/engine/boot/boot.c",
+      "symbol": "BOOT_GetBootState",
+      "line_range": "244-281",
+      "content_hash": "sha256:61f3e76cdb6aad718032bf3c22fdfd7fc2808aa236a789523ac8b99682552655",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/bootloader/engine/boot/boot.c",
+      "symbol": "BOOT_GetBootStateDuringLoad",
+      "line_range": "292-440",
+      "content_hash": "sha256:61f3e76cdb6aad718032bf3c22fdfd7fc2808aa236a789523ac8b99682552655",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/bootloader/engine/boot/boot.c",
+      "symbol": "BOOT_IsProgramAvailableAndValidated",
+      "line_range": "470-530",
+      "content_hash": "sha256:61f3e76cdb6aad718032bf3c22fdfd7fc2808aa236a789523ac8b99682552655",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/bootloader/driver/crc/crc.c",
+      "symbol": "CRC_SemiAutoCrcCalculation",
+      "line_range": "151-297",
+      "content_hash": "sha256:401d1fbd060d45dab488d48607db9ddb6834b1f72955b6329b2bd25ccb3b337e",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/bootloader/driver/config/flash_cfg.c",
+      "symbol": "FLASH_FLASH_BANK_s",
+      "line_range": "68-402",
+      "content_hash": "sha256:21f683880196342a88420283e6fc526c2709b124d546ba3e79a4d702d37be2c1",
+      "symbol_role": "table_definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/bootloader/main/include/fsystem.h",
+      "symbol": "FSYS_RaisePrivilegeToSystemModeSWI",
+      "line_range": "101-145",
+      "content_hash": "sha256:cc5b128cf270e69aa553a3b96a2df9ee7def659d665139c229553c6c8f45252a",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": null,
+    "design_level": null,
+    "relationship": "No design artefact in the as_is profile describes the bootloader, so there is no design for this element to implement and no implements link is asserted. What the component does, read from the pinned source: the bootloader's entry point (src/bootloader/main/main.c:87-186) enables interrupts, initialises the pin-multiplexing, general-purpose I/O, CAN and real-time-interrupt modules, copies the bootloader's own .text and .const sections to RAM from their flash load addresses, sends a boot notification frame, starts the RTI free-running counter, and then runs a polling loop that re-enables IRQ interrupts on every pass, advances boot_state from WAIT to RUN once MAIN_TIME_OUT_us has elapsed on the RTI counter, and switches on the state to ask BOOT_GetBootState or BOOT_GetBootStateDuringLoad for the next state. BOOT_GetBootState (boot.c:244-281) and BOOT_GetBootStateDuringLoad (292-440) are the two decision functions, and the file's own comment on the latter states that while loading the state can only be ERROR, RESET or LOAD. BOOT_IsProgramAvailableAndValidated (470-530) is the gate that decides whether an application image is present and passes validation, and CRC_SemiAutoCrcCalculation (crc.c:151-297) is the semi-automatic hardware CRC path that computes it, using a separately seeded CRC channel and DMA as the source's own comments describe. The FLASH_FLASH_BANK_s and FLASH_FLASH_SECTOR_s tables in flash_cfg.c (68-402) are the device's flash geometry and are the subject of deviation FB2-SW-DEV-000022. FSYS_RaisePrivilegeToSystemModeSWI (main/include/fsystem.h:101-145) is the bootloader's own, distinct privilege transition - named differently from the application's FSYS_RaisePrivilege because it returns to system mode rather than merely raising privilege - and is the subject of deviation FB2-SW-DEV-000025. So the component provides start-up, boot decision, image validation and the flash geometry it validates against.",
+    "design_gap_reason": "The as_is profile contains no software design artefact for the bootloader. Its three design records cover the AFE driver, the SOA module and the contactor driver, all of which run in the application rather than in the bootloader, and deviations FB2-SW-DEV-000022 through -000026 each record bootloader components as gap_no_design_artifact_in_profile. Attaching the bootloader to an application design would assert a design scope those records do not have and would blur the application/bootloader boundary, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13."
+  },
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the bootloader. The as_is requirement set is the three cell-voltage, contactor and SOA records, all of which concern application behaviour; none of them states anything about start-up, boot decision or update integrity. realises_requirements is empty rather than populated with a requirement this code does not serve. The absence is material and is recorded here rather than left implicit: the bootloader's update-integrity behaviour is the kind of mechanism an update or production requirement would constrain, and this corpus holds no such requirement for either profile.",
+  "anchor_refs": [
+    "FB2-SRC-COD-000052",
+    "FB2-SRC-COD-000053",
+    "FB2-SRC-COD-000054",
+    "FB2-SRC-COD-000055",
+    "FB2-SRC-COD-000056"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "BOOT-IMP-STARTUP",
+      "description": "Boot entry: enables interrupts, initialises the peripheral modules, relocates the bootloader's own code and constants to RAM, announces itself on CAN and starts the RTI counter.",
+      "kind": "startup",
+      "evidence_symbol": "main",
+      "evidence_line_range": "87-186"
+    },
+    {
+      "behaviour_id": "BOOT-IMP-TIMEOUT",
+      "description": "Advances the boot state from waiting to running once the RTI free-running counter shows the configured timeout has elapsed, re-enabling IRQ interrupts on every loop pass so CAN frames can be processed.",
+      "kind": "timekeeping",
+      "evidence_symbol": "main",
+      "evidence_line_range": "118-134"
+    },
+    {
+      "behaviour_id": "BOOT-IMP-DECISION",
+      "description": "Decides the next boot state in the waiting phase from the CAN-driven boot FSM.",
+      "kind": "state_transition",
+      "evidence_symbol": "BOOT_GetBootState",
+      "evidence_line_range": "244-281"
+    },
+    {
+      "behaviour_id": "BOOT-IMP-LOAD-DECISION",
+      "description": "Decides the next boot state while an image is being loaded; the source restricts the reachable states here to error, reset and load.",
+      "kind": "state_transition",
+      "evidence_symbol": "BOOT_GetBootStateDuringLoad",
+      "evidence_line_range": "292-440"
+    },
+    {
+      "behaviour_id": "BOOT-IMP-IMAGE-VALIDATION",
+      "description": "Decides whether an application image is present and passes validation before the bootloader will transfer control to it.",
+      "kind": "boot_validation",
+      "evidence_symbol": "BOOT_IsProgramAvailableAndValidated",
+      "evidence_line_range": "470-530"
+    },
+    {
+      "behaviour_id": "BOOT-IMP-CRC",
+      "description": "Computes the image CRC in hardware, using a separately seeded CRC channel with the seed split across the two PSA signature registers and DMA enabled for the capture.",
+      "kind": "integrity_check",
+      "evidence_symbol": "CRC_SemiAutoCrcCalculation",
+      "evidence_line_range": "151-297"
+    },
+    {
+      "behaviour_id": "BOOT-IMP-FLASH-GEOM",
+      "description": "The device flash bank and sector geometry tables the bootloader's addressing and validation are expressed against.",
+      "kind": "conversion",
+      "evidence_symbol": "FLASH_FLASH_BANK_s",
+      "evidence_line_range": "68-402"
+    },
+    {
+      "behaviour_id": "BOOT-IMP-SYSTEM-MODE",
+      "description": "The bootloader's own privilege transition, distinct from the application's, which raises the processor to system mode through a supervisor call.",
+      "kind": "privilege_transition",
+      "evidence_symbol": "FSYS_RaisePrivilegeToSystemModeSWI",
+      "evidence_line_range": "101-145"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "startup",
+      "entry_points": [
+        "main"
+      ],
+      "shared_state": "The real-time-interrupt free-running counter used for the boot timeout, and the CAN driver state the boot decision functions read. The loop re-enables IRQ interrupts on every pass explicitly, with the source comment stating that a sub-function called in this context could otherwise leave them disabled."
+    },
+    {
+      "context": "call_from_task_and_isr",
+      "entry_points": [
+        "FSYS_RaisePrivilegeToSystemModeSWI"
+      ],
+      "shared_state": "The processor privilege level, which is processor-wide. The bootloader's variant raises to system mode rather than merely raising privilege, and is deliberately a separate entry point from the application's."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the bootloader code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is explicitly not evidence that any update, production or release requirement is met, and in particular the presence of a CRC validation path is not a claim that the update path is secure, that a downloaded image is authentic, or that this bootloader has been assessed against any ISO 26262 part. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "Each file was read at the pinned commit with 'git show 308028fb:path'; each content_hash is that pinned blob's sha256 and equals the value the corresponding existing anchors FB2-SRC-COD-000052 through -000056 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The function spans were cross-read against 'graft skeleton src/bootloader/engine/boot/boot.c' and 'graft skeleton src/bootloader/main/main.c'.",
+    "limitations": [
+      "The main() range 87-186 covers the bootloader's entry function including its #ifndef UNITY_UNIT_TEST / #else unit_test_main(void) alternative, which is why the symbol name recorded is main while a search for that exact token in the range also finds the unit-test variant. The unit-test build path was not analysed.",
+      "CRC_SemiAutoCrcCalculation is listed at 151-297, the definition span of that function. Anchor FB2-SRC-COD-000053 records the narrower range 237-245, which covers the register-configuration portion of the same function body and is where its deviation record FB2-SW-DEV-000023 points. Both ranges are inside the file and refer to the same function.",
+      "FLASH_FLASH_BANK_s is a table type, not a function; its range 68-402 is the region the anchor FB2-SRC-COD-000052 records for the bank and sector tables, and both names occur there.",
+      "The flash addresses, sector numbers and CRC prescaler values are device-specific values whose authoritative definition is the device data sheet and TRM, neither of which this corpus has read. They are therefore not restated here, so this record cannot become a second unverifiable copy of the device's memory map.",
+      "Behaviour was verified by reading the code. No image was downloaded, no bootloader was executed, no CRC was computed and no flash sector was written. The corpus authorises none of those actions and none was attempted.",
+      "All seven files are unmodified between the pin and the working tree, so the same ranges and hashes hold for the checked-out files."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000052 covers the flash_cfg.c geometry tables, -000053 the CRC calculation, -000054 the bootloader's fassert.h interrupt masking, -000055 its privilege transition and -000056 its general.h datatype invariants. They are the same five anchors deviations FB2-SW-DEV-000022 through -000026 reference. No new anchor was created."
+}

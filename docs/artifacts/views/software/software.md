@@ -1,6 +1,6 @@
 # Software — requirements, design and deviations (generated view)
 
-Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
+Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
 
 ## Provenance and status of this file
 
@@ -27,16 +27,16 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 | Id | Profile | Title | ASIL | Verification approach | Guard |
 |---|---|---|---|---|---|
-| `FB2-SW-SWR-000001` | as_is | SWR: AFE Driver - Cell Voltage Acquisition | ASIL_D | test | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SW-SWR-000001` | as_is | SWR: AFE Driver - Cell Voltage Acquisition | ASIL_D | test | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-SW-SWR-000001` | synthetic_reference | SWR: AFE Driver - Cell Voltage Acquisition | ASIL_D | test | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
-| `FB2-SW-SWR-000002` | as_is | SWR: SOA Voltage Limit Monitoring | ASIL_D | test | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SW-SWR-000002` | as_is | SWR: SOA Voltage Limit Monitoring | ASIL_D | test | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-SW-SWR-000002` | synthetic_reference | SWR: SOA Voltage Limit Monitoring | ASIL_D | test | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
-| `FB2-SW-SWR-000003` | as_is | SWR: Contactor State Machine and Fault Response | ASIL_D | test | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SW-SWR-000003` | as_is | SWR: Contactor State Machine and Fault Response | ASIL_D | test | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-SW-SWR-000003` | synthetic_reference | SWR: Contactor State Machine and Fault Response | ASIL_D | test | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### FB2-SW-SWR-000001 (as_is) — SWR: AFE Driver - Cell Voltage Acquisition
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE driver shall trigger SPI/DMA acquisition of all cell voltages at 20 Hz, validate PEC/CRC, and publish to database within 5 ms of acquisition complete.
 - acceptance criteria: {'criterion': 'Acquisition period', 'measure': 'Timer period', 'threshold': '50', 'unit': 'ms'}; {'criterion': 'PEC/CRC validation', 'measure': 'Error detection before database write', 'threshold': '100%', 'unit': '%'}; {'criterion': 'Database publish latency', 'measure': 'Time from SPI complete to database write', 'threshold': '5', 'unit': 'ms'}
 - conditions/modes: NORMAL; CHARGING; PRECHARGE; DERATING
@@ -52,7 +52,7 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 ### FB2-SW-SWR-000002 (as_is) — SWR: SOA Voltage Limit Monitoring
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The SOA module shall read cell voltages from database and compare against configured limits within 10 ms of data availability, triggering FAULT state on confirmed violation.
 - acceptance criteria: {'criterion': 'Limit check latency', 'measure': 'Time from database read to violation classification', 'threshold': '10', 'unit': 'ms'}; {'criterion': 'Threshold accuracy', 'measure': 'Comparison accuracy vs config', 'threshold': '1', 'unit': 'mV'}; {'criterion': 'FAULT state transition', 'measure': 'Time from violation to SYS state FAULT', 'threshold': '5', 'unit': 'ms'}
 - conditions/modes: NORMAL; CHARGING; PRECHARGE; DERATING
@@ -68,11 +68,11 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 ### FB2-SW-SWR-000003 (as_is) — SWR: Contactor State Machine and Fault Response
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The contactor driver shall execute state machine (OPEN -> PRECHARGE -> CLOSE -> HOLD) and open contactors within 5 ms of FAULT state request from SOA/DIAG.
 - acceptance criteria: {'criterion': 'Fault response latency', 'measure': 'Time from FAULT request to coil de-energize command', 'threshold': '5', 'unit': 'ms'}; {'criterion': 'Feedback verification', 'measure': 'Auxiliary contact readback after command', 'threshold': '100%', 'unit': '%'}; {'criterion': 'State machine correctness', 'measure': 'Valid transitions only', 'threshold': '100%', 'unit': '%'}
 - conditions/modes: NORMAL; CHARGING; PRECHARGE; DERATING; FAULT
-- source_refs: FB2-SRC-COD-000007; FB2-SRC-COD-000008; FB2-SRC-COD-000009; FB2-SRC-COD-000013
+- source_refs: FB2-SRC-COD-000008; FB2-SRC-COD-000009; FB2-SRC-COD-000013
 
 ### FB2-SW-SWR-000003 (synthetic_reference) — SWR: Contactor State Machine and Fault Response
 
@@ -80,22 +80,22 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 - statement: The contactor driver shall execute state machine (OPEN -> PRECHARGE -> CLOSE -> HOLD) and open contactors within 5 ms of FAULT state request from SOA/DIAG.
 - acceptance criteria: {'criterion': 'Fault response latency', 'measure': 'Time from FAULT request to coil de-energize command', 'threshold': '5', 'unit': 'ms'}; {'criterion': 'Feedback verification', 'measure': 'Auxiliary contact readback after command', 'threshold': '100%', 'unit': '%'}; {'criterion': 'State machine correctness', 'measure': 'Valid transitions only', 'threshold': '100%', 'unit': '%'}
 - conditions/modes: NORMAL; CHARGING; PRECHARGE; DERATING; FAULT
-- source_refs: FB2-SRC-COD-000007; FB2-SRC-COD-000008; FB2-SRC-COD-000009; FB2-SRC-COD-000013
+- source_refs: FB2-SRC-COD-000008; FB2-SRC-COD-000009; FB2-SRC-COD-000013
 
 ## Software design records
 
 | Id | Profile | Level | Title | Guard |
 |---|---|---|---|---|
-| `FB2-SW-DSN-000001` | as_is | architecture | Design: AFE Driver Architecture (LTC Family) | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SW-DSN-000001` | as_is | architecture | Design: AFE Driver Architecture (LTC Family) | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-SW-DSN-000001` | synthetic_reference | architecture | Design: AFE Driver Architecture (LTC Family) | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
-| `FB2-SW-DSN-000002` | as_is | detailed_design | Design: SOA Voltage Monitoring Module | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SW-DSN-000002` | as_is | detailed_design | Design: SOA Voltage Monitoring Module | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-SW-DSN-000002` | synthetic_reference | detailed_design | Design: SOA Voltage Monitoring Module | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
-| `FB2-SW-DSN-000003` | as_is | detailed_design | Design: Contactor State Machine | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-SW-DSN-000003` | as_is | detailed_design | Design: Contactor State Machine | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-SW-DSN-000003` | synthetic_reference | detailed_design | Design: Contactor State Machine | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### FB2-SW-DSN-000001 (as_is) — Design: AFE Driver Architecture (LTC Family)
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - design_level: `architecture` | lifecycle: `reviewed`
 - responsibilities: SPI/DMA communication with LTC AFEs; Command sequencing (wakeup, read, balancing); PEC calculation and validation; Data conversion to mV/°C; Database publishing
 - constraints: SPI clock ≤ 1 MHz (LTC6811 spec); DMA buffer size: 256 bytes per slave; Task period: 100 ms (FreeRTOS task); Stack usage: < 2 KB
@@ -127,7 +127,7 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 ### FB2-SW-DSN-000002 (as_is) — Design: SOA Voltage Monitoring Module
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - design_level: `detailed_design` | lifecycle: `reviewed`
 - responsibilities: Read cell voltages from database; Compare against min/max limits from config; Debounce violations (configurable count); Trigger FAULT state on confirmed violation; Report violation details to DIAG
 - constraints: Check latency < 10 ms from database update; Debounce count configurable (default: 2); Must not block database access; Stack usage: < 1 KB
@@ -157,7 +157,7 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 ### FB2-SW-DSN-000003 (as_is) — Design: Contactor State Machine
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - design_level: `detailed_design` | lifecycle: `reviewed`
 - responsibilities: Execute contactor state machine (OPEN -> PRECHARGE -> CLOSE -> HOLD); Monitor precharge voltage and timeout; Drive contactor coils via SBC (FS85xx); Monitor auxiliary feedback contacts; Detect weld/stuck-open conditions; Count contactor cycles (FRAM persistence); Emergency open on FAULT request
 - constraints: Precharge timeout: configurable (default 5 s); Voltage threshold: configurable (default 95% pack voltage); Feedback debounce: 10 ms; Cycle count persisted to FRAM; Emergency open: < 5 ms from fault request

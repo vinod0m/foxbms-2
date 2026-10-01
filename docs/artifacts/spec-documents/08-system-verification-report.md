@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-30T01:21:29Z |
+| Generated | 2026-10-01T05:09:49Z |
 
 ## Scope
 
@@ -428,6 +428,144 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
   - `matches_without_adjudication` = 0 (tolerance exact)
   - `entries_with_guessed_version` = 0 (tolerance exact)
 
+#### `FB2-VER-TMS-000021` — Test: every transferred cell-voltage value is integrity-checked before any decision consumes it, and every published value carries a usable age (synthetic_reference)
+
+- **Test type**: `integration` | **Oracle basis**: `source_grounded`
+- **Objective**: Confirm two of FB2-SYS-SYR-000001's four acceptance criteria against the pinned source's own mechanism: that the integrity of every transferred value is decided before any decision uses it, and that each published value carries an age that can be read. The integrity criterion is judged against LTC_C...
+- **Preconditions**: The reference project's AFE driver is initialised and a measurement cycle has completed at least onc..., The database is initialised so that a write stamps the block header., The AFE plausibility entry is available for the range check.
+- **Environment**: POSIX host (Linux) running the unit-test build, with the AFE driver and the database linked and the SPI interface stubbed; foxBMS 2 application firmware built with the unit-test configuration; config `conf/unit/app_project_posix.yml with FOXBMS_AFE_DRIVER_LTC=1u, which is the configuration the repository's own unit-test build selects`
+- **Test cases (steps)**:
+  1. **Run 100 measurement cycles with uncorrupted frames and record the PEC validity flag and the header timestamp for each published block.** → expected: Every cycle reports PEC valid and every published block carries a non-zero header timestamp.
+  2. **Run 100 measurement cycles in which exactly one LTC's PEC is corrupted, and record the PEC validity flag, the per-cell invalid flag and the value a su...** → expected: The corrupted LTC's PEC validity flag is false, its per-cell invalid flag is true, and no decision reads a value for that cell that is not marked inva...
+  3. **Suppress the database write for one cycle and read the header timestamp again.** → expected: The header timestamp does not advance for the suppressed cycle, so the age of the last published value is observable rather than inferred.
+  4. **Compare the age implied by the header timestamp against the number of measurement cycles elapsed.** → expected: The age increases monotonically and by one acquisition period per elapsed cycle.
+- **Expected outcomes**:
+  - `cycles_with_integrity_decided_before_use` = 100 (tolerance exact)
+  - `corrupted_frames_consumed_unchallenged` = 0 (tolerance exact)
+  - `published_blocks_with_readable_age` = 100 (tolerance exact)
+  - `age_monotonic_across_cycles` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000022` — Test: the configured measurement period yields at least the acquisition rate FB2-SYS-SYR-000001 requires, computed rather than measured (synthetic_reference)
+
+- **Test type**: `qualification` | **Oracle basis**: `analytical_model`
+- **Objective**: Compute whether the reference project's configured measurement period meets the acquisition-rate criterion of FB2-SYS-SYR-000001, and record the arithmetic rather than an observation. The criterion is at least 20 acquisitions per second in every monitoring mode; the parameter registry records the ac...
+- **Preconditions**: The parameter registry entry for the acquisition period is the authoritative configured value for th..., The measurement is a computation over that value, not a run.
+- **Environment**: no hardware; the measure is a computation over the parameter registry and the source's task configuration; not applicable - no software is executed; config `BAS-REF-001 parameter registry plus the application task configuration in the pinned source`
+- **Test cases (steps)**:
+  1. **Read the configured acquisition period from the parameter registry.** → expected: A single period value is obtained, in milliseconds.
+  2. **Read the configured task cycle time for the task that triggers the measurement from the pinned source.** → expected: A single task cycle value is obtained, in milliseconds.
+  3. **Compute the acquisitions per second implied by each value as 1000 divided by the period.** → expected: Two rates are produced and compared with each other.
+  4. **Compare the smaller rate against the requirement's threshold and record the margin.** → expected: The comparison and the margin are recorded, including that the margin is zero at the registry value.
+  5. **Compute the longest period that would still satisfy the criterion.** → expected: A single boundary period is recorded, being the period at which the rate equals exactly the threshold.
+- **Expected outcomes**:
+  - `acquisitions_per_second_at_registry_period` = 20 (tolerance at least)
+  - `margin_above_requirement` = 0 (tolerance at least)
+  - `longest_period_still_meeting_criterion` = 50 (tolerance at most)
+
+#### `FB2-VER-TMS-000023` — Test: an excursion into each safe-operating-area tier produces the graded reaction the pinned source actually configures, and only the safety-limit tier reaches the fault reaction (synthetic_reference)
+
+- **Test type**: `integration` | **Oracle basis**: `source_grounded`
+- **Objective**: Establish, against the pinned source rather than against the item's output, which of FB2-SYS-SYR-000002's reactions the code can produce. SOA_CheckVoltages compares each string's extremes against three nested tiers per direction - operating, recommended safety and maximum safety - and raises a diagn...
+- **Preconditions**: The reference project's limit configuration is loaded from the parameter registry., The diagnosis configuration table is the one in the pinned source, which is what determines the grad...
+- **Environment**: POSIX host (Linux) running the unit-test build, with the SOA module linked and the diagnosis handler stubbed to record every entry raised; foxBMS 2 application firmware built with the unit-test configuration; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Read the configuration table and record the severity and delay configured for each of the three over-voltage diagnosis entries.** → expected: Three entries are recorded with distinct severities and distinct delay settings.
+  2. **Inject a maximum cell voltage just above the operating-limit threshold and record every diagnosis entry raised.** → expected: Exactly one entry is raised, and it is the operating-limit one.
+  3. **Inject a maximum cell voltage between the recommended-safety and maximum-safety thresholds.** → expected: Two entries are raised, and the maximum-safety entry is not among them.
+  4. **Inject a maximum cell voltage above the maximum-safety threshold.** → expected: Three entries are raised, including the maximum-safety one, which is the entry configured as a fatal error.
+  5. **Return the voltage below the operating-limit threshold and record the entries again.** → expected: The entries are cleared with the clear event rather than left latched.
+- **Expected outcomes**:
+  - `entries_raised_at_operating_limit` = 1 (tolerance exact)
+  - `entries_raised_below_maximum_safety` = 2 (tolerance exact)
+  - `entries_raised_at_maximum_safety` = 3 (tolerance exact)
+  - `tiers_configured_as_fatal_error` = 1 (tolerance exact)
+
+#### `FB2-VER-TMS-000024` — Test: the debounce and the degraded-to-fault boundary FB2-SYS-SYR-000002 demands, against an explicitly labelled synthetic assumption (synthetic_reference)
+
+- **Test type**: `unit` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Verify the two parts of FB2-SYS-SYR-000002 that have no counterpart in the pinned source and can therefore only be judged against a stated assumption: that a classification requires two consecutive violations within 100 ms, and that a numerical or named rule separates the degraded reaction from the ...
+- **Preconditions**: The assumption about the reference project's debounce behaviour is stated in this record and is not ..., The degraded-to-fault boundary is stated as a value to be declared, not as a value that exists.
+- **Environment**: no hardware and no software execution; the measure is a specification review of a requirement against an absence in the source; not applicable - nothing is executed; config `BAS-REF-001 parameter registry and the pinned source's SOA module and diagnosis configuration`
+- **Test cases (steps)**:
+  1. **Search the pinned SOA module for any counter, debounce or consecutive-violation state.** → expected: No such state is found, which is recorded as the condition the measure exists to make visible.
+  2. **Read the diagnosis configuration's occurrence threshold and delay for the maximum-safety over-voltage entry and compare them with the requirement's tw...** → expected: The two mechanisms are recorded side by side and shown not to be the same: different layer, different granularity, different parameters.
+  3. **State, against the assumption this record declares, the classification outcome for a sequence of one violation, of two violations inside the window, a...** → expected: Three outcomes are stated, and the second one depends entirely on the assumption rather than on the source.
+  4. **State what the degraded-to-fault boundary must be before this criterion can be verified at all.** → expected: A single declared value or named rule is required, and its absence is recorded as the reason the criterion is unverifiable rather than as a pass.
+- **Expected outcomes**:
+  - `soa_debounce_state_found_in_source` = 0 (tolerance exact)
+  - `consecutive_violations_required_by_requirement` = 2 (tolerance exact)
+  - `verdict_depends_on_declared_assumption_classification_outcome_is_assumption_dependent` = true (tolerance exact)
+  - `degraded_to_fault_boundary_declared_declared_boundary_value` = not_declared (tolerance exact)
+
+#### `FB2-VER-TMS-000025` — Test: the end-to-end fault-reaction budget FB2-SYS-SYR-000003 allocates, computed from the waits the pinned source actually configures (synthetic_reference)
+
+- **Test type**: `qualification` | **Oracle basis**: `analytical_model`
+- **Objective**: Compute whether the reaction chain the pinned source implements can close inside the interval FB2-SYS-SYR-000003 allocates, and record the arithmetic. The oracle is the sum of the configured waits the source actually applies between the stages of opening, taken from the application configuration at ...
+- **Preconditions**: The application configuration's waits are the ones the pinned source applies., The parameter registry's contactor-mechanical figure is the reference project's declared figure for ...
+- **Environment**: no hardware; the measure is a computation over the pinned source's configuration and the parameter registry; not applicable - nothing is executed; config `BAS-REF-001 parameter registry plus src/app/application/config/bms_cfg.h at the pinned commit`
+- **Test cases (steps)**:
+  1. **Read the configured waits and the task cycle time from the application configuration at the pinned commit.** → expected: Five values are obtained.
+  2. **Compute the earliest time at which a contactor can be confirmed open, given that the waits are counted in whole task cycles.** → expected: A lower bound is obtained and it is greater than the allocated interval.
+  3. **Add the reference project's declared contactor-mechanical figure to that lower bound.** → expected: A total reaction time is obtained.
+  4. **Compare the total against the interval the requirement allocates and against the fault-tolerant time interval in the parameter registry.** → expected: The comparison is recorded, and the over-run is recorded as a number rather than as a verdict.
+  5. **Compute the largest mechanical opening time that would still fit inside the allocated interval.** → expected: A single boundary figure is recorded.
+- **Expected outcomes**:
+  - `earliest_confirmed_open_lower_bound_ms` = at least the wait after opening a precharge contactor (tolerance at least)
+  - `reaction_time_exceeds_allocated_interval_end_to_end_reaction_ms` = greater than the allocated interval (tolerance outside)
+  - `largest_mechanical_time_still_fitting_max_mechanical_time_ms` = recorded (tolerance exact)
+
+#### `FB2-VER-TMS-000026` — Test: the limit applied, and the reaction reached, depend on the mode or direction in which the condition occurs (synthetic_reference)
+
+- **Test type**: `integration` | **Oracle basis**: `source_grounded`
+- **Objective**: Confirm that FB2-SYS-SYR-000004's core claim is falsifiable against the pinned source: that the limit applied and the reaction reached are selected by the mode or direction rather than fixed. Two independent mechanisms in the source select on mode or direction. SOA_CheckTemperatures chooses between ...
+- **Preconditions**: The reference project's limit configuration is loaded., The application's state machine is initialised in the uninitialised state.
+- **Environment**: POSIX host (Linux) running the unit-test build, with the SOA module and the application's state machine linked and the diagnosis handler stubbed to record entries; foxBMS 2 application firmware built with the unit-test configuration; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Inject the chosen cell temperature with a positive string current and record the entries raised.** → expected: The entries raised are the charge-direction temperature entries.
+  2. **Inject the identical temperature with a negative string current.** → expected: The entries raised are the discharge-direction temperature entries, which differ from step 1 for at least one tier.
+  3. **Issue an initialisation request in the uninitialised state and record the returned result.** → expected: The request is accepted.
+  4. **Issue the identical request after initialisation and record the returned result.** → expected: The request is refused with a reason specific to the state it was issued in.
+  5. **Record which state the refusal reason came from.** → expected: The refusal is attributable to the state rather than to a fixed policy.
+- **Expected outcomes**:
+  - `distinct_reaction_sets_by_direction` = true (tolerance exact)
+  - `initialisation_accepted_in_uninitialised_state` = true (tolerance exact)
+  - `initialisation_refused_after_initialisation` = true (tolerance exact)
+  - `refusal_reason_attributable_to_state` = true (tolerance exact)
+
+#### `FB2-VER-TMS-000027` — Test: the second-barrier voltage monitor FB2-SYS-SYR-000005 requires is separable from the main chain in every one of the four declared ways (synthetic_reference)
+
+- **Test type**: `qualification` | **Oracle basis**: `synthetic_assumption`
+- **Objective**: Verify FB2-SYS-SYR-000005's four independence criteria - zero processing resources, zero shared supply rails, zero shared communication paths and a stated threshold accuracy - against an explicitly labelled synthetic assumption, because the element the requirement describes does not exist in either ...
+- **Preconditions**: The assumption that the second barrier is implementable with a separate divider, comparator and refe..., No hardware design package for the barrier exists in this corpus.
+- **Environment**: no hardware: the element does not exist in either profile, so there is nothing to inspect and nothing to run; not applicable - nothing is executed; config `the declared assumption only; there is no configuration to apply`
+- **Test cases (steps)**:
+  1. **Enumerate what FB2-SYS-SYR-000005 requires the barrier to be independent of, quoting its own acceptance criteria.** → expected: Four independence requirements are enumerated: processing, supply, communication and threshold accuracy.
+  2. **For each, state the evidence a verification would need and whether this corpus holds any.** → expected: Four evidence statements are produced, and each records that the corpus holds none.
+  3. **Record the accuracy figure the requirement allocates and state that no measurement of any divider or comparator exists in this corpus.** → expected: A single figure is recorded as a declared allocation with no supporting measurement.
+  4. **Record what would have to exist before this requirement could be verified rather than merely stated.** → expected: A list of concrete missing artefacts is produced.
+- **Expected outcomes**:
+  - `independence_requirements_enumerated` = 4 (tolerance exact)
+  - `independence_requirements_with_evidence_in_corpus` = 0 (tolerance exact)
+  - `accuracy_allocation_measured_threshold_accuracy_mV_measured` = not_measured (tolerance exact)
+
+#### `FB2-VER-TMS-000028` — Test: a current or temperature measurement whose trust cannot be established is marked invalid before any supervisory comparison consumes it (synthetic_reference)
+
+- **Test type**: `integration` | **Oracle basis**: `source_grounded`
+- **Objective**: Confirm FB2-SYS-SYR-000006's validity-marking and envelope-check criteria against the pinned source. Two independent gates are available. On the acquisition side, the current-sensor receive callback sets the per-string invalidMeasurement flag on every channel error it handles and clears it on reset,...
+- **Preconditions**: The current-sensor receive callback is linked so that channel-error handling can be driven., The SOA module is linked with the database write path so that the invalid flags it reads are the one...
+- **Environment**: POSIX host (Linux) running the unit-test build, with the current-sensor receive callback and the SOA module linked; foxBMS 2 application firmware built with the unit-test configuration; config `conf/unit/app_project_posix.yml`
+- **Test cases (steps)**:
+  1. **Drive a channel-error indication for a monitored current channel and read that string's invalidMeasurement flag.** → expected: The flag is set, and it is set by the receive callback rather than by the consumer.
+  2. **Drive the reset of that channel error and read the flag again.** → expected: The flag is cleared.
+  3. **With the flag set, present a string current above the applicable charge-direction limit and record the entries raised.** → expected: No current-limit entry is raised for that string, and no entry at all is raised from the skipped branch.
+  4. **Clear the flag, present the identical current again and record the entries.** → expected: The charge-direction current-limit entry is raised, which shows the skip in step 3 was caused by the flag and not by the value.
+  5. **Present a temperature above the applicable tier in each current direction and record the entries.** → expected: The entries raised are the tier entries for the direction in force, not for both directions.
+- **Expected outcomes**:
+  - `invalid_flag_set_at_acquisition_boundary` = true (tolerance exact)
+  - `limit_entries_raised_while_invalid` = 0 (tolerance exact)
+  - `limit_entries_raised_after_validity_restored` = at least 1 (tolerance at least)
+  - `temperature_tiers_selected_by_direction` = true (tolerance exact)
+
 ## Test Cases
 
 - `FB2-VER-TMS-000001` (as_is): 4 test case(s)
@@ -455,8 +593,16 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - `FB2-VER-TMS-000018` (synthetic_reference): 5 test case(s)
 - `FB2-VER-TMS-000019` (synthetic_reference): 5 test case(s)
 - `FB2-VER-TMS-000020` (synthetic_reference): 6 test case(s)
+- `FB2-VER-TMS-000021` (synthetic_reference): 4 test case(s)
+- `FB2-VER-TMS-000022` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000023` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000024` (synthetic_reference): 4 test case(s)
+- `FB2-VER-TMS-000025` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000026` (synthetic_reference): 5 test case(s)
+- `FB2-VER-TMS-000027` (synthetic_reference): 4 test case(s)
+- `FB2-VER-TMS-000028` (synthetic_reference): 5 test case(s)
 
-**Total system-level test cases**: 94
+**Total system-level test cases**: 131
 
 ## Execution Report
 
@@ -676,8 +822,56 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 - **Environment**: none - no target hardware and no instrumented bus in this corpus; not applicable; tools: none 0.0.0
 - **Evidence refs**: `FB2-VER-TMS-000020`, `FB2-SAF-SEC-000005`
 
+##### Execution `FB2-VER-EXE-000021` — Execution: FB2-VER-TMS-000021 (blocked - the unit-test harness that would drive the AFE driver with an injectable SPI stub is not built in this corpus, and building it would write outside the corpus b...
+
+- **Test measure**: `FB2-VER-TMS-000021` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000021`
+
+##### Execution `FB2-VER-EXE-000022` — Execution: FB2-VER-TMS-000022 (blocked - the arithmetic is reproducible but this corpus does not run measures, and no second reader has independently reproduced the figures)
+
+- **Test measure**: `FB2-VER-TMS-000022` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000022`
+
+##### Execution `FB2-VER-EXE-000023` — Execution: FB2-VER-TMS-000023 (blocked - the diagnosis configuration table is generated from configuration headers, and reading the generated table is not the same as reading the values the reference ...
+
+- **Test measure**: `FB2-VER-TMS-000023` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000023`
+
+##### Execution `FB2-VER-EXE-000024` — Execution: FB2-VER-TMS-000024 (blocked - the oracle is a declared assumption, and confirming a requirement against its own assumption is not an execution this corpus can or should perform)
+
+- **Test measure**: `FB2-VER-TMS-000024` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000024`
+
+##### Execution `FB2-VER-EXE-000025` — Execution: FB2-VER-TMS-000025 (blocked - the configuration values the arithmetic needs are read by this authoring pass but no independent recomputation exists, and no timing was measured)
+
+- **Test measure**: `FB2-VER-TMS-000025` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000025`
+
+##### Execution `FB2-VER-EXE-000026` — Execution: FB2-VER-TMS-000026 (blocked - no host harness exists here for the application's state machine, and the requirement's publication criterion needs a vehicle control unit that this corpus does...
+
+- **Test measure**: `FB2-VER-TMS-000026` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000026`
+
+##### Execution `FB2-VER-EXE-000027` — Execution: FB2-VER-TMS-000027 (blocked - the element the measure is about does not exist in either profile, so there is nothing to inspect and nothing to run)
+
+- **Test measure**: `FB2-VER-TMS-000027` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000027`
+
+##### Execution `FB2-VER-EXE-000028` — Execution: FB2-VER-TMS-000028 (blocked - no host harness exists here, and the measure's third criterion needs a consumer census this corpus has not performed)
+
+- **Test measure**: `FB2-VER-TMS-000028` | **Execution kind**: `none` | **Outcome**: **BLOCKED**
+- **Environment**: none - no target hardware in this corpus; not applicable - no software was executed; tools: none 0.0.0
+- **Evidence refs**: `FB2-VER-TMS-000028`
+
 
 
 ---
 
-*Generated: 2026-09-30T01:21:29Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

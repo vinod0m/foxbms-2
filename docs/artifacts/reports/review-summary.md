@@ -6,32 +6,35 @@
 
 > **These are automated AI-assisted reviews. They are not human reviews, and
 > none of them constitutes approval.** No human has reviewed or approved any
-> artifact in this corpus. Every one of the 153 indexed records is
+> artifact in this corpus. Every one of the **263** indexed records is
 > `human_approval_status: pending` and `production_authorized: false`. Nothing
 > here asserts ISO 26262 conformity, ASIL capability, ASPICE capability level or
 > certification.
 >
-> Every number is from a live tool run on 2026-09-29.
+> Every number is from a live tool run on 2026-10-01.
 
 ## 1. Review Coverage
 
 | Measure | Value |
 |---|---|
-| Review records (unique, in the artifact index) | **12** |
-| Review record *files* on disk | 13 (one duplicate, see §5) |
-| Unique artifact IDs covered by a review | **82** |
-| Unique artifact IDs in the corpus | **123** |
-| **Automated review coverage** | **82/123 = 67%** |
-| Unique IDs **not** covered by any review | **41** |
-| `reviewed_by` link count | 167 |
+| Review records (unique, in the artifact index) | **15** |
+| Review record *files* on disk | **15** — no duplicate |
+| `reviewed_ids` entries summed across records | **229** |
+| Unique artifact IDs covered by a review (the union) | **144** |
+| Unique artifact IDs in the corpus | **224** |
+| **Automated review coverage** | **144/224 = 64%** |
+| Unique IDs **not** covered by any review | **80** |
+| `reviewed_by` link count | **229** |
 | Link/record agreement | consistent — `reviewed_by` links and `reviewed_ids` lists agree exactly |
 
-The denominator is 123 rather than 153 because it counts unique artifact
-**IDs**, and 30 IDs exist in both `as_is` and `synthetic_reference` by design.
-The tool reports the agreement between the two independent sources of the same
-fact rather than silently reconciling them.
+The denominator is 224 rather than 263 because it counts distinct artifact
+**IDs** across both profiles, and **39** IDs exist in both `as_is` and
+`synthetic_reference` by design (profile isolation, not duplication). The tool
+reports the agreement between the two independent sources of the same fact
+rather than silently reconciling them — and here they agree exactly, with 229
+`reviewed_by` links matching 229 `reviewed_ids` entries.
 
-## 2. The 12 Review Records
+## 2. The 15 Review Records
 
 | ID | Profile | Type | Domain | Lifecycle | IDs reviewed | Findings |
 |---|---|---|---|---|---|---|
@@ -47,14 +50,19 @@ fact rather than silently reconciling them.
 | `FB2-REV-000010` | as_is | **challenge** | safety | draft | 16 | 3 |
 | `FB2-REV-000011` | as_is | **meta** | supporting | draft | 16 | 5 |
 | `FB2-REV-000012` | synthetic_reference | **meta** | supporting | draft | 33 | 2 |
+| `FB2-REV-000013` | synthetic_reference | **cross_domain** | safety | draft | 32 | 5 |
+| `FB2-REV-000014` | synthetic_reference | **cross_domain** | supporting | draft | 17 | 4 |
+| `FB2-REV-000015` | synthetic_reference | domain | verification | draft | 13 | 4 |
 
-The `reviewed_ids` counts sum to 167, which is greater than 82 because an
-artifact reviewed by several records is counted once per record. The coverage
-figure of 82 is the **union**, so nothing is double-counted.
+The `reviewed_ids` counts sum to **229**, which is greater than **144** because
+an artefact reviewed by several records is counted once per record. The coverage
+figure of 144 is the **union**, so nothing is double-counted.
 
 ### Review record types
 
-- **domain** (8 records) — scoped review of a coherent body of work.
+- **domain** (10 records) — scoped review of a coherent body of work.
+- **cross_domain** (2 records) — review across the discipline boundary; added
+  2026-09-29 with the concept, system, supporting and security records.
 - **challenge** (2 records) — separated adversarial pass over the
   safety-critical chain, deliberately performed against a different profile from
   the original reviewer so it is not a self-review.
@@ -69,15 +77,20 @@ audits the synthetic review set.
 
 ## 3. Findings Raised by Reviews
 
-36 findings are embedded across the 12 review records.
+**49** findings are embedded across the **15** review records.
 
 | Profile | critical | high | medium | low | `info` | Total |
 |---|---|---|---|---|---|---|
-| `as_is` | 0 | 1 | 9 | 3 | 4 | 17 |
-| `synthetic_reference` | 0 | 3 | 8 | 2 | 6 | 19 |
-| **All** | **0** | **4** | **17** | **5** | **10** | **36** |
+| `as_is` | **0** | 1 | 9 | 3 | 4 | 17 |
+| `synthetic_reference` | **0** | 7 | 15 | 4 | 6 | 32 |
+| **All** | **0** | **8** | **24** | **7** | **10** | **49** |
 
-**No critical finding exists in either profile.**
+**No critical finding exists in either profile.** Separately, **42 `finding`
+artefacts** exist as first-class records under
+`docs/artifacts/reviews/findings/` (32 `medium`, 9 `high`, 1 `low`). Those are
+the validator's own findings promoted to records; the 49 above are findings
+embedded in review records. The two sets are different things and are not added
+together.
 
 **Presentation caveat, stated so the table is not misread:** the generated
 `views/supporting-processes/supporting-processes.md` table shows only the
@@ -86,7 +99,7 @@ severities. The visible columns therefore do not sum to the Total; the 10
 unaccounted findings are `info`. That table is generated and is left as
 generated.
 
-### The 4 high-severity findings
+### The 8 high-severity findings
 
 | Originating record | Type | Profile | Subject |
 |---|---|---|---|
@@ -94,18 +107,15 @@ generated.
 | `FB2-REV-000007` | domain | `synthetic_reference` | The `pass` outcome recorded against the synthetic fixture executions is not supported by a real execution |
 | `FB2-REV-000009` | **challenge** | `synthetic_reference` | Challenge-pass confirmation of a circular-argument risk in the safety chain |
 | `FB2-REV-000010` | **challenge** | `as_is` | The prior review `FB2-REV-000001` recorded a digest that does not match the reviewed content |
+| `FB2-REV-000013` | **cross_domain** | `synthetic_reference` | The new concept and system records contradict the pre-existing hazard, safety goal and requirement records |
+| `FB2-REV-000014` | **cross_domain** | `synthetic_reference` | The supporting-process records overstate what their own acceptance criteria are met by |
+| `FB2-REV-000015` | domain | `synthetic_reference` | The SIL host run's own results — 53 vacuous tests, build-failure misattribution, classifier non-determinism |
 
-Two of the four come from `domain` reviews and two from `challenge` reviews.
-That is worth stating accurately rather than crediting only the adversarial
-passes: the domain reviews found two real defects on their own, and the
-challenge passes independently found two more — including a finding **about the
-original review `FB2-REV-000001` itself**, which is direct evidence that the
-meta/challenge layer is doing real work rather than restating the first pass.
-
-The high findings are evenly split by profile: 1 in `as_is`, 3 in
-`synthetic_reference`. All three synthetic ones concern the safety case, the
-fixture execution outcomes, and the circular-argument risk — that is, they
-concern the synthetic artefacts themselves, not the `as_is` product evidence.
+**The profile split is 1 in `as_is`, 7 in `synthetic_reference`.** That asymmetry
+is itself worth stating plainly: the adversarial layer is finding more defects in
+the synthetic profile than in the real one, which is the expected result when a
+reviewer examines its own reasoning rather than the pinned upstream source, and
+is the opposite of what a reader might assume from the word "challenge".
 
 ## 4. The Original Review Record
 
@@ -113,7 +123,7 @@ concern the synthetic artefacts themselves, not the `as_is` product evidence.
 
 - **Type:** domain review, profile `as_is`
 - **Lifecycle:** `reviewed` — the **only** review record in the corpus at
-  `reviewed`; the other 11 are `draft`
+  `reviewed`; the other **14** are `draft`
 - **Scope:** 17 artifacts — hazard, safety goal, 4 FSRs, 3 HW TSRs, 3 SW SWRs,
   3 SW designs, test measures and an execution
 - **Findings:** 5
@@ -122,32 +132,34 @@ concern the synthetic artefacts themselves, not the `as_is` product evidence.
 
 This record is the only one that has progressed past `draft`. That is worth
 stating plainly rather than presenting the review programme as uniformly
-complete: **11 of 12 review records are still `draft`**, and a draft review is
+complete: **14 of 15 review records are still `draft`**, and a draft review is
 not a finished review.
 
 ## 5. Reported Defects in the Review Programme
 
-### 5.1 Duplicated review record
+### 5.1 The earlier duplicated review record — closed
 
-`FB2-REV-000001` exists in two files with identical content:
+`FB2-REV-000001` previously existed in two files with identical content
+(`corpus/as_is/reviews/records/review-vertical-slice.json` and
+`reviews/records/review-vertical-slice.json`). **That duplicate has been
+removed**: `docs/artifacts/reviews/records/` now holds **15** files for **15**
+review records, and the artifact index's file-to-key collapse is 4 corpus files
+rather than 5. Removing it unrecorded would have been the same class of error
+this report exists to prevent, so the removal is recorded here.
 
-- `docs/artifacts/corpus/as_is/reviews/records/review-vertical-slice.json`
-- `docs/artifacts/reviews/records/review-vertical-slice.json`
+### 5.2 Coverage is 64%, and 80 IDs are unreviewed
 
-The artifact index de-duplicates on `(profile, id)` and keeps the first, so no
-count is inflated anywhere. The validator does not raise a finding for it,
-because index de-duplication happens upstream of the duplicate-detection rule.
+The **80** uncovered distinct artifact IDs are the largest single gap in the
+review programme. Any claim that the corpus has been reviewed must carry this
+number. The uncovered set includes every `post_development_record`,
+`process_record`, `measurement_plan`, `risk_register`, `project_plan`,
+`stakeholder_need`, `use_case` and `safety_concept` record that no review
+record names — the material that `CORR-COV-016` found to be the only backing for
+21 `partially_mapped` ASPICE processes and 8 `partially_mapped` ISO parts.
+**That is not a coincidence:** the records the review programme has not looked at
+are the records the process-coverage claims rest on.
 
-**Reported, not deleted.** Removing a file is a corpus owner's decision, and
-doing it unrecorded would be the same class of error this report exists to
-prevent.
-
-### 5.2 Coverage is 67%, and 41 IDs are unreviewed
-
-The 41 uncovered unique IDs are the largest single gap in the review programme.
-Any claim that the corpus has been reviewed must carry this number.
-
-### 5.3 Eleven of twelve review records are `draft`
+### 5.3 Fourteen of fifteen review records are `draft`
 
 Review *activity* has occurred across the corpus. Review *completion* has not.
 
@@ -155,11 +167,11 @@ Review *activity* has occurred across the corpus. Review *completion* has not.
 
 | Established | Not established |
 |---|---|
-| 12 review records exist, spanning domain, challenge and meta types | That any review is complete — 11 of 12 are `draft` |
-| 82 of 123 unique artifact IDs are covered | That the 41 uncovered IDs have been looked at |
-| 4 high-severity findings, 0 critical, all from adversarial passes | That no defect exists — coverage is 67% |
-| The challenge and meta passes found more than the original domain review did | That the challenge passes were independent of the original reviewer in any organisational sense; they are AI sessions, not separated humans |
-| Findings are recorded as first-class artifacts, not just prose | Human review, human approval, or any conformity conclusion |
+| 15 review records exist, spanning domain, cross_domain, challenge and meta types | That any review is complete — **14 of 15** are `draft` |
+| **144 of 224** distinct artifact IDs are covered | That the **80** uncovered IDs have been looked at |
+| **8** high-severity findings, 0 critical | That no defect exists — coverage is **64%** |
+| The challenge, cross_domain and meta passes found defects the original domain review did not | That the challenge passes were independent of the original reviewer in any organisational sense; they are AI sessions, not separated humans |
+| Findings are recorded as first-class artefacts, not just prose | Human review, human approval, or any conformity conclusion |
 
 **Review independence is limited and stated as such.** These are automated
 AI-assisted reviews produced within the same session family. They provide

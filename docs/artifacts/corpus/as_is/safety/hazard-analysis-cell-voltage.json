@@ -1,92 +1,122 @@
 {
- "id": "FB2-SAF-HAZ-000001",
- "revision": "1",
- "schema_version": "1.0.0",
- "artifact_type": "hazard",
- "engineering_domain": "safety",
- "profile": "as_is",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "Cell Overvoltage / Undervoltage Hazard",
- "owner_role": "safety_engineer",
- "origin": "derived",
- "source_refs": [
-  "FB2-SRC-COD-000001",
-  "FB2-SRC-COD-000004",
-  "FB2-SRC-DOC-000001"
- ],
- "assumption_refs": [
-  "FB2-ASM-001",
-  "FB2-ASM-002"
- ],
- "standards_mappings": [
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 3, Clause 6",
-   "status": "mapped",
-   "rationale": "Hazard analysis for E/E system"
+  "id": "FB2-SAF-HAZ-000001",
+  "revision": "2",
+  "schema_version": "1.0.0",
+  "artifact_type": "hazard",
+  "engineering_domain": "safety",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Cell Overvoltage / Undervoltage Hazard",
+  "owner_role": "safety_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000001",
+    "FB2-SRC-COD-000004",
+    "FB2-SRC-DOC-000001"
+  ],
+  "assumption_refs": [
+    "FB2-ASM-001",
+    "FB2-ASM-002"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 3, Clause 6",
+      "status": "mapped",
+      "rationale": "Hazard analysis for E/E system"
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 6",
+      "status": "mapped",
+      "rationale": "System-level hazard analysis"
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z"
   },
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 4, Clause 6",
-   "status": "mapped",
-   "rationale": "System-level hazard analysis"
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-10-02T00:02:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-08T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Initial hazard analysis derived from foxBMS SOA implementation"
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Added asil_allocation_scope. An independent audit flagged the ASIL_D on this record's HE-01 entry as an unqualified classification on an as_is record. The class values and the S/E/C ratings are untouched; what is different now is that the record states in its own data that its hazardous events and their classifications are authored inputs of the hypothetical reference project, and that the real product has never had a hazard analysis and risk assessment. This record's safety goal child FB2-SAF-SGO-000001 already carried an equivalent statement in its asil_justification field; that field is untouched and the two are consistent."
+    }
+  ],
+  "malfunctioning_behavior": "AFE reports incorrect cell voltage (stuck-at, drift, communication error) OR SOA fails to detect limit violation OR contactor fails to open on violation",
+  "hazardous_events": [
+    {
+      "id": "HE-01",
+      "description": "Cell overvoltage during charging leading to thermal runaway",
+      "operational_situation": "CHARGING mode, high SOC, fast charge",
+      "severity": "S3",
+      "exposure": "E4",
+      "controllability": "C3",
+      "asil": "ASIL_D",
+      "rationale": "Thermal runaway can cause fire/explosion with fatal injuries; high exposure during charging; driver cannot control cell-level overvoltage"
+    },
+    {
+      "id": "HE-02",
+      "description": "Cell undervoltage during discharge leading to cell damage and potential thermal event on recharge",
+      "operational_situation": "NORMAL mode, deep discharge, high load",
+      "severity": "S2",
+      "exposure": "E3",
+      "controllability": "C2",
+      "asil": "ASIL_B",
+      "rationale": "Cell damage may lead to latent failure; moderate exposure; vehicle may provide warning"
+    }
+  ],
+  "safe_states": [
+    "Contactor open (HV isolated)",
+    "Charging disabled",
+    "Fault logged to FRAM"
+  ],
+  "degraded_states": [
+    "Reduced charge current (derating)",
+    "Balancing disabled for affected cells"
+  ],
+  "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchors FB2-SRC-COD-000001 and -000004 previously named AFE_GetCellVoltages and SOA_CheckVoltageLimits, neither of which exists; they now name AFE_StartMeasurement (afe.h:124) and SOA_CheckVoltages (soa.c:81-146). Anchor FB2-SRC-DOC-000001 previously carried a placeholder content hash and now carries the sha256 of the document body retrieved on 2026-10-01. Origin remains derived; the corrected anchors make the inference chain checkable rather than changing its category.",
+  "asil_allocation_scope": {
+    "classification_kind": "reconstructed_back_inference",
+    "classification_belongs_to": "the hypothetical reference project declared by the synthetic_reference profile of this corpus; this as_is record reconstructs that project's hazardous-event set so that the as_is chain from hazard to goal to requirement has a starting point",
+    "is_a_determination_for_the_real_product": false,
+    "real_product_hazard_analysis_and_risk_assessment_performed": false,
+    "statement": "The asil values in this record's hazardous_events are RECONSTRUCTED values, not observations and not determinations. The hazardous events, their operational situations and their severity, exposure and controllability ratings are authored inputs belonging to the hypothetical reference project this corpus declares in its synthetic_reference profile; they were not obtained from any exposure analysis, mission profile, fleet statistic, FMEA, measurement or stakeholder input about a real product. The real foxBMS 2 product has never had a hazard analysis and risk assessment. No HARA has been performed for it, none is claimed here, and nothing in this record may be read as one, as a partial one, or as a substitute for one.",
+    "why_the_value_is_still_here": "The ASIL values are retained because the hazardous events themselves are retained: the reference project's safety goal needs events to mitigate, and deleting only the class values would leave events with no classification while implying that the classification had been assessed and withdrawn. What was illegitimate was presenting those authored events and their authored classes as a hazard analysis of the real product, and this field removes that presentation.",
+    "what_this_field_asserts": [
+      "That the recorded asil value equals the classification the reference project's safety concept and goal chain assigns to this element, as those records state it.",
+      "That the classification originates in the reference project and nowhere else.",
+      "That no classification has been performed for the real product by this corpus or by anyone on its behalf."
+    ],
+    "what_this_field_does_not_assert": [
+      "It does not assert an ASIL for the real foxBMS 2 product. The real product's safety integrity level is undetermined, not ASIL_D; undetermined is the honest answer and this corpus has no standing to change it.",
+      "It does not assert that a hazard analysis and risk assessment exists for the real product in any form, complete or partial.",
+      "It does not assert that any design, in either profile, meets this ASIL. An allocation creates an obligation downstream; it is not evidence the obligation is discharged, and no execution record in this corpus discharges it for this element.",
+      "It does not assert ISO 26262 conformity, certification, or qualification of any product, supplier, tool or process.",
+      "It does not assert an Automotive SPICE capability level for any organisation.",
+      "It does not assert that the exposure or severity inputs behind the reference project's classification are evidenced. They are authored: the reference project's safety goal FB2-SAF-SGO-000001 already records that its exposure rating is an unevidenced authored input and that a single exposure step would move the whole classification one class lower."
+    ],
+    "reading_rule": "Any view, report or export that renders this record's asil value must render this field with it. An asil value shown without this field is a defect in that view, not a permissible abbreviation.",
+    "origin_field_relationship": "The origin field of this record is already 'derived' and was not changed by this edit; the authored ratings are exactly why."
   }
- ],
- "lifecycle_status": "reviewed",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-08T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-08T00:00:00Z",
-   "author": "safety_engineer",
-   "description": "Initial hazard analysis derived from foxBMS SOA implementation"
-  }
- ],
- "malfunctioning_behavior": "AFE reports incorrect cell voltage (stuck-at, drift, communication error) OR SOA fails to detect limit violation OR contactor fails to open on violation",
- "hazardous_events": [
-  {
-   "id": "HE-01",
-   "description": "Cell overvoltage during charging leading to thermal runaway",
-   "operational_situation": "CHARGING mode, high SOC, fast charge",
-   "severity": "S3",
-   "exposure": "E4",
-   "controllability": "C3",
-   "asil": "ASIL_D",
-   "rationale": "Thermal runaway can cause fire/explosion with fatal injuries; high exposure during charging; driver cannot control cell-level overvoltage"
-  },
-  {
-   "id": "HE-02",
-   "description": "Cell undervoltage during discharge leading to cell damage and potential thermal event on recharge",
-   "operational_situation": "NORMAL mode, deep discharge, high load",
-   "severity": "S2",
-   "exposure": "E3",
-   "controllability": "C2",
-   "asil": "ASIL_B",
-   "rationale": "Cell damage may lead to latent failure; moderate exposure; vehicle may provide warning"
-  }
- ],
- "safe_states": [
-  "Contactor open (HV isolated)",
-  "Charging disabled",
-  "Fault logged to FRAM"
- ],
- "degraded_states": [
-  "Reduced charge current (derating)",
-  "Balancing disabled for affected cells"
- ]
 }

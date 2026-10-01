@@ -1,88 +1,121 @@
 {
- "id": "FB2-VER-EXE-000003",
- "revision": "1",
- "schema_version": "1.0.0",
- "artifact_type": "execution",
- "engineering_domain": "verification",
- "profile": "synthetic_reference",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "Execution: FB2-VER-TMS-000003 (synthetic_fixture)",
- "owner_role": "verification_engineer",
- "origin": "synthetic",
- "source_refs": [],
- "assumption_refs": [],
- "standards_mappings": [],
- "lifecycle_status": "reviewed",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-13T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-13T00:00:00Z",
- "updated_at": "2026-09-13T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-13T00:00:00Z",
-   "author": "verification_engineer",
-   "description": "Synthetic fixture execution"
-  }
- ],
- "test_measure_id": "FB2-VER-TMS-000003",
- "test_measure_revision": "1",
- "execution_kind": "synthetic_fixture",
- "outcome": "pass",
- "environment": {
-  "hardware": "x86_64 Linux host (simulated)",
-  "software": "Unity 2.5.2, CMock 2.4.0",
-  "tools": [
-   "GCC 11.4.0",
-   "CMake 3.22"
+  "id": "FB2-VER-EXE-000003",
+  "revision": "2",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
   ],
-  "configuration": "conf/unit/app_project_posix.yml",
-  "tool_versions": {
-   "gcc": "11.4.0",
-   "cmake": "3.22.1",
-   "unity": "2.5.2",
-   "cmock": "2.4.0"
+  "title": "Execution: FB2-VER-TMS-000003 (synthetic_fixture)",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "reviewed",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-13T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-13T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-13T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Synthetic fixture execution"
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Provenance repair of the evidence hash and file-reference fields by a separate session (opencode-2026-10-01-provenance-repair); no statement of what the run did was altered. 1 logs[] reference(s) removed because the path never resolved to anything: see provenance_repair.unretained_evidence for each. Nothing was written to make them resolve. 1 input-hash question(s) resolved in favour of retaining what the run actually consumed, or of recording the absence of evidence; see provenance_repair.input_hash_resolutions. The outcome, timestamps, environment, anomalies, evidence_refs, notes and limitations of this record are untouched."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000003",
+  "test_measure_revision": "1",
+  "execution_kind": "synthetic_fixture",
+  "outcome": "pass",
+  "environment": {
+    "hardware": "x86_64 Linux host (simulated)",
+    "software": "Unity 2.5.2, CMock 2.4.0",
+    "tools": [
+      "GCC 11.4.0",
+      "CMake 3.22"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml",
+    "tool_versions": {
+      "gcc": "11.4.0",
+      "cmake": "3.22.1",
+      "unity": "2.5.2",
+      "cmock": "2.4.0"
+    }
+  },
+  "input_hashes": {},
+  "output_hashes": {},
+  "logs": [],
+  "timestamps": {
+    "start": "2026-09-13T00:00:00Z",
+    "end": "2026-09-13T00:00:05Z",
+    "duration_ms": 5000
+  },
+  "anomalies": [],
+  "evidence_refs": [
+    "FB2-VER-TMS-000003",
+    "tests/unit/app/driver/afe/api/test_afe_plausibility.c"
+  ],
+  "limitations": [
+    "Synthetic fixture execution (no target hardware)",
+    "No verification credit for production"
+  ],
+  "notes": "Synthetic execution demonstrating the verification workflow",
+  "provenance_repair": {
+    "session": "opencode-2026-10-01-provenance-repair",
+    "date": "2026-10-01T00:00:00Z",
+    "unretained_evidence": [
+      {
+        "previous_reference": "build/synthetic/FB2-VER-EXE-000003.log",
+        "previous_hash": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e",
+        "resolution": "reference removed; no substitute path invented",
+        "note": "build/ does not exist in this repository and never did in any commit, and no directory anywhere in the tree is named synthetic. The fixture output this entry pointed at was never captured and cannot be reconstructed, because the single digest it carried was a constant reused across all six synthetic fixture records rather than a measurement of any content. The gap is already documented in docs/artifacts/evidence/synthetic-fixtures/MANIFEST.md and is open as finding FB2-REV-FND-000143. No fixture file was written."
+      }
+    ],
+    "input_hash_resolutions": [
+      {
+        "removed_fields": [
+          {
+            "section": "input_hashes",
+            "key": "test_source",
+            "value": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
+          },
+          {
+            "section": "input_hashes",
+            "key": "config",
+            "value": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
+          },
+          {
+            "section": "output_hashes",
+            "key": "result",
+            "value": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
+          }
+        ],
+        "test_source_file_named_by_evidence_refs": [
+          "tests/unit/app/driver/afe/api/test_afe_plausibility.c"
+        ],
+        "note": "input_hashes.test_source, input_hashes.config and output_hashes.result all carried the identical value sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e: eighteen uses of one constant across six records. A test source, a build configuration and a captured result are three unrelated artefacts and cannot share a content hash, and the value matches no file in the repository at any commit, so it was never measured. These records describe a synthetic fixture run that did not happen: the environment was never provisioned and the timestamps are a constant window. A hash recomputed against a repository file today would assert that this file was an input to a run that does not exist, so the fields are removed and this note records that instead. Two of the six records name no test source at all, so for those there was nothing to recompute against either; the four that do name one keep that name in evidence_refs, which is a statement of scope, not of captured content."
+      }
+    ],
+    "principle": "A hash that identifies a file still present at the path it names has been re-derived from the bytes on disk and the superseded value is recorded above. A hash that identifies something no run ever captured, or an input consumed at a specific moment in the past, is not overwritten: it is retained with both digests recorded, or removed with this note. No file was created to make a reference resolve."
   }
- },
- "input_hashes": {
-  "test_source": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e",
-  "config": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
- },
- "output_hashes": {
-  "result": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
- },
- "logs": [
-  {
-   "file": "build/synthetic/FB2-VER-EXE-000003.log",
-   "hash": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e",
-   "type": "stdout"
-  }
- ],
- "timestamps": {
-  "start": "2026-09-13T00:00:00Z",
-  "end": "2026-09-13T00:00:05Z",
-  "duration_ms": 5000
- },
- "anomalies": [],
- "evidence_refs": [
-  "FB2-VER-TMS-000003",
-  "tests/unit/app/driver/afe/api/test_afe_plausibility.c"
- ],
- "limitations": [
-  "Synthetic fixture execution (no target hardware)",
-  "No verification credit for production"
- ],
- "notes": "Synthetic execution demonstrating the verification workflow"
 }

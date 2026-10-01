@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/implementation.schema.json",
+  "title": "Implementation Artifact Schema",
+  "description": "Schema for implementation-element artifacts. An implementation element is a code location (or an explicitly proposed one) that realises a design element and the requirements allocated to it. It exists because master prompt section 13 defines the chain as 'HW/SW architecture -> detailed design -> actual or proposed implementation', and the corpus previously had no record type at that rung: the implementation stage of the chain could only be inferred from a design record's source_refs, which says where a design says code is, not which code element is the implementation. This schema makes the rung a first-class, individually reviewable record.",
+  "allOf": [
+    {
+      "$ref": "./artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "implementation_kind",
+        "implementation_status",
+        "code_locations",
+        "implements",
+        "realises_requirements",
+        "anchor_refs",
+        "guard"
+      ],
+      "properties": {
+        "artifact_type": {
+          "type": "string",
+          "const": "implementation"
+        },
+        "implementation_kind": {
+          "type": "string",
+          "enum": [
+            "translation_unit",
+            "function_group",
+            "state_machine",
+            "driver_module",
+            "hal_module",
+            "startup_sequence",
+            "cross_cutting_header",
+            "configuration_module",
+            "bootloader_component"
+          ],
+          "description": "What kind of source construct this implementation element is (snake_case)"
+        },
+        "implementation_status": {
+          "type": "string",
+          "enum": [
+            "in_source",
+            "in_source_partial",
+            "in_source_with_deviations",
+            "not_in_source"
+          ],
+          "description": "Whether the element exists in the pinned source. 'not_in_source' is reserved for a proposed element of the synthetic_reference profile that has no counterpart in foxBMS 2 and must never be presented as implemented."
+        },
+        "code_locations": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The repository locations this element comprises. At least one is mandatory: an implementation element with no location is a proposal, and a proposal declares not_in_source and carries a proposed_location instead.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "commit",
+              "path",
+              "symbol",
+              "line_range",
+              "content_hash"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Repository identity the location is read from"
+              },
+              "commit": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{7,40}$",
+                "description": "Pinned commit the line range and content hash were read at"
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Repository-relative path, forward slashes, no leading slash"
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Function, type, macro or other symbol the location is. A whole-translation-unit element states the unit's name."
+              },
+              "line_range": {
+                "type": "string",
+                "pattern": "^[0-9]+(-[0-9]+)?$",
+                "description": "Inclusive 1-based line range, or a single line number, inside the pinned file at the pinned commit"
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "description": "sha256 of the file the location is in, at the pinned commit. Not a placeholder value: an unverified hash is a provenance defect, so the pattern admits no placeholder spelling."
+              },
+              "symbol_role": {
+                "type": "string",
+                "enum": [
+                  "definition",
+                  "declaration",
+                  "macro_definition",
+                  "type_definition",
+                  "translation_unit_body",
+                  "table_definition"
+                ],
+                "description": "What the named symbol is at that location"
+              },
+              "verified_against_pinned_source": {
+                "type": "boolean",
+                "description": "True only when path, symbol and line range were each confirmed to exist in the pinned file. False means the location is recorded but unconfirmed, and the record must say so in its own words."
+              }
+            }
+          }
+        },
+        "proposed_location": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "proposed_path",
+              "proposed_symbol",
+              "why_not_in_source"
+            ],
+            "properties": {
+              "proposed_path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Where the proposed element would live if it were written. This path does NOT exist in the pinned source and is not a source anchor."
+              },
+              "proposed_symbol": {
+                "type": "string",
+                "minLength": 1
+              },
+              "why_not_in_source": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The specific missing behaviour in the pinned source that the proposal supplies. Must name the gap, not restate the proposal."
+              }
+            }
+          },
+          "description": "Present only when implementation_status is 'not_in_source'. Never populated from an existing anchor."
+        },
+        "implements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "design_artifact_id",
+            "design_level",
+            "relationship"
+          ],
+          "properties": {
+            "design_artifact_id": {
+              "type": ["string", "null"],
+              "description": "The design artefact this element implements. Null when the corpus holds no design artefact for this module; the reason is then stated in design_gap_reason and the record declares no implements link."
+            },
+            "design_level": {
+              "type": ["string", "null"],
+              "enum": ["architecture", "detailed_design", "interface_specification", null],
+              "description": "design_level of the referenced design artefact"
+            },
+            "relationship": {
+              "type": "string",
+              "minLength": 1,
+              "description": "How this element realises the design: the mechanism, not the assertion that it does. A design decision, an interface, an algorithm or a state the code actually carries."
+            },
+            "design_gap_reason": {
+              "type": "string",
+              "description": "Required when design_artifact_id is null. States that the module exists in the pinned source and that no design artefact in this profile covers it, and that the gap is recorded rather than papered over with a link to an unrelated design."
+            },
+            "partial_coverage": {
+              "type": "array",
+              "minItems": 0,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "Design responsibilities or behaviours this element does NOT realise. Populated whenever implementation_status is in_source_partial or in_source_with_deviations; an element claiming complete coverage while leaving a named design behaviour unrealised is the defect this field exists to prevent."
+            }
+          }
+        },
+        "realises_requirements": {
+          "type": "array",
+          "minItems": 0,
+          "description": "Requirements this element realises at the requirement level. Permitted to be empty ONLY when requirement_gap_reason is present: a module that exists in the pinned source and that no requirement in this profile covers is a typed leaf exception under master prompt section 13, and forcing a requirement onto it would fabricate coverage.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "requirement_id",
+              "how_realised"
+            ],
+            "properties": {
+              "requirement_id": {
+                "type": "string",
+                "pattern": "^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$"
+              },
+              "how_realised": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The code behaviour that satisfies the requirement, and, where the requirement states a figure, whether that figure was read from the source or is a modelled value the source does not carry."
+              },
+              "figure_provenance": {
+                "type": "string",
+                "enum": [
+                  "read_from_source",
+                  "modelled_not_in_source",
+                  "mixed_read_and_modelled"
+                ],
+                "description": "Whether the requirement's quantified acceptance figures were read out of the pinned source or are back-modelled values it does not contain. Required whenever the requirement states a number."
+              }
+            }
+          }
+        },
+        "requirement_gap_reason": {
+          "type": "string",
+          "description": "Required when realises_requirements is empty. States that the module exists in the pinned source and that no requirement in this profile covers it."
+        },
+        "anchor_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^FB2-SRC-[A-Z]{3}-[0-9]{6}$"
+          },
+          "description": "Existing source-registry anchors this element is grounded in. These are the shared controlled anchors of both profiles; an implementation element references them and never introduces a competing anchor set. Every id here must already resolve in docs/artifacts/sources/source-registry.json."
+        },
+        "behaviours": {
+          "type": "array",
+          "minItems": 0,
+          "description": "Typed description of what the element does, so the record is not a bare pointer list.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "behaviour_id",
+              "description",
+              "kind"
+            ],
+            "properties": {
+              "behaviour_id": {
+                "type": "string",
+                "pattern": "^[A-Z0-9]{2,4}-[A-Z0-9-]+$",
+                "description": "Module abbreviation, then a hyphen, then a short uppercase name. A digit is admitted in the module abbreviation because several real module names contain one (I2C, LTC6813); it is not admitted in the name part so that a behaviour id can never be confused with a register or a symbol."
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "transfer",
+                  "validation",
+                  "conversion",
+                  "state_transition",
+                  "diagnostic_raise",
+                  "publication",
+                  "arbitration",
+                  "flow_control",
+                  "timekeeping",
+                  "startup",
+                  "integrity_check",
+                  "privilege_transition",
+                  "interrupt_dispatch",
+                  "boot_validation"
+                ]
+              },
+              "evidence_symbol": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The symbol in the pinned source that carries this behaviour. Must be a symbol that exists."
+              },
+              "evidence_line_range": {
+                "type": "string",
+                "pattern": "^[0-9]+(-[0-9]+)?$"
+              }
+            }
+          }
+        },
+        "concurrency_and_isr_context": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "context",
+              "entry_points"
+            ],
+            "properties": {
+              "context": {
+                "type": "string",
+                "enum": ["task", "interrupt", "isr", "startup", "call_from_task_and_isr"]
+              },
+              "entry_points": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "shared_state": {
+                "type": "string",
+                "description": "State shared with the other context and the protection the source uses for it, read from the source and not assumed."
+              }
+            }
+          }
+        },
+        "guard": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "is_implementation_evidence",
+            "is_verification_result",
+            "confers_no_production_authority",
+            "confers_no_verification_credit",
+            "human_approval_required"
+          ],
+          "properties": {
+            "is_implementation_evidence": {
+              "const": false,
+              "description": "A code location is not evidence that the requirement it realises is met. This constant makes that non-claim part of the record's own data rather than a sentence in a note."
+            },
+            "is_verification_result": {
+              "const": false
+            },
+            "confers_no_production_authority": {
+              "const": true
+            },
+            "confers_no_verification_credit": {
+              "const": true
+            },
+            "human_approval_required": {
+              "const": true
+            },
+            "statement": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The guard stated in words. Repeats the constants above for a human reader and records what this record is not."
+            }
+          }
+        },
+        "evidence_status": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "locations_verified",
+            "method",
+            "limitations"
+          ],
+          "properties": {
+            "locations_verified": {
+              "type": "boolean",
+              "description": "True only when every code_location was checked to exist, with the stated symbol, inside the stated line range, of the stated file."
+            },
+            "method": {
+              "type": "string",
+              "minLength": 1,
+              "description": "How the verification was performed, named precisely enough to be repeated."
+            },
+            "limitations": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "note_on_registration": {
+      "description": "This type is NOT yet registered in ARTIFACT_TYPE_SCHEMAS in docs/artifacts/tools/corpus.py. Until it is, _validate_artifact's schema-selection branch finds no schema for artifact_type 'implementation', and because 'implementation' is also absent from BASE_ONLY_TYPES the record is not validated against the base schema either: it is loaded, indexed and linked, but not schema-checked. Registration is a one-line addition to the map owned by the corpus tool."
+    }
+  }
+}

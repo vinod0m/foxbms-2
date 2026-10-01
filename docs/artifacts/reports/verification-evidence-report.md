@@ -1,40 +1,147 @@
 # Verification Evidence Report
 
-**Generated:** 2026-09-29
-**Baseline:** BAS-REF-001 (pinned source commit `308028fb`)
-**Primary evidence:** `docs/artifacts/.work/verification-env/logs/results-strict.json`
+**Generated:** 2026-10-01 (evidence base refreshed; headline is now the SIL run)
+**Baseline:** BAS-REF-001 — source pinned to commit `308028fb`, corpus authored at `2a408d5`
+**Primary evidence (tracked):** `docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json`
+**Earlier evidence (tracked):** `docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-strict.json`
 
-> **This run is not target-hardware evidence, and it is not credited as such.**
-> macOS is **not an upstream-supported foxBMS platform**. foxBMS 2 targets a
-> Texas Instruments TMS570-family MCU with a proprietary HALCoGen code-generation
-> step. The run described below is a **host run on a development machine**. It
-> exercises real product source code, which makes it genuine evidence about the
-> code, but it says nothing about timing on the target, about the AFE drivers, or
-> about the closed-loop control behaviour. `actual_product_evidence` remains
-> **0/16** and `product_verification_credit` is `false` on all 153 records.
+> **These runs are not target-hardware evidence, and they are not credited as
+> such.** macOS is **not an upstream-supported foxBMS platform**. foxBMS 2
+> targets a Texas Instruments TMS570-family MCU with a proprietary HALCoGen
+> code-generation step. Both runs are **host runs on a development machine**.
+> They exercise real product source code, which makes them genuine evidence
+> about the code, but they say nothing about timing on the target, about the
+> closed-loop control behaviour, or about the four `tests/unit-hw/test_tms570_*.c`
+> target-hardware tests, which were never attempted.
+> `actual_product_evidence` remains **0/33** and `product_verification_credit`
+> is `false` on all **263** records.
 >
 > Nothing here asserts ISO 26262 conformity, ASIL capability, ASPICE capability
 > level, certification, human approval or tool qualification. No human has
 > approved anything in this corpus.
 
-## 1. The Run
+### Where the evidence actually lives, and where it does not
+
+The previous version of this report cited
+`docs/artifacts/.work/verification-env/logs/results-strict.json` as its primary
+evidence. **`.work/` is gitignored and untracked, so that file is not in the
+distribution.** It has been replaced by a tracked path, and the distinction is
+now stated everywhere it matters:
+
+| Artefact | Tracked? | Path |
+|---|---|---|
+| Pre-SIL strict results | **yes** | `docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-strict.json` |
+| Pre-SIL relaxed results | **yes** | `…/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json` |
+| HALCoGen dependency closure | **yes** | `…/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json` |
+| SIL results (all 313 targets) | **yes** | `…/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json` |
+| SIL runbook (reproduction instructions) | **yes** | `…/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md` |
+| Per-test SIL logs (313 files) | **yes** | `…/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict/` |
+| SIL harness working tree | **NO — gitignored** | `docs/artifacts/.work/verification-env/sil/` |
+| Pre-SIL harness working tree | **NO — gitignored** | `docs/artifacts/.work/verification-env/` |
+
+Measured on the last `validate` run: **46 log entries, 46 hashes verified, 0
+mismatched, 0 unverified, 0 missing; 34 `evidence_files` entries, 0 missing.**
+
+> **Five execution records cite a digest that resolves only into the gitignored
+> tree.** `FB2-VER-EXE-000008`…`FB2-VER-EXE-000012` each carry
+> `output_hashes.sil_suite_results_all =
+> sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67`,
+> which resolves to
+> `docs/artifacts/.work/verification-env/sil/logs/RESULTS-POST-fix.json` and
+> **not** to the `results-sil-all.json` those records name in their `logs[]`
+> (`sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589`).
+> `FB2-VER-EXE-000015` names eight `.work/` paths directly in its `logs[]`. The
+> per-test logs those records *do* name are tracked and verify; it is the
+> suite-level aggregate digest that lives outside the distribution. A fresh
+> clone can reproduce the run from the tracked `RUNBOOK.md` and cannot verify
+> those five aggregate digests.
+
+## 1. The SIL Run — the current headline
+
+Harness: `SIL host unit tests (CMock mocks of host-declared HL_*.h interface headers)`.
 
 | Measure | Value |
 |---|---|
-| Host | `Darwin vinods-mbp-14.localdomain 27.0.0 Darwin Kernel Version 27.0.0` (arm64) |
-| Toolchain | `ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]` |
-| Run timestamp | 2026-09-29T10:30:52+0200 |
-| Selection | `no_halcogen_dependency` |
-| **Tests in scope** | **136** |
-| **Passed** | **94** |
-| **Failed** | **5** |
-| Build failures | 37 |
-| Assertions tested | 332 |
-| Assertions passed | 323 |
-| Assertions failed | 8 |
+| Host | `Darwin vinods-mbp-14.localdomain 27.0.0` (arm64) |
+| Toolchain | `ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]`, `Apple clang version 17.0.0` |
+| Run timestamp | **2026-09-30T01:24:18+0200** |
+| Selection | `all` — **no HALCoGen exclusion** |
+| **CeeDling targets attempted** | **313** |
+| **Passed** | **222** |
+| **Failed** | **7** |
+| Build failures | **84** |
+| Assertions tested | **988** |
+| Assertions passed | **950** |
+| Assertions failed | **35** |
 
-Raw data: `docs/artifacts/.work/verification-env/logs/results-strict.json`.
-Run procedure and full account: `docs/artifacts/.work/verification-env/RUNBOOK.md`.
+313 = 222 + 7 + 84 exactly. Every per-test log, the suite results, the HAL
+surface inventory and the HAL signature inventory are tracked and
+sha256-verified.
+
+### The 84 build failures, classified
+
+The harness classifies a build failure on the **set of distinct, order-independent
+diagnostic codes** — severity, `-W` flag and normalised message — not on any
+single message, and collects the set with `SIL_DIAG_COLLECT=1` so Ceedling
+compiles every remaining translation unit instead of aborting at the first.
+
+| Class | n | What it is |
+|---|---:|---|
+| `excluded:upstream_config` | 28 | paths the shipped Ceedling `:paths:` configuration excludes deliberately |
+| `build:clang_only_diagnostic` | 22 | a diagnostic Apple clang enables that GNU gcc does not, promoted by `-Werror` |
+| `build:undeclared_identifier` | 8 | identifier used without a declaration |
+| `build:real_defect_out_of_bounds_array_index` | 6 | **a real defect in the product** |
+| `build:strict_diagnostic_both_compilers` | 5 | fires under both compilers |
+| `build:real_defect_macro_arity` | 4 | **a real defect** |
+| `build:sil_interface_header_mismatch` | 3 | the SIL interface header disagrees with the module under test |
+| `build:real_defect_implicit_function_declaration` | 2 | **a real defect** |
+| `build:real_defect_implicit_int` | 2 | **a real defect** |
+| `build:not_buildable_on_macos_object_format` | 1 | Mach-O cannot express what the source asks for |
+| `build:product_tautological_guard` | 1 | a guard that cannot fail |
+| `build:real_defect_absolute_value_truncation` | 1 | **a real defect** |
+| `build:real_defect_excess_initializers` | 1 | **a real defect** |
+| **Total** | **84** | |
+
+**16 of the 84 are classified by the harness itself as real product defects.**
+That is a stronger claim than "the build broke", and it is the reason the SIL
+run is worth publishing even though it did not reach 313 passes.
+
+### A finding the SIL run produced against itself
+
+`FB2-REV-FND-000042`: **53 of the 245 green tests in the SIL host run assert
+nothing.** A vacuous test passes whatever the code does, so a green result from
+it is not evidence of anything. The harness ships a vacuous-test detector
+(`find_vacuous_tests.py`) and a real-diagnostics dumper
+(`dump_diagnostics.py`), both hashed in `FB2-VER-EXE-000015`. This is recorded
+against the SIL run rather than omitted from it: a run that hides its own
+weakness is not usable evidence.
+
+### "313 tests" is the harness's enumeration, not a count of the tree
+
+The harness attempted **313** distinct CeeDling targets. The repository today
+holds **318** `test_*.c` files under `tests/`. The 5 not attempted are
+`tests/unit-hw/test_tms570_{boot,crc,flash,main}.c` — the TMS570
+**target-hardware** tests, i.e. exactly the evidence class this corpus cannot
+produce — plus
+`tests/cli/pre_commit_scripts/test_check_include_guard/test_file.c`, a C sample
+for a Python linter.
+
+## 1.1 The Earlier Pre-SIL Run, for the record
+
+| Measure | Strict | Relaxed |
+|---|---:|---:|
+| Timestamp | 2026-09-29T10:30:52+0200 | 2026-09-29T10:33:16+0200 |
+| Selection | `no_halcogen_dependency` | `no_halcogen_dependency` |
+| Tests in scope | 136 | 136 |
+| Passed | 94 | 98 |
+| Failed | 5 | 7 |
+| Build failures | 37 | 31 |
+| Assertions tested / passed / failed | 332 / 323 / 8 | 391 / 380 / 10 |
+
+Raw data (tracked): `…/foxbms2-host-unit-test-macos-2026-09-29/results-strict.json`
+and `results-relaxed.json`. Run procedure and full account: the **tracked**
+`…/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md` (the SIL runbook
+supersedes the `.work` copy the earlier version of this report cited).
 
 ## 2. The Five Failures Are a Real Product Defect
 
@@ -130,12 +237,21 @@ Each defect has a first-class execution record in the corpus:
 A build failure is not a test failure and is not counted as one. The 5 failures
 in §2 are tests that **ran and failed**; the 37 did not run at all.
 
-## 4. The 177 Blocked Tests
+## 4. The 177 Tests the Pre-SIL Run Excluded — now reached by the SIL harness
 
-Of **313** repository tests, **136** were in scope and **177 are blocked** on
-HALCoGen (`docs/artifacts/.work/verification-env/logs/hcg-closure.json`).
+**Superseded as a blocker, retained as a characterisation.** Of the harness's
+**313** enumerated targets, the pre-SIL run selected **136** and excluded **177**
+because their quoted-`#include` closure reaches a HALCoGen-generated header
+(`docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json`,
+tracked).
 
-The blocked tests reach **34 distinct `HL_*.h` headers**, including
+The SIL harness mocks those headers at the interface boundary rather than
+reconstructing TI register maps, so **all 313 targets are now attempted**
+(§1). Of the 84 remaining build failures, 28 are upstream-excluded paths and 22
+are Apple-clang-only diagnostics; the HALCoGen-specific exclusion no longer
+accounts for any of them.
+
+The excluded tests reached **34 distinct `HL_*.h` headers**, including
 `HL_adc.h`, `HL_can.h`, `HL_crc.h`, `HL_dcc.h`, `HL_ecap.h`, `HL_epc.h`,
 `HL_eqep.h`, `HL_errata_SSWF021_45.h`, `HL_esm.h`, `HL_etpwm.h`, `HL_gio.h`,
 `HL_hal_stdtypes.h`, `HL_het.h`, `HL_i2c.h`, `HL_lin.h`, `HL_mdio.h`,
@@ -148,15 +264,22 @@ for every one of the 313 tests, exactly which HALCoGen headers it needs.
 
 ### To unblock
 
+The SIL harness is option (c), and it is what the corpus actually used: CMock
+mocks of host-declared `HL_*.h` interface headers, so the tests compile and run
+against a declared interface instead of against TI's proprietary register maps.
+That boundary is stated in the harness description itself and is the reason the
+313-target result is **not** evidence about TI register semantics.
+
+The options that remain open:
+
 - **(a)** a real HALCoGen run on `conf/hcg/app.hcg` — requires a TI licence; or
 - **(b)** a Linux host, where the ELF compiler accepts the TI section attributes
-  unchanged. This is the path upstream already documents, and the
-  reconstruction in §5.2 of the RUNBOOK would not be needed there.
+  unchanged. This is the path upstream already documents.
 
 Docker is available (`Docker version 29.8.0`), so option (b) is viable. It was
 **not** built, because native macOS succeeded and the deliverable priority puts
-native first. A Linux container would in any case need the same HALCoGen output
-for the 177 remaining tests, so it would not unblock them by itself.
+native first. Neither (a) nor (b) substitutes for target hardware, which is the
+one thing neither can provide.
 
 ## 5. The Two Sweeps
 
@@ -178,17 +301,29 @@ figures (136 / 94 / 5 / 37), which is the reproducibility check.
 
 The corpus separates evidence classes explicitly so that a blocked result is
 never mistaken for a pass. The `actual_product_evidence` coverage dimension
-reads **0/16**, and the tool's own detail string states the reason: *execution_kind
+reads **0/33**, and the tool's own detail string states the reason: *execution_kind
 has no target-hardware member, so none can be claimed (blocked, not fabricated)*.
 
-Of **25** execution records:
+Of **44** execution records:
 
 | Class | Count | Credit |
 |---|---|---|
-| host / simulation | 13 | Real product code on a development host. **Not** target hardware. |
-| `synthetic_fixture` or `none` | 12 | Synthetic or blocked. No product credit. |
+| `actual_host_run` (real product code, development host) | **15** | Real product code on a development host. **Not** target hardware. |
+| `execution_kind: none` | **23** | 1 `as_is`, 22 `synthetic_reference`. Blocked. No product credit. |
+| `synthetic_fixture` | **6** | **No retained evidence — see below.** No product credit. |
 | undeclared | **0** | — |
 | **target hardware** | **0** | — |
+
+> **The 6 `synthetic_fixture` executions retain nothing.**
+> `FB2-VER-EXE-000001`…`FB2-VER-EXE-000006` (profile `synthetic_reference`) each
+> record `execution_kind: synthetic_fixture`, `outcome: pass`, `logs: []` and no
+> `evidence_files` entry. `docs/artifacts/evidence/synthetic-fixtures/` holds **no
+> fixture artefact** — its only file is a hand-written `MANIFEST.md` which states
+> that the fixture was never captured and that the file "must never be counted as
+> captured evidence for any test". The fixture they claim to have run was never
+> retained, so the `pass` cannot be checked by anyone — including this corpus. Their `evidence_refs` name
+> real test measures and real test source files, which is not the same thing as
+> evidence that a run happened.
 
 ### Records created and corrected by this run
 
@@ -216,11 +351,11 @@ worse than an honest gap, because it survives review.
 
 ## 7. Verification Planning
 
-16 test measures cover 7 distinct FSRs (`verification_planning` = 16/7, a ratio
-rather than a score).
+**33 test measures cover 7 distinct FSR ids** (`verification_planning` = 33/7, a
+ratio rather than a score).
 
-- **`as_is`:** 5 test measures, 14 execution records.
-- **`synthetic_reference`:** 11 test measures, 11 execution records.
+- **`as_is`:** 5 test measures, 16 execution records.
+- **`synthetic_reference`:** 28 test measures, 28 execution records.
 
 ### The `verifies` direction convention
 
@@ -261,14 +396,15 @@ not fire on the record the scenario targets. See
 
 | Established | Not established |
 |---|---|
-| 94 of 136 in-scope tests pass on a real host | Anything about behaviour on the TMS570 target |
-| 5 tests fail, root-caused to a `void *` / CMock interaction | That the 94 passes are sufficient |
-| The failure is compiler- and platform-independent | That macOS is a supported foxBMS platform — it is not |
-| 177 tests are blocked on proprietary HALCoGen output | Anything about those 177 tests, which did not run |
-| 0 target-hardware executions exist | Any target-hardware claim |
-| Blocked and failed results are recorded, not hidden | That any verification has been approved by a human |
+| **222 of 313** CeeDling targets pass under the SIL harness on a real host, with **7** failing and **84** not building | Anything about behaviour on the TMS570 target |
+| 16 of the 84 build failures are classified **by the harness itself** as real product defects | That the 222 passes are sufficient |
+| **53 of the 245 green tests assert nothing** (`FB2-REV-FND-000042`) | That those 53 green results evidence anything |
+| 5 tests fail in the earlier strict run, root-caused to a `void *` / CMock interaction, and the failure is compiler- and platform-independent | That macOS is a supported foxBMS platform — it is not |
+| The SIL harness mocks the `HL_*.h` interface boundary rather than reconstructing TI register maps | Anything about TI register semantics |
+| 0 target-hardware executions exist; the 4 `tests/unit-hw/test_tms570_*.c` tests were never attempted | Any target-hardware claim |
+| Blocked, failed and vacuous results are recorded, not hidden | That any verification has been approved by a human |
 
 `human_approval_status` is `pending` and `production_authorized` is `false` for
-all 153 records. This run is evidence about the product's source code on a
-development host, and about the honesty of the corpus recording it — nothing
+all **263** records. These runs are evidence about the product's source code on a
+development host, and about the honesty of the corpus recording them — nothing
 more.

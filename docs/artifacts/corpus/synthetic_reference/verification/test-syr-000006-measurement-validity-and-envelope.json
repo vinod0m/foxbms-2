@@ -1,0 +1,182 @@
+{
+  "id": "FB2-VER-TMS-000028",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Test: a current or temperature measurement whose trust cannot be established is marked invalid before any supervisory comparison consumes it",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [
+    "FB2-SRC-COD-000005",
+    "FB2-SRC-COD-000006",
+    "FB2-SRC-COD-000025"
+  ],
+  "assumption_refs": [
+    "FB2-ASM-003",
+    "FB2-ASM-009",
+    "FB2-ASM-010"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+    },
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 9 (system verification)",
+      "status": "partially_mapped",
+      "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Authored because FB2-SYS-SYR-000006 had no verification. It is the one requirement in this set whose entire content is present in the pinned source and can therefore be falsified against it, which is why it carries a source-grounded oracle rather than a weaker one."
+    }
+  ],
+  "test_type": "integration",
+  "objective": "Confirm FB2-SYS-SYR-000006's validity-marking and envelope-check criteria against the pinned source. Two independent gates are available. On the acquisition side, the current-sensor receive callback sets the per-string invalidMeasurement flag on every channel error it handles and clears it on reset, so an untrusted measurement is marked at the boundary rather than at the consumer. On the consumption side, SOA_CheckCurrent skips a string's comparison entirely when the database reports that string current invalid, so an invalid value cannot raise a limit diagnosis. The third criterion, that invalid data never reaches a decision unchallenged, is only partly falsifiable from the source, and the measure says which part and which part not.",
+  "referenced_requirements": [
+    "FB2-SYS-SYR-000006"
+  ],
+  "referenced_designs": [
+    "FB2-SW-DSN-000002"
+  ],
+  "preconditions": [
+    "The current-sensor receive callback is linked so that channel-error handling can be driven.",
+    "The SOA module is linked with the database write path so that the invalid flags it reads are the ones the callback writes."
+  ],
+  "environment": {
+    "hardware": "POSIX host (Linux) running the unit-test build, with the current-sensor receive callback and the SOA module linked",
+    "software": "foxBMS 2 application firmware built with the unit-test configuration",
+    "tools": [
+      "GCC",
+      "CMock",
+      "Unity"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml"
+  },
+  "stimuli": [
+    {
+      "signal": "Current-sensor channel error",
+      "value": "one synthetic channel-error indication per monitored channel",
+      "timing": "one per cycle"
+    },
+    {
+      "signal": "Temperature at or above the applicable tier",
+      "value": "a temperature above the tier the current direction selects",
+      "timing": "held across all cycles"
+    },
+    {
+      "signal": "String current validity flag",
+      "value": "read before and after each SOA comparison",
+      "timing": "on every cycle"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Drive a channel-error indication for a monitored current channel and read that string's invalidMeasurement flag.",
+      "expected": "The flag is set, and it is set by the receive callback rather than by the consumer."
+    },
+    {
+      "step": 2,
+      "action": "Drive the reset of that channel error and read the flag again.",
+      "expected": "The flag is cleared."
+    },
+    {
+      "step": 3,
+      "action": "With the flag set, present a string current above the applicable charge-direction limit and record the entries raised.",
+      "expected": "No current-limit entry is raised for that string, and no entry at all is raised from the skipped branch."
+    },
+    {
+      "step": 4,
+      "action": "Clear the flag, present the identical current again and record the entries.",
+      "expected": "The charge-direction current-limit entry is raised, which shows the skip in step 3 was caused by the flag and not by the value."
+    },
+    {
+      "step": 5,
+      "action": "Present a temperature above the applicable tier in each current direction and record the entries.",
+      "expected": "The entries raised are the tier entries for the direction in force, not for both directions."
+    }
+  ],
+  "expected_outcomes": [
+    {
+      "signal": "invalid_flag_set_at_acquisition_boundary",
+      "expected_value": "true",
+      "tolerance": "exact",
+      "unit": "bool"
+    },
+    {
+      "signal": "limit_entries_raised_while_invalid",
+      "expected_value": "0",
+      "tolerance": "exact",
+      "unit": "entries"
+    },
+    {
+      "signal": "limit_entries_raised_after_validity_restored",
+      "expected_value": "at least 1",
+      "tolerance": "at least",
+      "unit": "entries"
+    },
+    {
+      "signal": "temperature_tiers_selected_by_direction",
+      "expected_value": "true",
+      "tolerance": "exact",
+      "unit": "bool"
+    }
+  ],
+  "tolerances": {
+    "invalid_flag_set_at_acquisition_boundary": "exact",
+    "limit_entries_raised_while_invalid": "exact",
+    "limit_entries_raised_after_validity_restored": "at least",
+    "temperature_tiers_selected_by_direction": "exact"
+  },
+  "timing": {
+    "max_execution_time_ms": 90000,
+    "setup_time_ms": 30000,
+    "teardown_time_ms": 15000
+  },
+  "oracle_basis": "source_grounded",
+  "oracle_detail": {
+    "kind": "source_grounded",
+    "why_this_oracle": "The oracle is the gating the pinned source performs, read from two places. The current-sensor receive callback marks every affected channel invalid on a channel error and clears it on reset, at can_cbs_rx_cs_isabellenhuette-ivt-s.c:206-246, and SOA_CheckCurrent reads invalidStringCurrent before it compares anything at soa.c:271-279. Those two facts together are exactly FB2-SYS-SYR-000006's first two criteria, and both are falsifiable by changing one condition in either place.",
+    "what_the_oracle_is_not": "It is not a measured reference: neither gate was exercised by a run in this authoring pass. It is not an analytical model: no magnitude arithmetic is involved. It is not a synthetic assumption: the gating is in the source.",
+    "what_it_still_does_not_prove": "It does not prove the third criterion. 'Invalid measurements reaching a supervisory decision unchallenged: 0' is a statement about every consumer of the block, and this measure only inspects one consumer, the current-limit comparison. Any other consumer that reads the raw value rather than the flag would pass this measure and violate the requirement. Enumerating those consumers is the missing work and is recorded as such.",
+    "residual_risk": "The gating is per-string and the flag is set per channel, so a partially valid string is represented by a per-string flag whose granularity is coarser than the flag the callback sets. Whether that coarseness can mask a channel-level fault is not examined here.",
+    "oracle_kind": "source_grounded"
+  },
+  "cleanup": "Clear every injected channel error, restore the stubbed diagnosis handler, and confirm the validity flags are back to their nominal state.",
+  "regression_selection": "Re-run on every change to the current-sensor receive callback's error handling, to the SOA module's validity gating, or to the database block layout that carries the invalid flags. Also re-run whenever a new consumer of the current or temperature block is added, because this measure only covers the one consumer it names.",
+  "limitations": [
+    "The requirement's third criterion - that no invalid measurement reaches a supervisory decision unchallenged - is only partly covered. One consumer of the current block is inspected. A pass here does not establish the criterion.",
+    "The per-string flag is coarser than the per-channel flag the receive callback sets; that mismatch is named and not resolved.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+    "This is a synthetic measure for the hypothetical reference project."
+  ]
+}

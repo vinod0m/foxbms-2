@@ -1,0 +1,84 @@
+{
+  "id": "FB2-VER-EXE-000023",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Execution: FB2-VER-TMS-000023 (blocked - the diagnosis configuration table is generated from configuration headers, and reading the generated table is not the same as reading the values the reference project would configure)",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.5 (system verification) execution record",
+      "status": "partially_mapped",
+      "rationale": "This record exists so that the absence of an execution is visible rather than inferred. It reports that nothing was run; it is not evidence that the measure passed."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Honest blocked-execution record for FB2-VER-TMS-000023. the measure depends on reading the diagnosis configuration table, and this corpus can read only the generated table at the pinned commit, not the configuration headers a reference project would author. The two can disagree - the table is derived - and this corpus has no evidence that they do not. Separately, no host harness exists here to drive the SOA module against a stubbed diagnosis handler."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000023",
+  "test_measure_revision": "1",
+  "execution_kind": "none",
+  "outcome": "blocked",
+  "environment": {
+    "hardware": "none - no target hardware in this corpus",
+    "software": "not applicable - no software was executed",
+    "tools": [],
+    "configuration": "not applicable",
+    "tool_versions": {
+      "none": "0.0.0"
+    }
+  },
+  "input_hashes": {},
+  "output_hashes": {},
+  "logs": [],
+  "timestamps": {
+    "start": "2026-10-02T00:00:00Z",
+    "end": "2026-10-02T00:00:00Z",
+    "duration_ms": 0
+  },
+  "anomalies": [],
+  "evidence_refs": [
+    "FB2-VER-TMS-000023"
+  ],
+  "blocked_reason": "the measure depends on reading the diagnosis configuration table, and this corpus can read only the generated table at the pinned commit, not the configuration headers a reference project would author. The two can disagree - the table is derived - and this corpus has no evidence that they do not. Separately, no host harness exists here to drive the SOA module against a stubbed diagnosis handler.",
+  "what_would_unblock_it": [
+    "The configuration headers the reference project would author, so that the generated table can be checked against its source rather than taken on trust.",
+    "A host test binary linking the SOA module with a recording diagnosis handler.",
+    "A generator for the configuration table, or a decision that reading the generated table is sufficient and on what basis."
+  ],
+  "limitations": [
+    "No run occurred. duration_ms is 0 because no process started.",
+    "The configuration table read this record depends on is a generated artefact; a reader should treat its agreement with the intended configuration as unverified.",
+    "Carries no product verification credit."
+  ]
+}

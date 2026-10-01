@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-30T01:21:29Z |
+| Generated | 2026-10-01T05:09:49Z |
 
 ## Scope
 
@@ -46,9 +46,12 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 | Design | Implements SWR | Link rationale |
 |---|---|---|
-| `FB2-SW-DSN-000001` | `FB2-SW-SWR-000001` | Design implements software requirement |
-| `FB2-SW-DSN-000002` | `FB2-SW-SWR-000002` | Design implements software requirement |
-| `FB2-SW-DSN-000003` | `FB2-SW-SWR-000003` | Design implements software requirement |
+| `FB2-SW-IMP-000001` | `FB2-SW-DSN-000001` | Implementation element FB2-SW-IMP-000001 is the code location in which FB2-SW-DSN-000001's acquisition, PEC-validation and publication responsibilities are carried: the pinned source's LTC_Trigger seq... |
+| `FB2-SW-IMP-000001` | `FB2-SW-SWR-000001` | FB2-SW-IMP-000001 realises FB2-SW-SWR-000001 at the requirement level: the acquisition the statement calls for is triggered through AFE_StartMeasurement into the LTC sequencer, the PEC validation it c... |
+| `FB2-SW-IMP-000002` | `FB2-SW-DSN-000002` | Implementation element FB2-SW-IMP-000002 is the code location in which FB2-SW-DSN-000002's limit-comparison and diagnosis-raising responsibilities are carried: SOA_CheckVoltages' three-tier voltage co... |
+| `FB2-SW-IMP-000002` | `FB2-SW-SWR-000002` | FB2-SW-IMP-000002 realises FB2-SW-SWR-000002 at the requirement level to the extent the requirement's comparison clause describes: SOA_CheckVoltages compares each string's minimum and maximum cell vol... |
+| `FB2-SW-IMP-000003` | `FB2-SW-DSN-000003` | Implementation element FB2-SW-IMP-000003 is the code location in which FB2-SW-DSN-000003's actuation-request and auxiliary-feedback responsibilities are carried: CONT_OpenContactor and CONT_CloseConta... |
+| `FB2-SW-IMP-000003` | `FB2-SW-SWR-000003` | FB2-SW-IMP-000003 realises the actuation and feedback-confirmation clauses of FB2-SW-SWR-000003: the open and close requests reach the SPS channel and the feedback comparison raises the matching diagn... |
 
 ### Integration Evidence
 
@@ -83,9 +86,13 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 | Design | Implements SWR | Link rationale |
 |---|---|---|
-| `FB2-SW-DSN-000001` | `FB2-SW-SWR-000001` | Design implements software requirement |
-| `FB2-SW-DSN-000002` | `FB2-SW-SWR-000002` | Design implements software requirement |
-| `FB2-SW-DSN-000003` | `FB2-SW-SWR-000003` | Design implements software requirement |
+| `FB2-SW-IMP-000001` | `FB2-SW-DSN-000001` | Implementation element FB2-SW-IMP-000001 is the code location in which the reference project's FB2-SW-DSN-000001 acquisition, PEC-validation and publication responsibilities are carried: the pinned so... |
+| `FB2-SW-IMP-000001` | `FB2-SW-SWR-000001` | FB2-SW-IMP-000001 realises the reference project's FB2-SW-SWR-000001 at the requirement level: acquisition is triggered through AFE_StartMeasurement into the LTC sequencer, integrity is gated by LTC_C... |
+| `FB2-SW-IMP-000002` | `FB2-SW-DSN-000002` | Implementation element FB2-SW-IMP-000002 is the code location in which the reference project's FB2-SW-DSN-000002 limit-comparison and diagnosis-raising responsibilities are carried, and it declares th... |
+| `FB2-SW-IMP-000002` | `FB2-SW-SWR-000002` | FB2-SW-IMP-000002 realises the comparison clause of the reference project's FB2-SW-SWR-000002 and, at revision 1, does not realise its debounce clause: the implementation record declares the missing p... |
+| `FB2-SW-IMP-000003` | `FB2-SW-DSN-000003` | Implementation element FB2-SW-IMP-000003 is the code location in which the reference project's FB2-SW-DSN-000003 actuation-request and auxiliary-feedback responsibilities are carried, with the sequenc... |
+| `FB2-SW-IMP-000003` | `FB2-SW-SWR-000003` | FB2-SW-IMP-000003 realises the actuation and feedback-confirmation clauses of the reference project's FB2-SW-SWR-000003, with the sequencing realised one layer above in BMS_Trigger, and declares the d... |
+| `FB2-SW-IMP-000004` | `FB2-SYS-SYR-000007` | FB2-SW-IMP-000004 is the implementation element the reference project relies on for FB2-SYS-SYR-000007: the periodic BMS-state frame is the publication mechanism for the item's own mode. The link asse... |
 
 ### Integration Evidence
 
@@ -109,6 +116,14 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 - `FB2-VER-EXE-000018`: kind=`none`, outcome=`blocked`
 - `FB2-VER-EXE-000019`: kind=`none`, outcome=`blocked`
 - `FB2-VER-EXE-000020`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000021`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000022`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000023`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000024`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000025`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000026`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000027`: kind=`none`, outcome=`blocked`
+- `FB2-VER-EXE-000028`: kind=`none`, outcome=`blocked`
 
 ### Integration Gaps
 
@@ -121,4 +136,4 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 ---
 
-*Generated: 2026-09-30T01:21:29Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

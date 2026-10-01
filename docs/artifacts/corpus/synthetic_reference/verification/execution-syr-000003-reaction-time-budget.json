@@ -1,0 +1,84 @@
+{
+  "id": "FB2-VER-EXE-000025",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Execution: FB2-VER-TMS-000025 (blocked - the configuration values the arithmetic needs are read by this authoring pass but no independent recomputation exists, and no timing was measured)",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.5 (system verification) execution record",
+      "status": "partially_mapped",
+      "rationale": "This record exists so that the absence of an execution is visible rather than inferred. It reports that nothing was run; it is not evidence that the measure passed."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Honest blocked-execution record for FB2-VER-TMS-000025. the measure is a sum over configured values that this authoring pass read out of the pinned source, and this corpus does not execute measures: no second party has recomputed the sum, and no contactor was opened so no interval was measured. The values themselves were read and are recorded in the measure, so the record is reproducible by a reader, but it is not an execution."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000025",
+  "test_measure_revision": "1",
+  "execution_kind": "none",
+  "outcome": "blocked",
+  "environment": {
+    "hardware": "none - no target hardware in this corpus",
+    "software": "not applicable - no software was executed",
+    "tools": [],
+    "configuration": "not applicable",
+    "tool_versions": {
+      "none": "0.0.0"
+    }
+  },
+  "input_hashes": {},
+  "output_hashes": {},
+  "logs": [],
+  "timestamps": {
+    "start": "2026-10-02T00:00:00Z",
+    "end": "2026-10-02T00:00:00Z",
+    "duration_ms": 0
+  },
+  "anomalies": [],
+  "evidence_refs": [
+    "FB2-VER-TMS-000025"
+  ],
+  "blocked_reason": "the measure is a sum over configured values that this authoring pass read out of the pinned source, and this corpus does not execute measures: no second party has recomputed the sum, and no contactor was opened so no interval was measured. The values themselves were read and are recorded in the measure, so the record is reproducible by a reader, but it is not an execution.",
+  "what_would_unblock_it": [
+    "An independent recomputation of the sum from the application's configured waits and the parameter registry, recorded with the values used.",
+    "A measurement of an actual contactor opening, which would replace the lower-bound computation with an observation and change the measure's oracle kind from analytical to measured.",
+    "A reconciliation between the interval the requirement allocates and the waits the configuration applies, recorded as a decision rather than left as a contradiction."
+  ],
+  "limitations": [
+    "No run occurred and no interval was measured.",
+    "The computation is a lower bound from configured waits, not a worst case; no stack, interrupt latency or scheduler jitter is included.",
+    "Carries no product verification credit and asserts nothing about the real product's contactor timing."
+  ]
+}

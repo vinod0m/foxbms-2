@@ -1,0 +1,193 @@
+{
+  "id": "FB2-SW-IMP-000008",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: SCI/UART driver - initialisation, receive interrupt, queued read and XON/XOFF software flow control (uart.c)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000067",
+    "FB2-SRC-COD-000068",
+    "FB2-SRC-COD-000069",
+    "FB2-SRC-COD-000070"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the UART driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "gap",
+      "rationale": "There is no software design artefact for the UART driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored because no artefact of type implementation existed and the as_is corpus anchors the UART driver through three source anchors (FB2-SRC-COD-000067, -000068, -000069) plus the flow-control constant header anchor FB2-SRC-COD-000070, with no design artefact covering it."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/uart/uart.c",
+      "symbol": "UART_Initialize",
+      "line_range": "144-164",
+      "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/uart/uart.c",
+      "symbol": "UART_RxInterrupt",
+      "line_range": "244-263",
+      "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/uart/uart.c",
+      "symbol": "UART_HandleFlowControl",
+      "line_range": "223-242",
+      "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/uart/uart.c",
+      "symbol": "UART_Read",
+      "line_range": "196-221",
+      "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/uart/uart.h",
+      "symbol": "UART_XOFF",
+      "line_range": "68-69",
+      "content_hash": "sha256:0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc",
+      "symbol_role": "macro_definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": null,
+    "design_level": null,
+    "relationship": "No design artefact in the as_is profile describes the UART driver, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source: UART_Initialize (uart.c:144-164) configures the SCI peripheral and registers the receive interrupt. UART_RxInterrupt (244-263) distinguishes the two flow-control characters from ordinary data - if the byte just received equals UART_XOFF or UART_XON it updates the software sending state, otherwise, and only once the task queues exist, it posts the byte onto ftsk_uartRxQueue and notifies the UART task with a yield-if-needed request. UART_HandleFlowControl (223-242) is the transmitter's half: it takes the transmit semaphore, and when the number of stored receive-queue messages reaches UART_UPPER_CUTOFF_MESSAGE_COUNT it sends the XOFF character and marks the receiving side as paused, and when the count falls to UART_LOWER_CUTOFF_MESSAGE_COUNT it sends XON and resumes - so the flow control is a software, queue-depth-driven XON/XOFF scheme rather than a hardware one. UART_Read (196-221) pulls bytes out of that queue for the task. So the driver provides an interrupt-driven queued byte stream with in-band software flow control.",
+    "design_gap_reason": "The as_is profile contains no software design artefact for the UART driver. Its three design records cover the AFE driver, the SOA module and the contactor driver, none of which describes a console or service serial link. Attaching this module to an existing design would assert UART design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13."
+  },
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the UART driver. The as_is requirement set is the three cell-voltage, contactor and SOA records, none of which states anything about a service or commissioning serial interface, and the requirements that do concern service-link behaviour are synthetic_reference security and system records that an as_is record may not claim. realises_requirements is empty rather than populated with a requirement this code does not serve.",
+  "anchor_refs": [
+    "FB2-SRC-COD-000067",
+    "FB2-SRC-COD-000068",
+    "FB2-SRC-COD-000069",
+    "FB2-SRC-COD-000070"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "UART-IMP-INIT",
+      "description": "Configures the SCI peripheral and registers the receive interrupt that feeds the driver.",
+      "kind": "startup",
+      "evidence_symbol": "UART_Initialize",
+      "evidence_line_range": "144-164"
+    },
+    {
+      "behaviour_id": "UART-IMP-RX-IS",
+      "description": "Receive interrupt: treats XON and XOFF as flow-control state changes and every other byte as data to enqueue and to notify the task for.",
+      "kind": "interrupt_dispatch",
+      "evidence_symbol": "UART_RxInterrupt",
+      "evidence_line_range": "244-263"
+    },
+    {
+      "behaviour_id": "UART-IMP-FLOW-CTRL",
+      "description": "Drives software flow control from the receive queue's depth, sending XOFF at the upper cutoff and XON at the lower cutoff, under the transmit semaphore.",
+      "kind": "flow_control",
+      "evidence_symbol": "UART_HandleFlowControl",
+      "evidence_line_range": "223-242"
+    },
+    {
+      "behaviour_id": "UART-IMP-QUEUED-READ",
+      "description": "Drains received bytes from the queue into a caller buffer, so the task layer never reads the peripheral register directly.",
+      "kind": "transfer",
+      "evidence_symbol": "UART_Read",
+      "evidence_line_range": "196-221"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "interrupt",
+      "entry_points": [
+        "UART_RxInterrupt"
+      ],
+      "shared_state": "ftsk_uartRxQueue, which the interrupt fills through OS_SendToBackOfQueueFromIsr and UART_Read drains in task context, plus the module-scope flags uart_softwareFlowControlReceiving and uart_softwareFlowControlSending, which the interrupt sets and UART_HandleFlowControl reads."
+    },
+    {
+      "context": "task",
+      "entry_points": [
+        "UART_Read",
+        "UART_HandleFlowControl",
+        "UART_Printf"
+      ],
+      "shared_state": "The same receive queue, and uart_txSemaphore, which UART_HandleFlowControl takes and gives around each flow-control character it sends."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the UART driver code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met: in particular nothing here establishes that the service link is authenticated or that any byte received on it is authorised, which is what the security requirements would have to demand of it. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "uart.c was read at the pinned commit with 'git show 308028fb:src/app/driver/uart/uart.c'; the content_hash recorded for it is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000067, -000068 and -000069 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The four function spans were cross-read against 'graft skeleton src/app/driver/uart/uart.c', which reports UART_Initialize at L144-L164, UART_RxInterrupt at L244-L263, UART_HandleFlowControl at L223-L242 and UART_Read at L196-L221 independently of this authoring pass.",
+    "limitations": [
+      "uart.h was additionally read at the pin to confirm the flow-control constant's range and to compute its hash; lines 68-69 are the UART_XOFF and UART_XON definitions that anchor FB2-SRC-COD-000070 records.",
+      "Behaviour was verified by reading the code. No byte was transmitted or received, no flow-control threshold was exercised, and no timing measurement of this driver exists in this corpus.",
+      "uart.c is unmodified between the pin and the working tree, so the same ranges and hash hold for the checked-out file."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000067, -000068 and -000069 name UART_Initialize, UART_RxInterrupt and UART_HandleFlowControl in uart.c, and FB2-SRC-COD-000070 names the UART_XOFF flow-control constant in uart.h. No new anchor was created."
+}

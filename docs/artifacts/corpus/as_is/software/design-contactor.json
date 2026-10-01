@@ -12,9 +12,8 @@
  ],
  "title": "Design: Contactor State Machine",
  "owner_role": "sw_engineer",
- "origin": "source_observed",
+ "origin": "derived",
  "source_refs": [
-  "FB2-SRC-COD-000007",
   "FB2-SRC-COD-000008"
  ],
  "assumption_refs": [],
@@ -319,5 +318,6 @@
    "symbol": "DIAG_CBS_Contactor",
    "status": "implemented"
   }
- ]
+ ],
+ "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchor FB2-SRC-COD-000007 (CONTACTOR_StateMachine) was deleted because contactor.c contains no state machine; the only surviving anchor, FB2-SRC-COD-000008, names CONT_CheckFeedback (contactor.c:125-163), which monitors feedback but does not execute the OPEN -> PRECHARGE -> CLOSE -> HOLD sequence this design record describes. The record's revision history says 'Extracted from contactor driver source', and its implementation_mapping asserts CONTACTOR_StateMachine, CONTACTOR_CheckFeedback, SBC_FS8X_SetContactor and DIAG_CBS_Contactor are 'implemented'; graft grep finds none of those four names anywhere in the repository. The extraction claim cannot stand, so the record is labelled derived."
 }

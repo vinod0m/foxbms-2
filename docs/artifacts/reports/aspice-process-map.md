@@ -163,23 +163,49 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 
 | Process | Applicability | Disposition | Blocking work product |
 |---|---|---|---|
-| SYS.1 | applicable | mapped | — |
-| SYS.2 | applicable | mapped | — |
-| SYS.3 | applicable | mapped | — |
-| SYS.4 | applicable | partially_mapped | integration executions recorded blocked (EXE-000007) |
-| SYS.5 | applicable | partially_mapped | qualification + HIL executions recorded blocked (EXE-000008/011) |
-| SWE.1 | applicable | mapped | — |
-| SWE.2 | applicable | mapped | — |
-| SWE.3 | applicable | mapped | — |
-| SWE.4 | applicable | partially_mapped | as_is executions mixed (EXE-002..005 recorded blocked, CI runs not captured); component execution recorded blocked (EXE-000010) |
-| SWE.5 | applicable | partially_mapped | integration executions recorded blocked (EXE-000007) |
-| SWE.6 | applicable | partially_mapped | qualification executions recorded blocked (EXE-000008) |
-| HWE.1–HWE.4 | applicable | partially_mapped | HW test executions recorded blocked (EXE-000004/005/011); HW arch/design CAD-format partial |
-| VAL.1 | applicable | partially_mapped | validation executions recorded blocked (EXE-000009) |
-| SUP.8/10/11 | applicable | mapped | — |
+| SYS.1 | applicable | **partially_mapped** | no operational scenario; needs declared, not elicited |
+| SYS.2 | applicable | **partially_mapped** | no system modes/states, no system interface requirements; back-inferred not analysed |
+| SYS.3 | applicable | **partially_mapped** | **no system-architecture record exists** |
+| SYS.4 | applicable | **partially_mapped** | no integration plan or specification; `EXE-000007` blocked |
+| SYS.5 | applicable | **partially_mapped** | no qualification plan or specification; `EXE-000008`/`000011` blocked |
+| SWE.1 | applicable | **partially_mapped** | no software interface requirements; back-inferred not analysed |
+| SWE.2 | applicable | **partially_mapped** | interfaces are signal tables, not interface specifications |
+| **SWE.3** | applicable | **`gap`** | **no artefact in the corpus references SWE.3 at all** |
+| SWE.4 | applicable | **partially_mapped** | no unit-test specification; the upstream Unity/CMock suite was never executed |
+| SWE.5 | applicable | **partially_mapped** | no integration plan or specification; `EXE-000007` blocked |
+| SWE.6 | applicable | **partially_mapped** | no qualification plan or specification; `EXE-000008` blocked |
+| HWE.1 | applicable | **partially_mapped** | no hardware interface requirements |
+| HWE.2 | applicable | **partially_mapped** | no architecture, block diagram or interface schematic |
+| **HWE.3** | applicable | **`gap`** | **no artefact references HWE.3; schematics are in the external `foxBMS2_hw` repository** |
+| **HWE.4** | applicable | **`gap`** | **no artefact references HWE.4; no HW plan, specification or result** |
+| VAL.1 | applicable | **partially_mapped** | no validation plan; **zero validations executed** |
+| ACQ.4 | applicable | **partially_mapped** | no supplier assessment; no supplier under contract |
+| SPL.2 | applicable | **partially_mapped** | no release notes; nothing released |
+| SUP.1 | applicable | **partially_mapped** | no audit record; review independence stated and not achieved |
+| SUP.8 | applicable | **partially_mapped** | change control deferred; status accounting not automated |
+| SUP.9 | applicable | **partially_mapped** | no trend analysis |
+| SUP.10 | applicable | **partially_mapped** | families present for a fictional project only |
+| SUP.11 | applicable | **partially_mapped** | **link currency not maintained — 326 of 489 links stale, none suspect** |
+| REU.2 | applicable | **partially_mapped** | no reuse assessment completed |
+| **MAN.3, MAN.5, MAN.6, PIM.3** | applicable | **`mapped`** | — each backed by a record carrying the process's defining content |
 | MLE.1–MLE.4 | not_applicable | explicit non-applicability | — |
 
-`partially_mapped` means every expected work product is **present and linked** (specification, measures, trace links) or **recorded blocked with an execution record** (`outcome: blocked`, `execution_kind: none`). No work product is missing without disposition and no execution is fabricated. Per-process detail:
+Disposition tally over the 28 applicable processes: **4 `mapped`, 21
+`partially_mapped`, 3 `gap`.** This table was 12 / 10 / 6 before the
+2026-10-01 substantive audit (`CORR-COV-016`), which derived each process's
+backing set from each artefact's own `standards_mappings[].reference` and demoted
+23 processes. `SWE.3` was the worst case: recorded `mapped` with **zero**
+referencing artefacts.
+
+`partially_mapped` does **not** mean every expected work product is present. It
+means at least one is present and at least one family of the process's own
+`expected_artifacts` has no record, or the activity was not performed. The
+per-process shortfall is named in
+`governance/coverage-plan.json` under each entry's `disposition` and
+`disposition_reason`, and the full table is in
+`reports/standards-mapping-report.md` §3. Per-process detail below is the
+original 2026-09-19 reading and is retained as the evidence the demotions were
+measured against:
 
 ### SYS.4 / SWE.5 — Integration (same measure artifact)
 
@@ -225,15 +251,23 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 | Validation plan/specification | ✅ linked | `FB2-VER-TMS-000009` (draft stub) — `validates` SGO-000001 + SCO-000001 (`LNK-046/047`) |
 | Validation results | ⚠️ recorded blocked | `FB2-VER-EXE-000009` (`result_of` `LNK-055`) — `outcome: blocked`, no validation environment or operational data |
 
-32 ASPICE processes inventoried (28 applicable + 4 not_applicable); 12 ISO parts (10 mapped/referenced + 2 not_applicable); acceptance gate 44/44.
+32 ASPICE processes inventoried (28 applicable + 4 `not_applicable`); 12 ISO
+parts (10 applicable: **0 `mapped`, 8 `partially_mapped`, 2 `referenced`**, plus
+2 `not_applicable`). The `standards_mapping` acceptance gate reads **33/38**
+(ASPICE 25/28 + ISO 8/10): it measures whether a disposition names an artefact
+that resolves, not whether the disposition is favourable. The old `44/44` was the
+size of the inventory file divided by itself.
 
 ## 5. Evidence Limits
 
-- `mapped` in this document means the process has documented work products with typed traceability — not process capability assessment.
-- All execution records are either `synthetic_fixture` (corpus structure only) or the single unsubstantiated `as_is` host run; `product_verification_credit` is `false` for every artifact and `human_approval_status` is `pending`.
+- `mapped` in this document means the process has documented work products with typed traceability — not process capability assessment. **Only 4 of 28 applicable processes meet that bar** as of 2026-10-01.
+- `product_verification_credit` is `false` and `human_approval_status` is `pending` on all **263** records; `production_authorized` is `false` on all of them.
 - All draft stubs (TMS-007..011) hold verification intent with `verifies`/`validates` links but zero executions — blocked, not fabricated.
+- **6 `synthetic_fixture` executions record `outcome: pass` with no retained evidence file**, and `evidence/synthetic-fixtures/` holds no fixture artefact (only a `MANIFEST.md` documenting the gap). They are the `synthetic_fixture` class this document warns about, and they are worse than blocked: a blocked result is at least a statement about what is missing.
+- **5 execution records carry an `output_hashes` digest that resolves into the gitignored `.work/` tree** rather than into the evidence file they name.
 - No SYS.6 process exists in ASPICE PAM 4.0/4.1; post-qualification closure is covered by SUP.10/SUP.11 and release cycles.
+- The `code graph` line in the preamble quotes `graphify-out` figures at commit `3fbfd82d`. That is a **different commit** from the source pin (`308028fb`) and from the corpus authoring head (`2a408d5`), and it was not re-derived on 2026-10-01; it is reproduced as recorded rather than restated as current.
 
 ---
 
-*Generated: 2026-09-19 — hand-maintained from the machine-verifiable corpus and `governance/coverage-plan.json`.*
+*Generated: 2026-09-19; disposition table and evidence limits refreshed 2026-10-01 from a live `corpus.py` run — hand-maintained from the machine-verifiable corpus and `governance/coverage-plan.json`.*

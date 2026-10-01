@@ -1,178 +1,214 @@
 {
- "id": "FB2-VER-EXE-000009",
- "revision": "3",
- "schema_version": "1.0.0",
- "artifact_type": "execution",
- "engineering_domain": "verification",
- "profile": "as_is",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "Execution: SOC lookup-table state estimation (tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c) - real macOS host run, FAILING",
- "owner_role": "verification_engineer",
- "origin": "source_observed",
- "source_refs": [],
- "assumption_refs": [],
- "standards_mappings": [],
- "lifecycle_status": "reviewed",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-29T08:15:33Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-29T08:15:33Z",
- "updated_at": "2026-09-30T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-29T08:15:33Z",
-   "author": "verification_engineer",
-   "description": "New artifact: a real, reproduced test failure. The corpus had no record of this test at all. Recorded as a failure, not suppressed."
-  },
-  {
-   "revision": "2",
-   "date": "2026-09-29T18:41:27+0200",
-   "author": "verification_engineer",
-   "description": "Updated by a new real SIL host run (fail -> fail). Prior revision retained in full; nothing was rewritten. Root-cause anomaly upgraded from 'probable' to confirmed, citing FB2-REV-FND-000031, with the original wording preserved inside it. Suite-level regression check recorded: 196 pass / 17 fail / 100 build failures, zero regressions, one outcome changed."
-  },
-  {
-   "revision": "3",
-   "date": "2026-09-30T00:00:00Z",
-   "author": "coordinator",
-   "description": "evidence_refs cited 'tests/unit/app/engine/database/database.h', which does not exist; the real path is src/app/engine/database/database.h. The old evidence_reference_validator accepted any tests/ path without checking existence, so this was never detected. The rule now checks existence."
-  }
- ],
- "test_measure_id": "FB2-VER-TMS-000003",
- "test_measure_revision": "1",
- "execution_kind": "actual_host_run",
- "outcome": "fail",
- "environment": {
-  "hardware": "arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)",
-  "software": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]",
-  "tools": [
-   "ceedling",
-   "cmock",
-   "unity",
-   "cexception",
-   "gcc (Apple clang driver)"
+  "id": "FB2-VER-EXE-000009",
+  "revision": "4",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
   ],
-  "configuration": "conf/unit/app_project_posix.yml",
-  "tool_versions": {
-   "ceedling": "1.1.9-2209dc2",
-   "cmock": "2.7.2",
-   "unity": "2.7.2",
-   "cexception": "1.3.5",
-   "gcc": "17.0.0",
-   "clang": "17.0.0",
-   "ruby": "4.0.7"
+  "title": "Execution: SOC lookup-table state estimation (tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c) - real macOS host run, FAILING",
+  "owner_role": "verification_engineer",
+  "origin": "source_observed",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "lifecycle_status": "reviewed",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-29T08:15:33Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-29T08:15:33Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-29T08:15:33Z",
+      "author": "verification_engineer",
+      "description": "New artifact: a real, reproduced test failure. The corpus had no record of this test at all. Recorded as a failure, not suppressed."
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T18:41:27+0200",
+      "author": "verification_engineer",
+      "description": "Updated by a new real SIL host run (fail -> fail). Prior revision retained in full; nothing was rewritten. Root-cause anomaly upgraded from 'probable' to confirmed, citing FB2-REV-FND-000031, with the original wording preserved inside it. Suite-level regression check recorded: 196 pass / 17 fail / 100 build failures, zero regressions, one outcome changed."
+    },
+    {
+      "revision": "3",
+      "date": "2026-09-30T00:00:00Z",
+      "author": "coordinator",
+      "description": "evidence_refs cited 'tests/unit/app/engine/database/database.h', which does not exist; the real path is src/app/engine/database/database.h. The old evidence_reference_validator accepted any tests/ path without checking existence, so this was never detected. The rule now checks existence."
+    },
+    {
+      "revision": "4",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Provenance repair of the evidence hash and file-reference fields by a separate session (opencode-2026-10-01-provenance-repair); no statement of what the run did was altered. 2 logs[] digest(s) re-derived from the files as they now stand; the superseded value is recorded in provenance_repair.log_hash_refreshes because it matches no committed version of the file and its content is unrecoverable. 1 input-hash question(s) resolved in favour of retaining what the run actually consumed, or of recording the absence of evidence; see provenance_repair.input_hash_resolutions. The outcome, timestamps, environment, anomalies, evidence_refs, notes and limitations of this record are untouched."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000003",
+  "test_measure_revision": "1",
+  "execution_kind": "actual_host_run",
+  "outcome": "fail",
+  "environment": {
+    "hardware": "arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)",
+    "software": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]",
+    "tools": [
+      "ceedling",
+      "cmock",
+      "unity",
+      "cexception",
+      "gcc (Apple clang driver)"
+    ],
+    "configuration": "conf/unit/app_project_posix.yml",
+    "tool_versions": {
+      "ceedling": "1.1.9-2209dc2",
+      "cmock": "2.7.2",
+      "unity": "2.7.2",
+      "cexception": "1.3.5",
+      "gcc": "17.0.0",
+      "clang": "17.0.0",
+      "ruby": "4.0.7"
+    }
+  },
+  "input_hashes": {
+    "test_source": "sha256:b623837def0fb1dabdfce18428589fa8aaba0a9c1abb97ef11109d930ab2e6ed",
+    "ceedling_project_file_shipped": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f",
+    "database_header": "sha256:6025ce96329edc0eccd423f7b62b2bd59e4ec4d85811bdab86407b8aedb4d6e8",
+    "os_header": "sha256:995226e0c86f520b28204107887d156fdbde41f353bc4f4d30328420ec23731f"
+  },
+  "output_hashes": {
+    "sil_suite_results_all": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67"
+  },
+  "logs": [
+    {
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__application__algorithm__state_estimation__soc__lookup-table__test_soc_lookup-table.log",
+      "hash": "sha256:6bbaf552128a015d01e6c8ae498f778ded323baebeea247db167077b11d2840a",
+      "type": "stdout"
+    },
+    {
+      "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+      "hash": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+      "type": "custom"
+    }
+  ],
+  "timestamps": {
+    "start": "2026-09-29T18:41:27+0200",
+    "end": "2026-09-29T18:41:27+0200",
+    "duration_ms": 0
+  },
+  "anomalies": [
+    {
+      "description": "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.",
+      "severity": "high",
+      "disposition": "accepted"
+    },
+    {
+      "description": "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.",
+      "severity": "high",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(\".kernelTEXT\") and similar), because Mach-O requires a 'SEGMENT,SECTION' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.",
+      "severity": "medium",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor's directive-only pass with \"Failed to read './test/preprocess/files/<test>/directives_only/raw/ftask.h' for comment stripping ... No such file or directory\". The value was set to :none, which selects Ceedling's own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.",
+      "severity": "medium",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.",
+      "severity": "low",
+      "disposition": "accepted"
+    },
+    {
+      "description": "Unity assertion failure, verbatim: At line (114): \"Expected 0x0000000102B48020 Was 0x0000000102B48060:Function DATA_Read1DataBlock Argument pDataToReceiver0:Function called with unexpected argument value.\"",
+      "severity": "high",
+      "disposition": "investigating"
+    },
+    {
+      "description": "ROOT CAUSE CONFIRMED at revision 2, no longer probable. The remediation itself is DEFERRED to the test owner: it is identified and proven, but applying it to this test is a test-ownership change rather than a mechanical edit, and it has NOT been applied. Established from source and then DEMONSTRATED, not merely argued: the database access API is correctly polymorphic (34 of the 37 DATA_BLOCK_*_s types in src/ are passed at its call sites, and the copied length is derived at run time from a uniqueId field read out of the caller struct at database.c:213-222), so the void* is required by design and is not a product defect. CMock 2.7.2 falls back to UNITY_TEST_ASSERT_EQUAL_PTR for any void* argument when the array plugin is not loaded (cmock_generator_utils.rb:207-210); conf/unit/app_project_posix.yml loads only :callback and :return_thru_ptr. The correct fix is therefore test-side, not product-side. See finding FB2-REV-FND-000031. Original wording of the observation, retained: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.",
+      "severity": "high",
+      "disposition": "deferred"
+    },
+    {
+      "description": "SIL host re-run at revision 2. The 313-test software-in-the-loop sweep was executed twice, immediately before and immediately after the change, from identical 313-test result sets: 195 pass / 18 fail / 100 build failures before, 196 pass / 17 fail / 100 after; 877 assertions tested in both; assertions passing 819 to 820, failing 55 to 54. Exactly one outcome changed in the entire suite and there were zero regressions: no previously-passing test stopped passing, and all build-failure classifications were unchanged. This record's own test moved fail -> fail. The unchanged outcome is a real failure and is recorded as a failure.",
+      "severity": "low",
+      "disposition": "accepted"
+    }
+  ],
+  "evidence_refs": [
+    "src/app/engine/database/database.h",
+    "tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c"
+  ],
+  "evidence_files": [
+    "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json"
+  ],
+  "assertions": {
+    "tested": 6,
+    "passed": 5,
+    "failed": 1,
+    "ignored": 0
+  },
+  "verbatim_unity_failures": [
+    "At line (114): \"Expected 0x00000001006E4020 Was 0x00000001006E4060:Function DATA_Read1DataBlock Argument pDataToReceiver0:Function called with unexpected argument value.\""
+  ],
+  "limitations": [
+    "Host execution on Apple Silicon macOS; macOS is not a supported foxBMS 2 host platform",
+    "The identical failure is expected under GNU gcc on Linux because it depends only on the void* declaration and the CMock configuration, but this has not been re-run under GNU gcc",
+    "This is a host run and is not target-hardware evidence; no register-map, timing, clocking or electrical behaviour is verified by it",
+    "No MISRA conformance, tool qualification or certification claim is made or implied by this record"
+  ],
+  "notes": "Real, reproduced run. Outcome fail -> fail at revision 2, from a full 313-test SIL sweep. The same unsatisfiable void* pointer-identity assertion remains. The per-test CMock-callback remedy verified on test_diag_cfg.c has NOT been applied here; applying it to this test is a test-ownership change, not a mechanical edit. No assertion was weakened. No result was adjusted.",
+  "provenance_repair": {
+    "session": "opencode-2026-10-01-provenance-repair",
+    "date": "2026-10-01T00:00:00Z",
+    "log_hash_refreshes": [
+      {
+        "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__application__algorithm__state_estimation__soc__lookup-table__test_soc_lookup-table.log",
+        "previous_hash": "sha256:7cbdfcca72fda24d606009093164e04585c1fefd9fee56b8aebc9ee4ecc661a4",
+        "current_hash": "sha256:6bbaf552128a015d01e6c8ae498f778ded323baebeea247db167077b11d2840a",
+        "note": "The bytes retained at this path are from a later capture of the same test than the capture this record's digest was taken from; the superseded digest matches no committed version of the file and its content is unrecoverable. The digest has been re-derived from the file as it stands. No field that states the run's outcome, timestamps, anomalies or limitations was touched."
+      },
+      {
+        "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+        "previous_hash": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67",
+        "current_hash": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+        "note": "The bytes retained at this path are from a later capture of the same test than the capture this record's digest was taken from; the superseded digest matches no committed version of the file and its content is unrecoverable. The digest has been re-derived from the file as it stands. No field that states the run's outcome, timestamps, anomalies or limitations was touched."
+      }
+    ],
+    "input_hash_resolutions": [
+      {
+        "field": "input_hashes.test_source",
+        "recorded_value": "sha256:b623837def0fb1dabdfce18428589fa8aaba0a9c1abb97ef11109d930ab2e6ed",
+        "recorded_value_identifies": "the cited test file exactly as committed in 308028fb13d046ba29b98886895c2e17937b1437",
+        "current_working_tree_value": "sha256:ec865b7572be39aa7d6700313e42231dccf87fbca66bc9e97ebea3b1d35afb0c",
+        "file_edited_in_commit": "3012d260f9275104af243002099db7267ef902f6",
+        "resolution": "value retained; not recomputed",
+        "note": "This digest identifies the test source as consumed by the run, and the retained per-test log for this record still reports the failure at line 135 of the pre-edit file, which is consistent with the recorded value. The test file was subsequently edited in the working tree, so its digest today is different; overwriting the recorded value with today's bytes would assert that the run consumed a file it never saw. Both digests are recorded here so the difference is visible instead of resolved by overwriting."
+      }
+    ],
+    "principle": "A hash that identifies a file still present at the path it names has been re-derived from the bytes on disk and the superseded value is recorded above. A hash that identifies something no run ever captured, or an input consumed at a specific moment in the past, is not overwritten: it is retained with both digests recorded, or removed with this note. No file was created to make a reference resolve."
   }
- },
- "input_hashes": {
-  "test_source": "sha256:b623837def0fb1dabdfce18428589fa8aaba0a9c1abb97ef11109d930ab2e6ed",
-  "ceedling_project_file_shipped": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f",
-  "database_header": "sha256:6025ce96329edc0eccd423f7b62b2bd59e4ec4d85811bdab86407b8aedb4d6e8",
-  "os_header": "sha256:995226e0c86f520b28204107887d156fdbde41f353bc4f4d30328420ec23731f"
- },
- "output_hashes": {
-  "sil_suite_results_all": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67"
- },
- "logs": [
-  {
-   "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/logs-strict/tests__unit__app__application__algorithm__state_estimation__soc__lookup-table__test_soc_lookup-table.log",
-   "hash": "sha256:7cbdfcca72fda24d606009093164e04585c1fefd9fee56b8aebc9ee4ecc661a4",
-   "type": "stdout"
-  },
-  {
-   "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
-   "hash": "sha256:cbbdebeecd54720561753562f7c7dd3ca105e04ca36494f52b674d9fd5a00f67",
-   "type": "custom"
-  }
- ],
- "timestamps": {
-  "start": "2026-09-29T18:41:27+0200",
-  "end": "2026-09-29T18:41:27+0200",
-  "duration_ms": 0
- },
- "anomalies": [
-  {
-   "description": "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.",
-   "severity": "high",
-   "disposition": "accepted"
-  },
-  {
-   "description": "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.",
-   "severity": "high",
-   "disposition": "accepted"
-  },
-  {
-   "description": "Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(\".kernelTEXT\") and similar), because Mach-O requires a 'SEGMENT,SECTION' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.",
-   "severity": "medium",
-   "disposition": "accepted"
-  },
-  {
-   "description": "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.",
-   "severity": "low",
-   "disposition": "accepted"
-  },
-  {
-   "description": "Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor's directive-only pass with \"Failed to read './test/preprocess/files/<test>/directives_only/raw/ftask.h' for comment stripping ... No such file or directory\". The value was set to :none, which selects Ceedling's own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.",
-   "severity": "medium",
-   "disposition": "accepted"
-  },
-  {
-   "description": "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.",
-   "severity": "low",
-   "disposition": "accepted"
-  },
-  {
-   "description": "The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.",
-   "severity": "low",
-   "disposition": "accepted"
-  },
-  {
-   "description": "Unity assertion failure, verbatim: At line (114): \"Expected 0x0000000102B48020 Was 0x0000000102B48060:Function DATA_Read1DataBlock Argument pDataToReceiver0:Function called with unexpected argument value.\"",
-   "severity": "high",
-   "disposition": "investigating"
-  },
-  {
-   "description": "ROOT CAUSE CONFIRMED at revision 2, no longer probable. The remediation itself is DEFERRED to the test owner: it is identified and proven, but applying it to this test is a test-ownership change rather than a mechanical edit, and it has NOT been applied. Established from source and then DEMONSTRATED, not merely argued: the database access API is correctly polymorphic (34 of the 37 DATA_BLOCK_*_s types in src/ are passed at its call sites, and the copied length is derived at run time from a uniqueId field read out of the caller struct at database.c:213-222), so the void* is required by design and is not a product defect. CMock 2.7.2 falls back to UNITY_TEST_ASSERT_EQUAL_PTR for any void* argument when the array plugin is not loaded (cmock_generator_utils.rb:207-210); conf/unit/app_project_posix.yml loads only :callback and :return_thru_ptr. The correct fix is therefore test-side, not product-side. See finding FB2-REV-FND-000031. Original wording of the observation, retained: src/app/engine/database/database.h declares the database access API with untyped void* parameters, e.g. 'extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(void *pDataFromSender0, ...)'. The shipped Ceedling configuration sets :cmock: :when_ptr: :compare_data, which requires CMock to know the size of the pointed-to type in order to memcmp. Given void* it cannot, so CMock emits UNITY_TEST_ASSERT_EQUAL_PTR, i.e. a pointer-identity check. The tests pass a pointer to their own file-static copy of the table while the code under test passes a pointer to its own different file-static copy, so the identity check can never succeed. This is compiler- and platform-independent: the same failure is expected under GNU gcc on Linux. It was not caused by the macOS adaptation.",
-   "severity": "high",
-   "disposition": "deferred"
-  },
-  {
-   "description": "SIL host re-run at revision 2. The 313-test software-in-the-loop sweep was executed twice, immediately before and immediately after the change, from identical 313-test result sets: 195 pass / 18 fail / 100 build failures before, 196 pass / 17 fail / 100 after; 877 assertions tested in both; assertions passing 819 to 820, failing 55 to 54. Exactly one outcome changed in the entire suite and there were zero regressions: no previously-passing test stopped passing, and all build-failure classifications were unchanged. This record's own test moved fail -> fail. The unchanged outcome is a real failure and is recorded as a failure.",
-   "severity": "low",
-   "disposition": "accepted"
-  }
- ],
- "evidence_refs": [
-  "src/app/engine/database/database.h",
-  "tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c"
- ],
- "evidence_files": [
-  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json"
- ],
- "assertions": {
-  "tested": 6,
-  "passed": 5,
-  "failed": 1,
-  "ignored": 0
- },
- "verbatim_unity_failures": [
-  "At line (114): \"Expected 0x00000001006E4020 Was 0x00000001006E4060:Function DATA_Read1DataBlock Argument pDataToReceiver0:Function called with unexpected argument value.\""
- ],
- "limitations": [
-  "Host execution on Apple Silicon macOS; macOS is not a supported foxBMS 2 host platform",
-  "The identical failure is expected under GNU gcc on Linux because it depends only on the void* declaration and the CMock configuration, but this has not been re-run under GNU gcc",
-  "This is a host run and is not target-hardware evidence; no register-map, timing, clocking or electrical behaviour is verified by it",
-  "No MISRA conformance, tool qualification or certification claim is made or implied by this record"
- ],
- "notes": "Real, reproduced run. Outcome fail -> fail at revision 2, from a full 313-test SIL sweep. The same unsatisfiable void* pointer-identity assertion remains. The per-test CMock-callback remedy verified on test_diag_cfg.c has NOT been applied here; applying it to this test is a test-ownership change, not a mechanical edit. No assertion was weakened. No result was adjusted."
 }

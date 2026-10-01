@@ -1,0 +1,85 @@
+{
+  "id": "FB2-VER-EXE-000021",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Execution: FB2-VER-TMS-000021 (blocked - the unit-test harness that would drive the AFE driver with an injectable SPI stub is not built in this corpus, and building it would write outside the corpus boundary)",
+  "owner_role": "verification_engineer",
+  "origin": "synthetic",
+  "source_refs": [],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SYS.5 (system verification) execution record",
+      "status": "partially_mapped",
+      "rationale": "This record exists so that the absence of an execution is visible rather than inferred. It reports that nothing was run; it is not evidence that the measure passed."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Honest blocked-execution record for FB2-VER-TMS-000021. the unit-test harness this measure needs does not exist in this corpus and cannot be created inside it: the measure requires the AFE driver to be linked against a stubbable SPI interface and the database write path, driven from a host test binary, and this corpus may not add files to the repository's tests tree or build one. Nothing was run, so no log, no output hash and no result exists for this record to report."
+    }
+  ],
+  "test_measure_id": "FB2-VER-TMS-000021",
+  "test_measure_revision": "1",
+  "execution_kind": "none",
+  "outcome": "blocked",
+  "environment": {
+    "hardware": "none - no target hardware in this corpus",
+    "software": "not applicable - no software was executed",
+    "tools": [],
+    "configuration": "not applicable",
+    "tool_versions": {
+      "none": "0.0.0"
+    }
+  },
+  "input_hashes": {},
+  "output_hashes": {},
+  "logs": [],
+  "timestamps": {
+    "start": "2026-10-02T00:00:00Z",
+    "end": "2026-10-02T00:00:00Z",
+    "duration_ms": 0
+  },
+  "anomalies": [],
+  "evidence_refs": [
+    "FB2-VER-TMS-000021"
+  ],
+  "blocked_reason": "the unit-test harness this measure needs does not exist in this corpus and cannot be created inside it: the measure requires the AFE driver to be linked against a stubbable SPI interface and the database write path, driven from a host test binary, and this corpus may not add files to the repository's tests tree or build one. Nothing was run, so no log, no output hash and no result exists for this record to report.",
+  "what_would_unblock_it": [
+    "A host test binary that links the AFE driver and the database write path with a controllable SPI stub, built with the unit-test configuration the repository already selects.",
+    "A way to inject a frame whose recomputed packet error code differs from the received one at exactly one LTC in the frame, without modifying the driver under test.",
+    "A decision on whether the unit-test tree may be extended for corpus verification purposes at all; that decision is not this corpus's to take."
+  ],
+  "limitations": [
+    "No run occurred. duration_ms is 0 because no process started.",
+    "No input or output hash is recorded because no input was assembled and no output exists. Filling either would manufacture evidence.",
+    "The measure's oracle is declared source_grounded. A declared oracle is a plan, and this record must not be read as evidence that the oracle was ever exercised.",
+    "Carries no product verification credit and asserts nothing about the real foxBMS product."
+  ]
+}

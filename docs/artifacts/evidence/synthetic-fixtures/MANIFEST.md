@@ -25,7 +25,15 @@ with `outcome: pass`:
 | `FB2-VER-EXE-000005` | `FB2-VER-TMS-000005` | `tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c` |
 | `FB2-VER-EXE-000006` | `FB2-VER-TMS-000006` | *(none recorded)* |
 
-Each record names a log at `build/synthetic/FB2-VER-EXE-00000N.log`.
+Each record used to name a log at `build/synthetic/FB2-VER-EXE-00000N.log`.
+
+> **Superseded on 2026-10-01.** A provenance-repair pass removed that reference from all six
+> records and replaced it with a per-record statement of what was and was not retained, carried
+> in each record's `provenance_repair.unretained_evidence`. The same pass removed the fabricated
+> `input_hashes.test_source`, `input_hashes.config` and `output_hashes.result` values described
+> in section 2 below, for the reasons given there. No fixture file was created. Sections 2 to 6
+> of this document are otherwise unchanged and the gap they describe is still open as finding
+> `FB2-REV-FND-000143`.
 
 ## 2. Why the fixtures are not reproduced here
 

@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-09-30T01:21:29Z |
+| Generated | 2026-10-01T05:09:49Z |
 
 ## Scope
 
@@ -122,32 +122,32 @@ Complete mapping of every implemented module to its source files, configuration,
 
 #### `FB2-SW-SWR-000001` (as_is)
 
-- Design `FB2-SW-DSN-000001` implements `FB2-SW-SWR-000001` → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c`
+- Design `FB2-SW-IMP-000001` implements `FB2-SW-SWR-000001` → sources: —
 - Verifying test measures: `FB2-VER-TMS-000003`
 
 #### `FB2-SW-SWR-000002` (as_is)
 
-- Design `FB2-SW-DSN-000002` implements `FB2-SW-SWR-000002` → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c`
+- Design `FB2-SW-IMP-000002` implements `FB2-SW-SWR-000002` → sources: —
 - Verifying test measures: `FB2-VER-TMS-000001`
 
 #### `FB2-SW-SWR-000003` (as_is)
 
-- Design `FB2-SW-DSN-000003` implements `FB2-SW-SWR-000003` → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c`
+- Design `FB2-SW-IMP-000003` implements `FB2-SW-SWR-000003` → sources: —
 - Verifying test measures: `FB2-VER-TMS-000002`
 
 #### `FB2-SW-SWR-000001` (synthetic_reference)
 
-- Design `FB2-SW-DSN-000001` implements `FB2-SW-SWR-000001` → sources: `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`, `src/app/driver/afe/ltc/common/ltc_afe.c`, `src/app/driver/afe/ltc/common/ltc_afe_dma.c`, `src/app/driver/afe/ltc/common/ltc_pec.c`
+- Design `FB2-SW-IMP-000001` implements `FB2-SW-SWR-000001` → sources: —
 - Verifying test measures: `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007`
 
 #### `FB2-SW-SWR-000002` (synthetic_reference)
 
-- Design `FB2-SW-DSN-000002` implements `FB2-SW-SWR-000002` → sources: `src/app/application/soa/soa.c`, `src/app/engine/diag/cbs/diag_cbs_voltage.c`
+- Design `FB2-SW-IMP-000002` implements `FB2-SW-SWR-000002` → sources: —
 - Verifying test measures: `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010`
 
 #### `FB2-SW-SWR-000003` (synthetic_reference)
 
-- Design `FB2-SW-DSN-000003` implements `FB2-SW-SWR-000003` → sources: `src/app/driver/contactor/contactor.c`, `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`, `src/app/engine/diag/cbs/diag_cbs_contactor.c`
+- Design `FB2-SW-IMP-000003` implements `FB2-SW-SWR-000003` → sources: —
 - Verifying test measures: `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007`
 
 ## Requirement-to-Test Coverage Matrix
@@ -182,12 +182,12 @@ One row per requirement artifact across FSR/TSR/SWR/management classes, both pro
 | `synthetic_reference` | `FB2-SW-SWR-000001` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` | — | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` |  |
 | `synthetic_reference` | `FB2-SW-SWR-000002` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` | — | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` |  |
 | `synthetic_reference` | `FB2-SW-SWR-000003` | SWR | **COVERED-DIRECT** | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` | — | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` |  |
-| `synthetic_reference` | `FB2-SYS-SYR-000001` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` |  |
-| `synthetic_reference` | `FB2-SYS-SYR-000002` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007, `FB2-SW-SWR-000002`←FB2-VER-TMS-000001,FB2-VER-TMS-000007,FB2-VER-TMS-000010 | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` |  |
-| `synthetic_reference` | `FB2-SYS-SYR-000003` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-HW-TSR-000004`←FB2-VER-TMS-000004, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000004`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007` |  |
-| `synthetic_reference` | `FB2-SYS-SYR-000004` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007` |  |
-| `synthetic_reference` | `FB2-SYS-SYR-000005` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000004`←FB2-VER-TMS-000004 | `FB2-VER-TMS-000004` |  |
-| `synthetic_reference` | `FB2-SYS-SYR-000006` | SYR | **COVERED-INDIRECT** | — | `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005`, `FB2-VER-TMS-000007` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000001` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000021`, `FB2-VER-TMS-000022` | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000021`, `FB2-VER-TMS-000022` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000002` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000023`, `FB2-VER-TMS-000024` | `FB2-HW-TSR-000001`←FB2-VER-TMS-000003, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007, `FB2-SW-SWR-000002`←FB2-VER-TMS-000001,FB2-VER-TMS-000007,FB2-VER-TMS-000010 | `FB2-VER-TMS-000001`, `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010`, `FB2-VER-TMS-000023`, `FB2-VER-TMS-000024` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000003` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000025` | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-HW-TSR-000004`←FB2-VER-TMS-000004, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000004`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000025` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000004` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000026` | `FB2-HW-TSR-000003`←FB2-VER-TMS-000006, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000006`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000026` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000005` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000027` | `FB2-HW-TSR-000004`←FB2-VER-TMS-000004 | `FB2-VER-TMS-000004`, `FB2-VER-TMS-000027` |  |
+| `synthetic_reference` | `FB2-SYS-SYR-000006` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000028` | `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000028` |  |
 | `synthetic_reference` | `FB2-SYS-SYR-000007` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` | `FB2-HW-TSR-000002`←FB2-VER-TMS-000005, `FB2-SW-SWR-000001`←FB2-VER-TMS-000003,FB2-VER-TMS-000007 | `FB2-VER-TMS-000003`, `FB2-VER-TMS-000005`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` |  |
 | `synthetic_reference` | `FB2-SYS-SYR-000008` | SYR | **COVERED-DIRECT** | `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` | `FB2-SAF-SEC-000001`←FB2-VER-TMS-000016, `FB2-SAF-SEC-000004`←FB2-VER-TMS-000019, `FB2-SW-SWR-000003`←FB2-VER-TMS-000002,FB2-VER-TMS-000007 | `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000016`, `FB2-VER-TMS-000017`, `FB2-VER-TMS-000018`, `FB2-VER-TMS-000019`, `FB2-VER-TMS-000020` |  |
 
@@ -260,4 +260,4 @@ Three slots in these records are empty by schema rather than by omission, and th
 
 ---
 
-*Generated: 2026-09-30T01:21:29Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

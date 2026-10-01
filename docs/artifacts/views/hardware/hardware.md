@@ -1,6 +1,6 @@
 # Hardware — requirements, design and interfaces (generated view)
 
-Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
+Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
 
 ## Provenance and status of this file
 
@@ -27,17 +27,17 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 | Id | Profile | Title | ASIL | Lifecycle | Guard |
 |---|---|---|---|---|---|
-| `FB2-HW-TSR-000001` | as_is | TSR: AFE Cell Voltage Measurement Accuracy | ASIL_D | reviewed | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-HW-TSR-000001` | as_is | TSR: AFE Cell Voltage Measurement Accuracy | ASIL_D | reviewed | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-HW-TSR-000001` | synthetic_reference | TSR: AFE Cell Voltage Measurement Accuracy | ASIL_D | baselined | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
-| `FB2-HW-TSR-000002` | as_is | TSR: AFE isoSPI Communication Integrity | ASIL_D | reviewed | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-HW-TSR-000002` | as_is | TSR: AFE isoSPI Communication Integrity | ASIL_D | reviewed | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-HW-TSR-000002` | synthetic_reference | TSR: AFE isoSPI Communication Integrity | ASIL_D | baselined | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
-| `FB2-HW-TSR-000003` | as_is | TSR: Contactor Driver and Feedback | ASIL_D | reviewed | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-HW-TSR-000003` | as_is | TSR: Contactor Driver and Feedback | ASIL_D | reviewed | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-HW-TSR-000003` | synthetic_reference | TSR: Contactor Driver and Feedback | ASIL_D | baselined | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-HW-TSR-000004` | synthetic_reference | TSR: Independent Hardware Voltage Monitor | ASIL_B | baselined | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### FB2-HW-TSR-000001 (as_is) — TSR: AFE Cell Voltage Measurement Accuracy
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE shall measure cell voltages with ±1.5 mV accuracy (including calibration) over -40°C to +85°C for 2.5V-4.2V range.
 - rationale: Required to support SOA limit detection with 1 mV threshold accuracy (FSR-002)
 - acceptance criteria: {'criterion': 'Measurement accuracy', 'measure': 'Total error (offset + gain + temp drift)', 'threshold': '1.5', 'unit': 'mV'}; {'criterion': 'Resolution', 'measure': 'LSB size', 'threshold': '0.5', 'unit': 'mV'}; {'criterion': 'PEC error detection', 'measure': 'Single-bit error detection', 'threshold': '100%', 'unit': '%'}
@@ -55,7 +55,7 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 ### FB2-HW-TSR-000002 (as_is) — TSR: AFE isoSPI Communication Integrity
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The isoSPI interface shall provide communication with BER < 10^-9 and detect communication failures within 5 ms.
 - rationale: Communication failures must be detected within FTTI budget for AFE data
 - acceptance criteria: {'criterion': 'Bit error rate', 'measure': 'BER under EMC conditions', 'threshold': '1E-9', 'unit': 'errors/bit'}; {'criterion': 'Failure detection time', 'measure': 'Time from communication loss to SW notification', 'threshold': '5', 'unit': 'ms'}; {'criterion': 'CRC coverage', 'measure': 'CRC polynomial coverage', 'threshold': '100%', 'unit': '%'}
@@ -73,12 +73,12 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 
 ### FB2-HW-TSR-000003 (as_is) — TSR: Contactor Driver and Feedback
 
-- guard: profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false`
+- guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The SBC (FS85xx) shall drive contactor coils with controlled slew rate and monitor auxiliary feedback contacts with < 2 ms latency.
 - rationale: Contactor control and feedback monitoring must meet FSR-003 30 ms latency budget
 - acceptance criteria: {'criterion': 'Coil drive slew rate', 'measure': 'dV/dt at coil terminals', 'threshold': '50', 'unit': 'V/ms'}; {'criterion': 'Feedback latency', 'measure': 'Time from contactor state change to SW notification', 'threshold': '2', 'unit': 'ms'}; {'criterion': 'Weld detection', 'measure': 'Feedback mismatch detection time', 'threshold': '100', 'unit': 'ms'}
 - safety allocation: asil=ASIL_D, mitigation=Independent SBC, feedback monitoring, watchdog, safety_goal_ref=FB2-SAF-SGO-000001
-- source_refs: FB2-SRC-HW-000001; FB2-SRC-COD-000007; FB2-SRC-COD-000008; FB2-SRC-COD-000027
+- source_refs: FB2-SRC-HW-000001; FB2-SRC-COD-000008; FB2-SRC-COD-000027
 
 ### FB2-HW-TSR-000003 (synthetic_reference) — TSR: Contactor Driver and Feedback
 
@@ -87,7 +87,7 @@ Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 lin
 - rationale: Contactor control and feedback monitoring must meet the FB2-SAF-FSR-000003 reaction budget: 5 ms coil command plus 30 ms mechanical opening (FB2-PRM-000005) reaches the mechanically open state 35 ms after the fault request, and 5 ms of auxiliary feedback confirmation completes the reaction 40 ms after it
 - acceptance criteria: {'criterion': 'Coil drive slew rate', 'measure': 'dV/dt at coil terminals', 'threshold': '50', 'unit': 'V/ms'}; {'criterion': 'Feedback latency', 'measure': 'Time from contactor state change to SW notification', 'threshold': '2', 'unit': 'ms'}; {'criterion': 'Weld detection', 'measure': 'Feedback mismatch detection time. The criterion is the weld detection budget of the actuated path and is deliberately not the reaction budget of FB2-SAF-FSR-000003, which is 40 ms end to end; see finding FB2-REV-FND-000024 for the 50 ms figure recorded here and the 100 ms figure of FB2-HW-TSR-000003', 'threshold': '100', 'unit': 'ms'}
 - safety allocation: asil=ASIL_D, mitigation=Independent SBC, feedback monitoring, watchdog, safety_goal_ref=FB2-SAF-SGO-000001
-- source_refs: FB2-SRC-HW-000001; FB2-SRC-COD-000007; FB2-SRC-COD-000008; FB2-SRC-COD-000027
+- source_refs: FB2-SRC-HW-000001; FB2-SRC-COD-000008; FB2-SRC-COD-000027
 
 ### FB2-HW-TSR-000004 (synthetic_reference) — TSR: Independent Hardware Voltage Monitor
 

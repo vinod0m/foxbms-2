@@ -1,125 +1,154 @@
 {
- "id": "FB2-SAF-FSR-000003",
- "revision": "2",
- "schema_version": "1.0.0",
- "artifact_type": "requirement",
- "engineering_domain": "safety",
- "profile": "as_is",
- "scenario_id": "SCN-BASELINE",
- "baseline_id": "BAS-REF-001",
- "variant_applicability": [
-  "VAR-REF-001"
- ],
- "title": "FSR: Contactor Opening on SOA Violation",
- "owner_role": "safety_engineer",
- "origin": "source_observed",
- "source_refs": [
-  "FB2-SRC-COD-000007",
-  "FB2-SRC-COD-000008",
-  "FB2-SRC-COD-000009",
-  "FB2-SRC-COD-000013"
- ],
- "assumption_refs": [
-  "FB2-ASM-001",
-  "FB2-ASM-006",
-  "FB2-ASM-007"
- ],
- "standards_mappings": [
-  {
-   "standard_id": "ISO_26262_2018",
-   "reference": "Part 4, Clause 7",
-   "status": "mapped",
-   "rationale": "Functional safety requirement from safety goal"
+  "id": "FB2-SAF-FSR-000003",
+  "revision": "3",
+  "schema_version": "1.0.0",
+  "artifact_type": "requirement",
+  "engineering_domain": "safety",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "FSR: Contactor Opening on SOA Violation",
+  "owner_role": "safety_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000008",
+    "FB2-SRC-COD-000009",
+    "FB2-SRC-COD-000013"
+  ],
+  "assumption_refs": [
+    "FB2-ASM-001",
+    "FB2-ASM-006",
+    "FB2-ASM-007"
+  ],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 4, Clause 7",
+      "status": "mapped",
+      "rationale": "Functional safety requirement from safety goal"
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.1",
+      "status": "mapped",
+      "rationale": "Software requirements analysis"
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z"
   },
-  {
-   "standard_id": "ASPICE_PAM_41",
-   "reference": "SWE.1",
-   "status": "mapped",
-   "rationale": "Software requirements analysis"
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-09-08T00:00:00Z",
+  "updated_at": "2026-10-02T00:02:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-09-08T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Back-inferred from CONTACTOR state machine and DIAG callback"
+    },
+    {
+      "revision": "2",
+      "date": "2026-09-29T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Added the fault_reaction this requirement was missing, derived from the source rather than from the synthetic concept, because this is an as_is record with origin source_observed and the real reaction is not the one the synthetic copy describes. CONT_OpenContactor() at src/app/driver/contactor/contactor.c:165-182 only sets currentSet and calls SPS_RequestContactorState(); it carries no timing constant and does not touch a coil. The reaction is the state machine's sequence in src/app/application/bms/bms.c:1028-1165 - open all precharge contactors first because the precharge resistor limits the current, then open the strings one at a time from the highest index, one contactor at a time, waiting BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE (50 ms) and BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR (10 ms), re-issuing the open after BMS_FSM_SHORTTIME (1 ms) when the feedback does not confirm, and giving up on a string after BMS_STRING_OPEN_TIMEOUT (1000 ms). The 35 ms allocation is recorded in its own field with a basis field that says plainly it is the synthetic_reference figure and not one read from the implementation. mode_dependence records a dependence that is visible in the code and not in any comment: a contactor is not opened while the string current is at or above BS_MAIN_CONTACTORS_MAXIMUM_BREAK_CURRENT_mA (3500 mA), so the reaction is DELAYED rather than skipped, and only after BS_MAIN_FUSE_MAXIMUM_TRIGGER_DURATION_ms (3000 ms) does the state machine raise DIAG_ID_ALERT_MODE and open regardless. That is recorded because a reaction that waits three seconds is not a reaction that meets any 100 ms interval, and the corpus's 100 ms interval is a synthetic_reference figure that this as_is record has never been shown to meet. open_limits also carries the unresolved 'TODO: add timeout' on the re-issue branch and the open weld-detection disagreement recorded against FB2-REV-FND-000024. Statement, rationale, all three acceptance criteria, safety_allocation, the ASIL and the safety goal reference are unchanged and no threshold was relaxed - in particular the 30 ms feedback-open threshold is left exactly as it is, because whether that criterion should move is the subject of FB2-REV-FND-000024 and was decided for the synthetic_reference copy only. Human approval remains pending, production_authorized stays false and product_verification_credit stays false. No ASIL, certification or capability level is claimed for the real product."
+    },
+    {
+      "revision": "3",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Added asil_allocation_scope, and moved the origin field from source_observed to derived. An independent audit flagged this record as asserting an unqualified ASIL on an as_is profile record, which presents a classification belonging to the hypothetical reference project as though it were a determination about the real foxBMS product. The ASIL value itself is untouched and remains ASIL_D, because it is legitimate inside the fictional project; what is different now is that the value can no longer be read without the reconstruction stated alongside it. The origin move is required by master prompt section 5: this record carries a back-inferred classification alongside source-derived content, so it may not be labelled wholly observed. It was previously source_observed."
+    }
+  ],
+  "statement": "The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.",
+  "rationale": "Contactor opening is the primary risk reduction measure; must complete within FTTI budget",
+  "classification": "safety",
+  "acceptance_criteria": [
+    {
+      "criterion": "Contactor open latency",
+      "measure": "Time from FAULT request to contactor feedback open",
+      "threshold": "30",
+      "unit": "ms"
+    },
+    {
+      "criterion": "Feedback verification",
+      "measure": "Auxiliary contact confirmation",
+      "threshold": "100%",
+      "unit": "%"
+    },
+    {
+      "criterion": "Weld detection",
+      "measure": "Weld detection latency",
+      "threshold": "100",
+      "unit": "ms"
+    }
+  ],
+  "verification_approach": "test",
+  "fault_reaction": {
+    "profile_basis": "as_is",
+    "allocated_element_id": "AR-004",
+    "element_owns_reaction": true,
+    "reaction": "The battery state machine runs a sequenced opening, not a single command, and the real reaction is that sequence. On a FAULT request the state machine enters BMS_FSM_STATE_OPEN_CONTACTORS and first calls CONT_OpenAllPrechargeContactors(), because the precharge resistor limits the maximum current and those contactors can always be opened (src/app/application/bms/bms.c:1042-1052). It then waits BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE (50 ms) and opens the strings one at a time starting from the highest string index (bms.c:1053-1165). Per string it opens the first contactor, waits BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR (10 ms), reads back CONT_GetContactorState and BMS_IsContactorFeedbackValid, and only then opens the second contactor. If the feedback does not confirm, the open is RE-ISSUED after BMS_FSM_SHORTTIME (1 ms) rather than abandoned, and the source carries a literal 'TODO: add timeout' on that branch (bms.c:1109-1115). A per-string bound exists: stringOpenTimeout is initialised to BMS_STRING_OPEN_TIMEOUT (1000 ms) and on expiry the state machine moves on to the next string (bms.c:1141-1146). Each string's contacts are opened one after another, so the total time to a fully opened pack is a function of the number of strings and contactors, not a single constant. The de-energisation itself is indirect: CONT_OpenContactor() at src/app/driver/contactor/contactor.c:165-182 sets currentSet = CONT_SWITCH_OFF and calls SPS_RequestContactorState(..., SPS_CHANNEL_OFF) on the safe base controller channel, and carries no timing constant of its own.",
+    "triggered_by": "A FAULT state request from the SOA monitor or from a diagnosis entry, surfaced as BMS_IsBatterySystemStateOkay() returning STD_NOT_OK; or a state of the auxiliary feedback that disagrees with the commanded state, which is the weld-detection path and which is also why this branch re-issues rather than proceeds.",
+    "reaction_time_budget_ms": 35,
+    "reaction_time_budget_basis": "The 35 ms is the synthetic_reference allocation from FB2-SAF-FSC-000001.fault_reaction entry 1 and FB2-SAF-TSC-000001.fault_reaction, being contactor_command 5 ms plus contactor_mechanical 30 ms from FB2-PRM-000005. It is recorded here because the ASIL and safety goal this record refines are the synthetic_reference ones, and dropping it would leave the record citing a reaction it does not state. It is NOT a figure read from the real implementation. The real implementation's own waits are BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE = 50 ms, BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR = 10 ms, BMS_FSM_SHORTTIME = 1 ms and BMS_STRING_OPEN_TIMEOUT = 1000 ms, all in src/app/application/config/bms_cfg.h, driven from a 10 ms task period (BMS_STATEMACHINE_TASK_CYCLE_CONTEXT_MS, bms_cfg.h:100). On those figures a single contactor cannot be confirmed open in less than the 10 ms wait that follows the first one, and a pack of several strings is bounded by 1000 ms per string before the state machine abandons that string. The real end-to-end time is therefore governed by bms_cfg.h and by the mechanical contactor, and no measurement of it exists in this corpus.",
+    "mode_dependence": "Mode-dependent, and in the real implementation the dependence is visible in the code rather than in a comment. The opening sequence is entered from any state that receives a FAULT or error request, and FB2-SAF-FSC-000001 records that in MOD-004, with the contactors closed and current flowing, reaching the safe state removes propulsion from a moving vehicle. The real sequence makes one further mode-dependent decision inside it: a contactor is not opened while the string current is at or above BS_MAIN_CONTACTORS_MAXIMUM_BREAK_CURRENT_mA (3500 mA, src/app/application/config/battery_system_cfg.h:180), so the reaction is DELAYED rather than skipped, timeAboveContactorBreakCurrent_ms accumulates, and only after BS_MAIN_FUSE_MAXIMUM_TRIGGER_DURATION_ms (3000 ms, battery_system_cfg.h:190) does the state machine raise DIAG_ID_ALERT_MODE and open the contactors regardless (bms.c:1076-1090). A reaction that waits three seconds before opening is not a reaction that meets any 100 ms interval, and the branch exists because a fuse is expected to clear the fault in the meantime.",
+    "allocation_basis": "FB2-SAF-FSC-000001.fault_reaction entry 1 and FB2-SAF-TSC-000001.fault_reaction entry 1 both allocate this reaction to AR-004 at 35 ms, realised by FB2-SW-SWR-000003 in software and FB2-HW-TSR-000003 in hardware. The 40 ms end-to-end figure is FB2-SAF-SGO-000001.timing_budget.allocation (contactor_command_ms 5 + contactor_mechanical_ms 30 + feedback_verification_ms 5) and is reconciled against this record's acceptance criteria under FB2-REV-FND-000024. The real source anchors are FB2-SRC-COD-000007 (src/app/driver/contactor/contactor.c, CONTACTOR_StateMachine) and FB2-SRC-COD-000008 (src/app/driver/contactor/contactor.c, CONTACTOR_CheckFeedback); the sequenced opening is in src/app/application/bms/bms.c, which is not one of this record's source_refs and is cited here as text rather than as an anchor because the corpus has no anchor for it.",
+    "open_limits": "Four limits are recorded. First, the 30 ms feedback-open criterion and the 100 ms feedback-confirmed criterion in this record's acceptance criteria do not distinguish the mechanically open point from the feedback-confirmed point the way the synthetic_reference copy of this requirement now does, and they carry a 100 ms weld-detection figure against FB2-HW-TSR-000003's 100 ms while the synthetic copy carries 50 ms; neither copy of the weld figure was changed here and the disagreement recorded against FB2-REV-FND-000024 is still open. Second, the real reaction is bounded by a per-string timeout rather than by a total reaction time, and the source carries an unresolved 'TODO: add timeout' on the re-issue branch, so the retry count is unbounded in the code. Third, the 30 ms mechanical figure is FB2-PRM-000005 with an upper tolerance of 40 ms, and FB2-ASM-006 is an assumption about the contactor rather than a measurement. Fourth, the watchdog independence the reaction relies on after a software hang is FB2-ASM-007, read out of the source and not measured over temperature or supply range."
+  },
+  "safety_allocation": {
+    "asil": "ASIL_D",
+    "safety_goal_ref": "FB2-SAF-SGO-000001",
+    "mitigation": "Feedback monitoring, independent SBC watchdog, weld detection"
+  },
+  "assumptions": [
+    "FB2-ASM-001",
+    "FB2-ASM-006",
+    "FB2-ASM-007"
+  ],
+  "conditions_modes": [
+    "NORMAL",
+    "CHARGING",
+    "PRECHARGE",
+    "DERATING",
+    "FAULT"
+  ],
+  "feasibility_dependencies": [
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002"
+  ],
+  "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchor FB2-SRC-COD-000007 (CONTACTOR_StateMachine) was deleted because contactor.c has no such function. The surviving anchors name real symbols - CONT_CheckFeedback (contactor.c:125-163), DIAG_Handler (diag.c:341-475), DIAG_StringContactorFeedback / DIAG_PrechargeContactorFeedback (diag_cbs_contactor.c:73-125) - and the last two genuinely perform the auxiliary feedback confirmation this record requires. What no anchor observes is the primary risk-reduction action of this record, opening the HV contactors within 30 ms: that logic lives in src/app/application/bms/bms.c, which this record does not anchor. Part observed, part modelled, so labelled derived.",
+  "asil_allocation_scope": {
+    "classification_kind": "reconstructed_back_inference",
+    "classification_belongs_to": "the hypothetical reference project declared by the synthetic_reference profile of this corpus",
+    "is_a_determination_for_the_real_product": false,
+    "real_product_hazard_analysis_and_risk_assessment_performed": false,
+    "statement": "The asil value in this record's safety_allocation is a RECONSTRUCTED value, not an observation and not a determination. It was produced by reading back the safety-goal classification of the hypothetical reference project this corpus also declares in its synthetic_reference profile, and by attributing that classification to this record because this corpus's own requirement set was written downstream of it. The real foxBMS 2 product has never had a hazard analysis and risk assessment. No HARA has been performed for it, none is claimed here, and nothing in this record may be read as one, as a partial one, or as a substitute for one.",
+    "why_the_value_is_still_here": "The ASIL is retained rather than deleted because it is legitimate inside the fictional project: the reference project needs an allocated class at this element for its own argument to be internally consistent, and removing the number would leave the reference project's allocation silently unallocated. What was illegitimate was its presentation here, as an unqualified field on an as_is record that a reader could take as a statement about the product. That presentation is what this field removes.",
+    "what_this_field_asserts": [
+      "That the recorded asil value equals the classification the reference project's safety concept and goal chain assigns to this element, as those records state it.",
+      "That the classification originates in the reference project and nowhere else.",
+      "That no classification has been performed for the real product by this corpus or by anyone on its behalf."
+    ],
+    "what_this_field_does_not_assert": [
+      "It does not assert an ASIL for the real foxBMS 2 product. The real product's safety integrity level is undetermined, not ASIL_D; undetermined is the honest answer and this corpus has no standing to change it.",
+      "It does not assert that a hazard analysis and risk assessment exists for the real product in any form, complete or partial.",
+      "It does not assert that any design, in either profile, meets this ASIL. An allocation creates an obligation downstream; it is not evidence the obligation is discharged, and no execution record in this corpus discharges it for this element.",
+      "It does not assert ISO 26262 conformity, certification, or qualification of any product, supplier, tool or process.",
+      "It does not assert an Automotive SPICE capability level for any organisation.",
+      "It does not assert that the exposure or severity inputs behind the reference project's classification are evidenced. They are authored: the reference project's safety goal FB2-SAF-SGO-000001 already records that its exposure rating is an unevidenced authored input and that a single exposure step would move the whole classification one class lower."
+    ],
+    "reading_rule": "Any view, report or export that renders this record's asil value must render this field with it. An asil value shown without this field is a defect in that view, not a permissible abbreviation.",
+    "origin_field_relationship": "Because this record now carries a back-inferred classification alongside its source-derived content, origin is 'derived' rather than 'source_observed': master prompt section 5 requires that an artefact containing both observed and modelled content must not be labelled wholly observed. Where this record's origin was 'source_observed' it has been changed to 'derived' for that reason and for no other; no statement, acceptance criterion, threshold, assumption, safety goal reference or mitigation text was altered in the same edit."
   }
- ],
- "lifecycle_status": "reviewed",
- "automated_review_status": {
-  "schema_valid": true,
-  "links_valid": true,
-  "provenance_consistent": true,
-  "consistency_checks": true,
-  "last_run": "2026-09-08T00:00:00Z"
- },
- "human_approval_status": "pending",
- "production_authorized": false,
- "product_verification_credit": false,
- "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
- "revision_history": [
-  {
-   "revision": "1",
-   "date": "2026-09-08T00:00:00Z",
-   "author": "safety_engineer",
-   "description": "Back-inferred from CONTACTOR state machine and DIAG callback"
-  },
-  {
-   "revision": "2",
-   "date": "2026-09-29T00:00:00Z",
-   "author": "safety_engineer",
-   "description": "Added the fault_reaction this requirement was missing, derived from the source rather than from the synthetic concept, because this is an as_is record with origin source_observed and the real reaction is not the one the synthetic copy describes. CONT_OpenContactor() at src/app/driver/contactor/contactor.c:165-182 only sets currentSet and calls SPS_RequestContactorState(); it carries no timing constant and does not touch a coil. The reaction is the state machine's sequence in src/app/application/bms/bms.c:1028-1165 - open all precharge contactors first because the precharge resistor limits the current, then open the strings one at a time from the highest index, one contactor at a time, waiting BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE (50 ms) and BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR (10 ms), re-issuing the open after BMS_FSM_SHORTTIME (1 ms) when the feedback does not confirm, and giving up on a string after BMS_STRING_OPEN_TIMEOUT (1000 ms). The 35 ms allocation is recorded in its own field with a basis field that says plainly it is the synthetic_reference figure and not one read from the implementation. mode_dependence records a dependence that is visible in the code and not in any comment: a contactor is not opened while the string current is at or above BS_MAIN_CONTACTORS_MAXIMUM_BREAK_CURRENT_mA (3500 mA), so the reaction is DELAYED rather than skipped, and only after BS_MAIN_FUSE_MAXIMUM_TRIGGER_DURATION_ms (3000 ms) does the state machine raise DIAG_ID_ALERT_MODE and open regardless. That is recorded because a reaction that waits three seconds is not a reaction that meets any 100 ms interval, and the corpus's 100 ms interval is a synthetic_reference figure that this as_is record has never been shown to meet. open_limits also carries the unresolved 'TODO: add timeout' on the re-issue branch and the open weld-detection disagreement recorded against FB2-REV-FND-000024. Statement, rationale, all three acceptance criteria, safety_allocation, the ASIL and the safety goal reference are unchanged and no threshold was relaxed - in particular the 30 ms feedback-open threshold is left exactly as it is, because whether that criterion should move is the subject of FB2-REV-FND-000024 and was decided for the synthetic_reference copy only. Human approval remains pending, production_authorized stays false and product_verification_credit stays false. No ASIL, certification or capability level is claimed for the real product."
-  }
- ],
- "statement": "The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.",
- "rationale": "Contactor opening is the primary risk reduction measure; must complete within FTTI budget",
- "classification": "safety",
- "acceptance_criteria": [
-  {
-   "criterion": "Contactor open latency",
-   "measure": "Time from FAULT request to contactor feedback open",
-   "threshold": "30",
-   "unit": "ms"
-  },
-  {
-   "criterion": "Feedback verification",
-   "measure": "Auxiliary contact confirmation",
-   "threshold": "100%",
-   "unit": "%"
-  },
-  {
-   "criterion": "Weld detection",
-   "measure": "Weld detection latency",
-   "threshold": "100",
-   "unit": "ms"
-  }
- ],
- "verification_approach": "test",
- "fault_reaction": {
-  "profile_basis": "as_is",
-  "allocated_element_id": "AR-004",
-  "element_owns_reaction": true,
-  "reaction": "The battery state machine runs a sequenced opening, not a single command, and the real reaction is that sequence. On a FAULT request the state machine enters BMS_FSM_STATE_OPEN_CONTACTORS and first calls CONT_OpenAllPrechargeContactors(), because the precharge resistor limits the maximum current and those contactors can always be opened (src/app/application/bms/bms.c:1042-1052). It then waits BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE (50 ms) and opens the strings one at a time starting from the highest string index (bms.c:1053-1165). Per string it opens the first contactor, waits BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR (10 ms), reads back CONT_GetContactorState and BMS_IsContactorFeedbackValid, and only then opens the second contactor. If the feedback does not confirm, the open is RE-ISSUED after BMS_FSM_SHORTTIME (1 ms) rather than abandoned, and the source carries a literal 'TODO: add timeout' on that branch (bms.c:1109-1115). A per-string bound exists: stringOpenTimeout is initialised to BMS_STRING_OPEN_TIMEOUT (1000 ms) and on expiry the state machine moves on to the next string (bms.c:1141-1146). Each string's contacts are opened one after another, so the total time to a fully opened pack is a function of the number of strings and contactors, not a single constant. The de-energisation itself is indirect: CONT_OpenContactor() at src/app/driver/contactor/contactor.c:165-182 sets currentSet = CONT_SWITCH_OFF and calls SPS_RequestContactorState(..., SPS_CHANNEL_OFF) on the safe base controller channel, and carries no timing constant of its own.",
-  "triggered_by": "A FAULT state request from the SOA monitor or from a diagnosis entry, surfaced as BMS_IsBatterySystemStateOkay() returning STD_NOT_OK; or a state of the auxiliary feedback that disagrees with the commanded state, which is the weld-detection path and which is also why this branch re-issues rather than proceeds.",
-  "reaction_time_budget_ms": 35,
-  "reaction_time_budget_basis": "The 35 ms is the synthetic_reference allocation from FB2-SAF-FSC-000001.fault_reaction entry 1 and FB2-SAF-TSC-000001.fault_reaction, being contactor_command 5 ms plus contactor_mechanical 30 ms from FB2-PRM-000005. It is recorded here because the ASIL and safety goal this record refines are the synthetic_reference ones, and dropping it would leave the record citing a reaction it does not state. It is NOT a figure read from the real implementation. The real implementation's own waits are BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE = 50 ms, BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR = 10 ms, BMS_FSM_SHORTTIME = 1 ms and BMS_STRING_OPEN_TIMEOUT = 1000 ms, all in src/app/application/config/bms_cfg.h, driven from a 10 ms task period (BMS_STATEMACHINE_TASK_CYCLE_CONTEXT_MS, bms_cfg.h:100). On those figures a single contactor cannot be confirmed open in less than the 10 ms wait that follows the first one, and a pack of several strings is bounded by 1000 ms per string before the state machine abandons that string. The real end-to-end time is therefore governed by bms_cfg.h and by the mechanical contactor, and no measurement of it exists in this corpus.",
-  "mode_dependence": "Mode-dependent, and in the real implementation the dependence is visible in the code rather than in a comment. The opening sequence is entered from any state that receives a FAULT or error request, and FB2-SAF-FSC-000001 records that in MOD-004, with the contactors closed and current flowing, reaching the safe state removes propulsion from a moving vehicle. The real sequence makes one further mode-dependent decision inside it: a contactor is not opened while the string current is at or above BS_MAIN_CONTACTORS_MAXIMUM_BREAK_CURRENT_mA (3500 mA, src/app/application/config/battery_system_cfg.h:180), so the reaction is DELAYED rather than skipped, timeAboveContactorBreakCurrent_ms accumulates, and only after BS_MAIN_FUSE_MAXIMUM_TRIGGER_DURATION_ms (3000 ms, battery_system_cfg.h:190) does the state machine raise DIAG_ID_ALERT_MODE and open the contactors regardless (bms.c:1076-1090). A reaction that waits three seconds before opening is not a reaction that meets any 100 ms interval, and the branch exists because a fuse is expected to clear the fault in the meantime.",
-  "allocation_basis": "FB2-SAF-FSC-000001.fault_reaction entry 1 and FB2-SAF-TSC-000001.fault_reaction entry 1 both allocate this reaction to AR-004 at 35 ms, realised by FB2-SW-SWR-000003 in software and FB2-HW-TSR-000003 in hardware. The 40 ms end-to-end figure is FB2-SAF-SGO-000001.timing_budget.allocation (contactor_command_ms 5 + contactor_mechanical_ms 30 + feedback_verification_ms 5) and is reconciled against this record's acceptance criteria under FB2-REV-FND-000024. The real source anchors are FB2-SRC-COD-000007 (src/app/driver/contactor/contactor.c, CONTACTOR_StateMachine) and FB2-SRC-COD-000008 (src/app/driver/contactor/contactor.c, CONTACTOR_CheckFeedback); the sequenced opening is in src/app/application/bms/bms.c, which is not one of this record's source_refs and is cited here as text rather than as an anchor because the corpus has no anchor for it.",
-  "open_limits": "Four limits are recorded. First, the 30 ms feedback-open criterion and the 100 ms feedback-confirmed criterion in this record's acceptance criteria do not distinguish the mechanically open point from the feedback-confirmed point the way the synthetic_reference copy of this requirement now does, and they carry a 100 ms weld-detection figure against FB2-HW-TSR-000003's 100 ms while the synthetic copy carries 50 ms; neither copy of the weld figure was changed here and the disagreement recorded against FB2-REV-FND-000024 is still open. Second, the real reaction is bounded by a per-string timeout rather than by a total reaction time, and the source carries an unresolved 'TODO: add timeout' on the re-issue branch, so the retry count is unbounded in the code. Third, the 30 ms mechanical figure is FB2-PRM-000005 with an upper tolerance of 40 ms, and FB2-ASM-006 is an assumption about the contactor rather than a measurement. Fourth, the watchdog independence the reaction relies on after a software hang is FB2-ASM-007, read out of the source and not measured over temperature or supply range."
- },
- "safety_allocation": {
-  "asil": "ASIL_D",
-  "safety_goal_ref": "FB2-SAF-SGO-000001",
-  "mitigation": "Feedback monitoring, independent SBC watchdog, weld detection"
- },
- "assumptions": [
-  "FB2-ASM-001",
-  "FB2-ASM-006",
-  "FB2-ASM-007"
- ],
- "conditions_modes": [
-  "NORMAL",
-  "CHARGING",
-  "PRECHARGE",
-  "DERATING",
-  "FAULT"
- ],
- "feasibility_dependencies": [
-  "FB2-SAF-FSR-000001",
-  "FB2-SAF-FSR-000002"
- ]
 }

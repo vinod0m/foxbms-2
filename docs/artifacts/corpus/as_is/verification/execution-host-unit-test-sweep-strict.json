@@ -1,6 +1,6 @@
 {
   "id": "FB2-VER-EXE-000006",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "execution",
   "engineering_domain": "verification",
@@ -28,13 +28,19 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T08:15:33Z",
-  "updated_at": "2026-09-29T08:15:33Z",
+  "updated_at": "2026-10-01T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-09-29T08:15:33Z",
       "author": "verification_engineer",
       "description": "New artifact: bulk host unit test sweep executed on macOS arm64. No prior record existed for the sweep."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Provenance repair of the evidence hash and file-reference fields by a separate session (opencode-2026-10-01-provenance-repair); no statement of what the run did was altered. 1 logs[] reference(s) removed because the path never resolved to anything: see provenance_repair.unretained_evidence for each. Nothing was written to make them resolve. The outcome, timestamps, environment, anomalies, evidence_refs, notes and limitations of this record are untouched."
     }
   ],
   "test_measure_id": "FB2-VER-TMS-000001..000005",
@@ -79,11 +85,6 @@
       "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-strict.json",
       "hash": "sha256:462d9a9b5f08f580cec787a4363306d7e7639e25dd6d338f02d6058b3307543c",
       "type": "custom"
-    },
-    {
-      "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict (one .txt per test, 136 files)",
-      "hash": "sha256:c9ee0687d4a0af02c561e8c22db28959be975438a1e4809fb6dd3c306c06a341",
-      "type": "stdout"
     }
   ],
   "timestamps": {
@@ -231,5 +232,22 @@
     "HALCoGen absent; see the per-run anomalies",
     "177 of 313 repository tests not in scope because they need HALCoGen output"
   ],
-  "notes": "Real sweep. 94 of 136 tests pass, 5 fail, 37 do not build. 323 of 332 assertions pass. Each test was run in its own Ceedling invocation so every verdict is attributable and every log is retained."
+  "notes": "Real sweep. 94 of 136 tests pass, 5 fail, 37 do not build. 323 of 332 assertions pass. Each test was run in its own Ceedling invocation so every verdict is attributable and every log is retained.",
+  "provenance_repair": {
+    "session": "opencode-2026-10-01-provenance-repair",
+    "date": "2026-10-01T00:00:00Z",
+    "unretained_evidence": [
+      {
+        "previous_reference": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict (one .txt per test, 136 files)",
+        "previous_hash": "sha256:c9ee0687d4a0af02c561e8c22db28959be975438a1e4809fb6dd3c306c06a341",
+        "named_set": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict",
+        "files_present_at_that_path": 136,
+        "file_extension": ".txt",
+        "output_hash_key_still_naming_the_unrecovered_manifest": "per_test_log_manifest_strict",
+        "resolution": "reference removed; no entry is made to name a directory",
+        "note": "The per-test logs this entry describes do exist: 136 .txt files are present at docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict and were listed as per_test_log_manifest_strict. What does not exist is the per-test log manifest whose digest was recorded here, in output_hashes.per_test_log_manifest_strict and nowhere else in the repository; the bytes it named are unrecoverable, so no digest can be given for it. Unlike the per-test logs, which were regenerated in place, no manifest was retained or regenerated. The directory and its file count are recorded here instead of a path that does not resolve. Generating a manifest now would add a file to the evidence tree that no run produced, which is left to the corpus owner rather than done silently."
+      }
+    ],
+    "principle": "A hash that identifies a file still present at the path it names has been re-derived from the bytes on disk and the superseded value is recorded above. A hash that identifies something no run ever captured, or an input consumed at a specific moment in the past, is not overwritten: it is retained with both digests recorded, or removed with this note. No file was created to make a reference resolve."
+  }
 }

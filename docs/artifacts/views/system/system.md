@@ -1,6 +1,6 @@
 # System — requirements, interfaces and architecture (generated view)
 
-Generated: 2026-09-30T02:22:59Z | Baseline: BAS-REF-001 | 233 artifacts, 460 links
+Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
 
 ## Provenance and status of this file
 
@@ -113,6 +113,7 @@ Signals (system-owned authority; hardware and software views link here rather th
 | `FB2-LNK-ELC-000063` | `FB2-SYS-SYR-000004` | refines | `FB2-SYS-UC-000003` | derived | reviewed |
 | `FB2-LNK-ELC-000064` | `FB2-SYS-SYR-000008` | refines | `FB2-SYS-UC-000004` | derived | reviewed |
 | `FB2-LNK-FND-000114` | `FB2-REV-FND-000027` | supports | `FB2-SYS-SYR-000005` | derived | reviewed |
+| `FB2-LNK-IMP-000107` | `FB2-SW-IMP-000004` | implements | `FB2-SYS-SYR-000007` | synthetic | pending |
 | `FB2-LNK-LIF-000099` | `FB2-REL-RLS-000001` | depends_on | `FB2-SYS-SYR-000003` | derived | reviewed |
 | `FB2-LNK-LIF-000100` | `FB2-PRD-EOL-000001` | depends_on | `FB2-SYS-SYR-000003` | derived | reviewed |
 | `FB2-LNK-LIF-000101` | `FB2-PRD-CAL-000001` | depends_on | `FB2-SYS-SYR-000002` | derived | reviewed |
@@ -148,6 +149,14 @@ Signals (system-owned authority; hardware and software views link here rather th
 | `FB2-LNK-SEC-000086` | `FB2-VER-TMS-000019` | verifies | `FB2-SYS-SYR-000008` | derived | reviewed |
 | `FB2-LNK-SEC-000088` | `FB2-VER-TMS-000020` | verifies | `FB2-SYS-SYR-000007` | derived | reviewed |
 | `FB2-LNK-SEC-000089` | `FB2-VER-TMS-000020` | verifies | `FB2-SYS-SYR-000008` | derived | reviewed |
+| `FB2-LNK-SYR-000121` | `FB2-VER-TMS-000021` | verifies | `FB2-SYS-SYR-000001` | synthetic | pending |
+| `FB2-LNK-SYR-000122` | `FB2-VER-TMS-000022` | verifies | `FB2-SYS-SYR-000001` | synthetic | pending |
+| `FB2-LNK-SYR-000123` | `FB2-VER-TMS-000023` | verifies | `FB2-SYS-SYR-000002` | synthetic | pending |
+| `FB2-LNK-SYR-000124` | `FB2-VER-TMS-000024` | verifies | `FB2-SYS-SYR-000002` | synthetic | pending |
+| `FB2-LNK-SYR-000125` | `FB2-VER-TMS-000025` | verifies | `FB2-SYS-SYR-000003` | synthetic | pending |
+| `FB2-LNK-SYR-000126` | `FB2-VER-TMS-000026` | verifies | `FB2-SYS-SYR-000004` | synthetic | pending |
+| `FB2-LNK-SYR-000127` | `FB2-VER-TMS-000027` | verifies | `FB2-SYS-SYR-000005` | synthetic | pending |
+| `FB2-LNK-SYR-000128` | `FB2-VER-TMS-000028` | verifies | `FB2-SYS-SYR-000006` | synthetic | pending |
 | `FB2-LNK-VAL-000065` | `FB2-VER-TMS-000012` | validates | `FB2-SYS-NED-000001` | derived | reviewed |
 | `FB2-LNK-VAL-000066` | `FB2-VER-TMS-000012` | validates | `FB2-SYS-UC-000001` | derived | reviewed |
 | `FB2-LNK-VAL-000067` | `FB2-VER-TMS-000013` | validates | `FB2-SYS-NED-000003` | derived | reviewed |

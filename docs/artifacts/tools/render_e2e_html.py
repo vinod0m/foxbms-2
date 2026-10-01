@@ -637,6 +637,12 @@ def owning_section(profile, aid, d, v):
             else "sec-06-detailed-design"
     if at in ("test_measure", "execution"):
         return verification_section_for(profile, aid, v)
+    if at == "implementation":
+        # an implementation element realises a design, so it belongs with the
+        # design it realises: architecture-level implementations with the
+        # architecture, the rest with the detailed design.
+        return "sec-05-software-architecture" if d.get("design_level") == "architecture" \
+            else "sec-06-detailed-design"
     if at == "deviation":
         return "sec-10-software-verification"
     if at == "change":
@@ -1982,6 +1988,60 @@ def sec_06(v):
         "dynamic diagram derived from those same fields. A field the record does not hold is "
         f"reported as <span class=\"phrase-ref\">{GAP_PHRASE}</span> and registered in "
         "section&nbsp;12.", "callout"))
+    # Implementation elements: emitted with the design section they belong to, so
+    # the ownership map's claim that they are rendered there is true.
+    imps = v.records(lambda d: d.get("artifact_type") == "implementation"
+                     and d.get("design_level") != "architecture")
+    if imps:
+        L.append(sub("Implementation elements", level=3,
+                     anchor="implementation-elements-detailed"))
+        L.append('<p class="note">Each element below is a code location that realises a '
+                 'design. Location, symbol and hash were read from the pinned source; '
+                 '<code>implementation_status</code> states whether the element is present '
+                 'in that source or is proposed and absent from it.</p>')
+    for profile, aid, d in imps:
+        L.append(f'<article class="card implementation" id="{v.anchor(profile, aid)}" '
+                 f'data-artifact-type="implementation" data-profile="{esc(profile)}" '
+                 f'data-revision="{esc(d.get("revision", ""))}">')
+        v.rendered_artifact_ids.add((profile, aid))
+        L += card_head(v, profile, aid, d, "Implementation element")
+        L.append(sub("Code locations", level=4, anchor=f"{profile}-{aid}-locations"))
+        locs = d.get("code_locations") or []
+        if not locs:
+            L.append(f"<p>{v.gap_phrase('implementation code locations')}</p>")
+        else:
+            L.append("<table class=\"kv\"><thead><tr><th>path</th><th>symbol</th>"
+                     "<th>lines</th><th>role</th><th>verified</th></tr></thead><tbody>")
+            for loc in locs:
+                if not isinstance(loc, dict):
+                    continue
+                L.append("<tr>"
+                         f"<td><code>{esc(loc.get('path', ''))}</code></td>"
+                         f"<td><code>{esc(loc.get('symbol', ''))}</code></td>"
+                         f"<td>{esc(loc.get('line_range', ''))}</td>"
+                         f"<td>{esc(loc.get('symbol_role', ''))}</td>"
+                         f"<td>{esc(loc.get('verified', ''))}</td></tr>")
+            L.append("</tbody></table>")
+        imp = d.get("implements") or {}
+        L.append(sub("What it implements", level=4, anchor=f"{profile}-{aid}-implements"))
+        L.append(scalar_list_html(v, [
+            f"design: {imp.get('design_id')}" if imp.get("design_id") else
+            "design: none in corpus (recorded as a coverage gap)",
+            f"design level: {imp.get('design_level', 'unspecified')}",
+            f"relationship: {imp.get('relationship', '')}",
+        ], "implementation mapping"))
+        reqs = d.get("realises_requirements") or []
+        L.append(scalar_list_html(v, reqs or ["no requirement realised in corpus"],
+                                  "requirements realised"))
+        L.append(sub("Status and evidence", level=4, anchor=f"{profile}-{aid}-status"))
+        L.append(scalar_list_html(v, [
+            f"implementation_status: {d.get('implementation_status', 'unspecified')}",
+            f"design gap reason: {imp.get('design_gap_reason', 'n/a')}",
+            f"requirement gap reason: {d.get('requirement_gap_reason', 'n/a')}",
+            f"evidence status: {d.get('evidence_status', 'unspecified')}",
+        ], "implementation status"))
+        L.append("</article>")
+
     recs = v.records(lambda d: d.get("artifact_type") == "design"
                      and d.get("design_level") != "architecture")
     if not recs:

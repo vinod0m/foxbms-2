@@ -1,0 +1,188 @@
+{
+  "id": "FB2-SW-IMP-000004",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: CAN driver - extended-identifier mailbox configuration, receive interrupt, queue drain and periodic transmit (can.c)",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000037",
+    "FB2-SRC-COD-000065",
+    "FB2-SRC-COD-000066"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the CAN driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "gap",
+      "rationale": "There is no software design artefact for the CAN driver in this profile, so the traceability SWE.4 expects cannot be asserted for it. The gap is declared in implements.design_gap_reason rather than closed by attaching this module to an unrelated design."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored to cover a module the as_is corpus anchors and analyses but for which it holds no design artefact at all. Deviation FB2-SW-DEV-000007 already records the same gap as gap_no_design_artifact_in_profile; this record makes the corresponding implementation rung explicit rather than leaving the module represented only by a deviation about it."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/can/can.c",
+      "symbol": "CAN_ConfigureRxMailboxesForExtendedIdentifiers",
+      "line_range": "272-565",
+      "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/can/can.c",
+      "symbol": "CAN_RxInterrupt",
+      "line_range": "643-692",
+      "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/can/can.c",
+      "symbol": "CAN_ReadRxBuffer",
+      "line_range": "1015-1031",
+      "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/can/can.c",
+      "symbol": "CAN_PeriodicTransmit",
+      "line_range": "694-744",
+      "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": null,
+    "design_level": null,
+    "relationship": "No design artefact in the as_is profile describes the CAN driver, so there is no design for this element to implement and no implements link is asserted for it. What the module does, read from the pinned source: CAN_ConfigureRxMailboxesForExtendedIdentifiers (can.c:272-565) writes the receive-mailbox configuration for extended identifiers directly into the CAN peripheral registers, with the file's own comment recording that the content was copied from the TI HALCoGen-generated HL_can.c of 11-Dec-2018, version 04.07.01, and that the literal mailbox numbers and masks are why the file carries an in-source MISRA C:2012 deviation (deviation FB2-SW-DEV-000007). CAN_RxInterrupt (643-692) reads each message box with canGetData, discards the frame unless the return value says no data was lost and the task queues have been created, derives an 11-bit or 29-bit identifier from the mailbox number against CAN_LOWEST_MAILBOX_FOR_EXTENDED_IDENTIFIERS and CAN_HIGHEST_MAILBOX_FOR_EXTENDED_IDENTIFIERS, and posts a CAN_BUFFER_ELEMENT_s onto ftsk_canRxQueue, reporting DIAG_ID_CAN_RX_QUEUE_FULL on both the accepted and the full outcome so the distinction is diagnosable. CAN_ReadRxBuffer (1015-1031) drains that queue and dispatches each element to the callback registered for the matching (node, id, idType) triple. CAN_PeriodicTransmit (694-744) empties the transmit queue and drives the periodic frames. So the driver provides transport, buffering and dispatch; it carries no requirement-derived behaviour of its own.",
+    "design_gap_reason": "The as_is profile contains no software design artefact for the CAN driver. Its three design records are FB2-SW-DSN-000001 (AFE driver architecture), -000002 (SOA voltage monitoring) and -000003 (contactor state machine), and none of them covers CAN transport; FB2-SW-DSN-000001's interface list names AFE_SPI, not CAN. Deviation FB2-SW-DEV-000007 records this same gap as gap_no_design_artifact_in_profile. Attaching this module to any of the three existing designs would assert CAN design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13."
+  },
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the CAN driver as a module. FB2-SW-SWR-000001 (AFE cell voltage acquisition) names CANTX_CellVoltages and CANRX_CellVoltages, which are the per-message callbacks in src/app/driver/can/cbs/, not this transport driver, and its statement is about acquisition, integrity validation and database publication, none of which happens in can.c. realises_requirements is therefore empty rather than populated with a requirement this code does not serve. The requirement-level gap and the design-level gap are distinct and both are declared.",
+  "anchor_refs": [
+    "FB2-SRC-COD-000037",
+    "FB2-SRC-COD-000065",
+    "FB2-SRC-COD-000066"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "CAN-IMP-MAILBOX-CFG",
+      "description": "Programs the peripheral's receive mailboxes for extended identifiers from literal constants copied from the vendor HAL configuration, which is the origin of the in-source MISRA deviation recorded against this function.",
+      "kind": "startup",
+      "evidence_symbol": "CAN_ConfigureRxMailboxesForExtendedIdentifiers",
+      "evidence_line_range": "272-565"
+    },
+    {
+      "behaviour_id": "CAN-IMP-RX-IS",
+      "description": "Reads a received frame in interrupt context, accepts it only when no data was lost and the queues exist, derives the identifier width from the mailbox number, and enqueues it.",
+      "kind": "interrupt_dispatch",
+      "evidence_symbol": "CAN_RxInterrupt",
+      "evidence_line_range": "643-692"
+    },
+    {
+      "behaviour_id": "CAN-IMP-QUEUE-FULL-DIAG",
+      "description": "Reports the receive queue's full condition as a diagnosis entry on both the accepted and the refused outcome, so a dropped frame is distinguishable from a delivered one.",
+      "kind": "diagnostic_raise",
+      "evidence_symbol": "CAN_RxInterrupt",
+      "evidence_line_range": "682-691"
+    },
+    {
+      "behaviour_id": "CAN-IMP-RX-DISPATCH",
+      "description": "Drains the receive queue in task context and invokes the callback registered for each frame's node, identifier and identifier width.",
+      "kind": "arbitration",
+      "evidence_symbol": "CAN_ReadRxBuffer",
+      "evidence_line_range": "1015-1031"
+    },
+    {
+      "behaviour_id": "CAN-IMP-TX-PERIODIC",
+      "description": "Empties the transmit queue and services the configured periodic messages when periodic transmission is enabled.",
+      "kind": "transfer",
+      "evidence_symbol": "CAN_PeriodicTransmit",
+      "evidence_line_range": "694-744"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "interrupt",
+      "entry_points": [
+        "CAN_RxInterrupt",
+        "CAN_TxInterrupt"
+      ],
+      "shared_state": "ftsk_canRxQueue, the FreeRTOS queue CAN_RxInterrupt posts to and CAN_ReadRxBuffer drains, and can_state.periodicEnable, read by CAN_PeriodicTransmit. The interrupt path uses the FromIsr queue and notification APIs (OS_SendToBackOfQueueFromIsr) and the task path uses the non-Isr ones (OS_ReceiveFromQueue), so the two contexts do not use the same API on the same object; that separation is read from the source, not assumed."
+    },
+    {
+      "context": "task",
+      "entry_points": [
+        "CAN_MainFunction",
+        "CAN_ReadRxBuffer"
+      ],
+      "shared_state": "The same ftsk_canRxQueue, drained here after the interrupt has filled it."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the CAN transport code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared rather than filled with an unrelated endpoint. It is not evidence that any requirement is met. It confers no production authority, no verification credit and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "can.c was read at the pinned commit with 'git show 308028fb:src/app/driver/can/can.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000037, -000065 and -000066 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin, and each range was confirmed within the file. The function spans were cross-read against 'graft skeleton src/app/driver/can/can.c', which reports CAN_ConfigureRxMailboxesForExtendedIdentifiers at L272 and CAN_RxInterrupt at L643-L692 independently of this authoring pass. Note that the registry anchor FB2-SRC-COD-000037 records the range 279-562 for that function, which is narrower than the definition span 272-565 recorded here; both are inside the file and both are defensible, and the difference is a range-convention difference rather than a disagreement about which function is meant.",
+    "limitations": [
+      "Behaviour was verified by reading the code. No CAN frame was sent or received, no bus was brought up, and no timing measurement of this driver exists in this corpus.",
+      "The mailbox numbers, register masks and identifier shift constants inside CAN_ConfigureRxMailboxesForExtendedIdentifiers are deliberately NOT reproduced in this record. They are literal vendor configuration values whose provenance is the external HALCoGen file the comment names, which this corpus cannot read; restating them here would create an unverifiable second copy of a register map.",
+      "can.c is unmodified between the pin and the working tree, so the same ranges and hash hold for the checked-out file."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000037 names the mailbox configuration function, FB2-SRC-COD-000065 the receive interrupt and FB2-SRC-COD-000066 the queue drain, all in can.c. No new anchor was created."
+}

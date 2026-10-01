@@ -1,0 +1,222 @@
+{
+  "id": "FB2-SW-IMP-000003",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation (reference project): Contactor actuation request and auxiliary feedback monitoring, plus a proposed non-volatile contactor cycle counter that the pinned source does not contain",
+  "owner_role": "sw_engineer",
+  "origin": "synthetic",
+  "source_refs": [
+    "FB2-SRC-COD-000008",
+    "FB2-SRC-COD-000013",
+    "FB2-SRC-COD-000027"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the code for the hypothetical reference project's contactor path is. Makes no claim that it was verified and asserts no ASIL classification for the real product."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "partially_mapped",
+      "rationale": "Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. The reference project's design FB2-SW-DSN-000003 lists 'Count contactor cycles (FRAM persistence)' among its responsibilities. The pinned contactor.c contains no occurrence of fram or of cycle at all, so that element is declared here as an explicit not_in_source proposal rather than being reported as implemented."
+    }
+  ],
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source_partial",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_CheckFeedback",
+      "line_range": "125-163",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_OpenContactor",
+      "line_range": "165-182",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_CloseContactor",
+      "line_range": "184-201",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/contactor/contactor.c",
+      "symbol": "CONT_GetFeedbackOfAllContactors",
+      "line_range": "86-106",
+      "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/application/bms/bms.c",
+      "symbol": "BMS_Trigger",
+      "line_range": "898-1691",
+      "content_hash": "sha256:c0e2f1d4dd83f059b91c11dd91543ef052d515eb7a247fa26be7b53897523286",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/engine/diag/cbs/diag_cbs_contactor.c",
+      "symbol": "DIAG_StringContactorFeedback",
+      "line_range": "73-100",
+      "content_hash": "sha256:a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "proposed_location": [
+    {
+      "proposed_path": "src/app/driver/contactor/contactor.c",
+      "proposed_symbol": "CONT_IncrementContactorCycleCounter",
+      "why_not_in_source": "The reference project's design FB2-SW-DSN-000003 lists 'Count contactor cycles (FRAM persistence)' as one of its responsibilities and its interfaces include a cycle_count signal with a 0-4G unit. The pinned contactor.c contains no occurrence of the string fram and no occurrence of the string cycle: the module holds only the static cont_contactorStates array of current-set and feedback values, and CONT_OpenContactor and CONT_CloseContactor update currentSet and forward the request without counting anything. The proposed symbol is therefore a new element the reference project would have to add, together with the non-volatile backing store the design's persistence constraint implies; neither exists in the product and neither is presented as if it did."
+    }
+  ],
+  "implements": {
+    "design_artifact_id": "FB2-SW-DSN-000003",
+    "design_level": "detailed_design",
+    "relationship": "This is where the reference project's FB2-SW-DSN-000003 two lowest-level responsibilities are realised, and its sequencing responsibility is realised one layer above. The mechanism is the real one, read from the pinned source and verified there: CONT_OpenContactor (contactor.c:165-182) and CONT_CloseContactor (184-201) locate the (string, type) pair in the static cont_contactorStates array, set currentSet, and forward the request to the SPS channel; CONT_GetFeedbackOfAllContactors (86-106) reads each contactor's feedback from the source its configuration names - current sense, a normally-open or normally-closed port-expander input, or the set state itself where no feedback is configured - and CONT_CheckFeedback (125-163) compares requested against actual per contactor and raises the matching feedback diagnosis entry, which DIAG_StringContactorFeedback (diag_cbs_contactor.c:73-100) turns into the per-string feedback error flags. The design's OPEN -> PRECHARGE -> CLOSE -> HOLD sequencing is realised in the application layer rather than in this driver: BMS_Trigger (bms.c:898-1691) is where the precharge and string-opening substates live, and the waits it applies are the configured BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE of 50 ms, BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR of 10 ms, BMS_FSM_SHORTTIME of 1 ms and BMS_STRING_OPEN_TIMEOUT of 1000 ms. The reference project reuses the actuation and feedback code and adds the cycle counter the design requires and the source lacks.",
+    "partial_coverage": [
+      "The design's 'Cycle count persisted to FRAM' is not realised and is declared in proposed_location as not_in_source.",
+      "The design's state machine is not in the driver. contactor.c contains no state machine, no state variable and no transition; its functions are stateless request and query operations. The sequencing is in BMS_Trigger, which the design record does not name.",
+      "The design's 'Emergency open: < 5 ms from fault request' is not established: CONT_OpenContactor carries no timing constant, and the configured waits the sequencing layer applies are 50 ms, 10 ms, 1 ms and 1000 ms, which are longer than 5 ms and are not reconciled with it anywhere in this corpus.",
+      "The design's 'Precharge timeout: configurable (default 5 s)' and 'Voltage threshold: configurable (default 95% pack voltage)' are not present in this module; the only timeout constant present is BMS_STRING_OPEN_TIMEOUT of 1000 ms in the application layer.",
+      "The design's 'Feedback debounce: 10 ms' is not in this module. CONT_CheckFeedback raises a diagnosis event on every call and any debouncing is the DIAG layer's occurrence counter.",
+      "The design's weld and stuck-open detection is realised only for contactors whose configuration names a real feedback source. CONT_GetFeedbackOfAllContactors substitutes the set state for the feedback where feedbackPinType is CONT_HAS_NO_FEEDBACK, so for such a contactor the comparison is tautological and cannot raise a feedback error. The reference project's design states weld and stuck-open detection without that qualification.",
+      "The design's implementation_mapping asserts CONTACTOR_StateMachine, CONTACTOR_CheckFeedback, SBC_FS8X_SetContactor and DIAG_CBS_Contactor; none of those four names occurs anywhere in the repository. That mapping is not repaired here and the disagreement is recorded rather than propagated."
+    ]
+  },
+  "realises_requirements": [
+    {
+      "requirement_id": "FB2-SW-SWR-000003",
+      "how_realised": "The actuation-request and feedback-comparison halves of the requirement's statement are present and reused; the sequencing is realised in the application layer rather than in this driver; the contactor cycle counter the design calls for is not in the source and is declared as a proposal. The reference project's realisation of this requirement is therefore incomplete at revision 1 in the same two respects the as_is record names.",
+      "figure_provenance": "mixed_read_and_modelled"
+    }
+  ],
+  "anchor_refs": [
+    "FB2-SRC-COD-000008",
+    "FB2-SRC-COD-000013",
+    "FB2-SRC-COD-000027"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "CONT-IMP-REQUEST",
+      "description": "Records the requested contactor state and forwards it to the SPS channel that drives that contactor, keyed on the (string, contactor type) pair.",
+      "kind": "state_transition",
+      "evidence_symbol": "CONT_OpenContactor",
+      "evidence_line_range": "165-182"
+    },
+    {
+      "behaviour_id": "CONT-IMP-FEEDBACK-READ",
+      "description": "Reads each contactor's feedback from the source its configuration selects: current sense, normally-open port-expander input, normally-closed port-expander input, or the set state itself when no feedback is configured.",
+      "kind": "arbitration",
+      "evidence_symbol": "CONT_GetFeedbackOfAllContactors",
+      "evidence_line_range": "86-106"
+    },
+    {
+      "behaviour_id": "CONT-IMP-FEEDBACK-COMPARE",
+      "description": "Compares requested against actual state per contactor and raises the string-plus, string-minus or precharge feedback diagnosis entry with an OK or NOT_OK event.",
+      "kind": "validation",
+      "evidence_symbol": "CONT_CheckFeedback",
+      "evidence_line_range": "125-163"
+    },
+    {
+      "behaviour_id": "CONT-IMP-FEEDBACK-FLAG",
+      "description": "Turns the raised feedback diagnosis event into the per-string feedback error flags the application reads.",
+      "kind": "diagnostic_raise",
+      "evidence_symbol": "DIAG_StringContactorFeedback",
+      "evidence_line_range": "73-100"
+    },
+    {
+      "behaviour_id": "CONT-IMP-SEQUENCE",
+      "description": "The application-layer state machine that performs the design's contactor sequencing, including the precharge-first ordering and the one-at-a-time string opening, with the configured waits between steps.",
+      "kind": "state_transition",
+      "evidence_symbol": "BMS_Trigger",
+      "evidence_line_range": "898-1691"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "task",
+      "entry_points": [
+        "CONT_CheckFeedback",
+        "CONT_OpenContactor",
+        "CONT_CloseContactor"
+      ],
+      "shared_state": "cont_contactorStates, the static registry array written by the open and close requests and read by the feedback read, the feedback comparison and the state query. All of them are called from BMS_Trigger on the same task cycle, so the module needs no critical section of its own. The proposed cycle counter would add a second piece of persistent module state written on every actuation and read by nothing in this corpus."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record describes the hypothetical reference project's contactor implementation against the real pinned source and declares, as a proposal, the cycle counter its design requires and the source does not contain. It is not evidence that FB2-SW-SWR-000003 is met in either profile: the requirement's 5 ms emergency-open figure and its stated state machine are not established by anything listed here, and the configured waits the source actually applies are longer than that figure. It confers no production authority, no verification credit and no human approval, and it asserts nothing about the real foxBMS product's safety classification."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "Every code_location was read at the pinned commit with 'git show 308028fb:path'; each content_hash is that pinned blob's sha256. For contactor.c and diag_cbs_contactor.c the hash equals the value the corresponding pre-existing source-registry anchor already carries; for bms.c there is no anchor and the hash was computed at the pin for this record. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The contactor.c spans were cross-read against 'graft skeleton src/app/driver/contactor/contactor.c'.",
+    "limitations": [
+      "The proposed_location entry names a symbol that DOES NOT EXIST in the pinned source and is not a source anchor. It is a proposal for the hypothetical project and is recorded here precisely so that it cannot be mistaken for a verified location or for an implemented counter.",
+      "The absence of any cycle counter in contactor.c was established by reading the file at the pinned commit and searching it for fram and cycle, which return no occurrence. It is an absence claim about this module and is stated as such.",
+      "Behaviour was verified by reading the code. No contactor was actuated, no feedback was read and no timing measurement of this path exists in this corpus.",
+      "contactor.c, bms.c and diag_cbs_contactor.c are unmodified between the pin and the working tree, so the same ranges and hashes hold for the checked-out files."
+    ]
+  },
+  "provenance_note": "This record shares its anchor set with the as_is record of the same id, because both profiles describe the same real source. No new anchor was created. bms.c is listed as a code location because the design's state-machine responsibility is realised there rather than in the driver the design names, and naming the real location is the point of an implementation record; it is not claimed to be covered by any anchor, and no anchor for it was added."
+}

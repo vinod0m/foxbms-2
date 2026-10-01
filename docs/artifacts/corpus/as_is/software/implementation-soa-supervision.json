@@ -1,0 +1,211 @@
+{
+  "id": "FB2-SW-IMP-000002",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "profile": "as_is",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Implementation: SOA supervision - three-tier cell voltage, mode-dependent temperature and direction-dependent current limit comparison with DIAG raising",
+  "owner_role": "sw_engineer",
+  "origin": "source_observed",
+  "source_refs": [
+    "FB2-SRC-COD-000004",
+    "FB2-SRC-COD-000005",
+    "FB2-SRC-COD-000006",
+    "FB2-SRC-COD-000009",
+    "FB2-SRC-COD-000010"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ISO_26262_2018",
+      "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+      "status": "partially_mapped",
+      "rationale": "States where the SOA comparison code is. Makes no claim that it was verified and asserts no ASIL classification."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.4 (design-to-code traceability)",
+      "status": "partially_mapped",
+      "rationale": "Supplies the traceability SWE.4 expects. Verification evidence lives in the FB2-VER-TMS-* measures."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-02T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "First issue. Authored because no artefact of type implementation existed. The design record FB2-SW-DSN-000002 asserts implementation_mapping symbols SOA_CheckVoltageLimits, SOA_CheckCurrentLimits, SOA_CheckTemperatureLimits and DIAG_CBS_Voltage; none of those four names occurs anywhere in the repository. The real symbols are SOA_CheckVoltages, SOA_CheckCurrent, SOA_CheckTemperatures and DIAG_ErrorOvervoltage / DIAG_ErrorUndervoltage / DIAG_ErrorHighVoltageMeasurement, and this record names only those."
+    }
+  ],
+  "implementation_kind": "function_group",
+  "implementation_status": "in_source_with_deviations",
+  "code_locations": [
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/application/soa/soa.c",
+      "symbol": "SOA_CheckVoltages",
+      "line_range": "81-146",
+      "content_hash": "sha256:9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/application/soa/soa.c",
+      "symbol": "SOA_CheckTemperatures",
+      "line_range": "148-269",
+      "content_hash": "sha256:9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/application/soa/soa.c",
+      "symbol": "SOA_CheckCurrent",
+      "line_range": "271-351",
+      "content_hash": "sha256:9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/engine/diag/diag.c",
+      "symbol": "DIAG_Handler",
+      "line_range": "341-475",
+      "content_hash": "sha256:71c7687897444417e944b051b2d0e8c881f00df52ecee9e4db6cfd422778553e",
+      "symbol_role": "definition",
+      "verified_against_pinned_source": true
+    }
+  ],
+  "implements": {
+    "design_artifact_id": "FB2-SW-DSN-000002",
+    "design_level": "detailed_design",
+    "relationship": "This function group is where FB2-SW-DSN-000002's limit-comparison and diagnosis-raising responsibilities are actually carried. The mechanism, read from the pinned source: SOA_CheckVoltages (soa.c:81-146) iterates BS_NR_OF_STRINGS and, for each string, compares maximumCellVoltage_mV against the nested thresholds BC_VOLTAGE_MAX_MOL_mV, then BC_VOLTAGE_MAX_RSL_mV, then BC_VOLTAGE_MAX_MSL_mV, calling DIAG_Handler with DIAG_EVENT_NOT_OK on each crossed tier and with DIAG_EVENT_OK on each tier the value has fallen back inside; the minimum voltage is handled symmetrically against BC_VOLTAGE_MIN_MOL/RSL/MSL_mV, and the undervoltage-MSL handler's return value is captured so that a simultaneous deep-discharge crossing raises DIAG_ID_DEEP_DISCHARGE_DETECTED as well. SOA_CheckTemperatures (148-269) branches on BMS_GetCurrentFlowDirection(i_current) and compares against a DISCHARGE tier set or a CHARGE tier set accordingly, so the limit that applies depends on current direction rather than on mode alone. SOA_CheckCurrent (271-351) skips a string entirely when invalidStringCurrent[s] is non-zero, computes an absolute current, evaluates string and cell current limits per direction, and separately raises DIAG_ID_CURRENT_ON_OPEN_STRING when a current is measured on a string whose contactors are open. What is absent is any counter: the module holds no static state at all, so it cannot debounce.",
+    "partial_coverage": [
+      "The design's DEBOUNCING state and its 'debounce count configurable (default 2)' constraint are NOT realised in this module. soa.c contains no static variable, no counter and no debounce state at the pinned commit. The debouncing the corpus describes is the DIAG layer's occurrence counter, configured per entry in diag_cfg.c with DIAG_SEN_EVENT_50 for the cell-voltage tiers and DIAG_DELAY_200ms for the MSL tiers (diag_cfg.c:126-131). This is a different mechanism at a different layer with different parameters, and the module does not implement the design's.",
+      "The design's VIOLATION_CONFIRMED -> FAULT_TRIGGERED -> fault_request output is not an output of this module. SOA_CheckVoltages returns void. The fault request is raised downstream by BMS_IsAnyFatalErrorFlagSet and BMS_IsBatterySystemStateOkay in bms.c:515-575, which poll the DIAG fatal-error link table and act on the shortest configured delay. The design's 'SOA_SYS_OUT fault_request' signal is therefore not implemented at the interface the design declares.",
+      "The design's 'violation_details' output does not exist. The detail carried out of the module is the DIAG occurrence counter, not a structured violation record.",
+      "The design's 'per-cell debounce' decision DEC-SOA-002 is not observable in this module for the same reason there is no debounce: nothing is counted per cell here.",
+      "SOA_CheckSlaveTemperatures (soa.c:353-354) exists as an empty function body carrying only a TODO. It is named here so that the record does not imply slave-temperature supervision is implemented; it is not."
+    ]
+  },
+  "realises_requirements": [
+    {
+      "requirement_id": "FB2-SW-SWR-000002",
+      "how_realised": "The limit comparison the requirement's statement describes is present: SOA_CheckVoltages reads the per-string minimum and maximum cell voltages the caller passes in and compares each against the configured tier thresholds, calling DIAG_Handler for every tier crossed. The classification latency and any debouncing are not in this module.",
+      "figure_provenance": "mixed_read_and_modelled"
+    }
+  ],
+  "anchor_refs": [
+    "FB2-SRC-COD-000004",
+    "FB2-SRC-COD-000005",
+    "FB2-SRC-COD-000006",
+    "FB2-SRC-COD-000009",
+    "FB2-SRC-COD-000010"
+  ],
+  "behaviours": [
+    {
+      "behaviour_id": "SOA-IMP-VOLT-TIER",
+      "description": "Compares each string's maximum and minimum cell voltage against three nested over- and under-voltage tiers and raises the matching diagnosis entry on each tier, clearing the tiers the value has returned inside.",
+      "kind": "diagnostic_raise",
+      "evidence_symbol": "SOA_CheckVoltages",
+      "evidence_line_range": "81-146"
+    },
+    {
+      "behaviour_id": "SOA-IMP-DEEP-DISCHARGE",
+      "description": "Raises an additional deep-discharge diagnosis when the undervoltage-MSL handler reports an error and the minimum voltage is also at or below the deep-discharge threshold.",
+      "kind": "diagnostic_raise",
+      "evidence_symbol": "SOA_CheckVoltages",
+      "evidence_line_range": "122-129"
+    },
+    {
+      "behaviour_id": "SOA-IMP-TEMP-DIRECTION",
+      "description": "Selects between the discharge and the charge temperature tier sets from the sign of the string current, so the applicable limit depends on current direction rather than on mode alone.",
+      "kind": "validation",
+      "evidence_symbol": "SOA_CheckTemperatures",
+      "evidence_line_range": "160-212"
+    },
+    {
+      "behaviour_id": "SOA-IMP-CURRENT-SKIP-INVALID",
+      "description": "Skips a string's current comparison entirely when the database marks that string current invalid, so an untrusted measurement does not raise a limit diagnosis.",
+      "kind": "validation",
+      "evidence_symbol": "SOA_CheckCurrent",
+      "evidence_line_range": "271-279"
+    },
+    {
+      "behaviour_id": "SOA-IMP-CURRENT-DIRECTION",
+      "description": "Compares absolute string current against direction-specific string and cell current limits and against the pack current limit, raising the charge or discharge entry accordingly.",
+      "kind": "validation",
+      "evidence_symbol": "SOA_CheckCurrent",
+      "evidence_line_range": "283-348"
+    },
+    {
+      "behaviour_id": "SOA-IMP-CURRENT-ON-OPEN-STRING",
+      "description": "Detects a measured current on a string whose contactors are open, which is the condition the fuse and the open-sense wiring are expected to make impossible.",
+      "kind": "diagnostic_raise",
+      "evidence_symbol": "SOA_CheckCurrent",
+      "evidence_line_range": "324-327"
+    },
+    {
+      "behaviour_id": "SOA-IMP-DIAG-AGGREGATE",
+      "description": "The diagnosis handler every SOA check calls into; it applies the configured per-entry occurrence threshold and delay and is what actually makes a raised entry active.",
+      "kind": "diagnostic_raise",
+      "evidence_symbol": "DIAG_Handler",
+      "evidence_line_range": "341-475"
+    }
+  ],
+  "concurrency_and_isr_context": [
+    {
+      "context": "task",
+      "entry_points": [
+        "SOA_CheckVoltages",
+        "SOA_CheckTemperatures",
+        "SOA_CheckCurrent",
+        "SOA_CheckSlaveTemperatures"
+      ],
+      "shared_state": "None in this module: the four functions hold no static state and write only through DIAG_Handler and the caller-supplied structures. The call site is BMS_Trigger (bms.c:898-1691), which invokes SOA_CheckVoltages, SOA_CheckTemperatures, SOA_CheckCurrent and SOA_CheckSlaveTemperatures in that order at bms.c:913-917, before the BMS state machine's own re-entrance guard at bms.c:920."
+    }
+  ],
+  "guard": {
+    "is_implementation_evidence": false,
+    "is_verification_result": false,
+    "confers_no_production_authority": true,
+    "confers_no_verification_credit": true,
+    "human_approval_required": true,
+    "statement": "This record says where the SOA comparison code is and what it does, including the parts of FB2-SW-DSN-000002 it does not realise. It is not evidence that FB2-SW-SWR-000002 is met: that requirement's 10 ms comparison latency and its debounce behaviour are not established by anything listed here, and the corpus already records that the source implements no SOA debounce counter. It confers no production authority, no verification credit, and no human approval."
+  },
+  "evidence_status": {
+    "locations_verified": true,
+    "method": "Each file was read at the pinned commit with 'git show 308028fb:path'; the content_hash of each location is the sha256 of that pinned blob, computed independently of the corpus; the named symbol was confirmed to occur inside the recorded line_range of the pinned content and the range was confirmed within the file. The three soa.c locations were cross-read against 'graft skeleton src/app/application/soa/soa.c'.",
+    "limitations": [
+      "Every content_hash in code_locations is the sha256 of the pinned blob of that file, and equals the content_hash the corresponding source-registry anchor already carries, so the record and the anchor cannot disagree about which bytes were read.",
+      "Behaviour was verified by reading the code. Nothing was executed. No timing, coverage or stack measurement of this module exists in this corpus.",
+      "The line ranges are those of the pinned commit. soa.c is unmodified between the pin and the working tree, so the same ranges hold for the checked-out file."
+    ]
+  },
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000004/5/6 name SOA_CheckVoltages / SOA_CheckCurrent / SOA_CheckTemperatures in this file, FB2-SRC-COD-000009 names DIAG_Handler in diag.c and FB2-SRC-COD-000010 names the three voltage callbacks in diag_cbs_voltage.c. No new anchor was created. The design record's four asserted implementation symbols (SOA_CheckVoltageLimits, SOA_CheckCurrentLimits, SOA_CheckTemperatureLimits, DIAG_CBS_Voltage) exist nowhere in the repository and were not carried forward; the disagreement is stated in implements.partial_coverage rather than repaired here, because the design record is a separate artefact."
+}

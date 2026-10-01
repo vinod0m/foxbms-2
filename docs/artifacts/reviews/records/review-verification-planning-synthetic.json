@@ -1,6 +1,6 @@
 {
   "id": "FB2-REV-000007",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "review",
   "engineering_domain": "verification",
@@ -29,13 +29,19 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T00:00:00Z",
-  "updated_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-09-29T00:00:00Z",
       "author": "verification_engineer",
       "description": "Domain review of the synthetic_reference test measures and execution records for execution classification orthogonality, oracle quality and evidence integrity."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "quality_engineer",
+      "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here."
     }
   ],
   "review_type": "domain",
@@ -72,8 +78,8 @@
     },
     {
       "artifact_id": "FB2-VER-EXE-000006",
-      "revision": "1",
-      "digest": "bdddec4e0d9f0f1b671d57fe416c06a457888db979aac18403c1b4527cd53d8e"
+      "revision": "2",
+      "digest": "a8fa0097ddf7eb22e1a8877cbf762433ed35ebb7c8d571d877230a0f114e9ae9"
     },
     {
       "artifact_id": "FB2-VER-EXE-000007",
@@ -175,5 +181,17 @@
     "referenced_log_directories_that_exist": 0,
     "evidence_artifacts_stored": 0,
     "test_measures_with_tautological_expected_outcome": 5
-  }
+  },
+  "digest_corrections": [
+    {
+      "artifact_id": "FB2-VER-EXE-000006",
+      "profile": "synthetic_reference",
+      "previous_digest": "bdddec4e0d9f0f1b671d57fe416c06a457888db979aac18403c1b4527cd53d8e",
+      "previous_reviewed_revision": "1",
+      "current_digest": "a8fa0097ddf7eb22e1a8877cbf762433ed35ebb7c8d571d877230a0f114e9ae9",
+      "current_artifact_revision": "2",
+      "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+      "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 2. The digest this review recorded is the sha256 of the file as committed in 2a408d57, 176fe234, 75e8de6c, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session."
+    }
+  ]
 }
