@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-01T05:09:49Z |
+| Generated | 2026-10-01T13:26:59Z |
 
 ## Scope
 
@@ -241,10 +241,13 @@ flowchart TD
     "FB2-SW-SWR-000003" --> "FB2-SYS-SYR-000008"
     "FB2-SW-IMP-000001" -.implements.-> "FB2-SW-DSN-000001"
     "FB2-SW-IMP-000001" -.implements.-> "FB2-SW-SWR-000001"
+    "FB2-SW-IMP-000001" -.implements.-> "FB2-SW-DSN-000004"
     "FB2-SW-IMP-000002" -.implements.-> "FB2-SW-DSN-000002"
     "FB2-SW-IMP-000002" -.implements.-> "FB2-SW-SWR-000002"
+    "FB2-SW-IMP-000002" -.implements.-> "FB2-SW-DSN-000005"
     "FB2-SW-IMP-000003" -.implements.-> "FB2-SW-DSN-000003"
     "FB2-SW-IMP-000003" -.implements.-> "FB2-SW-SWR-000003"
+    "FB2-SW-IMP-000003" -.implements.-> "FB2-SW-DSN-000006"
     "FB2-SW-IMP-000004" -.implements.-> "FB2-SYS-SYR-000007"
 ```
 
@@ -321,6 +324,112 @@ stateDiagram-v2
 ```
 
 
+### Dynamic Viewpoint — `FB2-SW-DSN-000004`
+
+**Caption**: State machine of `FB2-SW-DSN-000004` from `behavior_model` (state_machine).
+
+```mermaid
+stateDiagram-v2
+    [*] --> LTC_STATEMACH_UNINITIALIZED
+    LTC_STATEMACH_UNINITIALIZED --> LTC_STATEMACH_INITIALIZATION : LTC_Trigger entry with substat...
+    LTC_STATEMACH_INITIALIZATION --> LTC_STATEMACH_INITIALIZATION : LTC_CHECK_INITIALIZATION
+    LTC_STATEMACH_INITIALIZATION --> LTC_STATEMACH_INITIALIZATION : LTC_EXIT_INITIALIZATION
+    any state with a non-STD_OK operation result --> LTC_STATEMACH_ERROR_SPIFAILED : LTC_CondBasedStateTransition w...
+    any state with a STD_OK operation result --> caller-supplied state_ok : LTC_CondBasedStateTransition w...
+    LTC_STATEMACH_MEASCYCLE_FINISHED --> LTC_STATEMACH_IDLE : completion of a measurement cy...
+    any state, on every LTC_Trigger entry --> unchanged : entry-time timer gate
+    LTC_STATEMACH_UNINITIALIZED
+    LTC_STATEMACH_INITIALIZATION
+    LTC_STATEMACH_REINIT
+    LTC_STATEMACH_INITIALIZED
+    LTC_STATEMACH_IDLE
+    LTC_STATEMACH_STARTMEAS
+    LTC_STATEMACH_READVOLTAGE
+    LTC_STATEMACH_MUXMEASUREMENT
+    LTC_STATEMACH_MUXMEASUREMENT_FINISHED
+    LTC_STATEMACH_BALANCE_CONTROL
+    LTC_STATEMACH_ALL_GPIO_MEASUREMENT
+    LTC_STATEMACH_READALLGPIO
+    LTC_STATEMACH_READVOLTAGE_2CELLS
+    LTC_STATEMACH_STARTMEAS_2CELLS
+    LTC_STATEMACH_USER_IO_CONTROL
+    LTC_STATEMACH_USER_IO_FEEDBACK
+    LTC_STATEMACH_EEPROM_READ
+    LTC_STATEMACH_EEPROM_WRITE
+    LTC_STATEMACH_TEMP_SENS_READ
+    LTC_STATEMACH_BALANCE_FEEDBACK
+    LTC_STATEMACH_OPENWIRE_CHECK
+    LTC_STATEMACH_DEVICE_PARAMETER
+    LTC_STATEMACH_ADC_ACCURACY
+    LTC_STATEMACH_DIGITAL_FILTER
+    LTC_STATEMACH_VOLTAGE_MEASURE_SUM_OF_CELLS
+    LTC_STATEMACH_EEPROM_READ_UID
+    LTC_STATEMACH_USER_IO_CONTROL_TI
+    LTC_STATEMACH_USER_IO_FEEDBACK_TI
+    LTC_STATEMACH_STARTMEAS_CONTINUE
+    LTC_STATEMACH_MEASCYCLE_FINISHED
+    LTC_STATEMACH_UNDEFINED
+    LTC_STATEMACH_RESERVED1
+    LTC_STATEMACH_ERROR_SPIFAILED
+    LTC_STATEMACH_ERROR_PEC_FAILED
+    LTC_STATEMACH_ERROR_MULTIPLEXER_FAILED
+    LTC_STATEMACH_ERROR_INITIALIZATION
+```
+
+
+### Dynamic Viewpoint — `FB2-SW-DSN-000005`
+
+**Caption**: State machine of `FB2-SW-DSN-000005` from `behavior_model` (combination).
+
+```mermaid
+stateDiagram-v2
+    [*] --> string voltage evaluated
+    string voltage evaluated --> string voltage evaluated : maximumCellVoltage_mV >= BC_VO...
+    string voltage evaluated --> string voltage evaluated : maximumCellVoltage_mV < BC_VOL...
+    string voltage evaluated --> string voltage evaluated : minimumCellVoltage_mV <= BC_VO...
+    string voltage evaluated --> string voltage evaluated : minimumCellVoltage_mV <= BC_VO...
+    string temperature evaluated against the discharge limit set --> string temperature evaluated against the charge limit set : BMS_GetCurrentFlowDirection(st...
+    string current valid and evaluated --> string current valid and evaluated : SOA_IsStringCurrentLimitViolat...
+    string current valid and evaluated --> string current valid and evaluated : SOA_IsCurrentOnOpenString(curr...
+    string current invalid and skipped --> pack current valid and evaluated : end of the string loop
+    any state --> slave temperature not evaluated : BMS_Trigger calls SOA_CheckSla...
+    string voltage evaluated
+    string temperature evaluated against the discharge limit set
+    string temperature evaluated against the charge limit set
+    string current valid and evaluated
+    string current invalid and skipped
+    pack current valid and evaluated
+    pack current invalid and skipped
+    current direction unresolved at rest and exempt from all current limits
+    slave temperature not evaluated
+```
+
+
+### Dynamic Viewpoint — `FB2-SW-DSN-000006`
+
+**Caption**: State machine of `FB2-SW-DSN-000006` from `behavior_model` (combination).
+
+```mermaid
+stateDiagram-v2
+    [*] --> command recorded, feedback not yet sampled
+    command recorded, feedback not yet sampled --> command recorded, feedback sampled and matching : CONT_OpenContactor or CONT_Clo...
+    command recorded, feedback not yet sampled --> command recorded, feedback sampled and mismatching : CONT_OpenContactor or CONT_Clo...
+    any state --> contactor configured without feedback : CONT_GetFeedbackOfAllContactor...
+    no registry entry matched the request --> no registry entry matched the request : the linear scan over BS_NR_OF_...
+    string without a precharge contactor --> string without a precharge contactor : CONT_ClosePrecharge or CONT_Op...
+    any state --> command recorded, feedback not yet sampled : CONT_OpenAllContactors from th...
+    registry unvalidated --> registry validated : CONT_Initialize calls the regi...
+    command recorded, feedback not yet sampled
+    command recorded, feedback sampled and matching
+    command recorded, feedback sampled and mismatching
+    contactor configured without feedback
+    no registry entry matched the request
+    string without a precharge contactor
+    registry unvalidated
+    registry validated
+```
+
+
 ### Task/Thread Timing Context
 
 **Caption**: Timing budget elements (from `FB2-SAF-SGO-000001`) as scheduling context.
@@ -356,4 +465,4 @@ flowchart LR
 
 ---
 
-*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T13:26:59Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

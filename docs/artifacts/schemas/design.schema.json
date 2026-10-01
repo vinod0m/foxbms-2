@@ -57,10 +57,40 @@
                   "delegates_to"
                 ],
                 "description": "Type of relationship to child element (snake_case)"
+              },
+              "internal_unit": {
+                "type": "string",
+                "description": "Name of the internal unit (function, static function, data block or type) in the source that realises this part of the design. Required for detailed_design records so the decomposition names source-level units rather than only child artefact IDs.",
+                "examples": [
+                  "SOA_CheckVoltages",
+                  "LTC_CheckPec",
+                  "cont_contactorStates"
+                ]
+              },
+              "source_file": {
+                "type": "string",
+                "description": "Repository-relative path of the source file that declares internal_unit, pinned to the commit named in source_refs",
+                "examples": [
+                  "src/app/application/soa/soa.c",
+                  "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c"
+                ]
+              },
+              "unit_role": {
+                "type": "string",
+                "description": "What this internal unit is responsible for within the parent design element"
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "extern",
+                  "static",
+                  "external_test_hook"
+                ],
+                "description": "Linkage of the internal unit in the source: extern (translation-unit external), static (internal linkage), external_test_hook (declared static and exposed under UNITY_UNIT_TEST only)"
               }
             }
           },
-          "description": "Child design elements and their relationships"
+          "description": "Child design elements and their relationships. For design_level=detailed_design, each entry is expected to also carry internal_unit and source_file."
         },
         "interfaces": {
           "type": "array",
@@ -117,10 +147,30 @@
                     "rate": {
                       "type": "string",
                       "description": "Update rate or frequency (e.g., 10ms, 100Hz, event-driven)"
+                    },
+                    "validity": {
+                      "type": "string",
+                      "description": "Precondition the value must satisfy before the consumer acts on it, and what the source does when it does not (e.g. a FAS_ASSERT bound, an invalid* bitmask the consumer must test, or an unconditional cast with no check)"
+                    },
+                    "source_symbol": {
+                      "type": "string",
+                      "description": "Symbol in the pinned source that defines this signal, so the contract can be traced to the declaration that fixes it"
+                    },
+                    "source_value_basis": {
+                      "type": "string",
+                      "description": "How the stated range was obtained: a named configuration macro with its value, a literal in the source, a widening cast, or 'not stated in source' when the source does not bound the value"
                     }
                   }
                 },
                 "description": "Signals carried by this interface"
+              },
+              "error_signalling": {
+                "type": "string",
+                "description": "How this interface reports failure, read from the real signature and the real error path: the return type and its failure value, whether a non-failure return is possible for a rejected input, or 'no error return in signature' when the interface cannot fail"
+              },
+              "call_contract": {
+                "type": "string",
+                "description": "The precondition the callee enforces and the consequence of violating it, read from the real code path (e.g. an FAS_ASSERT that traps, or a silently ignored argument)"
               }
             }
           },
@@ -314,6 +364,55 @@
             }
           },
           "description": "Mapping from design elements to source code"
+        },
+        "declared_gaps": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "required": [
+              "topic",
+              "statement",
+              "searched"
+            ],
+            "properties": {
+              "topic": {
+                "type": "string",
+                "description": "The design element or characteristic that the source does not specify"
+              },
+              "statement": {
+                "type": "string",
+                "description": "What the source does and does not determine, stated without substituting a plausible value"
+              },
+              "searched": {
+                "type": "string",
+                "description": "Where the search was performed, so the absence claim can be re-checked rather than taken on trust"
+              }
+            }
+          },
+          "description": "Design characteristics the pinned source does not specify. A detailed design that declares an absence is preferred over one that invents the missing behaviour; ISO 26262-6 clause 8.4 information that the source does not carry belongs here and not in the fields above."
+        },
+        "derived_findings": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "required": [
+              "finding",
+              "evidence"
+            ],
+            "properties": {
+              "finding": {
+                "type": "string",
+                "description": "An observation about the pinned source that a reader of the design needs, stated as what the code does"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Path, symbol and line range at the pinned commit that establishes the observation"
+              }
+            }
+          },
+          "description": "Observations about the pinned source that follow from reading it and are material to the design - unimplemented entry points, inconsistent bounds, or unenforced invariants. Distinct from declared_gaps: a gap is something the source does not specify, a finding is something the source does specify in a way a reader should know."
         }
       },
       "additionalProperties": true

@@ -1,0 +1,677 @@
+{
+ "id": "FB2-SW-DSN-000004",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "design",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Detailed Design: LTC 6813-1 AFE measurement driver - internal units, PEC contract, transmission timing and error propagation",
+ "owner_role": "sw_engineer",
+ "origin": "synthetic",
+ "source_refs": [
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000002",
+  "FB2-SRC-COD-000034",
+  "FB2-SRC-COD-000003"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8.4 - software detailed design and unit design",
+   "status": "mapped",
+   "rationale": "This record carries the clause 8.4 content for one design element: responsibilities, decomposition into internal units named from the source, interface contracts with direction, unit, range, validity and error signalling read from real signatures and real error paths, the state model read from the actual switch in LTC_Trigger, the constraints and budgets the source imposes, the failure response taken from the real PEC and SPI error paths, and the mapping to implementation. Where the source does not specify a clause 8.4 item, the item is recorded in declared_gaps rather than filled with a plausible value."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.3",
+   "status": "mapped",
+   "rationale": "SWE.3 Software Detailed Design and Unit Construction. The backing family this record supplies is the Detailed Design family. The other two families SWE.3 expects - Source Code and Unit Test Specifications - are not supplied by this record and are named as such in the SWE.3 disposition in docs/artifacts/governance/coverage-plan.json."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "First issue. Detailed design derived by reading src/app/driver/afe/ltc at commit 308028fb: internal unit set, the LTC_CalculatePec15 / LTC_CheckPec integrity contract, the transmit_ongoing DMA handshake, the LTC_STATEMACH_e state set actually branched on, the timing macros the source imposes, and the failure propagation from PEC failure to invalidCellVoltage."
+  }
+ ],
+ "design_level": "detailed_design",
+ "design_scope_note": "FB2-SW-DSN-000001 records the same AFE element at architecture level: it allocates the element to the driver and states a state machine and budgets. This record does not restate that allocation. It specifies the internals - which source-level unit performs each part, what each interface accepts and returns, how the PEC failure reaches the database validity bits - and it names the places where the pinned source does not specify something a detailed design is expected to state. The two records are different levels of the same element, not two designs of it; the link FB2-SW-DSN-000004 refines FB2-SW-DSN-000001 records that relationship in the registry.",
+ "responsibilities": [
+  "Accept measurement and maintenance requests from the application layer and convert each into an LTC_STATEMACH_e state request against ltc_stateBase, returning whether the request was accepted (src/app/driver/afe/ltc/api/ltc_afe.c:86-140)",
+  "Advance one LTC 6813-1 state machine instance per call from the transmission and receive buffers held in LTC_STATE_s (src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:833-2964)",
+  "Verify the LTC 6813-1 packet error code over every received block and record per-device validity in the error table (src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:3838-3878)",
+  "Convert validated cell voltages and GPIO temperatures into the database and set the per-cell invalidCellVoltage bits from the error table rather than from a separate plausibility pass (src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:597-654, 3110-3135)",
+  "Release the state machine from the SPI DMA completion interrupt that signals the end of a transmission (src/app/driver/afe/ltc/common/ltc_afe_dma.c:88-93)",
+  "Compute the CRC-15 packet error code used by the transmit and receive paths (src/app/driver/afe/ltc/common/ltc_pec.c:75-115)"
+ ],
+ "decomposition": [
+  {
+   "child_id": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "relationship": "contains",
+   "internal_unit": "AFE_StartMeasurement, AFE_RequestTemperatureRead, AFE_RequestBalancingFeedbackRead, AFE_RequestOpenWireCheck, AFE_RequestEepromRead, AFE_RequestEepromWrite, AFE_TriggerIc, AFE_Initialize",
+   "source_file": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "unit_role": "Request-acceptance layer. Each entry point asserts its string bound, forms an LTC_REQUEST_s and offers it to LTC_SetStateRequest, translating a non-LTC_OK result into STD_NOT_OK. It contains no measurement logic itself.",
+   "visibility": "extern"
+  },
+  {
+   "child_id": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "relationship": "contains",
+   "internal_unit": "LTC_Trigger",
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "unit_role": "The state machine itself. A single function of 2132 lines branching on LTC_STATE_s->state and LTC_STATE_s->substate; it owns the entry-time guard, the timer gate and every SPI command issuance.",
+   "visibility": "extern"
+  },
+  {
+   "child_id": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "relationship": "contains",
+   "internal_unit": "LTC_StateTransition, LTC_CondBasedStateTransition",
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "unit_role": "Transition primitives. LTC_StateTransition assigns state, substate and timer unconditionally; LTC_CondBasedStateTransition selects between an ok and a nok destination on the STD_RETURN_TYPE_e of the preceding operation and raises the paired diagnosis entry.",
+   "visibility": "static"
+  },
+  {
+   "child_id": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "relationship": "contains",
+   "internal_unit": "LTC_CheckPec",
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "unit_role": "Integrity gate. For each of LTC_N_LTC devices it recomputes the packet error code over the six data bytes at a stride of eight in the receive buffer and compares it against the two received PEC bytes, writing the per-device verdict into the error table.",
+   "visibility": "static"
+  },
+  {
+   "child_id": "src/app/driver/afe/ltc/common/ltc_pec.c",
+   "relationship": "uses",
+   "internal_unit": "LTC_CalculatePec15",
+   "source_file": "src/app/driver/afe/ltc/common/ltc_pec.c",
+   "unit_role": "Table-driven CRC-15 over a caller-supplied length, seeded with LTC_PEC15_SEED and left-shifted by one bit on return because the AFE stores the PEC in a 16-bit register with a trailing zero.",
+   "visibility": "extern"
+  },
+  {
+   "child_id": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+   "relationship": "uses",
+   "internal_unit": "AFE_IsTransmitOngoing, AFE_SetTransmitOngoing, AFE_DmaCallback",
+   "source_file": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+   "unit_role": "Transmit-ownership handshake between the task context and the SPI DMA completion interrupt. AFE_SetTransmitOngoing sets the flag before a command is issued; AFE_DmaCallback clears it only when the completing SPI index is the one ltc_stateBase's interface uses.",
+   "visibility": "extern"
+  },
+  {
+   "child_id": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "relationship": "contains",
+   "internal_unit": "ltc_errorTable (LTC_ERRORTABLE_s), ltc_cellVoltage, ltc_cellTemperature",
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "unit_role": "Per-driver data state. ltc_errorTable holds the PEC and multiplexer verdicts for every string and device; the cell voltage and temperature copies hold the decoded measurements that LTC_SaveVoltages and LTC_SaveTemperatures publish.",
+   "visibility": "extern"
+  },
+  {
+   "child_id": "src/app/driver/afe/ltc/common/config/ltc_cfg.h",
+   "relationship": "uses",
+   "internal_unit": "LTC_N_LTC, LTC_N_BYTES_FOR_DATA_TRANSMISSION",
+   "source_file": "src/app/driver/afe/ltc/common/config/ltc_cfg.h",
+   "unit_role": "Sizes that fix the frame geometry. LTC_N_LTC resolves to BS_NR_OF_MODULES_PER_STRING and LTC_N_BYTES_FOR_DATA_TRANSMISSION resolves to 4 + 8 * LTC_N_LTC, which is the eight-bytes-per-device stride that LTC_CheckPec indexes against.",
+   "visibility": "extern"
+  }
+ ],
+ "interfaces": [
+  {
+   "interface_id": "AFE_MEAS_REQUEST",
+   "direction": "input",
+   "signals": [
+    {
+     "name": "string",
+     "type": "uint8_t",
+     "unit": "dimensionless",
+     "range": "0 .. BS_NR_OF_STRINGS-1; the source does not state a numeric bound, it asserts string < BS_NR_OF_STRINGS",
+     "validity": "Every request entry point begins with FAS_ASSERT(string < BS_NR_OF_STRINGS). The bound is enforced by assertion, not by an early return, so an out-of-range string traps rather than returning an error.",
+     "source_symbol": "AFE_RequestTemperatureRead",
+     "source_value_basis": "named configuration macro BS_NR_OF_STRINGS, asserted rather than compared against a literal"
+    },
+    {
+     "name": "request",
+     "type": "LTC_STATE_REQUEST_e",
+     "unit": "dimensionless",
+     "range": "one of LTC_STATE_NO_REQUEST, LTC_STATE_INIT_REQUEST, LTC_STATE_EEPROM_READ_REQUEST, LTC_STATE_EEPROM_WRITE_REQUEST, LTC_STATE_TEMP_SENS_READ_REQUEST, LTC_STATE_BALANCE_FEEDBACK_REQUEST, LTC_STATE_OPENWIRE_CHECK_REQUEST as used at these call sites",
+     "validity": "Offered to LTC_SetStateRequest; acceptance is not guaranteed and is reported in the return value.",
+     "source_symbol": "AFE_RequestBalancingFeedbackRead",
+     "source_value_basis": "named design-time enumerator set in LTC_REQUEST_s.request"
+    }
+   ],
+   "error_signalling": "STD_RETURN_TYPE_e. STD_OK when LTC_SetStateRequest returns LTC_OK, STD_NOT_OK otherwise. The two forms of the same translation differ between entry points: AFE_RequestEepromRead, AFE_RequestEepromWrite, AFE_RequestTemperatureRead, AFE_RequestOpenWireCheck and AFE_StartMeasurement default retval to STD_OK and overwrite it on failure, whereas AFE_RequestBalancingFeedbackRead defaults to STD_NOT_OK and overwrites it on success. Both produce the same observable mapping, so the difference is a coding style difference and not a contract difference.",
+   "call_contract": "FAS_ASSERT(string < BS_NR_OF_STRINGS) traps on an out-of-range string. There is no path on which an out-of-range string is reported through the return value."
+  },
+  {
+   "interface_id": "AFE_DIAG_ERROR_ENTRY",
+   "direction": "output",
+   "signals": [
+    {
+     "name": "spiDiagErrorEntry",
+     "type": "DIAG_ID_e",
+     "unit": "dimensionless",
+     "range": "a diagnosis identifier held in LTC_STATE_s; the source does not bound it and the closed enumeration lives in diag_cfg.h",
+     "validity": "Passed to DIAG_CheckEvent together with the STD_RETURN_TYPE_e of the SPI operation just completed; DIAG_CheckEvent raises the counter on any non-STD_OK value.",
+     "source_symbol": "DIAG_CheckEvent",
+     "source_value_basis": "not stated in source; the identifier set is configured, not derived"
+    },
+    {
+     "name": "pecDiagErrorEntry",
+     "type": "DIAG_ID_e",
+     "unit": "dimensionless",
+     "range": "a diagnosis identifier held in LTC_STATE_s; the source does not bound it",
+     "validity": "Passed to DIAG_CheckEvent with the STD_RETURN_TYPE_e returned by LTC_CheckPec. LTC_CheckPec returns STD_NOT_OK as soon as any device fails its PEC, and the error table retains the per-device verdict separately.",
+     "source_symbol": "LTC_CheckPec",
+     "source_value_basis": "not stated in source; the identifier set is configured, not derived"
+    }
+   ],
+   "error_signalling": "No error return. This interface is the outbound error path: failure is signalled by the act of raising a diagnosis entry, and the return value of the operation that failed is not propagated to the caller of LTC_Trigger.",
+   "call_contract": "The source states that the diagnosis entry is called with DIAG_EVENT_OK when retVal is STD_OK and DIAG_EVENT_NOT_OK otherwise; the impact level is DIAG_STRING and the string index is LTC_STATE_s->currentString, so the affected string is carried rather than assumed."
+  },
+  {
+   "interface_id": "LTC_PEC_15",
+   "direction": "output",
+   "signals": [
+    {
+     "name": "pec",
+     "type": "uint16_t",
+     "unit": "dimensionless",
+     "range": "0 .. 0xFFFE as emitted; the value is masked with LTC_PEC15_MASK (0x7FFF) and then shifted left one bit, so the low bit of the returned code is always zero",
+     "validity": "FAS_ASSERT(length > 0u) and FAS_ASSERT(data != NULL_PTR) guard the two arguments. No check is made that length is within the caller's buffer; the caller passes LTC_DATA_SIZE_IN_BYTES, a compile-time constant.",
+     "source_symbol": "LTC_CalculatePec15",
+     "source_value_basis": "literal shift-and-mask over LTC_PEC15_MASK, with the seed LTC_PEC15_SEED (0x10) and polynomial size LTC_PEC15_POLYNOMIAL_SIZE (15) as named macros"
+    },
+    {
+     "name": "ltc_crc15Table",
+     "type": "uint16_t[256]",
+     "unit": "dimensionless",
+     "range": "256 entries indexed by a masked byte position, sized by LTC_PEC_PRECOMPUTED_TABLE_SIZE",
+     "validity": "Declared static const inside the function, so it has internal linkage and is read-only after load.",
+     "source_symbol": "LTC_CalculatePec15",
+     "source_value_basis": "named configuration macro LTC_PEC_PRECOMPUTED_TABLE_SIZE, literal table contents"
+    }
+   ],
+   "error_signalling": "No error return in the signature. The two argument preconditions are enforced by FAS_ASSERT, which traps; a length of zero does not return zero, it does not return at all.",
+   "call_contract": "The index into the table is computed as ((pec >> (LTC_PEC15_POLYNOMIAL_SIZE - LTC_PEC_BYTE_SIZE)) ^ data[byte]) & LTC_PEC_ONE_BYTE_MASK, so the index is bounded by LTC_PEC_ONE_BYTE_MASK (0xFF) and the table access cannot leave the array for any input the assert admits."
+  },
+  {
+   "interface_id": "LTC_SAVE_TO_DATABASE",
+   "direction": "output",
+   "signals": [
+    {
+     "name": "cellVoltage_mV",
+     "type": "int16_t",
+     "unit": "mV",
+     "range": "not bounded by the driver. The conversion performed is ((val_ui) * 100e-6f * 1000.0f), i.e. the LTC register LSB scaled to mV, and the result is stored without a range check.",
+     "validity": "Written only for devices whose error table entry PEC_valid is true. For a device whose PEC failed, the write is skipped and LTC_NUMBER_OF_CELL_VOLTAGES_PER_REGISTER entries of invalidCellVoltage are set true for that register instead.",
+     "source_symbol": "LTC_SaveVoltages",
+     "source_value_basis": "not stated in source; the conversion factor is a literal in the expression and the resulting range is not checked anywhere in the driver"
+    },
+    {
+     "name": "invalidCellVoltage",
+     "type": "uint8_t",
+     "unit": "dimensionless",
+     "range": "0 or 1; 0 means valid, 1 means invalid",
+     "validity": "Set false only on the path where PEC_valid was true; set true for the whole voltage register when it was false. The consumer must read this bit rather than infer validity from the value.",
+     "source_symbol": "LTC_SaveVoltages",
+     "source_value_basis": "named configuration macro LTC_NUMBER_OF_CELL_VOLTAGES_PER_REGISTER fixing the granularity of the invalidation"
+    }
+   ],
+   "error_signalling": "No error return; both LTC_SaveVoltages and LTC_SaveTemperatures return void. Failure is reported by the validity bit rather than by a return value, so a consumer that ignores invalidCellVoltage consumes a value the driver has declared stale.",
+   "call_contract": "FAS_ASSERT(stringNumber < BS_NR_OF_STRINGS) and a NULL check on the state pointer."
+  },
+  {
+   "interface_id": "SPI_DMA_TRANSMIT_OWNERSHIP",
+   "direction": "bidirectional",
+   "signals": [
+    {
+     "name": "transmit_ongoing",
+     "type": "bool",
+     "unit": "dimensionless",
+     "range": "true or false",
+     "validity": "Set true by AFE_SetTransmitOngoing in task context before a command is issued. Cleared only by AFE_DmaCallback when the completing spiIndex equals SPI_GetSpiIndex(ltc_stateBase.ltcData.pSpiInterface->pNode); a completion for any other SPI index leaves it set.",
+     "source_symbol": "AFE_DmaCallback",
+     "source_value_basis": "named field transmit_ongoing of LTC_STATE_s; the guard is a literal comparison against SPI_GetSpiIndex of spiREG1 and spiREG4 asserted in the callback"
+    },
+    {
+     "name": "spiIndex",
+     "type": "uint8_t",
+     "unit": "dimensionless",
+     "range": "asserted to equal SPI_GetSpiIndex(spiREG1) or SPI_GetSpiIndex(spiREG4)",
+     "validity": "FAS_ASSERT restricts the callback to the two SPI peripherals the LTC uses; an interrupt from any other peripheral traps.",
+     "source_symbol": "AFE_DmaCallback",
+     "source_value_basis": "asserted against the two named peripherals rather than against a numeric range"
+    }
+   ],
+   "error_signalling": "No error return. There is no path by which the callback reports that the transmission it completed was the wrong one; the wrong-index case is handled by leaving the flag set rather than by signalling.",
+   "call_contract": "AFE_DmaCallback is described in the source as called on DMA complete interrupts, so it executes in interrupt context while AFE_SetTransmitOngoing executes in task context. The only shared object between the two is transmit_ongoing on the single global ltc_stateBase, and it is written in one context and read in the other with no atomic operation and no critical section anywhere in these three units."
+  }
+ ],
+ "behavior_model": {
+  "type": "state_machine",
+  "states": [
+   "LTC_STATEMACH_UNINITIALIZED",
+   "LTC_STATEMACH_INITIALIZATION",
+   "LTC_STATEMACH_REINIT",
+   "LTC_STATEMACH_INITIALIZED",
+   "LTC_STATEMACH_IDLE",
+   "LTC_STATEMACH_STARTMEAS",
+   "LTC_STATEMACH_READVOLTAGE",
+   "LTC_STATEMACH_MUXMEASUREMENT",
+   "LTC_STATEMACH_MUXMEASUREMENT_FINISHED",
+   "LTC_STATEMACH_BALANCE_CONTROL",
+   "LTC_STATEMACH_ALL_GPIO_MEASUREMENT",
+   "LTC_STATEMACH_READALLGPIO",
+   "LTC_STATEMACH_READVOLTAGE_2CELLS",
+   "LTC_STATEMACH_STARTMEAS_2CELLS",
+   "LTC_STATEMACH_USER_IO_CONTROL",
+   "LTC_STATEMACH_USER_IO_FEEDBACK",
+   "LTC_STATEMACH_EEPROM_READ",
+   "LTC_STATEMACH_EEPROM_WRITE",
+   "LTC_STATEMACH_TEMP_SENS_READ",
+   "LTC_STATEMACH_BALANCE_FEEDBACK",
+   "LTC_STATEMACH_OPENWIRE_CHECK",
+   "LTC_STATEMACH_DEVICE_PARAMETER",
+   "LTC_STATEMACH_ADC_ACCURACY",
+   "LTC_STATEMACH_DIGITAL_FILTER",
+   "LTC_STATEMACH_VOLTAGE_MEASURE_SUM_OF_CELLS",
+   "LTC_STATEMACH_EEPROM_READ_UID",
+   "LTC_STATEMACH_USER_IO_CONTROL_TI",
+   "LTC_STATEMACH_USER_IO_FEEDBACK_TI",
+   "LTC_STATEMACH_STARTMEAS_CONTINUE",
+   "LTC_STATEMACH_MEASCYCLE_FINISHED",
+   "LTC_STATEMACH_UNDEFINED",
+   "LTC_STATEMACH_RESERVED1",
+   "LTC_STATEMACH_ERROR_SPIFAILED",
+   "LTC_STATEMACH_ERROR_PEC_FAILED",
+   "LTC_STATEMACH_ERROR_MULTIPLEXER_FAILED",
+   "LTC_STATEMACH_ERROR_INITIALIZATION"
+  ],
+  "transitions": [
+   {
+    "from": "LTC_STATEMACH_UNINITIALIZED",
+    "to": "LTC_STATEMACH_INITIALIZATION",
+    "trigger": "LTC_Trigger entry with substate LTC_INIT_STRING",
+    "guard": "ltc_state->currentString < BS_NR_OF_STRINGS; the initialisation sequence walks the string index",
+    "action": "LTC_Init issues the daisy-chain initialisation command over the SPI sequence pointer, and the transition arms timer_ms as commandDataTransferTime + LTC_TRANSMISSION_TIMEOUT"
+   },
+   {
+    "from": "LTC_STATEMACH_INITIALIZATION",
+    "to": "LTC_STATEMACH_INITIALIZATION",
+    "trigger": "LTC_CHECK_INITIALIZATION",
+    "guard": "the initialisation transmission has completed within LTC_TRANSMISSION_TIMEOUT of commandDataTransferTime",
+    "action": "LTC_SaveLastStates, AFE_SetTransmitOngoing, LTC_ReadRegister(ltc_cmdRDCFG) reads the configuration register back, and the next transition is armed with commandDataTransferTime + LTC_TRANSMISSION_TIMEOUT"
+   },
+   {
+    "from": "LTC_STATEMACH_INITIALIZATION",
+    "to": "LTC_STATEMACH_INITIALIZATION",
+    "trigger": "LTC_EXIT_INITIALIZATION",
+    "guard": "none on the branch itself",
+    "action": "LTC_CheckPec runs over the received block and its result is handed to DIAG_CheckEvent with pecDiagErrorEntry; LTC_SetSerialId is called for every device; spiSeqPtr and currentString are then incremented"
+   },
+   {
+    "from": "any state with a non-STD_OK operation result",
+    "to": "LTC_STATEMACH_ERROR_SPIFAILED",
+    "trigger": "LTC_CondBasedStateTransition with retVal != STD_OK",
+    "guard": "the preceding SPI operation or LTC_CheckPec returned anything other than STD_OK",
+    "action": "DIAG_Handler is called with diagCode and DIAG_EVENT_NOT_OK at DIAG_STRING impact for currentString, and the machine is moved to the caller-supplied state_nok/substate_nok pair after timer_ms_nok"
+   },
+   {
+    "from": "any state with a STD_OK operation result",
+    "to": "caller-supplied state_ok",
+    "trigger": "LTC_CondBasedStateTransition with retVal == STD_OK",
+    "guard": "the preceding SPI operation and LTC_CheckPec both succeeded",
+    "action": "DIAG_Handler is called with diagCode and DIAG_EVENT_OK at DIAG_STRING impact for currentString, and the machine is moved to state_ok/substate_ok after timer_ms_ok"
+   },
+   {
+    "from": "LTC_STATEMACH_MEASCYCLE_FINISHED",
+    "to": "LTC_STATEMACH_IDLE",
+    "trigger": "completion of a measurement cycle",
+    "guard": "none stated in the branch",
+    "action": "the machine returns to idle and accepts the next state request; AFE_IsFirstMeasurementCycleFinished reports whether the first cycle has completed"
+   },
+   {
+    "from": "any state, on every LTC_Trigger entry",
+    "to": "unchanged",
+    "trigger": "entry-time timer gate",
+    "guard": "ltc_state->timer > 0 after one decrement, or AFE_IsTransmitOngoing(ltc_state) is true",
+    "action": "ltc_state->triggerentry is decremented, continueFunction is set to STD_NOT_OK and the state switch is skipped entirely for that call"
+   }
+  ]
+ },
+ "constraints": [
+  "Transmission budget per command: LTC_TRANSMISSION_TIMEOUT is 10 and is added to LTC_STATE_s->commandDataTransferTime for each armed transition (src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h:162).",
+  "Daisy-chain frame geometry: LTC_N_BYTES_FOR_DATA_TRANSMISSION is 4 + 8 * LTC_N_LTC and LTC_N_LTC resolves to BS_NR_OF_MODULES_PER_STRING (src/app/driver/afe/ltc/common/config/ltc_cfg.h:68,79). LTC_CheckPec indexes the received buffer at 4 + (i * 8) through 11 + (i * 8), so the eight-byte stride is a hard coupling between the configuration macro and the integrity check.",
+  "PEC payload length is fixed: LTC_DATA_SIZE_IN_BYTES is 6 and LTC_CheckPec copies exactly six bytes into PEC_Check before computing (src/app/driver/afe/ltc/common/ltc_defs.h:87, src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:3838-3878).",
+  "CRC table bound: LTC_PEC_PRECOMPUTED_TABLE_SIZE is 256 and the index is masked with LTC_PEC_ONE_BYTE_MASK (src/app/driver/afe/ltc/common/ltc_pec.h:66-68).",
+  "PEC accumulator bound: the accumulator is masked with LTC_PEC15_MASK (0x7FFF) and shifted left one, so it cannot exceed 0xFFFE (src/app/driver/afe/ltc/common/ltc_pec.h:70-72).",
+  "Per-device array bounds: the error table is indexed [BS_NR_OF_STRINGS][LTC_N_LTC] and every write to PEC_valid is inside a loop bounded by LTC_N_LTC (src/app/driver/afe/ltc/common/ltc_defs.h:74-81, src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:3850-3876).",
+  "Invalidation granularity: a PEC failure invalidates exactly LTC_NUMBER_OF_CELL_VOLTAGES_PER_REGISTER cells, so the validity of one cell is decided by the integrity of a whole register (src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h:130, src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:3110-3135).",
+  "Concurrency: AFE_DmaCallback runs in SPI DMA complete interrupt context and writes LTC_STATE_s->transmit_ongoing on the global ltc_stateBase, while AFE_SetTransmitOngoing and AFE_IsTransmitOngoing read and write the same field from task context. No critical section, mutex or atomic qualifier appears in src/app/driver/afe/ltc/common/ltc_afe_dma.c (src/app/driver/afe/ltc/common/ltc_afe_dma.c:77-93). The flag is a bool, so this is a read-modify-write hazard rather than a torn-value hazard.",
+  "Re-entrance: LTC_Trigger and BMS_Trigger both implement their own re-entrance counter (ltc_state->triggerentry) and return early when it is exceeded; the counters are independent and are not synchronised with each other.",
+  "Trigger cadence is build-configuration dependent, not fixed by the driver source. For the LTC family the build tool sets FOXBMS_AFE_DRIVER_TYPE_FSM because afe_driver_type defaults to \"fsm\" and the ltc branch does not change it, which places MEAS_Control in the 1 ms cyclic task; a dedicated-task configuration instead uses FTSK_TASK_AFE_CYCLE_TIME, which is 0 (src/app/task/config/ftask_cfg.c:246-257, src/app/task/config/ftask_cfg.h:182, tools/waf-tools/bms_config_validator.py:303,330,337).",
+  "Interface identity restriction: AFE_DmaCallback asserts that spiIndex is one of exactly two SPI peripherals, so the driver cannot be moved to a third SPI peripheral without changing the assertion."
+ ],
+ "budgets": {
+  "cpu_time_ms": 10,
+  "memory_bytes": 48,
+  "stack_bytes": 4096
+ },
+ "budget_basis": "cpu_time_ms is LTC_TRANSMISSION_TIMEOUT (10), the per-command timeout the source actually imposes and after which the machine is considered not to have completed; it is not a measured execution time and the source states no CPU execution figure. memory_bytes is the combined size of the two packet buffers at the pinned configuration: LTC_N_BYTES_FOR_DATA_TRANSMISSION resolves to 4 + 8 * LTC_N_LTC = 4 + 8 * 1 = 12 entries of uint16_t per buffer, so 24 bytes for ltc_RxPecBuffer plus 24 bytes for ltc_TxPecBuffer. stack_bytes is FTSK_TASK_AFE_STACK_SIZE_IN_BYTES (4096), which the source reserves for the dedicated AFE task in the no-FSM configuration; the source states no separate stack requirement for the FSM configuration, in which MEAS_Control is called from the existing 1 ms task. None of the three figures is a measured value and the source provides no measurement.",
+ "failure_response": [
+  {
+   "failure_mode": "Packet error code mismatch on one device in the daisy chain",
+   "detection": "LTC_CheckPec recomputes the CRC-15 over the six data bytes of each device block and byte-compares the result against the two received PEC bytes (src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:3838-3878)",
+   "reaction": "With LTC_DISCARD_PEC false, which is the pinned configuration, PEC_valid[stringNumber][i] is set false and LTC_CheckPec returns STD_NOT_OK. The caller passes that return value to DIAG_CheckEvent with pecDiagErrorEntry, so a diagnosis counter is raised. On the measurement path LTC_SaveVoltages then skips the store for that device and sets invalidCellVoltage true for LTC_NUMBER_OF_CELL_VOLTAGES_PER_REGISTER cells, so the stale value is not published as current.",
+   "recovery": "No retry and no re-read in the driver. Recovery is the caller's: LTC_CheckPec is re-invoked on the next state pass and PEC_valid is rewritten, and LTC_ResetErrorTable exists to clear the table. The source contains no bounded retry count for a PEC failure."
+  },
+  {
+   "failure_mode": "PEC check compiled out",
+   "detection": "The LTC_DISCARD_PEC macro is a compile-time switch, so the condition is not detected at runtime; the alternative branch is visible in the source (src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h:106, src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:3866)",
+   "reaction": "With LTC_DISCARD_PEC true the source sets PEC_valid true on a mismatch and leaves retVal at STD_OK, so a corrupted block is accepted and no diagnosis entry is raised. This is a configuration-dependent loss of the integrity check, not a runtime decision.",
+   "recovery": "None in the source; the only remedy is to rebuild with LTC_DISCARD_PEC false."
+  },
+  {
+   "failure_mode": "SPI operation returns a non-STD_OK value, including a transmission that does not complete within LTC_TRANSMISSION_TIMEOUT",
+   "detection": "The return value of the SPI operation is tested in LTC_CondBasedStateTransition, and independently LTC_Trigger skips its state switch while the armed timer has not expired or while AFE_IsTransmitOngoing is true (src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:578-595, 833-869)",
+   "reaction": "LTC_CondBasedStateTransition calls DIAG_Handler with DIAG_EVENT_NOT_OK at DIAG_STRING impact for the current string and transitions to the caller-supplied state_nok/substate_nok pair. The enumerator LTC_STATEMACH_ERROR_SPIFAILED exists in the state set.",
+   "recovery": "The source provides the error state but the transition to it is supplied per call site by the caller of LTC_CondBasedStateTransition, not centrally. See derived_findings for the consequence of that arrangement."
+  },
+  {
+   "failure_mode": "DMA completion interrupt arrives for a different SPI peripheral",
+   "detection": "AFE_DmaCallback compares the completing spiIndex against SPI_GetSpiIndex(ltc_stateBase.ltcData.pSpiInterface->pNode) before clearing the flag (src/app/driver/afe/ltc/common/ltc_afe_dma.c:88-93)",
+   "reaction": "The flag is left set. No diagnosis entry is raised and no error is reported; the consequence is that LTC_Trigger continues to skip its state switch until the armed timer expires, after which it proceeds regardless of whether the transmission ever completed.",
+   "recovery": "None in the source. The design relies on the timer as the backstop rather than on the interrupt."
+  },
+  {
+   "failure_mode": "Out-of-range or null pointer reaches a driver entry point",
+   "detection": "FAS_ASSERT at the top of each entry point: string < BS_NR_OF_STRINGS on every request function, length > 0 and data != NULL_PTR on LTC_CalculatePec15, pLtcState != NULL_PTR on the DMA helpers and on LTC_Trigger",
+   "reaction": "The assertion traps. There is no return path for a rejected argument and no error code for it.",
+   "recovery": "None in the source; a trap is terminal for the caller."
+  },
+  {
+   "failure_mode": "Received cell voltage outside the plausible cell range",
+   "detection": "The driver performs no range check. The pinned source contains no plausibility comparison on the converted cell voltage in the LTC path; plausibility checking is a separate entry point, AFE_PlausibilityCheckVoltageMeasurementRange, declared in src/app/driver/afe/api/afe_plausibility.h, which is not invoked by LTC_SaveVoltages",
+   "reaction": "None in the driver. The value is stored and published with invalidCellVoltage false, so an out-of-range but correctly-PEC-checked value is published as valid.",
+   "recovery": "Must be handled by a consumer of the cell voltage that does call the plausibility entry point. Recorded here because the absence of the check inside the driver is a property of the design, not a defect claim."
+  }
+ ],
+ "decisions": [
+  {
+   "decision_id": "DEC-AFE-DDD-001",
+   "alternatives": [
+    "Compute the CRC-15 bit by bit from the polynomial",
+    "Use a precomputed 256-entry table indexed by the byte position"
+   ],
+   "selected": "Precomputed 256-entry table, seeded with LTC_PEC15_SEED and left-shifted by one on return",
+   "rationale": "Taken from the source itself. LTC_CalculatePec15 carries the comment that the shift is needed because the AFE stores the PEC in a 16-bit register with one trailing zero, so the on-wire and in-register representations differ by exactly one bit and the function reconciles them. The alternative is not recorded in the source; it is named here as the ordinary CRC formulation, not as a considered-and-rejected option."
+  },
+  {
+   "decision_id": "DEC-AFE-DDD-002",
+   "alternatives": [
+    "Discard the whole device block on a PEC failure",
+    "Keep the values but mark them invalid in the database"
+   ],
+   "selected": "Keep the decode path but gate the store on PEC_valid and set invalidCellVoltage for the affected register",
+   "rationale": "Read from the source: the store is inside the if arm that tests PEC_valid and the else arm invalidates exactly LTC_NUMBER_OF_CELL_VOLTAGES_PER_REGISTER entries, with the source comment naming the behaviour as invalidating the flags of that voltage register. The design consequence, which the source states only in the comment, is that validity granularity is one register rather than one cell."
+  },
+  {
+   "decision_id": "DEC-AFE-DDD-003",
+   "alternatives": [
+    "Poll the SPI transmission-done flag from the task",
+    "Clear the flag from the DMA completion interrupt"
+   ],
+   "selected": "Clear from the interrupt, guarded by a peripheral-identity comparison",
+   "rationale": "Read from the source: the callback is documented as called on DMA complete interrupts and the guard restricts it to spiREG1 and spiREG4 so that a completion belonging to a different peripheral does not release the state machine. The reason the identity comparison was required is not stated in the source."
+  }
+ ],
+ "declared_gaps": [
+  {
+   "topic": "Worst-case execution time of one measurement cycle",
+   "statement": "The source states no CPU execution figure for the driver. LTC_TRANSMISSION_TIMEOUT (10) bounds how long the state machine waits for a transmission, and LTC_TWAKE_US (300), LTC_TREADY_US (10) and LTC_TIDLE_US (6700) are device timing values, but none of them is a measurement of what this code costs to execute. The cpu_time_ms field of this record carries the transmission timeout because that is the only time figure the source actually imposes, and budget_basis says so; it is not a CPU budget and no such budget exists in the source.",
+   "searched": "src/app/driver/afe/ltc/common/, src/app/driver/afe/ltc/6813-1/ and src/app/driver/afe/ltc/api/ at 308028fb for any execution-time, cycle-count or profiling annotation"
+  },
+  {
+   "topic": "Memory budget for the driver's data state",
+   "statement": "The source fixes the size of the two packet buffers by LTC_N_BYTES_FOR_DATA_TRANSMISSION but states no budget for the rest of the driver's footprint, which includes ltc_errorTable, the open-wire detection table, the cell voltage and temperature copies and the LTC_STATE_s instance itself. The memory_bytes field of this record counts only the two buffers, which is a partial figure and is labelled as such.",
+   "searched": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c and src/app/driver/afe/ltc/common/ltc_defs.h at 308028fb for a stated footprint"
+  },
+  {
+   "topic": "Voltage plausibility checking inside the driver",
+   "statement": "LTC_SaveVoltages converts and stores the cell voltage without any range comparison. A plausibility entry point exists, AFE_PlausibilityCheckVoltageMeasurementRange, in src/app/driver/afe/api/afe_plausibility.h, but the pinned LTC save path does not call it. Where plausibility is applied relative to the store is therefore not determined by this driver and is not asserted here.",
+   "searched": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c for calls to the plausibility entry points, and src/app/driver/afe/ltc/common/ltc.h for any plausibility declaration"
+  },
+  {
+   "topic": "Behaviour on the unused and error states",
+   "statement": "LTC_STATEMACH_UNDEFINED, LTC_STATEMACH_RESERVED1 and the four error states are members of the enumerated state set. The transitions of this record name LTC_STATEMACH_ERROR_SPIFAILED as a destination the caller can select, but the source routes the error destination per call site through LTC_CondBasedStateTransition rather than centrally, so which error state a given failure reaches is determined at each call site and is not a single documented mapping. No transition out of the error states is specified in this record because none was read from the source.",
+   "searched": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c at 308028fb for the destination arguments of every LTC_CondBasedStateTransition call"
+  },
+  {
+   "topic": "Multiplexer and GPIO measurement failure handling",
+   "statement": "The state set contains LTC_STATEMACH_MUXMEASUREMENT, LTC_STATEMACH_ERROR_MULTIPLEXER_FAILED and the error table carries mux0 through mux3 columns per device, so multiplexer verdicts are recorded. The source is not read here deeply enough to state how a multiplexer verdict gates the temperature store, and this record therefore does not assert a reaction for it. It is named so that the omission is visible rather than read as an absence in the code.",
+   "searched": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c and src/app/driver/afe/ltc/common/ltc_defs.h at 308028fb"
+  },
+  {
+   "topic": "Which AFE trigger cadence the product build selects",
+   "statement": "The driver source does not fix its own trigger rate. The rate is selected by the FOXBMS_AFE_DRIVER_TYPE_FSM or FOXBMS_AFE_DRIVER_TYPE_NO_FSM macro, which is emitted by tools/waf-tools/bms_config_validator.py from the project configuration. This record states the 1 ms placement because the build tool's default for the LTC family is \"fsm\", and states the dedicated-task alternative because the macro also admits it; it does not claim which configuration a deployed product uses, because the pinned source does not determine that.",
+   "searched": "tools/waf-tools/bms_config_validator.py and src/app/task/config/ftask_cfg.c and ftask_cfg.h at 308028fb"
+  }
+ ],
+ "derived_findings": [
+  {
+   "finding": "The error state is selected by the caller, not by the transition primitive. LTC_CondBasedStateTransition takes both state_ok and state_nok as parameters, so the mapping from a failed SPI or PEC operation to a specific error state is made at each call site. The set of reachable destinations is therefore a property of the call sites rather than of the transition logic, and no single table in the source fixes it.",
+   "evidence": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:578-595 (LTC_CondBasedStateTransition), with call sites such as lines 945-952 and 967-970"
+  },
+  {
+   "finding": "transmit_ongoing is shared between interrupt context and task context with no synchronisation object in the driver. AFE_DmaCallback runs on DMA complete interrupts and writes the flag on the single global ltc_stateBase; AFE_SetTransmitOngoing and AFE_IsTransmitOngoing are called from the task context. Neither the flag nor the containing struct carries an atomic qualifier, and neither unit takes a critical section.",
+   "evidence": "src/app/driver/afe/ltc/common/ltc_afe_dma.c:77-93, with the global instance declared at src/app/driver/afe/ltc/common/ltc.h:71"
+  },
+  {
+   "finding": "The two packet buffers are the SPI transmit and receive buffers, not separate PEC scratch space. ltc_stateBase binds .ltcData.txBuffer to ltc_TxPecBuffer and .ltcData.rxBuffer to ltc_RxPecBuffer, so the buffer that LTC_CheckPec reads is the buffer the SPI driver last filled. Both are placed in the .sharedRAM section by an explicit pragma for performance.",
+   "evidence": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:112-117 and 180-181"
+  },
+  {
+   "finding": "LTC_STATEMACH_ERROR_SPIFAILED is declared in the state enumeration but is not referenced anywhere in the LTC 6813-1 implementation at the pinned commit. The error destination at each call site is passed as a parameter, and no call site at this commit names that state.",
+   "evidence": "state enumerator at src/app/driver/afe/ltc/common/ltc_defs.h:155-161; absence established by searching every occurrence of LTC_STATEMACH_ERROR_SPIFAILED in src/app/driver/afe/ltc/6813-1/ltc_6813-1.c at 308028fb, which returns no line"
+  }
+ ],
+ "implementation_mapping": [
+  {
+   "source_file": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "symbol": "AFE_StartMeasurement",
+   "status": "implemented",
+   "line_range": "142-150"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "symbol": "AFE_RequestTemperatureRead",
+   "status": "implemented",
+   "line_range": "108-117"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "symbol": "AFE_RequestBalancingFeedbackRead",
+   "status": "implemented",
+   "line_range": "119-129"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "symbol": "AFE_RequestOpenWireCheck",
+   "status": "implemented",
+   "line_range": "131-140"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "symbol": "AFE_TriggerIc",
+   "status": "implemented",
+   "line_range": "76-79"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "LTC_Trigger",
+   "status": "implemented",
+   "line_range": "833-2964"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "LTC_CheckPec",
+   "status": "implemented",
+   "line_range": "3838-3878"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "LTC_StateTransition",
+   "status": "implemented",
+   "line_range": "549-553"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "LTC_CondBasedStateTransition",
+   "status": "implemented",
+   "line_range": "578-595"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "LTC_SaveVoltages",
+   "status": "implemented",
+   "line_range": "597-654"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "LTC_ResetErrorTable",
+   "status": "implemented",
+   "line_range": "3593-3604"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "ltc_RxPecBuffer",
+   "status": "implemented",
+   "line_range": "114"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "ltc_TxPecBuffer",
+   "status": "implemented",
+   "line_range": "115"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+   "symbol": "ltc_errorTable",
+   "status": "implemented",
+   "line_range": "135"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_pec.c",
+   "symbol": "LTC_CalculatePec15",
+   "status": "implemented",
+   "line_range": "75-115"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_pec.h",
+   "symbol": "LTC_PEC_PRECOMPUTED_TABLE_SIZE",
+   "status": "implemented",
+   "line_range": "68"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_pec.h",
+   "symbol": "LTC_PEC15_MASK",
+   "status": "implemented",
+   "line_range": "72"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+   "symbol": "AFE_DmaCallback",
+   "status": "implemented",
+   "line_range": "88-93"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+   "symbol": "AFE_IsTransmitOngoing",
+   "status": "implemented",
+   "line_range": "77-80"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+   "symbol": "AFE_SetTransmitOngoing",
+   "status": "implemented",
+   "line_range": "82-85"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/ltc_defs.h",
+   "symbol": "LTC_DATA_SIZE_IN_BYTES",
+   "status": "implemented",
+   "line_range": "87"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/common/config/ltc_cfg.h",
+   "symbol": "LTC_N_BYTES_FOR_DATA_TRANSMISSION",
+   "status": "implemented",
+   "line_range": "79"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h",
+   "symbol": "LTC_TRANSMISSION_TIMEOUT",
+   "status": "implemented",
+   "line_range": "162"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h",
+   "symbol": "LTC_DISCARD_PEC",
+   "status": "implemented",
+   "line_range": "106"
+  },
+  {
+   "source_file": "src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h",
+   "symbol": "LTC_NUMBER_OF_CELL_VOLTAGES_PER_REGISTER",
+   "status": "implemented",
+   "line_range": "130"
+  },
+  {
+   "source_file": "src/app/driver/meas/meas.c",
+   "symbol": "MEAS_Control",
+   "status": "implemented",
+   "line_range": "80-82"
+  },
+  {
+   "source_file": "src/app/task/config/ftask_cfg.h",
+   "symbol": "FTSK_TASK_AFE_STACK_SIZE_IN_BYTES",
+   "status": "implemented",
+   "line_range": "173"
+  },
+  {
+   "source_file": "src/app/task/config/ftask_cfg.h",
+   "symbol": "FTSK_TASK_AFE_CYCLE_TIME",
+   "status": "implemented",
+   "line_range": "182"
+  },
+  {
+   "source_file": "tools/waf-tools/bms_config_validator.py",
+   "symbol": "afe_driver_type",
+   "status": "implemented",
+   "line_range": "303"
+  },
+  {
+   "source_file": "src/app/driver/afe/api/afe_plausibility.h",
+   "symbol": "AFE_PlausibilityCheckVoltageMeasurementRange",
+   "status": "not_in_source",
+   "line_range": "97-99"
+  }
+ ],
+ "provenance_note": "Every path, symbol and line range in this record was checked against the tree at commit 308028fb with git show, not against the working tree. The three packet-buffer and integrity-check citations were cross-checked against source anchor FB2-SRC-COD-000034, which pins src/app/driver/afe/ltc/6813-1/ltc_6813-1.c lines 112-117 to that commit. This record does not assert ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status is pending, production_authorized is false and product_verification_credit is false."
+}

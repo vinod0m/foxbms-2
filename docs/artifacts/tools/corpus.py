@@ -49,6 +49,38 @@ ALLOWED_RELATION_TYPES = {
 }
 STRICT_FORBIDDEN_RELATION_TYPES = {"related_to"}
 
+# The single target-hardware execution_kind. It means the product's own code
+# was executed on the product's own hardware, as opposed to a developer host,
+# an executed model, or a fixture. It is the only execution_kind that is
+# product-hardware evidence, and it is a member of execution.schema.json's
+# enum, so a real TMS570/HIL run can be recorded honestly.
+TARGET_EXECUTION_KIND = "actual_target_hardware_run"
+
+# execution_kind values that are a real execution of the product's own code
+# but on developer infrastructure, so they are NOT product-hardware evidence.
+HOST_EXECUTION_KINDS = {"actual_host_run", "actual_simulation_run"}
+# Values that are not a real execution of the product at all.
+NON_EXECUTION_KINDS = {"synthetic_fixture", "none"}
+# Every execution_kind the schema admits.
+DECLARED_EXECUTION_KINDS = (
+    HOST_EXECUTION_KINDS | NON_EXECUTION_KINDS | {TARGET_EXECUTION_KIND})
+
+# Strings that name a developer machine or a generic virtual platform rather
+# than the product's own silicon. Used ONLY to reject a target-hardware claim
+# whose environment contradicts itself -- never to decide that a run counts as
+# target evidence, which is read from execution_kind alone. Matching prose is
+# not measurement; this is a self-consistency check, nothing more.
+#
+# Each entry is matched on word boundaries, so a marker cannot fire on an
+# accidental substring (a board id must not be rejected because it happens to
+# contain one of these).
+NON_TARGET_HARDWARE_MARKERS = (
+    "x86_64", "x86-64", "amd64", "arm64", "aarch64", "apple silicon", "macos",
+    "darwin", "linux", "win32", "windows", "posix", "host", "workstation",
+    "laptop", "ci", "virtual", "container", "docker", "qemu", "emulated",
+    "simulator", "simulation", "fixture", "none", "unknown", "tbd", "n/a",
+)
+
 ARTIFACT_TYPE_SCHEMAS = {
     "requirement": "requirement.schema.json",
     "design": "design.schema.json",
@@ -114,6 +146,11 @@ RULE_IDS = {
     "link_dangling_endpoint",
     "link_endpoint_revision_stale",
     "link_derived_field_contradiction",
+    # --- link registry shadowing: a record present in more than one registry
+    # is reported rather than silently de-duplicated away (see
+    # _validate_link_registry_shadowing) ---
+    "link_registry_shadowing_duplicate",
+    "link_registry_shadowing_conflict",
     "provenance_ref_unresolved",
     "traceability_checker",
     "safety_goal_mitigates_hazard",
@@ -316,38 +353,162 @@ class CorpusTool:
                 continue
             yield p, load_json(p)
 
-    def load_links(self):
-        """Return list of link dicts across all registries, tagged with profile.
-        De-duplicates by (profile, link_id) - same link_id in different profiles is intentional."""
-        links = []
-        # Search trace_dir (canonical top-level) and entire corpus tree
-        registries = list((self.trace_dir / "link-registry").rglob("links-*.json"))
-        registries += list(self.corpus_dir.rglob("traceability/link-registry/**/links-*.json"))
-        seen_paths = set()
-        for p in registries:
-            if p in seen_paths:
+    def _link_registry_paths(self):
+        """Every link registry file, in a deterministic order.
+
+        The order is explicit, not a side effect of directory iteration.
+        `rglob` walks the filesystem in whatever order the OS hands back, so
+        "first registry wins" used to be an accident of that order: two
+        registries holding the same (profile, link_id) resolved to whichever
+        one the filesystem happened to enumerate first, and the same corpus
+        could load differently on a different machine or after a rebuild.
+
+        Registries are therefore ranked by an explicit, documented precedence
+        and ties are broken on the path string, so the result depends only on
+        the contents of the tree:
+
+          0. docs/artifacts/traceability/link-registry/<profile>/  (canonical,
+             top-level: the location the corpus documents as authoritative)
+          1. any other docs/artifacts/**/traceability/link-registry/ tree
+             (a per-profile copy nested inside corpus/)
+
+        Lower rank wins. Within a rank, the lexicographically smaller path
+        wins. A shadowed record is never silently dropped: the duplicate is
+        reported by _validate_link_registry_shadowing, which is a separate
+        concern from which copy is loaded.
+        """
+        registries = []
+        seen = set()
+        for p in list((self.trace_dir / "link-registry").rglob("links-*.json")) + \
+                 list(self.corpus_dir.rglob("traceability/link-registry/**/links-*.json")):
+            if p in seen:
                 continue
-            seen_paths.add(p)
-            # infer profile from registry path
-            s = str(p)
-            if "traceability/link-registry/as_is" in s or "/corpus/as_is/traceability/" in s:
-                profile = "as_is"
-            elif "traceability/link-registry/synthetic_reference" in s or "/corpus/synthetic_reference/traceability/" in s:
-                profile = "synthetic_reference"
-            else:
-                profile = "unknown"
+            seen.add(p)
+            s = p.as_posix()
+            rank = 0 if s.startswith(self.trace_dir.as_posix()) else 1
+            registries.append((rank, s, p))
+        registries.sort(key=lambda t: (t[0], t[1]))
+        return [(p, rank) for rank, _s, p in registries]
+
+    def _link_profile_of(self, p):
+        """Infer the profile a registry belongs to from its path."""
+        s = str(p)
+        if "traceability/link-registry/as_is" in s or "/corpus/as_is/traceability/" in s:
+            return "as_is"
+        if "traceability/link-registry/synthetic_reference" in s or "/corpus/synthetic_reference/traceability/" in s:
+            return "synthetic_reference"
+        return "unknown"
+
+    def _iter_link_records(self):
+        """Yield (registry_path, profile, link_dict) for EVERY record on disk.
+
+        Deliberately does NOT de-duplicate. Callers that want one record per
+        (profile, link_id) use load_links; callers that need to see shadowed
+        copies use this.
+        """
+        for p, _rank in self._link_registry_paths():
+            profile = self._link_profile_of(p)
             d = load_json(p)
             for l in d.get("links", []):
-                l["_registry"] = str(p)
-                l["_profile"] = profile
-                links.append(l)
-        # de-duplicate by (profile, link_id) - same link_id in different profiles is intentional
+                yield p, profile, l
+
+    @staticmethod
+    def _link_identity(l):
+        """The comparable content of a link record.
+
+        The private `_registry` / `_profile` keys are provenance added by
+        load_links, not part of the record, so they are excluded: two copies
+        of one link in two registries must compare EQUAL on this projection
+        or every copy would look like a contradiction.
+        """
+        return {k: v for k, v in l.items() if k not in ("_registry", "_profile")}
+
+    def load_links(self):
+        """Return list of link dicts across all registries, tagged with profile.
+        De-duplicates by (profile, link_id) - same link_id in different profiles is intentional.
+
+        De-duplication is deterministic and independent of filesystem
+        iteration order: registries are visited in the explicit precedence
+        order built by _link_registry_paths, and the FIRST record for a key
+        under that order wins. Shadowed copies are not silently discarded --
+        they are reported by _validate_link_registry_shadowing, which must be
+        run to see them.
+        """
         by_key = {}
-        for l in links:
-            key = (l.get("_profile", "unknown"), l.get("link_id"))
+        for p, profile, raw in self._iter_link_records():
+            l = dict(raw)
+            l["_registry"] = str(p)
+            l["_profile"] = profile
+            key = (profile, l.get("link_id"))
             if key not in by_key:
                 by_key[key] = l
         return list(by_key.values())
+
+    def _validate_link_registry_shadowing(self):
+        """A link record present in more than one registry is reported, never dropped.
+
+        De-duplication is necessary: the same link id legitimately appears in
+        the canonical top-level registry and in a per-profile copy under
+        corpus/. But de-duplication alone is lossy in a way that hides
+        defects. If a repair loop reads what the tool returns and writes back
+        what it returns, a record that is only ever returned from one copy is
+        never checked, and an edit made to the other copy is invisible. A
+        link that exists in only ONE of two copies would likewise be silently
+        invisible or silently duplicated depending on which file won an
+        ordering accident.
+
+        So the multiplicity itself is the finding. A duplicate whose content
+        agrees is an unreconciled copy -- reported, because it is a latent
+        second source of truth that will drift. A duplicate whose content
+        DISAGREES is a genuine contradiction: two registries make incompatible
+        claims about the same link, which is high severity because the tool
+        cannot know which is true and must not pick one silently.
+
+        Severity is chosen so an unreconciled-but-agreeing copy is visible
+        without failing the corpus, while a real contradiction is an error.
+        """
+        occurrences = {}
+        for p, profile, raw in self._iter_link_records():
+            lid = raw.get("link_id")
+            if lid is None:
+                continue
+            occurrences.setdefault((profile, lid), []).append((p, raw))
+
+        ok = True
+        for (profile, lid), occs in sorted(occurrences.items(),
+                                           key=lambda kv: (kv[0][0], str(kv[0][1]))):
+            if len(occs) < 2:
+                continue
+            paths = sorted({p.as_posix() for p, _ in occs})
+            identities = {json.dumps(self._link_identity(raw), sort_keys=True)
+                          for _p, raw in occs}
+            where = "; ".join(paths)
+            if len(identities) == 1:
+                self.findings.add(
+                    "medium", "traceability", lid,
+                    f"link {lid} (profile {profile}) is present in {len(occs)} registries whose "
+                    f"content agrees byte for byte: {where}. The duplicate is an unreconciled "
+                    f"copy: it is loaded from the highest-precedence registry and the others are "
+                    f"not returned by load_links, so an edit made only to a shadowed copy is "
+                    f"invisible to every downstream check. Reconcile the registry layout or "
+                    f"record why two copies are intentional.",
+                    "link_registry_shadowing_duplicate")
+            else:
+                differing = sorted(
+                    k for k in
+                    set().union(*[set(self._link_identity(raw)) for _p, raw in occs])
+                    if len({json.dumps(self._link_identity(raw).get(k), sort_keys=True)
+                            for _p, raw in occs}) > 1)
+                self.findings.add(
+                    "high", "traceability", lid,
+                    f"link {lid} (profile {profile}) is present in {len(occs)} registries that "
+                    f"DISAGREE on {', '.join(differing) or 'record content'}: {where}. Two "
+                    f"registries make incompatible claims about the same link, so the tool cannot "
+                    f"know which is authoritative and does not choose silently -- reconcile the "
+                    f"registries by hand.",
+                    "link_registry_shadowing_conflict")
+                ok = False
+        return ok
 
     def load_artifact_index(self):
         """Map (profile, artifact_id) -> (path, dict) for all artifact-shaped files.
@@ -1380,6 +1541,20 @@ class CorpusTool:
             parts += _serial_from(budget.get("allocation"))
         return parts
 
+    @staticmethod
+    def _names_non_target_hardware(hardware):
+        """True if a free-form hardware string names a host/virtual platform.
+
+        Word-boundary matched so a marker cannot fire on an accidental
+        substring. Pure predicate over a string; it is never used to COUNT
+        target evidence, only to catch a record that claims a target-hardware
+        run while naming a developer machine.
+        """
+        for marker in NON_TARGET_HARDWARE_MARKERS:
+            if re.search(r"(?<![a-z0-9])" + re.escape(marker) + r"(?![a-z0-9])", hardware):
+                return True
+        return False
+
     def _validate_semantic_rules(self, index, links):
         """Semantic consistency rules (subset of the 10 check categories)."""
         ok = True
@@ -1433,7 +1608,8 @@ class CorpusTool:
             if d.get("artifact_type") == "execution":
                 ek = d.get("execution_kind")
                 oc = d.get("outcome")
-                if ek not in (None, "none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"):
+                if ek not in (None, "none", "actual_host_run", "actual_simulation_run",
+                              "actual_target_hardware_run", "synthetic_fixture"):
                     self.findings.add("high", "evidence", aid, f"invalid execution_kind '{ek}'",
                                       "execution_kind_orthogonality")
                     ok = False
@@ -1830,6 +2006,94 @@ class CorpusTool:
                         self.findings.add("medium", "evidence", aid,
                                           f"execution {aid} claims synthetic_fixture but lacks evidence",
                                           "execution_kind_classifier")
+                elif ek == "actual_target_hardware_run":
+                    # A target-hardware run is the only execution_kind that is
+                    # product-hardware evidence, so it is also the only one a
+                    # reader may take as a result on the MCU the product ships
+                    # on. It therefore has to carry the evidence such a run
+                    # implies, and the bar is deliberately higher than for a
+                    # host run:
+                    #
+                    #   - a log file that EXISTS on disk and whose recorded hash
+                    #     matches it (existence and hash are verified for every
+                    #     record by _validate_evidence_files, so a target run
+                    #     cannot point at a log that was never captured),
+                    #   - real input AND output hashes, since a run on silicon
+                    #     is characterised by what went in and what came out,
+                    #   - environment.hardware that identifies target hardware
+                    #     rather than naming a developer machine,
+                    #   - and origin=source_observed, because a synthetic-origin
+                    #     record asserting a hardware run is a fabricated claim.
+                    #
+                    # Without this the new enum member would be a hole: a
+                    # record could claim product-hardware evidence and be
+                    # believed, moving actual_product_evidence on nothing.
+                    #
+                    # Every branch below sets the FUNCTION-level `ok` to False
+                    # on failure; it is never reset to True here, because doing
+                    # so would clear a failure already recorded by an earlier
+                    # check in this same pass.
+                    logs = d.get("logs") or []
+                    if not logs:
+                        self.findings.add(
+                            "high", "evidence", aid,
+                            f"execution {aid} claims actual_target_hardware_run but records no log "
+                            f"file; a run on the product's own hardware is only evidence if the run "
+                            f"was captured",
+                            "execution_kind_classifier")
+                        ok = False
+                    else:
+                        for entry in logs:
+                            lf = entry.get("file")
+                            if not lf or not (self.root / lf).exists():
+                                self.findings.add(
+                                    "high", "evidence", aid,
+                                    f"execution {aid} claims actual_target_hardware_run but its log "
+                                    f"'{lf}' does not exist on disk",
+                                    "execution_kind_classifier")
+                                ok = False
+                                break
+                    if not (d.get("input_hashes") or {}):
+                        self.findings.add(
+                            "high", "evidence", aid,
+                            f"execution {aid} claims actual_target_hardware_run but records no "
+                            f"input hashes; what was run on the target is unidentified",
+                            "execution_kind_classifier")
+                        ok = False
+                    if not (d.get("output_hashes") or {}):
+                        self.findings.add(
+                            "high", "evidence", aid,
+                            f"execution {aid} claims actual_target_hardware_run but records no "
+                            f"output hashes; what the target produced is unidentified",
+                            "execution_kind_classifier")
+                        ok = False
+                    if not (d.get("evidence_refs") or []):
+                        self.findings.add(
+                            "high", "evidence", aid,
+                            f"execution {aid} claims actual_target_hardware_run but has no evidence",
+                            "execution_kind_classifier")
+                        ok = False
+                    hardware = str((d.get("environment") or {}).get("hardware") or "").lower()
+                    # Prose matching on a free-form hardware string is not a
+                    # measurement, so this is deliberately NOT used to decide
+                    # whether a run counts as target evidence (that is read from
+                    # execution_kind). It only rejects a string that names a
+                    # developer host, which cannot be the product's own silicon.
+                    if not hardware or self._names_non_target_hardware(hardware):
+                        self.findings.add(
+                            "high", "evidence", aid,
+                            f"execution {aid} claims actual_target_hardware_run but "
+                            f"environment.hardware is '{hardware or '<empty>'}', which does not "
+                            f"identify target hardware",
+                            "execution_kind_classifier")
+                        ok = False
+                    origin = d.get("origin")
+                    if origin not in ("source_observed", None):
+                        self.findings.add(
+                            "medium", "evidence", aid,
+                            f"execution {aid} claims actual_target_hardware_run but origin is "
+                            f"'{origin}' (fabricated evidence classification)",
+                            "execution_kind_classifier")
 
         # Rule: Evidence reference validator (MUT-014)
         # Build a set of all artifact IDs in the index
@@ -2035,6 +2299,7 @@ class CorpusTool:
         ok &= self._validate_no_duplicate_ids()
         ok &= self._validate_links(links, index)
         ok &= self._validate_link_currency(links, index)
+        ok &= self._validate_link_registry_shadowing()
         ok &= self._validate_provenance_refs(index)
         if not quiet:
             print("Running semantic consistency rules...")
@@ -2307,36 +2572,41 @@ class CorpusTool:
         # from the execution records rather than hardcoded, and bucketed by
         # execution_kind so host runs and synthetic fixtures cannot inflate it.
         #
-        # Finding: execution.schema.json's execution_kind enum is
-        # ["none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"].
-        # There is no member meaning "run on the product's target hardware", so no
-        # record can currently declare itself target-hardware evidence. The buckets
-        # below are declared explicitly rather than inferred: host and simulation
-        # runs are real executions of the product's code but on developer
-        # infrastructure, not on the product; synthetic fixtures are not the product
-        # at all. Deriving a target count from the free-form environment.hardware
-        # string would be prose matching, not measurement, so the target bucket stays
-        # 0 and the reason is surfaced in the detail below.
-        TARGET_EXECUTION_KINDS = {"actual_target_run", "actual_target_hardware_run"}
-        HOST_EXECUTION_KINDS = {"actual_host_run", "actual_simulation_run"}
-        NON_EXECUTION_KINDS = {"synthetic_fixture", "none"}
+        # `execution_kind` now HAS a target-hardware member,
+        # `actual_target_hardware_run` (see TARGET_EXECUTION_KIND), so this
+        # dimension is no longer structurally pinned at zero: a genuine TMS570
+        # or HIL run can be recorded and will move this figure. It reads 0
+        # because NO SUCH RUN HAS BEEN PERFORMED -- not because the schema
+        # could not express one. That distinction is the whole point of the
+        # repair, so the reason is stated in the detail below rather than
+        # folded into a silent zero.
+        #
+        # The buckets are declared explicitly rather than inferred. Host and
+        # simulation runs are real executions of the product's code but on
+        # developer infrastructure, not on the product; synthetic fixtures are
+        # not the product at all. Deriving a target count from the free-form
+        # environment.hardware string would be prose matching, not measurement,
+        # so the target bucket is read from execution_kind alone, and
+        # environment.hardware is used only as a self-consistency check on a
+        # record that already claims the kind (see execution_kind_classifier).
         execs = [d for _, d in self.iter_corpus_artifacts()
                  if d.get("artifact_type") == "execution" and d.get("id")]
         kind_of = [d.get("execution_kind") for d in execs]
-        target_execs = [d for d, k in zip(execs, kind_of) if k in TARGET_EXECUTION_KINDS]
+        target_execs = [d for d, k in zip(execs, kind_of)
+                        if k in {TARGET_EXECUTION_KIND}]
         # numerator = distinct TEST MEASURES backed by target-hardware execution,
         # so one measure with three redundant target runs still counts once
         target_tms = {d.get("test_measure_id") for d in target_execs} & set(tms)
         n_target = len(target_tms)
         n_host = sum(1 for k in kind_of if k in HOST_EXECUTION_KINDS)
         n_synth = sum(1 for k in kind_of if k in NON_EXECUTION_KINDS)
-        n_undeclared = sum(1 for k in kind_of
-                           if k not in TARGET_EXECUTION_KINDS | HOST_EXECUTION_KINDS | NON_EXECUTION_KINDS)
+        n_undeclared = sum(1 for k in kind_of if k not in DECLARED_EXECUTION_KINDS)
         if n_target:
             evidence_note = f"{n_target} test measures with target-hardware execution"
         else:
-            evidence_note = ("0 target-hardware executions: execution_kind has no target-hardware "
-                             "member, so none can be claimed (blocked, not fabricated)")
+            evidence_note = ("0 target-hardware executions: execution_kind can now express a run "
+                             "on the product's own hardware, but none has been performed "
+                             "(blocked, not fabricated)")
         dims["actual_product_evidence"] = {
             "numerator": n_target,
             "denominator": len(tms),
@@ -3519,6 +3789,8 @@ class CorpusTool:
         b.append("| `none` | not executed |")
         b.append("| `actual_host_run` | executed on a real host, logs captured |")
         b.append("| `actual_simulation_run` | executed model with captured logs |")
+        b.append("| `actual_target_hardware_run` | executed on the product's own target hardware; "
+                 "the only member that is product-hardware evidence |")
         b.append("| `synthetic_fixture` | fixture, never a real run |")
         b.append("")
         b.append("| outcome | meaning |")
@@ -4495,7 +4767,7 @@ class CorpusTool:
                 },
                 "boundaries": "no artifact is human-approved; production_authorized=false; product_verification_credit=false",
                 "link_semantics": "17 typed relations; 'related_to' forbidden in canonical registries; links carry rationale/provenance/review_state/change_suspect_status",
-                "evidence_semantics": "execution_kind (none|actual_host_run|actual_simulation_run|synthetic_fixture) orthogonal to outcome (pass|fail|inconclusive|not_run|blocked)",
+                "evidence_semantics": "execution_kind (none|actual_host_run|actual_simulation_run|actual_target_hardware_run|synthetic_fixture) orthogonal to outcome (pass|fail|inconclusive|not_run|blocked); only actual_target_hardware_run is product-hardware evidence, and no such run has been performed",
                 "approval_semantics": "human_approval_status=pending everywhere; synthetic decisions labeled synthetic_decision:{fictional_role}:{id}",
                 "provenance_rule": "importing systems MUST NOT treat synthetic origin as observed evidence",
             },
@@ -4661,6 +4933,7 @@ class CorpusTool:
         """
         self._validate_links(links, index)
         self._validate_link_currency(links, index)
+        self._validate_link_registry_shadowing()
         self._validate_semantic_rules(index, links)
         for key, (p, d) in index.items():
             aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
@@ -6194,6 +6467,308 @@ class CorpusTool:
                 self._validate_provenance_evidence = original
                 self._validate_governance_semantics = original_gov
 
+        # --- link registry shadowing + target-hardware execution --------------
+
+        def _link_fixture(link_bodies):
+            """Build a temp tree with one canonical and one nested registry.
+
+            `link_bodies` is (canonical_records, nested_records). Returns
+            (TemporaryDirectory, root).
+            """
+            import tempfile
+            tmp = tempfile.TemporaryDirectory()
+            root = Path(tmp.name)
+            canon = root / "docs/artifacts/traceability/link-registry/as_is"
+            nested = root / "docs/artifacts/corpus/as_is/traceability/link-registry/as_is"
+            canon.mkdir(parents=True)
+            nested.mkdir(parents=True)
+            for directory, records in ((canon, link_bodies[0]), (nested, link_bodies[1])):
+                (directory / "links-cell-voltage.json").write_text(
+                    json.dumps({"links": records}), encoding="utf-8")
+            return tmp, root
+
+        def _sample_link(lid, source_revision="1"):
+            return {"link_id": lid, "source_id": "A", "target_id": "B",
+                    "relation_type": "refines", "source_revision": source_revision,
+                    "target_revision": "1", "rationale": "r", "provenance": "derived",
+                    "review_state": "reviewed", "change_suspect_status": False,
+                    "profile": "as_is"}
+
+        def t_shadowed_duplicate_link_is_reported():
+            # A link present in two registries whose content AGREES is an
+            # unreconciled copy. It must be reported: it is a latent second
+            # source of truth that downstream checks never see.
+            tmp, root = _link_fixture(([_sample_link("L1")], [_sample_link("L1")]))
+            try:
+                tool = CorpusTool(root=root)
+                tool.findings = Findings()
+                ok = tool._validate_link_registry_shadowing()
+                dups = [f for f in tool.findings.items
+                        if f["rule"] == "link_registry_shadowing_duplicate"]
+                # one finding, naming BOTH registries so the owner can find them
+                paths_named = all("link-registry" in f["description"] for f in dups)
+                agrees = all("agrees" in f["description"] for f in dups)
+                # an agreeing duplicate is reported but is not an error
+                return (len(dups) == 1 and ok is True
+                        and dups[0]["severity"] == "medium"
+                        and dups[0]["artifact_id"] == "L1"
+                        and paths_named and agrees)
+            finally:
+                tmp.cleanup()
+
+        def t_conflicting_duplicate_link_is_an_error():
+            # Two registries that DISAGREE about the same link are a genuine
+            # contradiction: the tool cannot know which is true, so it must
+            # report it as an error and name the fields that differ rather than
+            # pick one.
+            tmp, root = _link_fixture(([_sample_link("L1", "1")],
+                                       [_sample_link("L1", "9")]))
+            try:
+                tool = CorpusTool(root=root)
+                tool.findings = Findings()
+                ok = tool._validate_link_registry_shadowing()
+                conflicts = [f for f in tool.findings.items
+                             if f["rule"] == "link_registry_shadowing_conflict"]
+                return (ok is False and len(conflicts) == 1
+                        and conflicts[0]["severity"] == "high"
+                        and "source_revision" in conflicts[0]["description"])
+            finally:
+                tmp.cleanup()
+
+        def _sibling_registry_fixture(first_rev, second_rev):
+            """Two registries at the SAME rank, in sibling subdirectories, that
+            disagree about the same link.
+
+            The directories are named so that the lexical order (aa before zz)
+            is the OPPOSITE of the order `rglob` happens to walk them in
+            (verified: rglob yields zz before aa here). A de-duplicator that
+            keeps "whichever rglob saw first" therefore loads the zz copy; one
+            that sorts by path loads the aa copy. The two answers differ, so
+            this fixture can tell them apart.
+            """
+            import tempfile
+            tmp = tempfile.TemporaryDirectory()
+            root = Path(tmp.name)
+            base = (root / "docs/artifacts/corpus/synthetic_reference/traceability"
+                    "/link-registry/synthetic_reference")
+            (base / "zz").mkdir(parents=True)
+            (base / "aa").mkdir(parents=True)
+            (base / "zz" / "links-cell-voltage.json").write_text(
+                json.dumps({"links": [_sample_link("L1", first_rev)]}), encoding="utf-8")
+            (base / "aa" / "links-cell-voltage.json").write_text(
+                json.dumps({"links": [_sample_link("L1", second_rev)]}), encoding="utf-8")
+            return tmp, root, base
+
+        def t_link_dedup_is_independent_of_glob_order():
+            # De-duplication must not depend on filesystem iteration order.
+            # Two same-rank registries disagree; the one loaded must be chosen by
+            # the documented rule (lexicographically smaller path) and not by
+            # whichever directory the OS enumerated first.
+            tmp, root, base = _sibling_registry_fixture("ZZ-REV", "AA-REV")
+            try:
+                tool = CorpusTool(root=root)
+                raw_first = next(iter(base.rglob("links-*.json")))
+                loaded = {(l["_profile"], l["link_id"]): l for l in tool.load_links()}
+                rec = loaded[("synthetic_reference", "L1")]
+                # the fixture is only meaningful if raw rglob really does walk
+                # the tree in the opposite order to the sorted rule
+                rglob_is_unsorted = raw_first.parent.name == "zz"
+                return (rglob_is_unsorted
+                        and rec["source_revision"] == "AA-REV"
+                        and "/aa/" in rec["_registry"]
+                        and "zz" not in rec["_registry"].split("/docs/")[-1])
+            finally:
+                tmp.cleanup()
+
+        def t_canonical_registry_outranks_a_nested_copy():
+            # The documented precedence: the canonical top-level registry
+            # outranks any per-profile copy nested under corpus/, regardless of
+            # what rglob enumerates first.
+            tmp, root = _link_fixture(([_sample_link("L1", "CANON")],
+                                       [_sample_link("L1", "NESTED")]))
+            try:
+                tool = CorpusTool(root=root)
+                loaded = {(l["_profile"], l["link_id"]): l for l in tool.load_links()}
+                rec = loaded[("as_is", "L1")]
+                return (rec["source_revision"] == "CANON"
+                        and "corpus" not in rec["_registry"].split("/docs/")[-1])
+            finally:
+                tmp.cleanup()
+
+        def t_shadowing_detector_is_wired_into_validate():
+            # The detector must be reachable from cmd_validate, not only from
+            # the scenario harness. Asserted as a WIRING fact via a spy, so it
+            # stays green whether or not the corpus currently has a duplicate.
+            calls = []
+            original = CorpusTool._validate_link_registry_shadowing
+
+            def _spy(self_obj):
+                calls.append(1)
+                return original(self_obj)
+
+            CorpusTool._validate_link_registry_shadowing = _spy
+            try:
+                tool = CorpusTool()
+                tool.findings = Findings()
+                tool.cmd_validate(quiet=True)
+                return (len(calls) == 1
+                        and {"link_registry_shadowing_duplicate",
+                             "link_registry_shadowing_conflict"} <= tool._implemented_rules())
+            finally:
+                CorpusTool._validate_link_registry_shadowing = original
+
+        # --- target-hardware execution ---------------------------------------
+
+        def _target_execution(**over):
+            """A target-hardware execution record with real evidence.
+
+            The log file is written into a temp tree by the caller and its
+            path is threaded in, so the on-disk existence check the rule
+            performs is satisfied by a file that genuinely exists.
+            """
+            rec = {
+                "id": "FB2-VER-EXE-TARGET", "artifact_type": "execution",
+                "profile": "as_is", "execution_kind": "actual_target_hardware_run",
+                "outcome": "pass", "origin": "source_observed",
+                "test_measure_id": "FB2-VER-TMS-000001",
+                "environment": {"hardware": "TI TMS570L Cortex-R5F",
+                                "software": "bare metal", "tools": ["ccs"],
+                                "configuration": "target", "tool_versions": {}},
+                "input_hashes": {"firmware": "sha256:" + "a" * 64},
+                "output_hashes": {"log": "sha256:" + "b" * 64},
+                "logs": [], "evidence_refs": ["FB2-VER-TMS-000001"],
+            }
+            rec.update(over)
+            return rec
+
+        def _target_index(rec, root, log_rel="evidence/target-run.log"):
+            log = root / log_rel
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text("target run captured output\n", encoding="utf-8")
+            rec = dict(rec)
+            rec["logs"] = [{"file": log_rel, "hash": "sha256:" + "b" * 64, "type": "stdout"}]
+            return {("as_is", rec["id"]): ("exec.json", rec)}
+
+        def t_target_hardware_execution_with_evidence_validates():
+            # A target-hardware record carrying the evidence such a run implies
+            # must pass the classifier. This is the positive case that makes the
+            # new enum member usable rather than merely present.
+            import tempfile
+            with tempfile.TemporaryDirectory() as td:
+                root = Path(td)
+                tool = CorpusTool(root=root)
+                tool.findings = Findings()
+                index = _target_index(_target_execution(), root)
+                ok = tool._validate_semantic_rules(index, [])
+                target_findings = [f for f in tool.findings.items
+                                   if f["rule"] == "execution_kind_classifier"
+                                   and "actual_target_hardware_run" in f["description"]]
+                # the kind is also accepted by the orthogonality rule
+                invalid = [f for f in tool.findings.items
+                           if f["rule"] == "execution_kind_orthogonality"]
+                return ok is True and not target_findings and not invalid
+
+        def t_target_hardware_execution_without_evidence_is_reported():
+            # A target run with no evidence is reported. Each missing element is
+            # checked on its own so the test names what actually regressed.
+            import tempfile
+            missing = {
+                "no log file": _target_execution(),
+                "no evidence": _target_execution(evidence_refs=[]),
+                "no input hashes": _target_execution(input_hashes={}),
+                "no output hashes": _target_execution(output_hashes={}),
+                "no target hardware named": _target_execution(
+                    environment={"hardware": "arm64-apple-darwin", "software": "macos",
+                                 "tools": [], "configuration": "c", "tool_versions": {}}),
+                "synthetic origin": _target_execution(origin="synthetic"),
+            }
+            results = {}
+            for label, rec in missing.items():
+                with tempfile.TemporaryDirectory() as td:
+                    root = Path(td)
+                    tool = CorpusTool(root=root)
+                    tool.findings = Findings()
+                    if label == "no log file":
+                        index = {("as_is", rec["id"]): ("exec.json", rec)}
+                    else:
+                        index = _target_index(rec, root)
+                    tool._validate_semantic_rules(index, [])
+                    results[label] = any(
+                        f["rule"] == "execution_kind_classifier"
+                        and "actual_target_hardware_run" in f["description"]
+                        for f in tool.findings.items)
+            return all(results.values())
+
+        def t_target_hardware_execution_missing_log_file_is_reported():
+            # A record may NAME a log that does not exist. Naming a file is not
+            # capturing a run, so the on-disk existence check must fire.
+            import tempfile
+            with tempfile.TemporaryDirectory() as td:
+                root = Path(td)
+                tool = CorpusTool(root=root)
+                tool.findings = Findings()
+                rec = _target_execution(logs=[{"file": "evidence/never-ran.log",
+                                               "hash": "sha256:" + "b" * 64,
+                                               "type": "stdout"}])
+                index = {("as_is", rec["id"]): ("exec.json", rec)}
+                tool._validate_semantic_rules(index, [])
+                return any("does not exist on disk" in f["description"]
+                           for f in tool.findings.items)
+
+        def t_actual_product_evidence_counts_a_genuine_target_run():
+            # The dimension must actually move when a genuine target run
+            # exists, and must stay at 0 when none does. If the numerator were
+            # hardcoded, or derived from prose in environment.hardware, this
+            # would fail.
+            #
+            # Run against the REAL corpus with ONE extra execution record
+            # injected in memory, so every other dimension is computed from the
+            # real tree and the only thing under test is the bucketing.
+            baseline = self._coverage_dimensions()["actual_product_evidence"]["numerator"]
+            real_iter = self.iter_corpus_artifacts
+            try:
+                # 1. the real corpus alone: no target run has been performed
+                self.findings = Findings()
+                plain = self._coverage_dimensions()["actual_product_evidence"]
+                # 2. inject one genuine target-hardware run for a real test measure
+                tm_id = next(a for a in (k[1] if isinstance(k, tuple) else k
+                                         for k in self.load_artifact_index())
+                             if "-TMS-" in a)
+                injected = _target_execution(id="FB2-VER-EXE-INJECTED",
+                                             test_measure_id=tm_id)
+                self.iter_corpus_artifacts = lambda: list(real_iter()) + \
+                    [(Path("injected.json"), injected)]
+                self.findings = Findings()
+                withtarget = self._coverage_dimensions()["actual_product_evidence"]
+                # 3. inject a HOST run for the same measure instead: must not count
+                hostrec = dict(injected, execution_kind="actual_host_run")
+                self.iter_corpus_artifacts = lambda: list(real_iter()) + \
+                    [(Path("injected.json"), hostrec)]
+                self.findings = Findings()
+                withhost = self._coverage_dimensions()["actual_product_evidence"]
+            finally:
+                self.iter_corpus_artifacts = real_iter
+                self.findings = Findings()
+            return (baseline == 0 and plain["numerator"] == 0
+                    and withtarget["numerator"] == 1
+                    and withhost["numerator"] == 0
+                    and withtarget["denominator"] == plain["denominator"])
+
+        def t_target_execution_kind_is_declared_by_the_schema():
+            # The tool and the schema must not drift: the kind the tool counts
+            # as target evidence has to be a member of the schema enum, or a
+            # real target run would be rejected by its own schema.
+            schema = load_json(self.schemas_dir / "execution.schema.json")
+            enum = None
+            for part in schema.get("allOf", []):
+                props = part.get("properties") or {}
+                if "execution_kind" in props:
+                    enum = props["execution_kind"].get("enum")
+            return (enum is not None
+                    and TARGET_EXECUTION_KIND in enum
+                    and set(enum) == DECLARED_EXECUTION_KINDS
+                    and HOST_EXECUTION_KINDS <= set(enum))
+
         # --- governance gate --------------------------------------------------
 
         def t_governance_gate_runs_detector():
@@ -6441,6 +7016,26 @@ class CorpusTool:
               t_standards_mapping_drops_without_backing)
         check("provenance checks run inside _run_detectors, so every finding-counting path sees them",
               t_provenance_runs_in_detector_pass)
+        check("link shadowing: a duplicate record in two registries is reported with both paths",
+              t_shadowed_duplicate_link_is_reported)
+        check("link shadowing: two registries that disagree is an error, not a silent pick",
+              t_conflicting_duplicate_link_is_an_error)
+        check("link de-duplication picks the canonical registry regardless of glob order",
+              t_link_dedup_is_independent_of_glob_order)
+        check("a canonical registry outranks a nested corpus copy under the documented precedence",
+              t_canonical_registry_outranks_a_nested_copy)
+        check("the shadowing detector runs inside cmd_validate, not only the scenario harness",
+              t_shadowing_detector_is_wired_into_validate)
+        check("target-hardware execution with real evidence validates",
+              t_target_hardware_execution_with_evidence_validates)
+        check("target-hardware execution without evidence is reported",
+              t_target_hardware_execution_without_evidence_is_reported)
+        check("target-hardware execution naming a log that does not exist is reported",
+              t_target_hardware_execution_missing_log_file_is_reported)
+        check("actual_product_evidence counts a genuine target run and ignores host runs",
+              t_actual_product_evidence_counts_a_genuine_target_run)
+        check("the target execution_kind is a member of the schema enum (tool and schema agree)",
+              t_target_execution_kind_is_declared_by_the_schema)
         return all(passed for _, passed in tests)
 
 

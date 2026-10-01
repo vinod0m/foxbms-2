@@ -9128,6 +9128,114 @@
       "provenance": "synthetic",
       "review_state": "pending",
       "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SWE3-000001",
+      "source_id": "FB2-SW-IMP-000001",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000004",
+      "target_revision": "1",
+      "relation_type": "implements",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The existing link FB2-LNK-SAF-000011 already records that FB2-SW-IMP-000001 is the code location carrying FB2-SW-DSN-000001, and this link does not restate that. It records the second design endpoint the same implementation realises: FB2-SW-DSN-000004, the detailed design of the same AFE measurement element, whose internal units are LTC_Trigger, LTC_CheckPec, LTC_CalculatePec15 and the transmit-ownership handshake. The mapping is not invented here - the implementation record's own source_refs already resolve to the anchors pinning LTC_Trigger's translation unit and the PEC buffer, and the detailed design was derived from those same anchors at the same pinned commit. Direction is implementation -> design, which is the direction master prompt section 13 declares for implements and the direction FB2-LNK-SAF-000011 already uses.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SWE3-000002",
+      "source_id": "FB2-SW-IMP-000002",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000005",
+      "target_revision": "1",
+      "relation_type": "implements",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The existing link FB2-LNK-SAF-000012 already records that FB2-SW-IMP-000002 is the code location carrying FB2-SW-DSN-000002. This link records the second design endpoint the same implementation realises: FB2-SW-DSN-000005, the detailed design of the same SOA element, whose internal units are SOA_CheckVoltages, SOA_CheckTemperatures, SOA_CheckCurrent, SOA_CheckSlaveTemperatures and the four limit providers in soa_cfg.c. The implementation record's own source_refs already name FB2-SRC-COD-000004, -000005 and -000006, which pin SOA_CheckVoltages, SOA_CheckCurrent and SOA_CheckTemperatures respectively, so the detailed design and the implementation rest on the same anchors rather than on a fresh claim. Direction is implementation -> design per master prompt section 13, matching FB2-LNK-SAF-000012.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SWE3-000003",
+      "source_id": "FB2-SW-IMP-000003",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000006",
+      "target_revision": "1",
+      "relation_type": "implements",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The existing link FB2-LNK-SAF-000013 already records that FB2-SW-IMP-000003 is the code location carrying FB2-SW-DSN-000003. This link records the second design endpoint the same implementation realises: FB2-SW-DSN-000006, the detailed design of the same contactor element, whose internal units are CONT_OpenContactor, CONT_CloseContactor, CONT_GetFeedbackOfAllContactors, CONT_CheckFeedback and CONT_InitializationCheckOfContactorRegistry. The implementation record's own source_refs already name FB2-SRC-COD-000008, which pins CONT_CheckFeedback to lines 125-163 of contactor.c at the pinned commit, so the detailed design and the implementation share the same anchor. Direction is implementation -> design per master prompt section 13, matching FB2-LNK-SAF-000013.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SWE3-000004",
+      "source_id": "FB2-SW-DSN-000004",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000001",
+      "target_revision": "1",
+      "relation_type": "refines",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "FB2-SW-DSN-000004 refines FB2-SW-DSN-000001 in the sense master prompt section 13 gives refines: the source side is the lower-level, more specific element and the target side is its parent. DSN-000001 allocates the AFE measurement element to the LTC driver and states its interfaces and budgets at architecture level; DSN-000004 specifies the same element's internals - which source-level unit performs each part, what the CRC-15 and per-device validity contract is, how transmit_ongoing is shared across an interrupt and a task, and which timing macros the source imposes. Neither record contradicts the other and no content was moved between them; this link exists so that the trace from the architecture allocation to the detailed specification is navigable and so that a reader landing on DSN-000001 learns that a detailed design exists beneath it. Direction is detailed design -> architecture, the inverse of allocated_to.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SWE3-000005",
+      "source_id": "FB2-SW-DSN-000005",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000002",
+      "target_revision": "1",
+      "relation_type": "refines",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "FB2-SW-DSN-000005 refines FB2-SW-DSN-000002: the source side is the lower-level detailed specification and the target side is the parent architecture record. DSN-000002 allocates the SOA element and states its diagnosis interfaces at architecture level; DSN-000005 specifies the internals - the split between the evaluator in soa.c and the limit providers in soa_cfg.c, the three-tier MOL/RSL/MSL nesting, the validity-bit gating, and the fact that SOA_CheckSlaveTemperatures has an empty body. One correction of fact belongs on this link rather than on the records: DSN-000002 already carries design_level=detailed_design while its own standards_mappings name SWE.2 with the rationale \"Software architectural design\", so its level token and its process reference disagree. DSN-000005 is the record that carries the ISO 26262-6 clause 8.4 content and the SWE.3 reference; the disagreement on DSN-000002 is recorded here because that record is not edited by this change, as editing it would invalidate nine review digests that record its current content.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SWE3-000006",
+      "source_id": "FB2-SW-DSN-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000003",
+      "target_revision": "1",
+      "relation_type": "refines",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "FB2-SW-DSN-000006 refines FB2-SW-DSN-000003: the source side is the lower-level detailed specification and the target side is the parent architecture record. DSN-000003 allocates the contactor element and states its command and feedback interfaces at architecture level; DSN-000006 specifies the internals - the registry data model, the four-way feedback source dispatch, the linear lookup and its STD_NOT_OK contract, the precharge gate, the unconditional open-all safe-state sweep, and the TODO recording that contactor-type uniqueness per string is not checked. As with the SOA element, DSN-000003 carries design_level=detailed_design while its own standards_mappings name SWE.2 with the rationale \"Software architectural design\"; DSN-000006 is the record that carries the clause 8.4 content and the SWE.3 reference, and DSN-000003 is not edited by this change so its nine recorded review digests stay valid.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
     }
   ],
   "schema_version": "1.0.0",

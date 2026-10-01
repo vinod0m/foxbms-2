@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-01T05:09:49Z |
+| Generated | 2026-10-01T13:26:59Z |
 
 ## Scope
 
@@ -117,6 +117,108 @@ Complete mapping of every implemented module to its source files, configuration,
 | `src/app/driver/contactor/contactor.c` | `CONTACTOR_CheckFeedback` | `implemented` |
 | `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c` | `SBC_FS8X_SetContactor` | `implemented` |
 | `src/app/engine/diag/cbs/diag_cbs_contactor.c` | `DIAG_CBS_Contactor` | `implemented` |
+
+### `FB2-SW-DSN-000004` (synthetic_reference) — Detailed Design: LTC 6813-1 AFE measurement driver - internal units, PEC contrac...
+
+| Source file | Symbol | Status |
+|---|---|---|
+| `src/app/driver/afe/ltc/api/ltc_afe.c` | `AFE_StartMeasurement` | `implemented` |
+| `src/app/driver/afe/ltc/api/ltc_afe.c` | `AFE_RequestTemperatureRead` | `implemented` |
+| `src/app/driver/afe/ltc/api/ltc_afe.c` | `AFE_RequestBalancingFeedbackRead` | `implemented` |
+| `src/app/driver/afe/ltc/api/ltc_afe.c` | `AFE_RequestOpenWireCheck` | `implemented` |
+| `src/app/driver/afe/ltc/api/ltc_afe.c` | `AFE_TriggerIc` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `LTC_Trigger` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `LTC_CheckPec` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `LTC_StateTransition` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `LTC_CondBasedStateTransition` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `LTC_SaveVoltages` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `LTC_ResetErrorTable` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `ltc_RxPecBuffer` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `ltc_TxPecBuffer` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c` | `ltc_errorTable` | `implemented` |
+| `src/app/driver/afe/ltc/common/ltc_pec.c` | `LTC_CalculatePec15` | `implemented` |
+| `src/app/driver/afe/ltc/common/ltc_pec.h` | `LTC_PEC_PRECOMPUTED_TABLE_SIZE` | `implemented` |
+| `src/app/driver/afe/ltc/common/ltc_pec.h` | `LTC_PEC15_MASK` | `implemented` |
+| `src/app/driver/afe/ltc/common/ltc_afe_dma.c` | `AFE_DmaCallback` | `implemented` |
+| `src/app/driver/afe/ltc/common/ltc_afe_dma.c` | `AFE_IsTransmitOngoing` | `implemented` |
+| `src/app/driver/afe/ltc/common/ltc_afe_dma.c` | `AFE_SetTransmitOngoing` | `implemented` |
+| `src/app/driver/afe/ltc/common/ltc_defs.h` | `LTC_DATA_SIZE_IN_BYTES` | `implemented` |
+| `src/app/driver/afe/ltc/common/config/ltc_cfg.h` | `LTC_N_BYTES_FOR_DATA_TRANSMISSION` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h` | `LTC_TRANSMISSION_TIMEOUT` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h` | `LTC_DISCARD_PEC` | `implemented` |
+| `src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h` | `LTC_NUMBER_OF_CELL_VOLTAGES_PER_REGISTER` | `implemented` |
+| `src/app/driver/meas/meas.c` | `MEAS_Control` | `implemented` |
+| `src/app/task/config/ftask_cfg.h` | `FTSK_TASK_AFE_STACK_SIZE_IN_BYTES` | `implemented` |
+| `src/app/task/config/ftask_cfg.h` | `FTSK_TASK_AFE_CYCLE_TIME` | `implemented` |
+| `tools/waf-tools/bms_config_validator.py` | `afe_driver_type` | `implemented` |
+| `src/app/driver/afe/api/afe_plausibility.h` | `AFE_PlausibilityCheckVoltageMeasurementRange` | `not_in_source` |
+
+### `FB2-SW-DSN-000005` (synthetic_reference) — Detailed Design: SOA monitoring - tiered limit evaluation, limit-provider split,...
+
+| Source file | Symbol | Status |
+|---|---|---|
+| `src/app/application/soa/soa.c` | `SOA_CheckVoltages` | `implemented` |
+| `src/app/application/soa/soa.c` | `SOA_CheckTemperatures` | `implemented` |
+| `src/app/application/soa/soa.c` | `SOA_CheckCurrent` | `implemented` |
+| `src/app/application/soa/soa.c` | `SOA_CheckSlaveTemperatures` | `not_in_source` |
+| `src/app/application/soa/soa.h` | `SOA_CheckVoltages` | `implemented` |
+| `src/app/application/config/soa_cfg.c` | `SOA_IsPackCurrentLimitViolated` | `implemented` |
+| `src/app/application/config/soa_cfg.c` | `SOA_IsStringCurrentLimitViolated` | `implemented` |
+| `src/app/application/config/soa_cfg.c` | `SOA_IsCellCurrentLimitViolated` | `implemented` |
+| `src/app/application/config/soa_cfg.c` | `SOA_IsCurrentOnOpenString` | `implemented` |
+| `src/app/application/soa/soa.c` | `DIAG_Handler` | `implemented` |
+| `src/app/application/bms/bms.c` | `BMS_Trigger` | `implemented` |
+| `src/app/application/bms/bms.c` | `BMS_GetCurrentFlowDirection` | `implemented` |
+| `src/app/task/config/ftask_cfg.c` | `FTSK_RunUserCodeCyclic10ms` | `implemented` |
+| `src/app/engine/diag/diag.h` | `DIAG_HANDLER_RETURN_ERR_OCCURRED` | `implemented` |
+| `src/app/engine/diag/diag.h` | `extern DIAG_RETURNTYPE_e DIAG_Handler` | `implemented` |
+| `src/app/engine/config/database_cfg.h` | `invalidStringCurrent` | `implemented` |
+| `src/app/engine/config/database_cfg.h` | `invalidPackCurrent` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_NR_OF_STRINGS` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_REST_CURRENT_mA` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_MAXIMUM_STRING_CURRENT_mA` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_MAXIMUM_PACK_CURRENT_mA` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_NR_OF_PARALLEL_CELLS_PER_CELL_BLOCK` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_POSITIVE_DISCHARGE_CURRENT` | `implemented` |
+| `src/app/application/config/battery_cell_cfg.h` | `BC_VOLTAGE_MAX_MOL_mV` | `implemented` |
+| `src/app/application/config/battery_cell_cfg.h` | `BC_VOLTAGE_DEEP_DISCHARGE_mV` | `implemented` |
+| `src/app/application/config/battery_cell_cfg.h` | `BC_TEMPERATURE_MAX_DISCHARGE_MSL_ddegC` | `implemented` |
+| `src/app/application/config/battery_cell_cfg.h` | `BC_TEMPERATURE_MIN_CHARGE_MOL_ddegC` | `implemented` |
+| `src/app/application/config/battery_cell_cfg.h` | `BC_CURRENT_MAX_CHARGE_MSL_mA` | `implemented` |
+
+### `FB2-SW-DSN-000006` (synthetic_reference) — Detailed Design: contactor actuation and auxiliary feedback - registry, command/...
+
+| Source file | Symbol | Status |
+|---|---|---|
+| `src/app/driver/contactor/contactor.c` | `CONT_CheckFeedback` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_GetFeedbackOfAllContactors` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_InitializationCheckOfContactorRegistry` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_OpenContactor` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_CloseContactor` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_ClosePrecharge` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_OpenPrecharge` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_OpenAllPrechargeContactors` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_OpenAllContactors` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_GetContactorState` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `CONT_Initialize` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `TEST_CONT_InitializationCheckOfContactorRegistry` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `FAS_ASSERT(FAS_TRAP)` | `implemented` |
+| `src/app/driver/contactor/contactor.c` | `SPS_NR_OF_AVAILABLE_SPS_CHANNELS` | `implemented` |
+| `src/app/driver/contactor/contactor.h` | `CONT_OpenContactor` | `implemented` |
+| `src/app/driver/contactor/contactor.h` | `CONT_GetContactorState` | `implemented` |
+| `src/app/driver/contactor/contactor.h` | `CONT_CheckFeedback` | `implemented` |
+| `src/app/driver/config/contactor_cfg.h` | `cont_contactorStates` | `implemented` |
+| `src/app/driver/config/contactor_cfg.h` | `CONT_CONTACTOR_INDEX` | `implemented` |
+| `src/app/driver/config/contactor_cfg.h` | `CONT_FEEDBACK_NORMALLY_CLOSED` | `implemented` |
+| `src/app/driver/config/contactor_cfg.h` | `CONT_BIDIRECTIONAL` | `implemented` |
+| `src/app/driver/config/contactor_cfg.c` | `cont_contactorStates` | `implemented` |
+| `src/app/driver/config/sps_cfg.h` | `SPS_NR_OF_AVAILABLE_SPS_CHANNELS` | `implemented` |
+| `src/app/driver/config/sps_cfg.h` | `SPS_NR_OF_REQUIRED_CONTACTOR_CHANNELS` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_NR_OF_CONTACTORS` | `implemented` |
+| `src/app/application/config/battery_system_cfg.h` | `BS_NR_OF_CONTACTORS_OUTSIDE_STRINGS` | `implemented` |
+| `src/app/application/bms/bms.c` | `CONT_OpenAllContactors` | `implemented` |
+| `src/app/application/bms/bms.c` | `BMS_Trigger` | `implemented` |
+| `src/app/task/config/ftask_cfg.c` | `FTSK_RunUserCodeCyclic10ms` | `implemented` |
 
 ### Requirement → Design → Source → Test Chains
 
@@ -260,4 +362,4 @@ Three slots in these records are empty by schema rather than by omission, and th
 
 ---
 
-*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T13:26:59Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

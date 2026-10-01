@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-01T05:09:49Z |
+| Generated | 2026-10-01T13:26:59Z |
 
 ## Scope
 
@@ -874,4 +874,4 @@ Cell measurements are validated continuously at runtime: plausibility checks (`P
 
 ---
 
-*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T13:26:59Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

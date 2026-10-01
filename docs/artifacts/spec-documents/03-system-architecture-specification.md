@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-01T05:09:49Z |
+| Generated | 2026-10-01T13:26:59Z |
 
 ## Scope
 
@@ -216,6 +216,9 @@ flowchart TD
     "FB2-SAF-FSR-000004" --- "FB2-SAF-SGO-000001"
     "FB2-SAF-TSC-000001" --- "FB2-SAF-FSC-000001"
     "FB2-SAF-TSC-000001" --- "FB2-SAF-SGO-000001"
+    "FB2-SW-DSN-000004" --- "FB2-SW-DSN-000001"
+    "FB2-SW-DSN-000005" --- "FB2-SW-DSN-000002"
+    "FB2-SW-DSN-000006" --- "FB2-SW-DSN-000003"
     "FB2-SYS-NED-000001" --- "FB2-SAF-ITE-000001"
     "FB2-SYS-NED-000002" --- "FB2-SAF-ITE-000001"
     "FB2-SYS-NED-000003" --- "FB2-SAF-ITE-000001"
@@ -279,10 +282,13 @@ flowchart TD
     "FB2-SW-SWR-000003" -.allocated_to.-> "FB2-SYS-SYR-000008"
     "FB2-SW-IMP-000001" -.implements.-> "FB2-SW-DSN-000001"
     "FB2-SW-IMP-000001" -.implements.-> "FB2-SW-SWR-000001"
+    "FB2-SW-IMP-000001" -.implements.-> "FB2-SW-DSN-000004"
     "FB2-SW-IMP-000002" -.implements.-> "FB2-SW-DSN-000002"
     "FB2-SW-IMP-000002" -.implements.-> "FB2-SW-SWR-000002"
+    "FB2-SW-IMP-000002" -.implements.-> "FB2-SW-DSN-000005"
     "FB2-SW-IMP-000003" -.implements.-> "FB2-SW-DSN-000003"
     "FB2-SW-IMP-000003" -.implements.-> "FB2-SW-SWR-000003"
+    "FB2-SW-IMP-000003" -.implements.-> "FB2-SW-DSN-000006"
     "FB2-SW-IMP-000004" -.implements.-> "FB2-SYS-SYR-000007"
 ```
 
@@ -290,4 +296,4 @@ flowchart TD
 
 ---
 
-*Generated: 2026-10-01T05:09:49Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T13:26:59Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
