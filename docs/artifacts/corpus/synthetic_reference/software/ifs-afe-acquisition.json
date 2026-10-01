@@ -1,0 +1,514 @@
+{
+ "id": "FB2-SW-IFS-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "software_interface_specification",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Interface Specification: the AFE measurement driver API",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000090",
+  "FB2-SRC-COD-000091",
+  "FB2-SRC-COD-000092",
+  "FB2-SRC-COD-000093",
+  "FB2-SRC-COD-000094",
+  "FB2-SRC-COD-000095",
+  "FB2-SRC-COD-000096",
+  "FB2-SRC-COD-000097",
+  "FB2-SRC-COD-000001",
+  "FB2-SRC-COD-000002"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+   "status": "partially_mapped",
+   "rationale": "Names the providing and consuming modules, the real signatures, the argument ranges, the validity signalling read off the real error paths, and the timing and concurrency the source imposes. It does not carry a protocol or an ownership rule, and no interface agreement exists."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Supplies the Interface Specifications family that SWE.2 expects and that the existing design records' interfaces signal tables did not supply. Component design remains absent and the design records remain a reconstruction of an implementation."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Named as the specification the software interface requirements for this boundary are derived from. It is an input to requirements, not a requirement."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "First interface specification in this corpus. Six elements of the AFE measurement API, each with its declaration transcribed from the header at the pinned commit and checked against the source line it cites, its argument range read from the assertion that enforces it, its return values read from the enum the source defines, and its timing read from the task configuration that calls it."
+  }
+ ],
+ "interface_id": "IFS-AFE-ACQ-000001",
+ "interface_class": "acquisition",
+ "analysis": {
+  "method": "source_analysis_at_pinned_commit",
+  "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+  "direction": "source_to_specification",
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "tools_used": [
+   "git show 308028fb:<path>",
+   "graft skeleton <file>"
+  ],
+  "what_this_record_is_not": [
+   "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+   "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+   "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+   "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+  ]
+ },
+ "providing_module": {
+  "name": "AFE driver, backend-selected",
+  "role": "Provides the measurement interface for the battery strings. Seven backends implement the same entry points, one per AFE family, and the header is the single API all of them present.",
+  "source_paths": [
+   "src/app/driver/afe/api/afe.h",
+   "src/app/driver/afe/ltc/api/ltc_afe.c"
+  ],
+  "note": "Seven files define a function of the same name for this API - under the adi, debug, debug/default, ltc, maxim, nxp and ti families - so the interface is a family of implementations behind one header rather than one implementation. Which one is compiled is a build-time decision this record does not resolve."
+ },
+ "consuming_modules": [
+  {
+   "name": "MEAS, the measurement module wrapper",
+   "source_path": "src/app/driver/meas/meas.c",
+   "calls": [
+    "AFE_TriggerIc",
+    "AFE_Initialize",
+    "AFE_StartMeasurement",
+    "AFE_RequestTemperatureRead",
+    "AFE_IsFirstMeasurementCycleFinished"
+   ],
+   "consumption_evidence": "MEAS_Control at src/app/driver/meas/meas.c L80-L82 calls AFE_TriggerIc and discards the result; MEAS_RequestTemperatureRead at L84-L87 asserts the string range and forwards; MEAS_StartMeasurement at L108-L110 and MEAS_Initialize at L112-L114 forward; MEAS_IsFirstMeasurementCycleFinished at L104-L106 forwards."
+  },
+  {
+   "name": "SYS, the system state machine",
+   "source_path": "src/app/engine/sys/sys.c",
+   "calls": [
+    "MEAS_StartMeasurement",
+    "MEAS_IsFirstMeasurementCycleFinished"
+   ],
+   "consumption_evidence": "(void)MEAS_StartMeasurement() at src/app/engine/sys/sys.c L426 and a comparison of MEAS_IsFirstMeasurementCycleFinished() against true at L432."
+  },
+  {
+   "name": "CAN asynchronous debug transmitter for hardware identification",
+   "source_path": "src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c",
+   "calls": [
+    "AFE_IdentifyAfes"
+   ],
+   "consumption_evidence": "serialIds = AFE_IdentifyAfes(); at src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c L189."
+  }
+ ],
+ "elements": [
+  {
+   "element_id": "IFSE-000001",
+   "symbol": "AFE_TriggerIc",
+   "declaration": "extern STD_RETURN_TYPE_e AFE_TriggerIc(void);",
+   "declaration_path": "src/app/driver/afe/api/afe.h",
+   "declaration_line": 108,
+   "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "implementation_line": 76,
+   "providing_module": "AFE driver, backend-selected",
+   "consuming_module": "MEAS_Control",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "The request was accepted by the AFE state machine.",
+     "STD_NOT_OK": "The request was not accepted."
+    },
+    "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;"
+   },
+   "validity_signalling": {
+    "mechanism": "Return value STD_RETURN_TYPE_e.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The declaration at src/app/driver/afe/api/afe.h L108 returns STD_RETURN_TYPE_e, so a caller that reads the return value can see a rejection."
+   },
+   "timing": {
+    "period_ms": 1,
+    "period_imposed_by_source": true,
+    "evidence": "The source imposes the period, not this record. MEAS_Control is documented at src/app/driver/meas/meas.h L76-L83 as 'called every 1ms from the tasks'; it calls AFE_TriggerIc at src/app/driver/meas/meas.c L80-L82; MEAS_Control is called from FTSK_RunUserCodeCyclic1ms at src/app/task/config/ftask_cfg.c L253; and FTSK_TASK_CYCLIC_1MS_CYCLE_TIME is 1u at src/app/task/config/ftask_cfg.h L94."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "The only path to this function is MEAS_Control at src/app/driver/meas/meas.c L80-L82, called from FTSK_RunUserCodeCyclic1ms at src/app/task/config/ftask_cfg.c L253, which runs in the 1 ms cyclic task whose priority is FTSK_TASK_CYCLIC_1MS_PRIORITY = OS_PRIORITY_VERY_HIGH at src/app/task/config/ftask_cfg.h L88. No interrupt context reaches this entry point in the source.",
+    "protection_mechanism": "None recorded at this entry point. Each backend's own implementation would have to carry its own."
+   },
+   "error_paths": [
+    {
+     "condition": "The caller is MEAS_Control.",
+     "observed_behaviour": "The return value is discarded: the body of MEAS_Control is a single call statement with no assignment and no test.",
+     "signalled_as": "not observable at this caller",
+     "evidence": "src/app/driver/meas/meas.c L80-L82: void MEAS_Control(void) { AFE_TriggerIc(); }"
+    }
+   ],
+   "not_specified_by_source": [
+    "The documentation comment for AFE_TriggerIc records no @return, so the header does not say what the return value means; the two-value enum is the only contract available.",
+    "Which backend implementation is active is not stated by this interface. Seven implementations share the name AFE_TriggerIc, one per AFE family, and the selection is a build-time decision this record does not resolve.",
+    "The period is stated by the caller, not by this interface. The header carries no period, no deadline and no budget.",
+    "Whether the backend is re-entrant safe, and whether AFE_TriggerIc may be called from more than one context, are not specified anywhere in the interface."
+   ]
+  },
+  {
+   "element_id": "IFSE-000002",
+   "symbol": "AFE_Initialize",
+   "declaration": "extern STD_RETURN_TYPE_e AFE_Initialize(void);",
+   "declaration_path": "src/app/driver/afe/api/afe.h",
+   "declaration_line": 111,
+   "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "implementation_line": 81,
+   "providing_module": "AFE driver, backend-selected",
+   "consuming_module": "MEAS_Initialize",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "The request was accepted by the AFE state machine.",
+     "STD_NOT_OK": "The request was not accepted."
+    },
+    "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;"
+   },
+   "validity_signalling": {
+    "mechanism": "Return value STD_RETURN_TYPE_e.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The declaration at src/app/driver/afe/api/afe.h L111 returns STD_RETURN_TYPE_e."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Called once during start-up: MEAS_Initialize calls AFE_Initialize at src/app/driver/meas/meas.c L112-L114, MEAS_Initialize is called from FTSK_InitializeUserCodePreCyclicTasks at src/app/task/config/ftask_cfg.c L230, and that function is documented in the source as operating under the assumption that the operating system is not yet running. No period applies."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Reached only from FTSK_InitializeUserCodePreCyclicTasks at src/app/task/config/ftask_cfg.c L230, which the source comments as running before the operating system is started, so no interrupt can race it.",
+    "protection_mechanism": "None recorded. The pre-cyclic start-up context is the constraint, and it is a comment in the source rather than an enforced precondition."
+   },
+   "error_paths": [
+    {
+     "condition": "Initialisation fails.",
+     "observed_behaviour": "The value is discarded by the one caller in the source: FTSK_InitializeUserCodePreCyclicTasks writes (void)MEAS_Initialize() at src/app/task/config/ftask_cfg.c L230.",
+     "signalled_as": "not observable to the task that performs initialisation",
+     "evidence": "src/app/task/config/ftask_cfg.c L230"
+    }
+   ],
+   "not_specified_by_source": [
+    "What initialisation does is backend-specific and not stated by this interface.",
+    "The consequence of a failed initialisation is not specified. The only caller discards the result, so a failure is not observable from the call site.",
+    "The interface does not state whether AFE_Initialize may be called more than once or what a second call does."
+   ]
+  },
+  {
+   "element_id": "IFSE-000003",
+   "symbol": "AFE_StartMeasurement",
+   "declaration": "extern STD_RETURN_TYPE_e AFE_StartMeasurement(void);",
+   "declaration_path": "src/app/driver/afe/api/afe.h",
+   "declaration_line": 124,
+   "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "implementation_line": 142,
+   "providing_module": "AFE driver, backend-selected",
+   "consuming_module": "MEAS_StartMeasurement",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "The request was accepted by the AFE state machine.",
+     "STD_NOT_OK": "The request was not accepted."
+    },
+    "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;"
+   },
+   "validity_signalling": {
+    "mechanism": "Return value STD_RETURN_TYPE_e.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The declaration at src/app/driver/afe/api/afe.h L124 returns STD_RETURN_TYPE_e."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Called once per start-up sequence by the system state machine: (void)MEAS_StartMeasurement() at src/app/engine/sys/sys.c L426, and MEAS_StartMeasurement forwards to AFE_StartMeasurement at src/app/driver/meas/meas.c L108-L110. It is not called periodically."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Called from src/app/engine/sys/sys.c L426, which runs in the state-machine trigger, not in an interrupt context in the source."
+   },
+   "error_paths": [
+    {
+     "condition": "The measurement start request is rejected.",
+     "observed_behaviour": "The value is discarded: the caller writes (void)MEAS_StartMeasurement() at src/app/engine/sys/sys.c L426.",
+     "signalled_as": "not observable at this caller",
+     "evidence": "src/app/engine/sys/sys.c L426"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state what 'measurement started' means in observable terms, such as which output changes or which flag a consumer may poll.",
+    "No completion or timeout is offered. A caller cannot learn that the first cycle finished from this call; it must call AFE_IsFirstMeasurementCycleFinished instead, and the relation between the two is not stated here.",
+    "Whether a second call while a measurement is in progress is accepted, rejected or idempotent is not specified."
+   ]
+  },
+  {
+   "element_id": "IFSE-000004",
+   "symbol": "AFE_RequestTemperatureRead",
+   "declaration": "extern STD_RETURN_TYPE_e AFE_RequestTemperatureRead(uint8_t string);",
+   "declaration_path": "src/app/driver/afe/api/afe.h",
+   "declaration_line": 131,
+   "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "implementation_line": 108,
+   "providing_module": "AFE driver, backend-selected",
+   "consuming_module": "MEAS_RequestTemperatureRead",
+   "parameters": [
+    {
+     "name": "string",
+     "c_type": "uint8_t",
+     "direction": "in",
+     "unit": "string index (dimensionless)",
+     "meaning": "Identifies which battery string the request addresses, because the module serves more than one string.",
+     "valid_range": "0 <= string < BS_NR_OF_STRINGS",
+     "range_evidence": "The forwarding wrapper asserts it: FAS_ASSERT(string < BS_NR_OF_STRINGS) at src/app/driver/meas/meas.c L85. BS_NR_OF_STRINGS is (1u) at src/app/application/config/battery_system_cfg.h L109.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "The request was accepted by the AFE state machine.",
+     "STD_NOT_OK": "The request was not accepted."
+    },
+    "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;"
+   },
+   "validity_signalling": {
+    "mechanism": "Return value for the request, and a precondition assertion for the argument.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The return value carries the request outcome; the argument range is enforced one level up by an assertion rather than by a returned error."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Requested on demand by consumers, not on a fixed period. The open-wire period that the interface itself fixes is a different request: AFE_ERROR_OPEN_WIRE_PERIOD_ms is (30000u) at src/app/driver/afe/api/afe.h L99."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Reached through MEAS_RequestTemperatureRead, which is a task-level wrapper; no interrupt path to it appears in the source."
+   },
+   "error_paths": [
+    {
+     "condition": "string is at or above BS_NR_OF_STRINGS.",
+     "observed_behaviour": "The wrapper trips a precondition assertion before the request reaches the driver.",
+     "signalled_as": "precondition assertion, not a returned error",
+     "evidence": "src/app/driver/meas/meas.c L85"
+    },
+    {
+     "condition": "The request is rejected by the AFE state machine.",
+     "observed_behaviour": "STD_NOT_OK is returned to the wrapper's caller.",
+     "signalled_as": "STD_NOT_OK",
+     "evidence": "The return type is STD_RETURN_TYPE_e at src/app/driver/afe/api/afe.h L131."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state the unit or the valid range of the temperature it causes to be read. Nothing here gives a temperature scale, a resolution or a valid window.",
+    "The interface does not state how a caller obtains the temperature once the request has been accepted, or how it distinguishes a stale reading from a fresh one.",
+    "No completion notification is offered; the function returns before the measurement exists, and the mechanism a caller would use to learn completion is not named by this interface."
+   ]
+  },
+  {
+   "element_id": "IFSE-000005",
+   "symbol": "AFE_IsFirstMeasurementCycleFinished",
+   "declaration": "extern bool AFE_IsFirstMeasurementCycleFinished(void);",
+   "declaration_path": "src/app/driver/afe/api/afe.h",
+   "declaration_line": 118,
+   "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "implementation_line": 152,
+   "providing_module": "AFE driver, backend-selected",
+   "consuming_module": "MEAS_IsFirstMeasurementCycleFinished, SYS",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "bool",
+    "values": {
+     "true": "The first measurement cycle was made.",
+     "false": "The first measurement cycle has not been made yet."
+    },
+    "default_on_no_information": "The declared false state is the safe direction: before the first cycle the function reports that the cycle has not finished. It cannot report a third condition.",
+    "evidence": "Declared with a doxygen @return of 'true is the first measurement cycle was made, false otherwise' at src/app/driver/afe/api/afe.h L113-L117."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value bool.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The declaration returns bool, so the caller can distinguish the two states."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Polled by the system state machine at src/app/engine/sys/sys.c L432, guarded by a comparison against true, inside the state-machine trigger rather than on a fixed period."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Called from src/app/engine/sys/sys.c L432; no interrupt path to it appears in the source."
+   },
+   "error_paths": [
+    {
+     "condition": "The first cycle has not been made.",
+     "observed_behaviour": "Returns false and the caller keeps waiting.",
+     "signalled_as": "false",
+     "evidence": "src/app/engine/sys/sys.c L432 compares the result against true."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not say whether the flag latches or whether it can return to false. A caller reading 'first cycle finished' would assume a latch, and the source does not state one.",
+    "The interface does not say how long the first cycle takes, so a caller cannot distinguish 'not finished yet' from 'never going to finish'.",
+    "No error state exists. A backend that failed to start a measurement has no way to express that through this element."
+   ]
+  },
+  {
+   "element_id": "IFSE-000006",
+   "symbol": "AFE_IdentifyAfes",
+   "declaration": "extern uint64_t *AFE_IdentifyAfes(void);",
+   "declaration_path": "src/app/driver/afe/api/afe.h",
+   "declaration_line": 172,
+   "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+   "implementation_line": 156,
+   "providing_module": "AFE driver, backend-selected",
+   "consuming_module": "CAN debug transmitter",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "uint64_t *",
+    "values": {
+     "non-NULL": "A pointer to the first serialId of the serialId field of the driver state structure.",
+     "NULL_PTR": "Not stated. The source does not document a null return for this function, so a caller has no documented contract for it."
+    },
+    "default_on_no_information": "Undocumented. The doxygen comment names only the success case: 'pointer to the first serialId of the serialId field in driver state structure'. Nothing states when the pointer is invalid.",
+    "evidence": "Declared at src/app/driver/afe/api/afe.h L169-L172 with the comment 'pointer to the first serialId of the serialId field in driver state structure'."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value is a pointer into driver-internal state.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The declaration returns uint64_t * at src/app/driver/afe/api/afe.h L172 and the only documented behaviour is a non-null pointer into the driver state structure. No failure value is documented, so a caller cannot observe failure from this element."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Not called periodically. The one caller in the source is the asynchronous CAN debug transmitter, which reads the pointer at src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c L189."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Reached from an asynchronous CAN transmit callback body at src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c L189; the source shows no critical section around the read."
+   },
+   "error_paths": [
+    {
+     "condition": "The caller dereferences the returned pointer.",
+     "observed_behaviour": "The pointer is into the driver's own state structure, so the data read is whatever the driver currently holds.",
+     "signalled_as": "not applicable",
+     "evidence": "The declared return type at src/app/driver/afe/api/afe.h L172 is a pointer into driver state, and no copy or snapshot is documented."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state how many serial identifiers there are, so the caller cannot know how far to read from the returned pointer without a separate agreement.",
+    "The interface does not state whether the pointed-to data is stable, whether it changes under the caller, or how long it remains valid.",
+    "No lock, no ownership rule and no lifetime rule are stated. The source hands out a pointer into internal state and says nothing about it."
+   ]
+  }
+ ],
+ "interface_level_gaps": [
+  {
+   "gap": "The interface is a family of seven implementations behind one header, and nothing in the interface says which one is active or whether a consumer may rely on behaviour common to all seven.",
+   "consequence": "A requirement written against this interface is a requirement against seven implementations that this corpus has not compared with each other.",
+   "evidence": "Seven files define AFE_TriggerIc: src/app/driver/afe/adi/common/ades183x/api/adi_ades183x_afe.c, src/app/driver/afe/debug/can/api/debug_can_afe.c, src/app/driver/afe/debug/default/api/debug_default_afe.c, src/app/driver/afe/ltc/api/ltc_afe.c, src/app/driver/afe/maxim/api/mxm_afe.c, src/app/driver/afe/nxp/api/nxp_afe.c and src/app/driver/afe/ti/api/ti_afe.c."
+  },
+  {
+   "gap": "Three of the six elements have a return value that the only caller in the source discards.",
+   "consequence": "For AFE_TriggerIc, AFE_Initialize and AFE_StartMeasurement the interface can signal failure but the code that calls it does not observe it, so a failure of any of the three is invisible at the call site. This is a finding about the implementation, not a defect asserted against it.",
+   "evidence": "src/app/driver/meas/meas.c L80-L82 discards the AFE_TriggerIc result; src/app/task/config/ftask_cfg.c L230 writes (void)MEAS_Initialize(); src/app/engine/sys/sys.c L426 writes (void)MEAS_StartMeasurement()."
+  },
+  {
+   "gap": "No element of this interface carries a physical or electrical contract: no cell count, no sense range, no accuracy, no sampling time.",
+   "consequence": "Nothing here can be traced to the hardware that would have to satisfy it. The hardware interface that would carry those limits is FB2-HW-HDD-000001's subject and that record says the schematics are unavailable.",
+   "evidence": "The header declares only the request vocabulary AFE_REQUEST_e at src/app/driver/afe/api/afe.h L68-L73 and two constants, AFE_ERROR_OPEN_WIRE_PERIOD_ms and AFE_DEFAULT_CELL_VOLTAGE_INVALID_VALUE, at L99 and L102; neither is an accuracy or range statement."
+  }
+ ],
+ "verification_status": {
+  "analysed_against_running_code": false,
+  "conformance_tested": false,
+  "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+ },
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "approval_claimed": false,
+  "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+ }
+}

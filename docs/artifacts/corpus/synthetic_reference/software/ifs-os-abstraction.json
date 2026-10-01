@@ -1,0 +1,442 @@
+{
+ "id": "FB2-SW-IFS-000007",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "software_interface_specification",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Interface Specification: the operating-system and platform abstraction layer",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000047",
+  "FB2-SRC-COD-000048",
+  "FB2-SRC-COD-000049",
+  "FB2-SRC-COD-000106"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+   "status": "partially_mapped",
+   "rationale": "Specifies the platform-service boundary with the real signatures, the precondition assertions, the tick-rate unit, and the difference between a task critical section and a global interrupt mask - two elements that this record shows are not interchangeable."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Supplies an interface specification for the platform-service boundary that the design records' signal tables did not."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Named as the specification the software interface requirements for the platform-service boundary are derived from."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Four elements of the platform-service layer: the task critical section, the periodic delay, the tick count and the global interrupt mask. The reason these four and not others is that between them they contain this corpus's only nesting-safety question, and the answer differs by element: the task critical section is not nestable and does not detect nesting, and the interrupt mask is worse, because it is a register write with no count and no matching restore."
+  }
+ ],
+ "interface_id": "IFS-OS-ABS-000007",
+ "interface_class": "platform_service",
+ "analysis": {
+  "method": "source_analysis_at_pinned_commit",
+  "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+  "direction": "source_to_specification",
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "tools_used": [
+   "git show 308028fb:<path>",
+   "graft skeleton <file>"
+  ],
+  "what_this_record_is_not": [
+   "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+   "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+   "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+   "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+  ]
+ },
+ "providing_module": {
+  "name": "OS abstraction and platform service layer",
+  "role": "Wraps the RTOS and the privilege layer so that application and driver code does not name the RTOS. It also holds the privilege and interrupt-control elements, which are declared in separate headers but serve the same purpose: giving code a controlled way to touch hardware registers.",
+  "source_paths": [
+   "src/app/task/os/os.h",
+   "src/app/task/os/freertos/os_freertos.c",
+   "src/app/task/os/os.c",
+   "src/app/main/include/fassert.h",
+   "src/app/main/include/fsystem.h"
+  ]
+ },
+ "consuming_modules": [
+  {
+   "name": "The whole application, through the tick count",
+   "source_path": "src/app/engine/database/database.c",
+   "calls": [
+    "OS_GetTickCount"
+   ],
+   "consumption_evidence": "The tick count is the database's time base: DATA_CopyData stamps each write with OS_GetTickCount() at src/app/engine/database/database.c L176."
+  },
+  {
+   "name": "I2C driver",
+   "source_path": "src/app/driver/i2c/i2c.c",
+   "calls": [
+    "OS_EnterTaskCritical",
+    "OS_ExitTaskCritical",
+    "FSYS_RaisePrivilege"
+   ],
+   "consumption_evidence": "The DMA configuration is wrapped in a task critical section at src/app/driver/i2c/i2c.c L449 and L462, with a privilege raise inside it at L451."
+  },
+  {
+   "name": "SPI driver",
+   "source_path": "src/app/driver/spi/spi.c",
+   "calls": [
+    "OS_EnterTaskCritical",
+    "OS_ExitTaskCritical"
+   ],
+   "consumption_evidence": "The busy-flag test and set are wrapped in a task critical section at src/app/driver/spi/spi.c L518 and L523."
+  },
+  {
+   "name": "I2C task body",
+   "source_path": "src/app/task/config/ftask_cfg.c",
+   "calls": [
+    "OS_DelayTaskUntil"
+   ],
+   "consumption_evidence": "OS_DelayTaskUntil(&current_time, 2u) at src/app/task/config/ftask_cfg.c L322, the only caller of the periodic delay this record traced."
+  }
+ ],
+ "elements": [
+  {
+   "element_id": "IFSE-000601",
+   "symbol": "OS_EnterTaskCritical",
+   "declaration": "extern void OS_EnterTaskCritical(void);",
+   "declaration_path": "src/app/task/os/os.h",
+   "declaration_line": 221,
+   "implementation_path": "src/app/task/os/freertos/os_freertos.c",
+   "implementation_line": 153,
+   "providing_module": "OS abstraction layer",
+   "consuming_module": "Every module that takes a task-level critical section",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value; the element has no failure path.",
+    "evidence": "Declared void at src/app/task/os/os.h L221 and defined void at src/app/task/os/freertos/os_freertos.c L153."
+   },
+   "validity_signalling": {
+    "mechanism": "None returned. The element masks or suspends scheduling for the calling task.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The body is a single call to taskENTER_CRITICAL() at src/app/task/os/freertos/os_freertos.c L154."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Not periodic. It is called around short register or queue-manipulation sections, for example around the DMA configuration in the I2C driver at src/app/driver/i2c/i2c.c L449-L462 and around the SPI busy-flag update at src/app/driver/spi/spi.c L518-L523.",
+    "timeouts": [
+     {
+      "name": "OS_TICK_RATE_MS",
+      "value": "portTICK_RATE_MS",
+      "unit": "ms per RTOS tick",
+      "meaning": "The unit in which every tick-valued timeout in this layer is expressed.",
+      "evidence": "#define OS_TICK_RATE_MS (portTICK_RATE_MS) at src/app/task/os/os.h L75."
+     }
+    ]
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "not_reentrant",
+    "evidence": "The wrapper is documented at src/app/task/os/os.h L216-L221 as not to be called from an interrupt, and the underlying primitive is the task critical-section macro rather than a bare interrupt mask. The source carries a further statement about this platform at src/app/task/os/freertos/os_freertos.c L162: the tick count is read there with the comment that the TMS570 does not support nested interrupts.",
+    "protection_mechanism": "This element is itself the protection mechanism for its callers."
+   },
+   "error_paths": [
+    {
+     "condition": "Called with interrupts already masked by the caller.",
+     "observed_behaviour": "Not handled. Nothing at this element detects or rejects a nested entry, and the source does not provide one.",
+     "signalled_as": "not signalled",
+     "evidence": "The body at src/app/task/os/freertos/os_freertos.c L153-L155 contains only taskENTER_CRITICAL()."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface states no nesting rule and provides no way to ask whether a critical section is already held. A caller cannot tell whether it is about to nest, and nothing detects it if it does.",
+    "The interface states no maximum hold time and no warning if a caller holds it across a blocking call. This is the single most dangerous property of a critical-section interface and it is not documented here.",
+    "The interface says nothing about which interrupts or tasks it excludes. It wraps a task critical-section macro, so on this platform the exclusion is of scheduling and of the tasks at or above the masking priority, but the header does not state that.",
+    "The interface declares no return value, so a caller cannot confirm that a section was actually entered."
+   ]
+  },
+  {
+   "element_id": "IFSE-000602",
+   "symbol": "OS_DelayTaskUntil",
+   "declaration": "extern void OS_DelayTaskUntil(uint32_t *pPreviousWakeTime, uint32_t milliseconds);",
+   "declaration_path": "src/app/task/os/os.h",
+   "declaration_line": 264,
+   "implementation_path": "src/app/task/os/freertos/os_freertos.c",
+   "implementation_line": 172,
+   "providing_module": "OS abstraction layer",
+   "consuming_module": "Periodic task bodies, including the I2C task",
+   "parameters": [
+    {
+     "name": "pPreviousWakeTime",
+     "c_type": "uint32_t *",
+     "direction": "in_out",
+     "unit": "RTOS ticks",
+     "meaning": "Points at the previous wake time. The element reads it and the underlying primitive advances it, so the caller must keep the same storage across calls for the delay to be periodic.",
+     "valid_range": "Non-null.",
+     "range_evidence": "FAS_ASSERT(pPreviousWakeTime != NULL_PTR) at src/app/task/os/freertos/os_freertos.c L173.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    },
+    {
+     "name": "milliseconds",
+     "c_type": "uint32_t",
+     "direction": "in",
+     "unit": "ms",
+     "meaning": "The period to delay by.",
+     "valid_range": "Greater than zero.",
+     "range_evidence": "FAS_ASSERT(milliseconds > 0u) at src/app/task/os/freertos/os_freertos.c L174.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value; a zero period traps rather than returning.",
+    "evidence": "Declared void at src/app/task/os/os.h L264."
+   },
+   "validity_signalling": {
+    "mechanism": "None returned. Two precondition assertions and a floor on the computed tick count.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "Two assertions at src/app/task/os/freertos/os_freertos.c L173-L174, and a floor at L176-L178."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "The element implements whatever period the caller asks for, so it imposes none. The one caller this record traced passes 2u: OS_DelayTaskUntil(&current_time, 2u) at src/app/task/config/ftask_cfg.c L322.",
+    "timeouts": [
+     {
+      "name": "computed tick floor",
+      "value": "1",
+      "unit": "RTOS ticks",
+      "meaning": "A millisecond value below one tick is raised to one tick, so a requested sub-tick period becomes one tick rather than zero.",
+      "evidence": "if ((uint32_t)ticks < 1u) { ticks = 1u; /* Minimum delay is 1 tick */ } at src/app/task/os/freertos/os_freertos.c L176-L178."
+     }
+    ]
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "A task-level blocking primitive; no interrupt context reaches it in the source this record examined."
+   },
+   "error_paths": [
+    {
+     "condition": "pPreviousWakeTime is NULL.",
+     "observed_behaviour": "A precondition assertion traps before the delay.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/task/os/freertos/os_freertos.c L173"
+    },
+    {
+     "condition": "milliseconds is zero.",
+     "observed_behaviour": "A precondition assertion traps. Zero is not treated as 'no delay'.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/task/os/freertos/os_freertos.c L174"
+    },
+    {
+     "condition": "milliseconds is positive but smaller than one tick.",
+     "observed_behaviour": "The computed tick count is raised to one, so the delay is longer than requested and the caller is not told.",
+     "signalled_as": "not signalled",
+     "evidence": "src/app/task/os/freertos/os_freertos.c L176-L178"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state the tick rate, so a caller cannot convert a millisecond period into a real-time period without consulting the RTOS configuration this layer is meant to hide.",
+    "The interface silently rounds a sub-tick request up to a full tick and does not say so, so a requested period is not necessarily the period obtained.",
+    "The interface does not state that the pointed-at storage is advanced, which is the property that makes the call periodic. A caller that passed a local variable would get a one-off delay with no indication why.",
+    "The interface states nothing about what happens if the task is already late, which is the question a periodic-delay interface normally has to answer."
+   ]
+  },
+  {
+   "element_id": "IFSE-000603",
+   "symbol": "OS_GetTickCount",
+   "declaration": "extern uint32_t OS_GetTickCount(void);",
+   "declaration_path": "src/app/task/os/os.h",
+   "declaration_line": 244,
+   "implementation_path": "src/app/task/os/freertos/os_freertos.c",
+   "implementation_line": 161,
+   "providing_module": "OS abstraction layer",
+   "consuming_module": "The whole application: every time-stamped database write and every state-machine trigger",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "uint32_t",
+    "values": {},
+    "default_on_no_information": "The return type is the tick count itself, so the value returned before the scheduler starts is whatever the underlying primitive returns. The source records a platform property here rather than a guarantee: the body returns the tick count with the comment that the TMS570 does not support nested interrupts.",
+    "evidence": "Declared at src/app/task/os/os.h L244; the definition and its platform comment are at src/app/task/os/freertos/os_freertos.c L161-L163."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value uint32_t, the tick count. There is no error path.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The body is a single return of the underlying tick count at src/app/task/os/freertos/os_freertos.c L162."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Read on demand. It is the time base for the database: DATA_CopyData stamps every write with OS_GetTickCount() at src/app/engine/database/database.c L176, and BMS_Trigger reads it into its own state at src/app/application/bms/bms.c L901.",
+    "timeouts": [
+     {
+      "name": "OS_TICK_RATE_MS",
+      "value": "portTICK_RATE_MS",
+      "unit": "ms per RTOS tick",
+      "meaning": "The conversion between the returned tick count and real time.",
+      "evidence": "#define OS_TICK_RATE_MS (portTICK_RATE_MS) at src/app/task/os/os.h L75."
+     }
+    ]
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Read from task context throughout the source this record examined. The underlying primitive is the task tick-count read and the source records no interrupt-safe variant of this element."
+   },
+   "error_paths": [
+    {
+     "condition": "Any condition.",
+     "observed_behaviour": "No error path exists; the element always returns a value.",
+     "signalled_as": "nothing",
+     "evidence": "src/app/task/os/freertos/os_freertos.c L161-L163"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface returns ticks and does not state the tick rate, so every consumer must convert outside the abstraction layer this element is meant to provide. Any consumer that treats the return value as milliseconds will be wrong by a factor of the tick rate.",
+    "The interface does not state whether the value is monotonic across the wrap of the 32-bit counter, nor what the wrap period is. A consumer that subtracts two readings across a wrap would compute a negative interval.",
+    "The interface does not state whether it is safe to call before the scheduler starts, although the value is read at initialisation time elsewhere in the source.",
+    "The interface says nothing about precision: the resolution is one tick and the interface does not name it."
+   ]
+  },
+  {
+   "element_id": "IFSE-000604",
+   "symbol": "FAS_DisableInterrupts",
+   "declaration": "extern void FAS_DisableInterrupts(void);",
+   "declaration_path": "src/app/main/include/fassert.h",
+   "declaration_line": 117,
+   "implementation_path": "src/app/main/include/fassert.h",
+   "implementation_line": 112,
+   "providing_module": "Platform privilege and interrupt-control layer, part of the OS abstraction surface",
+   "consuming_module": "Application and driver code that writes a register directly",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value. This element masks interrupts globally and offers no way to read the mask state back.",
+    "evidence": "Declared void at src/app/main/include/fassert.h L117."
+   },
+   "validity_signalling": {
+    "mechanism": "None returned. The element writes the saved program status register.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The element has no C implementation at all: it is bound to an assembler routine by the supervisor-call pragma on the line above it, #pragma SWI_ALIAS(FAS_DisableInterrupts, 5) at src/app/main/include/fassert.h L112, with the source documenting that the implementation is in assembler and writes the SPSR register."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Not periodic; used around short direct register sequences."
+   },
+   "concurrency": {
+    "calling_context": "both",
+    "reentrancy": "not_reentrant",
+    "evidence": "Unlike OS_EnterTaskCritical, this element masks interrupts globally rather than suspending scheduling for one task. It is available from an interrupt context as well as a task, and nothing at the interface distinguishes the two or warns about the cost of masking globally in an interrupt.",
+    "protection_mechanism": "This element is itself the protection mechanism for its callers."
+   },
+   "error_paths": [
+    {
+     "condition": "Called twice without an intervening re-enable.",
+     "observed_behaviour": "Not handled. Nothing detects nesting, and because the mechanism is a register write rather than a counted critical section, a second call followed by one re-enable leaves interrupts masked.",
+     "signalled_as": "not signalled",
+     "evidence": "The pragma declaration at src/app/main/include/fassert.h L112 and the surrounding documentation describe a single register write and no count."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface provides no matching re-enable and no way to restore a previous mask state. The source's own comment on the tick-count element records that this platform does not support nested interrupts, and this element is the global counterpart of that limitation, so nesting is unsafe here by construction.",
+    "The interface states nothing about which interrupts it masks, whether maskable interrupt sources are included, or how long the caller may hold the mask.",
+    "The interface has no C implementation, so its behaviour is not inspectable in this language at all: it is an assembler routine reached through a supervisor-call alias, and this corpus can state that but cannot analyse the routine.",
+    "The interface is declared in the same header as the assertion facility, which mixes two unrelated concerns in one boundary."
+   ]
+  }
+ ],
+ "interface_level_gaps": [
+  {
+   "gap": "Two elements in the same abstraction mask very different things and the layer does not distinguish them.",
+   "consequence": "A caller that reaches for either one to get exclusion will get a different guarantee depending on which it picked, and nothing in the headers warns about it. This is the finding that makes this boundary worth specifying rather than summarising.",
+   "evidence": "OS_EnterTaskCritical wraps taskENTER_CRITICAL() at src/app/task/os/freertos/os_freertos.c L154, which suspends scheduling for the calling task, while FAS_DisableInterrupts writes the SPSR register globally through a supervisor-call alias declared at src/app/main/include/fassert.h L112."
+  },
+  {
+   "gap": "Neither masking element is nestable and neither detects nesting.",
+   "consequence": "A nested entry followed by a single exit leaves the masking in place, and in the global-mask case that would silently disable interrupts for the rest of the run. Nothing detects it, so the failure mode is invisible rather than loud.",
+   "evidence": "Neither body contains a depth counter: src/app/task/os/freertos/os_freertos.c L153-L155 and L157-L159, and the pragma declaration at src/app/main/include/fassert.h L112 with no corresponding C body."
+  },
+  {
+   "gap": "The abstraction does not expose its own tick rate.",
+   "consequence": "The one element whose value is a time quantity returns ticks and leaves the conversion to every consumer, which defeats the abstraction for the element most likely to be misused.",
+   "evidence": "uint32_t OS_GetTickCount(void) at src/app/task/os/os.h L244 returns a tick count, while the conversion constant OS_TICK_RATE_MS is a separate macro at src/app/task/os/os.h L75."
+  },
+  {
+   "gap": "One element of the boundary has no C implementation in this repository.",
+   "consequence": "Its behaviour cannot be analysed, reviewed or tested in the language the rest of the boundary is written in, so a requirement written about it can only be traced to the declaration.",
+   "evidence": "FAS_DisableInterrupts is declared at src/app/main/include/fassert.h L117 and bound by the pragma on L112 to an assembler routine the source names as being in the RTOS port."
+  }
+ ],
+ "verification_status": {
+  "analysed_against_running_code": false,
+  "conformance_tested": false,
+  "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+ },
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "approval_claimed": false,
+  "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+ }
+}

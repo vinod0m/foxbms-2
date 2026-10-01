@@ -1,0 +1,258 @@
+{
+ "schema_version": "1.0.0",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "links": [
+  {
+   "link_id": "FB2-LNK-HW-000001",
+   "source_id": "FB2-HW-HVP-000001",
+   "source_revision": "1",
+   "target_id": "FB2-HW-HCB-000001",
+   "target_revision": "1",
+   "relation_type": "depends_on",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The hardware verification plan is scoped by the configuration baseline: the plan's own scope_basis names FB2-HW-HCB-000001 and takes the board set and the released versions from it rather than choosing them. Without that dependency the plan's subject would be undefined, since the release index is the only place in this repository that says which boards exist and at which versions. The direction is plan to baseline: the plan is the finer statement and the baseline is what it rests on.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-HW-000002",
+   "source_id": "FB2-HW-HDD-000001",
+   "source_revision": "1",
+   "target_id": "FB2-HW-HCB-000001",
+   "target_revision": "1",
+   "relation_type": "depends_on",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The HWE.3 gap record repeats the same search result that the configuration baseline records: zero Altium source files in the working tree and in every commit, and the designs hosted on an external server. The gap record does not re-derive that from scratch, it depends on the baseline's measurement and extends it with the count of the records that inherit the limitation. If the baseline's availability finding were wrong, this record would be wrong too, so the dependency is declared rather than left implicit.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-HW-000003",
+   "source_id": "FB2-SYS-HVA-000001",
+   "source_revision": "1",
+   "target_id": "FB2-HW-HCB-000001",
+   "target_revision": "1",
+   "relation_type": "refines",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The system-domain variant applicability record refines the hardware configuration baseline at the system level. The baseline fixes seven board designations and ten released versions; the applicability record states which of them a system requirement can be stated against, and records the three board designations the variant registry names for which the release index releases nothing. It is the finer statement: it answers a question the baseline does not ask.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-IFS-000004",
+   "source_id": "FB2-SW-IFS-000001",
+   "source_revision": "1",
+   "target_id": "FB2-SW-DSN-000001",
+   "target_revision": "1",
+   "relation_type": "refines",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The AFE design record's interfaces field is a signal table: it names cell_voltages as uint16_t[] in mV at 20 Hz and says nothing about who calls it, what the legal string range is or how a failure is reported. FB2-SW-IFS-000001 replaces that table with the six declared elements of the API, their real signatures, the assertion that bounds the string argument, the two-value return contract and the 1 ms period the calling task imposes. It refines FB2-SW-DSN-000001, the architecture record whose signal table it supersedes, and is at the same level as FB2-SW-DSN-000004, the detailed design record for the same element: it adds the interface contract that the detailed design record also does not carry.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-IFS-000005",
+   "source_id": "FB2-SW-IFS-000002",
+   "source_revision": "1",
+   "target_id": "FB2-SW-DSN-000002",
+   "target_revision": "1",
+   "relation_type": "refines",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The SOA design record's interfaces field is a signal table naming fault_request as bool and violation_details as a struct at event rate. FB2-SW-IFS-000002 replaces it with the four declared elements of the module, three of which return void and register diagnosis events, and the fourth of which is declared and called on the 10 ms cycle and does nothing. It refines FB2-SW-DSN-000002 and sits alongside FB2-SW-DSN-000005, which designs the debounce internally and still carries no interface contract.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-IFS-000006",
+   "source_id": "FB2-SW-IFS-000003",
+   "source_revision": "1",
+   "target_id": "FB2-SW-DSN-000003",
+   "target_revision": "1",
+   "relation_type": "refines",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The contactor design record's interfaces field is a signal table naming the command and feedback signals. FB2-SW-IFS-000003 replaces it with the four declared elements, the two precondition assertions on every actuation request, the two-value return contract and the finding that the negative value is ambiguous between a registry miss and a completed request. It refines FB2-SW-DSN-000003 and sits alongside FB2-SW-DSN-000006, whose detailed design names the registry data model and the four-way feedback dispatch and still states no interface contract.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-IFS-000007",
+   "source_id": "FB2-SW-IFS-000004",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IMP-000004",
+   "target_revision": "1",
+   "relation_type": "refines",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The CAN implementation record maps the transport to named symbols in the pinned source. FB2-SW-IFS-000004 adds what that mapping cannot carry: that the identifier argument is deliberately not range-checked, that a full transmit mailbox causes the queue pump to discard the frame in a branch whose body is empty, and that interrupts are masked around the message-box search. It refines the implementation record because the implementation record is the coarser statement of what this boundary does.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-SIR-000020",
+   "source_id": "FB2-SW-SIR-000001",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IFS-000001",
+   "target_revision": "1",
+   "relation_type": "specified_by",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-SW-SIR-000001 is the software interface requirement set for the acquisition and monitoring boundary and is specified by FB2-SW-IFS-000001 (AFE measurement driver API) and FB2-SW-IFS-000002 (SOA supervision). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-SIR-000021",
+   "source_id": "FB2-SW-SIR-000001",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IFS-000002",
+   "target_revision": "1",
+   "relation_type": "specified_by",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The second specification FB2-SW-SIR-000001 is derived from. FB2-SW-SIR-000001 covers the acquisition and monitoring boundary and its derivation field names every interface specification it came from; this link names the second one so that a reader following the requirement to its evidence reaches both specifications rather than only the first. The direction and the reason are the same as for the first specification: the specification establishes what the interface is by analysing the source, and the requirement states what must be true of it.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-SIR-000022",
+   "source_id": "FB2-SW-SIR-000002",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IFS-000003",
+   "target_revision": "1",
+   "relation_type": "specified_by",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-SW-SIR-000002 is the software interface requirement set for the actuation boundary and is specified by FB2-SW-IFS-000003 (contactor actuation and feedback driver). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-SIR-000023",
+   "source_id": "FB2-SW-SIR-000003",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IFS-000004",
+   "target_revision": "1",
+   "relation_type": "specified_by",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-SW-SIR-000003 is the software interface requirement set for the communication and data exchange boundary and is specified by FB2-SW-IFS-000004 (CAN transport) and FB2-SW-IFS-000005 (database engine). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-SIR-000024",
+   "source_id": "FB2-SW-SIR-000003",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IFS-000005",
+   "target_revision": "1",
+   "relation_type": "specified_by",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The second specification FB2-SW-SIR-000003 is derived from. FB2-SW-SIR-000003 covers the communication and data exchange boundary and its derivation field names every interface specification it came from; this link names the second one so that a reader following the requirement to its evidence reaches both specifications rather than only the first. The direction and the reason are the same as for the first specification: the specification establishes what the interface is by analysing the source, and the requirement states what must be true of it.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-SIR-000025",
+   "source_id": "FB2-SW-SIR-000004",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IFS-000007",
+   "target_revision": "1",
+   "relation_type": "specified_by",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-SW-SIR-000004 is the software interface requirement set for the platform service and serial bus boundary and is specified by FB2-SW-IFS-000007 (OS and platform abstraction) and FB2-SW-IFS-000008 (SPI, I2C and UART drivers). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-SIR-000026",
+   "source_id": "FB2-SW-SIR-000004",
+   "source_revision": "1",
+   "target_id": "FB2-SW-IFS-000008",
+   "target_revision": "1",
+   "relation_type": "specified_by",
+   "profile": "synthetic_reference",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The second specification FB2-SW-SIR-000004 is derived from. FB2-SW-SIR-000004 covers the platform service and serial bus boundary and its derivation field names every interface specification it came from; this link names the second one so that a reader following the requirement to its evidence reaches both specifications rather than only the first. The direction and the reason are the same as for the first specification: the specification establishes what the interface is by analysing the source, and the requirement states what must be true of it.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  }
+ ]
+}

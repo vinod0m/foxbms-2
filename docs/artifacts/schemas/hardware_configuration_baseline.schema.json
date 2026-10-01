@@ -1,0 +1,508 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://foxbms2.softwaredevlabs.org/schemas/hardware_configuration_baseline.schema.json",
+ "title": "Hardware Configuration Baseline Schema",
+ "description": "Schema for a hardware configuration baseline record: the identified set of released hardware boards with their exact released versions, the versioning scheme that names those versions, and the availability status of each board's design artefacts. The record exists because a configuration baseline is what a hardware requirements analysis and a hardware verification plan are both written against, and because without it 'which hardware' is an unanswered question in this repository.",
+ "allOf": [
+  {
+   "$ref": "artifact-base.schema.json"
+  },
+  {
+   "type": "object",
+   "required": [
+    "baseline_subject",
+    "versioning_scheme",
+    "board_inventory",
+    "inventory_counts",
+    "design_artefact_availability",
+    "not_established_by_this_record",
+    "authority_and_independence",
+    "documentation_inventory"
+   ],
+   "properties": {
+    "artifact_type": {
+     "const": "hardware_configuration_baseline",
+     "type": "string"
+    },
+    "baseline_subject": {
+     "type": "object",
+     "required": [
+      "description",
+      "authority",
+      "authority_path",
+      "authority_commit",
+      "derivation"
+     ],
+     "properties": {
+      "description": {
+       "type": "string",
+       "minLength": 1
+      },
+      "authority": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The tracked first-party file the baseline is derived from."
+      },
+      "authority_path": {
+       "type": "string",
+       "pattern": "^.+\\.md$"
+      },
+      "authority_commit": {
+       "type": "string",
+       "pattern": "^[0-9a-f]{7,40}$"
+      },
+      "derivation": {
+       "type": "string",
+       "minLength": 1,
+       "description": "How the board inventory was mechanically derived from the authority file."
+      }
+     },
+     "additionalProperties": false
+    },
+    "versioning_scheme": {
+     "type": "object",
+     "required": [
+      "pattern",
+      "components",
+      "suffix_rationale",
+      "authority_quote_basis",
+      "observations"
+     ],
+     "properties": {
+      "pattern": {
+       "type": "string",
+       "minLength": 1
+      },
+      "components": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "object",
+        "required": [
+         "name",
+         "kind",
+         "meaning"
+        ],
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "kind": {
+          "type": "string",
+          "enum": [
+           "number",
+           "suffix"
+          ]
+         },
+         "meaning": {
+          "type": "string"
+         }
+        },
+        "additionalProperties": false
+       }
+      },
+      "suffix_rationale": {
+       "type": "string",
+       "minLength": 1
+      },
+      "authority_quote_basis": {
+       "type": "string",
+       "minLength": 1
+      },
+      "observations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "additionalProperties": false
+    },
+    "board_inventory": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "board_id",
+       "role",
+       "item_label",
+       "primary_device",
+       "released_versions",
+       "design_artefact_location",
+       "design_artefact_verifiable_from_this_repository",
+       "verifiability_reason"
+      ],
+      "properties": {
+       "board_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "role": {
+        "type": "string",
+        "enum": [
+         "master",
+         "interface",
+         "slave"
+        ]
+       },
+       "item_label": {
+        "type": "string",
+        "minLength": 1,
+        "description": "The Item string exactly as the authority file prints it."
+       },
+       "primary_device": {
+        "type": "string",
+        "minLength": 1
+       },
+       "cells_monitored": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 1
+       },
+       "released_versions": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "object",
+         "required": [
+          "version",
+          "version_kind",
+          "release_artifact",
+          "release_url"
+         ],
+         "properties": {
+          "version": {
+           "type": "string",
+           "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9]+)?$"
+          },
+          "version_kind": {
+           "type": "string",
+           "enum": [
+            "numeric",
+            "numeric_with_suffix"
+           ]
+          },
+          "release_artifact": {
+           "type": "string",
+           "minLength": 1
+          },
+          "release_url": {
+           "type": "string",
+           "pattern": "^https://"
+          }
+         },
+         "additionalProperties": false
+        }
+       },
+       "latest_released_version": {
+        "type": "string"
+       },
+       "design_artefact_location": {
+        "type": "string",
+        "minLength": 1
+       },
+       "design_artefact_verifiable_from_this_repository": {
+        "type": "boolean"
+       },
+       "verifiability_reason": {
+        "type": "string",
+        "minLength": 1
+       },
+       "release_download_attempted": {
+        "type": "boolean"
+       },
+       "release_download_outcome": {
+        "type": "string"
+       },
+       "documentation_in_repository": {
+        "type": "object",
+        "required": [
+         "release_note_versions",
+         "changelog_versions",
+         "per_version_artefact_directory_present",
+         "note"
+        ],
+        "properties": {
+         "release_note_versions": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "changelog_versions": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "per_version_artefact_directory_present": {
+          "type": "boolean"
+         },
+         "note": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "additionalProperties": false
+       },
+       "version_string_discrepancies": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "inventory_counts": {
+     "type": "object",
+     "required": [
+      "distinct_board_designations",
+      "release_rows",
+      "derivation",
+      "count_disagreements_recorded"
+     ],
+     "properties": {
+      "distinct_board_designations": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "release_rows": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "derivation": {
+       "type": "string",
+       "minLength": 1
+      },
+      "count_disagreements_recorded": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "additionalProperties": false
+    },
+    "design_artefact_availability": {
+     "type": "object",
+     "required": [
+      "local_design_files_present",
+      "design_file_extensions_sought",
+      "search_performed",
+      "search_result",
+      "designs_hosted_externally",
+      "external_host",
+      "access_conditions",
+      "consequence"
+     ],
+     "properties": {
+      "local_design_files_present": {
+       "type": "boolean"
+      },
+      "design_file_extensions_sought": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "search_performed": {
+       "type": "string",
+       "minLength": 1
+      },
+      "search_result": {
+       "type": "string",
+       "minLength": 1
+      },
+      "designs_hosted_externally": {
+       "type": "boolean"
+      },
+      "external_host": {
+       "type": "string",
+       "minLength": 1
+      },
+      "access_conditions": {
+       "type": "string",
+       "minLength": 1
+      },
+      "consequence": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "variant_cross_reference": {
+     "type": "object",
+     "required": [
+      "registry",
+      "board_designations_named_by_the_registry",
+      "board_designation_count_named_by_the_registry",
+      "board_designations_with_no_released_version_in_the_authority_file",
+      "statement"
+     ],
+     "properties": {
+      "registry": {
+       "type": "string"
+      },
+      "board_designations_named_by_the_registry": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "board_designations_with_no_released_version_in_the_authority_file": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "designation",
+         "named_by_variant",
+         "variant_note"
+        ],
+        "properties": {
+         "designation": {
+          "type": "string"
+         },
+         "named_by_variant": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "variant_note": {
+          "type": "string"
+         }
+        },
+        "additionalProperties": false
+       }
+      },
+      "statement": {
+       "type": "string",
+       "minLength": 1
+      },
+      "board_designation_count_named_by_the_registry": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "designation_count_with_a_released_version": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "designation_count_with_no_released_version": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "registry_field_values_as_written": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "qualifiers_appended_to_a_designation_in_the_registry": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "string"
+       }
+      },
+      "registry_field_values_that_are_not_board_designations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "registry_field_value_note": {
+       "type": "string",
+       "minLength": 1
+      },
+      "released_items_the_variant_registry_does_not_name": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "released_but_not_named_by_the_registry_note": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false,
+     "description": "The summary cross-reference this baseline carries. The full reconciliation, including the registry field values as written, the released board the registry does not name, and the one variant that names no board at all, is the system-domain record FB2-SYS-HVA-000001; this field states only what a reader of the baseline needs to know that the registry and the release index do not list the same hardware."
+    },
+    "not_established_by_this_record": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    "authority_and_independence": {
+     "type": "object",
+     "required": [
+      "independence",
+      "independence_statement",
+      "approval_claimed"
+     ],
+     "properties": {
+      "independence": {
+       "type": "string",
+       "enum": [
+        "not_independent",
+        "independent"
+       ]
+      },
+      "independence_statement": {
+       "type": "string",
+       "minLength": 1
+      },
+      "approval_claimed": {
+       "type": "boolean"
+      }
+     },
+     "additionalProperties": false
+    },
+    "documentation_inventory": {
+     "type": "object",
+     "required": [
+      "tree",
+      "tracked_files",
+      "csv_pinout_and_rating_tables",
+      "drawio_block_diagrams",
+      "altium_source_files_present",
+      "statement"
+     ],
+     "properties": {
+      "tree": {
+       "type": "string"
+      },
+      "tracked_files": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "csv_pinout_and_rating_tables": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "drawio_block_diagrams": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "altium_source_files_present": {
+       "type": "boolean"
+      },
+      "statement": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    }
+   },
+   "additionalProperties": true
+  }
+ ]
+}

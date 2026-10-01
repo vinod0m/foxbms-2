@@ -1,0 +1,435 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://foxbms2.softwaredevlabs.org/schemas/hardware_verification_plan.schema.json",
+ "title": "Hardware Verification Plan Schema",
+ "description": "Schema for a hardware verification plan record. A plan is not a result: the schema therefore separates a step's intent (scope, level, environment, entry and exit criteria) from its execution state, and requires every step to state its executability and, when it cannot be executed, the specific unblock condition. A step with no execution_state and no result is structurally indistinguishable from a completed step, which is how a plan gets mistaken for evidence.",
+ "allOf": [
+  {
+   "$ref": "artifact-base.schema.json"
+  },
+  {
+   "type": "object",
+   "required": [
+    "plan_subject",
+    "verification_levels",
+    "environments",
+    "entry_criteria",
+    "exit_criteria",
+    "steps",
+    "execution_state",
+    "authority_and_independence"
+   ],
+   "properties": {
+    "artifact_type": {
+     "const": "hardware_verification_plan",
+     "type": "string"
+    },
+    "plan_subject": {
+     "type": "object",
+     "required": [
+      "description",
+      "configuration_baseline_ref",
+      "scope_basis",
+      "executed_steps",
+      "results_recorded",
+      "plan_is_not_a_result_statement"
+     ],
+     "properties": {
+      "description": {
+       "type": "string",
+       "minLength": 1
+      },
+      "configuration_baseline_ref": {
+       "type": "string",
+       "pattern": "^FB2-[A-Z]{2,4}-[A-Z]{2,4}-[0-9]{6}$"
+      },
+      "scope_basis": {
+       "type": "string",
+       "minLength": 1
+      },
+      "executed_steps": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "results_recorded": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "plan_is_not_a_result_statement": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "verification_levels": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "level_id",
+       "name",
+       "what_it_demonstrates",
+       "what_it_does_not_demonstrate",
+       "requires_physical_hardware",
+       "requires_design_sources"
+      ],
+      "properties": {
+       "level_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "what_it_demonstrates": {
+        "type": "string",
+        "minLength": 1
+       },
+       "what_it_does_not_demonstrate": {
+        "type": "string",
+        "minLength": 1
+       },
+       "requires_physical_hardware": {
+        "type": "boolean"
+       },
+       "requires_design_sources": {
+        "type": "boolean"
+       },
+       "applies_to_roles": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "master",
+          "interface",
+          "slave"
+         ]
+        }
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "environments": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "environment_id",
+       "name",
+       "capabilities",
+       "available_to_this_corpus",
+       "availability_reason"
+      ],
+      "properties": {
+       "environment_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "capabilities": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "available_to_this_corpus": {
+        "type": "boolean"
+       },
+       "availability_reason": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "entry_criteria": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "criterion",
+       "currently_met",
+       "met_by"
+      ],
+      "properties": {
+       "criterion": {
+        "type": "string",
+        "minLength": 1
+       },
+       "currently_met": {
+        "type": "boolean"
+       },
+       "met_by": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "exit_criteria": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "criterion",
+       "currently_met",
+       "met_by"
+      ],
+      "properties": {
+       "criterion": {
+        "type": "string",
+        "minLength": 1
+       },
+       "currently_met": {
+        "type": "boolean"
+       },
+       "met_by": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "steps": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "step_id",
+       "title",
+       "board_id",
+       "level_id",
+       "environment_id",
+       "procedure",
+       "acceptance_criteria",
+       "executability",
+       "executed",
+       "result"
+      ],
+      "properties": {
+       "step_id": {
+        "type": "string",
+        "pattern": "^HWE4-STEP-[0-9]{4}$"
+       },
+       "title": {
+        "type": "string",
+        "minLength": 1
+       },
+       "board_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "level_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "environment_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "procedure": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string"
+        }
+       },
+       "acceptance_criteria": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string"
+        }
+       },
+       "preconditions": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "executability": {
+        "type": "string",
+        "enum": [
+         "executable_here",
+         "not_executable_here"
+        ]
+       },
+       "executed": {
+        "type": "boolean"
+       },
+       "result": {
+        "type": [
+         "object",
+         "null"
+        ],
+        "properties": {
+         "outcome": {"type": "string"},
+         "measured": {"type": "array", "items": {"type": "object"}},
+          "evidence_files": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+       },
+       "not_executable_reason": {
+        "type": "string",
+        "minLength": 1
+       },
+       "unblock_condition": {
+        "type": "string",
+        "minLength": 1
+       },
+       "expected_source_of_evidence": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "additionalProperties": false,
+      "allOf": [
+       {
+        "if": {
+         "properties": {
+          "executability": {
+           "const": "not_executable_here"
+          }
+         },
+         "required": [
+          "executability"
+         ]
+        },
+        "then": {
+         "required": [
+          "not_executable_reason",
+          "unblock_condition"
+         ],
+         "properties": {
+          "executed": {
+           "const": false
+          },
+          "result": {
+           "type": "null"
+          }
+         }
+        }
+       },
+       {
+        "if": {
+         "properties": {
+          "executed": {
+           "const": true
+          }
+         },
+         "required": [
+          "executed"
+         ]
+        },
+        "then": {
+         "properties": {
+          "result": {
+           "type": "object"
+          }
+         },
+         "required": [
+          "result"
+         ]
+        }
+       }
+      ]
+     }
+    },
+    "execution_state": {
+     "type": "object",
+     "required": [
+      "steps_total",
+      "steps_executable_here",
+      "steps_not_executable_here",
+      "steps_executed",
+      "results_recorded",
+      "verification_performed_claim",
+      "statement"
+     ],
+     "properties": {
+      "steps_total": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "steps_executable_here": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "steps_not_executable_here": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "steps_executed": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "results_recorded": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "verification_performed_claim": {
+       "type": "string",
+       "minLength": 1
+      },
+      "statement": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "not_established_by_this_record": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    "authority_and_independence": {
+     "type": "object",
+     "required": [
+      "independence",
+      "independence_statement",
+      "approval_claimed"
+     ],
+     "properties": {
+      "independence": {
+       "type": "string",
+       "enum": [
+        "not_independent",
+        "independent"
+       ]
+      },
+      "independence_statement": {
+       "type": "string",
+       "minLength": 1
+      },
+      "approval_claimed": {
+       "type": "boolean"
+       }
+     },
+     "additionalProperties": false
+    }
+   },
+   "additionalProperties": true
+  }
+ ]
+}

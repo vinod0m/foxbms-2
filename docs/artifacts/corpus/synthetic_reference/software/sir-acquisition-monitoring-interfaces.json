@@ -1,0 +1,215 @@
+{
+ "id": "FB2-SW-SIR-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Software interface requirements: the acquisition and monitoring interfaces",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000090",
+  "FB2-SRC-COD-000092",
+  "FB2-SRC-COD-000094",
+  "FB2-SRC-COD-000096",
+  "FB2-SRC-COD-000098",
+  "FB2-SRC-COD-000099"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 7 (software requirements analysis)",
+   "status": "partially_mapped",
+   "rationale": "Supplies software interface requirements, the family SWE.1 expected and that was absent. It does not analyse them from a higher-level requirement, so the process's defining activity is still absent."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Backs SWE.1 with the software interface requirement family. The status stays partially_mapped because these requirements are derived from an analysis of an existing implementation, not analysed from software requirements or system requirements, and because the existing software requirements remain back-inferred."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Consumes the interface specifications this requirement set is derived from. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Four interface requirements over the acquisition and monitoring boundary, derived from FB2-SW-IFS-000001 and FB2-SW-IFS-000002. Each statement is one obligation a consumer of the boundary may rely on, and each is traceable to a specific analysed interface element rather than to a wish."
+  }
+ ],
+ "statement": "The acquisition and monitoring interfaces shall present the following to their consumers: (a) a request entry point whose result reports acceptance or rejection; (b) a completion query by which a consumer can determine whether the first measurement cycle has completed; (c) a string-addressed request whose argument range is bounded by the configured string count; and (d) a supervision entry point that is invoked on the 10 ms cycle and whose entire effect is delivered through the diagnosis module rather than through a return value.",
+ "rationale": "The requirements exist because the interface specifications analysed at the pinned commit show that this boundary has four properties a consumer must be able to rely on, and that none of them is stated by the interface itself. Without these requirements a consumer would have to read the implementation to learn them, which is what an interface requirement is supposed to prevent. The four properties are: a request result that distinguishes acceptance from rejection; a separate completion signal, because the request returns before the measurement exists; a bounded string argument, because the enforcement is an assertion in a wrapper rather than a returned error; and side-effect-only supervision, because the supervision entry points return nothing at all.",
+ "classification": "interface",
+ "acceptance_criteria": [
+  {
+   "criterion": "Request entry points on the acquisition boundary shall return a value that distinguishes an accepted request from a rejected one",
+   "measure": "Inspection of the declared return type against the enum it names",
+   "threshold": "2 distinct return values declared"
+  },
+  {
+   "criterion": "A completion query shall exist that reports whether the first measurement cycle has finished",
+   "measure": "Inspection of the declared return type and of the implementation",
+   "threshold": "a boolean-returning element present"
+  },
+  {
+   "criterion": "Every string-addressed request parameter shall be bounded by the configured string count",
+   "measure": "Inspection of the assertion in the forwarding wrapper",
+   "threshold": "one assertion per string-addressed parameter"
+  },
+  {
+   "criterion": "Supervision entry points shall be invoked on the 10 ms cycle",
+   "measure": "Inspection of the task configuration that reaches them",
+   "threshold": "invoked from the task whose cycle time is 10 ms",
+   "unit": "ms"
+  }
+ ],
+ "verification_approach": "analysis",
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "not_applicable",
+  "mitigation": "No ASIL is allocated to this requirement. It is a software interface requirement about how two modules call each other, and the product it describes has never had a hazard analysis and risk assessment: no ISO 26262 conformity, no ASIL determination and no certification is claimed for it or for anything in this corpus. The non-applicability is stated with its reason rather than left blank, because an unexplained non-applicability is indistinguishable from a requirement that quietly dropped out of every ASIL-derived view."
+ },
+ "asil_justification": {
+  "severity": {
+   "rating": "not_applicable"
+  },
+  "exposure": {
+   "rating": "not_applicable"
+  },
+  "derived_asil": "not_applicable",
+  "statement": "Not applicable, and deliberately so. This requirement carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. This is not a statement that the interface is unimportant: it is a statement that the classification apparatus is not available in this repository, and a reader must not read 'not_applicable' as 'no consequence'."
+ },
+ "assumptions": [],
+ "conditions_modes": [
+  "NORMAL",
+  "CHARGING",
+  "PRECHARGE",
+  "DERATING"
+ ],
+ "feasibility_dependencies": [],
+ "requirement_kind": "software_interface_requirement",
+ "derivation": {
+  "direction": "specification_to_requirement",
+  "derived_from_interface_specifications": [
+   "FB2-SW-IFS-000001",
+   "FB2-SW-IFS-000002"
+  ],
+  "method": "Every statement below names the interface element it obliges and the analysed behaviour it rests on. None of them introduces an obligation the source does not already impose.",
+  "authoring_independence": "not_independent",
+  "authoring_independence_statement": "Authored by an AI agent from the interface specifications and the source. No requirements engineer confirmed that this is the interface that was wanted, no stakeholder stated a need that these requirements answer, and no human approved them. They record what the code obliges a consumer to rely on; they do not record what anyone asked for."
+ },
+ "element_requirements": [
+  {
+   "id": "FB2-SW-SIR-000001-A",
+   "statement": "A request to the acquisition interface shall report whether the request was accepted.",
+   "source_element": "IFSE-000001 AFE_TriggerIc, IFSE-000003 AFE_StartMeasurement, IFSE-000004 AFE_RequestTemperatureRead",
+   "basis": "Each is declared to return STD_RETURN_TYPE_e, a two-value enum, and the interface specification records that STD_NOT_OK is the only negative value."
+  },
+  {
+   "id": "FB2-SW-SIR-000001-B",
+   "statement": "A consumer shall be able to determine separately whether the first measurement cycle has completed, because the request that starts it returns before the measurement exists.",
+   "source_element": "IFSE-000003 AFE_StartMeasurement and IFSE-000005 AFE_IsFirstMeasurementCycleFinished",
+   "basis": "The start request returns STD_RETURN_TYPE_e at acceptance only, and the completion query returns bool; the interface specification records that no completion notification is offered by the request itself."
+  },
+  {
+   "id": "FB2-SW-SIR-000001-C",
+   "statement": "Every string-addressed request parameter on the acquisition interface shall be bounded by the configured string count, and a value outside that bound shall be rejected before the request reaches the driver.",
+   "source_element": "IFSE-000004 AFE_RequestTemperatureRead",
+   "basis": "The forwarding wrapper asserts string < BS_NR_OF_STRINGS before the call, so the bound is enforced one level above the declared interface."
+  },
+  {
+   "id": "FB2-SW-SIR-000001-D",
+   "statement": "The supervision interface shall deliver its entire effect through the diagnosis module and shall not rely on a return value to report a detected violation.",
+   "source_element": "IFSE-000101 SOA_CheckVoltages, IFSE-000102 SOA_CheckTemperatures, IFSE-000103 SOA_CheckCurrent",
+   "basis": "All three are declared void and their bodies consist of DIAG_Handler calls; the interface specification records that a caller learns the outcome only by later reading diagnosis state."
+  },
+  {
+   "id": "FB2-SW-SIR-000001-E",
+   "statement": "The supervision interface shall be invoked on the 10 ms cycle.",
+   "source_element": "IFSE-000101 to IFSE-000103",
+   "basis": "Reached only through BMS_Trigger, which is called from the 10 ms cyclic task whose cycle time is 10 ms."
+  }
+ ],
+ "element_requirements_note": "The failure reaction of this boundary is a precondition trap rather than a reported event. The analysed implementation enforces three of these five requirements with assertions and one with task placement, so a breach of the string bound, of the contactor-type bound or of the period stops the task or changes its latency instead of raising a diagnosis event. This is recorded rather than presented as a design choice, and it is the single most important thing a reader of this requirement set needs to know about it: none of these requirements has a detection channel of its own.",
+ "failure_reaction": "A violation of any of these is not observable as a returned error at the point of the requirement. C-E are enforced by assertions and by task placement rather than by a diagnostic, so their failure mode is a trap or a latency change, not an event.",
+ "traceability_to_existing_requirements": [
+  {
+   "requirement": "FB2-SW-SIR-000001-A",
+   "statement": "A request to the acquisition interface shall report whether the request was accepted.",
+   "derivation": "Inspect the declared return type of each request element and confirm it is the two-value enum; confirm that no request element returns void.",
+   "interface_spec": "FB2-SW-IFS-000001",
+   "evidence": "Declared at src/app/driver/afe/api/afe.h L108, L111, L124 and L131, all returning STD_RETURN_TYPE_e."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000001-B",
+   "statement": "A consumer shall be able to determine separately whether the first measurement cycle has completed, because the request that starts it returns before the measurement exists.",
+   "derivation": "Confirm that a boolean-returning completion element exists and that no request element offers a completion notification.",
+   "interface_spec": "FB2-SW-IFS-000001",
+   "evidence": "AFE_IsFirstMeasurementCycleFinished declared at src/app/driver/afe/api/afe.h L118; the request elements carry no completion notification."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000001-C",
+   "statement": "Every string-addressed request parameter on the acquisition interface shall be bounded by the configured string count, and a value outside that bound shall be rejected before the request reaches the driver.",
+   "derivation": "Confirm an assertion in the forwarding wrapper for each string-addressed parameter.",
+   "interface_spec": "FB2-SW-IFS-000001",
+   "evidence": "FAS_ASSERT(string < BS_NR_OF_STRINGS) at src/app/driver/meas/meas.c L85."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000001-D",
+   "statement": "The supervision interface shall deliver its entire effect through the diagnosis module and shall not rely on a return value to report a detected violation.",
+   "derivation": "Confirm every supervision element returns void and that each body's effect is a sequence of DIAG_Handler calls.",
+   "interface_spec": "FB2-SW-IFS-000002",
+   "evidence": "Declared void at src/app/application/soa/soa.h L79, L88-L90 and L98; bodies at src/app/application/soa/soa.c L81, L148 and L271."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000001-E",
+   "statement": "The supervision interface shall be invoked on the 10 ms cycle.",
+   "derivation": "Confirm the only call path to these elements runs in the 10 ms cyclic task.",
+   "interface_spec": "FB2-SW-IFS-000002",
+   "evidence": "Called at src/app/application/bms/bms.c L913-L915; FTSK_TASK_CYCLIC_10MS_CYCLE_TIME 10u at src/app/task/config/ftask_cfg.h L112."
+  }
+ ],
+ "verification_status": {
+  "analysis_performed": false,
+  "test_measure_exists": false,
+  "statement": "No test measure exists for any requirement in this record, and no requirement in it has been verified against running code. Every derivation below is an inspection of the source at the pinned commit, which is why the verification approach is analysis and why the coverage matrix in the implementation mapping document reports this record as uncovered. That is the accurate position, not a gap to be filled by writing more prose."
+ },
+ "not_established_by_this_record": [
+  "The three existing software requirements in this corpus are back-inferred from the implementation and say nothing about interfaces. This record does not replace them and does not claim to supersede them; it adds the interface family that was absent and it names the direction it was produced in, which the existing records do not.",
+  "No requirement here is elicited from a stakeholder, a system requirement or a safety goal. Each states an obligation the existing code already imposes, which means none of them can be used to justify changing that code without a separate decision to do so.",
+  "No ASIL, no safety allocation, no conformity claim, no certification, no human approval. The asil field is not_applicable and the reason is recorded in asil_justification rather than left blank.",
+  "No verification has been performed against any of these requirements and no test measure exists for any of them. Every derivation in this record is an inspection of the source, not a test.",
+  "Nothing here is a hardware interface requirement. Where this boundary would need a physical contract - a sense range, an accuracy, a sampling time - no such requirement exists, because the hardware design that would carry it is external to this repository and FB2-HW-HDD-000001 records why."
+ ],
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent. It is a derivation from an analysed specification, not an elicitation, not an analysis of a higher-level requirement, and not independent review.",
+  "approval_claimed": false
+ }
+}

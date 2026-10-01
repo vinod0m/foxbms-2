@@ -1,0 +1,395 @@
+{
+ "id": "FB2-SW-IFS-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "software_interface_specification",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Interface Specification: the safe-operating-area supervision module",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000098",
+  "FB2-SRC-COD-000099",
+  "FB2-SRC-COD-000100",
+  "FB2-SRC-COD-000004",
+  "FB2-SRC-COD-000005",
+  "FB2-SRC-COD-000006",
+  "FB2-SRC-COD-000094",
+  "FB2-SRC-COD-000116",
+  "FB2-SRC-COD-000096"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+   "status": "partially_mapped",
+   "rationale": "Specifies the supervision boundary: who provides, who consumes, the real signatures, the argument preconditions, the side-effect-only signalling, and the 10 ms period the caller imposes. No ownership rule and no interface agreement."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Supplies an interface specification for the SOA element that the design records' signal tables did not. Component design remains absent."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Named as the specification the software interface requirements for the supervision boundary are derived from."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Four elements of the SOA supervision interface. Three are implemented and one is an empty function the source marks TODO; that fourth element is recorded as empty rather than described as a check, because a call site that invokes it on the 10 ms cycle otherwise reads as a supervision that does not exist."
+  }
+ ],
+ "interface_id": "IFS-SOA-MON-000002",
+ "interface_class": "monitoring",
+ "analysis": {
+  "method": "source_analysis_at_pinned_commit",
+  "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+  "direction": "source_to_specification",
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "tools_used": [
+   "git show 308028fb:<path>",
+   "graft skeleton <file>"
+  ],
+  "what_this_record_is_not": [
+   "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+   "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+   "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+   "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+  ]
+ },
+ "providing_module": {
+  "name": "SOA module, safe-operating-area supervision",
+  "role": "Judges measured voltage, temperature and current against configured safe-operating-area limits and raises diagnosis events. It decides nothing and acts on nothing itself: it reports through the diagnosis module.",
+  "source_paths": [
+   "src/app/application/soa/soa.h",
+   "src/app/application/soa/soa.c"
+  ]
+ },
+ "consuming_modules": [
+  {
+   "name": "BMS_Trigger, the battery-management state-machine trigger",
+   "source_path": "src/app/application/bms/bms.c",
+   "calls": [
+    "SOA_CheckVoltages",
+    "SOA_CheckTemperatures",
+    "SOA_CheckCurrent",
+    "SOA_CheckSlaveTemperatures"
+   ],
+   "consumption_evidence": "All four are called from one block inside BMS_Trigger, at src/app/application/bms/bms.c L913, L914, L915 and L916 respectively, each passing the module's own database entries. The block is guarded by a test that the state machine is not uninitialised, at L911."
+  },
+  {
+   "name": "DIAG module, the diagnosis consumer of the side effects",
+   "source_path": "src/app/engine/diag/diag.h",
+   "calls": [
+    "DIAG_Handler"
+   ],
+   "consumption_evidence": "Every outcome of every implemented element is a DIAG_Handler call, for example DIAG_Handler(DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MOL, DIAG_EVENT_NOT_OK, DIAG_STRING, s) at src/app/application/soa/soa.c L90."
+  }
+ ],
+ "elements": [
+  {
+   "element_id": "IFSE-000101",
+   "symbol": "SOA_CheckVoltages",
+   "declaration": "extern void SOA_CheckVoltages(DATA_BLOCK_MIN_MAX_s *pMinimumMaximumCellVoltages);",
+   "declaration_path": "src/app/application/soa/soa.h",
+   "declaration_line": 79,
+   "implementation_path": "src/app/application/soa/soa.c",
+   "implementation_line": 81,
+   "providing_module": "SOA module, safe-operating-area supervision",
+   "consuming_module": "BMS_Trigger",
+   "parameters": [
+    {
+     "name": "pMinimumMaximumCellVoltages",
+     "c_type": "DATA_BLOCK_MIN_MAX_s *",
+     "direction": "in",
+     "unit": "struct holding mV values",
+     "meaning": "The per-string minimum and maximum cell voltages to judge against the safe operating area.",
+     "valid_range": "Non-null. No element range is stated by the interface; the ranges are the cell voltage limit configuration.",
+     "range_evidence": "FAS_ASSERT(pMinimumMaximumCellVoltages != NULL_PTR) at src/app/application/soa/soa.c L82 is the only range this interface states.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+    "evidence": "Declared void in the source; the interface communicates entirely through side effects."
+   },
+   "validity_signalling": {
+    "mechanism": "Side effect: diagnosis events registered through DIAG_Handler. No return value exists.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The declaration returns void at src/app/application/soa/soa.h L79. The function's whole effect is a sequence of DIAG_Handler calls, for example DIAG_Handler(DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MOL, DIAG_EVENT_NOT_OK, DIAG_STRING, s) at src/app/application/soa/soa.c L90. A caller learns the outcome only by later reading the diagnosis state, not from this call."
+   },
+   "timing": {
+    "period_ms": 10,
+    "period_imposed_by_source": true,
+    "evidence": "The period is imposed by the caller, and the caller is on a fixed task: SOA_CheckVoltages is called at src/app/application/bms/bms.c L913 inside BMS_Trigger, BMS_Trigger is called from FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L280, and FTSK_TASK_CYCLIC_10MS_CYCLE_TIME is 10u at src/app/task/config/ftask_cfg.h L112."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Reached only through BMS_Trigger, which runs in the 10 ms cyclic task of priority FTSK_TASK_CYCLIC_10MS_PRIORITY = OS_PRIORITY_HIGH at src/app/task/config/ftask_cfg.h L106. No interrupt context reaches this entry point in the source.",
+    "protection_mechanism": "None at this boundary. The function writes diagnosis state through DIAG_Handler, whose own protection this record does not cover."
+   },
+   "error_paths": [
+    {
+     "condition": "pMinimumMaximumCellVoltages is NULL.",
+     "observed_behaviour": "A precondition assertion trips at the first statement of the body.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/application/soa/soa.c L82"
+    },
+    {
+     "condition": "The undervoltage MSL threshold is reached and deep discharge is also indicated.",
+     "observed_behaviour": "The return value of DIAG_Handler for the MSL event is captured and, only when it equals DIAG_HANDLER_RETURN_ERR_OCCURRED and the voltage is at or below BC_VOLTAGE_DEEP_DISCHARGE_mV, a further DIAG_ID_DEEP_DISCHARGE_DETECTED event is registered.",
+     "signalled_as": "DIAG_HANDLER_RETURN_ERR_OCCURRED, observed inside the module and not returned",
+     "evidence": "src/app/application/soa/soa.c L122-L129"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state the voltage unit it expects in the struct. The values it compares are read as mV by the comparison against BC_VOLTAGE_MAX_MOL_mV and its siblings, which are (2720), (2750), (2800), (1580), (1550) and (1500) in src/app/application/config/battery_cell_cfg.h L135-L180, so the unit is inferable from the configuration rather than declared by the interface.",
+    "The interface does not state the number of strings it iterates. It loops s from 0 to BS_NR_OF_STRINGS, which is (1u) at src/app/application/config/battery_system_cfg.h L109, so a corpus configured for more strings would need this interface re-read rather than trusted.",
+    "The interface returns nothing, so a caller cannot tell whether a violation was detected from this call. The only way to know is to inspect diagnosis state afterwards, and no such rule is stated here.",
+    "The interface does not state whether the diagnosis threshold is reached before the event is raised. The debouncing is inside DIAG_Handler, whose threshold is configuration, and this interface says nothing about it."
+   ]
+  },
+  {
+   "element_id": "IFSE-000102",
+   "symbol": "SOA_CheckTemperatures",
+   "declaration": "extern void SOA_CheckTemperatures(DATA_BLOCK_MIN_MAX_s *pMinimumMaximumCellTemperatures, DATA_BLOCK_PACK_VALUES_s *pCurrent);",
+   "declaration_path": "src/app/application/soa/soa.h",
+   "declaration_line": 88,
+   "implementation_path": "src/app/application/soa/soa.c",
+   "implementation_line": 148,
+   "providing_module": "SOA module, safe-operating-area supervision",
+   "consuming_module": "BMS_Trigger",
+   "parameters": [
+    {
+     "name": "pMinimumMaximumCellTemperatures",
+     "c_type": "DATA_BLOCK_MIN_MAX_s *",
+     "direction": "in",
+     "unit": "struct holding temperature values",
+     "meaning": "The per-string minimum and maximum cell temperatures to judge.",
+     "valid_range": "Non-null.",
+     "range_evidence": "FAS_ASSERT(pMinimumMaximumCellTemperatures != NULL_PTR) at src/app/application/soa/soa.c L151.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    },
+    {
+     "name": "pCurrent",
+     "c_type": "DATA_BLOCK_PACK_VALUES_s *",
+     "direction": "in",
+     "unit": "struct holding pack values including current",
+     "meaning": "The pack values including current, needed because the temperature judgement the source performs is conditioned on the current in use.",
+     "valid_range": "Non-null.",
+     "range_evidence": "FAS_ASSERT(pCurrent != NULL_PTR) at src/app/application/soa/soa.c L152.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+    "evidence": "Declared void in the source; the interface communicates entirely through side effects."
+   },
+   "validity_signalling": {
+    "mechanism": "Side effect: diagnosis events registered through DIAG_Handler. No return value exists.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "Declared void at src/app/application/soa/soa.h L88-L90; the body registers diagnosis events."
+   },
+   "timing": {
+    "period_ms": 10,
+    "period_imposed_by_source": true,
+    "evidence": "Called at src/app/application/bms/bms.c L914 from BMS_Trigger, which runs in the 10 ms cyclic task, FTSK_TASK_CYCLIC_10MS_CYCLE_TIME 10u at src/app/task/config/ftask_cfg.h L112."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Reached only from BMS_Trigger at src/app/application/bms/bms.c L914, in the 10 ms cyclic task."
+   },
+   "error_paths": [
+    {
+     "condition": "Either pointer is NULL.",
+     "observed_behaviour": "A precondition assertion trips at the top of the body.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/application/soa/soa.c L151-L152"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state the temperature unit. Like the voltage interface, the unit is inferable from the configuration constants the body compares against and is not declared by the interface.",
+    "The interface does not state which of the pack values it uses from pCurrent, nor why a current is needed to judge a temperature. The second parameter is a struct far wider than the judgement requires and the interface does not say which fields are read.",
+    "The interface returns nothing and states no outcome.",
+    "No threshold, no debounce and no error case beyond the pointer preconditions is stated by the interface; all of it lives in the diagnosis configuration."
+   ]
+  },
+  {
+   "element_id": "IFSE-000103",
+   "symbol": "SOA_CheckCurrent",
+   "declaration": "extern void SOA_CheckCurrent(DATA_BLOCK_PACK_VALUES_s *pTablePackValues);",
+   "declaration_path": "src/app/application/soa/soa.h",
+   "declaration_line": 98,
+   "implementation_path": "src/app/application/soa/soa.c",
+   "implementation_line": 271,
+   "providing_module": "SOA module, safe-operating-area supervision",
+   "consuming_module": "BMS_Trigger",
+   "parameters": [
+    {
+     "name": "pTablePackValues",
+     "c_type": "DATA_BLOCK_PACK_VALUES_s *",
+     "direction": "in",
+     "unit": "struct holding pack current values",
+     "meaning": "The pack current to judge against the charge and discharge limits.",
+     "valid_range": "Non-null.",
+     "range_evidence": "FAS_ASSERT(pTablePackValues != NULL_PTR) at src/app/application/soa/soa.c L272.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+    "evidence": "Declared void in the source; the interface communicates entirely through side effects."
+   },
+   "validity_signalling": {
+    "mechanism": "Side effect: diagnosis events registered through DIAG_Handler. No return value exists.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "Declared void at src/app/application/soa/soa.h L98; the body registers diagnosis events."
+   },
+   "timing": {
+    "period_ms": 10,
+    "period_imposed_by_source": true,
+    "evidence": "Called at src/app/application/bms/bms.c L915 from BMS_Trigger, in the 10 ms cyclic task, FTSK_TASK_CYCLIC_10MS_CYCLE_TIME 10u at src/app/task/config/ftask_cfg.h L112."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Reached only from BMS_Trigger at src/app/application/bms/bms.c L915, in the 10 ms cyclic task."
+   },
+   "error_paths": [
+    {
+     "condition": "pTablePackValues is NULL.",
+     "observed_behaviour": "A precondition assertion trips at the top of the body.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/application/soa/soa.c L272"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state the current unit, the sign convention, or whether the limits are symmetric for charge and discharge. Those are in the configuration the body compares against, not in the interface.",
+    "The interface returns nothing and states no outcome.",
+    "The interface does not state the time window over which an over-current must persist, which is the question a monitoring interface usually has to answer. It is answered in the diagnosis configuration instead."
+   ]
+  },
+  {
+   "element_id": "IFSE-000104",
+   "symbol": "SOA_CheckSlaveTemperatures",
+   "declaration": "extern void SOA_CheckSlaveTemperatures(void);",
+   "declaration_path": "src/app/application/soa/soa.h",
+   "declaration_line": 104,
+   "implementation_path": "src/app/application/soa/soa.c",
+   "implementation_line": 353,
+   "providing_module": "SOA module, safe-operating-area supervision",
+   "consuming_module": "BMS_Trigger",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+    "evidence": "Declared void in the source; the interface communicates entirely through side effects."
+   },
+   "validity_signalling": {
+    "mechanism": "None. The interface is empty.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The whole implementation is the line 'extern void SOA_CheckSlaveTemperatures(void) { /* TODO: to be implemented */ }' at src/app/application/soa/soa.c L353-L354. It registers nothing and returns nothing."
+   },
+   "timing": {
+    "period_ms": 10,
+    "period_imposed_by_source": true,
+    "evidence": "Called at src/app/application/bms/bms.c L916 from BMS_Trigger in the 10 ms cyclic task, even though it does nothing, so the call site presents an interface that a reader could reasonably mistake for a live check."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "not_reentrant",
+    "evidence": "An empty body is trivially re-entrant; the call site is BMS_Trigger at src/app/application/bms/bms.c L916, in the 10 ms cyclic task."
+   },
+   "error_paths": [
+    {
+     "condition": "Any condition.",
+     "observed_behaviour": "No condition is handled. The body is empty apart from a TODO comment.",
+     "signalled_as": "nothing",
+     "evidence": "src/app/application/soa/soa.c L353-L354"
+    }
+   ],
+   "not_specified_by_source": [
+    "Everything. This element is declared, called on the 10 ms supervision cycle, and does nothing. The source says so in a TODO comment and this record records it as it stands rather than inferring a slave-temperature check that does not exist.",
+    "The interface does not say what a slave temperature is, how it would be obtained, or what it would be judged against, because no implementation states any of it.",
+    "Because the element is called unconditionally from the same place as the three implemented checks, a reader of the call site alone would conclude the SOA module supervises slave temperatures. It does not."
+   ]
+  }
+ ],
+ "interface_level_gaps": [
+  {
+   "gap": "All four elements return void. The module cannot tell its caller that it detected anything, and its caller does not ask.",
+   "consequence": "The supervision boundary carries no return path at all. Any requirement about how the module reports a violation has to be written about the diagnosis module's state rather than about this interface, which is why this record exists.",
+   "evidence": "Declarations at src/app/application/soa/soa.h L79, L88-L90, L98 and L104 all return void."
+  },
+  {
+   "gap": "One of the four elements is empty.",
+   "consequence": "The SOA element of this corpus is modelled on a module that supervises voltage, temperature and current and declares a fourth slave-temperature check that does nothing. A requirement written against 'the SOA module supervises slave temperatures' would be satisfied by a function with an empty body.",
+   "evidence": "src/app/application/soa/soa.c L353-L354 is the whole implementation, and it carries a TODO comment saying it is to be implemented."
+  },
+  {
+   "gap": "No element declares the unit of the quantity it judges.",
+   "consequence": "The voltage, temperature and current units are recoverable only from the cell configuration constants the bodies compare against, which is an implementation detail rather than an interface contract.",
+   "evidence": "BC_VOLTAGE_MAX_MOL_mV (2720) at src/app/application/config/battery_cell_cfg.h L141 is mV by name only."
+  }
+ ],
+ "verification_status": {
+  "analysed_against_running_code": false,
+  "conformance_tested": false,
+  "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+ },
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "approval_claimed": false,
+  "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+ }
+}

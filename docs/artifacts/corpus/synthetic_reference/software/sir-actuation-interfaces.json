@@ -1,0 +1,211 @@
+{
+ "id": "FB2-SW-SIR-000002",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Software interface requirements: the actuation interface",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000101",
+  "FB2-SRC-COD-000102",
+  "FB2-SRC-COD-000096"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 7 (software requirements analysis)",
+   "status": "partially_mapped",
+   "rationale": "Supplies software interface requirements, the family SWE.1 expected and that was absent. It does not analyse them from a higher-level requirement, so the process's defining activity is still absent."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Backs SWE.1 with the software interface requirement family. The status stays partially_mapped because these requirements are derived from an analysis of an existing implementation, not analysed from software requirements or system requirements, and because the existing software requirements remain back-inferred."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Consumes the interface specifications this requirement set is derived from. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Four interface requirements over the actuation boundary, derived from FB2-SW-IFS-000003. They record the obligations a consumer of the contactor driver may rely on, including the one the analysed interface does not provide: a distinguishable report of why an actuation request was refused."
+  }
+ ],
+ "statement": "The actuation interface shall present the following to its consumers: (a) a request entry point whose result reports whether the request was placed on a configured contactor; (b) a state read that returns an explicit indication when no such contactor exists rather than a stale or default state; (c) a feedback check whose entire effect is delivered through the diagnosis module; and (d) an argument range on every actuation request, bounded by the configured string count and excluding the undefined contactor type.",
+ "rationale": "The requirements exist because the analysed interface has two properties a consumer must be able to rely on and one it demonstrably lacks. The two are that the string and contactor-type arguments are bounded, and that a state read distinguishes 'no such contactor' from a real state. The third is the gap: the single negative return value is used both for a request that matched nothing and for a request that matched and could not be completed, so a consumer cannot tell a configuration error from a transient condition. Stating that as a requirement rather than leaving it as an observation is what makes the gap visible to a requirements process instead of to whoever happens to read the source.",
+ "classification": "interface",
+ "acceptance_criteria": [
+  {
+   "criterion": "Actuation request elements shall return a value that reports whether the request was placed on a configured contactor",
+   "measure": "Inspection of the declared return type and of the assignment site",
+   "threshold": "1 success and 1 negative value declared"
+  },
+  {
+   "criterion": "The state-read element shall return an explicit indication when no configured contactor matches the requested string and type",
+   "measure": "Inspection of the initialised return value on the no-match path",
+   "threshold": "a dedicated 'undefined' enumerator returned on the no-match path"
+  },
+  {
+   "criterion": "Every actuation request parameter shall be bounded: the string index by the configured string count and the contactor type by excluding the undefined enumerator",
+   "measure": "Inspection of the assertions at the top of each element",
+   "threshold": "one assertion per bounded parameter"
+  },
+  {
+   "criterion": "The feedback check shall deliver its effect through the diagnosis module",
+   "measure": "Inspection of the declared return type and of the body's effect",
+   "threshold": "declared void; body registers diagnosis events"
+  }
+ ],
+ "verification_approach": "analysis",
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "not_applicable",
+  "mitigation": "No ASIL is allocated to this requirement. It is a software interface requirement about how two modules call each other, and the product it describes has never had a hazard analysis and risk assessment: no ISO 26262 conformity, no ASIL determination and no certification is claimed for it or for anything in this corpus. The non-applicability is stated with its reason rather than left blank, because an unexplained non-applicability is indistinguishable from a requirement that quietly dropped out of every ASIL-derived view."
+ },
+ "asil_justification": {
+  "severity": {
+   "rating": "not_applicable"
+  },
+  "exposure": {
+   "rating": "not_applicable"
+  },
+  "derived_asil": "not_applicable",
+  "statement": "Not applicable, and deliberately so. This requirement carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. This is not a statement that the interface is unimportant: it is a statement that the classification apparatus is not available in this repository, and a reader must not read 'not_applicable' as 'no consequence'."
+ },
+ "assumptions": [],
+ "conditions_modes": [
+  "NORMAL",
+  "CHARGING",
+  "PRECHARGE"
+ ],
+ "feasibility_dependencies": [],
+ "requirement_kind": "software_interface_requirement",
+ "derivation": {
+  "direction": "specification_to_requirement",
+  "derived_from_interface_specifications": [
+   "FB2-SW-IFS-000003"
+  ],
+  "method": "Every statement names the interface element it obliges and the analysed behaviour it rests on.",
+  "authoring_independence": "not_independent",
+  "authoring_independence_statement": "Authored by an AI agent from the interface specifications and the source. No requirements engineer confirmed that this is the interface that was wanted, no stakeholder stated a need that these requirements answer, and no human approved them. They record what the code obliges a consumer to rely on; they do not record what anyone asked for."
+ },
+ "element_requirements": [
+  {
+   "id": "FB2-SW-SIR-000002-A",
+   "statement": "An actuation request shall report whether the request was placed on a configured contactor.",
+   "source_element": "IFSE-000201 CONT_CloseContactor",
+   "basis": "STD_OK is assigned only after a registry match, and the initial negative value is returned otherwise."
+  },
+  {
+   "id": "FB2-SW-SIR-000002-B",
+   "statement": "The state read shall return an explicit indication when no configured contactor matches, rather than a default or stale state.",
+   "source_element": "IFSE-000202 CONT_GetContactorState",
+   "basis": "The return value is initialised to the undefined enumerator and returned unchanged on the no-match path."
+  },
+  {
+   "id": "FB2-SW-SIR-000002-C",
+   "statement": "Every actuation request shall reject a string index outside the configured string count and shall reject the undefined contactor type.",
+   "source_element": "IFSE-000201 CONT_CloseContactor, IFSE-000202 CONT_GetContactorState",
+   "basis": "Two assertions at the top of each element: stringNumber < BS_NR_OF_STRINGS and the type is not CONT_UNDEFINED."
+  },
+  {
+   "id": "FB2-SW-SIR-000002-D",
+   "statement": "The feedback check shall deliver its entire effect through the diagnosis module and shall not rely on a return value.",
+   "source_element": "IFSE-000203 CONT_CheckFeedback",
+   "basis": "Declared void; the body compares the commanded state with the feedback and registers one diagnosis event per contactor."
+  },
+  {
+   "id": "FB2-SW-SIR-000002-E",
+   "statement": "An actuation request that matches no configured contactor and an actuation request that matched but could not be completed shall be distinguishable to the caller.",
+   "source_element": "IFSE-000201 CONT_CloseContactor",
+   "basis": "This one is NOT met by the analysed implementation. It is recorded as a requirement precisely because the interface does not provide it: the single negative value is returned on both paths, so a consumer cannot distinguish a configuration error from a transient condition.",
+   "gap": "unsatisfied_by_the_analysed_implementation"
+  }
+ ],
+ "element_requirements_note": "The failure reaction of the actuation boundary is a trap for a bad argument and a silent ambiguity for a refused request. Requirement E has no detection channel at all today: a caller cannot distinguish the two causes of refusal, so a configuration error presents as an intermittent failure. That is stated here because it is the reason E is worth writing down.",
+ "failure_reaction": "Requirement E is not satisfied today and this record does not claim it is. It is stated because a requirement that describes what the interface should do is what makes the shortfall actionable; a note in an interface specification is not. Every other requirement in this set is satisfied by the implementation as analysed, and each carries the source line that satisfies it.",
+ "traceability_to_existing_requirements": [
+  {
+   "requirement": "FB2-SW-SIR-000002-A",
+   "statement": "An actuation request shall report whether the request was placed on a configured contactor.",
+   "derivation": "Confirm the success value is assigned only inside the registry-match branch.",
+   "interface_spec": "FB2-SW-IFS-000003",
+   "evidence": "src/app/driver/contactor/contactor.c L196, with the initial negative value at L187 returned at L200."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000002-B",
+   "statement": "The state read shall return an explicit indication when no configured contactor matches, rather than a default or stale state.",
+   "derivation": "Confirm the return value is initialised to the undefined enumerator and returned unchanged when the loop finds no match.",
+   "interface_spec": "FB2-SW-IFS-000003",
+   "evidence": "src/app/driver/contactor/contactor.c L249 and L258."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000002-C",
+   "statement": "Every actuation request shall reject a string index outside the configured string count and shall reject the undefined contactor type.",
+   "derivation": "Confirm one assertion per bounded parameter at the top of each element.",
+   "interface_spec": "FB2-SW-IFS-000003",
+   "evidence": "src/app/driver/contactor/contactor.c L185, L186, L247 and L248."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000002-D",
+   "statement": "The feedback check shall deliver its entire effect through the diagnosis module and shall not rely on a return value.",
+   "derivation": "Confirm the element is declared void and its body registers diagnosis events.",
+   "interface_spec": "FB2-SW-IFS-000003",
+   "evidence": "src/app/driver/contactor/contactor.c L131-L135 and the DIAG_Handler calls at L138, L145 and L152."
+  },
+  {
+   "requirement": "FB2-SW-SIR-000002-E",
+   "statement": "An actuation request that matches no configured contactor and an actuation request that matched but could not be completed shall be distinguishable to the caller.",
+   "derivation": "Confirm the return type offers a distinct value per cause. It does not: STD_RETURN_TYPE_e has two members.",
+   "interface_spec": "FB2-SW-IFS-000003",
+   "evidence": "src/app/main/include/fstd_types.h L82-L85; both causes return STD_NOT_OK from src/app/driver/contactor/contactor.c.",
+   "status": "NOT SATISFIED at 308028fb"
+  }
+ ],
+ "verification_status": {
+  "analysis_performed": false,
+  "test_measure_exists": false,
+  "statement": "No test measure exists for any requirement in this record, and no requirement in it has been verified against running code. Every derivation below is an inspection of the source at the pinned commit, which is why the verification approach is analysis and why the coverage matrix in the implementation mapping document reports this record as uncovered. That is the accurate position, not a gap to be filled by writing more prose."
+ },
+ "not_established_by_this_record": [
+  "One requirement in this set is not satisfied by the implementation as analysed, and this record says so rather than dropping it. Requirement E would require a distinct return value per cause, which the declared two-value return type cannot express.",
+  "No requirement here is elicited from a stakeholder, a system requirement or a safety goal. Each states an obligation the existing code already imposes, except E which states one it does not.",
+  "The requirement set does not state the physical or timing contract of an actuation: no contactor rating, no switching time, no feedback settling time. None of those exists in this repository, and the hardware that would carry them is external.",
+  "No ASIL, no safety allocation, no conformity claim, no certification, no human approval.",
+  "No verification has been performed against any of these requirements and no test measure exists for any of them."
+ ],
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent. It is a derivation from an analysed specification, not an elicitation, not an analysis of a higher-level requirement, and not independent review.",
+  "approval_claimed": false
+ }
+}

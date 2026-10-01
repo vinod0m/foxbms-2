@@ -1,0 +1,410 @@
+{
+ "id": "FB2-SW-IFS-000006",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "software_interface_specification",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Interface Specification: the diagnosis module's event-reporting interface",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000107",
+  "FB2-SRC-COD-000009",
+  "FB2-SRC-COD-000010",
+  "FB2-SRC-COD-000011",
+  "FB2-SRC-COD-000012",
+  "FB2-SRC-COD-000013",
+  "FB2-SRC-COD-000014",
+  "FB2-SRC-COD-000015",
+  "FB2-SRC-COD-000094",
+  "FB2-SRC-COD-000096"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+   "status": "partially_mapped",
+   "rationale": "Specifies the diagnosis boundary with the real signature, four separately-returned rejection reasons read off distinct source lines, and the threshold semantics that make an unreported error report as success."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Supplies an interface specification for the diagnosis boundary that the design records' signal tables did not."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Named as the specification the software interface requirements for the diagnostics boundary are derived from."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Two elements of the diagnosis interface, chosen because between them they carry every supervising module in this corpus: SOA_CheckVoltages and CONT_CheckFeedback both reach the system through DIAG_Handler. Eight of its nine return codes are given distinct meanings, each traced to the source line that assigns it, and the one that has no assignment is recorded as such rather than described as a configuration-error signal."
+  }
+ ],
+ "interface_id": "IFS-DIAGNOS-000006",
+ "interface_class": "diagnostics",
+ "analysis": {
+  "method": "source_analysis_at_pinned_commit",
+  "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+  "direction": "source_to_specification",
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "tools_used": [
+   "git show 308028fb:<path>",
+   "graft skeleton <file>"
+  ],
+  "what_this_record_is_not": [
+   "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+   "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+   "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+   "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+  ]
+ },
+ "providing_module": {
+  "name": "DIAG module",
+  "role": "Aggregates events from every supervising module, debounces them against per-channel configured thresholds, records them, raises fatal errors, and invokes a per-channel callback.",
+  "source_paths": [
+   "src/app/engine/diag/diag.h",
+   "src/app/engine/diag/diag.c"
+  ]
+ },
+ "consuming_modules": [
+  {
+   "name": "SOA supervision module",
+   "source_path": "src/app/application/soa/soa.c",
+   "calls": [
+    "DIAG_Handler"
+   ],
+   "consumption_evidence": "DIAG_Handler(DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MOL, DIAG_EVENT_NOT_OK, DIAG_STRING, s) at src/app/application/soa/soa.c L90, and the same pattern for the undervoltage, temperature and current channels."
+  },
+  {
+   "name": "Contactor driver",
+   "source_path": "src/app/driver/contactor/contactor.c",
+   "calls": [
+    "DIAG_Handler"
+   ],
+   "consumption_evidence": "DIAG_Handler(DIAG_ID_STRING_PLUS_CONTACTOR_FEEDBACK, feedbackStatus, DIAG_STRING, ...) at src/app/driver/contactor/contactor.c L138."
+  },
+  {
+   "name": "DIAG configuration module",
+   "source_path": "src/app/engine/config/diag_cfg.c",
+   "calls": [
+    "DIAG_UpdateFlags"
+   ],
+   "consumption_evidence": "DIAG_UpdateFlags() at src/app/task/config/ftask_cfg.c L250 on the 1 ms cycle; the implementation is declared at src/app/engine/config/diag_cfg.h L316 and defined at src/app/engine/config/diag_cfg.c L223."
+  },
+  {
+   "name": "Start-up sequence",
+   "source_path": "src/app/main/main.c",
+   "calls": [
+    "DIAG_Initialize"
+   ],
+   "consumption_evidence": "DIAG_Initialize(&diag_device) at src/app/main/main.c L118."
+  }
+ ],
+ "elements": [
+  {
+   "element_id": "IFSE-000501",
+   "symbol": "DIAG_Handler",
+   "declaration": "extern DIAG_RETURNTYPE_e DIAG_Handler(DIAG_ID_e diagId, DIAG_EVENT_e event, DIAG_IMPACT_LEVEL_e impact, uint32_t data);",
+   "declaration_path": "src/app/engine/diag/diag.h",
+   "declaration_line": 121,
+   "implementation_path": "src/app/engine/diag/diag.c",
+   "implementation_line": 341,
+   "providing_module": "DIAG module",
+   "consuming_module": "Every supervising module in the application and driver layers",
+   "parameters": [
+    {
+     "name": "diagId",
+     "c_type": "DIAG_ID_e",
+     "direction": "in",
+     "unit": "diagnosis identifier enumerator",
+     "meaning": "Which diagnosis channel the event belongs to.",
+     "valid_range": "diagId < DIAG_ID_MAX",
+     "range_evidence": "if (diagId >= DIAG_ID_MAX) { return DIAG_HANDLER_RETURN_WRONG_ID; } at src/app/engine/diag/diag.c L355-L357.",
+     "range_enforcement": "returned_error",
+     "nullable": false
+    },
+    {
+     "name": "event",
+     "c_type": "DIAG_EVENT_e",
+     "direction": "in",
+     "unit": "diagnosis event enumerator",
+     "meaning": "What happened: OK, NOT_OK or RESET.",
+     "valid_range": "Any of the three defined events. The source has no branch for any other value, and in that case the return variable keeps its initial DIAG_HANDLER_RETURN_UNKNOWN, which is how an unrecognised event surfaces.",
+     "range_evidence": "The three branches are tested at src/app/engine/diag/diag.c L384, L419 and L448; no else branch assigns the return variable.",
+     "range_enforcement": "returned_error",
+     "nullable": false
+    },
+    {
+     "name": "impact",
+     "c_type": "DIAG_IMPACT_LEVEL_e",
+     "direction": "in",
+     "unit": "impact level enumerator",
+     "meaning": "Whether the event is system-wide or belongs to one string.",
+     "valid_range": "Either DIAG_SYSTEM or DIAG_STRING.",
+     "range_evidence": "if (!((impact == DIAG_SYSTEM) || (DIAG_STRING))) { return DIAG_HANDLER_INVALID_ERR_IMPACT; } at src/app/engine/diag/diag.c L359-L361.",
+     "range_enforcement": "returned_error",
+     "nullable": false
+    },
+    {
+     "name": "data",
+     "c_type": "uint32_t",
+     "direction": "in",
+     "unit": "string index when impact is DIAG_STRING; otherwise ignored",
+     "meaning": "Which string the event concerns. It is reinterpreted as a string index only when impact is DIAG_STRING.",
+     "valid_range": "data < BS_NR_OF_STRINGS, and only enforced when impact is DIAG_STRING.",
+     "range_evidence": "if ((impact == DIAG_STRING) && (data >= BS_NR_OF_STRINGS)) { return DIAG_HANDLER_INVALID_DATA; } at src/app/engine/diag/diag.c L363-L365. BS_NR_OF_STRINGS is (1u) at src/app/application/config/battery_system_cfg.h L109.",
+     "range_enforcement": "returned_error",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "DIAG_RETURNTYPE_e",
+    "values": {
+     "DIAG_HANDLER_RETURN_OK": "Either the event was OK, or a NOT_OK event occurred below its configured threshold, so no error was reported.",
+     "DIAG_HANDLER_RETURN_ERR_OCCURRED": "An error occurred, is enabled by the mask, and has reached or passed its configured threshold.",
+     "DIAG_HANDLER_RETURN_WARNING_OCCURRED": "An error occurred but is not enabled by the mask, so it is recorded as a warning rather than an error.",
+     "DIAG_HANDLER_RETURN_WRONG_ID": "The supplied diagnosis id is at or above DIAG_ID_MAX.",
+     "DIAG_HANDLER_RETURN_UNKNOWN": "The initial value of the return variable. Reachable if the event is none of DIAG_EVENT_OK, DIAG_EVENT_NOT_OK or DIAG_EVENT_RESET, because no branch assigns it.",
+     "DIAG_HANDLER_INVALID_TYPE": "Declared by the type; the source does not assign it on any path this record could find.",
+     "DIAG_HANDLER_INVALID_DATA": "The impact is DIAG_STRING and the string index is at or above BS_NR_OF_STRINGS.",
+     "DIAG_HANDLER_INVALID_ERR_IMPACT": "The impact is neither DIAG_SYSTEM nor DIAG_STRING.",
+     "DIAG_HANDLER_RETURN_NOT_READY": "The module is still in its uninitialised state."
+    },
+    "default_on_no_information": "DIAG_HANDLER_RETURN_UNKNOWN is the safe default: it is the value the return variable carries before any branch runs, so an unrecognised event yields 'unknown' rather than 'ok'. The one value with no reachable assignment is DIAG_HANDLER_INVALID_TYPE.",
+    "evidence": "The enum is declared at src/app/engine/diag/diag.h L67-L78. Each enumerator is written in full and each assignment is at the line given, so that no abbreviation in this record has to be resolved by the reader: DIAG_HANDLER_RETURN_NOT_READY at src/app/engine/diag/diag.c L353, DIAG_HANDLER_RETURN_WRONG_ID at L357, DIAG_HANDLER_INVALID_ERR_IMPACT at L361, DIAG_HANDLER_INVALID_DATA at L365, DIAG_HANDLER_RETURN_OK at L418 and L452, DIAG_HANDLER_RETURN_ERR_OCCURRED at L437 and L440, DIAG_HANDLER_RETURN_WARNING_OCCURRED at L446, and the initial DIAG_HANDLER_RETURN_UNKNOWN at L342."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value DIAG_RETURNTYPE_e, with a distinct code per rejection reason.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "Five distinct rejection and outcome codes are returned, each on its own path: src/app/engine/diag/diag.c L342, L353, L357, L361, L365, L418, L437, L440, L446 and L452."
+   },
+   "timing": {
+    "period_ms": 1,
+    "period_imposed_by_source": true,
+    "evidence": "The module's own flag update runs on the 1 ms cycle: DIAG_UpdateFlags() at src/app/task/config/ftask_cfg.c L250 in FTSK_RunUserCodeCyclic1ms, whose cycle time is FTSK_TASK_CYCLIC_1MS_CYCLE_TIME (1u) at src/app/task/config/ftask_cfg.h L94. DIAG_Handler itself is event-driven and has no period of its own; its callers run on the 1 ms or the 10 ms cycle."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "All the consumers this record can see call it from task context, including the 10 ms supervision block at src/app/application/soa/soa.c L90 and the contactor feedback check at src/app/driver/contactor/contactor.c L138. No critical section or lock protects the module state this element mutates, and the source does not state that one is unnecessary."
+   },
+   "error_paths": [
+    {
+     "condition": "The module is uninitialised.",
+     "observed_behaviour": "Returns DIAG_HANDLER_RETURN_NOT_READY and does nothing else.",
+     "signalled_as": "DIAG_HANDLER_RETURN_NOT_READY",
+     "evidence": "src/app/engine/diag/diag.c L351-L353"
+    },
+    {
+     "condition": "diagId is at or above DIAG_ID_MAX.",
+     "observed_behaviour": "Returns DIAG_HANDLER_RETURN_WRONG_ID.",
+     "signalled_as": "DIAG_HANDLER_RETURN_WRONG_ID",
+     "evidence": "src/app/engine/diag/diag.c L355-L357"
+    },
+    {
+     "condition": "impact is neither DIAG_SYSTEM nor DIAG_STRING.",
+     "observed_behaviour": "Returns DIAG_HANDLER_INVALID_ERR_IMPACT.",
+     "signalled_as": "DIAG_HANDLER_INVALID_ERR_IMPACT",
+     "evidence": "src/app/engine/diag/diag.c L359-L361"
+    },
+    {
+     "condition": "impact is DIAG_STRING and data is at or above BS_NR_OF_STRINGS.",
+     "observed_behaviour": "Returns DIAG_HANDLER_INVALID_DATA.",
+     "signalled_as": "DIAG_HANDLER_INVALID_DATA",
+     "evidence": "src/app/engine/diag/diag.c L363-L365"
+    },
+    {
+     "condition": "event is none of the three defined values.",
+     "observed_behaviour": "No branch runs, so the return variable keeps its initial value and DIAG_HANDLER_RETURN_UNKNOWN is returned.",
+     "signalled_as": "DIAG_HANDLER_RETURN_UNKNOWN",
+     "evidence": "src/app/engine/diag/diag.c L342 initialises the variable; the branches at L384, L419 and L448 have no else."
+    },
+    {
+     "condition": "The event is NOT_OK and the channel's error-enable mask bit is clear.",
+     "observed_behaviour": "The error flag bit is cleared, the warning flag bit is set, and DIAG_HANDLER_RETURN_WARNING_OCCURRED is returned: the same physical condition is reported as an error or a warning depending on configuration.",
+     "signalled_as": "DIAG_HANDLER_RETURN_WARNING_OCCURRED",
+     "evidence": "src/app/engine/diag/diag.c L443-L446"
+    },
+    {
+     "condition": "The event is NOT_OK, the channel is enabled, and the occurrence counter is below the configured threshold.",
+     "observed_behaviour": "The counter is incremented but DIAG_HANDLER_RETURN_OK is returned, with the source comment stating plainly that the function does not return an error message in this case.",
+     "signalled_as": "DIAG_HANDLER_RETURN_OK despite an error having occurred",
+     "evidence": "src/app/engine/diag/diag.c L421-L424, including the comment 'Function does not return an error-message!'"
+    },
+    {
+     "condition": "The event is OK and the occurrence counter is 1.",
+     "observed_behaviour": "The error and warning bits are cleared, the counter is zeroed, an entry is written, and if the channel is configured fatal a fatal error is cleared. The callback is invoked with DIAG_EVENT_RESET when evaluation is enabled.",
+     "signalled_as": "DIAG_HANDLER_RETURN_OK",
+     "evidence": "src/app/engine/diag/diag.c L394-L416"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state whether an error that is still below its threshold has been recorded at all. The counter is incremented but the caller is told OK, and the source says so in a comment, so a caller cannot distinguish 'no error' from 'an error that has not yet reached its threshold'. This is the single most consequential thing the interface does not say.",
+    "The interface does not state the configured threshold, its unit, or where it comes from. It is read from the configuration table at src/app/engine/diag/diag.c L380, and the threshold itself is not a parameter of this interface.",
+    "The interface does not state whether the callback is invoked with this thread or another, and it is invoked synchronously inside this element at src/app/engine/diag/diag.c L409-L411 and L432-L434, so a callback that blocks delays every caller of the diagnosis module.",
+    "DIAG_HANDLER_INVALID_TYPE is declared by the return type and this record found no path that returns it, so a caller cannot rely on it and must not treat its absence as a configuration error.",
+    "The interface does not state the string index encoding: data is a plain uint32_t whose meaning depends on impact, and nothing at the interface says so."
+   ]
+  },
+  {
+   "element_id": "IFSE-000502",
+   "symbol": "DIAG_CheckEvent",
+   "declaration": "extern STD_RETURN_TYPE_e DIAG_CheckEvent(STD_RETURN_TYPE_e cond, DIAG_ID_e diagId, DIAG_IMPACT_LEVEL_e impact, uint32_t data);",
+   "declaration_path": "src/app/engine/diag/diag.h",
+   "declaration_line": 137,
+   "implementation_path": "src/app/engine/diag/diag.c",
+   "implementation_line": 477,
+   "providing_module": "DIAG module",
+   "consuming_module": "Callers that only need a yes/no answer",
+   "parameters": [
+    {
+     "name": "cond",
+     "c_type": "STD_RETURN_TYPE_e",
+     "direction": "in",
+     "unit": "the caller's own success or failure",
+     "meaning": "The condition to report. STD_OK is reported as an OK event; anything else is reported as NOT_OK.",
+     "valid_range": "STD_OK or STD_NOT_OK.",
+     "range_evidence": "The body branches on cond == STD_OK at src/app/engine/diag/diag.c L479.",
+     "range_enforcement": "not_enforced",
+     "nullable": false
+    },
+    {
+     "name": "diagId",
+     "c_type": "DIAG_ID_e",
+     "direction": "in",
+     "unit": "diagnosis identifier enumerator",
+     "meaning": "Which diagnosis channel to use.",
+     "valid_range": "diagId < DIAG_ID_MAX.",
+     "range_evidence": "Enforced by the wrapped DIAG_Handler rather than by this element.",
+     "range_enforcement": "returned_error",
+     "nullable": false
+    },
+    {
+     "name": "impact",
+     "c_type": "DIAG_IMPACT_LEVEL_e",
+     "direction": "in",
+     "unit": "impact level enumerator",
+     "meaning": "Whether the event is system-wide or per string.",
+     "valid_range": "Either DIAG_SYSTEM or DIAG_STRING.",
+     "range_evidence": "Enforced by the wrapped DIAG_Handler rather than by this element.",
+     "range_enforcement": "returned_error",
+     "nullable": false
+    },
+    {
+     "name": "data",
+     "c_type": "uint32_t",
+     "direction": "in",
+     "unit": "string index when impact is DIAG_STRING",
+     "meaning": "Which string the event concerns.",
+     "valid_range": "data < BS_NR_OF_STRINGS when impact is DIAG_STRING.",
+     "range_evidence": "Enforced by the wrapped DIAG_Handler rather than by this element.",
+     "range_enforcement": "returned_error",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "cond was STD_OK, or cond was not OK and the event did not reach its threshold.",
+     "STD_NOT_OK": "cond was not OK and the event reached its threshold."
+    },
+    "default_on_no_information": "The element collapses the wrapped element's nine return codes into two. A caller of this element cannot see a wrong id, a bad impact, bad data or a not-ready module; those are all reported as whatever this element chooses, and the source does not document that mapping.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85; the definition is at src/app/engine/diag/diag.c L477."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value STD_RETURN_TYPE_e only. The wrapped element's detailed codes are discarded.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The element is documented in the header as a wrapper that reduces the interface to a pass/fail test, at src/app/engine/diag/diag.h L123-L137, and it returns STD_RETURN_TYPE_e, not DIAG_RETURNTYPE_e."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Event-driven; it has no period of its own and is called where its caller evaluates a condition."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Task-level convenience wrapper; no interrupt context reaches it in the source this record examined."
+   },
+   "error_paths": [
+    {
+     "condition": "The wrapped DIAG_Handler rejects the call for any of its five reasons.",
+     "observed_behaviour": "This element does not forward the rejection code. The header documents it as a simplification to a two-value result, so a wrong id or a not-ready module is indistinguishable here from a normal evaluation.",
+     "signalled_as": "collapsed to STD_OK or STD_NOT_OK",
+     "evidence": "The documented purpose at src/app/engine/diag/diag.h L123-L136 and the two-value return type."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not document how the wrapped element's rejection codes are mapped onto its own two return values. A caller cannot tell a configuration error from a genuine condition failure.",
+    "The interface inherits every unspecified behaviour of the element it wraps, including the threshold semantics that make an error report as OK.",
+    "The interface does not state whether the callback configured for the channel is invoked. It is, by the wrapped element, and that is not mentioned here."
+   ]
+  }
+ ],
+ "interface_level_gaps": [
+  {
+   "gap": "An error below its configured threshold is reported to the caller as success.",
+   "consequence": "The interface cannot be used by a caller that needs to know whether a fault is present, only whether it has reached its debounce count. Any requirement that a supervision module shall report a violated limit is unsatisfiable through this return value and must be written against the module's stored state instead.",
+   "evidence": "src/app/engine/diag/diag.c L421-L424 increments the occurrence counter and returns DIAG_HANDLER_RETURN_OK, with the source comment stating that the function does not return an error message in this case."
+  },
+  {
+   "gap": "The same physical condition is reported as an error or as a warning depending on a configuration mask the interface does not expose.",
+   "consequence": "The severity a caller observes is not a property of the interface but of configuration, and nothing at the interface lets a caller discover which. This record does not claim it is a defect; it records that the interface does not determine the severity.",
+   "evidence": "src/app/engine/diag/diag.c L443-L446 clears the error bit, sets the warning bit and returns DIAG_HANDLER_RETURN_WARNING_OCCURRED when the channel's enable-mask bit is clear."
+  },
+  {
+   "gap": "One of the nine declared return codes has no reachable assignment.",
+   "consequence": "DIAG_HANDLER_INVALID_TYPE is part of the interface's type but not of its behaviour, so a caller cannot treat it as a signal and a configuration fault in that dimension would be silent.",
+   "evidence": "Declared at src/app/engine/diag/diag.h L75. This record traced every assignment of the return variable in the implementation at src/app/engine/diag/diag.c L341-L474 and found no path that returns it."
+  },
+  {
+   "gap": "No protection and no stated concurrency rule for the module state this element mutates.",
+   "consequence": "The interface is called from the 10 ms supervision task and from the contactor driver, and from at least one asynchronous CAN transmit context elsewhere in the driver layer. Nothing here states that those callers are mutually excluded, so the interface's re-entrancy contract is simply absent.",
+   "evidence": "The element reads and writes the module's error, warning and occurrence arrays at src/app/engine/diag/diag.c L378-L382 with no critical section, mutex or lock in the element or in its callers."
+  },
+  {
+   "gap": "The configured callback is invoked synchronously inside the reporting call and the interface does not say so.",
+   "consequence": "A callback that blocks delays every caller of the diagnosis module, which is a latency path into the 1 ms and 10 ms cycles that no interface statement discloses.",
+   "evidence": "fpCallback is invoked inside DIAG_Handler at src/app/engine/diag/diag.c L409-L411 and L432-L434."
+  }
+ ],
+ "verification_status": {
+  "analysed_against_running_code": false,
+  "conformance_tested": false,
+  "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+ },
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "approval_claimed": false,
+  "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+ }
+}

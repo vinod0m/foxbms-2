@@ -1,0 +1,225 @@
+{
+ "id": "FB2-SW-SIR-000003",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Software interface requirements: the communication and data-exchange interfaces",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000103",
+  "FB2-SRC-COD-000104",
+  "FB2-SRC-COD-000105",
+  "FB2-SRC-COD-000106",
+  "FB2-SRC-COD-000094",
+  "FB2-SRC-COD-000096"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 7 (software requirements analysis)",
+   "status": "partially_mapped",
+   "rationale": "Supplies software interface requirements, the family SWE.1 expected and that was absent. It does not analyse them from a higher-level requirement, so the process's defining activity is still absent."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Backs SWE.1 with the software interface requirement family. The status stays partially_mapped because these requirements are derived from an analysis of an existing implementation, not analysed from software requirements or system requirements, and because the existing software requirements remain back-inferred."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Consumes the interface specifications this requirement set is derived from. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Five interface requirements over the communication and data-exchange boundaries, derived from FB2-SW-IFS-000004 and FB2-SW-IFS-000005. Two of them are stated because the analysed interface does not satisfy them, and that is the point of writing them down."
+  }
+ ],
+ "statement": "The communication and data-exchange interfaces shall present the following to their consumers: (a) a transmit call whose result reports whether the frame was placed on the bus; (b) an identifier argument whose range is bounded by the identifier width the caller selected; (c) a data-block read whose result reports whether the request was accepted and which shall not be represented as returning the data; (d) a bounded maximum queue wait on that read; and (e) a single-consumer serialisation rule for concurrent access to the data blocks.",
+ "rationale": "These requirements exist because the two analysed boundaries behave differently in ways a consumer must know and cannot infer from a signature. The transmit interface has an explicitly unchecked identifier, recorded in the source as a deliberate non-assert, and its queue pump discards a frame when the retransmit queue is full. The data-exchange interface is asynchronous: it returns before the data exists, and its return value reports only whether the request was queued. A consumer of either would have to read the implementation to learn that, which is the situation an interface requirement exists to prevent.",
+ "classification": "interface",
+ "acceptance_criteria": [
+  {
+   "criterion": "The transmit call shall report whether the frame was placed on a free message box",
+   "measure": "Inspection of the declared return type and of the assignment site",
+   "threshold": "1 success and 1 negative value declared"
+  },
+  {
+   "criterion": "The identifier argument shall be bounded by the identifier width the caller selected",
+   "measure": "Inspection for a range check or mask on the identifier before it reaches the controller",
+   "threshold": "one bound per identifier width"
+  },
+  {
+   "criterion": "The data-block read shall report whether the request was accepted and shall state that the data is not yet available at the point of return",
+   "measure": "Inspection of the declared return type and of whether the body performs the copy",
+   "threshold": "enqueue-only read with an explicit statement of asynchrony"
+  },
+  {
+   "criterion": "The data-block read shall bound the time a caller waits to enqueue its request",
+   "measure": "Inspection of the timeout passed to the queue send",
+   "threshold": "1 queue timeout, in ms"
+  },
+  {
+   "criterion": "Concurrent access to the data blocks shall be serialised through a single consumer",
+   "measure": "Inspection of the number of consumers of the database queue",
+   "threshold": "exactly 1 consumer"
+  }
+ ],
+ "verification_approach": "analysis",
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "not_applicable",
+  "mitigation": "No ASIL is allocated to this requirement. It is a software interface requirement about how two modules call each other, and the product it describes has never had a hazard analysis and risk assessment: no ISO 26262 conformity, no ASIL determination and no certification is claimed for it or for anything in this corpus. The non-applicability is stated with its reason rather than left blank, because an unexplained non-applicability is indistinguishable from a requirement that quietly dropped out of every ASIL-derived view."
+ },
+ "asil_justification": {
+  "severity": {
+   "rating": "not_applicable"
+  },
+  "exposure": {
+   "rating": "not_applicable"
+  },
+  "derived_asil": "not_applicable",
+  "statement": "Not applicable, and deliberately so. This requirement carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. This is not a statement that the interface is unimportant: it is a statement that the classification apparatus is not available in this repository, and a reader must not read 'not_applicable' as 'no consequence'."
+ },
+ "assumptions": [],
+ "conditions_modes": [
+  "NORMAL",
+  "CHARGING",
+  "PRECHARGE"
+ ],
+ "feasibility_dependencies": [],
+ "requirement_kind": "software_interface_requirement",
+ "derivation": {
+  "direction": "specification_to_requirement",
+  "derived_from_interface_specifications": [
+   "FB2-SW-IFS-000004",
+   "FB2-SW-IFS-000005"
+  ],
+  "method": "Every statement below names the interface element it obliges and the analysed behaviour it rests on.",
+  "authoring_independence": "not_independent",
+  "authoring_independence_statement": "Authored by an AI agent from the interface specifications and the source. No requirements engineer confirmed that this is the interface that was wanted, no stakeholder stated a need that these requirements answer, and no human approved them. They record what the code obliges a consumer to rely on; they do not record what anyone asked for."
+ },
+ "element_requirements": [
+  {
+   "id": "FB2-SW-SIR-000003-A",
+   "statement": "A transmit call shall report whether the frame was placed on a free message box.",
+   "source_element": "IFSE-000301 CAN_DataSend",
+   "basis": "STD_OK is assigned only inside the message-box loop after the transmit call; the initial negative value is returned when the loop finds no free box."
+  },
+  {
+   "id": "FB2-SW-SIR-000003-B",
+   "statement": "The identifier argument shall be bounded by the identifier width the caller selected, and an identifier wider than that width shall be rejected.",
+   "source_element": "IFSE-000301 CAN_DataSend",
+   "basis": "NOT satisfied by the analysed implementation. The source records the absence of a check as a deliberate decision and shifts the value into the controller register with no mask.",
+   "gap": "unsatisfied_by_the_analysed_implementation"
+  },
+  {
+   "id": "FB2-SW-SIR-000003-C",
+   "statement": "The data-block read shall report whether the request was accepted, and shall not be represented as returning the data.",
+   "source_element": "IFSE-000401 DATA_Read1DataBlock",
+   "basis": "The public element only enqueues; the copy is performed later on the consumer task. The return value is the enqueue result."
+  },
+  {
+   "id": "FB2-SW-SIR-000003-D",
+   "statement": "The data-block read shall bound the time a caller waits to enqueue its request.",
+   "source_element": "IFSE-000401 DATA_Read1DataBlock",
+   "basis": "The queue send is given a timeout computed from a declared 10 ms maximum, statically asserted to be non-zero."
+  },
+  {
+   "id": "FB2-SW-SIR-000003-E",
+   "statement": "Concurrent access to the data blocks shall be serialised through a single consumer of the database queue.",
+   "source_element": "IFSE-000401 DATA_Read1DataBlock and IFSE-000403 DATA_Task",
+   "basis": "All access is routed through one queue and one consumer drains it, which is what serialises concurrent access."
+  }
+ ],
+ "element_requirements_note": "The failure reaction of these two boundaries is the reason most of this set is unsatisfied. On the communication side a refused transmit is reported but a congested queue is not: when a queued frame cannot be re-queued the branch body is empty apart from a comment, so the frame is discarded with no return value, no diagnosis event and no log. On the data-exchange side a caller that is refused its enqueue gets a negative value but no byte count and no indication that a previously accepted request may now be stale. Neither failure has a detection channel.",
+ "failure_reaction": "Two of these five are not satisfied by the implementation as analysed, and the other three are. The unsatisfied pair is the interesting one: B has no bound and no rejection, and the transmit queue discards a frame with no return value, no diagnosis event and no log when the retransmit queue is full. Together they mean the communication boundary has no defined failure behaviour for either an over-wide identifier or a congested bus. Stating them as requirements is what makes that actionable rather than incidental.",
+ "traceability_to_existing_requirements": [
+  {
+   "requirement": "FB2-SW-SIR-000003-A",
+   "statement": "A transmit call shall report whether the frame was placed on a free message box.",
+   "derivation": "Confirm the success value is assigned only after the transmit call inside the message-box loop.",
+   "interface_spec": "FB2-SW-IFS-000004",
+   "evidence": "src/app/driver/can/can.c L968, with the initial negative value at L938 returned at L976.",
+   "status": "satisfied at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000003-B",
+   "statement": "The identifier argument shall be bounded by the identifier width the caller selected, and an identifier wider than that width shall be rejected.",
+   "derivation": "Confirm a range check or a mask is applied to the identifier before it reaches the controller register. Neither is present.",
+   "interface_spec": "FB2-SW-IFS-000004",
+   "evidence": "src/app/driver/can/can.c L933 records the parameter as accepting the whole range; L953-L966 shift it without a mask.",
+   "status": "NOT SATISFIED at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000003-C",
+   "statement": "The data-block read shall report whether the request was accepted, and shall not be represented as returning the data.",
+   "derivation": "Confirm the public read only enqueues and that its return value is the enqueue result.",
+   "interface_spec": "FB2-SW-IFS-000005",
+   "evidence": "src/app/engine/database/database.c L299-L302 enqueues; STD_OK is set on a successful queue send at L158-L159.",
+   "status": "satisfied at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000003-D",
+   "statement": "The data-block read shall bound the time a caller waits to enqueue its request.",
+   "derivation": "Confirm a timeout is passed to the queue send and that the interface states its value.",
+   "interface_spec": "FB2-SW-IFS-000005",
+   "evidence": "DATA_MAX_QUEUE_TIMEOUT_MS is (10u) at src/app/engine/database/database.c L79 and is converted and statically asserted at L81-L83.",
+   "status": "satisfied at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000003-E",
+   "statement": "Concurrent access to the data blocks shall be serialised through a single consumer of the database queue.",
+   "derivation": "Count the consumers of the database queue in the source.",
+   "interface_spec": "FB2-SW-IFS-000005",
+   "evidence": "src/app/engine/database/database.c L284 is the only receive from ftsk_databaseQueue; the queue is created once at src/app/task/ftask/freertos/ftask_freertos.c L199.",
+   "status": "satisfied at 308028fb"
+  }
+ ],
+ "verification_status": {
+  "analysis_performed": false,
+  "test_measure_exists": false,
+  "statement": "No test measure exists for any requirement in this record, and no requirement in it has been verified against running code. Every derivation below is an inspection of the source at the pinned commit, which is why the verification approach is analysis and why the coverage matrix in the implementation mapping document reports this record as uncovered. That is the accurate position, not a gap to be filled by writing more prose."
+ },
+ "not_established_by_this_record": [
+  "Requirements B and the queue-discard behaviour are not satisfied by the implementation as analysed. B would need either a range check on the identifier or a mask on the shift; the queue-discard behaviour would need a defined drop path with a signal. Neither exists and this record does not claim otherwise.",
+  "No requirement here is elicited from a stakeholder, a system requirement or a safety goal.",
+  "The requirement set states no bus-level contract: no bit rate, no identifier allocation, no maximum frame rate, no maximum payload length. The bit rate is configuration and the identifier allocation is spread across the transmit callback files, neither of which is named by the analysed interfaces.",
+  "The requirement set states no coherency or atomicity rule for a multi-entry data-block read, so nothing here can be used to justify a requirement that a group of values be mutually consistent.",
+  "No ASIL, no safety allocation, no conformity claim, no certification, no human approval.",
+  "No verification has been performed against any of these requirements and no test measure exists for any of them."
+ ],
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent. It is a derivation from an analysed specification, not an elicitation, not an analysis of a higher-level requirement, and not independent review.",
+  "approval_claimed": false
+ }
+}

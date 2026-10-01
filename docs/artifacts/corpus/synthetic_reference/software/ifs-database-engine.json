@@ -1,0 +1,380 @@
+{
+ "id": "FB2-SW-IFS-000005",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "software_interface_specification",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Interface Specification: the database engine's data-block exchange interface",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000105",
+  "FB2-SRC-COD-000106",
+  "FB2-SRC-COD-000028"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+   "status": "partially_mapped",
+   "rationale": "Specifies the exchange boundary with the real signatures, the queue timeout as the one stated time limit, the queue serialisation that realises the re-entrancy rule, and the fact that the return value reports enqueue success only."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Supplies an interface specification for the data-exchange boundary that the design records' signal tables did not."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Named as the specification the software interface requirements for the data-exchange boundary are derived from."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Three elements of the database interface, chosen because together they show the property that makes this boundary different from the others in this corpus: it is asynchronous. The public read returns before the data exists, the return value reports only whether the request was queued, and the copy happens later on another task. The record states that rather than describing the interface as if it were a function call."
+  }
+ ],
+ "interface_id": "IFS-DATABASE-000005",
+ "interface_class": "data_exchange",
+ "analysis": {
+  "method": "source_analysis_at_pinned_commit",
+  "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+  "direction": "source_to_specification",
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "tools_used": [
+   "git show 308028fb:<path>",
+   "graft skeleton <file>"
+  ],
+  "what_this_record_is_not": [
+   "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+   "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+   "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+   "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+  ]
+ },
+ "providing_module": {
+  "name": "Database engine",
+  "role": "Owns the shared data blocks. All access goes through a single queue drained by one task, which is what serialises concurrent access to the blocks in the first place.",
+  "source_paths": [
+   "src/app/engine/database/database.h",
+   "src/app/engine/database/database.c"
+  ]
+ },
+ "consuming_modules": [
+  {
+   "name": "1 ms engine task",
+   "source_path": "src/app/task/config/ftask_cfg.c",
+   "calls": [
+    "DATA_Task"
+   ],
+   "consumption_evidence": "DATA_Task() at src/app/task/config/ftask_cfg.c L211 inside FTSK_RunUserCodeEngine, the 1 ms engine task."
+  },
+  {
+   "name": "Start-up task configuration",
+   "source_path": "src/app/task/config/ftask_cfg.c",
+   "calls": [
+    "DATA_Initialize"
+   ],
+   "consumption_evidence": "STD_RETURN_TYPE_e retval = DATA_Initialize(); at src/app/task/config/ftask_cfg.c L190, with the result tested at L191."
+  },
+  {
+   "name": "Application algorithms and state estimation",
+   "source_path": "src/app/application/algorithm/state_estimation/soc/counting/soc_counting.c",
+   "calls": [
+    "DATA_Read1DataBlock"
+   ],
+   "consumption_evidence": "Through the DATA_READ_DATA macro, which resolves to the one-to-four block read family: DATA_READ_DATA(&tableMinMaxCellVoltages); at src/app/application/algorithm/state_estimation/soc/counting/soc_counting.c L171."
+  }
+ ],
+ "elements": [
+  {
+   "element_id": "IFSE-000401",
+   "symbol": "DATA_Read1DataBlock",
+   "declaration": "extern STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0);",
+   "declaration_path": "src/app/engine/database/database.h",
+   "declaration_line": 224,
+   "implementation_path": "src/app/engine/database/database.c",
+   "implementation_line": 299,
+   "providing_module": "Database engine",
+   "consuming_module": "Application algorithms and state-estimation modules",
+   "parameters": [
+    {
+     "name": "pDataToReceiver0",
+     "c_type": "void *",
+     "direction": "out",
+     "unit": "one data block of the caller's own type",
+     "meaning": "Destination for a copy of one database entry.",
+     "valid_range": "Non-null. The caller's database entry must carry the uniqueId of the entry it expects, because the engine resolves the entry from that field rather than from the pointer.",
+     "range_evidence": "The engine asserts it: FAS_ASSERT(pData0 != NULL_PTR) at src/app/engine/database/database.c L134.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "The access request was enqueued on the database queue within the queue timeout.",
+     "STD_NOT_OK": "The queue send did not succeed within the timeout, so the request was not enqueued and the read or write did not happen."
+    },
+    "default_on_no_information": "The return value reports only enqueue success. It does not report whether the access itself later succeeded, and it cannot: the caller has already returned by the time DATA_Task performs the copy.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85; the success branch is src/app/engine/database/database.c L158-L159 and the initial value at L146 is returned at L160."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value reports enqueue success only. The data itself arrives later, asynchronously.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The public element only forwards to the static DATA_AccessDatabaseEntries at src/app/engine/database/database.c L299-L302, which returns STD_OK on a successful queue send at L158-L159. Nothing in the return path reports whether the copy happened."
+   },
+   "timing": {
+    "period_ms": 1,
+    "period_imposed_by_source": true,
+    "evidence": "The consumer side is on the 1 ms engine task: DATA_Task() is called from FTSK_RunUserCodeEngine at src/app/task/config/ftask_cfg.c L211, and FTSK_TASK_ENGINE_CYCLE_TIME is 1u at src/app/task/config/ftask_cfg.h L76. The caller side has no period at all; it enqueues and returns.",
+    "timeouts": [
+     {
+      "name": "DATA_MAX_QUEUE_TIMEOUT_MS",
+      "value": "10",
+      "unit": "ms",
+      "meaning": "The longest a caller will block trying to enqueue its access request.",
+      "evidence": "src/app/engine/database/database.c L79 defines DATA_MAX_QUEUE_TIMEOUT_MS as (10u); L81 converts it to queue ticks as DATA_QUEUE_TIMEOUT_MS (DATA_MAX_QUEUE_TIMEOUT_MS / OS_TICK_RATE_MS) and L83 statically asserts the result is greater than zero."
+     }
+    ]
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "serialised_by_queue_or_mutex",
+    "evidence": "Serialisation is achieved by routing every access through one queue. DATA_AccessDatabaseEntries sends the request with OS_SendToBackOfQueue(ftsk_databaseQueue, ...) at src/app/engine/database/database.c L158, and the single consumer drains that queue in DATA_Task with OS_ReceiveFromQueue at L284. The queue handle itself is declared in src/app/task/ftask/freertos/ftask_freertos.c L156 and created there at L199.",
+    "protection_mechanism": "Single queue with one consumer; no mutex and no critical section around the copy."
+   },
+   "error_paths": [
+    {
+     "condition": "pDataToReceiver0 is NULL.",
+     "observed_behaviour": "A precondition assertion trips at the top of the static engine function.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/engine/database/database.c L134"
+    },
+    {
+     "condition": "The database queue send does not complete within DATA_QUEUE_TIMEOUT_MS.",
+     "observed_behaviour": "The initial STD_NOT_OK is returned to the caller and no access is performed.",
+     "signalled_as": "STD_NOT_OK",
+     "evidence": "src/app/engine/database/database.c L146, L157-L160"
+    },
+    {
+     "condition": "The queue does not yet exist.",
+     "observed_behaviour": "Initialisation records this: DATA_Initialize sets retval to STD_NOT_OK when ftsk_databaseQueue is NULL_PTR.",
+     "signalled_as": "STD_NOT_OK from DATA_Initialize",
+     "evidence": "src/app/engine/database/database.c L272-L273"
+    },
+    {
+     "condition": "The caller's uniqueId does not name an existing entry.",
+     "observed_behaviour": "Not handled by this element. The engine resolves entries through a uniqueId-to-index table built at initialisation; an unmatched id is not reported to the caller by the access path this record specifies.",
+     "signalled_as": "not signalled on this path",
+     "evidence": "The uniqueId-to-index table is built in DATA_Initialize at src/app/engine/database/database.c L258-L270, which asserts the header pointer is non-null at L262 and rejects an id at or above DATA_BLOCK_ID_MAX at L265 by setting retval to STD_NOT_OK."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state which entry it reads. It is resolved from the uniqueId field inside the caller's own struct, so the 'name' of the data block is a property of the caller's object rather than an argument, and nothing documents that convention at the interface.",
+    "The interface does not state the size of the copy or how the destination length is checked against the entry length. DATA_CopyData takes a dataLength that comes from the registered entry and a destination pointer whose size the engine cannot know, so the interface carries an unchecked buffer contract.",
+    "The interface is asynchronous and does not say so. A caller gets STD_OK and no data, and nothing in the header tells it that the data has not arrived yet.",
+    "The interface does not state whether the copy is atomic with respect to a concurrent writer. It is not, because the copy happens in the consumer task while another task may be enqueuing, and the header does not say what a reader sees if a writer is mid-update.",
+    "The interface states no coherency rule for multi-entry reads. DATA_Read4DataBlocks exists and can copy four entries in one request, but nothing states whether those four copies are taken at one instant."
+   ]
+  },
+  {
+   "element_id": "IFSE-000402",
+   "symbol": "DATA_Initialize",
+   "declaration": "STD_RETURN_TYPE_e DATA_Initialize(void)",
+   "declaration_path": "src/app/engine/database/database.c",
+   "declaration_line": 228,
+   "implementation_path": "src/app/engine/database/database.c",
+   "implementation_line": 228,
+   "providing_module": "Database engine",
+   "consuming_module": "Start-up task configuration",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "The access request was enqueued on the database queue within the queue timeout.",
+     "STD_NOT_OK": "The queue send did not succeed within the timeout, so the request was not enqueued and the read or write did not happen."
+    },
+    "default_on_no_information": "The return value reports only enqueue success. It does not report whether the access itself later succeeded, and it cannot: the caller has already returned by the time DATA_Task performs the copy.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85; the success branch is src/app/engine/database/database.c L158-L159 and the initial value at L146 is returned at L160."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value STD_RETURN_TYPE_e.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The single caller in the source tests it and traps on failure: STD_RETURN_TYPE_e retval = DATA_Initialize(); at src/app/task/config/ftask_cfg.c L190 followed by if (retval == STD_NOT_OK) { FAS_ASSERT(FAS_TRAP); } at src/app/task/config/ftask_cfg.c L191-L194."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Called once during start-up from the task initialisation function at src/app/task/config/ftask_cfg.c L190."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Called from task start-up at src/app/task/config/ftask_cfg.c L190. The source comments the surrounding function as operating under the assumption that the operating system is not yet running."
+   },
+   "error_paths": [
+    {
+     "condition": "A registered data block's header pointer is NULL.",
+     "observed_behaviour": "A precondition assertion traps.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/engine/database/database.c L262"
+    },
+    {
+     "condition": "A block id is at or above DATA_BLOCK_ID_MAX.",
+     "observed_behaviour": "retval is set to STD_NOT_OK and initialisation continues rather than aborting, so the caller learns of it only from the return value.",
+     "signalled_as": "STD_NOT_OK",
+     "evidence": "src/app/engine/database/database.c L264-L268"
+    },
+    {
+     "condition": "The database queue was not created.",
+     "observed_behaviour": "retval is set to STD_NOT_OK.",
+     "signalled_as": "STD_NOT_OK",
+     "evidence": "src/app/engine/database/database.c L272-L273"
+    },
+    {
+     "condition": "The task queues have not all been created yet.",
+     "observed_behaviour": "A precondition assertion traps before any entry is initialised: the element copies the all-queues-created flag to a local, then asserts it is true.",
+     "signalled_as": "precondition assertion",
+     "evidence": "const bool allQueuesCreatedCopyForAssert = ftsk_allQueuesCreated; followed by FAS_ASSERT(allQueuesCreatedCopyForAssert == true); at src/app/engine/database/database.c L232-L233"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state how many data blocks must be registered, or what a caller must do to register one. The registry is a separate data structure the interface never names.",
+    "The interface does not state that it partially succeeds: on an out-of-range id it sets the failure flag and keeps initialising the remaining entries, so a returned STD_NOT_OK does not say which entries were set up correctly.",
+    "The interface does not state the initial value written into each entry. The body zeroes every byte from the size of the uniqueId field onward, which is an implementation choice the interface does not describe.",
+    "The interface returns no diagnostic identifying which block failed, so a failure is actionable only by inspecting the caller's own configuration."
+   ]
+  },
+  {
+   "element_id": "IFSE-000403",
+   "symbol": "DATA_Task",
+   "declaration": "void DATA_Task(void)",
+   "declaration_path": "src/app/engine/database/database.c",
+   "declaration_line": 278,
+   "implementation_path": "src/app/engine/database/database.c",
+   "implementation_line": 278,
+   "providing_module": "Database engine",
+   "consuming_module": "1 ms engine task",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value; this is the single consumer side of the queue.",
+    "evidence": "Declared void in the header and defined void at src/app/engine/database/database.c L278."
+   },
+   "validity_signalling": {
+    "mechanism": "None returned. It performs the queued accesses.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "Defined void at src/app/engine/database/database.c L278; it drains the queue and performs copies."
+   },
+   "timing": {
+    "period_ms": 1,
+    "period_imposed_by_source": true,
+    "evidence": "Called from FTSK_RunUserCodeEngine at src/app/task/config/ftask_cfg.c L211, whose cycle time is FTSK_TASK_ENGINE_CYCLE_TIME (1u) at src/app/task/config/ftask_cfg.h L76."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "not_reentrant",
+    "evidence": "It is the only consumer of the database queue: it tests the queue handle at src/app/engine/database/database.c L279 and receives from it at L284. A second concurrent invocation would not be excluded by any lock in this element.",
+    "protection_mechanism": "Queue with a single consumer; no mutex."
+   },
+   "error_paths": [
+    {
+     "condition": "The queue handle is NULL.",
+     "observed_behaviour": "The function returns without doing anything.",
+     "signalled_as": "nothing",
+     "evidence": "src/app/engine/database/database.c L279"
+    },
+    {
+     "condition": "A received request names an access type that is neither read nor write.",
+     "observed_behaviour": "DATA_CopyData traps on its else branch.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/engine/database/database.c L190-L192, marked with an LCOV_EXCL_LINE exclusion"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface does not state how many queued requests it will process in one call. It receives in a loop, so the bound is the queue length, and the interface does not name either.",
+    "The interface does not state a worst-case execution time or a budget, although it is the serialisation point for every data block in the system. Nothing in the interface reserves time for it against the 1 ms cycle.",
+    "The interface does not state what a producer should do when the queue is full beyond the enqueue timeout, which lives in the caller-side element.",
+    "The interface does not state whether a queued access can be stale by the time it is performed, which is the central timing question an asynchronous interface raises."
+   ]
+  }
+ ],
+ "interface_level_gaps": [
+  {
+   "gap": "The interface is asynchronous and does not say so.",
+   "consequence": "A caller that treats STD_OK as 'the data is in my buffer' is wrong, and nothing in the header would tell it so. A requirement written from this header alone would be unsound.",
+   "evidence": "The read element at src/app/engine/database/database.c L299-L302 only enqueues; the copy is performed later in DATA_Task at L278-L294."
+  },
+  {
+   "gap": "The return value reports enqueue success and nothing else.",
+   "consequence": "There is no way for a caller to learn that its access failed after it was accepted, and no completion callback. A requirement about detection of a failed read cannot be satisfied through this return value.",
+   "evidence": "src/app/engine/database/database.c L158-L159 sets STD_OK on a successful OS_SendToBackOfQueue and nothing else in the access path returns a value."
+  },
+  {
+   "gap": "The entry is identified by a field inside the caller's own struct rather than by an argument, and the copy length is unchecked.",
+   "consequence": "A caller that gets the uniqueId wrong reads a different entry, or none, and the interface will not say so. The copy length comes from the registered entry and is applied to a destination whose size the engine cannot verify.",
+   "evidence": "FAS_ASSERT(pData0 != NULL_PTR) at src/app/engine/database/database.c L134 is the only argument check; the uniqueId-to-index table is built at L258-L270; DATA_CopyData takes the registered dataLength at src/app/engine/database/database.c L164-L196."
+  },
+  {
+   "gap": "No coherency or atomicity statement for multi-entry reads and no staleness bound for any read.",
+   "consequence": "The interface cannot support a requirement that a group of values be mutually consistent, and a reader has no way to know how old the data it just requested is. The serialisation is real, and so is the absence of any stated snapshot semantics.",
+   "evidence": "The read family reaches four entries in one request, and DATA_CopyData copies each entry independently at src/app/engine/database/database.c L164-L196 with no snapshot or lock spanning them."
+  }
+ ],
+ "verification_status": {
+  "analysed_against_running_code": false,
+  "conformance_tested": false,
+  "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+ },
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "approval_claimed": false,
+  "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+ }
+}

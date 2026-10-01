@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-01T16:36:58Z |
+| Generated | 2026-10-01T19:25:12Z |
 
 ## Scope
 
@@ -219,6 +219,11 @@ flowchart TD
     "FB2-SW-DSN-000004" --- "FB2-SW-DSN-000001"
     "FB2-SW-DSN-000005" --- "FB2-SW-DSN-000002"
     "FB2-SW-DSN-000006" --- "FB2-SW-DSN-000003"
+    "FB2-SW-IFS-000001" --- "FB2-SW-DSN-000001"
+    "FB2-SW-IFS-000002" --- "FB2-SW-DSN-000002"
+    "FB2-SW-IFS-000003" --- "FB2-SW-DSN-000003"
+    "FB2-SW-IFS-000004" --- "FB2-SW-IMP-000004"
+    "FB2-SYS-HVA-000001" --- "FB2-HW-HCB-000001"
     "FB2-SYS-NED-000001" --- "FB2-SAF-ITE-000001"
     "FB2-SYS-NED-000002" --- "FB2-SAF-ITE-000001"
     "FB2-SYS-NED-000003" --- "FB2-SAF-ITE-000001"
@@ -296,4 +301,4 @@ flowchart TD
 
 ---
 
-*Generated: 2026-10-01T16:36:58Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-01T19:25:12Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

@@ -1,0 +1,552 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://foxbms2.softwaredevlabs.org/schemas/software_interface_specification.schema.json",
+ "title": "Software Interface Specification Schema",
+ "description": "Schema for a software interface specification record: one module's exported interface, specified from an analysis of the source at a pinned commit. The schema exists because a signal table is not an interface specification. A signal table says what values cross a boundary; an interface specification says who provides and who consumes, what the real C signature is, what the parameters mean and what range is legal, how validity is signalled on the real error paths, what timing and concurrency the source imposes, and what the source leaves unspecified. Each of those is a separate typed field here so that an omission is visible rather than implied. Every element carries the path and line of the declaration and of the implementation, and the `not_specified_by_source` list is required so that silence is recorded as a finding rather than as completeness.",
+ "allOf": [
+  {
+   "$ref": "artifact-base.schema.json"
+  },
+  {
+   "type": "object",
+   "required": [
+    "interface_class",
+    "analysis",
+    "providing_module",
+    "consuming_modules",
+    "elements",
+    "interface_level_gaps",
+    "authority_and_independence"
+   ],
+   "properties": {
+    "artifact_type": {
+     "const": "software_interface_specification",
+     "type": "string"
+    },
+    "interface_id": {
+     "type": "string",
+     "pattern": "^IFS-[A-Z0-9]+(-[A-Z0-9]+)*-[0-9]{6}$",
+     "description": "A stable interface identity. The middle segment names the boundary within its class so that the identifier is readable without the record: AFE-ACQ, SOA-MON, CONTACT, CAN-TRAN, DATABASE, DIAGNOS, OS-ABS, SERIAL."
+    },
+    "interface_class": {
+     "type": "string",
+     "enum": [
+      "acquisition",
+      "monitoring",
+      "actuation",
+      "communication",
+      "data_exchange",
+      "diagnostics",
+      "platform_service",
+      "serial_bus"
+     ],
+     "description": "The class of boundary this interface belongs to. Grouping is by boundary, not by file, because the requirement that a requirement set is derived from groups by boundary too."
+    },
+    "analysis": {
+     "type": "object",
+     "required": [
+      "method",
+      "commit",
+      "direction",
+      "independence",
+      "independence_statement",
+      "what_this_record_is_not"
+     ],
+     "properties": {
+      "method": {
+       "type": "string",
+       "enum": [
+        "source_analysis_at_pinned_commit"
+       ]
+      },
+      "commit": {
+       "type": "string",
+       "pattern": "^[0-9a-f]{7,40}$"
+      },
+      "direction": {
+       "type": "string",
+       "enum": [
+        "source_to_specification",
+        "code_to_requirement"
+       ],
+       "description": "source_to_specification: the source was read to establish what the interface IS, and the specification records it. This is the direction a specification is written in. code_to_requirement: the code was read to work out what to require, which is the direction that makes a requirement back-inferred rather than analysed."
+      },
+      "independence": {
+       "type": "string",
+       "enum": [
+        "not_independent",
+        "independent"
+       ]
+      },
+      "independence_statement": {
+       "type": "string",
+       "minLength": 1
+      },
+      "tools_used": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "what_this_record_is_not": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "additionalProperties": false
+    },
+    "providing_module": {
+     "type": "object",
+     "required": [
+      "name",
+      "role",
+      "source_paths"
+     ],
+     "properties": {
+      "name": {
+       "type": "string",
+       "minLength": 1
+      },
+      "role": {
+       "type": "string",
+       "minLength": 1
+      },
+      "source_paths": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "string"
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     },
+     "additionalProperties": false
+    },
+    "consuming_modules": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "name",
+       "source_path",
+       "calls",
+       "consumption_evidence"
+      ],
+      "properties": {
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "source_path": {
+        "type": "string",
+        "minLength": 1
+       },
+       "calls": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "consumption_evidence": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "elements": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "element_id",
+       "symbol",
+       "declaration",
+       "declaration_path",
+       "declaration_line",
+       "implementation_path",
+       "implementation_line",
+       "providing_module",
+       "consuming_module",
+       "parameters",
+       "return_contract",
+       "validity_signalling",
+       "timing",
+       "concurrency",
+       "error_paths",
+       "not_specified_by_source"
+      ],
+      "properties": {
+       "element_id": {
+        "type": "string",
+        "pattern": "^IFSE-[0-9]{6}$"
+       },
+       "symbol": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       },
+       "declaration": {
+        "type": "string",
+        "minLength": 1,
+        "description": "The C declaration as it stands in the source, transcribed, not paraphrased."
+       },
+       "declaration_path": {
+        "type": "string",
+        "minLength": 1
+       },
+       "declaration_line": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "implementation_path": {
+        "type": "string",
+        "minLength": 1
+       },
+       "implementation_line": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "providing_module": {
+        "type": "string",
+        "minLength": 1
+       },
+       "consuming_module": {
+        "type": "string",
+        "minLength": 1
+       },
+       "parameters": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "name",
+          "c_type",
+          "direction",
+          "unit",
+          "meaning"
+         ],
+         "properties": {
+          "name": {
+           "type": "string",
+           "minLength": 1
+          },
+          "c_type": {
+           "type": "string",
+           "minLength": 1
+          },
+          "direction": {
+           "type": "string",
+           "enum": [
+            "in",
+            "out",
+            "in_out",
+            "none"
+           ]
+          },
+          "unit": {
+           "type": "string",
+           "minLength": 1
+          },
+          "meaning": {
+           "type": "string",
+           "minLength": 1
+          },
+          "valid_range": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "range_evidence": {
+           "type": "string"
+          },
+          "range_enforcement": {
+           "type": "string",
+           "enum": [
+            "precondition_assertion",
+            "returned_error",
+            "clamped_or_truncated",
+            "not_enforced"
+           ]
+          },
+          "nullable": {
+           "type": "boolean"
+          }
+         },
+         "additionalProperties": false
+        }
+       },
+       "return_contract": {
+        "type": "object",
+        "required": [
+         "c_type",
+         "values",
+         "default_on_no_information"
+        ],
+        "properties": {
+         "c_type": {
+          "type": "string",
+          "minLength": 1
+         },
+         "values": {
+          "type": "object",
+          "description": "Per-value meaning. Keys are the literal enumerators the source defines; no value is listed that the source does not define.",
+          "additionalProperties": {
+           "type": "string"
+          }
+         },
+         "default_on_no_information": {
+          "type": "string",
+          "minLength": 1
+         },
+         "evidence": {
+          "type": "string"
+         }
+        },
+        "additionalProperties": false
+       },
+       "validity_signalling": {
+        "type": "object",
+        "required": [
+         "mechanism",
+         "failure_is_observable_to_caller",
+         "evidence"
+        ],
+        "properties": {
+         "mechanism": {
+          "type": "string",
+          "minLength": 1
+         },
+         "failure_is_observable_to_caller": {
+          "type": "boolean"
+         },
+         "evidence": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "additionalProperties": false
+       },
+       "timing": {
+        "type": "object",
+        "required": [
+         "period_ms",
+         "period_imposed_by_source",
+         "evidence"
+        ],
+        "properties": {
+         "period_ms": {
+          "type": [
+           "number",
+           "null"
+          ]
+         },
+         "period_imposed_by_source": {
+          "type": "boolean"
+         },
+         "evidence": {
+          "type": "string",
+          "minLength": 1
+         },
+         "timeouts": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "required": [
+            "name",
+            "value",
+            "unit",
+            "meaning",
+            "evidence"
+           ],
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "value": {
+             "type": "string"
+            },
+            "unit": {
+             "type": "string"
+            },
+            "meaning": {
+             "type": "string"
+            },
+            "evidence": {
+             "type": "string"
+            }
+           },
+           "additionalProperties": false
+          }
+         }
+        },
+        "additionalProperties": false
+       },
+       "concurrency": {
+        "type": "object",
+        "required": [
+         "calling_context",
+         "reentrancy",
+         "evidence"
+        ],
+        "properties": {
+         "calling_context": {
+          "type": "string",
+          "enum": [
+           "task",
+           "interrupt",
+           "both",
+           "unspecified"
+          ]
+         },
+         "reentrancy": {
+          "type": "string",
+          "enum": [
+           "reentrant",
+           "guarded_by_critical_section",
+           "serialised_by_queue_or_mutex",
+           "not_reentrant",
+           "unspecified"
+          ]
+         },
+         "evidence": {
+          "type": "string",
+          "minLength": 1
+         },
+         "protection_mechanism": {
+          "type": "string"
+         }
+        },
+        "additionalProperties": false
+       },
+       "error_paths": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "condition",
+          "observed_behaviour",
+          "evidence"
+         ],
+         "properties": {
+          "condition": {
+           "type": "string",
+           "minLength": 1
+          },
+          "observed_behaviour": {
+           "type": "string",
+           "minLength": 1
+          },
+          "signalled_as": {
+           "type": "string"
+          },
+          "evidence": {
+           "type": "string",
+           "minLength": 1
+          }
+         },
+         "additionalProperties": false
+        }
+       },
+       "not_specified_by_source": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "interface_level_gaps": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "gap",
+       "consequence"
+      ],
+      "properties": {
+       "gap": {
+        "type": "string",
+        "minLength": 1
+       },
+       "consequence": {
+        "type": "string",
+        "minLength": 1
+       },
+       "evidence": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "verification_status": {
+     "type": "object",
+     "required": [
+      "analysed_against_running_code",
+      "conformance_tested"
+     ],
+     "properties": {
+      "analysed_against_running_code": {
+       "type": "boolean"
+      },
+      "conformance_tested": {
+       "type": "boolean"
+      },
+      "statement": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "authority_and_independence": {
+     "type": "object",
+     "required": [
+      "independence",
+      "independence_statement",
+      "approval_claimed",
+      "interface_agreement_status"
+     ],
+     "properties": {
+      "independence": {
+       "type": "string",
+       "enum": [
+        "not_independent",
+        "independent"
+       ]
+      },
+      "independence_statement": {
+       "type": "string",
+       "minLength": 1
+      },
+      "approval_claimed": {
+       "type": "boolean"
+      },
+      "interface_agreement_status": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    }
+   },
+   "additionalProperties": true
+  }
+ ]
+}

@@ -1,0 +1,180 @@
+{
+ "id": "FB2-SYS-HVA-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "hardware_variant_applicability",
+ "engineering_domain": "system",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "System hardware variant applicability: which board a system requirement applies to",
+ "owner_role": "sys_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-HW-000004"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 3, Clause 7 and Part 4, Clause 7 (item definition and its configuration)",
+   "status": "partially_mapped",
+   "rationale": "This record states which hardware configuration a system-level requirement is stated against, which is the item configuration clause of Part 4. It does not allocate any safety requirement to any ASIL and defines no item boundary beyond pointing at the configuration baseline."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SYS.2",
+   "status": "partially_mapped",
+   "rationale": "Makes explicit the configuration that the existing system requirements are stated against. It adds no system requirement and does not analyse one."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "HWE.1",
+   "status": "partially_mapped",
+   "rationale": "Supplies the applicability statement the hardware technical requirements were missing: which released board and version each hardware requirement is about."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sys_engineer",
+   "description": "Reconciles the ten board designations the corpus variant matrix names against the seven the release index releases, and records which of the three unmatched designations are documented in this repository and which is not. Every figure is re-derived from the two files at the pinned commit rather than taken from either file's own claims."
+  }
+ ],
+ "problem": "A system requirement is only meaningful against a configuration. This corpus holds system requirements, hardware technical requirements and a variant matrix, but until this record no artefact said which released board and version a requirement is about. Two first-party files in this repository each list hardware, and they do not list the same hardware. This record fixes the configuration and states the disagreement, so that a system requirement can be traced to a board rather than to a variant label.",
+ "inputs": [
+  {
+   "file": "hardware/README.md",
+   "role": "release index",
+   "derivation": "Every table row carrying a Version cell was parsed: 10 release rows across 7 distinct Item strings."
+  },
+  {
+   "file": "docs/artifacts/sources/variant-matrix.json",
+   "role": "corpus variant registry",
+   "derivation": "The master_board, slave_board and interface fields of every variant were collected into the set of board designations the registry names: 9 of them."
+  },
+  {
+   "file": "docs/hardware/",
+   "role": "tracked hardware documentation",
+   "derivation": "git ls-tree -r --name-only 308028fb -- docs/hardware/ returns 166 tracked files. Their per-board-family directories were used to establish which board is documented in this repository and which is not."
+  }
+ ],
+ "reconciliation": {
+  "board_designations_in_the_variant_registry": [
+   "HW-BMS-MASTER",
+   "HW-BMS-SLAVE-12-LTC6804",
+   "HW-BMS-SLAVE-14-MAX17852",
+   "HW-BMS-SLAVE-14-MC33775A",
+   "HW-BMS-SLAVE-16-ADES1830",
+   "HW-BMS-SLAVE-18-LTC6813",
+   "HW-IF-LTC6820",
+   "HW-IF-MAX17841B",
+   "HW-IF-MC33664"
+  ],
+  "registry_field_values_as_written": [
+   "HW-BMS-MASTER",
+   "HW-BMS-SLAVE-12-LTC6804",
+   "HW-BMS-SLAVE-14-MAX17852",
+   "HW-BMS-SLAVE-14-MC33775A",
+   "HW-BMS-SLAVE-16-ADES1830",
+   "HW-BMS-SLAVE-18-LTC6813",
+   "HW-IF-LTC6820",
+   "HW-IF-MAX17841B",
+   "HW-IF-MC33664"
+  ],
+  "qualifiers_appended_to_a_designation_in_the_registry": {
+   "HW-BMS-SLAVE-12-LTC6804": "the registry writes this board as 'HW-BMS-SLAVE-12-LTC6804 (uses LTC6806 compatible)'",
+   "HW-BMS-SLAVE-14-MAX17852": "the registry writes this board as 'HW-BMS-SLAVE-14-MAX17852 (MAX17841B compatible)'",
+   "HW-IF-MAX17841B": "the registry writes this interface as 'HW-IF-MAX17841B (UART)'",
+   "HW-IF-MC33664": "the registry embeds this interface inside a free-text value: the MC33775A variant writes its interface as 'SPI with transformer isolation (HW-IF-MC33664)'"
+  },
+  "registry_field_values_that_are_not_board_designations": [
+   "Not documented in hardware/ (driver only)",
+   "SPI/DMA (no isoSPI)",
+   "SPI/UART"
+  ],
+  "registry_field_value_note": "Three registry field values carry a designation inside a parenthetical qualifier and one carries no designation at all. The designation is extracted wherever it appears in the value; the qualifier is recorded because it carries real information, in particular the statement that the MAX17852 board is MAX17841B compatible and that the LTC6804 board is used with an LTC6806. The value 'Not documented in hardware/ (driver only)' is the slave_board field of VAR-AFE-TI-BQ79XXX and names no board at all: it is a literal statement that no board exists for that variant, and it is carried as that statement rather than as a designation.",
+  "distinct_items_in_the_release_index": [
+   "LTC 12 Cell Slave (LTC6811-1)",
+   "LTC 18 Cell Slave (LTC6813-1)",
+   "LTC Interface (LTC6820)",
+   "MAXIM Interface (MAX17841b)",
+   "NXP 14 Cell Slave (MC33775A)",
+   "NXP Interface (MC33664)",
+   "TI BMS-Master"
+  ],
+  "designations_with_a_released_version": [
+   "HW-BMS-MASTER",
+   "HW-BMS-SLAVE-14-MC33775A",
+   "HW-BMS-SLAVE-18-LTC6813",
+   "HW-IF-LTC6820",
+   "HW-IF-MAX17841B",
+   "HW-IF-MC33664"
+  ],
+  "designation_count_with_a_released_version": 6,
+  "released_items_the_variant_registry_does_not_name": [
+   "LTC 12 Cell Slave (LTC6811-1)"
+  ],
+  "designations_with_no_released_version": [
+   {
+    "designation": "HW-BMS-SLAVE-16-ADES1830",
+    "named_by_variant": "VAR-AFE-ADI-1830",
+    "variant_note": "Driver fully implemented. Hardware design package available. Not in reference configuration.",
+    "documented_in_this_repository": true,
+    "documentation_evidence": "docs/hardware/slaves/16-adi-ades1830-vx.x.x/ holds release notes for v0.9.0 and a full per-version artefact set: a draw.io source, eight connector tables, an electrical-ratings table, mechanical dimensions, a pinout table and a pinout draw.io source.",
+    "finding": "The board is documented here at v0.9.0 and released nowhere in the release index. The variant note says a hardware design package is available; the release index contains no ADI board at any version. Both statements concern the same board and only one of them is supported by the release index. The registry is not edited by this record; the disagreement is recorded."
+   },
+   {
+    "designation": "HW-BMS-SLAVE-12-LTC6804",
+    "named_by_variant": "VAR-AFE-LTC-6806",
+    "variant_note": "Legacy part. Driver maintained for compatibility. Not recommended for new designs.",
+    "documented_in_this_repository": true,
+    "documentation_evidence": "docs/hardware/slaves/12-ltc-ltc6804-1-vx.x.x/ holds a v1.x.x release note, a draw.io source and four connector tables. The slaves.rst overview states that no changelog is available for this family.",
+    "finding": "A versioned note exists whose version component is the literal x.x.x, so this board has no released version and no version identity at all in this repository. It is documented and unreleased, which is consistent with the variant note that it is not recommended for new designs."
+   },
+   {
+    "designation": "HW-BMS-SLAVE-14-MAX17852",
+    "named_by_variant": "VAR-AFE-MAXIM-17852",
+    "variant_note": "Next-gen Maxim part. Driver partially implemented.",
+    "documented_in_this_repository": false,
+    "documentation_evidence": "The board's whole tree under docs/hardware/ is 1 file(s): docs/hardware/slaves/14-maxim-max17852-vx.x.x/.dummy.",
+    "finding": "This is the one board the variant registry names for which this repository holds no documentation beyond a placeholder file, which is consistent with the variant note that its driver is only partially implemented. It is also the one board in the registry with neither a release nor documentation, so nothing at all in this repository supports a requirement stated against it."
+   }
+  ],
+  "designation_count_with_no_released_version": 3,
+  "released_but_not_named_by_the_registry_note": "The release index releases the 12-cell LTC6811-1 slave at two versions, 2.1.5 and 2.1.7, and the variant registry names no board designation for it. The designation HW-BMS-SLAVE-12-LTC6811 exists, but in docs/artifacts/sources/source-inventory.json, not in the variant matrix. The gap runs in both directions and neither file is complete on its own: the registry names three boards that are not released, and the release index sells a board the registry does not name. Both facts are recorded; neither file is edited here.",
+  "statement": "The variant registry names nine board designations across its master_board, slave_board and interface fields. Six of them correspond to a board that the release index releases. Three do not: two are documented in this repository but released nowhere, and one is neither documented nor released. Separately, one variant, VAR-AFE-TI-BQ79XXX, names no board at all: its slave_board field is the literal text 'Not documented in hardware/ (driver only)'. A system requirement stated against any of the six is traceable to a released board and a released version. A requirement stated against any of the three is not, and a requirement stated against the TI BQ79xxx variant has no board to be stated against. This record says so rather than letting a variant label imply a configuration that does not exist."
+ },
+ "applicability_statement": "Every hardware and system requirement in this corpus is stated against one of the six released board designations fixed by FB2-HW-HCB-000001, at the released version named there. No requirement in this corpus is stated against HW-BMS-SLAVE-16-ADES1830, HW-BMS-SLAVE-12-LTC6804 or HW-BMS-SLAVE-14-MAX17852, because none of the three is released. The one requirement in this corpus that does name a variant label is the hardware interface record FB2-SYS-HSI-000001, and it is stated against the 12-cell LTC6811-1 and the 18-cell LTC6813-1, both of which are released. This statement is a reconciliation of two files, not a validation of any requirement: it does not establish that any requirement is correct, complete or testable.",
+ "not_established_by_this_record": [
+  "No system requirement. This record adds an applicability statement, not a requirement.",
+  "No ASIL allocation and no safety allocation of any kind.",
+  "No item boundary definition, no item diagram, no allocation of function to hardware.",
+  "No confirmation that the software supports every released board. The corpus records that drivers exist for AFE families including parts with no released board; it does not record which released boards are supported, because no file in this repository states that.",
+  "No edit to docs/artifacts/sources/variant-matrix.json. The disagreement is recorded here, not resolved there.",
+  "No verification, no inspection of a board, no measurement.",
+  "No human approval, no independence, no certification, no ASPICE capability level."
+ ],
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent that re-derived both inventories from the two files at the pinned commit. The derivation is reproducible; the judgement is not independent. No engineer has reviewed which reading of the disagreement is correct, and where this record says one file supports a claim the other does not, that is the reading of a machine reading two files, not an audit finding.",
+  "approval_claimed": false
+ }
+}

@@ -1,0 +1,724 @@
+{
+ "id": "FB2-HW-HVP-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "hardware_verification_plan",
+ "engineering_domain": "hardware",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Hardware Verification Plan for the released foxBMS 2 board set",
+ "owner_role": "hw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-HW-000004"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 5, Clause 7 and Clause 9",
+   "status": "partially_mapped",
+   "rationale": "This record is the hardware integration and test plan a Part 5 configuration-management and hardware-verification activity would produce. It names no result, and Part 5 expects a test specification and evidence alongside the plan."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "HWE.4",
+   "status": "partially_mapped",
+   "rationale": "The process expects three families: an integration plan, a test specification and test results. This record is the plan. It is not a specification, in the sense of a set of pass/fail limits fixed per parameter, and it carries no result of any kind."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "HWE.3",
+   "status": "gap",
+   "rationale": "Named only to record why this plan cannot reference a schematic: HWE.3 has no backing detailed-design content in this corpus and FB2-HW-HDD-000001 records why. The plan's document-consistency steps would read those designs if they existed here."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "hw_engineer",
+   "description": "First hardware integration and test plan in this corpus. Authored against the board set and the released versions fixed by FB2-HW-HCB-000001. Sixteen steps across five verification levels and four environments; zero steps executed and zero results recorded, because every step needs either the external Altium design sources or a physical board and this repository contains neither."
+  }
+ ],
+ "plan_subject": {
+  "description": "Integration and verification of the seven released foxBMS 2 boards identified in FB2-HW-HCB-000001, at their exact released versions, in the reference configuration the corpus uses for the synthetic_reference profile.",
+  "configuration_baseline_ref": "FB2-HW-HCB-000001",
+  "scope_basis": "The board set and the versions are taken from the release index in FB2-HW-HCB-000001 rather than chosen here, so the plan cannot drift from the configuration it is written against. The reference configuration is master plus LTC6820 interface plus 12-cell slave, which is the configuration docs/artifacts/sources/variant-matrix.json names as VAR-REF-001.",
+  "executed_steps": 0,
+  "results_recorded": 0,
+  "plan_is_not_a_result_statement": "This is a plan. It records sixteen intended verification steps and no completed verification. Nothing in this record demonstrates that any foxBMS 2 board works, conforms to a specification or meets a requirement, and no step here may be cited as evidence for any such claim. A plan with zero executed steps is not partial evidence; it is no evidence."
+ },
+ "verification_levels": [
+  {
+   "level_id": "LVL-DOC",
+   "name": "Documentation consistency against the design sources",
+   "what_it_demonstrates": "That the pinout tables, connector pin assignments, electrical-ratings tables and release notes tracked under docs/hardware/ describe the design that was actually released, for one named released version.",
+   "what_it_does_not_demonstrate": "That the board performs to any electrical, timing or functional specification. A document that matches its design proves nothing about how the board behaves.",
+   "requires_physical_hardware": false,
+   "requires_design_sources": true,
+   "applies_to_roles": [
+    "master",
+    "interface",
+    "slave"
+   ]
+  },
+  {
+   "level_id": "LVL-ELEC",
+   "name": "Electrical verification",
+   "what_it_demonstrates": "That supply currents, cell-voltage sense ranges, digital input thresholds and measurement accuracy of a specific physical board fall inside the ranges the documentation states.",
+   "what_it_does_not_demonstrate": "Anything about a board that was not measured, and nothing about the population of boards built from the same design. One measured board is not a released design.",
+   "requires_physical_hardware": true,
+   "requires_design_sources": false,
+   "applies_to_roles": [
+    "master",
+    "interface",
+    "slave"
+   ]
+  },
+  {
+   "level_id": "LVL-TIME",
+   "name": "Timing and protocol verification",
+   "what_it_demonstrates": "That the isoSPI or SPI or CAN physical layer of a specific board meets the timing the interface specification requires, measured on that board.",
+   "what_it_does_not_demonstrate": "That the timing holds across temperature, supply or board population. Timing margins are temperature-dependent and one board at one temperature is not a characterisation.",
+   "requires_physical_hardware": true,
+   "requires_design_sources": false,
+   "applies_to_roles": [
+    "master",
+    "interface",
+    "slave"
+   ]
+  },
+  {
+   "level_id": "LVL-IF",
+   "name": "Interface and pin-level verification",
+   "what_it_demonstrates": "That the connectors and pins of a specific board are wired as the connector tables state, by continuity and signal measurement on that board.",
+   "what_it_does_not_demonstrate": "That the wiring is as designed, only that it is as documented, and nothing about the design itself.",
+   "requires_physical_hardware": true,
+   "requires_design_sources": true,
+   "applies_to_roles": [
+    "master",
+    "interface",
+    "slave"
+   ]
+  },
+  {
+   "level_id": "LVL-BRINGUP",
+   "name": "Integration bring-up",
+   "what_it_demonstrates": "That a specific assembled master, with its interfaces and slaves, reaches a known operating state under a controlled power sequence, and that the sequence can be repeated.",
+   "what_it_does_not_demonstrate": "That the integrated item meets a system safety requirement. Bring-up shows the hardware powers up and enumerates; it is not a safety verification.",
+   "requires_physical_hardware": true,
+   "requires_design_sources": false,
+   "applies_to_roles": [
+    "master"
+   ]
+  }
+ ],
+ "environments": [
+  {
+   "environment_id": "ENV-OFFLINE-DOC",
+   "name": "Offline documentation review",
+   "capabilities": [
+    "Read the tracked docs/hardware/ tables, notes and changelogs",
+    "Parse the release index",
+    "Re-derive counts mechanically"
+   ],
+   "available_to_this_corpus": true,
+   "availability_reason": "Available: it is this repository. FB2-HW-HCB-000001 was produced in exactly this environment and its counts are reproducible from hardware/README.md."
+  },
+  {
+   "environment_id": "ENV-CAD",
+   "name": "Schematic and layout review with the design sources",
+   "capabilities": [
+    "Open the Altium schematic and layout of a named released version",
+    "Read nets, reference designators, components and BOM lines",
+    "Read the released bill of materials"
+   ],
+   "available_to_this_corpus": false,
+   "availability_reason": "Not available. The Altium sources for all seven boards are external to this repository and were never added to it in any commit, and they are proprietary CAD that an offline text corpus cannot parse in any case. This is an unblock condition, not a missing measurement."
+  },
+  {
+   "environment_id": "ENV-BENCH",
+   "name": "Instrumented hardware bench",
+   "capabilities": [
+    "Programmable supply with current measurement",
+    "Oscilloscope with differential probes",
+    "Current and voltage measurement across the cell-sense and digital connectors",
+    "Thermal chamber or temperature-controlled fixture"
+   ],
+   "available_to_this_corpus": false,
+   "availability_reason": "Not available. Requires physical foxBMS 2 boards, which this repository does not contain and cannot contain. No board exists in any commit: the hardware/ tree is one README."
+  },
+  {
+   "environment_id": "ENV-HIL",
+   "name": "Hardware-in-the-loop rig with a vehicle CAN environment",
+   "capabilities": [
+    "CAN bus with the vehicle-side network",
+    "BMS master firmware image",
+    "Contactor and interlock load simulation",
+    "Fault injection on the CAN bus"
+   ],
+   "available_to_this_corpus": false,
+   "availability_reason": "Not available. Requires assembled hardware plus a vehicle-side CAN environment. The corpus's whole actual_product_evidence dimension stands at 0 target-hardware executions for the same reason."
+  }
+ ],
+ "entry_criteria": [
+  {
+   "criterion": "The hardware configuration under test is identified by board and by released version.",
+   "currently_met": true,
+   "met_by": [
+    "FB2-HW-HCB-000001 fixes 7 board designations and 10 released versions from the release index"
+   ]
+  },
+  {
+   "criterion": "The Altium schematic and layout sources of the boards under test are available to the activity.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "Physical boards of the released versions exist and are identified.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "Bench instrumentation for electrical and timing measurement is available.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "A hardware-in-the-loop environment with a vehicle-side CAN network is available.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "For each board under test, the documentation that states the ratings to be verified against exists in a form that names that version.",
+   "currently_met": false,
+   "met_by": []
+  }
+ ],
+ "exit_criteria": [
+  {
+   "criterion": "Every step in this plan has been executed and its result recorded with the instrument, the ambient condition and the measurement point.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "No LVL-DOC step has an open discrepancy between a tracked document and its released design.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "Every measured value falls inside the documented range at every documented temperature corner, or has an accepted deviation.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "The bring-up power sequence is repeatable, with a stated repeat count and a stated final state.",
+   "currently_met": false,
+   "met_by": []
+  },
+  {
+   "criterion": "Every finding raised by a step is dispositioned.",
+   "currently_met": false,
+   "met_by": []
+  }
+ ],
+ "steps": [
+  {
+   "step_id": "HWE4-STEP-0001",
+   "title": "Cross-check the tracked documentation of TI TMS570LC4357 BMS-Master 1.2.3 against its released Altium design sources",
+   "board_id": "HW-BMS-MASTER-TI-TMS570LC4357",
+   "level_id": "LVL-DOC",
+   "environment_id": "ENV-CAD",
+   "procedure": [
+    "Obtain the release archive named in FB2-HW-HCB-000001 for TI TMS570LC4357 BMS-Master version 1.2.3 and unpack it outside this repository.",
+    "Open the schematic and the layout of that version in Altium Designer, which docs/hardware/design-resources.rst names as the tool required to open them.",
+    "Compare the pinout table, every connector table and every electrical-ratings row the repository tracks for this version against the schematic and layout: docs/hardware/master/ti-tms570lc4357-vx.x.x/ti-tms570lc4357-v1.2.3.rst.",
+    "Record every discrepancy as a finding with the schematic sheet, the net and the reference designator it was found on.",
+    "Record the number of nets, reference designators and BOM lines read from the design, so the comparison has a denominator."
+   ],
+   "acceptance_criteria": [
+    "Every pin assignment in the tracked tables is either confirmed against the schematic or raised as a finding.",
+    "Every electrical rating in the tracked table is either confirmed against the schematic or raised as a finding.",
+    "The set of nets read from the design is recorded, not merely the set of discrepancies."
+   ],
+   "preconditions": [
+    "Release archive obtained from the external Fraunhofer IISB server",
+    "Altium Designer available to open the proprietary sources"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "This is a comparison between a tracked document and the design source it claims to describe. The document side is present in this repository; the design side is not. No Altium source file for this board exists in the working tree or in any commit of any branch, so there is nothing to compare the document against. Reading the CSV is possible and is not the blocker; having a second, independent side to compare it to is.",
+   "unblock_condition": "The Altium release archive for this exact board and version is made available to the verification activity, together with a tool that can open it. Neither is obtainable from this repository.",
+   "expected_source_of_evidence": "A finding list naming schematic sheet, net and reference designator for each discrepancy, plus the counted net and BOM totals, stored as a run log under docs/artifacts/evidence/actual-runs/."
+  },
+  {
+   "step_id": "HWE4-STEP-0002",
+   "title": "Electrical verification of one physical TI TMS570LC4357 BMS-Master 1.2.3 against its documented ratings",
+   "board_id": "HW-BMS-MASTER-TI-TMS570LC4357",
+   "level_id": "LVL-ELEC",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Take one physical TI TMS570LC4357 BMS-Master of the 1.2.3 design out of the released population and record its identity.",
+    "Apply each supply condition the documentation states, at each temperature corner the documentation states, and record the measured current and voltage.",
+    "Measure each cell-sense and digital input threshold against the documented range.",
+    "Record the ambient temperature, the supply setting and the instrument used for every measurement taken."
+   ],
+   "acceptance_criteria": [
+    "Every measured value is inside the documented range at the documented temperature corner, or is raised as a finding.",
+    "Every measurement carries its instrument, its ambient temperature and its supply setting.",
+    "The measured board is identified, and the report states that one board is not a released design."
+   ],
+   "preconditions": [
+    "A physical board of the named design and version exists",
+    "Instrumented bench with a programmable supply, oscilloscope and thermal control"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires a physical board and laboratory instrumentation. This repository contains no hardware: git ls-tree -r --name-only 308028fb -- hardware/ returns one file, hardware/README.md. There is nothing to power up and nothing to probe.",
+   "unblock_condition": "A physical board of the named design and version is available to the verification activity, together with bench instrumentation, and the documented ratings to compare against are identified for that version. For some boards the second half of that condition is itself unmet inside this repository: see the coverage note on this record.",
+   "expected_source_of_evidence": "Instrument records or data-logger files, with the ambient temperature and supply setting per reading."
+  },
+  {
+   "step_id": "HWE4-STEP-0003",
+   "title": "Cross-check the tracked documentation of LTC6820 Interface 1.0.3 against its released Altium design sources",
+   "board_id": "HW-IF-LTC-LTC6820",
+   "level_id": "LVL-DOC",
+   "environment_id": "ENV-CAD",
+   "procedure": [
+    "Obtain the release archive named in FB2-HW-HCB-000001 for LTC6820 Interface version 1.0.3 and unpack it outside this repository.",
+    "Open the schematic and the layout of that version in Altium Designer, which docs/hardware/design-resources.rst names as the tool required to open them.",
+    "Compare the pinout table, every connector table and every electrical-ratings row the repository tracks for this version against the schematic and layout: docs/hardware/interfaces/ltc-ltc6820-vx.x.x/ltc-ltc6820-v1.0.3.rst.",
+    "Record every discrepancy as a finding with the schematic sheet, the net and the reference designator it was found on.",
+    "Record the number of nets, reference designators and BOM lines read from the design, so the comparison has a denominator."
+   ],
+   "acceptance_criteria": [
+    "Every pin assignment in the tracked tables is either confirmed against the schematic or raised as a finding.",
+    "Every electrical rating in the tracked table is either confirmed against the schematic or raised as a finding.",
+    "The set of nets read from the design is recorded, not merely the set of discrepancies."
+   ],
+   "preconditions": [
+    "Release archive obtained from the external Fraunhofer IISB server",
+    "Altium Designer available to open the proprietary sources"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "This is a comparison between a tracked document and the design source it claims to describe. The document side is present in this repository; the design side is not. No Altium source file for this board exists in the working tree or in any commit of any branch, so there is nothing to compare the document against. Reading the CSV is possible and is not the blocker; having a second, independent side to compare it to is.",
+   "unblock_condition": "The Altium release archive for this exact board and version is made available to the verification activity, together with a tool that can open it. Neither is obtainable from this repository.",
+   "expected_source_of_evidence": "A finding list naming schematic sheet, net and reference designator for each discrepancy, plus the counted net and BOM totals, stored as a run log under docs/artifacts/evidence/actual-runs/."
+  },
+  {
+   "step_id": "HWE4-STEP-0004",
+   "title": "Electrical verification of one physical LTC6820 Interface 1.0.3 against its documented ratings",
+   "board_id": "HW-IF-LTC-LTC6820",
+   "level_id": "LVL-ELEC",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Take one physical LTC6820 Interface of the 1.0.3 design out of the released population and record its identity.",
+    "Apply each supply condition the documentation states, at each temperature corner the documentation states, and record the measured current and voltage.",
+    "Measure each cell-sense and digital input threshold against the documented range.",
+    "Record the ambient temperature, the supply setting and the instrument used for every measurement taken."
+   ],
+   "acceptance_criteria": [
+    "Every measured value is inside the documented range at the documented temperature corner, or is raised as a finding.",
+    "Every measurement carries its instrument, its ambient temperature and its supply setting.",
+    "The measured board is identified, and the report states that one board is not a released design."
+   ],
+   "preconditions": [
+    "A physical board of the named design and version exists",
+    "Instrumented bench with a programmable supply, oscilloscope and thermal control"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires a physical board and laboratory instrumentation. This repository contains no hardware: git ls-tree -r --name-only 308028fb -- hardware/ returns one file, hardware/README.md. There is nothing to power up and nothing to probe.",
+   "unblock_condition": "A physical board of the named design and version is available to the verification activity, together with bench instrumentation, and the documented ratings to compare against are identified for that version. For some boards the second half of that condition is itself unmet inside this repository: see the coverage note on this record.",
+   "expected_source_of_evidence": "Instrument records or data-logger files, with the ambient temperature and supply setting per reading."
+  },
+  {
+   "step_id": "HWE4-STEP-0005",
+   "title": "Cross-check the tracked documentation of MC33664 Interface 1.0.2 against its released Altium design sources",
+   "board_id": "HW-IF-NXP-MC33664",
+   "level_id": "LVL-DOC",
+   "environment_id": "ENV-CAD",
+   "procedure": [
+    "Obtain the release archive named in FB2-HW-HCB-000001 for MC33664 Interface version 1.0.2 and unpack it outside this repository.",
+    "Open the schematic and the layout of that version in Altium Designer, which docs/hardware/design-resources.rst names as the tool required to open them.",
+    "Compare the pinout table, every connector table and every electrical-ratings row the repository tracks for this version against the schematic and layout: docs/hardware/interfaces/nxp-mc33664-vx.x.x/nxp-mc33664-v1.0.2.rst.",
+    "Record every discrepancy as a finding with the schematic sheet, the net and the reference designator it was found on.",
+    "Record the number of nets, reference designators and BOM lines read from the design, so the comparison has a denominator."
+   ],
+   "acceptance_criteria": [
+    "Every pin assignment in the tracked tables is either confirmed against the schematic or raised as a finding.",
+    "Every electrical rating in the tracked table is either confirmed against the schematic or raised as a finding.",
+    "The set of nets read from the design is recorded, not merely the set of discrepancies."
+   ],
+   "preconditions": [
+    "Release archive obtained from the external Fraunhofer IISB server",
+    "Altium Designer available to open the proprietary sources"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "This is a comparison between a tracked document and the design source it claims to describe. The document side is present in this repository; the design side is not. No Altium source file for this board exists in the working tree or in any commit of any branch, so there is nothing to compare the document against. Reading the CSV is possible and is not the blocker; having a second, independent side to compare it to is.",
+   "unblock_condition": "The Altium release archive for this exact board and version is made available to the verification activity, together with a tool that can open it. Neither is obtainable from this repository.",
+   "expected_source_of_evidence": "A finding list naming schematic sheet, net and reference designator for each discrepancy, plus the counted net and BOM totals, stored as a run log under docs/artifacts/evidence/actual-runs/."
+  },
+  {
+   "step_id": "HWE4-STEP-0006",
+   "title": "Electrical verification of one physical MC33664 Interface 1.0.2 against its documented ratings",
+   "board_id": "HW-IF-NXP-MC33664",
+   "level_id": "LVL-ELEC",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Take one physical MC33664 Interface of the 1.0.2 design out of the released population and record its identity.",
+    "Apply each supply condition the documentation states, at each temperature corner the documentation states, and record the measured current and voltage.",
+    "Measure each cell-sense and digital input threshold against the documented range.",
+    "Record the ambient temperature, the supply setting and the instrument used for every measurement taken."
+   ],
+   "acceptance_criteria": [
+    "Every measured value is inside the documented range at the documented temperature corner, or is raised as a finding.",
+    "Every measurement carries its instrument, its ambient temperature and its supply setting.",
+    "The measured board is identified, and the report states that one board is not a released design."
+   ],
+   "preconditions": [
+    "A physical board of the named design and version exists",
+    "Instrumented bench with a programmable supply, oscilloscope and thermal control"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires a physical board and laboratory instrumentation. This repository contains no hardware: git ls-tree -r --name-only 308028fb -- hardware/ returns one file, hardware/README.md. There is nothing to power up and nothing to probe.",
+   "unblock_condition": "A physical board of the named design and version is available to the verification activity, together with bench instrumentation, and the documented ratings to compare against are identified for that version. For some boards the second half of that condition is itself unmet inside this repository: see the coverage note on this record.",
+   "expected_source_of_evidence": "Instrument records or data-logger files, with the ambient temperature and supply setting per reading."
+  },
+  {
+   "step_id": "HWE4-STEP-0007",
+   "title": "Cross-check the tracked documentation of MAX17841b Interface 1.0.0 against its released Altium design sources",
+   "board_id": "HW-IF-MAXIM-MAX17841B",
+   "level_id": "LVL-DOC",
+   "environment_id": "ENV-CAD",
+   "procedure": [
+    "Obtain the release archive named in FB2-HW-HCB-000001 for MAX17841b Interface version 1.0.0 and unpack it outside this repository.",
+    "Open the schematic and the layout of that version in Altium Designer, which docs/hardware/design-resources.rst names as the tool required to open them.",
+    "Compare the pinout table, every connector table and every electrical-ratings row the repository tracks for this version against the schematic and layout: docs/hardware/interfaces/maxim-max17841b-vx.x.x/maxim-max17841b-v1.0.0.rst.",
+    "Record every discrepancy as a finding with the schematic sheet, the net and the reference designator it was found on.",
+    "Record the number of nets, reference designators and BOM lines read from the design, so the comparison has a denominator."
+   ],
+   "acceptance_criteria": [
+    "Every pin assignment in the tracked tables is either confirmed against the schematic or raised as a finding.",
+    "Every electrical rating in the tracked table is either confirmed against the schematic or raised as a finding.",
+    "The set of nets read from the design is recorded, not merely the set of discrepancies."
+   ],
+   "preconditions": [
+    "Release archive obtained from the external Fraunhofer IISB server",
+    "Altium Designer available to open the proprietary sources"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "This is a comparison between a tracked document and the design source it claims to describe. The document side is present in this repository; the design side is not. No Altium source file for this board exists in the working tree or in any commit of any branch, so there is nothing to compare the document against. Reading the CSV is possible and is not the blocker; having a second, independent side to compare it to is.",
+   "unblock_condition": "The Altium release archive for this exact board and version is made available to the verification activity, together with a tool that can open it. Neither is obtainable from this repository.",
+   "expected_source_of_evidence": "A finding list naming schematic sheet, net and reference designator for each discrepancy, plus the counted net and BOM totals, stored as a run log under docs/artifacts/evidence/actual-runs/."
+  },
+  {
+   "step_id": "HWE4-STEP-0008",
+   "title": "Electrical verification of one physical MAX17841b Interface 1.0.0 against its documented ratings",
+   "board_id": "HW-IF-MAXIM-MAX17841B",
+   "level_id": "LVL-ELEC",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Take one physical MAX17841b Interface of the 1.0.0 design out of the released population and record its identity.",
+    "Apply each supply condition the documentation states, at each temperature corner the documentation states, and record the measured current and voltage.",
+    "Measure each cell-sense and digital input threshold against the documented range.",
+    "Record the ambient temperature, the supply setting and the instrument used for every measurement taken."
+   ],
+   "acceptance_criteria": [
+    "Every measured value is inside the documented range at the documented temperature corner, or is raised as a finding.",
+    "Every measurement carries its instrument, its ambient temperature and its supply setting.",
+    "The measured board is identified, and the report states that one board is not a released design."
+   ],
+   "preconditions": [
+    "A physical board of the named design and version exists",
+    "Instrumented bench with a programmable supply, oscilloscope and thermal control"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires a physical board and laboratory instrumentation. This repository contains no hardware: git ls-tree -r --name-only 308028fb -- hardware/ returns one file, hardware/README.md. There is nothing to power up and nothing to probe.",
+   "unblock_condition": "A physical board of the named design and version is available to the verification activity, together with bench instrumentation, and the documented ratings to compare against are identified for that version. For some boards the second half of that condition is itself unmet inside this repository: see the coverage note on this record.",
+   "expected_source_of_evidence": "Instrument records or data-logger files, with the ambient temperature and supply setting per reading."
+  },
+  {
+   "step_id": "HWE4-STEP-0009",
+   "title": "Cross-check the tracked documentation of LTC6811-1 12-cell Slave 2.1.7 against its released Altium design sources",
+   "board_id": "HW-SLAVE-12-LTC-LTC6811-1",
+   "level_id": "LVL-DOC",
+   "environment_id": "ENV-CAD",
+   "procedure": [
+    "Obtain the release archive named in FB2-HW-HCB-000001 for LTC6811-1 12-cell Slave version 2.1.7 and unpack it outside this repository.",
+    "Open the schematic and the layout of that version in Altium Designer, which docs/hardware/design-resources.rst names as the tool required to open them.",
+    "Compare the pinout table, every connector table and every electrical-ratings row the repository tracks for this version against the schematic and layout: no per-version note or artefact directory exists in this repository for 2.1.5 or for 2.1.7.",
+    "Record every discrepancy as a finding with the schematic sheet, the net and the reference designator it was found on.",
+    "Record the number of nets, reference designators and BOM lines read from the design, so the comparison has a denominator."
+   ],
+   "acceptance_criteria": [
+    "Every pin assignment in the tracked tables is either confirmed against the schematic or raised as a finding.",
+    "Every electrical rating in the tracked table is either confirmed against the schematic or raised as a finding.",
+    "The set of nets read from the design is recorded, not merely the set of discrepancies."
+   ],
+   "preconditions": [
+    "Release archive obtained from the external Fraunhofer IISB server",
+    "Altium Designer available to open the proprietary sources"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "This is a comparison between a tracked document and the design source it claims to describe. The document side is present in this repository; the design side is not. No Altium source file for this board exists in the working tree or in any commit of any branch, so there is nothing to compare the document against. Reading the CSV is possible and is not the blocker; having a second, independent side to compare it to is.",
+   "unblock_condition": "The Altium release archive for this exact board and version is made available to the verification activity, together with a tool that can open it. Neither is obtainable from this repository.",
+   "expected_source_of_evidence": "A finding list naming schematic sheet, net and reference designator for each discrepancy, plus the counted net and BOM totals, stored as a run log under docs/artifacts/evidence/actual-runs/."
+  },
+  {
+   "step_id": "HWE4-STEP-0010",
+   "title": "Electrical verification of one physical LTC6811-1 12-cell Slave 2.1.7 against its documented ratings",
+   "board_id": "HW-SLAVE-12-LTC-LTC6811-1",
+   "level_id": "LVL-ELEC",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Take one physical LTC6811-1 12-cell Slave of the 2.1.7 design out of the released population and record its identity.",
+    "Apply each supply condition the documentation states, at each temperature corner the documentation states, and record the measured current and voltage.",
+    "Measure each cell-sense and digital input threshold against the documented range.",
+    "Record the ambient temperature, the supply setting and the instrument used for every measurement taken."
+   ],
+   "acceptance_criteria": [
+    "Every measured value is inside the documented range at the documented temperature corner, or is raised as a finding.",
+    "Every measurement carries its instrument, its ambient temperature and its supply setting.",
+    "The measured board is identified, and the report states that one board is not a released design."
+   ],
+   "preconditions": [
+    "A physical board of the named design and version exists",
+    "Instrumented bench with a programmable supply, oscilloscope and thermal control"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires a physical board and laboratory instrumentation. This repository contains no hardware: git ls-tree -r --name-only 308028fb -- hardware/ returns one file, hardware/README.md. There is nothing to power up and nothing to probe.",
+   "unblock_condition": "A physical board of the named design and version is available to the verification activity, together with bench instrumentation, and the documented ratings to compare against are identified for that version. For some boards the second half of that condition is itself unmet inside this repository: see the coverage note on this record.",
+   "expected_source_of_evidence": "Instrument records or data-logger files, with the ambient temperature and supply setting per reading."
+  },
+  {
+   "step_id": "HWE4-STEP-0011",
+   "title": "Cross-check the tracked documentation of LTC6813-1 18-cell Slave 1.1.6 against its released Altium design sources",
+   "board_id": "HW-SLAVE-18-LTC-LTC6813-1",
+   "level_id": "LVL-DOC",
+   "environment_id": "ENV-CAD",
+   "procedure": [
+    "Obtain the release archive named in FB2-HW-HCB-000001 for LTC6813-1 18-cell Slave version 1.1.6 and unpack it outside this repository.",
+    "Open the schematic and the layout of that version in Altium Designer, which docs/hardware/design-resources.rst names as the tool required to open them.",
+    "Compare the pinout table, every connector table and every electrical-ratings row the repository tracks for this version against the schematic and layout: docs/hardware/slaves/18-ltc-ltc6813-1-vx.x.x/18-ltc-ltc6813-1-v1.1.6.rst.",
+    "Record every discrepancy as a finding with the schematic sheet, the net and the reference designator it was found on.",
+    "Record the number of nets, reference designators and BOM lines read from the design, so the comparison has a denominator."
+   ],
+   "acceptance_criteria": [
+    "Every pin assignment in the tracked tables is either confirmed against the schematic or raised as a finding.",
+    "Every electrical rating in the tracked table is either confirmed against the schematic or raised as a finding.",
+    "The set of nets read from the design is recorded, not merely the set of discrepancies."
+   ],
+   "preconditions": [
+    "Release archive obtained from the external Fraunhofer IISB server",
+    "Altium Designer available to open the proprietary sources"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "This is a comparison between a tracked document and the design source it claims to describe. The document side is present in this repository; the design side is not. No Altium source file for this board exists in the working tree or in any commit of any branch, so there is nothing to compare the document against. Reading the CSV is possible and is not the blocker; having a second, independent side to compare it to is.",
+   "unblock_condition": "The Altium release archive for this exact board and version is made available to the verification activity, together with a tool that can open it. Neither is obtainable from this repository.",
+   "expected_source_of_evidence": "A finding list naming schematic sheet, net and reference designator for each discrepancy, plus the counted net and BOM totals, stored as a run log under docs/artifacts/evidence/actual-runs/."
+  },
+  {
+   "step_id": "HWE4-STEP-0012",
+   "title": "Electrical verification of one physical LTC6813-1 18-cell Slave 1.1.6 against its documented ratings",
+   "board_id": "HW-SLAVE-18-LTC-LTC6813-1",
+   "level_id": "LVL-ELEC",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Take one physical LTC6813-1 18-cell Slave of the 1.1.6 design out of the released population and record its identity.",
+    "Apply each supply condition the documentation states, at each temperature corner the documentation states, and record the measured current and voltage.",
+    "Measure each cell-sense and digital input threshold against the documented range.",
+    "Record the ambient temperature, the supply setting and the instrument used for every measurement taken."
+   ],
+   "acceptance_criteria": [
+    "Every measured value is inside the documented range at the documented temperature corner, or is raised as a finding.",
+    "Every measurement carries its instrument, its ambient temperature and its supply setting.",
+    "The measured board is identified, and the report states that one board is not a released design."
+   ],
+   "preconditions": [
+    "A physical board of the named design and version exists",
+    "Instrumented bench with a programmable supply, oscilloscope and thermal control"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires a physical board and laboratory instrumentation. This repository contains no hardware: git ls-tree -r --name-only 308028fb -- hardware/ returns one file, hardware/README.md. There is nothing to power up and nothing to probe.",
+   "unblock_condition": "A physical board of the named design and version is available to the verification activity, together with bench instrumentation, and the documented ratings to compare against are identified for that version. For some boards the second half of that condition is itself unmet inside this repository: see the coverage note on this record.",
+   "expected_source_of_evidence": "Instrument records or data-logger files, with the ambient temperature and supply setting per reading."
+  },
+  {
+   "step_id": "HWE4-STEP-0013",
+   "title": "Cross-check the tracked documentation of MC33775A 14-cell Slave 1.0.3 against its released Altium design sources",
+   "board_id": "HW-SLAVE-14-NXP-MC33775A",
+   "level_id": "LVL-DOC",
+   "environment_id": "ENV-CAD",
+   "procedure": [
+    "Obtain the release archive named in FB2-HW-HCB-000001 for MC33775A 14-cell Slave version 1.0.3 and unpack it outside this repository.",
+    "Open the schematic and the layout of that version in Altium Designer, which docs/hardware/design-resources.rst names as the tool required to open them.",
+    "Compare the pinout table, every connector table and every electrical-ratings row the repository tracks for this version against the schematic and layout: docs/hardware/slaves/14-nxp-mc33775a-vx.x.x/14-nxp-mc33775a-v1.0.3.rst.",
+    "Record every discrepancy as a finding with the schematic sheet, the net and the reference designator it was found on.",
+    "Record the number of nets, reference designators and BOM lines read from the design, so the comparison has a denominator."
+   ],
+   "acceptance_criteria": [
+    "Every pin assignment in the tracked tables is either confirmed against the schematic or raised as a finding.",
+    "Every electrical rating in the tracked table is either confirmed against the schematic or raised as a finding.",
+    "The set of nets read from the design is recorded, not merely the set of discrepancies."
+   ],
+   "preconditions": [
+    "Release archive obtained from the external Fraunhofer IISB server",
+    "Altium Designer available to open the proprietary sources"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "This is a comparison between a tracked document and the design source it claims to describe. The document side is present in this repository; the design side is not. No Altium source file for this board exists in the working tree or in any commit of any branch, so there is nothing to compare the document against. Reading the CSV is possible and is not the blocker; having a second, independent side to compare it to is.",
+   "unblock_condition": "The Altium release archive for this exact board and version is made available to the verification activity, together with a tool that can open it. Neither is obtainable from this repository.",
+   "expected_source_of_evidence": "A finding list naming schematic sheet, net and reference designator for each discrepancy, plus the counted net and BOM totals, stored as a run log under docs/artifacts/evidence/actual-runs/."
+  },
+  {
+   "step_id": "HWE4-STEP-0014",
+   "title": "Electrical verification of one physical MC33775A 14-cell Slave 1.0.3 against its documented ratings",
+   "board_id": "HW-SLAVE-14-NXP-MC33775A",
+   "level_id": "LVL-ELEC",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Take one physical MC33775A 14-cell Slave of the 1.0.3 design out of the released population and record its identity.",
+    "Apply each supply condition the documentation states, at each temperature corner the documentation states, and record the measured current and voltage.",
+    "Measure each cell-sense and digital input threshold against the documented range.",
+    "Record the ambient temperature, the supply setting and the instrument used for every measurement taken."
+   ],
+   "acceptance_criteria": [
+    "Every measured value is inside the documented range at the documented temperature corner, or is raised as a finding.",
+    "Every measurement carries its instrument, its ambient temperature and its supply setting.",
+    "The measured board is identified, and the report states that one board is not a released design."
+   ],
+   "preconditions": [
+    "A physical board of the named design and version exists",
+    "Instrumented bench with a programmable supply, oscilloscope and thermal control"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires a physical board and laboratory instrumentation. This repository contains no hardware: git ls-tree -r --name-only 308028fb -- hardware/ returns one file, hardware/README.md. There is nothing to power up and nothing to probe.",
+   "unblock_condition": "A physical board of the named design and version is available to the verification activity, together with bench instrumentation, and the documented ratings to compare against are identified for that version. For some boards the second half of that condition is itself unmet inside this repository: see the coverage note on this record.",
+   "expected_source_of_evidence": "Instrument records or data-logger files, with the ambient temperature and supply setting per reading."
+  },
+  {
+   "step_id": "HWE4-STEP-0015",
+   "title": "Timing and isoSPI protocol verification on the released master with an LTC6820 interface and LTC6811-1 slaves",
+   "board_id": "HW-BMS-MASTER-TI-TMS570LC4357",
+   "level_id": "LVL-TIME",
+   "environment_id": "ENV-BENCH",
+   "procedure": [
+    "Assemble the released master, the released LTC6820 interface and at least one released 12-cell slave into the configuration FB2-HW-HCB-000001 identifies as the reference configuration.",
+    "Measure the isoSPI clock, data setup and data hold at the interface board pins across the temperature corners the documentation states.",
+    "Measure the SPI timing the master presents to the AFE and compare it against the requirement the software's AFE driver documents for its own side of the interface.",
+    "Record the measured edges, not a pass or fail, so the numbers can be re-checked."
+   ],
+   "acceptance_criteria": [
+    "Measured setup, hold and clock period are recorded at each temperature corner.",
+    "The measurement point is named, so a later reader knows whether a number was taken at the master pin, the interface pin or the slave pin.",
+    "The report states the configuration the numbers were taken in, by board and by version."
+   ],
+   "preconditions": [
+    "Assembled hardware from the released boards",
+    "Oscilloscope with differential probes",
+    "A stated reference configuration"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires three physical boards wired together and an oscilloscope. No board exists in this repository. The protocol requirement the measurement would be compared against also lives outside it: the AFE driver's timing expectations are written against a device data sheet this corpus does not hold, so even the acceptance threshold is not available here.",
+   "unblock_condition": "Assembled released hardware plus instrumentation, and the interface timing specification the measurement is compared against. The timing specification is a separate unblock: this corpus holds neither the device data sheet nor a hardware interface timing requirement for isoSPI or SPI.",
+   "expected_source_of_evidence": "Oscilloscope captures with the measurement point and temperature corner named per capture."
+  },
+  {
+   "step_id": "HWE4-STEP-0016",
+   "title": "Integration bring-up of the released master in the reference configuration",
+   "board_id": "HW-BMS-MASTER-TI-TMS570LC4357",
+   "level_id": "LVL-BRINGUP",
+   "environment_id": "ENV-HIL",
+   "procedure": [
+    "Apply the documented power sequence to the assembled reference configuration and record the rail voltages as each rail comes up.",
+    "Record the state of every contactor, the interlock chain and the fault outputs before and after the sequence.",
+    "Enumerate the daisy chain and record the serial identifiers the master reports.",
+    "Repeat the sequence a stated number of times and record whether the final state is the same every time."
+   ],
+   "acceptance_criteria": [
+    "The rail sequence, every rail voltage and the final state of every switched output are recorded.",
+    "The repeat count is stated.",
+    "The report states explicitly that bring-up is not a system safety verification, so the result cannot be cited as one."
+   ],
+   "preconditions": [
+    "Assembled reference configuration",
+    "A loaded BMS master firmware image",
+    "A controlled power supply with current limit"
+   ],
+   "executability": "not_executable_here",
+   "executed": false,
+   "result": null,
+   "not_executable_reason": "Requires assembled hardware and a firmware image running on it. This corpus has executed the product's own code, on developer hardware, and recorded that as host evidence; it has never run it on the product's own hardware, which is why the actual_product_evidence coverage dimension stands at 0.",
+   "unblock_condition": "A released board populated and running a released firmware image, plus a controlled power supply. The corpus's own deficiency register already carries this unblock in general terms; this step needs it resolved for hardware specifically.",
+   "expected_source_of_evidence": "A power-sequence log with per-rail voltages, the enumerated serial identifiers, and the per-iteration final state."
+  }
+ ],
+ "execution_state": {
+  "steps_total": 16,
+  "steps_executable_here": 0,
+  "steps_not_executable_here": 16,
+  "steps_executed": 0,
+  "results_recorded": 0,
+  "verification_performed_claim": "No hardware verification was performed. Zero of sixteen steps were executed and zero results exist. This corpus holds no board and no design source, so no hardware verification activity is even possible from it, and no such activity is claimed.",
+  "statement": "Every step is marked not_executable_here with its own reason and its own unblock condition. The reasons are not interchangeable: the LVL-DOC steps need a second independent side to compare a document against, the LVL-ELEC and LVL-TIME steps need a physical board and instrumentation, the LVL-IF steps need both, and the LVL-BRINGUP step needs populated hardware running a released firmware image. Collapsing them into one generic statement would hide which unblock actually buys which step."
+ },
+ "documentation_coverage_note": "Two coverage facts change what can be verified even after the hardware unblock is resolved. First, for the two released versions of the 12-cell LTC6811-1 slave, 2.1.5 and 2.1.7, this repository holds no per-version release note and no per-version artefact directory at all: the per-version documentation exists for 2.0.3, 2.1.2 and 2.1.6, so an electrical verification of the newest released 12-cell slave would have no in-repository ratings table to compare against. Second, the MC33664 interface has no pinout table and no electrical-ratings table for its released version, so its LVL-ELEC step has nothing to compare against either. Both are recorded here rather than being discovered during a verification campaign.",
+ "not_established_by_this_record": [
+  "No verification result, measurement, observation or pass/fail judgement. The result field of every step is null.",
+  "No hardware interface timing specification. The acceptance threshold of the timing step is not available in this corpus, because the device data sheets that would carry it are external.",
+  "No bill of materials, no schematic content, no layout content, no component specification.",
+  "No statement that any released board is correct, manufacturable, safe or compliant. Nothing in this plan asserts any of that.",
+  "No ASPICE capability level, no ISO 26262 conformity, no certification, no human approval."
+ ],
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the release index and the tracked documentation tree. It has not been reviewed by a hardware engineer, it has never been performed, and no step in it has been attempted. An unperformed plan authored by a machine is not independent verification evidence and is not offered as such.",
+  "approval_claimed": false
+ }
+}

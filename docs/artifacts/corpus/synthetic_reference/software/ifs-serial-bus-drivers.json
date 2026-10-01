@@ -1,0 +1,632 @@
+{
+ "id": "FB2-SW-IFS-000008",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "software_interface_specification",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Interface Specification: the SPI, I2C and UART driver interfaces",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000110",
+  "FB2-SRC-COD-000111",
+  "FB2-SRC-COD-000112",
+  "FB2-SRC-COD-000113",
+  "FB2-SRC-COD-000114",
+  "FB2-SRC-COD-000115",
+  "FB2-SRC-COD-000067",
+  "FB2-SRC-COD-000068",
+  "FB2-SRC-COD-000069",
+  "FB2-SRC-COD-000041",
+  "FB2-SRC-COD-000042",
+  "FB2-SRC-COD-000043"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+   "status": "partially_mapped",
+   "rationale": "Specifies three serial-bus boundaries with the real signatures, six precondition assertions, one deliberate unchecked-parameter suppression, and the three different concurrency models the three buses use - polled, mutex-protected and queue-mediated."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Supplies interface specifications for the serial-bus drivers that the design records' signal tables did not."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Named as the specification the software interface requirements for the serial-bus boundaries are derived from."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Six elements across the three serial-bus drivers, chosen because they differ in a way a signal table would hide: I2C is polled and blocking, SPI is guarded by a mutex-like lock with no owner and no timeout, and UART is the only one whose producer is an interrupt. Each carries the concurrency model the source actually implements, and each carries what the interface does not say."
+  }
+ ],
+ "interface_id": "IFS-SERIAL-000008",
+ "interface_class": "serial_bus",
+ "analysis": {
+  "method": "source_analysis_at_pinned_commit",
+  "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+  "direction": "source_to_specification",
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "tools_used": [
+   "git show 308028fb:<path>",
+   "graft skeleton <file>"
+  ],
+  "what_this_record_is_not": [
+   "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+   "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+   "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+   "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+  ]
+ },
+ "providing_module": {
+  "name": "Serial bus drivers: SPI, I2C and UART",
+  "role": "Wrap the controller HAL for the three serial buses. They differ in synchronisation strategy, and that difference is the substantive content of this boundary.",
+  "source_paths": [
+   "src/app/driver/i2c/i2c.h",
+   "src/app/driver/i2c/i2c.c",
+   "src/app/driver/spi/spi.h",
+   "src/app/driver/spi/spi.c",
+   "src/app/driver/uart/uart.h",
+   "src/app/driver/uart/uart.c"
+  ]
+ },
+ "consuming_modules": [
+  {
+   "name": "UART task body",
+   "source_path": "src/app/task/config/ftask_cfg.c",
+   "calls": [
+    "UART_HandleFlowControl"
+   ],
+   "consumption_evidence": "UART_HandleFlowControl() at src/app/task/config/ftask_cfg.c L332, followed by an indefinite block on a notification at L334."
+  },
+  {
+   "name": "Console and serial consumers",
+   "source_path": "src/app/driver/uart/uart.c",
+   "calls": [
+    "UART_Read"
+   ],
+   "consumption_evidence": "UART_Read is the public read element; it drains the receive queue that the receive interrupt fills at src/app/driver/uart/uart.c L244-L263."
+  },
+  {
+   "name": "Every module that transfers over SPI, including every AFE backend",
+   "source_path": "src/app/driver/spi/spi.c",
+   "calls": [
+    "SPI_Lock",
+    "SPI_Unlock"
+   ],
+   "consumption_evidence": "Claim and release are the two elements of this boundary; each guards the busy flag with a task critical section at src/app/driver/spi/spi.c L518, L523, L531 and L533."
+  },
+  {
+   "name": "I2C client modules: port expander, RTC, temperature and humidity sensor, and the AFE backends' I2C path",
+   "source_path": "src/app/driver/i2c/i2c.c",
+   "calls": [
+    "I2C_Read",
+    "I2C_Initialize"
+   ],
+   "consumption_evidence": "I2C_Initialize is the mandatory first call per the header at src/app/driver/i2c/i2c.h L125-L127; I2C_Read is the blocking read element at src/app/driver/i2c/i2c.c L226."
+  }
+ ],
+ "elements": [
+  {
+   "element_id": "IFSE-000701",
+   "symbol": "I2C_Read",
+   "declaration": "extern STD_RETURN_TYPE_e I2C_Read(i2cBASE_t *pI2cInterface, uint32_t slaveAddress, uint32_t nrBytes, uint8_t *readData);",
+   "declaration_path": "src/app/driver/i2c/i2c.h",
+   "declaration_line": 139,
+   "implementation_path": "src/app/driver/i2c/i2c.c",
+   "implementation_line": 226,
+   "providing_module": "I2C driver",
+   "consuming_module": "The port expander, the RTC, the temperature and humidity sensor, and the AFE backends' I2C path",
+   "parameters": [
+    {
+     "name": "pI2cInterface",
+     "c_type": "i2cBASE_t *",
+     "direction": "in",
+     "unit": "I2C controller selector (pointer to a configured controller)",
+     "meaning": "Which of the controller's I2C instances to use.",
+     "valid_range": "Non-null, and one of the controller instances. For the DMA variants the source enumerates the instances explicitly and traps on anything else, so the set is closed.",
+     "range_evidence": "FAS_ASSERT(pI2cInterface != NULL_PTR) at src/app/driver/i2c/i2c.c L231; the DMA variant tests the same pointer against each instance and traps otherwise at src/app/driver/i2c/i2c.c L436-L445.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    },
+    {
+     "name": "slaveAddress",
+     "c_type": "uint32_t",
+     "direction": "in",
+     "unit": "7-bit I2C slave address (dimensionless)",
+     "meaning": "Which device to read from.",
+     "valid_range": "Less than 128.",
+     "range_evidence": "FAS_ASSERT(slaveAddress < 128u) at src/app/driver/i2c/i2c.c L234.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    },
+    {
+     "name": "nrBytes",
+     "c_type": "uint32_t",
+     "direction": "in",
+     "unit": "bytes",
+     "meaning": "How many bytes to read.",
+     "valid_range": "Greater than zero.",
+     "range_evidence": "FAS_ASSERT(nrBytes > 0u) at src/app/driver/i2c/i2c.c L233.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    },
+    {
+     "name": "readData",
+     "c_type": "uint8_t *",
+     "direction": "out",
+     "unit": "nrBytes bytes",
+     "meaning": "Destination for the received bytes. The interface does not state a maximum length for this buffer and does not check it.",
+     "valid_range": "Non-null.",
+     "range_evidence": "FAS_ASSERT(readData != NULL_PTR) at src/app/driver/i2c/i2c.c L232.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "Every byte of the transfer was received or acknowledged.",
+     "STD_NOT_OK": "The transfer did not complete: the bus was busy, a NACK was seen, or the wait for data timed out."
+    },
+    "default_on_no_information": "One negative value covers at least three distinct physical causes, so a caller cannot tell a busy bus from an absent device from a timeout.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85; the success value is the initial STD_OK at src/app/driver/i2c/i2c.c L235 and the loop sets it to STD_NOT_OK on a failed wait."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value STD_RETURN_TYPE_e. The four precondition assertions cover the arguments; the return value covers the transfer.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "Four assertions at src/app/driver/i2c/i2c.c L231-L234, and the transfer result is assigned from the per-byte wait at src/app/driver/i2c/i2c.c L256."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Not periodic. Callers invoke it on demand, and the variant that this element selects the timing for is the per-byte timeout below.",
+    "timeouts": [
+     {
+      "name": "I2C_TIMEOUT_us",
+      "value": "declared by the driver as a per-byte wait timeout",
+      "unit": "us",
+      "meaning": "How long the element waits for each byte before giving up on it.",
+      "evidence": "The per-byte receive loop waits with I2C_WaitReceive(pI2cInterface, I2C_TIMEOUT_us) at src/app/driver/i2c/i2c.c L256, so the total worst-case time of the call is this timeout multiplied by nrBytes."
+     }
+    ]
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Task-level, and the element polls rather than blocking on an interrupt. The header describes it as a blocking call at src/app/driver/i2c/i2c.h L136, and no interrupt context reaches it in the source. No mutex or bus-arbitration mechanism is visible at this boundary, although the controller registers themselves are guarded by a task critical section in the DMA variants at src/app/driver/i2c/i2c.c L449 and L462."
+   },
+   "error_paths": [
+    {
+     "condition": "Any pointer argument is NULL.",
+     "observed_behaviour": "A precondition assertion traps before the transfer.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/driver/i2c/i2c.c L231-L232"
+    },
+    {
+     "condition": "nrBytes is zero.",
+     "observed_behaviour": "A precondition assertion traps.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/driver/i2c/i2c.c L233"
+    },
+    {
+     "condition": "slaveAddress is 128 or greater.",
+     "observed_behaviour": "A precondition assertion traps.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/driver/i2c/i2c.c L234"
+    },
+    {
+     "condition": "The bus is busy when the element starts.",
+     "observed_behaviour": "The whole body is skipped and the initial STD_OK is returned, so a transfer that never started is reported as a success.",
+     "signalled_as": "STD_OK despite no transfer",
+     "evidence": "if ((pI2cInterface->STR & (uint32_t)I2C_BUSBUSY) == 0u) at src/app/driver/i2c/i2c.c L237 guards the body, and retVal is initialised to STD_OK at L235."
+    },
+    {
+     "condition": "A byte does not arrive within the per-byte timeout, or a NACK is seen.",
+     "observed_behaviour": "The element's success value is cleared, so the call reports failure.",
+     "signalled_as": "STD_NOT_OK",
+     "evidence": "The per-byte loop at src/app/driver/i2c/i2c.c L255-L258 tests the wait result and clears the success value."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface states no maximum for nrBytes and no maximum length for the readData buffer, so a caller can overrun a buffer it sized for a different length and nothing here objects. Four assertions check the arguments and none of them bounds the transfer.",
+    "The interface reports a skipped transfer as success. When the bus is busy the body does not run and the caller receives STD_OK, which is the opposite of the truth. This is recorded as read from the source, not as a defect asserted against it.",
+    "The interface does not state whether a partial transfer is possible, what the buffer holds in that case, or how many bytes succeeded. The negative result does not carry a byte count.",
+    "The interface does not state which bus speed or timing mode is used, so a caller cannot reason about how long the call will take; only the per-byte timeout bounds it, and only indirectly through nrBytes.",
+    "The interface does not state any ordering or arbitration requirement between concurrent I2C clients. Nothing at this boundary prevents two callers from driving the same controller."
+   ]
+  },
+  {
+   "element_id": "IFSE-000702",
+   "symbol": "I2C_Initialize",
+   "declaration": "extern void I2C_Initialize(void);",
+   "declaration_path": "src/app/driver/i2c/i2c.h",
+   "declaration_line": 129,
+   "implementation_path": "src/app/driver/i2c/i2c.c",
+   "implementation_line": 222,
+   "providing_module": "I2C driver",
+   "consuming_module": "Start-up task configuration",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value; the element cannot fail visibly.",
+    "evidence": "Declared void at src/app/driver/i2c/i2c.h L129 and defined void at src/app/driver/i2c/i2c.c L222."
+   },
+   "validity_signalling": {
+    "mechanism": "None returned.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The body is a single call to the vendor initialiser at src/app/driver/i2c/i2c.c L223."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Called once during start-up; the header states it must be called before any other call to this API, at src/app/driver/i2c/i2c.h L125-L127."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Start-up context, before the operating system runs."
+   },
+   "error_paths": [
+    {
+     "condition": "Any condition.",
+     "observed_behaviour": "No error path; the element calls the vendor initialiser and returns.",
+     "signalled_as": "nothing",
+     "evidence": "src/app/driver/i2c/i2c.c L222-L224"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface states no ordering requirement beyond the header comment that it must come first, and that comment is the only ordering statement at the boundary.",
+    "The interface returns nothing, so a caller cannot confirm the controller was initialised before it uses it.",
+    "The interface states nothing about the bus configuration it leaves in place: speed, addressing mode and timeout are all set inside the vendor initialiser and none of them is part of the interface.",
+    "The interface does not state which controller instances exist or how many, so a caller cannot tell whether the instance it holds was configured."
+   ]
+  },
+  {
+   "element_id": "IFSE-000703",
+   "symbol": "SPI_Lock",
+   "declaration": "extern STD_RETURN_TYPE_e SPI_Lock(uint8_t spi);",
+   "declaration_path": "src/app/driver/spi/spi.h",
+   "declaration_line": 186,
+   "implementation_path": "src/app/driver/spi/spi.c",
+   "implementation_line": 513,
+   "providing_module": "SPI driver",
+   "consuming_module": "Every module that transfers over SPI, including every AFE backend",
+   "parameters": [
+    {
+     "name": "spi",
+     "c_type": "uint8_t",
+     "direction": "in",
+     "unit": "SPI instance index (dimensionless)",
+     "meaning": "Which SPI instance to claim exclusively.",
+     "valid_range": "Less than the number of busy flags the driver keeps. The header states the intended range as the SPI interfaces of this MCU, 0 to 4 on the TMS570LC4357.",
+     "range_evidence": "FAS_ASSERT(spi < spi_nrBusyFlags) at src/app/driver/spi/spi.c L514. The header states the range in prose at src/app/driver/spi/spi.h L178-L183.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "STD_RETURN_TYPE_e",
+    "values": {
+     "STD_OK": "The instance was idle and is now marked busy; the caller owns it.",
+     "STD_NOT_OK": "The instance was already marked busy, so the caller does not own it and must not transfer."
+    },
+    "default_on_no_information": "Two values, and they are unambiguous here: the flag is a single state per instance and there is no other cause of failure.",
+    "evidence": "src/app/main/include/fstd_types.h L82-L85; the two assignments are at src/app/driver/spi/spi.c L520-L521."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value STD_RETURN_TYPE_e, backed by a per-instance busy flag.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "STD_OK is assigned only when the flag was idle, at src/app/driver/spi/spi.c L521; the initial STD_NOT_OK at L516 is returned unchanged if the flag was busy, at L525."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Not periodic. It is claimed and released around a transfer, so the period is that of the transfers, not a fixed cycle."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "guarded_by_critical_section",
+    "evidence": "The flag test and set are inside a task critical section: OS_EnterTaskCritical() at src/app/driver/spi/spi.c L518 and the matching OS_ExitTaskCritical() at L523. The paired release does the same at L531 and L533, so the claim and the release are separately masked and the whole read-modify-write is atomic.",
+    "protection_mechanism": "Task critical section around the flag test and set."
+   },
+   "error_paths": [
+    {
+     "condition": "spi is at or above the number of busy flags.",
+     "observed_behaviour": "A precondition assertion traps before the flag is read.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/driver/spi/spi.c L514"
+    },
+    {
+     "condition": "The instance is already marked busy.",
+     "observed_behaviour": "The flag is left as it is and STD_NOT_OK is returned. The caller must not transfer.",
+     "signalled_as": "STD_NOT_OK",
+     "evidence": "src/app/driver/spi/spi.c L516, L519 and L525"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface states no timeout and no queueing. A caller that is refused gets a bare STD_NOT_OK and no indication of when the instance will be free, so back-pressure has to be invented by the caller or by the caller not existing.",
+    "The interface does not state who must release the instance. The release is a separate element in the same header, SPI_Unlock, and nothing ties the two together or records an owner, so a caller that fails between claim and release would leave the instance permanently busy.",
+    "The interface does not state the number of instances. The bound is a static flag count the caller cannot read, and the header states the range only in prose.",
+    "The interface does not state whether a caller may claim and release across a blocking call, nor what the instance may be used for while claimed. The name implies exclusivity and nothing more is specified.",
+    "The interface is a lock without an owner, a timeout or a diagnostic, so a deadlock caused by a lost unlock is not diagnosable through this boundary."
+   ]
+  },
+  {
+   "element_id": "IFSE-000704",
+   "symbol": "SPI_Unlock",
+   "declaration": "extern void SPI_Unlock(uint8_t spi);",
+   "declaration_path": "src/app/driver/spi/spi.h",
+   "declaration_line": 194,
+   "implementation_path": "src/app/driver/spi/spi.c",
+   "implementation_line": 528,
+   "providing_module": "SPI driver",
+   "consuming_module": "Every module that transfers over SPI",
+   "parameters": [
+    {
+     "name": "spi",
+     "c_type": "uint8_t",
+     "direction": "in",
+     "unit": "SPI instance index (dimensionless)",
+     "meaning": "Which SPI instance to release.",
+     "valid_range": "Less than the number of busy flags the driver keeps.",
+     "range_evidence": "FAS_ASSERT(spi < spi_nrBusyFlags) at src/app/driver/spi/spi.c L529.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value, and the absence matters: this element releases a lock unconditionally, so releasing an instance this caller does not hold is accepted silently.",
+    "evidence": "Declared void at src/app/driver/spi/spi.h L194 and defined void at src/app/driver/spi/spi.c L528."
+   },
+   "validity_signalling": {
+    "mechanism": "None returned. It writes the flag back to idle.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "The body writes the idle state inside a task critical section at src/app/driver/spi/spi.c L531-L533."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Not periodic; it is the release half of the claim and release pair."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "guarded_by_critical_section",
+    "evidence": "The write is wrapped in a task critical section at src/app/driver/spi/spi.c L531 and L533.",
+    "protection_mechanism": "Task critical section around the flag write."
+   },
+   "error_paths": [
+    {
+     "condition": "The instance was never claimed by this caller.",
+     "observed_behaviour": "The flag is set to idle and nothing is reported, so a spurious release can make an instance that is genuinely in use appear free.",
+     "signalled_as": "not signalled",
+     "evidence": "The body at src/app/driver/spi/spi.c L528-L534 contains no test of the previous state and returns nothing."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface states no ownership rule, so it cannot refuse a release it should refuse. A caller can release an instance another task holds.",
+    "The interface does not pair with the claim in a way that enforces balance, so a lost release is indistinguishable from a correct one.",
+    "The interface returns nothing, so there is no way for a caller to confirm that the instance is now free or to discover that it never was held."
+   ]
+  },
+  {
+   "element_id": "IFSE-000705",
+   "symbol": "UART_Read",
+   "declaration": "extern uint32_t UART_Read(uint8_t *const readData, const uint32_t nrBytes);",
+   "declaration_path": "src/app/driver/uart/uart.h",
+   "declaration_line": 92,
+   "implementation_path": "src/app/driver/uart/uart.c",
+   "implementation_line": 196,
+   "providing_module": "UART driver",
+   "consuming_module": "Console and external serial consumers",
+   "parameters": [
+    {
+     "name": "readData",
+     "c_type": "uint8_t *const",
+     "direction": "out",
+     "unit": "nrBytes bytes",
+     "meaning": "Destination for the received bytes. The element stops early on the first empty queue receive, so it may write fewer bytes than asked for.",
+     "valid_range": "Non-null.",
+     "range_evidence": "FAS_ASSERT(readData != NULL_PTR) at src/app/driver/uart/uart.c L197.",
+     "range_enforcement": "precondition_assertion",
+     "nullable": false
+    },
+    {
+     "name": "nrBytes",
+     "c_type": "const uint32_t",
+     "direction": "in",
+     "unit": "bytes",
+     "meaning": "The most bytes to read. The source records that this parameter accepts its whole range, so there is no upper bound.",
+     "valid_range": "Any value. The source marks the absence of a check explicitly with an AXIVION suppression comment stating that nrBytes accepts the whole range.",
+     "range_evidence": "src/app/driver/uart/uart.c L198-L199.",
+     "range_enforcement": "not_enforced",
+     "nullable": false
+    }
+   ],
+   "return_contract": {
+    "c_type": "uint32_t",
+    "values": {
+     "0 or a positive count": "How many bytes were actually copied out of the receive queue."
+    },
+    "default_on_no_information": "Zero is the honest default: if the task queues have not been created the element does not read at all, and an empty queue also yields zero. The two are not distinguished by the return value.",
+    "evidence": "The local read counter is initialised to 0u at src/app/driver/uart/uart.c L201 and is returned at the end of the function."
+   },
+   "validity_signalling": {
+    "mechanism": "Return value is a byte count, not a success flag. A caller must compare it with what it asked for to know whether it got everything.",
+    "failure_is_observable_to_caller": true,
+    "evidence": "The count is returned, so a short read is visible: src/app/driver/uart/uart.c L196-L221. The same element also notifies the flow-control task because the stored-message count changed, at L214-L216."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Not periodic on the read side. The related flow-control element is called from the UART task body at src/app/task/config/ftask_cfg.c L332, and that task then blocks indefinitely on OS_NotifyTake at L334."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "serialised_by_queue_or_mutex",
+    "evidence": "The producer is an interrupt context and the consumer is a task, and they meet through a queue. The receive interrupt pushes the byte with OS_SendToBackOfQueueFromIsr at src/app/driver/uart/uart.c L257 and yields with FSYS_PORT_YIELD_FROM_ISR at L259; this element drains the same queue with OS_ReceiveFromQueue at L208.",
+    "protection_mechanism": "FreeRTOS queue with a single producer in an interrupt and a single consumer in a task."
+   },
+   "error_paths": [
+    {
+     "condition": "readData is NULL.",
+     "observed_behaviour": "A precondition assertion traps before the read.",
+     "signalled_as": "precondition assertion",
+     "evidence": "src/app/driver/uart/uart.c L197"
+    },
+    {
+     "condition": "The receive queue has not been created yet.",
+     "observed_behaviour": "The element does nothing and returns the initial count of zero, with no indication that the serial link is not yet up.",
+     "signalled_as": "0",
+     "evidence": "if (ftsk_allQueuesCreated) at src/app/driver/uart/uart.c L203 guards the whole read; the count is initialised to 0u at L201."
+    },
+    {
+     "condition": "The queue holds fewer bytes than nrBytes.",
+     "observed_behaviour": "The loop breaks on the first empty receive and returns the number of bytes actually copied, so the caller gets a short count.",
+     "signalled_as": "a count smaller than nrBytes",
+     "evidence": "src/app/driver/uart/uart.c L207-L212, where a failed OS_ReceiveFromQueue breaks the loop."
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface has no timeout and no blocking option: it returns whatever is already queued. A caller that wants to wait for bytes must build that itself, and nothing here says whether the queue is expected to be drained continuously.",
+    "The interface does not state the largest nrBytes it will accept, and the source records the absence of a check as a deliberate suppression. A caller can therefore ask for more bytes than any buffer it passed could hold, and nothing here objects.",
+    "The interface cannot distinguish 'the link is not up yet' from 'no bytes have arrived'. Both are a return of zero, so a caller cannot tell a start-up condition from an idle link.",
+    "The interface states nothing about the flow-control characters the driver also interprets on this same receive path, so a caller reading through this element may see software flow-control bytes that the driver has already consumed elsewhere."
+   ]
+  },
+  {
+   "element_id": "IFSE-000706",
+   "symbol": "UART_HandleFlowControl",
+   "declaration": "extern void UART_HandleFlowControl(void);",
+   "declaration_path": "src/app/driver/uart/uart.h",
+   "declaration_line": 102,
+   "implementation_path": "src/app/driver/uart/uart.c",
+   "implementation_line": 223,
+   "providing_module": "UART driver",
+   "consuming_module": "UART task body",
+   "parameters": [
+    {
+     "name": "(none)",
+     "c_type": "void",
+     "direction": "none",
+     "unit": "(no parameter)",
+     "meaning": "The function takes no argument."
+    }
+   ],
+   "return_contract": {
+    "c_type": "void",
+    "values": {},
+    "default_on_no_information": "Not applicable as a return value; the element drives transmission on and off.",
+    "evidence": "Declared void at src/app/driver/uart/uart.h L102 and defined void at src/app/driver/uart/uart.c L223."
+   },
+   "validity_signalling": {
+    "mechanism": "None returned.",
+    "failure_is_observable_to_caller": false,
+    "evidence": "Declared void at src/app/driver/uart/uart.h L102."
+   },
+   "timing": {
+    "period_ms": null,
+    "period_imposed_by_source": false,
+    "evidence": "Event-driven: the task body calls it and then blocks on OS_NotifyTake(pdTRUE, portMAX_DELAY) at src/app/task/config/ftask_cfg.c L332 and L334, so it runs when the receive interrupt gives a notification, not on a cycle. The source makes this explicit with the comment that it notifies the flow-control task because the number of stored messages changed, at src/app/driver/uart/uart.c L214-L216."
+   },
+   "concurrency": {
+    "calling_context": "task",
+    "reentrancy": "unspecified",
+    "evidence": "Called from the UART task body at src/app/task/config/ftask_cfg.c L332. The state it acts on is written by the receive interrupt at src/app/driver/uart/uart.c L245-L251, so an interrupt writes it and a task reads it with no lock visible at either end."
+   },
+   "error_paths": [
+    {
+     "condition": "Any condition.",
+     "observed_behaviour": "No error path exists.",
+     "signalled_as": "nothing",
+     "evidence": "src/app/driver/uart/uart.c L223-L242"
+    }
+   ],
+   "not_specified_by_source": [
+    "The interface states nothing about the protocol it implements. The transmission flag it acts on is set by the receive interrupt from two special byte values declared in the same header, so the protocol is a property of two constants that this element does not name.",
+    "The interface reports nothing, so a caller cannot know whether transmission is currently enabled or why.",
+    "The interface takes no lock over the flag its producer interrupt writes, and states no memory-ordering requirement, so this corpus cannot tell whether the handoff is safe on this platform. The source does not say and this record does not guess.",
+    "The interface does not state a timeout: the task that calls it blocks indefinitely on a notification, so a missed notification stalls the flow-control path with nothing to detect it."
+   ]
+  }
+ ],
+ "interface_level_gaps": [
+  {
+   "gap": "Three buses, three different synchronisation models, and no boundary statement that distinguishes them.",
+   "consequence": "A caller that assumes one model's rules will be wrong on the other two. I2C is polled with no arbiter, SPI uses a counted-free busy flag with no owner, and UART is the only one whose producer is an interrupt. A signal table would have shown the same three signatures and none of this.",
+   "evidence": "I2C polls per byte at src/app/driver/i2c/i2c.c L255-L258 with no lock at that boundary; SPI guards the flag at src/app/driver/spi/spi.c L518 and L523; UART mediates through a queue whose producer is the receive interrupt at src/app/driver/uart/uart.c L257."
+  },
+  {
+   "gap": "The I2C read reports a transfer that never started as a success.",
+   "consequence": "The single most consequential finding at this boundary. When the bus is busy the whole body is skipped and the caller receives STD_OK, so a caller that trusts the return value will believe it has data it does not have.",
+   "evidence": "The success value is initialised at src/app/driver/i2c/i2c.c L235 and the entire transfer is inside if ((pI2cInterface->STR & (uint32_t)I2C_BUSBUSY) == 0u) at L237."
+  },
+  {
+   "gap": "The SPI lock has no owner, no timeout and no refused-release behaviour.",
+   "consequence": "A caller that fails between claim and release leaves the instance permanently busy and the only recovery visible at this boundary is another call that gets STD_NOT_OK forever. Nothing diagnoses it.",
+   "evidence": "SPI_Lock returns STD_NOT_OK with no timing information at src/app/driver/spi/spi.c L525, and SPI_Unlock writes the idle state with no test of the previous state and no return value at src/app/driver/spi/spi.c L528-L534."
+  },
+  {
+   "gap": "Two buffer-length parameters are explicitly unchecked.",
+   "consequence": "Both the I2C read length and the UART read length can exceed the buffer the caller supplied, and in both cases the source records the absence of a check as a deliberate suppression rather than an oversight. A requirement about bounded transfer is not satisfiable against either interface.",
+   "evidence": "src/app/driver/i2c/i2c.c L233 asserts only that nrBytes is greater than zero, and src/app/driver/uart/uart.c L198-L199 records that nrBytes accepts the whole range."
+  },
+  {
+   "gap": "No element of this boundary states a bus speed, a bit rate or a protocol version.",
+   "consequence": "Nothing at this boundary can be traced to a timing requirement or to a data sheet, so the physical and protocol contract of all three buses is outside the interface entirely. That is where the timing verification of the hardware would have to come from, and FB2-HW-HVP-000001 records that it is unavailable.",
+   "evidence": "The headers declare function prototypes and one flow-control constant, UART_XOFF at src/app/driver/uart/uart.h L68-L69; no rate appears in any of the three headers."
+  }
+ ],
+ "verification_status": {
+  "analysed_against_running_code": false,
+  "conformance_tested": false,
+  "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+ },
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+  "approval_claimed": false,
+  "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+ }
+}

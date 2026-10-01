@@ -1,1633 +1,2013 @@
 {
-  "schema_version": "1.0.0",
-  "created_at": "2026-09-10T00:00:00Z",
-  "updated_at": "2026-10-01T00:00:00Z",
-  "repository_commit": "308028fb13d046ba29b98886895c2e17937b1437",
-  "anchors": [
-    {
-      "anchor_id": "FB2-SRC-COD-000001",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/api/afe.h",
-        "symbol": "AFE_StartMeasurement",
-        "line_range": "124",
-        "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d"
-      },
-      "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "AFE_GetCellVoltages",
-        "previous_line_range": "45-52",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "afe.h declares no cell-voltage getter; AFE_StartMeasurement is the header entry point that starts the AFE measurement cycle which produces the cell voltages (implemented by all seven AFE backends, e.g. src/app/driver/afe/ltc/api/ltc_afe.c:142)."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000002",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/api/afe.h",
-        "symbol": "AFE_RequestTemperatureRead",
-        "line_range": "131",
-        "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d"
-      },
-      "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "AFE_GetCellTemperatures",
-        "previous_line_range": "55-62",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "afe.h declares no cell-temperature getter; AFE_RequestTemperatureRead is the declared API entry point for requesting a slave temperature read."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000003",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/api/afe_plausibility.h",
-        "symbol": "AFE_PlausibilityCheckVoltageMeasurementRange",
-        "line_range": "97-99",
-        "content_hash": "a184baac5a2ee62ad1fc646e20ba704e1dd570ecdf35b586d13728eecfe9c306"
-      },
-      "content_hash": "a184baac5a2ee62ad1fc646e20ba704e1dd570ecdf35b586d13728eecfe9c306",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "AFE_CheckPlausibility",
-        "previous_line_range": "30-40",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The plausibility header declares two real checks; the voltage-measurement range check is the one that serves a cell-voltage plausibility claim."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000004",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/soa/soa.c",
-        "symbol": "SOA_CheckVoltages",
-        "line_range": "81-146",
-        "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7"
-      },
-      "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SOA_CheckVoltageLimits",
-        "previous_line_range": "120-180",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "Real SOA voltage limit check; verified by reading soa.c."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000005",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/soa/soa.c",
-        "symbol": "SOA_CheckCurrent",
-        "line_range": "271-351",
-        "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7"
-      },
-      "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SOA_CheckCurrentLimits",
-        "previous_line_range": "185-240",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "Real SOA current limit check; verified by reading soa.c."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000006",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/soa/soa.c",
-        "symbol": "SOA_CheckTemperatures",
-        "line_range": "148-269",
-        "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7"
-      },
-      "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SOA_CheckTemperatureLimits",
-        "previous_line_range": "245-300",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "Real SOA temperature limit check; verified by reading soa.c."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000008",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/contactor/contactor.c",
-        "symbol": "CONT_CheckFeedback",
-        "line_range": "125-163",
-        "content_hash": "71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83"
-      },
-      "content_hash": "71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "CONTACTOR_CheckFeedback",
-        "previous_line_range": "355-420",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "contactor.c implements CONT_CheckFeedback, not CONTACTOR_CheckFeedback; verified by reading contactor.c."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000009",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/diag/diag.c",
-        "symbol": "DIAG_Handler",
-        "line_range": "341-475",
-        "content_hash": "71c7687897444417e944b051b2d0e8c881f00df52ecee9e4db6cfd422778553e"
-      },
-      "content_hash": "71c7687897444417e944b051b2d0e8c881f00df52ecee9e4db6cfd422778553e",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DIAG_Handler",
-        "previous_line_range": "341-341",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The symbol was already real; the range 341-341 pointed only at the signature line and is re-derived here to the full function extent."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000010",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/diag/cbs/diag_cbs_voltage.c",
-        "symbol": "DIAG_ErrorOvervoltage",
-        "line_range": "72-194",
-        "content_hash": "7d99a10c434ce61182f441920fb659da41f17324e7b4a045d5d263d5748b7c72",
-        "symbol_note": "Recorded as 'DIAG_ErrorOvervoltage', the first element of the original prose description \"DIAG_ErrorOvervoltage / DIAG_ErrorUndervoltage / DIAG_ErrorHighVoltageMeasurement\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_voltage.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '72-194' inside it."
-      },
-      "content_hash": "7d99a10c434ce61182f441920fb659da41f17324e7b4a045d5d263d5748b7c72",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DIAG_CBS_Voltage",
-        "previous_line_range": "30-120",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "diag_cbs_voltage.c has no DIAG_CBS_Voltage; it implements exactly these three voltage diagnostic callbacks. The compound-symbol form follows the existing registry convention for multi-callback modules (cf. FB2-SRC-COD-000032)."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000011",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/diag/cbs/diag_cbs_current.c",
-        "symbol": "DIAG_ErrorOvercurrentCharge",
-        "line_range": "72-305",
-        "content_hash": "94e6410f69d3caaeb46258a7fb31657aabbe13b033f7eeabd634bc8f48d40419",
-        "symbol_note": "Recorded as 'DIAG_ErrorOvercurrentCharge', the first element of the original prose description \"DIAG_ErrorOvercurrentCharge / DIAG_ErrorOvercurrentDischarge / DIAG_ErrorCurrentMeasurement / DIAG_ErrorCurrentOnOpenString\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_current.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '72-305' inside it."
-      },
-      "content_hash": "94e6410f69d3caaeb46258a7fb31657aabbe13b033f7eeabd634bc8f48d40419",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DIAG_CBS_Current",
-        "previous_line_range": "30-100",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "diag_cbs_current.c has no DIAG_CBS_Current; it implements these four current diagnostic callbacks."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000012",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/diag/cbs/diag_cbs_temperature.c",
-        "symbol": "DIAG_ErrorOvertemperatureCharge",
-        "line_range": "73-217",
-        "content_hash": "79e3a12da1396d8a8efbe0355982a2ab1391a7a3c33f38b7cc79c11adffcd7b2",
-        "symbol_note": "Recorded as 'DIAG_ErrorOvertemperatureCharge', the first element of the original prose description \"DIAG_ErrorOvertemperatureCharge / DIAG_ErrorOvertemperatureDischarge / DIAG_ErrorUndertemperatureCharge / DIAG_ErrorUndertemperatureDischarge\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_temperature.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '73-217' inside it."
-      },
-      "content_hash": "79e3a12da1396d8a8efbe0355982a2ab1391a7a3c33f38b7cc79c11adffcd7b2",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DIAG_CBS_Temperature",
-        "previous_line_range": "30-100",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "diag_cbs_temperature.c has no DIAG_CBS_Temperature; it implements these four temperature diagnostic callbacks."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000013",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/diag/cbs/diag_cbs_contactor.c",
-        "symbol": "DIAG_StringContactorFeedback",
-        "line_range": "73-125",
-        "content_hash": "a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
-        "symbol_note": "Recorded as 'DIAG_StringContactorFeedback', the first element of the original prose description \"DIAG_StringContactorFeedback / DIAG_PrechargeContactorFeedback\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_contactor.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '73-125' inside it."
-      },
-      "content_hash": "a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DIAG_CBS_Contactor",
-        "previous_line_range": "30-100",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "diag_cbs_contactor.c has no DIAG_CBS_Contactor; it implements these two contactor feedback callbacks."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000014",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/diag/cbs/diag_cbs_insulation.c",
-        "symbol": "DIAG_Insulation",
-        "line_range": "72-113",
-        "content_hash": "594eec823344ec1ca4331c0bfc0da5fe980354e05bc4abd89493eafa0b20a574"
-      },
-      "content_hash": "594eec823344ec1ca4331c0bfc0da5fe980354e05bc4abd89493eafa0b20a574",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DIAG_CBS_Insulation",
-        "previous_line_range": "30-100",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "diag_cbs_insulation.c has no DIAG_CBS_Insulation; it implements DIAG_Insulation."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000015",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/diag/cbs/diag_cbs_interlock.c",
-        "symbol": "DIAG_ErrorInterlock",
-        "line_range": "73-88",
-        "content_hash": "644e87d6a400b5e273e2daf42f732f8fc450e107380fd11993100ec815897abc"
-      },
-      "content_hash": "644e87d6a400b5e273e2daf42f732f8fc450e107380fd11993100ec815897abc",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DIAG_CBS_Interlock",
-        "previous_line_range": "30-80",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "diag_cbs_interlock.c has no DIAG_CBS_Interlock; it implements DIAG_ErrorInterlock."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000016",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/algorithm/state_estimation/soc/counting/soc_counting.c",
-        "symbol": "SE_CalculateStateOfCharge",
-        "line_range": "299-391",
-        "content_hash": "1debde05edb1c1452c7d522bbd8a4e6443b49b32261b917da1dd81ee27e990c6"
-      },
-      "content_hash": "1debde05edb1c1452c7d522bbd8a4e6443b49b32261b917da1dd81ee27e990c6",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SOC_Counting_Calculate",
-        "previous_line_range": "40-150",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "soc_counting.c has no SOC_Counting_Calculate; the coulomb-counting calculation is SE_CalculateStateOfCharge."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000017",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/algorithm/state_estimation/soc/lookup-table/soc_lookup-table.c",
-        "symbol": "SE_GetStateOfChargeFromVoltage",
-        "line_range": "200-232",
-        "content_hash": "4311c66f21862745dc7fa0b3eb047959946b5741123238e0503a988830e74527"
-      },
-      "content_hash": "4311c66f21862745dc7fa0b3eb047959946b5741123238e0503a988830e74527",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SOC_LookupTable_Correct",
-        "previous_line_range": "40-120",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "soc_lookup-table.c has no SOC_LookupTable_Correct; the lookup-table interpolation is SE_GetStateOfChargeFromVoltage."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000018",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/algorithm/state_estimation/sof/trapezoid/sof_trapezoid.c",
-        "symbol": "SOF_Calculation",
-        "line_range": "355-434",
-        "content_hash": "6df7bf912bb359a00220ad6c6becdbebb000009a1fb713ee792f4b9b2acb1dbf"
-      },
-      "content_hash": "6df7bf912bb359a00220ad6c6becdbebb000009a1fb713ee792f4b9b2acb1dbf",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SOF_Trapezoid_Calculate",
-        "previous_line_range": "50-200",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "sof_trapezoid.c has no SOF_Trapezoid_Calculate; the module calculation entry point is SOF_Calculation."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000019",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/bal/bal.c",
-        "symbol": "BAL_TransferStateRequest",
-        "line_range": "100-180",
-        "content_hash": "4146f0cd87d9d8b0c8650087575d29aa1c5219bd97ac857686af2fe69fec3730",
-        "symbol_note": "Recorded as 'BAL_TransferStateRequest', the first element of the original prose description \"BAL_TransferStateRequest / BAL_CheckStateRequest / BAL_ProcessStateUninitialized / BAL_ProcessStateInitialization / BAL_ProcessStateInitialized\", and verified to occur in src/app/application/bal/bal.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '100-180' inside it."
-      },
-      "content_hash": "4146f0cd87d9d8b0c8650087575d29aa1c5219bd97ac857686af2fe69fec3730",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "BAL_StateMachine",
-        "previous_line_range": "80-250",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "bal.c has no BAL_StateMachine; its state machine is these five real functions. The previous range 80-250 also ran past the 184-line file."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000020",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/bal/voltage/bal_strategy_voltage.c",
-        "symbol": "BAL_ActivateBalancing",
-        "line_range": "122-153",
-        "content_hash": "7043bb54794bb6e26ddf08b5ae17d7140f06340c07b1af9f15d80b270bb430c1"
-      },
-      "content_hash": "7043bb54794bb6e26ddf08b5ae17d7140f06340c07b1af9f15d80b270bb430c1",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "BAL_Strategy_Voltage",
-        "previous_line_range": "40-150",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "bal_strategy_voltage.c has no BAL_Strategy_Voltage; BAL_ActivateBalancing is the voltage-threshold balancing decision that reads DATA_BLOCK_CELL_VOLTAGE."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000021",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_cell-voltages.c",
-        "symbol": "CANTX_CellVoltages",
-        "line_range": "238-305",
-        "content_hash": "8c90d0409ee6a34e0cfff15540eb0f74847229237b39c3becd83a656e54ab8b4"
-      },
-      "content_hash": "8c90d0409ee6a34e0cfff15540eb0f74847229237b39c3becd83a656e54ab8b4",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "CAN_TX_CellVoltages",
-        "previous_line_range": "30-100",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The cyclic transmit callback is CANTX_CellVoltages, not CAN_TX_CellVoltages."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000022",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_cell-temperatures.c",
-        "symbol": "CANTX_CellTemperatures",
-        "line_range": "302-400",
-        "content_hash": "2a3e3d4a6b238a938ae10b7bb0224c07bf65a5a967ce8bbc866359c50ef5739b"
-      },
-      "content_hash": "2a3e3d4a6b238a938ae10b7bb0224c07bf65a5a967ce8bbc866359c50ef5739b",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "CAN_TX_CellTemperatures",
-        "previous_line_range": "30-100",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The cyclic transmit callback is CANTX_CellTemperatures, not CAN_TX_CellTemperatures."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000023",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c",
-        "symbol": "CANRX_CellVoltages",
-        "line_range": "155-182",
-        "content_hash": "08e135869b61e4425100fd392a93b925cab00c94c0a99a4fc801f2a1c0d2920e"
-      },
-      "content_hash": "08e135869b61e4425100fd392a93b925cab00c94c0a99a4fc801f2a1c0d2920e",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "CAN_RX_AFE_CellVoltages",
-        "previous_line_range": "30-120",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The receive callback is CANRX_CellVoltages, not CAN_RX_AFE_CellVoltages."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000024",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c",
-        "symbol": "CANRX_CellTemperatures",
-        "line_range": "168-196",
-        "content_hash": "032f08160ca16c6293e60261aedd6a8b96a5b1cc3eebd138a89461032166c7d6"
-      },
-      "content_hash": "032f08160ca16c6293e60261aedd6a8b96a5b1cc3eebd138a89461032166c7d6",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "CAN_RX_AFE_CellTemperatures",
-        "previous_line_range": "30-120",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The receive callback is CANRX_CellTemperatures, not CAN_RX_AFE_CellTemperatures."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000025",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/cbs/rx/can_cbs_rx_cs_isabellenhuette-ivt-s.c",
-        "symbol": "CANRX_CsIsabellenhuetteIvtS",
-        "line_range": "433-508",
-        "content_hash": "855b37370be3859b4fae3d8af43aae2f984a1e840f1fb0694fa419bc377662f0"
-      },
-      "content_hash": "855b37370be3859b4fae3d8af43aae2f984a1e840f1fb0694fa419bc377662f0",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "CAN_RX_CurrentSensor_IVTS",
-        "previous_line_range": "30-100",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The receive callback is CANRX_CsIsabellenhuetteIvtS, not CAN_RX_CurrentSensor_IVTS."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000026",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/imd/bender/iso165c/bender_iso165c.c",
-        "symbol": "I165C_RequestRelayState",
-        "line_range": "508-522",
-        "content_hash": "9824f74fcd4e3d4609801f2839647cf1c7677bb11d4c6ce87c0819a304b850ef"
-      },
-      "content_hash": "9824f74fcd4e3d4609801f2839647cf1c7677bb11d4c6ce87c0819a304b850ef",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "IMD_BenderISO165C_Request",
-        "previous_line_range": "50-150",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "bender_iso165c.c has no IMD_BenderISO165C_Request; I165C_RequestRelayState is the module request function."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000027",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/sbc/fs8x_driver/sbc_fs8x.c",
-        "symbol": "FS8x_WD_Refresh",
-        "line_range": "160-182",
-        "content_hash": "159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec"
-      },
-      "content_hash": "159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SBC_FS8X_TriggerWatchdog",
-        "previous_line_range": "100-180",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "sbc_fs8x.c has no SBC_FS8X_TriggerWatchdog; FS8x_WD_Refresh is the watchdog service entry point (in-source comment: \"Performs the watchdog refresh\")."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000028",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/database/database.c",
-        "symbol": "DATA_AccessDatabaseEntries",
-        "line_range": "130-196",
-        "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
-        "symbol_note": "Recorded as 'DATA_AccessDatabaseEntries', the first element of the original prose description \"DATA_AccessDatabaseEntries / DATA_CopyData\", and verified to occur in src/app/engine/database/database.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '130-196' inside it."
-      },
-      "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "DATA_WriteData / DATA_ReadData",
-        "previous_line_range": "80-200",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "database.c has no DATA_WriteData or DATA_ReadData; the read and write paths are implemented by DATA_AccessDatabaseEntries (handles DATA_READ_ACCESS and DATA_WRITE_ACCESS) and DATA_CopyData. The DATA_WRITE_DATA/DATA_READ_DATA macros are call-site macros generated from the database.h data-block definitions, not functions in database.c."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000029",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/engine/sys/sys.c",
-        "symbol": "SYS_SetStateRequest",
-        "line_range": "691-739",
-        "content_hash": "f5e20d579eafa3df2b2c81c2bc8d58f56aeff2f3772a2ef47b24eaac6988d338",
-        "symbol_note": "Recorded as 'SYS_SetStateRequest', the first element of the original prose description \"SYS_SetStateRequest / SYS_GetSystemState\", and verified to occur in src/app/engine/sys/sys.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '691-739' inside it."
-      },
-      "content_hash": "f5e20d579eafa3df2b2c81c2bc8d58f56aeff2f3772a2ef47b24eaac6988d338",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "SYS_GetState / SYS_SetState",
-        "previous_line_range": "50-150",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "sys.c has no SYS_GetState; the real accessors are SYS_SetStateRequest and SYS_GetSystemState. SYS_SetState does exist but is file-static and takes a SYS_STATE_s pointer, so it is not the public state accessor the record claimed."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000030",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/main/main.c",
-        "symbol": "main",
-        "line_range": "98-144",
-        "content_hash": "7db4c6781998041023c438c695eafc11e17dcfd91b55a16d4ceadf9675ca296b"
-      },
-      "content_hash": "7db4c6781998041023c438c695eafc11e17dcfd91b55a16d4ceadf9675ca296b",
-      "retrieval_date": "2026-09-10T00:00:00Z",
-      "correction": {
-        "previous_symbol": "main",
-        "previous_line_range": "50-200",
-        "previous_content_hash": "sha256:placeholder",
-        "reason": "The symbol was already real; the range 50-200 ran past the 148-line file. main() spans 98-144; unit_test_main at line 100 is the UNITY_UNIT_TEST alias of the same entry point."
-      }
-    },
-    {
-      "anchor_id": "FB2-SRC-HW-000001",
-      "source_type": "hardware",
-      "location": {
-        "board_revision": "ti-tms570lc4357-vx.x.x",
-        "sheet_page": "Sheet 1-5",
-        "reference_designator": "U1 (TMS570LC4357)",
-        "net_connector_pin": "CAN1_TX, CAN1_RX, SPI1_CLK, SPI1_MOSI, SPI1_MISO, ETH_TXD, ETH_RXD",
-        "file_hash": "unresolved",
-        "external_file": "docs/hardware/master/ti-tms570lc4357-vx.x.x/Schematics/foxBMS_Master.SchDoc",
-        "external_repository": "foxBMS2_hw"
-      },
-      "content_hash": "unresolved",
-      "retrieval_date": "2026-09-08T00:00:00Z",
-      "hash_status": "external_design_file_unverifiable_from_this_repository",
-      "hash_note": "This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.external_file rather than location.file, because location.file is read by the provenance checker as a path inside this repository and this path is not one. Consequence for the records that cite this anchor: their hardware provenance rests on a design file this repository cannot show, and that limitation is theirs to carry, not something this registry can resolve. The 2026-09-08 retrieval_date and every other field are unchanged."
-    },
-    {
-      "anchor_id": "FB2-SRC-HW-000002",
-      "source_type": "hardware",
-      "location": {
-        "board_revision": "12-ltc-ltc6811-1-vx.x.x",
-        "sheet_page": "Sheet 1-3",
-        "reference_designator": "U1-U3 (LTC6811-1)",
-        "net_connector_pin": "isoSPI_A, isoSPI_B, CELL_1-12, GPIO_1-5",
-        "file_hash": "unresolved",
-        "external_file": "docs/hardware/slaves/12-ltc-ltc6811-1-vx.x.x/Schematics/foxBMS_Slave.SchDoc",
-        "external_repository": "foxBMS2_hw"
-      },
-      "content_hash": "unresolved",
-      "retrieval_date": "2026-09-08T00:00:00Z",
-      "hash_status": "external_design_file_unverifiable_from_this_repository",
-      "hash_note": "This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.external_file rather than location.file, because location.file is read by the provenance checker as a path inside this repository and this path is not one. Consequence for the records that cite this anchor: their hardware provenance rests on a design file this repository cannot show, and that limitation is theirs to carry, not something this registry can resolve. The 2026-09-08 retrieval_date and every other field are unchanged."
-    },
-    {
-      "anchor_id": "FB2-SRC-HW-000003",
-      "source_type": "hardware",
-      "location": {
-        "board_revision": "ltc-ltc6820-vx.x.x",
-        "sheet_page": "Sheet 1",
-        "reference_designator": "U1 (LTC6820)",
-        "net_connector_pin": "SPI_MASTER, isoSPI_SLAVE",
-        "file_hash": "unresolved",
-        "external_file": "docs/hardware/interfaces/ltc-ltc6820-vx.x.x/Schematics/LTC6820_Interface.SchDoc",
-        "external_repository": "foxBMS2_hw"
-      },
-      "content_hash": "unresolved",
-      "retrieval_date": "2026-09-08T00:00:00Z",
-      "hash_status": "external_design_file_unverifiable_from_this_repository",
-      "hash_note": "This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.external_file rather than location.file, because location.file is read by the provenance checker as a path inside this repository and this path is not one. Consequence for the records that cite this anchor: their hardware provenance rests on a design file this repository cannot show, and that limitation is theirs to carry, not something this registry can resolve. The 2026-09-08 retrieval_date and every other field are unchanged."
-    },
-    {
-      "anchor_id": "FB2-SRC-DOC-000001",
-      "source_type": "documentation",
-      "location": {
-        "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/structure/software-structure.html",
-        "version": "latest (v1.11.0)",
-        "section_anchor": "sw-structure",
-        "retrieval_date": "2026-10-01T00:00:00Z",
-        "content_hash": "b5e4ee840abf40970f60ed7f6f428b80d84728ce74773e570547b8be6c5f5d91"
-      },
-      "content_hash": "b5e4ee840abf40970f60ed7f6f428b80d84728ce74773e570547b8be6c5f5d91",
-      "retrieval_date": "2026-10-01T00:00:00Z",
-      "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"sw-structure\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact."
-    },
-    {
-      "anchor_id": "FB2-SRC-DOC-000002",
-      "source_type": "documentation",
-      "location": {
-        "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/hardware/design-resources.html",
-        "version": "latest (v1.11.0)",
-        "section_anchor": "design-resources",
-        "retrieval_date": "2026-10-01T00:00:00Z",
-        "content_hash": "b6b09f7d2ba2254bc1a43e06019faf299260532c731a77bc41655ae96daf9979"
-      },
-      "content_hash": "b6b09f7d2ba2254bc1a43e06019faf299260532c731a77bc41655ae96daf9979",
-      "retrieval_date": "2026-10-01T00:00:00Z",
-      "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"design-resources\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact."
-    },
-    {
-      "anchor_id": "FB2-SRC-DOC-000003",
-      "source_type": "documentation",
-      "location": {
-        "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/modules/modules.html",
-        "version": "latest (v1.11.0)",
-        "section_anchor": "modules",
-        "retrieval_date": "2026-10-01T00:00:00Z",
-        "content_hash": "f8d2fd92e5d54369c294081a93508a2413a10a9eb3e06cd84595e15ecbee3f55"
-      },
-      "content_hash": "f8d2fd92e5d54369c294081a93508a2413a10a9eb3e06cd84595e15ecbee3f55",
-      "retrieval_date": "2026-10-01T00:00:00Z",
-      "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"modules\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact."
-    },
-    {
-      "anchor_id": "FB2-SRC-DOC-000004",
-      "source_type": "documentation",
-      "location": {
-        "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/unit-tests/unit-tests.html",
-        "version": "latest (v1.11.0)",
-        "section_anchor": "unit-tests",
-        "retrieval_date": "2026-10-01T00:00:00Z",
-        "content_hash": "df5951195a7865685aa44a71d254097b861b257bdd7e68743c6608d28e49c2eb"
-      },
-      "content_hash": "df5951195a7865685aa44a71d254097b861b257bdd7e68743c6608d28e49c2eb",
-      "retrieval_date": "2026-10-01T00:00:00Z",
-      "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"unit-tests\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact."
-    },
-    {
-      "anchor_id": "FB2-SRC-TST-000001",
-      "source_type": "test",
-      "location": {
-        "file_or_executable": "tests/unit/app/application/soa/test_soa.c",
-        "version": "commit 308028fb",
-        "configuration": "Unity/CMock, POSIX host build",
-        "assertion_report": "SOA limit checking test cases"
-      },
-      "content_hash": "380d07375c882253761268c2b31973c273fcb89dc312ebcd3ad603b0ab37d6b4",
-      "retrieval_date": "2026-09-08T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-TST-000002",
-      "source_type": "test",
-      "location": {
-        "file_or_executable": "tests/unit/app/driver/contactor/test_contactor.c",
-        "version": "commit 308028fb",
-        "configuration": "Unity/CMock, POSIX host build",
-        "assertion_report": "Contactor state machine and feedback test cases"
-      },
-      "content_hash": "08c18b3bf975a876bcf07eadf983329d4a501ade6db59da119291e7361fbe65f",
-      "retrieval_date": "2026-09-08T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-TST-000003",
-      "source_type": "test",
-      "location": {
-        "file_or_executable": "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c",
-        "version": "commit 308028fb",
-        "configuration": "Unity/CMock, POSIX host build",
-        "assertion_report": "LTC6813-1 AFE driver test cases"
-      },
-      "content_hash": "451bd4ff80f72eae255ab1642261d3b642d023a7e8654f819fb789a185699949",
-      "retrieval_date": "2026-09-08T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-TST-000004",
-      "source_type": "test",
-      "location": {
-        "file_or_executable": "tests/unit/app/engine/diag/test_diag.c",
-        "version": "commit 308028fb",
-        "configuration": "Unity/CMock, POSIX host build",
-        "assertion_report": "Diagnostic callback framework test cases"
-      },
-      "content_hash": "67de881e472d8ab412f34ab5a3810e8b0c0fb8fac37e45e5d6e4f01d02eea297",
-      "retrieval_date": "2026-09-08T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-TST-000005",
-      "source_type": "test",
-      "location": {
-        "file_or_executable": "tests/unit/app/application/algorithm/state_estimation/soc/counting/test_soc_counting.c",
-        "version": "commit 308028fb",
-        "configuration": "Unity/CMock, POSIX host build",
-        "assertion_report": "SOC counting algorithm test cases"
-      },
-      "content_hash": "0d0620bdde15549327a5d0732370472f134a71a7c92ad3c8fced21ca7977d893",
-      "retrieval_date": "2026-09-08T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-TST-000006",
-      "source_type": "test",
-      "location": {
-        "file_or_executable": "tests/unit/app/driver/afe/api/test_afe_plausibility.c",
-        "version": "commit 308028fb",
-        "configuration": "Unity/CMock, POSIX host build",
-        "assertion_report": "AFE measurement plausibility check test cases"
-      },
-      "content_hash": "8b2658a2818c516ab5d2ddb81f692b31226741c978b9b992c49e7b3787374847",
-      "retrieval_date": "2026-09-13T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000031",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/redundancy/redundancy.c",
-        "symbol": "MRC_ValidateBatteryVoltageMeasurement",
-        "line_range": "658-673",
-        "content_hash": "8cd338327a83e2daf405b436046d6dd77bff951a1013e6f7b3d2a4a3bdd588db"
-      },
-      "content_hash": "8cd338327a83e2daf405b436046d6dd77bff951a1013e6f7b3d2a4a3bdd588db",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000032",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/adi/common/ades183x/adi_ades183x.c",
-        "symbol": "adi_bufferRxPec",
-        "line_range": "86-91",
-        "content_hash": "03151425c57e0b750578ba7dfc8ef417d90b8a02a480b0aa04f5005c91f70457",
-        "symbol_note": "Recorded as 'adi_bufferRxPec', the first element of the original prose description \"adi_bufferRxPec / adi_bufferTxPec\", and verified to occur in src/app/driver/afe/adi/common/ades183x/adi_ades183x.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '86-91' inside it."
-      },
-      "content_hash": "03151425c57e0b750578ba7dfc8ef417d90b8a02a480b0aa04f5005c91f70457",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000033",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/ltc/6806/ltc_6806.c",
-        "symbol": "ltc_RxPecBuffer",
-        "line_range": "110-115",
-        "content_hash": "e01ccd2370db67c9e5c4bef209e936427ea11a00e23799bf2f60ddbefe9c84c4",
-        "symbol_note": "Recorded as 'ltc_RxPecBuffer', the first element of the original prose description \"ltc_RxPecBuffer / ltc_TxPecBuffer\", and verified to occur in src/app/driver/afe/ltc/6806/ltc_6806.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '110-115' inside it."
-      },
-      "content_hash": "e01ccd2370db67c9e5c4bef209e936427ea11a00e23799bf2f60ddbefe9c84c4",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000034",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
-        "symbol": "ltc_RxPecBuffer",
-        "line_range": "112-117",
-        "content_hash": "f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
-        "symbol_note": "Recorded as 'ltc_RxPecBuffer', the first element of the original prose description \"ltc_RxPecBuffer / ltc_TxPecBuffer\", and verified to occur in src/app/driver/afe/ltc/6813-1/ltc_6813-1.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '112-117' inside it."
-      },
-      "content_hash": "f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000035",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/maxim/common/mxm_41b_register_map.h",
-        "symbol": "MXM_REG_RX_STATUS_R",
-        "line_range": "80-332",
-        "content_hash": "85cf1313dfaf3c082b762b213ecf3cb5522b13a1907ad19fd10af32fc657fc16",
-        "symbol_note": "Recorded as 'MXM_REG_RX_STATUS_R', the first element of the original prose description \"module level (MXM_41B register address defines)\", and verified to occur in src/app/driver/afe/maxim/common/mxm_41b_register_map.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '80-332' inside it."
-      },
-      "content_hash": "85cf1313dfaf3c082b762b213ecf3cb5522b13a1907ad19fd10af32fc657fc16",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000036",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/afe/maxim/common/mxm_bit_extract.h",
-        "symbol": "MXM_41B_REG_BIT_VALUE",
-        "line_range": "70-110",
-        "content_hash": "19669751dcb435b5a6c08fee9ffc6a7bc3b52e7fa65e9ffdac94f5d380ef8bca",
-        "symbol_note": "Recorded as 'MXM_41B_REG_BIT_VALUE', the first element of the original prose description \"module level (MXM_41B_REG_BIT_VALUE defines)\", and verified to occur in src/app/driver/afe/maxim/common/mxm_bit_extract.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '70-110' inside it."
-      },
-      "content_hash": "19669751dcb435b5a6c08fee9ffc6a7bc3b52e7fa65e9ffdac94f5d380ef8bca",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000037",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/can.c",
-        "symbol": "CAN_ConfigureRxMailboxesForExtendedIdentifiers",
-        "line_range": "279-562",
-        "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6"
-      },
-      "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000038",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/config/pex_cfg.h",
-        "symbol": "PEX_PORT_EXPANDER1",
-        "line_range": "73-97",
-        "content_hash": "5eac30c992da846cb0540d58db018c88b03002c033b928d7a235138ceb889e91",
-        "symbol_note": "Recorded as 'PEX_PORT_EXPANDER1', the first element of the original prose description \"PEX_PORT_EXPANDER1 / PEX_PORT_EXPANDER2 / PEX_PORT_EXPANDER3 and PEX_PORT_0_PIN_0 .. PEX_PORT_1_PIN_7\", and verified to occur in src/app/driver/config/pex_cfg.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '73-97' inside it."
-      },
-      "content_hash": "5eac30c992da846cb0540d58db018c88b03002c033b928d7a235138ceb889e91",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000039",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/emac/emac.c",
-        "symbol": "EMAC_TxInterruptServiceRoutine",
-        "line_range": "581-584",
-        "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0"
-      },
-      "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000040",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/emac/emac.c",
-        "symbol": "EMAC_RxInterruptServiceRoutine",
-        "line_range": "597-600",
-        "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0"
-      },
-      "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000041",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/i2c/i2c.c",
-        "symbol": "I2C_ReadDma",
-        "line_range": "454-456",
-        "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1"
-      },
-      "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000042",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/i2c/i2c.c",
-        "symbol": "I2C_WriteDma",
-        "line_range": "548-550",
-        "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1"
-      },
-      "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000043",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/i2c/i2c.c",
-        "symbol": "I2C_WriteReadDma",
-        "line_range": "645-700",
-        "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1"
-      },
-      "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000044",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/rtc/rtc.c",
-        "symbol": "module level (whole rtc.c module body, Disable at line 70 / matching Enable at line 653)",
-        "line_range": "70-653",
-        "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
-        "working_file_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
-        "pinned_commit_content_hash": "913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
-        "symbol_scope_note": "The claim is about the whole module body of rtc.c between the Disable at line 70 and the matching Enable at line 653, so there is no single identifier that names it. Naming one function would understate the anchor and would not be what it asserts. Recorded as a module-level anchor; its occurrence in rtc.c is therefore not machine-verifiable by symbol match, although its content_hash, its line range and both of the named sites are verified.",
-        "symbol_verifiability": "module_or_file_level_not_machine_verifiable"
-      },
-      "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
-      "retrieval_date": "2026-09-29T00:00:00Z",
-      "hash_note": "Two different contents are in play and both are recorded. location.pinned_commit_content_hash (913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826) are the sha256 of the file as it stands in the working tree, and the file has been edited since the pinned commit. content_hash now names the working-tree file so that it is the digest a reader can check against the file this anchor names; the pinned value is kept beside it rather than discarded, because a commit id on its own does not identify content. line_range and symbol are bounds inside the working-tree file and were checked against it."
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000045",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/rtc/rtc.c",
-        "symbol": "rtc_i2cWriteBuffer",
-        "line_range": "77-84",
-        "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
-        "working_file_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
-        "pinned_commit_content_hash": "913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
-        "symbol_note": "Recorded as 'rtc_i2cWriteBuffer', the first element of the original prose description \"rtc_i2cWriteBuffer / rtc_i2cReadBuffer\", and verified to occur in src/app/driver/rtc/rtc.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '77-84' inside it."
-      },
-      "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
-      "retrieval_date": "2026-09-29T00:00:00Z",
-      "hash_note": "Two different contents are in play and both are recorded. location.pinned_commit_content_hash (913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826) are the sha256 of the file as it stands in the working tree, and the file has been edited since the pinned commit. content_hash now names the working-tree file so that it is the digest a reader can check against the file this anchor names; the pinned value is kept beside it rather than discarded, because a commit id on its own does not identify content. line_range and symbol are bounds inside the working-tree file and were checked against it."
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000046",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/spi/spi_cfg-helper.h",
-        "symbol": "SPI_HARDWARE_CHIP_SELECT_0_ACTIVE",
-        "line_range": "79-173",
-        "content_hash": "f283d2488b60489fd5cccb8e067aa998fed748e471a7256860ed94f6edf71f39",
-        "symbol_note": "Recorded as 'SPI_HARDWARE_CHIP_SELECT_0_ACTIVE', the first element of the original prose description \"module level (SPI_HARDWARE_CHIP_SELECT_*_ACTIVE defines)\", and verified to occur in src/app/driver/spi/spi_cfg-helper.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '79-173' inside it."
-      },
-      "content_hash": "f283d2488b60489fd5cccb8e067aa998fed748e471a7256860ed94f6edf71f39",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000047",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/main/include/fassert.h",
-        "symbol": "FAS_DisableInterrupts",
-        "line_range": "97-120",
-        "content_hash": "bb6b152030bf7fe0fb86397bfb085a613d2008d9598b99e3106abb9fe00478a9"
-      },
-      "content_hash": "bb6b152030bf7fe0fb86397bfb085a613d2008d9598b99e3106abb9fe00478a9",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000048",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/main/include/fsystem.h",
-        "symbol": "FSYS_RaisePrivilege",
-        "line_range": "66-119",
-        "content_hash": "6010244017c7d1ea6fed94ac49b689392894bd4438296c3cc46ddc0882468180"
-      },
-      "content_hash": "6010244017c7d1ea6fed94ac49b689392894bd4438296c3cc46ddc0882468180",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000049",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/main/include/general.h",
-        "symbol": "FAS_STATIC_ASSERT",
-        "line_range": "94-102",
-        "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
-        "symbol_note": "Recorded as 'FAS_STATIC_ASSERT', the first element of the original prose description \"module level (FAS_STATIC_ASSERT datatype invariants)\", and verified to occur in src/app/main/include/general.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '94-102' inside it."
-      },
-      "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000050",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/main/include/general.h",
-        "symbol": "GEN_REPEAT_Ux",
-        "line_range": "212-214",
-        "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254"
-      },
-      "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000051",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/main/include/general.h",
-        "symbol": "GEN_STRIP",
-        "line_range": "248-255",
-        "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254"
-      },
-      "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000052",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/bootloader/driver/config/flash_cfg.c",
-        "symbol": "FLASH_FLASH_BANK_s",
-        "line_range": "68-402",
-        "content_hash": "21f683880196342a88420283e6fc526c2709b124d546ba3e79a4d702d37be2c1",
-        "symbol_note": "Recorded as 'FLASH_FLASH_BANK_s', the first element of the original prose description \"module level (FLASH_FLASH_BANK_s / FLASH_FLASH_SECTOR_s tables)\", and verified to occur in src/bootloader/driver/config/flash_cfg.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '68-402' inside it."
-      },
-      "content_hash": "21f683880196342a88420283e6fc526c2709b124d546ba3e79a4d702d37be2c1",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000053",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/bootloader/driver/crc/crc.c",
-        "symbol": "CRC_SemiAutoCrcCalculation",
-        "line_range": "237-245",
-        "content_hash": "401d1fbd060d45dab488d48607db9ddb6834b1f72955b6329b2bd25ccb3b337e"
-      },
-      "content_hash": "401d1fbd060d45dab488d48607db9ddb6834b1f72955b6329b2bd25ccb3b337e",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000054",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/bootloader/main/include/fassert.h",
-        "symbol": "FAS_DisableInterrupts",
-        "line_range": "97-120",
-        "content_hash": "968692cfb14d9f373934365112790e33acc7e31ef82c60d43a85f3caac330ee6"
-      },
-      "content_hash": "968692cfb14d9f373934365112790e33acc7e31ef82c60d43a85f3caac330ee6",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000055",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/bootloader/main/include/fsystem.h",
-        "symbol": "FSYS_RaisePrivilegeToSystemModeSWI",
-        "line_range": "101-145",
-        "content_hash": "cc5b128cf270e69aa553a3b96a2df9ee7def659d665139c229553c6c8f45252a"
-      },
-      "content_hash": "cc5b128cf270e69aa553a3b96a2df9ee7def659d665139c229553c6c8f45252a",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000056",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/bootloader/main/include/general.h",
-        "symbol": "FAS_STATIC_ASSERT",
-        "line_range": "68-76",
-        "content_hash": "48ec856195fe668621be6d80f26cdb4d1633fc0ee3fd4dcef05fbce42a3757ca",
-        "symbol_note": "Recorded as 'FAS_STATIC_ASSERT', the first element of the original prose description \"module level (FAS_STATIC_ASSERT datatype invariants)\", and verified to occur in src/bootloader/main/include/general.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '68-76' inside it."
-      },
-      "content_hash": "48ec856195fe668621be6d80f26cdb4d1633fc0ee3fd4dcef05fbce42a3757ca",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000057",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/ethernet/ethernet.c",
-        "symbol": "ETH_ListenForConnection",
-        "line_range": "241-294",
-        "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346"
-      },
-      "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000058",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/ethernet/ethernet.c",
-        "symbol": "ETH_EchoServerInstance",
-        "line_range": "128-239",
-        "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346"
-      },
-      "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000059",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/ethernet/ethernet.c",
-        "symbol": "ulApplicationGetNextSequenceNumber",
-        "line_range": "344-364",
-        "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346"
-      },
-      "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000060",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/ethernet/ethernet.c",
-        "symbol": "xApplicationDNSQueryHook_Multi",
-        "line_range": "407-414",
-        "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346"
-      },
-      "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000061",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/ethernet/ethernet_freertos.c",
-        "symbol": "ETH_CreateListeningTask",
-        "line_range": "83-112",
-        "content_hash": "dde8d929a77d4512ec4bc95ad7da8c848bbf5609d4a0dcfd667ba99e306d9aa6"
-      },
-      "content_hash": "dde8d929a77d4512ec4bc95ad7da8c848bbf5609d4a0dcfd667ba99e306d9aa6",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000062",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/config/ethernet_cfg.h",
-        "symbol": "ETH_ECHO_SERVER_PORT_NUMBER",
-        "line_range": "84-96",
-        "content_hash": "24dfc5030b534a41d45466a17fe14efc4178877cd839ebaa3f50d5a0d9cc8b2c"
-      },
-      "content_hash": "24dfc5030b534a41d45466a17fe14efc4178877cd839ebaa3f50d5a0d9cc8b2c",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000063",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/application/config/ethernet_cfg.c",
-        "symbol": "eth_ipAddress",
-        "line_range": "65-69",
-        "content_hash": "9ce959df36c7420da2fc2ffaaef7235cba1ec6628f328d36f45480f353e7879e"
-      },
-      "content_hash": "9ce959df36c7420da2fc2ffaaef7235cba1ec6628f328d36f45480f353e7879e",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000064",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h",
-        "symbol": "ipconfigTCP_MSS",
-        "line_range": "294-301",
-        "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af"
-      },
-      "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000065",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/can.c",
-        "symbol": "CAN_RxInterrupt",
-        "line_range": "643-692",
-        "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6"
-      },
-      "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000066",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/can/can.c",
-        "symbol": "CAN_ReadRxBuffer",
-        "line_range": "1015-1031",
-        "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6"
-      },
-      "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000067",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/uart/uart.c",
-        "symbol": "UART_Initialize",
-        "line_range": "144-164",
-        "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e"
-      },
-      "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000068",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/uart/uart.c",
-        "symbol": "UART_RxInterrupt",
-        "line_range": "244-263",
-        "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e"
-      },
-      "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000069",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/uart/uart.c",
-        "symbol": "UART_HandleFlowControl",
-        "line_range": "223-242",
-        "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e"
-      },
-      "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000070",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/uart/uart.h",
-        "symbol": "UART_XOFF",
-        "line_range": "68-69",
-        "content_hash": "0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc"
-      },
-      "content_hash": "0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000071",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/task/config/ftask_cfg.c",
-        "symbol": "FTSK_RunUserCodeUart",
-        "line_range": "330-338",
-        "content_hash": "84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52",
-        "working_file_hash": "84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52",
-        "pinned_commit_content_hash": "b083dae4fc190a06beced4efe584672ea565e0478a2ddeea1dbd8f02b32e10f2"
-      },
-      "content_hash": "84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52",
-      "retrieval_date": "2026-09-29T00:00:00Z",
-      "hash_note": "Two different contents are in play and both are recorded. location.pinned_commit_content_hash (b083dae4fc190a06beced4efe584672ea565e0478a2ddeea1dbd8f02b32e10f2) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52) are the sha256 of the file as it stands in the working tree, and the file has been edited since the pinned commit. content_hash now names the working-tree file so that it is the digest a reader can check against the file this anchor names; the pinned value is kept beside it rather than discarded, because a commit id on its own does not identify content. line_range and symbol are bounds inside the working-tree file and were checked against it."
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000072",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/foxmath/utils.c",
-        "symbol": "UTIL_GetPseudoRandomNumber",
-        "line_range": "104-115",
-        "content_hash": "5e60e1957371051cdee2eacb914cfc5e6f8a2dc9ec665f853aacc09d7140a1e9"
-      },
-      "content_hash": "5e60e1957371051cdee2eacb914cfc5e6f8a2dc9ec665f853aacc09d7140a1e9",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000073",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos/include/task.h",
-        "symbol": "tskKERNEL_VERSION_NUMBER",
-        "line_range": "56-58",
-        "content_hash": "f3a76f99198a537ffce4b7876566502e7156a4fbd5b57b56f213bb7884b772c9"
-      },
-      "content_hash": "f3a76f99198a537ffce4b7876566502e7156a4fbd5b57b56f213bb7884b772c9",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000074",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOS_IP.h",
-        "symbol": "ipFR_TCP_VERSION_NUMBER",
-        "line_range": "47-51",
-        "content_hash": "624072983ee96a078cf56260e4d1b66295d1e4bc4852f7aabc449c4809d40862"
-      },
-      "content_hash": "624072983ee96a078cf56260e4d1b66295d1e4bc4852f7aabc449c4809d40862",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000075",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfigDefaults.h",
-        "symbol": "ipconfigHAS_DEBUG_PRINTF",
-        "line_range": "3162-3176",
-        "content_hash": "a5f4b849a59add09227c5d43e6fae1aa42400737020e26df606db5d5f155d082"
-      },
-      "content_hash": "a5f4b849a59add09227c5d43e6fae1aa42400737020e26df606db5d5f155d082",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000076",
-      "source_type": "documentation",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos/README.foxbms.md",
-        "symbol": "module level (FreeRTOS kernel basis for foxBMS 2)",
-        "line_range": "1-12",
-        "content_hash": "cf3d69ca84dff742c89579760a16684fe59df212d0819d886711dbe0c3ccb8f6",
-        "symbol_scope_note": "A markdown README carries no code identifier. The anchor is about the whole 12-line file, so no symbol can be named and none is invented. Recorded as a file-level anchor; not machine-verifiable by symbol match.",
-        "symbol_verifiability": "module_or_file_level_not_machine_verifiable"
-      },
-      "content_hash": "cf3d69ca84dff742c89579760a16684fe59df212d0819d886711dbe0c3ccb8f6",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000077",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "requirements.txt",
-        "symbol": "module level (pinned Python dependency set)",
-        "line_range": "1-114",
-        "content_hash": "5cf497cfd3011396b25073ff84ac652fe382510aa5ad3c29975d3e0642714f00",
-        "symbol_scope_note": "requirements.txt is a list of pinned requirement specifiers with no identifiers of their own. The anchor is about the whole 114-line file. Recorded as a file-level anchor; not machine-verifiable by symbol match.",
-        "symbol_verifiability": "module_or_file_level_not_machine_verifiable"
-      },
-      "content_hash": "5cf497cfd3011396b25073ff84ac652fe382510aa5ad3c29975d3e0642714f00",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000078",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/emac/emac.c",
-        "symbol": "EMAC_InitializeHardware",
-        "line_range": "234-239",
-        "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
-        "symbol_note": "The original prose named 'EMAC_Initialize', which does not occur anywhere in src/app/driver/emac/emac.c: the function that contains the anchored lines 234-239 is EMAC_InitializeHardware, declared at line 217 and ending before EMAC_InitializeDma at line 296. The symbol field now names the function that actually encloses the anchored lines, and the anchor is verifiable by symbol match. The anchor previously attributed a code element to a file that does not contain it."
-      },
-      "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000079",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/emac/emac.c",
-        "symbol": "EMAC_RxInterruptServiceRoutine",
-        "line_range": "601-608",
-        "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0"
-      },
-      "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000080",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c",
-        "symbol": "NIC_ProcessRxPacket",
-        "line_range": "277-318",
-        "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
-        "symbol_note": "Recorded as 'NIC_ProcessRxPacket', the first element of the original prose description \"NIC_ProcessRxPacket (receive frame-type filter gate)\", and verified to occur in src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '277-318' inside it."
-      },
-      "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000081",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c",
-        "symbol": "NIC_TransferToTcp",
-        "line_range": "220-275",
-        "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
-        "symbol_note": "Recorded as 'NIC_TransferToTcp', the first element of the original prose description \"NIC_TransferToTcp (receive length bound, buffer allocation, endpoint match)\", and verified to occur in src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '220-275' inside it."
-      },
-      "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000082",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c",
-        "symbol": "NIC_CONSIDER_FRAME_FOR_PROCESSING",
-        "line_range": "66-79",
-        "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
-        "symbol_note": "Recorded as 'NIC_CONSIDER_FRAME_FOR_PROCESSING', the first element of the original prose description \"module level (NIC_CONSIDER_FRAME_FOR_PROCESSING selection, NIC_ETH_MIN_FRAME_BYTES)\", and verified to occur in src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '66-79' inside it."
-      },
-      "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000083",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h",
-        "symbol": "ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES",
-        "line_range": "267-275",
-        "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af"
-      },
-      "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000084",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/phy/dp83869.c",
-        "symbol": "PHY_Initialize",
-        "line_range": "243-305",
-        "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
-        "symbol_note": "Recorded as 'PHY_Initialize', the first element of the original prose description \"PHY_Initialize (PHY power-up, MDIO ID check, MII mode, autonegotiation, link wait)\", and verified to occur in src/app/driver/phy/dp83869.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '243-305' inside it."
-      },
-      "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000085",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/phy/dp83869.c",
-        "symbol": "PHY_GetLinkStatus",
-        "line_range": "307-341",
-        "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54"
-      },
-      "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000086",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/phy/dp83869.c",
-        "symbol": "PHY_AutoNegotiate",
-        "line_range": "367-421",
-        "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54"
-      },
-      "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000087",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/phy/dp83869.c",
-        "symbol": "PHY_ResetHardware",
-        "line_range": "540-547",
-        "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54"
-      },
-      "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000088",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/phy/dp83869.c",
-        "symbol": "file header (copyright, licence, and origin/generator statement)",
-        "line_range": "1-59",
-        "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
-        "symbol_scope_note": "The anchor is about the copyright/licence/origin header block of dp83869.c, lines 1-59, which is prose in a comment and contains no identifier. Recorded as a file-header anchor; not machine-verifiable by symbol match.",
-        "symbol_verifiability": "module_or_file_level_not_machine_verifiable"
-      },
-      "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    },
-    {
-      "anchor_id": "FB2-SRC-COD-000089",
-      "source_type": "code",
-      "location": {
-        "repository": "foxbms-2",
-        "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-        "path": "src/app/driver/phy/dp83869.h",
-        "symbol": "PHY_PHY_ID",
-        "line_range": "73-74",
-        "content_hash": "84d43d426a37d49cac9b45db71cf53339b0b90cbf7258b47857020b4188cf458"
-      },
-      "content_hash": "84d43d426a37d49cac9b45db71cf53339b0b90cbf7258b47857020b4188cf458",
-      "retrieval_date": "2026-09-29T00:00:00Z"
-    }
-  ]
+ "anchors": [
+  {
+   "anchor_id": "FB2-SRC-COD-000001",
+   "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "45-52",
+    "previous_symbol": "AFE_GetCellVoltages",
+    "reason": "afe.h declares no cell-voltage getter; AFE_StartMeasurement is the header entry point that starts the AFE measurement cycle which produces the cell voltages (implemented by all seven AFE backends, e.g. src/app/driver/afe/ltc/api/ltc_afe.c:142)."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
+    "line_range": "124",
+    "path": "src/app/driver/afe/api/afe.h",
+    "repository": "foxbms-2",
+    "symbol": "AFE_StartMeasurement"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000002",
+   "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "55-62",
+    "previous_symbol": "AFE_GetCellTemperatures",
+    "reason": "afe.h declares no cell-temperature getter; AFE_RequestTemperatureRead is the declared API entry point for requesting a slave temperature read."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
+    "line_range": "131",
+    "path": "src/app/driver/afe/api/afe.h",
+    "repository": "foxbms-2",
+    "symbol": "AFE_RequestTemperatureRead"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000003",
+   "content_hash": "a184baac5a2ee62ad1fc646e20ba704e1dd570ecdf35b586d13728eecfe9c306",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-40",
+    "previous_symbol": "AFE_CheckPlausibility",
+    "reason": "The plausibility header declares two real checks; the voltage-measurement range check is the one that serves a cell-voltage plausibility claim."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "a184baac5a2ee62ad1fc646e20ba704e1dd570ecdf35b586d13728eecfe9c306",
+    "line_range": "97-99",
+    "path": "src/app/driver/afe/api/afe_plausibility.h",
+    "repository": "foxbms-2",
+    "symbol": "AFE_PlausibilityCheckVoltageMeasurementRange"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000004",
+   "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "120-180",
+    "previous_symbol": "SOA_CheckVoltageLimits",
+    "reason": "Real SOA voltage limit check; verified by reading soa.c."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+    "line_range": "81-146",
+    "path": "src/app/application/soa/soa.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckVoltages"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000005",
+   "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "185-240",
+    "previous_symbol": "SOA_CheckCurrentLimits",
+    "reason": "Real SOA current limit check; verified by reading soa.c."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+    "line_range": "271-351",
+    "path": "src/app/application/soa/soa.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckCurrent"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000006",
+   "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "245-300",
+    "previous_symbol": "SOA_CheckTemperatureLimits",
+    "reason": "Real SOA temperature limit check; verified by reading soa.c."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+    "line_range": "148-269",
+    "path": "src/app/application/soa/soa.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckTemperatures"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000008",
+   "content_hash": "71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "355-420",
+    "previous_symbol": "CONTACTOR_CheckFeedback",
+    "reason": "contactor.c implements CONT_CheckFeedback, not CONTACTOR_CheckFeedback; verified by reading contactor.c."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+    "line_range": "125-163",
+    "path": "src/app/driver/contactor/contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "CONT_CheckFeedback"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000009",
+   "content_hash": "71c7687897444417e944b051b2d0e8c881f00df52ecee9e4db6cfd422778553e",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "341-341",
+    "previous_symbol": "DIAG_Handler",
+    "reason": "The symbol was already real; the range 341-341 pointed only at the signature line and is re-derived here to the full function extent."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "71c7687897444417e944b051b2d0e8c881f00df52ecee9e4db6cfd422778553e",
+    "line_range": "341-475",
+    "path": "src/app/engine/diag/diag.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_Handler"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000010",
+   "content_hash": "7d99a10c434ce61182f441920fb659da41f17324e7b4a045d5d263d5748b7c72",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-120",
+    "previous_symbol": "DIAG_CBS_Voltage",
+    "reason": "diag_cbs_voltage.c has no DIAG_CBS_Voltage; it implements exactly these three voltage diagnostic callbacks. The compound-symbol form follows the existing registry convention for multi-callback modules (cf. FB2-SRC-COD-000032)."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "7d99a10c434ce61182f441920fb659da41f17324e7b4a045d5d263d5748b7c72",
+    "line_range": "72-194",
+    "path": "src/app/engine/diag/cbs/diag_cbs_voltage.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_ErrorOvervoltage",
+    "symbol_note": "Recorded as 'DIAG_ErrorOvervoltage', the first element of the original prose description \"DIAG_ErrorOvervoltage / DIAG_ErrorUndervoltage / DIAG_ErrorHighVoltageMeasurement\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_voltage.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '72-194' inside it."
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000011",
+   "content_hash": "94e6410f69d3caaeb46258a7fb31657aabbe13b033f7eeabd634bc8f48d40419",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-100",
+    "previous_symbol": "DIAG_CBS_Current",
+    "reason": "diag_cbs_current.c has no DIAG_CBS_Current; it implements these four current diagnostic callbacks."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "94e6410f69d3caaeb46258a7fb31657aabbe13b033f7eeabd634bc8f48d40419",
+    "line_range": "72-305",
+    "path": "src/app/engine/diag/cbs/diag_cbs_current.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_ErrorOvercurrentCharge",
+    "symbol_note": "Recorded as 'DIAG_ErrorOvercurrentCharge', the first element of the original prose description \"DIAG_ErrorOvercurrentCharge / DIAG_ErrorOvercurrentDischarge / DIAG_ErrorCurrentMeasurement / DIAG_ErrorCurrentOnOpenString\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_current.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '72-305' inside it."
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000012",
+   "content_hash": "79e3a12da1396d8a8efbe0355982a2ab1391a7a3c33f38b7cc79c11adffcd7b2",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-100",
+    "previous_symbol": "DIAG_CBS_Temperature",
+    "reason": "diag_cbs_temperature.c has no DIAG_CBS_Temperature; it implements these four temperature diagnostic callbacks."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "79e3a12da1396d8a8efbe0355982a2ab1391a7a3c33f38b7cc79c11adffcd7b2",
+    "line_range": "73-217",
+    "path": "src/app/engine/diag/cbs/diag_cbs_temperature.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_ErrorOvertemperatureCharge",
+    "symbol_note": "Recorded as 'DIAG_ErrorOvertemperatureCharge', the first element of the original prose description \"DIAG_ErrorOvertemperatureCharge / DIAG_ErrorOvertemperatureDischarge / DIAG_ErrorUndertemperatureCharge / DIAG_ErrorUndertemperatureDischarge\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_temperature.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '73-217' inside it."
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000013",
+   "content_hash": "a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-100",
+    "previous_symbol": "DIAG_CBS_Contactor",
+    "reason": "diag_cbs_contactor.c has no DIAG_CBS_Contactor; it implements these two contactor feedback callbacks."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
+    "line_range": "73-125",
+    "path": "src/app/engine/diag/cbs/diag_cbs_contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_StringContactorFeedback",
+    "symbol_note": "Recorded as 'DIAG_StringContactorFeedback', the first element of the original prose description \"DIAG_StringContactorFeedback / DIAG_PrechargeContactorFeedback\", and verified to occur in src/app/engine/diag/cbs/diag_cbs_contactor.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '73-125' inside it."
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000014",
+   "content_hash": "594eec823344ec1ca4331c0bfc0da5fe980354e05bc4abd89493eafa0b20a574",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-100",
+    "previous_symbol": "DIAG_CBS_Insulation",
+    "reason": "diag_cbs_insulation.c has no DIAG_CBS_Insulation; it implements DIAG_Insulation."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "594eec823344ec1ca4331c0bfc0da5fe980354e05bc4abd89493eafa0b20a574",
+    "line_range": "72-113",
+    "path": "src/app/engine/diag/cbs/diag_cbs_insulation.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_Insulation"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000015",
+   "content_hash": "644e87d6a400b5e273e2daf42f732f8fc450e107380fd11993100ec815897abc",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-80",
+    "previous_symbol": "DIAG_CBS_Interlock",
+    "reason": "diag_cbs_interlock.c has no DIAG_CBS_Interlock; it implements DIAG_ErrorInterlock."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "644e87d6a400b5e273e2daf42f732f8fc450e107380fd11993100ec815897abc",
+    "line_range": "73-88",
+    "path": "src/app/engine/diag/cbs/diag_cbs_interlock.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_ErrorInterlock"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000016",
+   "content_hash": "1debde05edb1c1452c7d522bbd8a4e6443b49b32261b917da1dd81ee27e990c6",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "40-150",
+    "previous_symbol": "SOC_Counting_Calculate",
+    "reason": "soc_counting.c has no SOC_Counting_Calculate; the coulomb-counting calculation is SE_CalculateStateOfCharge."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "1debde05edb1c1452c7d522bbd8a4e6443b49b32261b917da1dd81ee27e990c6",
+    "line_range": "299-391",
+    "path": "src/app/application/algorithm/state_estimation/soc/counting/soc_counting.c",
+    "repository": "foxbms-2",
+    "symbol": "SE_CalculateStateOfCharge"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000017",
+   "content_hash": "4311c66f21862745dc7fa0b3eb047959946b5741123238e0503a988830e74527",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "40-120",
+    "previous_symbol": "SOC_LookupTable_Correct",
+    "reason": "soc_lookup-table.c has no SOC_LookupTable_Correct; the lookup-table interpolation is SE_GetStateOfChargeFromVoltage."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "4311c66f21862745dc7fa0b3eb047959946b5741123238e0503a988830e74527",
+    "line_range": "200-232",
+    "path": "src/app/application/algorithm/state_estimation/soc/lookup-table/soc_lookup-table.c",
+    "repository": "foxbms-2",
+    "symbol": "SE_GetStateOfChargeFromVoltage"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000018",
+   "content_hash": "6df7bf912bb359a00220ad6c6becdbebb000009a1fb713ee792f4b9b2acb1dbf",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "50-200",
+    "previous_symbol": "SOF_Trapezoid_Calculate",
+    "reason": "sof_trapezoid.c has no SOF_Trapezoid_Calculate; the module calculation entry point is SOF_Calculation."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "6df7bf912bb359a00220ad6c6becdbebb000009a1fb713ee792f4b9b2acb1dbf",
+    "line_range": "355-434",
+    "path": "src/app/application/algorithm/state_estimation/sof/trapezoid/sof_trapezoid.c",
+    "repository": "foxbms-2",
+    "symbol": "SOF_Calculation"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000019",
+   "content_hash": "4146f0cd87d9d8b0c8650087575d29aa1c5219bd97ac857686af2fe69fec3730",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "80-250",
+    "previous_symbol": "BAL_StateMachine",
+    "reason": "bal.c has no BAL_StateMachine; its state machine is these five real functions. The previous range 80-250 also ran past the 184-line file."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "4146f0cd87d9d8b0c8650087575d29aa1c5219bd97ac857686af2fe69fec3730",
+    "line_range": "100-180",
+    "path": "src/app/application/bal/bal.c",
+    "repository": "foxbms-2",
+    "symbol": "BAL_TransferStateRequest",
+    "symbol_note": "Recorded as 'BAL_TransferStateRequest', the first element of the original prose description \"BAL_TransferStateRequest / BAL_CheckStateRequest / BAL_ProcessStateUninitialized / BAL_ProcessStateInitialization / BAL_ProcessStateInitialized\", and verified to occur in src/app/application/bal/bal.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '100-180' inside it."
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000020",
+   "content_hash": "7043bb54794bb6e26ddf08b5ae17d7140f06340c07b1af9f15d80b270bb430c1",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "40-150",
+    "previous_symbol": "BAL_Strategy_Voltage",
+    "reason": "bal_strategy_voltage.c has no BAL_Strategy_Voltage; BAL_ActivateBalancing is the voltage-threshold balancing decision that reads DATA_BLOCK_CELL_VOLTAGE."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "7043bb54794bb6e26ddf08b5ae17d7140f06340c07b1af9f15d80b270bb430c1",
+    "line_range": "122-153",
+    "path": "src/app/application/bal/voltage/bal_strategy_voltage.c",
+    "repository": "foxbms-2",
+    "symbol": "BAL_ActivateBalancing"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000021",
+   "content_hash": "8c90d0409ee6a34e0cfff15540eb0f74847229237b39c3becd83a656e54ab8b4",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-100",
+    "previous_symbol": "CAN_TX_CellVoltages",
+    "reason": "The cyclic transmit callback is CANTX_CellVoltages, not CAN_TX_CellVoltages."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "8c90d0409ee6a34e0cfff15540eb0f74847229237b39c3becd83a656e54ab8b4",
+    "line_range": "238-305",
+    "path": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_cell-voltages.c",
+    "repository": "foxbms-2",
+    "symbol": "CANTX_CellVoltages"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000022",
+   "content_hash": "2a3e3d4a6b238a938ae10b7bb0224c07bf65a5a967ce8bbc866359c50ef5739b",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-100",
+    "previous_symbol": "CAN_TX_CellTemperatures",
+    "reason": "The cyclic transmit callback is CANTX_CellTemperatures, not CAN_TX_CellTemperatures."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "2a3e3d4a6b238a938ae10b7bb0224c07bf65a5a967ce8bbc866359c50ef5739b",
+    "line_range": "302-400",
+    "path": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_cell-temperatures.c",
+    "repository": "foxbms-2",
+    "symbol": "CANTX_CellTemperatures"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000023",
+   "content_hash": "08e135869b61e4425100fd392a93b925cab00c94c0a99a4fc801f2a1c0d2920e",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-120",
+    "previous_symbol": "CAN_RX_AFE_CellVoltages",
+    "reason": "The receive callback is CANRX_CellVoltages, not CAN_RX_AFE_CellVoltages."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "08e135869b61e4425100fd392a93b925cab00c94c0a99a4fc801f2a1c0d2920e",
+    "line_range": "155-182",
+    "path": "src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c",
+    "repository": "foxbms-2",
+    "symbol": "CANRX_CellVoltages"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000024",
+   "content_hash": "032f08160ca16c6293e60261aedd6a8b96a5b1cc3eebd138a89461032166c7d6",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-120",
+    "previous_symbol": "CAN_RX_AFE_CellTemperatures",
+    "reason": "The receive callback is CANRX_CellTemperatures, not CAN_RX_AFE_CellTemperatures."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "032f08160ca16c6293e60261aedd6a8b96a5b1cc3eebd138a89461032166c7d6",
+    "line_range": "168-196",
+    "path": "src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c",
+    "repository": "foxbms-2",
+    "symbol": "CANRX_CellTemperatures"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000025",
+   "content_hash": "855b37370be3859b4fae3d8af43aae2f984a1e840f1fb0694fa419bc377662f0",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "30-100",
+    "previous_symbol": "CAN_RX_CurrentSensor_IVTS",
+    "reason": "The receive callback is CANRX_CsIsabellenhuetteIvtS, not CAN_RX_CurrentSensor_IVTS."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "855b37370be3859b4fae3d8af43aae2f984a1e840f1fb0694fa419bc377662f0",
+    "line_range": "433-508",
+    "path": "src/app/driver/can/cbs/rx/can_cbs_rx_cs_isabellenhuette-ivt-s.c",
+    "repository": "foxbms-2",
+    "symbol": "CANRX_CsIsabellenhuetteIvtS"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000026",
+   "content_hash": "9824f74fcd4e3d4609801f2839647cf1c7677bb11d4c6ce87c0819a304b850ef",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "50-150",
+    "previous_symbol": "IMD_BenderISO165C_Request",
+    "reason": "bender_iso165c.c has no IMD_BenderISO165C_Request; I165C_RequestRelayState is the module request function."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9824f74fcd4e3d4609801f2839647cf1c7677bb11d4c6ce87c0819a304b850ef",
+    "line_range": "508-522",
+    "path": "src/app/driver/imd/bender/iso165c/bender_iso165c.c",
+    "repository": "foxbms-2",
+    "symbol": "I165C_RequestRelayState"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000027",
+   "content_hash": "159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "100-180",
+    "previous_symbol": "SBC_FS8X_TriggerWatchdog",
+    "reason": "sbc_fs8x.c has no SBC_FS8X_TriggerWatchdog; FS8x_WD_Refresh is the watchdog service entry point (in-source comment: \"Performs the watchdog refresh\")."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec",
+    "line_range": "160-182",
+    "path": "src/app/driver/sbc/fs8x_driver/sbc_fs8x.c",
+    "repository": "foxbms-2",
+    "symbol": "FS8x_WD_Refresh"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000028",
+   "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "80-200",
+    "previous_symbol": "DATA_WriteData / DATA_ReadData",
+    "reason": "database.c has no DATA_WriteData or DATA_ReadData; the read and write paths are implemented by DATA_AccessDatabaseEntries (handles DATA_READ_ACCESS and DATA_WRITE_ACCESS) and DATA_CopyData. The DATA_WRITE_DATA/DATA_READ_DATA macros are call-site macros generated from the database.h data-block definitions, not functions in database.c."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+    "line_range": "130-196",
+    "path": "src/app/engine/database/database.c",
+    "repository": "foxbms-2",
+    "symbol": "DATA_AccessDatabaseEntries",
+    "symbol_note": "Recorded as 'DATA_AccessDatabaseEntries', the first element of the original prose description \"DATA_AccessDatabaseEntries / DATA_CopyData\", and verified to occur in src/app/engine/database/database.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '130-196' inside it."
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000029",
+   "content_hash": "f5e20d579eafa3df2b2c81c2bc8d58f56aeff2f3772a2ef47b24eaac6988d338",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "50-150",
+    "previous_symbol": "SYS_GetState / SYS_SetState",
+    "reason": "sys.c has no SYS_GetState; the real accessors are SYS_SetStateRequest and SYS_GetSystemState. SYS_SetState does exist but is file-static and takes a SYS_STATE_s pointer, so it is not the public state accessor the record claimed."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "f5e20d579eafa3df2b2c81c2bc8d58f56aeff2f3772a2ef47b24eaac6988d338",
+    "line_range": "691-739",
+    "path": "src/app/engine/sys/sys.c",
+    "repository": "foxbms-2",
+    "symbol": "SYS_SetStateRequest",
+    "symbol_note": "Recorded as 'SYS_SetStateRequest', the first element of the original prose description \"SYS_SetStateRequest / SYS_GetSystemState\", and verified to occur in src/app/engine/sys/sys.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '691-739' inside it."
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000030",
+   "content_hash": "7db4c6781998041023c438c695eafc11e17dcfd91b55a16d4ceadf9675ca296b",
+   "correction": {
+    "previous_content_hash": "sha256:placeholder",
+    "previous_line_range": "50-200",
+    "previous_symbol": "main",
+    "reason": "The symbol was already real; the range 50-200 ran past the 148-line file. main() spans 98-144; unit_test_main at line 100 is the UNITY_UNIT_TEST alias of the same entry point."
+   },
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "7db4c6781998041023c438c695eafc11e17dcfd91b55a16d4ceadf9675ca296b",
+    "line_range": "98-144",
+    "path": "src/app/main/main.c",
+    "repository": "foxbms-2",
+    "symbol": "main"
+   },
+   "retrieval_date": "2026-09-10T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-HW-000001",
+   "content_hash": "unresolved",
+   "hash_note": "This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.external_file rather than location.file, because location.file is read by the provenance checker as a path inside this repository and this path is not one. Consequence for the records that cite this anchor: their hardware provenance rests on a design file this repository cannot show, and that limitation is theirs to carry, not something this registry can resolve. The 2026-09-08 retrieval_date and every other field are unchanged.",
+   "hash_status": "external_design_file_unverifiable_from_this_repository",
+   "location": {
+    "board_revision": "ti-tms570lc4357-vx.x.x",
+    "external_file": "docs/hardware/master/ti-tms570lc4357-vx.x.x/Schematics/foxBMS_Master.SchDoc",
+    "external_repository": "foxBMS2_hw",
+    "file_hash": "unresolved",
+    "net_connector_pin": "CAN1_TX, CAN1_RX, SPI1_CLK, SPI1_MOSI, SPI1_MISO, ETH_TXD, ETH_RXD",
+    "reference_designator": "U1 (TMS570LC4357)",
+    "sheet_page": "Sheet 1-5"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "hardware"
+  },
+  {
+   "anchor_id": "FB2-SRC-HW-000002",
+   "content_hash": "unresolved",
+   "hash_note": "This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.external_file rather than location.file, because location.file is read by the provenance checker as a path inside this repository and this path is not one. Consequence for the records that cite this anchor: their hardware provenance rests on a design file this repository cannot show, and that limitation is theirs to carry, not something this registry can resolve. The 2026-09-08 retrieval_date and every other field are unchanged.",
+   "hash_status": "external_design_file_unverifiable_from_this_repository",
+   "location": {
+    "board_revision": "12-ltc-ltc6811-1-vx.x.x",
+    "external_file": "docs/hardware/slaves/12-ltc-ltc6811-1-vx.x.x/Schematics/foxBMS_Slave.SchDoc",
+    "external_repository": "foxBMS2_hw",
+    "file_hash": "unresolved",
+    "net_connector_pin": "isoSPI_A, isoSPI_B, CELL_1-12, GPIO_1-5",
+    "reference_designator": "U1-U3 (LTC6811-1)",
+    "sheet_page": "Sheet 1-3"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "hardware"
+  },
+  {
+   "anchor_id": "FB2-SRC-HW-000003",
+   "content_hash": "unresolved",
+   "hash_note": "This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.external_file rather than location.file, because location.file is read by the provenance checker as a path inside this repository and this path is not one. Consequence for the records that cite this anchor: their hardware provenance rests on a design file this repository cannot show, and that limitation is theirs to carry, not something this registry can resolve. The 2026-09-08 retrieval_date and every other field are unchanged.",
+   "hash_status": "external_design_file_unverifiable_from_this_repository",
+   "location": {
+    "board_revision": "ltc-ltc6820-vx.x.x",
+    "external_file": "docs/hardware/interfaces/ltc-ltc6820-vx.x.x/Schematics/LTC6820_Interface.SchDoc",
+    "external_repository": "foxBMS2_hw",
+    "file_hash": "unresolved",
+    "net_connector_pin": "SPI_MASTER, isoSPI_SLAVE",
+    "reference_designator": "U1 (LTC6820)",
+    "sheet_page": "Sheet 1"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "hardware"
+  },
+  {
+   "anchor_id": "FB2-SRC-DOC-000001",
+   "content_hash": "b5e4ee840abf40970f60ed7f6f428b80d84728ce74773e570547b8be6c5f5d91",
+   "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"sw-structure\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact.",
+   "location": {
+    "content_hash": "b5e4ee840abf40970f60ed7f6f428b80d84728ce74773e570547b8be6c5f5d91",
+    "retrieval_date": "2026-10-01T00:00:00Z",
+    "section_anchor": "sw-structure",
+    "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/structure/software-structure.html",
+    "version": "latest (v1.11.0)"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "documentation"
+  },
+  {
+   "anchor_id": "FB2-SRC-DOC-000002",
+   "content_hash": "b6b09f7d2ba2254bc1a43e06019faf299260532c731a77bc41655ae96daf9979",
+   "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"design-resources\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact.",
+   "location": {
+    "content_hash": "b6b09f7d2ba2254bc1a43e06019faf299260532c731a77bc41655ae96daf9979",
+    "retrieval_date": "2026-10-01T00:00:00Z",
+    "section_anchor": "design-resources",
+    "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/hardware/design-resources.html",
+    "version": "latest (v1.11.0)"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "documentation"
+  },
+  {
+   "anchor_id": "FB2-SRC-DOC-000003",
+   "content_hash": "f8d2fd92e5d54369c294081a93508a2413a10a9eb3e06cd84595e15ecbee3f55",
+   "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"modules\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact.",
+   "location": {
+    "content_hash": "f8d2fd92e5d54369c294081a93508a2413a10a9eb3e06cd84595e15ecbee3f55",
+    "retrieval_date": "2026-10-01T00:00:00Z",
+    "section_anchor": "modules",
+    "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/modules/modules.html",
+    "version": "latest (v1.11.0)"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "documentation"
+  },
+  {
+   "anchor_id": "FB2-SRC-DOC-000004",
+   "content_hash": "df5951195a7865685aa44a71d254097b861b257bdd7e68743c6608d28e49c2eb",
+   "hash_note": "sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"unit-tests\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact.",
+   "location": {
+    "content_hash": "df5951195a7865685aa44a71d254097b861b257bdd7e68743c6608d28e49c2eb",
+    "retrieval_date": "2026-10-01T00:00:00Z",
+    "section_anchor": "unit-tests",
+    "url_or_path": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/unit-tests/unit-tests.html",
+    "version": "latest (v1.11.0)"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "documentation"
+  },
+  {
+   "anchor_id": "FB2-SRC-TST-000001",
+   "content_hash": "380d07375c882253761268c2b31973c273fcb89dc312ebcd3ad603b0ab37d6b4",
+   "location": {
+    "assertion_report": "SOA limit checking test cases",
+    "configuration": "Unity/CMock, POSIX host build",
+    "file_or_executable": "tests/unit/app/application/soa/test_soa.c",
+    "version": "commit 308028fb"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "test"
+  },
+  {
+   "anchor_id": "FB2-SRC-TST-000002",
+   "content_hash": "08c18b3bf975a876bcf07eadf983329d4a501ade6db59da119291e7361fbe65f",
+   "location": {
+    "assertion_report": "Contactor state machine and feedback test cases",
+    "configuration": "Unity/CMock, POSIX host build",
+    "file_or_executable": "tests/unit/app/driver/contactor/test_contactor.c",
+    "version": "commit 308028fb"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "test"
+  },
+  {
+   "anchor_id": "FB2-SRC-TST-000003",
+   "content_hash": "451bd4ff80f72eae255ab1642261d3b642d023a7e8654f819fb789a185699949",
+   "location": {
+    "assertion_report": "LTC6813-1 AFE driver test cases",
+    "configuration": "Unity/CMock, POSIX host build",
+    "file_or_executable": "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c",
+    "version": "commit 308028fb"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "test"
+  },
+  {
+   "anchor_id": "FB2-SRC-TST-000004",
+   "content_hash": "67de881e472d8ab412f34ab5a3810e8b0c0fb8fac37e45e5d6e4f01d02eea297",
+   "location": {
+    "assertion_report": "Diagnostic callback framework test cases",
+    "configuration": "Unity/CMock, POSIX host build",
+    "file_or_executable": "tests/unit/app/engine/diag/test_diag.c",
+    "version": "commit 308028fb"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "test"
+  },
+  {
+   "anchor_id": "FB2-SRC-TST-000005",
+   "content_hash": "0d0620bdde15549327a5d0732370472f134a71a7c92ad3c8fced21ca7977d893",
+   "location": {
+    "assertion_report": "SOC counting algorithm test cases",
+    "configuration": "Unity/CMock, POSIX host build",
+    "file_or_executable": "tests/unit/app/application/algorithm/state_estimation/soc/counting/test_soc_counting.c",
+    "version": "commit 308028fb"
+   },
+   "retrieval_date": "2026-09-08T00:00:00Z",
+   "source_type": "test"
+  },
+  {
+   "anchor_id": "FB2-SRC-TST-000006",
+   "content_hash": "8b2658a2818c516ab5d2ddb81f692b31226741c978b9b992c49e7b3787374847",
+   "location": {
+    "assertion_report": "AFE measurement plausibility check test cases",
+    "configuration": "Unity/CMock, POSIX host build",
+    "file_or_executable": "tests/unit/app/driver/afe/api/test_afe_plausibility.c",
+    "version": "commit 308028fb"
+   },
+   "retrieval_date": "2026-09-13T00:00:00Z",
+   "source_type": "test"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000031",
+   "content_hash": "8cd338327a83e2daf405b436046d6dd77bff951a1013e6f7b3d2a4a3bdd588db",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "8cd338327a83e2daf405b436046d6dd77bff951a1013e6f7b3d2a4a3bdd588db",
+    "line_range": "658-673",
+    "path": "src/app/application/redundancy/redundancy.c",
+    "repository": "foxbms-2",
+    "symbol": "MRC_ValidateBatteryVoltageMeasurement"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000032",
+   "content_hash": "03151425c57e0b750578ba7dfc8ef417d90b8a02a480b0aa04f5005c91f70457",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "03151425c57e0b750578ba7dfc8ef417d90b8a02a480b0aa04f5005c91f70457",
+    "line_range": "86-91",
+    "path": "src/app/driver/afe/adi/common/ades183x/adi_ades183x.c",
+    "repository": "foxbms-2",
+    "symbol": "adi_bufferRxPec",
+    "symbol_note": "Recorded as 'adi_bufferRxPec', the first element of the original prose description \"adi_bufferRxPec / adi_bufferTxPec\", and verified to occur in src/app/driver/afe/adi/common/ades183x/adi_ades183x.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '86-91' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000033",
+   "content_hash": "e01ccd2370db67c9e5c4bef209e936427ea11a00e23799bf2f60ddbefe9c84c4",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "e01ccd2370db67c9e5c4bef209e936427ea11a00e23799bf2f60ddbefe9c84c4",
+    "line_range": "110-115",
+    "path": "src/app/driver/afe/ltc/6806/ltc_6806.c",
+    "repository": "foxbms-2",
+    "symbol": "ltc_RxPecBuffer",
+    "symbol_note": "Recorded as 'ltc_RxPecBuffer', the first element of the original prose description \"ltc_RxPecBuffer / ltc_TxPecBuffer\", and verified to occur in src/app/driver/afe/ltc/6806/ltc_6806.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '110-115' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000034",
+   "content_hash": "f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+    "line_range": "112-117",
+    "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+    "repository": "foxbms-2",
+    "symbol": "ltc_RxPecBuffer",
+    "symbol_note": "Recorded as 'ltc_RxPecBuffer', the first element of the original prose description \"ltc_RxPecBuffer / ltc_TxPecBuffer\", and verified to occur in src/app/driver/afe/ltc/6813-1/ltc_6813-1.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '112-117' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000035",
+   "content_hash": "85cf1313dfaf3c082b762b213ecf3cb5522b13a1907ad19fd10af32fc657fc16",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "85cf1313dfaf3c082b762b213ecf3cb5522b13a1907ad19fd10af32fc657fc16",
+    "line_range": "80-332",
+    "path": "src/app/driver/afe/maxim/common/mxm_41b_register_map.h",
+    "repository": "foxbms-2",
+    "symbol": "MXM_REG_RX_STATUS_R",
+    "symbol_note": "Recorded as 'MXM_REG_RX_STATUS_R', the first element of the original prose description \"module level (MXM_41B register address defines)\", and verified to occur in src/app/driver/afe/maxim/common/mxm_41b_register_map.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '80-332' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000036",
+   "content_hash": "19669751dcb435b5a6c08fee9ffc6a7bc3b52e7fa65e9ffdac94f5d380ef8bca",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "19669751dcb435b5a6c08fee9ffc6a7bc3b52e7fa65e9ffdac94f5d380ef8bca",
+    "line_range": "70-110",
+    "path": "src/app/driver/afe/maxim/common/mxm_bit_extract.h",
+    "repository": "foxbms-2",
+    "symbol": "MXM_41B_REG_BIT_VALUE",
+    "symbol_note": "Recorded as 'MXM_41B_REG_BIT_VALUE', the first element of the original prose description \"module level (MXM_41B_REG_BIT_VALUE defines)\", and verified to occur in src/app/driver/afe/maxim/common/mxm_bit_extract.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '70-110' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000037",
+   "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+    "line_range": "279-562",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_ConfigureRxMailboxesForExtendedIdentifiers"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000038",
+   "content_hash": "5eac30c992da846cb0540d58db018c88b03002c033b928d7a235138ceb889e91",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "5eac30c992da846cb0540d58db018c88b03002c033b928d7a235138ceb889e91",
+    "line_range": "73-97",
+    "path": "src/app/driver/config/pex_cfg.h",
+    "repository": "foxbms-2",
+    "symbol": "PEX_PORT_EXPANDER1",
+    "symbol_note": "Recorded as 'PEX_PORT_EXPANDER1', the first element of the original prose description \"PEX_PORT_EXPANDER1 / PEX_PORT_EXPANDER2 / PEX_PORT_EXPANDER3 and PEX_PORT_0_PIN_0 .. PEX_PORT_1_PIN_7\", and verified to occur in src/app/driver/config/pex_cfg.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '73-97' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000039",
+   "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "581-584",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_TxInterruptServiceRoutine"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000040",
+   "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "597-600",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_RxInterruptServiceRoutine"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000041",
+   "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+    "line_range": "454-456",
+    "path": "src/app/driver/i2c/i2c.c",
+    "repository": "foxbms-2",
+    "symbol": "I2C_ReadDma"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000042",
+   "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+    "line_range": "548-550",
+    "path": "src/app/driver/i2c/i2c.c",
+    "repository": "foxbms-2",
+    "symbol": "I2C_WriteDma"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000043",
+   "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+    "line_range": "645-700",
+    "path": "src/app/driver/i2c/i2c.c",
+    "repository": "foxbms-2",
+    "symbol": "I2C_WriteReadDma"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000044",
+   "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
+   "hash_note": "Two different contents are in play and both are recorded. location.pinned_commit_content_hash (913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826) are the sha256 of the file as it stands in the working tree, and the file has been edited since the pinned commit. content_hash now names the working-tree file so that it is the digest a reader can check against the file this anchor names; the pinned value is kept beside it rather than discarded, because a commit id on its own does not identify content. line_range and symbol are bounds inside the working-tree file and were checked against it.",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
+    "line_range": "70-653",
+    "path": "src/app/driver/rtc/rtc.c",
+    "pinned_commit_content_hash": "913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "repository": "foxbms-2",
+    "symbol": "module level (whole rtc.c module body, Disable at line 70 / matching Enable at line 653)",
+    "symbol_scope_note": "The claim is about the whole module body of rtc.c between the Disable at line 70 and the matching Enable at line 653, so there is no single identifier that names it. Naming one function would understate the anchor and would not be what it asserts. Recorded as a module-level anchor; its occurrence in rtc.c is therefore not machine-verifiable by symbol match, although its content_hash, its line range and both of the named sites are verified.",
+    "symbol_verifiability": "module_or_file_level_not_machine_verifiable",
+    "working_file_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000045",
+   "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
+   "hash_note": "Two different contents are in play and both are recorded. location.pinned_commit_content_hash (913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826) are the sha256 of the file as it stands in the working tree, and the file has been edited since the pinned commit. content_hash now names the working-tree file so that it is the digest a reader can check against the file this anchor names; the pinned value is kept beside it rather than discarded, because a commit id on its own does not identify content. line_range and symbol are bounds inside the working-tree file and were checked against it.",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826",
+    "line_range": "77-84",
+    "path": "src/app/driver/rtc/rtc.c",
+    "pinned_commit_content_hash": "913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "repository": "foxbms-2",
+    "symbol": "rtc_i2cWriteBuffer",
+    "symbol_note": "Recorded as 'rtc_i2cWriteBuffer', the first element of the original prose description \"rtc_i2cWriteBuffer / rtc_i2cReadBuffer\", and verified to occur in src/app/driver/rtc/rtc.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '77-84' inside it.",
+    "working_file_hash": "b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000046",
+   "content_hash": "f283d2488b60489fd5cccb8e067aa998fed748e471a7256860ed94f6edf71f39",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "f283d2488b60489fd5cccb8e067aa998fed748e471a7256860ed94f6edf71f39",
+    "line_range": "79-173",
+    "path": "src/app/driver/spi/spi_cfg-helper.h",
+    "repository": "foxbms-2",
+    "symbol": "SPI_HARDWARE_CHIP_SELECT_0_ACTIVE",
+    "symbol_note": "Recorded as 'SPI_HARDWARE_CHIP_SELECT_0_ACTIVE', the first element of the original prose description \"module level (SPI_HARDWARE_CHIP_SELECT_*_ACTIVE defines)\", and verified to occur in src/app/driver/spi/spi_cfg-helper.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '79-173' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000047",
+   "content_hash": "bb6b152030bf7fe0fb86397bfb085a613d2008d9598b99e3106abb9fe00478a9",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "bb6b152030bf7fe0fb86397bfb085a613d2008d9598b99e3106abb9fe00478a9",
+    "line_range": "97-120",
+    "path": "src/app/main/include/fassert.h",
+    "repository": "foxbms-2",
+    "symbol": "FAS_DisableInterrupts"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000048",
+   "content_hash": "6010244017c7d1ea6fed94ac49b689392894bd4438296c3cc46ddc0882468180",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "6010244017c7d1ea6fed94ac49b689392894bd4438296c3cc46ddc0882468180",
+    "line_range": "66-119",
+    "path": "src/app/main/include/fsystem.h",
+    "repository": "foxbms-2",
+    "symbol": "FSYS_RaisePrivilege"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000049",
+   "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+    "line_range": "94-102",
+    "path": "src/app/main/include/general.h",
+    "repository": "foxbms-2",
+    "symbol": "FAS_STATIC_ASSERT",
+    "symbol_note": "Recorded as 'FAS_STATIC_ASSERT', the first element of the original prose description \"module level (FAS_STATIC_ASSERT datatype invariants)\", and verified to occur in src/app/main/include/general.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '94-102' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000050",
+   "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+    "line_range": "212-214",
+    "path": "src/app/main/include/general.h",
+    "repository": "foxbms-2",
+    "symbol": "GEN_REPEAT_Ux"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000051",
+   "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+    "line_range": "248-255",
+    "path": "src/app/main/include/general.h",
+    "repository": "foxbms-2",
+    "symbol": "GEN_STRIP"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000052",
+   "content_hash": "21f683880196342a88420283e6fc526c2709b124d546ba3e79a4d702d37be2c1",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "21f683880196342a88420283e6fc526c2709b124d546ba3e79a4d702d37be2c1",
+    "line_range": "68-402",
+    "path": "src/bootloader/driver/config/flash_cfg.c",
+    "repository": "foxbms-2",
+    "symbol": "FLASH_FLASH_BANK_s",
+    "symbol_note": "Recorded as 'FLASH_FLASH_BANK_s', the first element of the original prose description \"module level (FLASH_FLASH_BANK_s / FLASH_FLASH_SECTOR_s tables)\", and verified to occur in src/bootloader/driver/config/flash_cfg.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '68-402' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000053",
+   "content_hash": "401d1fbd060d45dab488d48607db9ddb6834b1f72955b6329b2bd25ccb3b337e",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "401d1fbd060d45dab488d48607db9ddb6834b1f72955b6329b2bd25ccb3b337e",
+    "line_range": "237-245",
+    "path": "src/bootloader/driver/crc/crc.c",
+    "repository": "foxbms-2",
+    "symbol": "CRC_SemiAutoCrcCalculation"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000054",
+   "content_hash": "968692cfb14d9f373934365112790e33acc7e31ef82c60d43a85f3caac330ee6",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "968692cfb14d9f373934365112790e33acc7e31ef82c60d43a85f3caac330ee6",
+    "line_range": "97-120",
+    "path": "src/bootloader/main/include/fassert.h",
+    "repository": "foxbms-2",
+    "symbol": "FAS_DisableInterrupts"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000055",
+   "content_hash": "cc5b128cf270e69aa553a3b96a2df9ee7def659d665139c229553c6c8f45252a",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "cc5b128cf270e69aa553a3b96a2df9ee7def659d665139c229553c6c8f45252a",
+    "line_range": "101-145",
+    "path": "src/bootloader/main/include/fsystem.h",
+    "repository": "foxbms-2",
+    "symbol": "FSYS_RaisePrivilegeToSystemModeSWI"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000056",
+   "content_hash": "48ec856195fe668621be6d80f26cdb4d1633fc0ee3fd4dcef05fbce42a3757ca",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "48ec856195fe668621be6d80f26cdb4d1633fc0ee3fd4dcef05fbce42a3757ca",
+    "line_range": "68-76",
+    "path": "src/bootloader/main/include/general.h",
+    "repository": "foxbms-2",
+    "symbol": "FAS_STATIC_ASSERT",
+    "symbol_note": "Recorded as 'FAS_STATIC_ASSERT', the first element of the original prose description \"module level (FAS_STATIC_ASSERT datatype invariants)\", and verified to occur in src/bootloader/main/include/general.h. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '68-76' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000057",
+   "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+    "line_range": "241-294",
+    "path": "src/app/application/ethernet/ethernet.c",
+    "repository": "foxbms-2",
+    "symbol": "ETH_ListenForConnection"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000058",
+   "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+    "line_range": "128-239",
+    "path": "src/app/application/ethernet/ethernet.c",
+    "repository": "foxbms-2",
+    "symbol": "ETH_EchoServerInstance"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000059",
+   "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+    "line_range": "344-364",
+    "path": "src/app/application/ethernet/ethernet.c",
+    "repository": "foxbms-2",
+    "symbol": "ulApplicationGetNextSequenceNumber"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000060",
+   "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346",
+    "line_range": "407-414",
+    "path": "src/app/application/ethernet/ethernet.c",
+    "repository": "foxbms-2",
+    "symbol": "xApplicationDNSQueryHook_Multi"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000061",
+   "content_hash": "dde8d929a77d4512ec4bc95ad7da8c848bbf5609d4a0dcfd667ba99e306d9aa6",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "dde8d929a77d4512ec4bc95ad7da8c848bbf5609d4a0dcfd667ba99e306d9aa6",
+    "line_range": "83-112",
+    "path": "src/app/application/ethernet/ethernet_freertos.c",
+    "repository": "foxbms-2",
+    "symbol": "ETH_CreateListeningTask"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000062",
+   "content_hash": "24dfc5030b534a41d45466a17fe14efc4178877cd839ebaa3f50d5a0d9cc8b2c",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "24dfc5030b534a41d45466a17fe14efc4178877cd839ebaa3f50d5a0d9cc8b2c",
+    "line_range": "84-96",
+    "path": "src/app/application/config/ethernet_cfg.h",
+    "repository": "foxbms-2",
+    "symbol": "ETH_ECHO_SERVER_PORT_NUMBER"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000063",
+   "content_hash": "9ce959df36c7420da2fc2ffaaef7235cba1ec6628f328d36f45480f353e7879e",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9ce959df36c7420da2fc2ffaaef7235cba1ec6628f328d36f45480f353e7879e",
+    "line_range": "65-69",
+    "path": "src/app/application/config/ethernet_cfg.c",
+    "repository": "foxbms-2",
+    "symbol": "eth_ipAddress"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000064",
+   "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af",
+    "line_range": "294-301",
+    "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h",
+    "repository": "foxbms-2",
+    "symbol": "ipconfigTCP_MSS"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000065",
+   "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+    "line_range": "643-692",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_RxInterrupt"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000066",
+   "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+    "line_range": "1015-1031",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_ReadRxBuffer"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000067",
+   "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+    "line_range": "144-164",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_Initialize"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000068",
+   "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+    "line_range": "244-263",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_RxInterrupt"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000069",
+   "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+    "line_range": "223-242",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_HandleFlowControl"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000070",
+   "content_hash": "0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc",
+    "line_range": "68-69",
+    "path": "src/app/driver/uart/uart.h",
+    "repository": "foxbms-2",
+    "symbol": "UART_XOFF"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000071",
+   "content_hash": "84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52",
+   "hash_note": "Two different contents are in play and both are recorded. location.pinned_commit_content_hash (b083dae4fc190a06beced4efe584672ea565e0478a2ddeea1dbd8f02b32e10f2) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52) are the sha256 of the file as it stands in the working tree, and the file has been edited since the pinned commit. content_hash now names the working-tree file so that it is the digest a reader can check against the file this anchor names; the pinned value is kept beside it rather than discarded, because a commit id on its own does not identify content. line_range and symbol are bounds inside the working-tree file and were checked against it.",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52",
+    "line_range": "330-338",
+    "path": "src/app/task/config/ftask_cfg.c",
+    "pinned_commit_content_hash": "b083dae4fc190a06beced4efe584672ea565e0478a2ddeea1dbd8f02b32e10f2",
+    "repository": "foxbms-2",
+    "symbol": "FTSK_RunUserCodeUart",
+    "working_file_hash": "84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000072",
+   "content_hash": "5e60e1957371051cdee2eacb914cfc5e6f8a2dc9ec665f853aacc09d7140a1e9",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "5e60e1957371051cdee2eacb914cfc5e6f8a2dc9ec665f853aacc09d7140a1e9",
+    "line_range": "104-115",
+    "path": "src/app/driver/foxmath/utils.c",
+    "repository": "foxbms-2",
+    "symbol": "UTIL_GetPseudoRandomNumber"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000073",
+   "content_hash": "f3a76f99198a537ffce4b7876566502e7156a4fbd5b57b56f213bb7884b772c9",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "f3a76f99198a537ffce4b7876566502e7156a4fbd5b57b56f213bb7884b772c9",
+    "line_range": "56-58",
+    "path": "src/os/freertos/freertos/include/task.h",
+    "repository": "foxbms-2",
+    "symbol": "tskKERNEL_VERSION_NUMBER"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000074",
+   "content_hash": "624072983ee96a078cf56260e4d1b66295d1e4bc4852f7aabc449c4809d40862",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "624072983ee96a078cf56260e4d1b66295d1e4bc4852f7aabc449c4809d40862",
+    "line_range": "47-51",
+    "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOS_IP.h",
+    "repository": "foxbms-2",
+    "symbol": "ipFR_TCP_VERSION_NUMBER"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000075",
+   "content_hash": "a5f4b849a59add09227c5d43e6fae1aa42400737020e26df606db5d5f155d082",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "a5f4b849a59add09227c5d43e6fae1aa42400737020e26df606db5d5f155d082",
+    "line_range": "3162-3176",
+    "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfigDefaults.h",
+    "repository": "foxbms-2",
+    "symbol": "ipconfigHAS_DEBUG_PRINTF"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000076",
+   "content_hash": "cf3d69ca84dff742c89579760a16684fe59df212d0819d886711dbe0c3ccb8f6",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "cf3d69ca84dff742c89579760a16684fe59df212d0819d886711dbe0c3ccb8f6",
+    "line_range": "1-12",
+    "path": "src/os/freertos/freertos/README.foxbms.md",
+    "repository": "foxbms-2",
+    "symbol": "module level (FreeRTOS kernel basis for foxBMS 2)",
+    "symbol_scope_note": "A markdown README carries no code identifier. The anchor is about the whole 12-line file, so no symbol can be named and none is invented. Recorded as a file-level anchor; not machine-verifiable by symbol match.",
+    "symbol_verifiability": "module_or_file_level_not_machine_verifiable"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "documentation"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000077",
+   "content_hash": "5cf497cfd3011396b25073ff84ac652fe382510aa5ad3c29975d3e0642714f00",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "5cf497cfd3011396b25073ff84ac652fe382510aa5ad3c29975d3e0642714f00",
+    "line_range": "1-114",
+    "path": "requirements.txt",
+    "repository": "foxbms-2",
+    "symbol": "module level (pinned Python dependency set)",
+    "symbol_scope_note": "requirements.txt is a list of pinned requirement specifiers with no identifiers of their own. The anchor is about the whole 114-line file. Recorded as a file-level anchor; not machine-verifiable by symbol match.",
+    "symbol_verifiability": "module_or_file_level_not_machine_verifiable"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000078",
+   "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "234-239",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_InitializeHardware",
+    "symbol_note": "The original prose named 'EMAC_Initialize', which does not occur anywhere in src/app/driver/emac/emac.c: the function that contains the anchored lines 234-239 is EMAC_InitializeHardware, declared at line 217 and ending before EMAC_InitializeDma at line 296. The symbol field now names the function that actually encloses the anchored lines, and the anchor is verifiable by symbol match. The anchor previously attributed a code element to a file that does not contain it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000079",
+   "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "601-608",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_RxInterruptServiceRoutine"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000080",
+   "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
+    "line_range": "277-318",
+    "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c",
+    "repository": "foxbms-2",
+    "symbol": "NIC_ProcessRxPacket",
+    "symbol_note": "Recorded as 'NIC_ProcessRxPacket', the first element of the original prose description \"NIC_ProcessRxPacket (receive frame-type filter gate)\", and verified to occur in src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '277-318' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000081",
+   "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
+    "line_range": "220-275",
+    "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c",
+    "repository": "foxbms-2",
+    "symbol": "NIC_TransferToTcp",
+    "symbol_note": "Recorded as 'NIC_TransferToTcp', the first element of the original prose description \"NIC_TransferToTcp (receive length bound, buffer allocation, endpoint match)\", and verified to occur in src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '220-275' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000082",
+   "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "fd897833c88ccd84e19599a73360943ef05a3ae4cb6baed1a0a91d2a9f8f1a34",
+    "line_range": "66-79",
+    "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c",
+    "repository": "foxbms-2",
+    "symbol": "NIC_CONSIDER_FRAME_FOR_PROCESSING",
+    "symbol_note": "Recorded as 'NIC_CONSIDER_FRAME_FOR_PROCESSING', the first element of the original prose description \"module level (NIC_CONSIDER_FRAME_FOR_PROCESSING selection, NIC_ETH_MIN_FRAME_BYTES)\", and verified to occur in src/os/freertos/freertos-plus/freertos-plus-tcp/source/portable/NetworkInterface/tms570lc435/NetworkInterface.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '66-79' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000083",
+   "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "565ef63018882933a14a8409ead6872bfe5423c129d39ede94c90caa52f6b4af",
+    "line_range": "267-275",
+    "path": "src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h",
+    "repository": "foxbms-2",
+    "symbol": "ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000084",
+   "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+    "line_range": "243-305",
+    "path": "src/app/driver/phy/dp83869.c",
+    "repository": "foxbms-2",
+    "symbol": "PHY_Initialize",
+    "symbol_note": "Recorded as 'PHY_Initialize', the first element of the original prose description \"PHY_Initialize (PHY power-up, MDIO ID check, MII mode, autonegotiation, link wait)\", and verified to occur in src/app/driver/phy/dp83869.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '243-305' inside it."
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000085",
+   "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+    "line_range": "307-341",
+    "path": "src/app/driver/phy/dp83869.c",
+    "repository": "foxbms-2",
+    "symbol": "PHY_GetLinkStatus"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000086",
+   "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+    "line_range": "367-421",
+    "path": "src/app/driver/phy/dp83869.c",
+    "repository": "foxbms-2",
+    "symbol": "PHY_AutoNegotiate"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000087",
+   "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+    "line_range": "540-547",
+    "path": "src/app/driver/phy/dp83869.c",
+    "repository": "foxbms-2",
+    "symbol": "PHY_ResetHardware"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000088",
+   "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "9a2805af7a388ebd4c2890d636b213ee22463b5b6dc1867ee72d51b00aa5da54",
+    "line_range": "1-59",
+    "path": "src/app/driver/phy/dp83869.c",
+    "repository": "foxbms-2",
+    "symbol": "file header (copyright, licence, and origin/generator statement)",
+    "symbol_scope_note": "The anchor is about the copyright/licence/origin header block of dp83869.c, lines 1-59, which is prose in a comment and contains no identifier. Recorded as a file-header anchor; not machine-verifiable by symbol match.",
+    "symbol_verifiability": "module_or_file_level_not_machine_verifiable"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000089",
+   "content_hash": "84d43d426a37d49cac9b45db71cf53339b0b90cbf7258b47857020b4188cf458",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "84d43d426a37d49cac9b45db71cf53339b0b90cbf7258b47857020b4188cf458",
+    "line_range": "73-74",
+    "path": "src/app/driver/phy/dp83869.h",
+    "repository": "foxbms-2",
+    "symbol": "PHY_PHY_ID"
+   },
+   "retrieval_date": "2026-09-29T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-HW-000004",
+   "content_hash": "710a164beb69c711571607073e6d05abdae660a39a9975fb3c67140e8cced808",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "1-87",
+    "path": "hardware/README.md",
+    "repository": "foxbms-2"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "hardware"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000090",
+   "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "68-73",
+    "path": "src/app/driver/afe/api/afe.h",
+    "repository": "foxbms-2",
+    "symbol": "AFE_REQUEST_e"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000091",
+   "content_hash": "88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "104-108",
+    "path": "src/app/driver/afe/api/afe.h",
+    "repository": "foxbms-2",
+    "symbol": "AFE_TriggerIc"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000092",
+   "content_hash": "4b2c0e98d4a308604a88e6102a40782a2338680647d3af0a23a1a3d25ad95f96",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "76-83",
+    "path": "src/app/driver/meas/meas.h",
+    "repository": "foxbms-2",
+    "symbol": "MEAS_Control"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000093",
+   "content_hash": "9992c431761c3124adce61b350147db8a4f12f8bdb814bcc09901a2ccfa80ed3",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "84-87",
+    "path": "src/app/driver/meas/meas.c",
+    "repository": "foxbms-2",
+    "symbol": "MEAS_RequestTemperatureRead"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000094",
+   "content_hash": "ab0543a8ef7052d52e3e3acb6e4041fb9f2b3e5d658ed026a8a849d3dec65060",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "94",
+    "path": "src/app/task/config/ftask_cfg.h",
+    "repository": "foxbms-2",
+    "symbol": "FTSK_TASK_CYCLIC_1MS_CYCLE_TIME"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000095",
+   "content_hash": "84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52",
+   "hash_note": "This file differs between the named commit 308028fb and the working tree that the offline provenance check hashes, so the recorded content_hash is the hash of the file on disk and NOT the hash of the 308028fb blob. This is the convention the rest of this registry already follows (FB2-SRC-COD-000044, FB2-SRC-COD-000045 and FB2-SRC-COD-000071 all name files with this same property and record their working-tree hash). The cited symbol and line range were verified to hold at BOTH 308028fb and the working tree.",
+   "hash_status": "hash_is_of_the_working_tree_not_of_the_named_commit",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "246-256",
+    "path": "src/app/task/config/ftask_cfg.c",
+    "repository": "foxbms-2",
+    "symbol": "FTSK_RunUserCodeCyclic1ms"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000096",
+   "content_hash": "3a38542f4da1986bc1944cd7ce6eabbc38a044255c9273f8273e46f2940670b1",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "109",
+    "path": "src/app/application/config/battery_system_cfg.h",
+    "repository": "foxbms-2",
+    "symbol": "BS_NR_OF_STRINGS"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000097",
+   "content_hash": "ea1f74619aa95bff27a9b1f5c7a5f57c3d0f661d96970f46afda23ed455e9378",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "81-85",
+    "path": "src/app/main/include/fstd_types.h",
+    "repository": "foxbms-2",
+    "symbol": "STD_RETURN_TYPE_e"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000098",
+   "content_hash": "41e6b467b5e42fa2f02c6f500515f3da249b0f2fd4c99144cbde44ff87e4ecf1",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "70-79",
+    "path": "src/app/application/soa/soa.h",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckVoltages"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000099",
+   "content_hash": "9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "353-354",
+    "path": "src/app/application/soa/soa.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckSlaveTemperatures"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000100",
+   "content_hash": "c0e2f1d4dd83f059b91c11dd91543ef052d515eb7a247fa26be7b53897523286",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "898-917",
+    "path": "src/app/application/bms/bms.c",
+    "repository": "foxbms-2",
+    "symbol": "BMS_Trigger"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000101",
+   "content_hash": "9cf58622c01f3cffaf26d8e76f06d9abde1ea1d29afbe1cd1ad3bff262973396",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "69-77",
+    "path": "src/app/driver/contactor/contactor.h",
+    "repository": "foxbms-2",
+    "symbol": "CONT_GetContactorState"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000102",
+   "content_hash": "71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "184-201",
+    "path": "src/app/driver/contactor/contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "CONT_CloseContactor"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000103",
+   "content_hash": "067fe6ef41b5d184ee170749b72e2325d30c59302c13406a806e7fe5c3079c2c",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "95-101",
+    "path": "src/app/driver/can/can.h",
+    "repository": "foxbms-2",
+    "symbol": "CAN_DataSend"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000104",
+   "content_hash": "571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "931-977",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_DataSend"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000105",
+   "content_hash": "6025ce96329edc0eccd423f7b62b2bd59e4ec4d85811bdab86407b8aedb4d6e8",
+   "hash_note": "This file differs between the named commit 308028fb and the working tree that the offline provenance check hashes, so the recorded content_hash is the hash of the file on disk and NOT the hash of the 308028fb blob. This is the convention the rest of this registry already follows (FB2-SRC-COD-000044, FB2-SRC-COD-000045 and FB2-SRC-COD-000071 all name files with this same property and record their working-tree hash). The cited symbol and line range were verified to hold at BOTH 308028fb and the working tree.",
+   "hash_status": "hash_is_of_the_working_tree_not_of_the_named_commit",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "73",
+    "path": "src/app/engine/database/database.h",
+    "repository": "foxbms-2",
+    "symbol": "DATA_MAX_ENTRIES_PER_ACCESS"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000106",
+   "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "79-83",
+    "path": "src/app/engine/database/database.c",
+    "repository": "foxbms-2",
+    "symbol": "DATA_MAX_QUEUE_TIMEOUT_MS"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000107",
+   "content_hash": "af6b6fe67b67fc8e791184c140f35b5d9f063e3723d831fea0d14e93c37ce56e",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "105-121",
+    "path": "src/app/engine/diag/diag.h",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_Handler"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000108",
+   "content_hash": "bb6b152030bf7fe0fb86397bfb085a613d2008d9598b99e3106abb9fe00478a9",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "140-152",
+    "path": "src/app/main/include/fassert.h",
+    "repository": "foxbms-2",
+    "symbol": "FAS_StoreAssertLocation"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000109",
+   "content_hash": "6010244017c7d1ea6fed94ac49b689392894bd4438296c3cc46ddc0882468180",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "100-116",
+    "path": "src/app/main/include/fsystem.h",
+    "repository": "foxbms-2",
+    "symbol": "FSYS_RaisePrivilege"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000110",
+   "content_hash": "743144c15d98bd057c4c712372968d72b7ba51ff7efbeffaeecb7dee0ba74d13",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "130-139",
+    "path": "src/app/driver/i2c/i2c.h",
+    "repository": "foxbms-2",
+    "symbol": "I2C_Read"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000111",
+   "content_hash": "ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "226-281",
+    "path": "src/app/driver/i2c/i2c.c",
+    "repository": "foxbms-2",
+    "symbol": "I2C_Read"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000112",
+   "content_hash": "983aeeff2d73be60d764de8edc042c7224f6605d7a315f843322ae68a848e565",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "178-186",
+    "path": "src/app/driver/spi/spi.h",
+    "repository": "foxbms-2",
+    "symbol": "SPI_Lock"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000113",
+   "content_hash": "cf3f363240ca36bf2177e90ecdc048672546318db72b1f5d94129deab67d5a92",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "513-526",
+    "path": "src/app/driver/spi/spi.c",
+    "repository": "foxbms-2",
+    "symbol": "SPI_Lock"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000114",
+   "content_hash": "0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "85-92",
+    "path": "src/app/driver/uart/uart.h",
+    "repository": "foxbms-2",
+    "symbol": "UART_Read"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000115",
+   "content_hash": "0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "196-221",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_Read"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000116",
+   "content_hash": "337db40b6a32cb7bb9c6ced3464002b8fb25e93e73d68dd785e2a1d7d4ccc26f",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "141",
+    "path": "src/app/application/config/battery_cell_cfg.h",
+    "repository": "foxbms-2",
+    "symbol": "BC_VOLTAGE_MAX_MOL_mV"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  },
+  {
+   "anchor_id": "FB2-SRC-COD-000117",
+   "content_hash": "c0e2f1d4dd83f059b91c11dd91543ef052d515eb7a247fa26be7b53897523286",
+   "location": {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "line_range": "913",
+    "path": "src/app/application/bms/bms.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckVoltages"
+   },
+   "retrieval_date": "2026-10-01T00:00:00Z",
+   "source_type": "code"
+  }
+ ],
+ "created_at": "2026-09-10T00:00:00Z",
+ "repository_commit": "308028fb13d046ba29b98886895c2e17937b1437",
+ "schema_version": "1.0.0",
+ "updated_at": "2026-10-01T00:00:00Z"
 }

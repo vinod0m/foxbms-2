@@ -1,0 +1,232 @@
+{
+ "id": "FB2-HW-HDD-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "hardware_detailed_design_gap",
+ "engineering_domain": "hardware",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "HWE.3 Hardware Detailed Design: recorded unavailability and its consequence",
+ "owner_role": "hw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-HW-000001",
+  "FB2-SRC-HW-000002",
+  "FB2-SRC-HW-000003"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 5, Clause 8 (hardware detailed design)",
+   "status": "gap",
+   "rationale": "The Part 5 detailed-design artefacts - schematics, PCB layout, bill of materials, component specifications - are absent and cannot be authored from this repository. This record states why; it does not supply any of them."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "HWE.3",
+   "status": "gap",
+   "rationale": "HWE.3 remains a gap. This record is a recorded finding about that gap, not a discharge of it: it contains no board-level design content, and naming the process here makes the gap legible rather than smaller."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "hw_engineer",
+   "description": "Recorded why HWE.3 has no backing artefact, so that the gap is a stated finding rather than an absence."
+  }
+ ],
+ "gap_statement": "HWE.3 expects schematics, a PCB layout, a bill of materials and component specifications. All four are absent from this corpus, and none of them can be authored from this repository, because the design sources they would be derived from are not in it. This record is the finding that says so, with the evidence, so that a reader encountering HWE.3 in the coverage plan finds a reason rather than a silence. It deliberately contains no board-level design content: there is none here to carry, and inventing a net, a reference designator, a component, a register, an offset, a mask or a base address would be fabrication, not documentation.",
+ "expected_families": [
+  {
+   "family": "Schematics",
+   "status": "absent",
+   "basis": "The schematic sources are Altium .SchDoc files hosted in a separate repository. No .SchDoc file exists in the foxbms-2 working tree or in any commit of any branch."
+  },
+  {
+   "family": "PCB Layout",
+   "status": "absent",
+   "basis": "The layout sources are Altium .PcbDoc files hosted externally. No .PcbDoc file exists in the foxbms-2 working tree or in any commit of any branch."
+  },
+  {
+   "family": "BOM",
+   "status": "absent",
+   "basis": "No bill of materials file is tracked in this repository for any board at any version. docs/hardware/design-resources.rst lists a BOM in Excel format as part of the assembly files inside the external design package, which is where this corpus's BOM would have to come from."
+  },
+  {
+   "family": "Component Specifications",
+   "status": "absent",
+   "basis": "No component specification for any board is tracked here. The device data sheets that would carry component limits are not in this repository and are not vendor-neutral substitutes for them."
+  }
+ ],
+ "blockers": [
+  {
+   "blocker": "No Altium design source in this repository, at any commit of any branch",
+   "evidence": "git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md. git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns no output. git ls-tree -r --name-only 308028fb -- docs/hardware/ returns 166 tracked files, of which 93 are CSV tables and 26 are draw.io sources, and none of them is an Altium file.",
+   "consequence": "Nothing downstream of a schematic can be derived here: no net, no reference designator, no component placement, no BOM line."
+  },
+  {
+   "blocker": "The designs are hosted outside this repository",
+   "evidence": "The release index hardware/README.md points every board at a per-release zip archive on https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release. docs/hardware/design-resources.rst states that the design packages for the masters, interfaces and slaves are available from the project repository.",
+   "consequence": "The board inventory in FB2-HW-HCB-000001 is a configuration baseline, not a design baseline. It says which board and which version; it cannot say what is on the board."
+  },
+  {
+   "blocker": "The format is proprietary CAD and out of reach for an offline corpus even if fetched",
+   "evidence": "docs/hardware/design-resources.rst names Altium Designer as the tool required to open the schematic and layout files.",
+   "consequence": "Obtaining the archives would not make the design verifiable by this corpus. The unblock is a tool, not only a download, and recording it as only a download would understate what is missing."
+  },
+  {
+   "blocker": "The three existing hardware anchors cannot be verified, and were already recorded as such",
+   "evidence": "FB2-SRC-HW-000001, FB2-SRC-HW-000002 and FB2-SRC-HW-000003 each carry content_hash 'unresolved' and location.file_hash 'unresolved', with hash_status 'external_design_file_unverifiable_from_this_repository' and a hash_note recording the same search this record repeats. Their external_file values name .SchDoc paths in a separate repository.",
+   "consequence": "No new evidence can be produced for those anchors from here, and any record depending on them inherits an unverifiable provenance."
+  }
+ ],
+ "affected_records": {
+  "derivation": "Re-derived mechanically at authoring time, not asserted: every tracked JSON file under docs/artifacts/corpus/, docs/artifacts/reviews/ and docs/artifacts/scenarios/ whose text contains one of the three anchor identifiers FB2-SRC-HW-000001, FB2-SRC-HW-000002 or FB2-SRC-HW-000003, excluding source-registry.json itself and excluding FB2-HW-HCB-000001, which cites hardware/README.md and not these anchors.",
+  "record_files": 14,
+  "by_artifact_type": {
+   "requirement": 6,
+   "scenario": 2,
+   "change": 2,
+   "safety_analysis": 1,
+   "item_definition": 1,
+   "safety_concept": 1,
+   "design": 1
+  },
+  "records": [
+   {
+    "id": "FB2-HW-TSR-000001",
+    "artifact_type": "requirement",
+    "profile": "as_is",
+    "path": "docs/artifacts/corpus/as_is/hardware/tsr-afe-cell-voltage.json"
+   },
+   {
+    "id": "FB2-HW-TSR-000002",
+    "artifact_type": "requirement",
+    "profile": "as_is",
+    "path": "docs/artifacts/corpus/as_is/hardware/tsr-afe-communication.json"
+   },
+   {
+    "id": "FB2-HW-TSR-000003",
+    "artifact_type": "requirement",
+    "profile": "as_is",
+    "path": "docs/artifacts/corpus/as_is/hardware/tsr-contactor-driver.json"
+   },
+   {
+    "id": "FB2-SCN-CHG-000002",
+    "artifact_type": "scenario",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/scenarios/change-lifecycles/change-002-hsi-interface.json"
+   },
+   {
+    "id": "FB2-HW-TSR-000001",
+    "artifact_type": "requirement",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-afe-cell-voltage.json"
+   },
+   {
+    "id": "FB2-HW-TSR-000002",
+    "artifact_type": "requirement",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-afe-communication.json"
+   },
+   {
+    "id": "FB2-HW-TSR-000003",
+    "artifact_type": "requirement",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-contactor-driver.json"
+   },
+   {
+    "id": "FB2-MAN-CHG-000001",
+    "artifact_type": "change",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/management/change-001-cell-voltage-max-limit.json"
+   },
+   {
+    "id": "FB2-MAN-CHG-000002",
+    "artifact_type": "change",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/management/change-002-afe-communication-interface.json"
+   },
+   {
+    "id": "FB2-SAF-ANL-000003",
+    "artifact_type": "safety_analysis",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/safety/analyses/dependent-failure-analysis.json"
+   },
+   {
+    "id": "FB2-SAF-ITE-000001",
+    "artifact_type": "item_definition",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json"
+   },
+   {
+    "id": "FB2-SAF-TSC-000001",
+    "artifact_type": "safety_concept",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json"
+   },
+   {
+    "id": "FB2-SYS-HSI-000001",
+    "artifact_type": "design",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/corpus/synthetic_reference/system/hsi-cell-voltage.json"
+   },
+   {
+    "id": "FB2-SCN-CHG-000002",
+    "artifact_type": "scenario",
+    "profile": "synthetic_reference",
+    "path": "docs/artifacts/scenarios/change-lifecycles/change-002-hsi-interface.json"
+   }
+  ],
+  "statement": "14 tracked record files in this corpus name one of the three unverifiable Altium anchors. Each of them rests, for its hardware provenance, on a design file this repository cannot show, and each of them already carries that limitation itself. The count is stated so the size of the inherited limitation is visible; it is not a count of defects, because none of these records is wrong about its own limitation."
+ },
+ "what_would_close_the_gap": [
+  {
+   "unblock": "The Altium design sources for the boards under consideration are placed under version control that this corpus can read, or exported to a documented neutral format.",
+   "then": "Schematics, layout and BOM become derivable and HWE.3 can be authored as content rather than as a finding."
+  },
+  {
+   "unblock": "A tool able to read the format is available to the corpus.",
+   "then": "The exported or committed sources become machine-checkable rather than merely present, and a BOM can be re-derived and compared."
+  },
+  {
+   "unblock": "Component data sheets for the parts actually placed are available under terms that permit their use.",
+   "then": "Component specifications become derivable; without them the component family stays absent even if the design sources arrive."
+  },
+  {
+   "note": "This record does not estimate how long that takes, does not schedule it, and does not treat the gap as expected to close soon. It is blocked, not late."
+  }
+ ],
+ "not_established_by_this_record": [
+  "No schematic, layout, net, reference designator, component, register, offset, mask or base address.",
+  "No bill of materials, not even a partial or an inferred one.",
+  "No component specification and no device data sheet content.",
+  "No discharge of HWE.3. The process remains a gap and this record says so in its own standards mapping, with status gap.",
+  "No claim that the corpus's existing hardware records are wrong. They already carry the limitation; this record makes the population visible.",
+  "No human approval, no independence, no certification, no ASPICE capability level."
+ ],
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent that re-ran the searches itself rather than taking the finding on trust. That makes the finding reproducible, not independent: no hardware engineer confirmed it, no design source was consulted because none could be, and no board was inspected.",
+  "approval_claimed": false
+ }
+}

@@ -1,0 +1,231 @@
+{
+ "id": "FB2-SW-SIR-000004",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "requirement",
+ "engineering_domain": "software",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Software interface requirements: the platform-service and serial-bus interfaces",
+ "owner_role": "sw_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000047",
+  "FB2-SRC-COD-000110",
+  "FB2-SRC-COD-000111",
+  "FB2-SRC-COD-000112",
+  "FB2-SRC-COD-000113",
+  "FB2-SRC-COD-000114",
+  "FB2-SRC-COD-000115"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 7 (software requirements analysis)",
+   "status": "partially_mapped",
+   "rationale": "Supplies software interface requirements, the family SWE.1 expected and that was absent. It does not analyse them from a higher-level requirement, so the process's defining activity is still absent."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.1",
+   "status": "partially_mapped",
+   "rationale": "Backs SWE.1 with the software interface requirement family. The status stays partially_mapped because these requirements are derived from an analysis of an existing implementation, not analysed from software requirements or system requirements, and because the existing software requirements remain back-inferred."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.2",
+   "status": "partially_mapped",
+   "rationale": "Consumes the interface specifications this requirement set is derived from. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "sw_engineer",
+   "description": "Five interface requirements over the platform-service and serial-bus boundaries, derived from FB2-SW-IFS-000007 and FB2-SW-IFS-000008. Two of them are stated because the analysed interfaces do not satisfy them, and both concern failure detection: a transfer that never started is reported as a success, and a lock release is not checked."
+  }
+ ],
+ "statement": "The platform-service and serial-bus interfaces shall present the following to their consumers: (a) a masking entry point that states what it excludes and that rejects a nested entry; (b) a time base that states its unit and its resolution; (c) a serial read that reports a transfer which did not start as a failure rather than a success; (d) a lock that states its owner, its timeout and the consequence of a release that the caller does not hold; and (e) a transfer length parameter that is bounded against the destination buffer the caller supplies.",
+ "rationale": "These requirements exist because the analysed boundaries fail in ways a consumer cannot detect from the outside. The I2C read reports a skipped transfer as success when the bus is busy, so a caller can believe it holds data it does not have. The SPI lock has no owner, no timeout and no refusal on a spurious release, so a lost release is indistinguishable from a correct one and a refused claim carries no timing information. Two buffer-length parameters are explicitly unchecked by a decision recorded in the source. A masking entry point that cannot detect nesting is the third such case. None of these is visible in a signature, and all four are the kind of property an interface requirement exists to state.",
+ "classification": "interface",
+ "acceptance_criteria": [
+  {
+   "criterion": "A masking entry point shall state what it excludes and shall reject a nested entry",
+   "measure": "Inspection for a depth counter or an equivalent nesting check in the masking element",
+   "threshold": "1 nesting check, or an explicit statement that nesting is rejected"
+  },
+  {
+   "criterion": "The time base shall state its unit and its resolution",
+   "measure": "Inspection of the declared return type against a stated conversion constant",
+   "threshold": "unit and resolution stated at the interface"
+  },
+  {
+   "criterion": "A serial read shall report a transfer that did not start as a failure",
+   "measure": "Inspection of the return value on the path where the body is skipped",
+   "threshold": "a non-success value on the skipped path"
+  },
+  {
+   "criterion": "A lock shall state its owner, its timeout and the consequence of a spurious release",
+   "measure": "Inspection of the claim and release elements",
+   "threshold": "owner, timeout and refused-release behaviour stated"
+  },
+  {
+   "criterion": "Every transfer-length parameter shall be bounded against the destination buffer",
+   "measure": "Inspection for a maximum length on the length parameter",
+   "threshold": "1 maximum length per length parameter"
+  }
+ ],
+ "verification_approach": "analysis",
+ "safety_allocation": {
+  "asil": "not_applicable",
+  "safety_goal_ref": "not_applicable",
+  "mitigation": "No ASIL is allocated to this requirement. It is a software interface requirement about how two modules call each other, and the product it describes has never had a hazard analysis and risk assessment: no ISO 26262 conformity, no ASIL determination and no certification is claimed for it or for anything in this corpus. The non-applicability is stated with its reason rather than left blank, because an unexplained non-applicability is indistinguishable from a requirement that quietly dropped out of every ASIL-derived view."
+ },
+ "asil_justification": {
+  "severity": {
+   "rating": "not_applicable"
+  },
+  "exposure": {
+   "rating": "not_applicable"
+  },
+  "derived_asil": "not_applicable",
+  "statement": "Not applicable, and deliberately so. This requirement carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. This is not a statement that the interface is unimportant: it is a statement that the classification apparatus is not available in this repository, and a reader must not read 'not_applicable' as 'no consequence'."
+ },
+ "assumptions": [],
+ "conditions_modes": [
+  "NORMAL",
+  "CHARGING",
+  "PRECHARGE",
+  "DERATING"
+ ],
+ "feasibility_dependencies": [],
+ "requirement_kind": "software_interface_requirement",
+ "derivation": {
+  "direction": "specification_to_requirement",
+  "derived_from_interface_specifications": [
+   "FB2-SW-IFS-000007",
+   "FB2-SW-IFS-000008"
+  ],
+  "method": "Every statement below names the interface element it obliges and the analysed behaviour it rests on.",
+  "authoring_independence": "not_independent",
+  "authoring_independence_statement": "Authored by an AI agent from the interface specifications and the source. No requirements engineer confirmed that this is the interface that was wanted, no stakeholder stated a need that these requirements answer, and no human approved them. They record what the code obliges a consumer to rely on; they do not record what anyone asked for."
+ },
+ "element_requirements": [
+  {
+   "id": "FB2-SW-SIR-000004-A",
+   "statement": "A masking entry point shall state what it excludes and shall reject a nested entry.",
+   "source_element": "IFSE-000601 OS_EnterTaskCritical and IFSE-000604 FAS_DisableInterrupts",
+   "basis": "Neither element contains a depth counter, so a nested entry followed by a single exit leaves the masking in place. The two elements also mask different things - scheduling for the calling task versus interrupts globally - and the headers do not say so.",
+   "gap": "unsatisfied_by_the_analysed_implementation"
+  },
+  {
+   "id": "FB2-SW-SIR-000004-B",
+   "statement": "The time base shall state its unit and its resolution at the interface.",
+   "source_element": "IFSE-000603 OS_GetTickCount",
+   "basis": "NOT satisfied by the analysed implementation. The element returns a tick count and the conversion constant is a separate macro elsewhere in the same layer.",
+   "gap": "unsatisfied_by_the_analysed_implementation"
+  },
+  {
+   "id": "FB2-SW-SIR-000004-C",
+   "statement": "A serial read shall report a transfer that did not start as a failure.",
+   "source_element": "IFSE-000701 I2C_Read",
+   "basis": "NOT satisfied by the analysed implementation. When the bus is busy the entire body is skipped and the caller receives the success value.",
+   "gap": "unsatisfied_by_the_analysed_implementation"
+  },
+  {
+   "id": "FB2-SW-SIR-000004-D",
+   "statement": "A lock shall state its owner, its timeout and the consequence of a release that the caller does not hold.",
+   "source_element": "IFSE-000703 SPI_Lock and IFSE-000704 SPI_Unlock",
+   "basis": "The claim returns a bare negative with no timing information and the release writes the idle state with no test of the previous state, so a lost release is indistinguishable from a correct one.",
+   "gap": "unsatisfied_by_the_analysed_implementation"
+  },
+  {
+   "id": "FB2-SW-SIR-000004-E",
+   "statement": "Every transfer-length parameter shall be bounded against the destination buffer the caller supplies.",
+   "source_element": "IFSE-000701 I2C_Read and IFSE-000705 UART_Read",
+   "basis": "NOT satisfied by the analysed implementation. The I2C read asserts only that the length is greater than zero, and the UART read records the absence of a check as a deliberate suppression. Neither bounds the length against the buffer.",
+   "gap": "unsatisfied_by_the_analysed_implementation"
+  }
+ ],
+ "element_requirements_note": "The failure reaction of this boundary is almost entirely absent, which is why five of five requirements are unsatisfied. A skipped transfer looks like a completed one, a lock release cannot be refused, a masked section cannot be detected as nested, and two buffer lengths are unbounded. In every case the consumer has no channel through which to learn that something did not happen. That is recorded here as a property of the boundary rather than as a verdict on the code, and it is the reason this requirement set exists at all.",
+ "failure_reaction": "Five of five are unsatisfied by the implementation as analysed, and this record does not claim otherwise. That ratio is the finding, not a defect in this record. This is the boundary where the analysed code's own decisions are recorded as deliberate - the unchecked identifier, the unchecked lengths, the non-nesting masking - and the requirements state what the interface would have to do for a consumer to rely on it. Three of the five are one-line changes in intent: a range check, a unit in a comment, and a check on the skipped path. The other two, the lock ownership and the nesting, need a design decision.",
+ "traceability_to_existing_requirements": [
+  {
+   "requirement": "FB2-SW-SIR-000004-A",
+   "statement": "A masking entry point shall state what it excludes and shall reject a nested entry.",
+   "derivation": "Inspect both masking elements for a depth counter and for any statement of what each excludes.",
+   "interface_spec": "FB2-SW-IFS-000007",
+   "evidence": "src/app/task/os/freertos/os_freertos.c L153-L155 and L157-L159 contain no counter; the global mask is a pragma-bound assembler routine at src/app/main/include/fassert.h L112.",
+   "status": "NOT SATISFIED at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000004-B",
+   "statement": "The time base shall state its unit and its resolution at the interface.",
+   "derivation": "Confirm the unit and the conversion are stated where the time value is returned. They are not; the conversion is a separate macro.",
+   "interface_spec": "FB2-SW-IFS-000007",
+   "evidence": "uint32_t OS_GetTickCount(void) at src/app/task/os/os.h L244 returns a tick count; OS_TICK_RATE_MS is defined separately at src/app/task/os/os.h L75.",
+   "status": "NOT SATISFIED at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000004-C",
+   "statement": "A serial read shall report a transfer that did not start as a failure.",
+   "derivation": "Inspect the return value on the path where the transfer body is skipped.",
+   "interface_spec": "FB2-SW-IFS-000008",
+   "evidence": "The success value is initialised at src/app/driver/i2c/i2c.c L235 and the whole transfer is inside the bus-not-busy test at L237.",
+   "status": "NOT SATISFIED at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000004-D",
+   "statement": "A lock shall state its owner, its timeout and the consequence of a release that the caller does not hold.",
+   "derivation": "Inspect the claim for timing information and the release for any test of the previous state.",
+   "interface_spec": "FB2-SW-IFS-000008",
+   "evidence": "src/app/driver/spi/spi.c L516 and L525 for the claim; L528-L534 for the release, which has no test and no return value.",
+   "status": "NOT SATISFIED at 308028fb"
+  },
+  {
+   "requirement": "FB2-SW-SIR-000004-E",
+   "statement": "Every transfer-length parameter shall be bounded against the destination buffer the caller supplies.",
+   "derivation": "Inspect the length parameter of each serial read for a maximum.",
+   "interface_spec": "FB2-SW-IFS-000008",
+   "evidence": "src/app/driver/i2c/i2c.c L233 asserts only that the length is greater than zero; src/app/driver/uart/uart.c L198-L199 records that the parameter accepts its whole range.",
+   "status": "NOT SATISFIED at 308028fb"
+  }
+ ],
+ "verification_status": {
+  "analysis_performed": false,
+  "test_measure_exists": false,
+  "statement": "No test measure exists for any requirement in this record, and no requirement in it has been verified against running code. Every derivation below is an inspection of the source at the pinned commit, which is why the verification approach is analysis and why the coverage matrix in the implementation mapping document reports this record as uncovered. That is the accurate position, not a gap to be filled by writing more prose."
+ },
+ "not_established_by_this_record": [
+  "Every requirement in this set is unsatisfied by the implementation as analysed. The record exists to state what the interface would owe a consumer, and it must not be read as a description of what the code does today.",
+  "Requirement A covers two elements that mask different things, and the requirement does not choose between them. Whether the global interrupt mask should detect nesting at all is a design decision for a hardware engineer, not something this record decides.",
+  "No requirement here is elicited from a stakeholder, a system requirement or a safety goal.",
+  "The requirement set states no bus speed, bit rate or protocol version for any of the three serial buses, because none appears in any of the three headers.",
+  "No ASIL, no safety allocation, no conformity claim, no certification, no human approval.",
+  "No verification has been performed against any of these requirements and no test measure exists for any of them."
+ ],
+ "authority_and_independence": {
+  "independence": "not_independent",
+  "independence_statement": "Authored by an AI agent. It is a derivation from an analysed specification, not an elicitation, not an analysis of a higher-level requirement, and not independent review.",
+  "approval_claimed": false
+ }
+}
