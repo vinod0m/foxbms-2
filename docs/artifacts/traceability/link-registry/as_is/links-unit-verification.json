@@ -1,0 +1,137 @@
+{
+ "schema_version": "1.0.0",
+ "created_at": "2026-10-02T00:00:00Z",
+ "updated_at": "2026-10-02T00:00:00Z",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "generated_note": "Typed links for the SWE.4 software unit verification specification FB2-VER-UTS-000002 authored in the as_is profile. Written into a new registry file rather than appended to links-cell-voltage.json, so that file's 117 links are byte-unchanged and this file can be diffed against them independently. Every link_id uses the FB2-LNK-USW- prefix, which no other registry uses, and no endpoint pair in this file appears in any other registry, so the shadowing detector has nothing to report. Every link is review_state pending: no person has examined any of them. change_suspect_status is false on each because each endpoint revision recorded here is that endpoint's current revision, which is what the corpus derives the field from; that is a statement about the recorded revision, not a finding that the relationship was re-examined.",
+ "links": [
+  {
+   "link_id": "FB2-LNK-USW-000001",
+   "source_id": "FB2-SW-SWR-000001",
+   "source_revision": "2",
+   "target_id": "FB2-VER-UTS-000002",
+   "target_revision": "1",
+   "relation_type": "verifies",
+   "profile": "as_is",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-SW-SWR-000001 requires 20 Hz acquisition, PEC/CRC validation before database write, and database publish within 5 ms. The specification's requirement_traceability entry records that one of those three - the PEC/CRC criterion - has an executed unit assertion, in the LTC 6813-1 PEC oracle group, and that the two timing criteria are neither asserted nor assertable in a harness that mocks the timebase and the SPI/DMA transfer. The verification_state recorded is partially_verified_at_unit_level. A verifies link is recorded because the specification does address the requirement and states what it does and does not reach; it is not recorded as evidence that the requirement is met.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-USW-000002",
+   "source_id": "FB2-SW-SWR-000002",
+   "source_revision": "2",
+   "target_id": "FB2-VER-UTS-000002",
+   "target_revision": "1",
+   "relation_type": "verifies",
+   "profile": "as_is",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-SW-SWR-000002 requires a 10 ms limit-check latency, 1 mV threshold accuracy against the configured limits and a 5 ms transition to FAULT. The specification records that 0 of those 3 criteria have an executed unit assertion: the only tests reaching src/app/application/soa/soa.c assert NULL-argument rejection, which is a defensive contract no requirement states. The 60 assertions on src/app/application/config/soa_cfg.c verify a configuration table, not the monitoring behaviour. verification_state is recorded as not_verified_at_unit_level and the link exists so that the absence is visible from the requirement rather than only from the verification side of the corpus.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-USW-000003",
+   "source_id": "FB2-SW-SWR-000003",
+   "source_revision": "2",
+   "target_id": "FB2-VER-UTS-000002",
+   "target_revision": "1",
+   "relation_type": "verifies",
+   "profile": "as_is",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-SW-SWR-000003 requires the OPEN to PRECHARGE to CLOSE to HOLD state machine, a 5 ms fault response and auxiliary feedback readback after every command. The specification records that the only test file for src/app/driver/contactor/contactor.c was a build failure in the recorded SIL host run, so nothing about this requirement executed, and that the file's 2 surviving assertions concern registry shape rather than any state transition. verification_state is not_verified_at_unit_level.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-USW-000004",
+   "source_id": "FB2-VER-UTS-000002",
+   "source_revision": "1",
+   "target_id": "FB2-VER-EXE-000015",
+   "target_revision": "10",
+   "relation_type": "depends_on",
+   "profile": "as_is",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "The specification's measurement_state.recorded_run block is read directly out of docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json, which is the evidence the execution record FB2-VER-EXE-000015 registers: 313 test files selected, 222 green, 7 red, 84 build failures, 988 assertion sites reported of which 950 passed, 35 failed and 3 were ignored. The specification adds no execution of its own and is not an independent confirmation of that record; its limitations say so explicitly.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-USW-000005",
+   "source_id": "FB2-VER-UTS-000002",
+   "source_revision": "1",
+   "target_id": "FB2-VER-TMS-000004",
+   "target_revision": "1",
+   "relation_type": "consumes",
+   "profile": "as_is",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-VER-TMS-000004 is the unit test measure for the LTC 6813-1 AFE measurement cycle and PEC validation, the one requirement in this corpus whose criterion the specification finds an executed analytical oracle for. The specification's MOD-LTC-6813-1 group names the three real test files whose assertions discharge that measure and records the recorded-run counter for each beside the current-tree assertion-site count.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-USW-000006",
+   "source_id": "FB2-VER-UTS-000002",
+   "source_revision": "1",
+   "target_id": "FB2-VER-TMS-000001",
+   "target_revision": "1",
+   "relation_type": "consumes",
+   "profile": "as_is",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-VER-TMS-000001 is the unit test measure for SOA voltage limit monitoring. The specification consumes it to state, per requirement, what the named tests actually assert: on MOD-SOA that the only assertions are TEST_ASSERT_FAIL_ASSERT on NULL arguments and that no acceptance criterion of FB2-SW-SWR-000002 is reached. The measure records what the test does; the specification records whether that constitutes a verification basis, which for this group it does not.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  },
+  {
+   "link_id": "FB2-LNK-USW-000007",
+   "source_id": "FB2-VER-UTS-000002",
+   "source_revision": "1",
+   "target_id": "FB2-VER-TMS-000002",
+   "target_revision": "1",
+   "relation_type": "consumes",
+   "profile": "as_is",
+   "scenario_id": "SCN-BASELINE",
+   "baseline_id": "BAS-REF-001",
+   "variant_applicability": [
+    "VAR-REF-001"
+   ],
+   "rationale": "FB2-VER-TMS-000002 is the unit test measure for the contactor state machine. The specification consumes it to record that the tests it names for src/app/driver/contactor/contactor.c were a build failure in the recorded run, so the measure has no execution behind it and FB2-SW-SWR-000003 is unverified at unit level.",
+   "provenance": "derived",
+   "review_state": "pending",
+   "change_suspect_status": false
+  }
+ ]
+}

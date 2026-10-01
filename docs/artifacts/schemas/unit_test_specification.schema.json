@@ -1,0 +1,507 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://foxbms2.softwaredevlabs.org/schemas/unit_test_specification.schema.json",
+ "title": "Unit Test Specification Schema",
+ "description": "Schema for a software unit test specification (ASPICE SWE.4 family 'Unit Test Specification'). A unit test measure record is not a specification: a measure says what one test does, a specification says, per module under test, what is covered, on what oracle basis, and what is not covered. This schema requires a per-module coverage statement naming real test file paths, an enumerated oracle basis drawn from a closed set, a non-coverage section that must be non-empty, and a vacuity census.",
+ "allOf": [
+  {
+   "$ref": "artifact-base.schema.json"
+  },
+  {
+   "type": "object",
+   "required": [
+    "spec_id",
+    "specification_basis",
+    "measurement_state",
+    "oracle_basis_definitions",
+    "modules_under_test",
+    "non_coverage",
+    "vacuity_census",
+    "requirement_traceability",
+    "claims_not_made",
+    "independence_statement",
+    "limitations"
+   ],
+   "properties": {
+    "artifact_type": {
+     "const": "unit_test_specification"
+    },
+    "spec_id": {
+     "type": "string",
+     "pattern": "^FB2-VER-UTS-[0-9]{6}$"
+    },
+    "specification_basis": {
+     "type": "string",
+     "minLength": 1
+    },
+    "measurement_state": {
+     "type": "object",
+     "required": [
+      "recorded_run",
+      "current_tree_static_census",
+      "why_two_states"
+     ],
+     "properties": {
+      "recorded_run": {
+       "type": "object",
+       "required": [
+        "evidence_path",
+        "generated_at",
+        "total_test_files",
+        "passed",
+        "failed",
+        "build_failures",
+        "assertions_tested",
+        "assertions_passed",
+        "assertions_failed"
+       ],
+       "properties": {
+        "evidence_path": {
+         "type": "string",
+         "minLength": 1
+        },
+        "evidence_sha256": {
+         "type": "string",
+         "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "generated_at": {
+         "type": "string",
+         "minLength": 1
+        },
+        "total_test_files": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "passed": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "failed": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "build_failures": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "assertions_tested": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "assertions_passed": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "assertions_failed": {
+         "type": "integer",
+         "minimum": 0
+        }
+       },
+       "additionalProperties": false
+      },
+      "current_tree_static_census": {
+       "type": "object",
+       "required": [
+        "tree_commit",
+        "total_test_files",
+        "with_test_case_and_assertion",
+        "with_test_case_no_assertion",
+        "with_no_test_case",
+        "method",
+        "method_limitation"
+       ],
+       "properties": {
+        "tree_commit": {
+         "type": "string",
+         "pattern": "^[0-9a-f]{7,40}$"
+        },
+        "total_test_files": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "with_test_case_and_assertion": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "with_test_case_no_assertion": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "with_no_test_case": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "method": {
+         "type": "string",
+         "minLength": 1
+        },
+        "method_limitation": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "additionalProperties": false
+      },
+      "why_two_states": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "oracle_basis_definitions": {
+     "type": "object",
+     "required": [
+      "closed_set",
+      "definitions",
+      "discriminator"
+     ],
+     "properties": {
+      "closed_set": {
+       "type": "array",
+       "minItems": 4,
+       "maxItems": 4,
+       "items": {
+        "enum": [
+         "source_grounded",
+         "analytical_model",
+         "synthetic_assumption",
+         "measured"
+        ]
+       }
+      },
+      "definitions": {
+       "type": "object",
+       "required": [
+        "source_grounded",
+        "analytical_model",
+        "synthetic_assumption",
+        "measured"
+       ],
+       "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "discriminator": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "modules_under_test": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "module_id",
+       "module_path",
+       "module_exists",
+       "test_files",
+       "what_is_covered",
+       "oracle_basis",
+       "oracle_basis_justification",
+       "oracle_blindness",
+       "coverage_verified_by"
+      ],
+      "properties": {
+       "module_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "module_path": {
+        "type": "string",
+        "minLength": 1
+       },
+       "module_exists": {
+        "type": "boolean"
+       },
+       "test_files": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "object",
+         "required": [
+          "path",
+          "path_exists",
+          "test_case_functions",
+          "unity_assertion_count"
+         ],
+         "properties": {
+          "path": {
+           "type": "string",
+           "pattern": "^tests/unit/.*\\.c$"
+          },
+          "path_exists": {
+           "type": "boolean"
+          },
+          "test_case_functions": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          },
+          "unity_assertion_count": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "recorded_run_outcome": {
+           "enum": [
+            "pass",
+            "fail",
+            "build_failure",
+            "not_in_recorded_run"
+           ]
+          },
+          "recorded_run_tested": {
+           "type": [
+            "integer",
+            "null"
+           ]
+          },
+          "recorded_run_passed": {
+           "type": [
+            "integer",
+            "null"
+           ]
+          },
+          "recorded_run_failed": {
+           "type": [
+            "integer",
+            "null"
+           ]
+          }
+         },
+         "additionalProperties": false
+        }
+       },
+       "what_is_covered": {
+        "type": "string",
+        "minLength": 1
+       },
+       "oracle_basis": {
+        "enum": [
+         "source_grounded",
+         "analytical_model",
+         "synthetic_assumption",
+         "measured"
+        ]
+       },
+       "oracle_basis_justification": {
+        "type": "string",
+        "minLength": 1
+       },
+       "oracle_blindness": {
+        "type": "string",
+        "minLength": 1
+       },
+       "coverage_verified_by": {
+        "enum": [
+         "unit_test_execution",
+         "code_reading_only",
+         "none"
+        ]
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "non_coverage": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "gap_id",
+       "gap_class",
+       "affected",
+       "evidence_path",
+       "statement"
+      ],
+      "properties": {
+       "gap_id": {
+        "type": "string",
+        "pattern": "^GAP-UTS-[0-9]{3}$"
+       },
+         "gap_class": {
+          "enum": [
+           "build_failure",
+           "vacuous_green",
+           "no_test_case",
+           "no_routine_outcome_assertion",
+           "unimplemented_in_source",
+           "unmeasured_metric",
+           "not_executed_on_target",
+           "test_failure"
+          ],
+          "$comment": "test_failure was added when FB2-VER-UTS-000002 was authored. The closed set had no member for a test file that builds, links, executes and whose assertions FAIL, which is a distinct condition from all seven above: it is not a build failure (the file compiled), not vacuous (it does assert), not a missing test (it exists and runs), and not an unmeasured metric. The nearest members were being forced into service and mislabelled -- a red file counted as build_failure would assert that it did not compile, and counted as vacuous_green would assert the opposite of what was observed. The member is additive: no existing record's gap_class value was changed, reclassified or removed, and every value already in the set still validates."
+         },
+       "affected": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "evidence_path": {
+        "type": "string",
+        "minLength": 1
+       },
+       "evidence_sha256": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+       },
+       "statement": {
+        "type": "string",
+        "minLength": 1
+       },
+       "count": {
+        "type": "integer",
+        "minimum": 0
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "vacuity_census": {
+     "type": "object",
+     "required": [
+      "method",
+      "recorded_run_green",
+      "recorded_run_green_asserting",
+      "recorded_run_green_not_asserting",
+      "vacuous_green_files",
+      "deletion_experiment_status"
+     ],
+     "properties": {
+      "method": {
+       "type": "string",
+       "minLength": 1
+      },
+      "recorded_run_green": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "recorded_run_green_asserting": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "recorded_run_green_not_asserting": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "vacuous_green_files": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "path",
+         "path_exists",
+         "test_case_functions",
+         "what_it_does_instead"
+        ],
+        "properties": {
+         "path": {
+          "type": "string",
+          "pattern": "^tests/unit/.*\\.c$"
+         },
+         "path_exists": {
+          "type": "boolean"
+         },
+         "test_case_functions": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          }
+         },
+         "what_it_does_instead": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "additionalProperties": false
+       }
+      },
+      "deletion_experiment_status": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "requirement_traceability": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "requirement_id",
+       "requirement_exists",
+       "acceptance_criterion",
+       "covering_test_files",
+       "verification_state"
+      ],
+      "properties": {
+       "requirement_id": {
+        "type": "string",
+        "pattern": "^FB2-SW-SWR-[0-9]{6}$"
+       },
+       "requirement_exists": {
+        "type": "boolean"
+       },
+       "acceptance_criterion": {
+        "type": "string",
+        "minLength": 1
+       },
+       "covering_test_files": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "verification_state": {
+        "enum": [
+         "verified_at_unit_level",
+         "partially_verified_at_unit_level",
+         "not_verified_at_unit_level"
+        ]
+       },
+       "note": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "claims_not_made": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "independence_statement": {
+     "type": "string",
+     "minLength": 1
+    },
+    "limitations": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    }
+   },
+   "additionalProperties": true
+  }
+ ]
+}

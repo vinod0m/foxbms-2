@@ -1,0 +1,378 @@
+{
+ "id": "FB2-MAN-VDR-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "verification_deficiency_register",
+ "engineering_domain": "management",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Software Verification Deficiency Register: 10 open deficiencies blocking a complete SWE.4/SWE.5/SWE.6 verification",
+ "owner_role": "project_manager",
+ "origin": "derived",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.4, SWE.5, SWE.6",
+   "status": "partially_mapped",
+   "rationale": "This register tracks the deficiencies that keep SWE.4, SWE.5 and SWE.6 from being satisfied. It is a management record and supplies none of the three expected verification families itself."
+  },
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SUP.9 Problem Resolution Management",
+   "status": "partially_mapped",
+   "rationale": "Deficiencies are recorded with an owner, an unblock condition and a blocking relationship, which is the problem-resolution shape. What SUP.9 also requires and this does not have is an agreed root cause and an agreed resolution per problem, because nobody has reviewed any of these."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 9",
+   "status": "partially_mapped",
+   "rationale": "The verification deficiencies that bear on the three named software requirements."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": false,
+  "links_valid": false,
+  "provenance_consistent": false,
+  "consistency_checks": false,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "project_manager",
+   "description": "First issue. 10 entries, each with the tracked evidence that establishes it and the condition that would close it."
+  }
+ ],
+ "register_id": "FB2-MAN-VDR-000001",
+ "register_basis": "Every entry names a tracked file and its sha256. The counts come from results-sil-all.json and from a mechanical re-count of the committed test sources at tree commit ebd6d5a6. No entry is an opinion without a file behind it, and no count is estimated. Where a number is a join rather than a field, the count_basis field says so and the join key is named.",
+ "entries": [
+  {
+   "deficiency_id": "VDR-001",
+   "title": "84 of 313 unit-test targets do not build, 17 of them on product defects",
+   "category": "product_defect",
+   "affected": [
+    "17 targets attributed to the product: 16 on a build:real_defect_* class (6 out-of-bounds array index, 4 macro arity, 2 implicit function declaration, 2 implicit int, 1 absolute-value truncation, 1 excess initialisers) plus 1 on build:product_tautological_guard",
+    "8 targets with undeclared identifier, which the classifier treats as its own class and which could be either a product omission or a harness gap",
+    "56 targets that are not product defects at all: 28 excluded upstream by configuration, 22 failing only a clang-specific diagnostic, 5 failing a strict diagnostic under both compilers, 1 not buildable on the macOS object format",
+    "3 targets with a SIL interface header mismatch, which is a harness defect rather than a product defect"
+   ],
+   "count": 84,
+   "count_basis": "results-sil-all.json .build_failures, 13 classifier classes",
+   "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+   "why_it_matters": "A target that does not build is not a coverage question, it is an unresolved defect that sits inside every pass-rate figure anyone quotes from this suite. The 17 defect-attributed ones are the sharp end: an out-of-bounds array index and a macro-arity error are exactly the defects that a BMS cannot have, and no test result exists for any file that would have caught them because the file does not compile. The 28 excluded-upstream ones need a recorded decision rather than a silent omission, because an exclusion that nobody decided on is indistinguishable from a test that was quietly deleted.",
+   "owner_role": "verification_engineer",
+   "unblock_condition": "Execute and fix or formally disposition each of the 84. The 17 defect-attributed ones are product changes and are not verification work. The 28 excluded ones need a decision on whether they are excluded on purpose. The 22 clang-only and 1 object-format ones are host artefacts and must NOT be fixed in the product; they need to be recorded as substitution artefacts.",
+   "blocks": [
+    "FB2-VER-EXE-000015 completeness",
+    "FB2-VER-SIP-000001 IL-01 exit criteria",
+    "any coverage claim"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-UTS-000001 GAP-UTS-001",
+    "FB2-VER-SIP-000001 IL-01 unblock_condition"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-002",
+   "title": "5 green unit-test targets assert nothing, and 21 more declare no test case at all",
+   "category": "vacuous_verification",
+   "affected": [
+    "tests/unit/app/main/test_fassert.c",
+    "tests/unit/bootloader/main/test_fassert.c",
+    "tests/unit/app/engine/sys/test_reset.c",
+    "tests/unit/app/driver/afe/debug/can/api/test_debug_can_afe_dma.c",
+    "tests/unit/app/driver/afe/debug/default/api/test_debug_default_afe_dma.c",
+    "21 files with zero test cases: 13 in the ADI ADES183x shared layer, 6 in the NXP MC3377x shared layer, plus test_emac-low-level.c and test_fake_functions.c"
+   ],
+   "count": 26,
+   "count_basis": "5 vacuous green from the join of recorded outcome to committed source; 21 from a static count of void test*(void) definitions at tree commit ebd6d5a6",
+   "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+   "why_it_matters": "The 5 contribute to the pass count and to no coverage. fassert is the module that records where an assertion fired, so a fault there would make every other test's PASS_ASSERT meaningless, and the test that supposedly covers it checks nothing. The 21 do not inflate anything because all of them are build failures, but they are concentrated in the two AFE shared layers, which are the only code in the tree instantiated by more than one vendor: an undetected defect in the ADES183x or MC3377x shared layer appears once per AFE variant that uses it.",
+   "owner_role": "verification_engineer",
+   "unblock_condition": "For the 5: a decision on what each is for. The corpus's own finding is explicit that writing tests for the config-module cases would be inventing the specification, so this needs whoever knows what each module guarantees, not a test author. For the 21: write tests or record that the shared layer is untested by decision. Either outcome is acceptable; silence is not.",
+   "blocks": [
+    "FB2-VER-SQP-000001 PC-002",
+    "any statement of the form N tests pass without a qualifier"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-UTS-000001 GAP-UTS-002 and GAP-UTS-003",
+    "FB2-VER-VSR-000001 what_failed"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-003",
+   "title": "The SOA module has no verified behaviour although a software requirement is written about it",
+   "category": "unbuilt_verification",
+   "affected": [
+    "src/app/application/soa/soa.c",
+    "tests/unit/app/application/soa/test_soa.c",
+    "FB2-SW-SWR-000002"
+   ],
+   "count": 1,
+   "count_basis": "1 module; its only test file holds 2 test cases and 3 assertions, all NULL-pointer traps, with the output-verification step written as /* TODO */",
+   "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+   "why_it_matters": "This is the largest single requirement-to-verification hole in the corpus. The SOA module is the safe-operating-area monitor: it is what decides a cell is over- or under-voltage and raises the diagnosis. Its test drives the routine path and mock-queues every DIAG_Handler call, so the interactions are satisfied, and then verifies nothing about the classification the module reached. A module that misclassifies every cell as safe would pass this test. All four acceptance criteria of FB2-SW-SWR-000002 are unverified, and two of them describe behaviour the source does not contain (see VDR-004).",
+   "owner_role": "verification_engineer",
+   "unblock_condition": "An outcome oracle: after SOA_CheckVoltages, assert which cells, which tier and which violation the module classified, against a classification derived independently of the code. The test file already has the structure for it - the expectation queue is in place and only the output check is missing.",
+   "blocks": [
+    "FB2-SW-SWR-000002 verification",
+    "FB2-VER-SQP-000001 PC-004",
+    "FB2-VER-SIP-000001 IL-05 entry criteria"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-VSR-000001 what_failed"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-004",
+   "title": "FB2-SW-SWR-000002 specifies a debounce and a reaction path that the source does not contain",
+   "category": "requirement_source_contradiction",
+   "affected": [
+    "FB2-SW-SWR-000002",
+    "src/app/application/soa/soa.c",
+    "FB2-SW-DSN-000005"
+   ],
+   "count": 1,
+   "count_basis": "1 requirement; 2 of its 4 acceptance criteria are for behaviour FB2-SW-DSN-000005's declared_gaps records as absent",
+   "evidence_path": "docs/artifacts/corpus/synthetic_reference/software/design-soa-detailed.json",
+   "evidence_sha256": "sha256:840fdad55bd6050f42ea2260438a3fc57554b7687578ffd6ede2a2c0d9bf5587",
+   "why_it_matters": "The requirement states a debounce of 2 consecutive violations within 100 ms and a FAULT state request on confirmed violation. The detailed design record's own declared_gaps records that the SOA module contains no debounce and no reaction path. A verification task cannot be written against behaviour that does not exist, and a requirement that survives in this state makes the corpus look as though it has a specified safety monitor when it has a specified intent and an unimplemented monitor.",
+   "owner_role": "project_manager",
+   "unblock_condition": "A human decision. Either withdraw the debounce and reaction criteria from FB2-SW-SWR-000002, or add a debounce and a reaction path to the SOA module and re-run VDR-003 against it. No harness work, no amount of testing, and no AI judgement resolves this; it is a decision about what the product is.",
+   "blocks": [
+    "FB2-VER-SQP-000001 PC-009",
+    "FB2-VER-SIP-000001 IL-05 exit criteria",
+    "any safety argument that cites FB2-SW-SWR-000002"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-SQP-000001 PC-009",
+    "FB2-VER-VSR-000001 what_is_blocked"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-005",
+   "title": "No coverage measurement of any kind exists, so no percentage of this product is known",
+   "category": "unmeasured_attribute",
+   "affected": [
+    "all 263 src translation units",
+    "all 313 test targets"
+   ],
+   "count": 1,
+   "count_basis": "No statement-coverage or branch-coverage artefact exists in this corpus; the recorded run reports 988 assertions executed, which is not a coverage figure",
+   "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+   "why_it_matters": "An assertion count says how many comparisons were made, not which statements ran or which branches were taken. Without a coverage measurement, the suite's 217 asserting green targets cannot be turned into any statement about how much of the product they exercise, and a reviewer asking what percentage of foxBMS 2 is tested has no answer available to them. This deficiency is the reason several pass criteria in the qualification plan are written as unmet bars rather than as descriptions.",
+   "owner_role": "verification_lead",
+   "unblock_condition": "Run a coverage-instrumented build of the host sweep and retain the report as a tracked artefact with input hashes. gcov is not qualified in this corpus, so the tool qualification is part of the condition and the result inherits that limitation.",
+   "blocks": [
+    "FB2-VER-SQP-000001 PC-006",
+    "any percentage coverage claim",
+    "a defensible regression-selection basis"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-UTS-000001 GAP-UTS-005 and claims_not_made",
+    "FB2-VER-SQP-000001 PC-006"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-006",
+   "title": "No integration test specification exists, so the integration plan has nothing to execute",
+   "category": "absent_specification",
+   "affected": [
+    "FB2-VER-SIP-000001 (5 levels, 9 ordered steps)",
+    "FB2-VER-TMS-000007",
+    "FB2-VER-EXE-000007"
+   ],
+   "count": 9,
+   "count_basis": "9 ordered integration steps, 0 executed; FB2-VER-EXE-000007 is execution_kind none with outcome blocked",
+   "evidence_path": "docs/artifacts/corpus/synthetic_reference/verification/test-sw-integration.json",
+   "evidence_sha256": "sha256:41a774f475de617164435d2835463d65a1686da21073c7a58b5966049127cc38",
+   "why_it_matters": "SWE.5 expects three families: a plan, a specification and results. The plan now exists. The other two do not, and a plan without oracles is a schedule. FB2-VER-TMS-000007 declares 3 steps and no oracle for any of them, so executing it would produce a number with nothing behind it.",
+   "owner_role": "verification_lead",
+   "unblock_condition": "Author an integration test specification with a real oracle per step, derived from the per-level exit criteria in FB2-VER-SIP-000001, and then execute IL-01. IL-01 is partially executable now once VDR-001 is cleared.",
+   "blocks": [
+    "FB2-VER-SIP-000001 execution_state",
+    "SWE.5 SW Integration Test Specification family",
+    "SWE.5 SW Integration Test Results family"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-SIP-000001 unblock_conditions"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-007",
+   "title": "No qualification specification and no executed qualification, at any level",
+   "category": "absent_specification",
+   "affected": [
+    "FB2-VER-EXE-000008",
+    "FB2-VER-TMS-000016 through FB2-VER-TMS-000020"
+   ],
+   "count": 6,
+   "count_basis": "1 blocked system-qualification execution plus 5 network-security measures with no executed result",
+   "evidence_path": "docs/artifacts/corpus/synthetic_reference/verification/execution-sys-qualification.json",
+   "evidence_sha256": "sha256:047ff7fe8f8ead4e074964c78a9f0b6807cd687fd8d947cc67284ae09204b995",
+   "why_it_matters": "The five network-security measures are the most substantial qualification content the corpus has: they state what a passing run would have to observe and, unusually, what their oracle cannot see. They have never been run. So the corpus holds a good statement of what qualification would require and no evidence that any of it holds.",
+   "owner_role": "verification_lead",
+   "unblock_condition": "Author the SW Qualification Test Specification with a measurable oracle per acceptance criterion, then execute it. The five security measures can be executed on the host; the latency criteria of FB2-SW-SWR-000001..000003 cannot, which is VDR-008.",
+   "blocks": [
+    "SWE.6 SW Qualification Test Specification family",
+    "SWE.6 SW Qualification Test Results family",
+    "FB2-VER-SQP-000001 L4"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-SQP-000001 results_records_absent"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-008",
+   "title": "No target-hardware verification has been performed, and no latency criterion can be met without one",
+   "category": "environment_absence",
+   "affected": [
+    "all 313 recorded results",
+    "all timing acceptance criteria in FB2-SW-SWR-000001, 000002 and 000003",
+    "src/bootloader/**",
+    "src/os/freertos/**"
+   ],
+   "count": 1,
+   "count_basis": "0 target-hardware executions; every one of the 313 records is a macOS arm64 host build against mocked HL_* interface headers",
+   "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md",
+   "evidence_sha256": "sha256:929ada9c27021915758946785ab5844435e7f33f3d7cbbf5a0b4e6067788f462",
+   "why_it_matters": "Every result in this corpus was produced against substitutes: 38 distinct HALCoGen interface headers, with HL_spi required by 70 targets, HL_can by 69 and HL_het by 60. The FreeRTOS scheduler, the real interrupt and DMA completion paths, the SPI transfer ordering, the CAN wire behaviour and a real time base are all outside what any recorded result demonstrates. This matters most for the timing criteria, which are the majority of the acceptance criteria across the three software requirements: 50 ms, 25 ms, 5 ms, 1 ms and 2 ms, none of which can be measured by a harness that contains no wall-clock oracle. Until this is closed, the corpus has evidence about a host build of the product's sources and nothing about the product.",
+   "owner_role": "hw_verification_lead",
+   "unblock_condition": "Target hardware, a harness that builds the product for it, and an authority to declare the product verified. The corpus's coverage report reads 0 target-hardware executions and this deficiency is the reason that figure is 0 rather than a gap in the report.",
+   "blocks": [
+    "FB2-VER-SQP-000001 PC-008 and PC-010",
+    "FB2-VER-SQP-000001 L5",
+    "any qualification claim",
+    "any release decision"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-VSR-000001 target_hardware"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-009",
+   "title": "The linker crash that zeroes out the PHY driver's 15 assertions is a host toolchain problem, not 15 defects",
+   "category": "environment_absence",
+   "affected": [
+    "tests/unit/app/driver/phy/test_dp83869.c",
+    "the host linker used by the SIL harness"
+   ],
+   "count": 1,
+   "count_basis": "1 target, 15 cases, 15 assertions, 0 passed; diagnosed in TASK2-SEGFAULT.md as a linker crash plus an ASAN/-flto link deadlock",
+   "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md",
+   "evidence_sha256": "sha256:50465b4839cdf42abc6bd1a69e69c39b4bf686c7c47563e0eaa2d6dc95e279ed",
+   "why_it_matters": "The largest test file by assertion count in the suite, 932 lines and 45 assertions, contributes nothing because the link step crashes. Without the diagnosis this reads as the worst-verified module in the product; with it, it reads as a module that is neither verified nor disproven, and a host toolchain that needs fixing before the next sweep. The distinction is the difference between a quality finding and an infrastructure ticket, and the corpus is better at telling it because TASK2-SEGFAULT.md was written rather than the failure being reported as a product defect.",
+   "owner_role": "hw_verification_lead",
+   "unblock_condition": "Fix the host link path, or exclude -flto from the SIL test linker configuration so that a diagnosing build becomes possible, then re-run the target. Neither is a product change.",
+   "blocks": [
+    "the only test of src/app/driver/phy/dp83869.c",
+    "FB2-VER-VSR-000001 what_failed completeness"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-UTS-000001 MUT-PHY-DP83869",
+    "FB2-VER-VSR-000001 what_failed"
+   ]
+  },
+  {
+   "deficiency_id": "VDR-010",
+   "title": "No verification artefact in this corpus is independent, and none is approved",
+   "category": "independence_absence",
+   "affected": [
+    "every artefact in the corpus; human_approval_status is pending on all of them and production_authorized is false on all of them"
+   ],
+   "count": 1,
+   "count_basis": "0 of the corpus's artefacts carry a completed human approval; 0 verification levels have been performed by a person who did not author the code",
+   "evidence_path": "docs/artifacts/governance/role-and-review-policy.json",
+   "evidence_sha256": "sha256:8e7227e87448981bd21faf450086f350490298f74e4aaa6148f530572deffcf5",
+   "why_it_matters": "An AI-authored review is not independence, and this corpus's verification is entirely AI-authored. Pass criterion PC-011 in the qualification plan requires a person who did not author the code, and no such person has reviewed anything here. The practical consequence is not that the records are wrong; it is that no judgement in them has been checked, including the judgement that the SOA test verifies nothing, which is the single most consequential claim this corpus makes about its own test suite.",
+   "owner_role": "project_manager",
+   "unblock_condition": "A human who did not author the code reviews the verification, and the role-and-review policy is applied to record the outcome. Until then every plan and summary in this series is an unsigned position rather than a finding.",
+   "blocks": [
+    "FB2-VER-SQP-000001 PC-011",
+    "any use of these records as a release or qualification argument"
+   ],
+   "status": "open",
+   "recorded_in": [
+    "FB2-VER-SQP-000001 independence",
+    "FB2-VER-VSR-000001 independence_statement"
+   ]
+  }
+ ],
+ "summary_counts": {
+  "entries_total": 10,
+  "by_category": {
+   "product_defect": 1,
+   "vacuous_verification": 1,
+   "unbuilt_verification": 1,
+   "requirement_source_contradiction": 1,
+   "unmeasured_attribute": 1,
+   "absent_specification": 2,
+   "environment_absence": 2,
+   "independence_absence": 1
+  },
+  "items_affected_total": 131
+ },
+ "residual_risk_statement": "Carrying all ten open means the following is true at the same time. The product's unit-level behaviour is partially evidenced: 217 asserting green targets and 950 passing assertions on a host, with 84 targets unbuilt and 5 vacuous. The safety monitor the corpus's own requirement is written about has no verified behaviour, and the requirement for it specifies behaviour the source does not contain. No code has been integrated and no qualification has been run. The product has never run on its own hardware, and the majority of its acceptance criteria are latencies that no existing harness can measure. No artefact has been reviewed by a person who did not write the code, including the four specifications and plans this register tracks. In short: the corpus holds good evidence that a host build of the product's sources behaves as those sources suggest in the places that have tests, and no evidence whatsoever about the product. The dominant residual risk is the gap between those two statements, and it is not a documentation gap: it is a hardware gap, a specification gap and an independence gap, and only the third is cheap to close.",
+ "review_cadence": {
+  "reviewed_on": "2026-10-01",
+  "next_review": "2026-10-08",
+  "reviewer_role": "project_manager",
+  "human_review_performed": false
+ },
+ "independence_statement": "This register was compiled by an AI agent from the same repository and the same recorded run that the code's own test suite was derived from. Compiling a register of deficiencies is not an independent review of them: the person who would most need to check these entries is the one who has to decide whether to accept the risk they represent, and that person has not seen this. human_review_performed is false and human_approval_status is pending.",
+ "limitations": [
+  "The register is a snapshot of 2026-10-01 against tree commit ebd6d5a6 and the recorded sweep of 2026-09-30. Commit 176fe234 landed between them, so entry VDR-001's 84 and VDR-002's 26 describe the sweep, not necessarily the current tree.",
+  "No entry has been accepted, resolved or deferred. All 10 are open, and none has been seen by the role that owns it.",
+  "VDR-003 and VDR-004 are related and the order matters: the SOA behaviour is unverified partly because the requirement contradicts the source. Closing VDR-004 by withdrawing the requirement would close VDR-003's scope rather than its gap.",
+  "The register does not carry an agreed root cause or an agreed resolution for any entry, which is what SUP.9 would require. It carries the evidence, the owner and the unblock condition, which is the part that can be authored without a decision.",
+  "VDR-008 is the entry that dominates the others and it is the only one that no amount of authoring can close."
+ ],
+ "evidence_files": [
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/VACUOUS-TESTS.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+  "docs/artifacts/governance/role-and-review-policy.json"
+ ],
+ "logs": [
+  {
+   "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "hash": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+   "type": "custom"
+  },
+  {
+   "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md",
+   "hash": "sha256:50465b4839cdf42abc6bd1a69e69c39b4bf686c7c47563e0eaa2d6dc95e279ed",
+   "type": "custom"
+  }
+ ]
+}

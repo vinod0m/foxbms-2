@@ -1,0 +1,214 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://foxbms2.softwaredevlabs.org/schemas/verification_deficiency_register.schema.json",
+ "title": "Verification Deficiency Register Schema",
+ "description": "Schema for a register of open software-verification deficiencies (ASPICE SWE.4/SWE.5/SWE.6 and the supporting processes that own the resulting actions). A register exists so that a gap has an owner, a count, an unblock condition and a review date, instead of being a sentence in a plan. This schema requires every entry to name the evidence that establishes the deficiency, because a deficiency asserted without evidence is an opinion, and it requires the register to carry its own summary counts so the register and the plans cannot drift apart silently. It requires a residual_risk_statement: a register that lists deficiencies without saying what is accepted by carrying them is a to-do list, not a management record.",
+ "allOf": [
+  {
+   "$ref": "artifact-base.schema.json"
+  },
+  {
+   "type": "object",
+   "required": [
+    "register_id",
+    "register_basis",
+    "entries",
+    "summary_counts",
+    "residual_risk_statement",
+    "review_cadence",
+    "independence_statement",
+    "limitations"
+   ],
+   "properties": {
+    "artifact_type": {
+     "const": "verification_deficiency_register"
+    },
+    "register_id": {
+     "type": "string",
+     "pattern": "^FB2-MAN-VDR-[0-9]{6}$"
+    },
+    "register_basis": {
+     "type": "string",
+     "minLength": 1
+    },
+    "entries": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "deficiency_id",
+       "title",
+       "category",
+       "affected",
+       "count",
+       "evidence_path",
+       "evidence_sha256",
+       "why_it_matters",
+       "owner_role",
+       "unblock_condition",
+       "blocks",
+       "status"
+      ],
+      "properties": {
+       "deficiency_id": {
+        "type": "string",
+        "pattern": "^VDR-[0-9]{3}$"
+       },
+       "title": {
+        "type": "string",
+        "minLength": 1
+       },
+       "category": {
+        "enum": [
+         "unbuilt_verification",
+         "vacuous_verification",
+         "product_defect",
+         "absent_specification",
+         "unmeasured_attribute",
+         "requirement_source_contradiction",
+         "environment_absence",
+         "independence_absence"
+        ]
+       },
+       "affected": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "count": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "count_basis": {
+        "type": "string",
+        "minLength": 1
+       },
+       "evidence_path": {
+        "type": "string",
+        "minLength": 1
+       },
+       "evidence_sha256": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+       },
+       "why_it_matters": {
+        "type": "string",
+        "minLength": 1
+       },
+       "owner_role": {
+        "type": "string",
+        "pattern": "^[a-z_]{3,40}$"
+       },
+       "unblock_condition": {
+        "type": "string",
+        "minLength": 1
+       },
+       "blocks": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "status": {
+        "enum": [
+         "open",
+         "accepted",
+         "resolved",
+         "deferred"
+        ]
+       },
+       "recorded_in": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "summary_counts": {
+     "type": "object",
+     "description": "Counts restated here so a reader of the register has the totals without cross-referencing the plans. Each count must match the evidence it is derived from.",
+     "required": [
+      "entries_total",
+      "by_category"
+     ],
+     "properties": {
+      "entries_total": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "by_category": {
+       "type": "object",
+       "minProperties": 1,
+       "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+       }
+      },
+      "items_affected_total": {
+       "type": "integer",
+       "minimum": 0
+      }
+     },
+     "additionalProperties": false
+    },
+    "residual_risk_statement": {
+     "type": "string",
+     "minLength": 1,
+     "description": "What risk is being carried by leaving these open, stated as risk rather than as a list of tasks. Mandatory."
+    },
+    "review_cadence": {
+     "type": "object",
+     "required": [
+      "reviewed_on",
+      "next_review",
+      "reviewer_role",
+      "human_review_performed"
+     ],
+     "properties": {
+      "reviewed_on": {
+       "type": "string",
+       "format": "date"
+      },
+      "next_review": {
+       "type": "string",
+       "format": "date"
+      },
+      "reviewer_role": {
+       "type": "string",
+       "pattern": "^[a-z_]{3,40}$"
+      },
+      "human_review_performed": {
+       "type": "boolean",
+       "description": "False in this corpus. Recorded explicitly so the register cannot be read as reviewed."
+      }
+     },
+     "additionalProperties": false
+    },
+    "independence_statement": {
+     "type": "string",
+     "minLength": 1
+    },
+    "limitations": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    }
+   },
+   "additionalProperties": true
+  }
+ ]
+}

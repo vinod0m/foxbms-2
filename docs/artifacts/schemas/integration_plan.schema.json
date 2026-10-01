@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/integration_plan.schema.json",
+  "title": "Software Integration and Integration Test Plan Schema",
+  "description": "Schema for a software integration and integration test plan (ASPICE SWE.5 family 'SW Integration Plan'). A design record describing how modules are structured is not an integration plan: a plan states what is integrated in what order, at which level, against which entry and exit criteria, in which environment, how a defect is handled there, which tests are re-run when something changes, and - the part this schema exists to enforce - which of those steps cannot be executed here and what would unblock them. The order must be derived from a named, reproducible measurement of the real dependency structure rather than asserted, and a tool that was run and produced nothing usable must be recorded as such, so a later reader does not assume the question was never asked. execution_state is mandatory and plan_executed is a boolean, so a plan that has never been run cannot read as though it had.",
+  "allOf": [
+    { "$ref": "artifact-base.schema.json" },
+    {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "plan_basis",
+        "dependency_basis",
+        "integration_scope",
+        "integration_levels",
+        "integration_order",
+        "environment_requirements",
+        "defect_handling",
+        "regression_selection",
+        "execution_state",
+        "unblock_conditions",
+        "independence_statement",
+        "limitations"
+      ],
+      "properties": {
+        "artifact_type": { "const": "integration_plan" },
+        "plan_id": { "type": "string", "pattern": "^FB2-VER-SIP-[0-9]{6}$" },
+        "plan_basis": { "type": "string", "minLength": 1 },
+        "dependency_basis": {
+          "type": "object",
+          "required": [
+            "derivation",
+            "tools_consulted",
+            "tools_that_returned_nothing",
+            "scope",
+            "src_module_count",
+            "modules_with_edges",
+            "fan_in_ranking",
+            "widest_fan_out",
+            "interface_boundary"
+          ],
+          "properties": {
+            "derivation": { "type": "string", "minLength": 1 },
+            "tools_consulted": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+            "tools_that_returned_nothing": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 },
+              "description": "Tools that were run and produced no usable result. Mandatory and non-empty: an ordering derived without saying which analysis failed is an ordering nobody can check."
+            },
+            "scope": { "type": "string", "minLength": 1 },
+            "src_module_count": { "type": "integer", "minimum": 0 },
+            "modules_with_edges": { "type": "integer", "minimum": 0 },
+            "fan_in_ranking": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["module_path", "path_exists", "inbound_module_count", "role_in_order"],
+                "properties": {
+                  "module_path": { "type": "string", "pattern": "^src/.*\\.c$" },
+                  "path_exists": { "type": "boolean" },
+                  "inbound_module_count": { "type": "integer", "minimum": 0 },
+                  "role_in_order": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              }
+            },
+            "widest_fan_out": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["layer", "outbound_edge_count", "distinct_layers_touched", "note"],
+                "properties": {
+                  "layer": { "type": "string", "minLength": 1 },
+                  "outbound_edge_count": { "type": "integer", "minimum": 0 },
+                  "distinct_layers_touched": { "type": "integer", "minimum": 0 },
+                  "note": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              }
+            },
+            "interface_boundary": {
+              "type": "object",
+              "required": ["description", "distinct_interface_headers", "top_headers", "evidence_path", "evidence_sha256", "statement"],
+              "properties": {
+                "description": { "type": "string", "minLength": 1 },
+                "distinct_interface_headers": { "type": "integer", "minimum": 0 },
+                "top_headers": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "required": ["header", "tests_requiring"],
+                    "properties": {
+                      "header": { "type": "string", "minLength": 1 },
+                      "tests_requiring": { "type": "integer", "minimum": 0 }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "evidence_path": { "type": "string", "minLength": 1 },
+                "evidence_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+                "statement": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "integration_scope": {
+          "type": "object",
+          "required": ["in_scope", "out_of_scope", "scope_rationale"],
+          "properties": {
+            "in_scope": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+            "out_of_scope": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+            "scope_rationale": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "integration_levels": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Ordered bottom-up. The array order is the integration order and every entry states why it sits at that position.",
+          "items": {
+            "type": "object",
+            "required": [
+              "level_id",
+              "order",
+              "level_name",
+              "level_kind",
+              "modules",
+              "depends_on_levels",
+              "entry_criteria",
+              "exit_criteria",
+              "environment",
+              "defect_routing",
+              "regression_selection_rule",
+              "executability",
+              "unblock_condition"
+            ],
+            "properties": {
+              "level_id": { "type": "string", "pattern": "^IL-[0-9]{2}$" },
+              "order": { "type": "integer", "minimum": 1 },
+              "level_name": { "type": "string", "minLength": 1 },
+              "level_kind": { "enum": ["module", "interface", "subsystem"] },
+              "modules": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+              "depends_on_levels": { "type": "array", "items": { "type": "string", "pattern": "^IL-[0-9]{2}$" } },
+              "entry_criteria": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+              "exit_criteria": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+              "environment": {
+                "type": "object",
+                "required": ["available_here", "required", "substitution_and_its_limitation"],
+                "properties": {
+                  "available_here": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+                  "required": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+                  "substitution_and_its_limitation": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              },
+              "defect_routing": { "type": "string", "minLength": 1 },
+              "regression_selection_rule": { "type": "string", "minLength": 1 },
+              "executability": {
+                "enum": ["executable_now", "executable_partially", "not_executable_here"],
+                "description": "Mandatory per level. There is no unknown state, because an unknown state reads as a done state in every report that quotes the plan."
+              },
+              "unblock_condition": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "integration_order": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["step", "bring_together", "why_this_order", "level_id", "dependency_basis"],
+            "properties": {
+              "step": { "type": "integer", "minimum": 1 },
+              "bring_together": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 } },
+              "why_this_order": { "type": "string", "minLength": 1 },
+              "level_id": { "type": "string", "pattern": "^IL-[0-9]{2}$" },
+              "dependency_basis": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "environment_requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["level_id", "requirement", "available", "source_of_availability"],
+            "properties": {
+              "level_id": { "type": "string", "pattern": "^IL-[0-9]{2}$" },
+              "requirement": { "type": "string", "minLength": 1 },
+              "available": { "type": "boolean" },
+              "source_of_availability": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "defect_handling": {
+          "type": "object",
+          "required": ["severity_model", "routes", "retest_rule", "regression_trigger", "retention", "evidence_of_real_defects_found"],
+          "properties": {
+            "severity_model": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+            "routes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+            "retest_rule": { "type": "string", "minLength": 1 },
+            "regression_trigger": { "type": "string", "minLength": 1 },
+            "retention": { "type": "string", "minLength": 1 },
+            "evidence_of_real_defects_found": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "regression_selection": {
+          "type": "object",
+          "required": ["rule", "existing_suite_size", "why_not_full_regression"],
+          "properties": {
+            "rule": { "type": "string", "minLength": 1 },
+            "existing_suite_size": { "type": "integer", "minimum": 0 },
+            "why_not_full_regression": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "execution_state": {
+          "type": "object",
+          "required": ["plan_executed", "steps_executed", "steps_total", "statement"],
+          "properties": {
+            "plan_executed": { "type": "boolean" },
+            "steps_executed": { "type": "integer", "minimum": 0 },
+            "steps_total": { "type": "integer", "minimum": 0 },
+            "statement": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "unblock_conditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["blocked_item", "blocks", "unblock_condition", "who_can_decide"],
+            "properties": {
+              "blocked_item": { "type": "string", "minLength": 1 },
+              "blocks": { "type": "string", "minLength": 1 },
+              "unblock_condition": { "type": "string", "minLength": 1 },
+              "who_can_decide": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "independence_statement": { "type": "string", "minLength": 1 },
+        "limitations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

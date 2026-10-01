@@ -1,0 +1,295 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://foxbms2.softwaredevlabs.org/schemas/qualification_test_plan.schema.json",
+ "title": "Software Qualification Test Plan Schema",
+ "description": "Schema for a software qualification test plan (ASPICE SWE.6 family 'SW Qualification Test Plan'). The plan is the statement of intent: scope, the strategy used at each verification level, the methods, the pass criteria, who is responsible, and what independence means for each level. This schema requires a per-level strategy and per-level pass criteria, a named independence position per level, and an explicit statement of what the plan does not cover. It does not record results; a result belongs to an execution record, and this schema refuses any field that would let a plan assert one.",
+ "allOf": [
+  {
+   "$ref": "artifact-base.schema.json"
+  },
+  {
+   "type": "object",
+   "required": [
+    "plan_id",
+    "plan_basis",
+    "scope",
+    "out_of_scope",
+    "verification_levels",
+    "methods",
+    "pass_criteria",
+    "responsibilities",
+    "independence",
+    "results_records_absent",
+    "limitations"
+   ],
+   "properties": {
+    "artifact_type": {
+     "const": "qualification_test_plan"
+    },
+    "plan_id": {
+     "type": "string",
+     "pattern": "^FB2-VER-SQP-[0-9]{6}$"
+    },
+    "plan_basis": {
+     "type": "string",
+     "minLength": 1
+    },
+    "scope": {
+     "type": "object",
+     "required": [
+      "software_elements",
+      "requirements_covered",
+      "statement"
+     ],
+     "properties": {
+      "software_elements": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "requirements_covered": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "string",
+        "pattern": "^FB2-SW-SWR-[0-9]{6}$"
+       }
+      },
+      "statement": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "out_of_scope": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "verification_levels": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "level",
+       "purpose",
+       "strategy",
+       "test_assets",
+       "executed",
+       "blocker"
+      ],
+      "properties": {
+       "level": {
+        "type": "string",
+        "minLength": 1
+       },
+       "purpose": {
+        "type": "string",
+        "minLength": 1
+       },
+       "strategy": {
+        "type": "string",
+        "minLength": 1
+       },
+       "test_assets": {
+        "type": "array",
+        "minItems": 0,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        },
+        "description": "May be empty. A level with no assets is the honest state for a level that has never been set up, and a minItems of 1 would force a plan to name a test asset that does not exist."
+       },
+       "executed": {
+        "type": "boolean"
+       },
+       "blocker": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "methods": {
+     "type": "object",
+     "required": [
+      "static",
+      "unit",
+      "integration",
+      "qualification_on_host",
+      "qualification_on_target"
+     ],
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "applicable",
+       "description",
+       "available_here"
+      ],
+      "properties": {
+       "applicable": {
+        "type": "boolean"
+       },
+       "description": {
+        "type": "string",
+        "minLength": 1
+       },
+       "available_here": {
+        "type": "boolean"
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "pass_criteria": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "criterion_id",
+       "level",
+       "criterion",
+       "why_this_is_the_bar"
+      ],
+      "properties": {
+       "criterion_id": {
+        "type": "string",
+        "pattern": "^PC-[0-9]{3}$"
+       },
+       "level": {
+        "type": "string",
+        "minLength": 1
+       },
+       "criterion": {
+        "type": "string",
+        "minLength": 1
+       },
+       "why_this_is_the_bar": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "responsibilities": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "role",
+       "responsible_for",
+       "may_approve"
+      ],
+      "properties": {
+       "role": {
+        "type": "string",
+        "pattern": "^[a-z_]{3,40}$"
+       },
+       "responsible_for": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "may_approve": {
+        "type": "boolean",
+        "description": "False for every role in this corpus. No role here has the authority to approve anything; approval is a human act and none has occurred."
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "independence": {
+     "type": "object",
+     "required": [
+      "statement",
+      "ai_authorship_disclaimer",
+      "per_level"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string",
+       "minLength": 1
+      },
+      "ai_authorship_disclaimer": {
+       "type": "string",
+       "minLength": 1
+      },
+      "per_level": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "object",
+        "required": [
+         "level",
+         "authored_by_developer",
+         "independence_status"
+        ],
+        "properties": {
+         "level": {
+          "type": "string",
+          "minLength": 1
+         },
+         "authored_by_developer": {
+          "type": "boolean"
+         },
+         "independence_status": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "additionalProperties": false
+       }
+      }
+     },
+     "additionalProperties": false
+    },
+    "results_records_absent": {
+     "type": "object",
+     "required": [
+      "statement",
+      "absent_families"
+     ],
+     "properties": {
+      "statement": {
+       "type": "string",
+       "minLength": 1
+      },
+      "absent_families": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
+     },
+     "additionalProperties": false
+    },
+    "limitations": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    }
+   },
+   "additionalProperties": true
+  }
+ ]
+}

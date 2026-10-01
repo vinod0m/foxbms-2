@@ -1,0 +1,346 @@
+{
+ "id": "FB2-VER-SQP-000001",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "qualification_test_plan",
+ "engineering_domain": "verification",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Software Qualification Test Plan: what would have to be true, at which level, for foxBMS 2 to be qualified - and what this corpus can and cannot show",
+ "owner_role": "verification_lead",
+ "origin": "derived",
+ "source_refs": [],
+ "assumption_refs": [
+  "FB2-ASM-001"
+ ],
+ "standards_mappings": [
+  {
+   "standard_id": "ASPICE_PAM_41",
+   "reference": "SWE.6",
+   "status": "partially_mapped",
+   "rationale": "This record supplies the SWE.6 expected family 'SW Qualification Test Plan', which coverage-plan.json recorded as ABSENT. The other two families remain ABSENT: 'SW Qualification Test Specification' has no record, and 'SW Qualification Test Results' does not exist because FB2-VER-EXE-000008 is execution_kind none with outcome blocked and the five security measures FB2-VER-TMS-000016..000020 have no executed result either. A plan with no specification behind it and no executed result cannot make the process mapped."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 6, Clause 9",
+   "status": "partially_mapped",
+   "rationale": "Qualification strategy and acceptance criteria for the three software requirements the corpus names. The network-security qualification measures FB2-VER-TMS-000016..000020 cover the security-relevant cases; this plan states the level structure they sit in and what remains outside it."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 2, Clause 7",
+   "status": "not_applicable",
+   "rationale": "Functional safety concept. This is a software verification plan and does not restate the FSC; FB2-SAF-* records carry that."
+  }
+ ],
+ "lifecycle_status": "draft",
+ "automated_review_status": {
+  "schema_valid": false,
+  "links_valid": false,
+  "provenance_consistent": false,
+  "consistency_checks": false,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "verification_lead",
+   "description": "First issue. Verification levels, methods and pass criteria stated against the three software requirements the corpus names and the one recorded host execution."
+  }
+ ],
+ "plan_id": "FB2-VER-SQP-000001",
+ "plan_basis": "Written from three things that exist: the three software requirements FB2-SW-SWR-000001, 000002 and 000003 with their acceptance criteria; the one recorded software execution, FB2-VER-EXE-000015 in the as_is profile, which is a macOS arm64 host run of the SIL Ceedling harness over 313 targets; and the measured gaps in FB2-VER-UTS-000001 and FB2-VER-SIP-000001. The plan states what would have to be demonstrated at each level. It records no result, because a plan is not a result and this schema has no field in which one could be smuggled in.",
+ "scope": {
+  "software_elements": [
+   "src/app/application/ - the application layer: bms, soa, bal, algorithm, meas, plausibility, redundancy, ethernet, config",
+   "src/app/driver/ - the driver layer: afe (4 vendor trees plus TI and a debug default), can, spi, dma, i2c, uart, fram, sbc, imd, contactor, interlock, pex, phy, pwm, rtc, sps, ts, io, mcu, crc, foxmath, adc, emac, htsensor, led",
+   "src/app/engine/ - database, diag, sys, sys_mon, hw_info",
+   "src/app/task/ - os abstraction, ftask, timer",
+   "src/app/main/ and src/app/hal/ - startup, assertion and the hardware-abstraction notification layer",
+   "src/bootloader/ - the bootloader variant, a separate build with its own can, crc, flash, io, rti and boot engine",
+   "src/os/freertos/ - the operating system, excluded from verification scope as vendored third-party code and carried instead by upstream's own qualification"
+  ],
+  "requirements_covered": [
+   "FB2-SW-SWR-000001",
+   "FB2-SW-SWR-000002",
+   "FB2-SW-SWR-000003"
+  ],
+  "statement": "Three software requirements are in scope. That is the whole of the requirement side of this corpus, and it is a small fraction of a BMS: there are no software requirements for the state estimation family beyond SOC, none for the balancing strategies, none for the insulation monitoring, none for the FRAM or flash persistence, none for the network security requirements that five separate test measures address, and none for the bootloader beyond what it inherits. The scope statement is this size because the requirements are, and a plan that implied broader coverage would be implying requirements that do not exist."
+ },
+ "out_of_scope": [
+  "Target-hardware verification. No run on the product's own board exists in this corpus, so the target-hardware level of this plan has no assets and no results. This is the single largest exclusion and it is stated first because it is the one a reader is most likely to assume was covered.",
+  "System-level and HIL fault reaction. The corpus has HIL and system-qualification test measures and execution records, but they are system records, not software qualification results, and this plan does not restate them as software evidence.",
+  "The upstream CI unit runs. coverage-plan.json records that the upstream Unity/CMock CI runs were never captured. The one executed sweep is this corpus's own SIL host harness, not upstream's pipeline.",
+  "Static analysis and coding-guideline conformance as a qualification gate. The corpus carries 26 deviation records documenting justified departures from coding guidelines, which is conformance work, not a qualification criterion.",
+  "Tool qualification for gcc, clang, Ceedling, CMock, Unity, gcov and the debugger. None of these is qualified in this corpus, so every result they produce inherits an unqualified toolchain. This is stated as a limitation of the results, not as an omission of the plan.",
+  "The FreeRTOS and FreeRTOS-TCP trees under src/os/freertos/, and the 1445-file vendored dependencies in the graft graph."
+ ],
+ "verification_levels": [
+  {
+   "level": "L1 static review and coding-guideline conformance",
+   "purpose": "Establish that the code conforms to the standard it claims before any execution evidence is read.",
+   "strategy": "The project runs uncrustify as a pre-commit hook; the corpus carries 26 deviation records for justified departures. Conformance is demonstrated by review of the deviation records, not by a generated score.",
+   "test_assets": [
+    "26 deviation records under corpus/synthetic_reference/",
+    "the uncrustify pre-commit configuration"
+   ],
+   "executed": true,
+   "blocker": "Partially executed. The deviation records exist and are reviewed; this corpus has not itself run the formatter over the tree, so the evidence is that departures were recorded, not that the tree conforms."
+  },
+  {
+   "level": "L2 unit verification against detailed design",
+   "purpose": "Establish that each software unit behaves as its detailed design says, with an oracle that could in principle disagree with the code.",
+   "strategy": "Each unit's tests, with the oracle basis of each test group recorded. The specification of what is covered, on what oracle, and what is not covered is FB2-VER-UTS-000001; the result of the one recorded sweep is FB2-VER-EXE-000015 in the as_is profile.",
+   "test_assets": [
+    "313 test files under tests/unit/",
+    "FB2-VER-UTS-000001",
+    "FB2-VER-EXE-000015",
+    "FB2-SW-DSN-000004, 000005, 000006 (detailed design for 3 of 24 modules)"
+   ],
+   "executed": true,
+   "blocker": "Executed once, on a host, at a tree state the tree has since left. 84 of 313 targets did not build. 5 of the 222 green targets assert nothing. The oracle for the safety-monitor SOA module records its own output-verification step as TODO. Detailed design exists for 3 of the 24 modules the source inventory names, so for the other 21 there is no design to verify against even where tests pass."
+  },
+  {
+   "level": "L3 software integration testing",
+   "purpose": "Establish that units which are correct in isolation produce the intended behaviour when combined, across real interfaces.",
+   "strategy": "Bottom-up in five levels with entry and exit criteria, ordered by measured coupling. Specified in FB2-VER-SIP-000001.",
+   "test_assets": [
+    "FB2-VER-SIP-000001",
+    "FB2-VER-TMS-000007 (planning stub)",
+    "FB2-VER-EXE-000007 (blocked)"
+   ],
+   "executed": false,
+   "blocker": "No integration test specification exists, so no step has an oracle, and 4 of the 5 integration levels are not executable in this corpus at all: no FreeRTOS host build, no CAN frame observer, no SPI or DMA, no target hardware."
+  },
+  {
+   "level": "L4 software qualification on the host",
+   "purpose": "Establish that the integrated software meets its software requirements on the host, as far as a host can show.",
+   "strategy": "Run the requirement-level acceptance criteria against the host build. Every latency criterion in the three software requirements is a wall-clock criterion, and the host harness has no wall-clock oracle, so this level can only address the value criteria and not the timing ones.",
+   "test_assets": [
+    "FB2-VER-TMS-000008 (system-qualification stub)",
+    "FB2-VER-TMS-000016..000020 (network security)"
+   ],
+   "executed": false,
+   "blocker": "FB2-VER-EXE-000008 is execution_kind none with outcome blocked. The five network-security measures state what a passing run would have to observe and what their oracle cannot see, and none has an executed result."
+  },
+  {
+   "level": "L5 software qualification on target hardware",
+   "purpose": "Establish that the software meets its requirements on the product's own hardware, under the real scheduler, the real peripherals and a real time base.",
+   "strategy": "Not specified. There is nothing to specify against: no target board is described in this corpus, no harness for it exists, and no run has been performed.",
+   "test_assets": [],
+   "executed": false,
+   "blocker": "No target-hardware execution exists anywhere in this corpus. This is not a resourcing gap that a plan can close; it requires hardware, a harness, and an authority to declare the product verified, none of which this corpus has."
+  }
+ ],
+ "methods": {
+  "static": {
+   "applicable": true,
+   "description": "Coding-guideline conformance via the uncrustify pre-commit hook and 26 deviation records. Also: reading the module under test to classify the oracle basis of each test, which is what FB2-VER-UTS-000001 does and is the only static method that produced a finding in this corpus: it is how the 5 vacuous green tests and the SOA module's TODO output verification were found.",
+   "available_here": true
+  },
+  "unit": {
+   "applicable": true,
+   "description": "Ceedling 1.1.9-2209dc2 with CMock 2.7.2 and Unity 2.7.2 over 313 targets, compiled by gcc/clang 17.0.0 on arm64-apple-darwin27, against SIL HL_* interface headers. The one method in this corpus that has produced real execution results.",
+   "available_here": true
+  },
+  "integration": {
+   "applicable": true,
+   "description": "Defined by FB2-VER-SIP-000001. No specification and no harness.",
+   "available_here": false
+  },
+  "qualification_on_host": {
+   "applicable": true,
+   "description": "Requirement-level acceptance criteria against the host build. Structurally possible, blocked in practice by the absence of any executed qualification measure.",
+   "available_here": false
+  },
+  "qualification_on_target": {
+   "applicable": true,
+   "description": "The product's own hardware. This is the level that would make a qualification claim meaningful.",
+   "available_here": false
+  }
+ },
+ "pass_criteria": [
+  {
+   "criterion_id": "PC-001",
+   "level": "L1",
+   "criterion": "Every departure from the coding guidelines is recorded as a deviation with a justification, and no unexplained departure exists.",
+   "why_this_is_the_bar": "A guideline departure with no recorded reason is indistinguishable from an unreviewed one, and the guideline's value is entirely in the review it forces."
+  },
+  {
+   "criterion_id": "PC-002",
+   "level": "L2",
+   "criterion": "Every test file that the recorded run reports as green contains at least one Unity assertion, and no test file declares zero test cases.",
+   "why_this_is_the_bar": "A green verdict that cannot fail is not evidence. On the recorded run 5 of 222 green targets assert nothing and 21 of 313 files declare no test case at all, so this criterion is currently not met and is stated as a bar rather than as a description."
+  },
+  {
+   "criterion_id": "PC-003",
+   "level": "L2",
+   "criterion": "Every test group has a recorded oracle basis, and no test whose oracle is the code under test is described as verifying that code.",
+   "why_this_is_the_bar": "The 39 PEC assertions in the LTC 6813-1 test compare the product's PEC implementation against the product's own constant tables. That is a drift pin and it is valuable, but a consistently wrong PEC passes all 39. The corpus had to be told this explicitly."
+  },
+  {
+   "criterion_id": "PC-004",
+   "level": "L2",
+   "criterion": "Every module under test that a software requirement depends on has at least one test that asserts an outcome, not only an argument check.",
+   "why_this_is_the_bar": "The SOA module has three NULL-pointer assertions and a TODO where its outcome check should be. It is the module FB2-SW-SWR-000002 is written about, and no behaviour of it is verified."
+  },
+  {
+   "criterion_id": "PC-005",
+   "level": "L2",
+   "criterion": "Every test target in the suite builds, or its exclusion is a recorded decision rather than an omission.",
+   "why_this_is_the_bar": "84 of 313 targets did not build in the recorded run. 17 of those are attributed to the product. A target that does not build is not a coverage question, it is an unresolved defect, and it must not sit inside a coverage figure."
+  },
+  {
+   "criterion_id": "PC-006",
+   "level": "L2",
+   "criterion": "A statement-coverage and a branch-coverage measurement exist for every module under test.",
+   "why_this_is_the_bar": "This criterion is stated because it is NOT met and its absence is the reason the corpus cannot make a percentage claim. 988 assertions executed is not a coverage number. No coverage tool has been run in this corpus."
+  },
+  {
+   "criterion_id": "PC-007",
+   "level": "L3",
+   "criterion": "Each integration level's exit criteria are met, and each is observed at the interface the level names rather than through a mock queue.",
+   "why_this_is_the_bar": "A diagnosis raised through a CMock expectation queue is verified as an interaction, not as a reaction. The SOA test is the worked example of a suite that would report green and verify nothing."
+  },
+  {
+   "criterion_id": "PC-008",
+   "level": "L4",
+   "criterion": "Every acceptance criterion of FB2-SW-SWR-000001, 000002 and 000003 is demonstrated against a recorded result, including all four timing criteria, against a measured clock.",
+   "why_this_is_the_bar": "All three requirements are dominated by latency criteria - 50 ms, 25 ms, 5 ms, 1 ms, 2 ms - and none can be demonstrated on a host harness with no wall-clock oracle. This is the criterion that forces the target-hardware level."
+  },
+  {
+   "criterion_id": "PC-009",
+   "level": "L4",
+   "criterion": "The debounce behaviour FB2-SW-SWR-000002 specifies exists in the source, or the criterion is formally withdrawn.",
+   "why_this_is_the_bar": "FB2-SW-DSN-000005's own declared_gaps records that the SOA module contains no debounce and no reaction path. A requirement that specifies behaviour the source does not contain is not a verification task, it is a contradiction, and no harness can resolve it."
+  },
+  {
+   "criterion_id": "PC-010",
+   "level": "L5",
+   "criterion": "A target-hardware run of the integrated software has been performed, its result recorded with input and output hashes, and its verdict stated.",
+   "why_this_is_the_bar": "This is the criterion that distinguishes a verified product from a verified host build of the product's sources. It has not been met, and nothing in this corpus substitutes for it."
+  },
+  {
+   "criterion_id": "PC-011",
+   "level": "L5",
+   "criterion": "The verification of every level was performed by a person who did not author the code under verification.",
+   "why_this_is_the_bar": "ASPICE independence is a process requirement, not a quality nicety. This corpus has met it nowhere: every record here is AI-authored, human_approval_status is pending on all of them, and an AI-authored review is not independence."
+  }
+ ],
+ "responsibilities": [
+  {
+   "role": "verification_lead",
+   "responsible_for": [
+    "This plan and its revision",
+    "the pass criteria and any change to them",
+    "the statement that the verification is incomplete"
+   ],
+   "may_approve": false
+  },
+  {
+   "role": "verification_engineer",
+   "responsible_for": [
+    "The unit test specification FB2-VER-UTS-000001",
+    "Executing the host unit sweep and recording its result",
+    "Recording vacuity and coverage gaps rather than closing them"
+   ],
+   "may_approve": false
+  },
+  {
+   "role": "integration_engineer",
+   "responsible_for": [
+    "The integration plan FB2-VER-SIP-000001",
+    "The integration order and the level exit criteria",
+    "Reporting which levels are not executable and why"
+   ],
+   "may_approve": false
+  },
+  {
+   "role": "project_manager",
+   "responsible_for": [
+    "Resolving the FB2-SW-SWR-000002 debounce contradiction",
+    "Accepting the residual risk of an incomplete verification, which is a management decision and not an engineering one",
+    "Deciding who performs the independent review that PC-011 requires"
+   ],
+   "may_approve": false
+  },
+  {
+   "role": "hw_verification_lead",
+   "responsible_for": [
+    "Any target-hardware run",
+    "The decision on the 19 zero-test-case AFE shared-layer test files"
+   ],
+   "may_approve": false
+  }
+ ],
+ "independence": {
+  "statement": "No verification level in this plan has been performed independently. Every record in this corpus is AI-authored, every human_approval_status is pending, and every production_authorized flag is false. The author of this plan is an AI agent that read the same repository and the same recorded runs that the code's own test suite was derived from.",
+  "ai_authorship_disclaimer": "An AI-authored review is NOT an independent review, and an AI-authored plan is not an independently checked plan. Independence in the ASPICE sense requires a person who did not author the code. No such person has reviewed any artefact in this corpus. This statement is not a disclaimer attached for form: it is the reason PC-011 is unmet and will remain unmet until a human performs the review.",
+  "per_level": [
+   {
+    "level": "L1 static review and coding-guideline conformance",
+    "authored_by_developer": false,
+    "independence_status": "Not independent. The deviation records were authored by the developers whose departures they record, and the conformance claim rests on them."
+   },
+   {
+    "level": "L2 unit verification against detailed design",
+    "authored_by_developer": false,
+    "independence_status": "Not independent, and not applicable in the usual sense: the tests are the developer's own tests of the developer's own code. Unity/CMock unit testing is a developer activity, so this level is not expected to be independent; what is expected is that the oracle is sound, and PC-003 records that in one case it demonstrably is not."
+   },
+   {
+    "level": "L3 software integration testing",
+    "authored_by_developer": false,
+    "independence_status": "Not independent and not executed. No specification and no result exist."
+   },
+   {
+    "level": "L4 software qualification on the host",
+    "authored_by_developer": false,
+    "independence_status": "Not independent and not executed. FB2-VER-EXE-000008 is blocked."
+   },
+   {
+    "level": "L5 software qualification on target hardware",
+    "authored_by_developer": false,
+    "independence_status": "Not independent and not executed. Nothing exists at this level."
+   }
+  ]
+ },
+ "results_records_absent": {
+  "statement": "This plan produces no result and no result may be read into it. The schema for this artifact type has no field that accepts one, deliberately: the corpus has previously had records that asserted outcomes they had not measured, and the fix for that is a schema that cannot express the claim.",
+  "absent_families": [
+   "SW Qualification Test Specification - no record exists. FB2-VER-EXE-000008 is blocked with no specification behind it.",
+   "SW Qualification Test Results - no record exists. The five network-security measures FB2-VER-TMS-000016..000020 have no executed result.",
+   "Target-hardware result - no record of any kind exists. actual_product_evidence in this corpus's coverage report reads 0 target-hardware executions.",
+   "Coverage measurement - no record exists. No statement-coverage or branch-coverage artefact has ever been produced here."
+  ]
+ },
+ "limitations": [
+  "This plan is a plan. It demonstrates nothing about the product and its existence changes no verification status by itself.",
+  "Of the 5 levels, 1 is partially executed, 1 is executed once on a host at a tree state the tree has since left, and 3 have not been executed at all.",
+  "L5 is unspecified rather than merely unexecuted. There is no target board description, no harness and no authority in this corpus.",
+  "The scope is three software requirements. This is not a comment on the product's requirements, which are far more numerous; it is a statement about what this corpus contains.",
+  "Pass criteria PC-002, PC-005, PC-006, PC-009, PC-010 and PC-011 are stated as bars and are currently unmet. They are written as criteria precisely so that the gap is a matter of record rather than of impression.",
+  "No criterion here has been reviewed by anyone. Every one is an AI agent's reading of the repository and of one recorded run."
+ ],
+ "evidence_files": [
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+  "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md"
+ ],
+ "logs": [
+  {
+   "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "hash": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+   "type": "custom"
+  }
+ ]
+}
