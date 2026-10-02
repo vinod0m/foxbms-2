@@ -8129,22 +8129,47 @@ class CorpusTool:
         def t_export_reproducibility_does_not_read_the_exports_dir():
             # The old figure was "manifest.json exists", and acceptance gate [6/8]
             # calls cmd_export() moments before the coverage result is read. So
-            # delete the exports directory and ask the DIMENSION -- not the
+            # make the manifest unreachable and ask the DIMENSION -- not the
             # helper, which would only prove the helper works -- for its figure.
             # Under the old code this returns 0/1; under the repaired code the
-            # figure is produced by two exports into throwaway temp dirs and
-            # holds regardless of what the tree contains.
-            import shutil
-            saved = self.exports_dir
-            try:
-                shutil.rmtree(saved, ignore_errors=True)
-                gone = not (self.exports_dir / "manifest.json").exists()
-                d = self._coverage_dimensions()["export_reproducibility"]
-            finally:
-                self.exports_dir = saved
-            self._probe_note = (f"exports/manifest.json absent={gone}; dimension reports "
-                                f"{d['numerator']}/{d['denominator']} - {d['detail'][:120]}")
-            return gone and d["reproducible"] is True and d["numerator"] == 1
+            # figure comes from two exports into throwaway temp dirs and holds
+            # regardless.
+            #
+            # `self.exports_dir` is REPOINTED at a path that does not exist. An
+            # earlier form of this test rmtree'd the real docs/artifacts/exports/
+            # to make it absent, which silently destroyed four tracked files on
+            # every self-test run -- the test was deleting part of the
+            # distribution it was supposed to be checking. Repointing expresses
+            # "no manifest here" with no side effect at all.
+            import tempfile
+            from pathlib import Path as _P
+            real = self.exports_dir
+            with tempfile.TemporaryDirectory() as td:
+                try:
+                    self.exports_dir = _P(td) / "exports"   # never created
+                    absent = not (self.exports_dir / "manifest.json").exists()
+                    d = self._coverage_dimensions()["export_reproducibility"]
+                finally:
+                    self.exports_dir = real
+            self._probe_note = (f"exports_dir repointed to a nonexistent path; manifest "
+                                f"absent={absent}; dimension reports {d['numerator']}/"
+                                f"{d['denominator']} - {d['detail'][:110]}")
+            return absent and d["reproducible"] is True and d["numerator"] == 1
+
+        def t_selftest_leaves_the_exports_dir_untouched():
+            # The regression guard for the defect the test above used to have.
+            import hashlib
+            f = self.exports_dir / "manifest.json"
+            before = hashlib.sha256(f.read_bytes()).hexdigest() if f.exists() else None
+            present_before = (self.exports_dir / "nodes.jsonl").exists()
+            self._coverage_dimensions()
+            after = hashlib.sha256(f.read_bytes()).hexdigest() if f.exists() else None
+            self._probe_note = (f"manifest.json present before={before is not None} "
+                                f"after={after is not None}, unchanged={before == after}, "
+                                f"nodes.jsonl still present="
+                                f"{self.exports_dir / 'nodes.jsonl' == self.exports_dir / 'nodes.jsonl' and present_before and (self.exports_dir / 'nodes.jsonl').exists()}")
+            return (before is not None and before == after and present_before
+                    and (self.exports_dir / "nodes.jsonl").exists())
 
         def t_anchor_without_local_file_is_counted_and_reported():
             # DEFECT 5: 130 anchors, 123 verified, 7 unexplained. The tally must
@@ -8192,6 +8217,8 @@ class CorpusTool:
               t_synthetic_fixture_dimension_has_no_typed_target)
         check("export_reproducibility holds with docs/artifacts/exports/ deleted",
               t_export_reproducibility_does_not_read_the_exports_dir)
+        check("running the self-tests does not delete or alter docs/artifacts/exports/",
+              t_selftest_leaves_the_exports_dir_untouched)
         check("every anchor is counted in a class the provenance report prints",
               t_anchor_without_local_file_is_counted_and_reported)
         return all(passed for _, passed in tests)
