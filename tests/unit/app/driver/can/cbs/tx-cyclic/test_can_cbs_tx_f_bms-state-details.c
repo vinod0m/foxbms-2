@@ -183,7 +183,7 @@ void test_BmsStateDetails(void) {
 
     SYSM_TIMING_VIOLATION_RESPONSE_s testRecordedTimingViolationsZero = {0u};
 
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableErrorState, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableErrorState, sizeof(*(can_kShim.pTableErrorState)), STD_OK);
     SYSM_GetRecordedTimingViolations_Expect(&testRecordedTimingViolationsZero);
     SYSM_GetRecordedTimingViolations_ReturnThruPtr_pAnswer(&testRecordedTimingViolations);
     CAN_ConvertBooleanToInteger_ExpectAndReturn(true, 1u);

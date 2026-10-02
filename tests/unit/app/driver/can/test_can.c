@@ -463,13 +463,25 @@ void testCAN_CheckCanTiming(void) {
     stateRequestTest.header.previousTimestamp   = 0u;
 
     OS_GetTickCount_ExpectAndReturn(100u);
-    DATA_Read2DataBlocks_ExpectAndReturn(&can_tableStateRequest, &can_tableErrorState, STD_OK);
+    DATA_Read2DataBlocks_ExpectAndReturn(
+        &can_tableStateRequest,
+        sizeof(*(&can_tableStateRequest)),
+        &can_tableErrorState,
+        sizeof(*(&can_tableErrorState)),
+        STD_OK);
     DATA_Read2DataBlocks_ReturnThruPtr_pDataToReceiver0(&stateRequestTest);
 
     DIAG_Handler_ExpectAndReturn(DIAG_ID_CAN_TIMING, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
 
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Read3DataBlocks_ExpectAndReturn(&can_tableCurrent, &can_tableCurrentCounter, &can_tableEnergyCounter, STD_OK);
+    DATA_Read3DataBlocks_ExpectAndReturn(
+        &can_tableCurrent,
+        sizeof(*(&can_tableCurrent)),
+        &can_tableCurrentCounter,
+        sizeof(*(&can_tableCurrentCounter)),
+        &can_tableEnergyCounter,
+        sizeof(*(&can_tableEnergyCounter)),
+        STD_OK);
 
     TEST_CAN_CheckCanTiming();
 
@@ -477,11 +489,23 @@ void testCAN_CheckCanTiming(void) {
     stateRequestTest.header.timestamp         = 0u;
     stateRequestTest.header.previousTimestamp = 0u;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Read2DataBlocks_ExpectAndReturn(&can_tableStateRequest, &can_tableErrorState, STD_OK);
+    DATA_Read2DataBlocks_ExpectAndReturn(
+        &can_tableStateRequest,
+        sizeof(*(&can_tableStateRequest)),
+        &can_tableErrorState,
+        sizeof(*(&can_tableErrorState)),
+        STD_OK);
     DIAG_Handler_ExpectAndReturn(DIAG_ID_CAN_TIMING, DIAG_EVENT_NOT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
 
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Read3DataBlocks_ExpectAndReturn(&can_tableCurrent, &can_tableCurrentCounter, &can_tableEnergyCounter, STD_OK);
+    DATA_Read3DataBlocks_ExpectAndReturn(
+        &can_tableCurrent,
+        sizeof(*(&can_tableCurrent)),
+        &can_tableCurrentCounter,
+        sizeof(*(&can_tableCurrentCounter)),
+        &can_tableEnergyCounter,
+        sizeof(*(&can_tableEnergyCounter)),
+        STD_OK);
 
     TEST_CAN_CheckCanTiming();
 
@@ -490,13 +514,25 @@ void testCAN_CheckCanTiming(void) {
     stateRequestTest.header.previousTimestamp = 0u;
 
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Read2DataBlocks_ExpectAndReturn(&can_tableStateRequest, &can_tableErrorState, STD_OK);
+    DATA_Read2DataBlocks_ExpectAndReturn(
+        &can_tableStateRequest,
+        sizeof(*(&can_tableStateRequest)),
+        &can_tableErrorState,
+        sizeof(*(&can_tableErrorState)),
+        STD_OK);
     DATA_Read2DataBlocks_ReturnThruPtr_pDataToReceiver0(&stateRequestTest);
 
     DIAG_Handler_ExpectAndReturn(DIAG_ID_CAN_TIMING, DIAG_EVENT_NOT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
 
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Read3DataBlocks_ExpectAndReturn(&can_tableCurrent, &can_tableCurrentCounter, &can_tableEnergyCounter, STD_OK);
+    DATA_Read3DataBlocks_ExpectAndReturn(
+        &can_tableCurrent,
+        sizeof(*(&can_tableCurrent)),
+        &can_tableCurrentCounter,
+        sizeof(*(&can_tableCurrentCounter)),
+        &can_tableEnergyCounter,
+        sizeof(*(&can_tableEnergyCounter)),
+        STD_OK);
 
     TEST_CAN_CheckCanTiming();
 }
@@ -504,7 +540,14 @@ void testCAN_CheckCanTiming(void) {
 void testCAN_CheckCanTimingOfCurrentSensor(void) {
     /* Test case: no check */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Read3DataBlocks_ExpectAndReturn(&can_tableCurrent, &can_tableCurrentCounter, &can_tableEnergyCounter, STD_OK);
+    DATA_Read3DataBlocks_ExpectAndReturn(
+        &can_tableCurrent,
+        sizeof(*(&can_tableCurrent)),
+        &can_tableCurrentCounter,
+        sizeof(*(&can_tableCurrentCounter)),
+        &can_tableEnergyCounter,
+        sizeof(*(&can_tableEnergyCounter)),
+        STD_OK);
     TEST_CAN_CheckCanTimingOfCurrentSensor();
 
     /*Test case: CS measurements timeout */
@@ -517,7 +560,14 @@ void testCAN_CheckCanTimingOfCurrentSensor(void) {
         energyCounterTest.timestamp[s]  = BS_ENERGY_COUNTING_MEASUREMENT_RESPONSE_TIMEOUT_ms + 1u;
     }
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Read3DataBlocks_ExpectAndReturn(&can_tableCurrent, &can_tableCurrentCounter, &can_tableEnergyCounter, STD_OK);
+    DATA_Read3DataBlocks_ExpectAndReturn(
+        &can_tableCurrent,
+        sizeof(*(&can_tableCurrent)),
+        &can_tableCurrentCounter,
+        sizeof(*(&can_tableCurrentCounter)),
+        &can_tableEnergyCounter,
+        sizeof(*(&can_tableEnergyCounter)),
+        STD_OK);
     DATA_Read3DataBlocks_ReturnThruPtr_pDataToReceiver0(&currentTest);
     DATA_Read3DataBlocks_ReturnThruPtr_pDataToReceiver1(&currentCounterTest);
     DATA_Read3DataBlocks_ReturnThruPtr_pDataToReceiver2(&energyCounterTest);
@@ -539,7 +589,14 @@ void testCAN_CheckCanTimingOfCurrentSensor(void) {
         energyCounterTest.timestamp[s]  = 1u;
     }
     OS_GetTickCount_ExpectAndReturn(100u);
-    DATA_Read3DataBlocks_ExpectAndReturn(&can_tableCurrent, &can_tableCurrentCounter, &can_tableEnergyCounter, STD_OK);
+    DATA_Read3DataBlocks_ExpectAndReturn(
+        &can_tableCurrent,
+        sizeof(*(&can_tableCurrent)),
+        &can_tableCurrentCounter,
+        sizeof(*(&can_tableCurrentCounter)),
+        &can_tableEnergyCounter,
+        sizeof(*(&can_tableEnergyCounter)),
+        STD_OK);
     DATA_Read3DataBlocks_ReturnThruPtr_pDataToReceiver0(&currentTest);
     DATA_Read3DataBlocks_ReturnThruPtr_pDataToReceiver1(&currentCounterTest);
     DATA_Read3DataBlocks_ReturnThruPtr_pDataToReceiver2(&energyCounterTest);

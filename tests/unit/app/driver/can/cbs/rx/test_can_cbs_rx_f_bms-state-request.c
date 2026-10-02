@@ -198,7 +198,7 @@ void testCANRX_BmsStateRequest(void) {
     /* ======= RT1/1: Test implementation */
     CAN_RxGetSignalDataFromMessageData_Expect(
         testMessageData, 1u, 2u, &testSignalData[0u], CANRX_BMS_STATE_REQUEST_ENDIANNESS);
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableStateRequest, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableStateRequest, sizeof(*(can_kShim.pTableStateRequest)), STD_OK);
     CAN_RxGetMessageDataFromCanData_Expect(&testMessageDataZero, testCanData, CANRX_BMS_STATE_REQUEST_ENDIANNESS);
     CAN_RxGetMessageDataFromCanData_ReturnThruPtr_pMessage(&testMessageData);
     CAN_RxGetSignalDataFromMessageData(
@@ -215,7 +215,7 @@ void testCANRX_BmsStateRequest(void) {
     CAN_RxGetSignalDataFromMessageData_Expect(
         testMessageData, 23u, 8u, &testSignalData[0u], CANRX_BMS_STATE_REQUEST_ENDIANNESS);
     BAL_SetBalancingThreshold_Expect((uint32_t)testMessageDataZero);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableStateRequest, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableStateRequest, sizeof(*(can_kShim.pTableStateRequest)), STD_OK);
 
     /* ======= RT1/1: Call function under test */
     uint32_t testResult = CANRX_BmsStateRequest(testMessage, testCanData, &can_kShim);

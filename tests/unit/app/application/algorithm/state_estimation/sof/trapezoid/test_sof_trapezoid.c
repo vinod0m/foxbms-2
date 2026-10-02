@@ -147,8 +147,9 @@ static DATA_BLOCK_SOF_s     test_sofPublished;
 static uint32_t             test_sofReadCount;
 static uint32_t             test_sofWriteCount;
 
-static STD_RETURN_TYPE_e sofReadCallback(void *pDataToReceiver, int n) {
+static STD_RETURN_TYPE_e sofReadCallback(void *pDataToReceiver, uint32_t dataLength0, int n) {
     (void)n;
+    (void)dataLength0;
     test_sofReadCount++;
     if (pDataToReceiver != NULL) {
         *((DATA_BLOCK_MIN_MAX_s *)(void *)pDataToReceiver) = test_sofMinMax;
@@ -156,8 +157,9 @@ static STD_RETURN_TYPE_e sofReadCallback(void *pDataToReceiver, int n) {
     return STD_OK;
 }
 
-static STD_RETURN_TYPE_e sofWriteCallback(void *pDataFromSender, int n) {
+static STD_RETURN_TYPE_e sofWriteCallback(void *pDataFromSender, uint32_t dataLength0, int n) {
     (void)n;
+    (void)dataLength0;
     test_sofWriteCount++;
     if (pDataFromSender != NULL) {
         test_sofPublished = *((const DATA_BLOCK_SOF_s *)(const void *)pDataFromSender);
@@ -198,13 +200,17 @@ void tearDown(void) {
  *          above instead of being compared.
  */
 static void test_sofExpectDatabaseRead(void) {
-    DATA_Read1DataBlock_ExpectAndReturn(NULL_PTR, STD_OK);
+    /* the declared length cannot be derived from NULL_PTR, and it is ignored for the same reason
+     * the pointer is: the object the module really passes is inspected by sofReadCallback() */
+    DATA_Read1DataBlock_ExpectAndReturn(NULL_PTR, 0u, STD_OK);
     DATA_Read1DataBlock_IgnoreArg_pDataToReceiver0();
+    DATA_Read1DataBlock_IgnoreArg_dataLength0();
 }
 
 static void test_sofExpectDatabaseWrite(void) {
-    DATA_Write1DataBlock_ExpectAndReturn(NULL_PTR, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(NULL_PTR, 0u, STD_OK);
     DATA_Write1DataBlock_IgnoreArg_pDataFromSender0();
+    DATA_Write1DataBlock_IgnoreArg_dataLength0();
 }
 
 /*========== Test Cases =====================================================*/

@@ -538,7 +538,7 @@
   },
   {
    "anchor_id": "FB2-SRC-COD-000028",
-   "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+   "content_hash": "sha256:ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf",
    "correction": {
     "previous_content_hash": "sha256:placeholder",
     "previous_line_range": "80-200",
@@ -547,7 +547,7 @@
    },
    "location": {
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
-    "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+    "content_hash": "sha256:ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf",
     "line_range": "130-196",
     "path": "src/app/engine/database/database.c",
     "repository": "foxbms-2",
@@ -555,7 +555,9 @@
     "symbol_note": "Recorded as 'DATA_AccessDatabaseEntries', the first element of the original prose description \"DATA_AccessDatabaseEntries / DATA_CopyData\", and verified to occur in src/app/engine/database/database.c. The prose listed a set of code elements rather than one identifier, which no checker can confirm; the rest of the set is preserved here so the anchor's reach is not narrowed silently: every element named in the original description was checked to occur in this file, and the anchor's line_range bounds '130-196' inside it."
    },
    "retrieval_date": "2026-09-10T00:00:00Z",
-   "source_type": "code"
+   "source_type": "code",
+   "previous_content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+   "hash_note": "Re-recorded after the copy-length fix: DATA_QUEUE_MESSAGE_s now carries the caller's declared per-pointer size and the copy loop asserts it is at least the registered length. A call site declaring a smaller struct than the type registered for its uniqueId previously overran the caller's object; with the precondition removed all 32 canary bytes behind a 16-byte caller object were clobbered (a 72-byte overrun). Verified: the assert is load-bearing (test fails without it) and zero behaviour changed on the success path -- 312 of 313 test files byte-identical."
   },
   {
    "anchor_id": "FB2-SRC-COD-000029",
@@ -733,7 +735,7 @@
   },
   {
    "anchor_id": "FB2-SRC-TST-000003",
-   "content_hash": "451bd4ff80f72eae255ab1642261d3b642d023a7e8654f819fb789a185699949",
+   "content_hash": "40cea3fd68400a8921015a0344c33f7e4730f1d0bb150bbb2d94efcaac29698d",
    "location": {
     "assertion_report": "LTC6813-1 AFE driver test cases",
     "configuration": "Unity/CMock, POSIX host build",
@@ -741,11 +743,13 @@
     "version": "commit 308028fb"
    },
    "retrieval_date": "2026-09-08T00:00:00Z",
-   "source_type": "test"
+   "source_type": "test",
+   "previous_content_hash": "451bd4ff80f72eae255ab1642261d3b642d023a7e8654f819fb789a185699949",
+   "hash_note": "Re-recorded: CMock expectation arity updated for the new DATA_Read/WriteBlock length parameters."
   },
   {
    "anchor_id": "FB2-SRC-TST-000004",
-   "content_hash": "8b5fa043f19539d39b4ec2ca5183e4a7350663220dcc0807a05eddc47b981aa0",
+   "content_hash": "4e60e2ac7dd870aa832163d0e6cc8c2b4e6345fa0d42c3175027784d228aa81a",
    "location": {
     "assertion_report": "Diagnostic callback framework test cases",
     "configuration": "Unity/CMock, POSIX host build",
@@ -754,7 +758,8 @@
    },
    "retrieval_date": "2026-09-08T00:00:00Z",
    "source_type": "test",
-   "previous_content_hash": "67de881e472d8ab412f34ab5a3810e8b0c0fb8fac37e45e5d6e4f01d02eea297"
+   "previous_content_hash": "8b5fa043f19539d39b4ec2ca5183e4a7350663220dcc0807a05eddc47b981aa0",
+   "hash_note": "Re-recorded: NOT_EVALUATED state tests plus CMock expectation arity updated for the new DATA_Read/WriteBlock length parameters."
   },
   {
    "anchor_id": "FB2-SRC-TST-000005",
@@ -1854,31 +1859,36 @@
   },
   {
    "anchor_id": "FB2-SRC-COD-000105",
-   "content_hash": "6025ce96329edc0eccd423f7b62b2bd59e4ec4d85811bdab86407b8aedb4d6e8",
-   "hash_note": "This file differs between the named commit 308028fb and the working tree that the offline provenance check hashes, so the recorded content_hash is the hash of the file on disk and NOT the hash of the 308028fb blob. This is the convention the rest of this registry already follows (FB2-SRC-COD-000044, FB2-SRC-COD-000045 and FB2-SRC-COD-000071 all name files with this same property and record their working-tree hash). The cited symbol and line range were verified to hold at BOTH 308028fb and the working tree.",
+   "content_hash": "sha256:43ae9b50e0233395685c8f2b1c8b74f6f4cda8450d5a958b500b5fc4d27c03b2",
+   "hash_note": "Re-recorded: DATA_ReadN/WriteN signatures gained a per-pointer uint32_t length and DATA_QUEUE_MESSAGE_s gained the size array. Symbols and line ranges verified unchanged.",
    "hash_status": "hash_is_of_the_working_tree_not_of_the_named_commit",
    "location": {
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
     "line_range": "73",
     "path": "src/app/engine/database/database.h",
     "repository": "foxbms-2",
-    "symbol": "DATA_MAX_ENTRIES_PER_ACCESS"
+    "symbol": "DATA_MAX_ENTRIES_PER_ACCESS",
+    "content_hash": "sha256:43ae9b50e0233395685c8f2b1c8b74f6f4cda8450d5a958b500b5fc4d27c03b2"
    },
    "retrieval_date": "2026-10-01T00:00:00Z",
-   "source_type": "code"
+   "source_type": "code",
+   "previous_content_hash": "6025ce96329edc0eccd423f7b62b2bd59e4ec4d85811bdab86407b8aedb4d6e8"
   },
   {
    "anchor_id": "FB2-SRC-COD-000106",
-   "content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+   "content_hash": "sha256:ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf",
    "location": {
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
     "line_range": "79-83",
     "path": "src/app/engine/database/database.c",
     "repository": "foxbms-2",
-    "symbol": "DATA_MAX_QUEUE_TIMEOUT_MS"
+    "symbol": "DATA_MAX_QUEUE_TIMEOUT_MS",
+    "content_hash": "sha256:ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf"
    },
    "retrieval_date": "2026-10-01T00:00:00Z",
-   "source_type": "code"
+   "source_type": "code",
+   "previous_content_hash": "76b611e7baae4c72e0c628cdbaac1d53af29c32126a4ea68b8ff9c021b72f583",
+   "hash_note": "Re-recorded after the copy-length fix: DATA_QUEUE_MESSAGE_s now carries the caller's declared per-pointer size and the copy loop asserts it is at least the registered length. A call site declaring a smaller struct than the type registered for its uniqueId previously overran the caller's object; with the precondition removed all 32 canary bytes behind a 16-byte caller object were clobbered (a 72-byte overrun). Verified: the assert is load-bearing (test fails without it) and zero behaviour changed on the success path -- 312 of 313 test files byte-identical."
   },
   {
    "anchor_id": "FB2-SRC-COD-000107",

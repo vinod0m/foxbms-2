@@ -115,8 +115,12 @@ DATA_BLOCK_MOVING_AVERAGE_s movingAverage_tab = {.header.uniqueId = DATA_BLOCK_I
  */
 static uint8_t stepMovingAverage = 0u;
 
-static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(void *pDataToReceiver0, int cmock_num_calls) {
+static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(
+    void *pDataToReceiver0,
+    uint32_t dataLength0,
+    int cmock_num_calls) {
     (void)cmock_num_calls;
+    (void)dataLength0;
     const DATA_BLOCK_MOVING_AVERAGE_s *pBlock = (const DATA_BLOCK_MOVING_AVERAGE_s *)pDataToReceiver0;
     TEST_ASSERT_NOT_NULL(pBlock);
     TEST_ASSERT_EQUAL_MEMORY(&movingAverage_tab, pBlock, sizeof(DATA_BLOCK_MOVING_AVERAGE_s));
@@ -124,8 +128,12 @@ static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(void *pDataToReceiver0, int
     return STD_OK;
 }
 
-static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(void *pDataFromSender0, int cmock_num_calls) {
+static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(
+    void *pDataFromSender0,
+    uint32_t dataLength0,
+    int cmock_num_calls) {
     (void)cmock_num_calls;
+    (void)dataLength0;
     const DATA_BLOCK_MOVING_AVERAGE_s *pBlock = (const DATA_BLOCK_MOVING_AVERAGE_s *)pDataFromSender0;
     TEST_ASSERT_NOT_NULL(pBlock);
     /* the read must have happened first */
@@ -156,9 +164,16 @@ void tearDown(void) {
  * @details This function uses the callback #MockDATA_ReadBlocks_Callback() in order to inject
  *          other values into the returned database tables.
  */
-STD_RETURN_TYPE_e MockDATA_ReadBlocks_Callback(void *pDataToReceiver1, void *pDataToReceiver2, int num_calls) {
+STD_RETURN_TYPE_e MockDATA_ReadBlocks_Callback(
+    void *pDataToReceiver1,
+    uint32_t dataLength0,
+    void *pDataToReceiver2,
+    uint32_t dataLength1,
+    int num_calls) {
     uint8_t newCurrent = 0;
     uint8_t newPower   = 0;
+    (void)dataLength0;
+    (void)dataLength1;
 
     /* determine a value depending on num_calls (has to be synchronized with test) */
     switch (num_calls) {

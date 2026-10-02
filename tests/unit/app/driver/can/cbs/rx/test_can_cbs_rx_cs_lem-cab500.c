@@ -303,7 +303,7 @@ void testCANRX_CsLemCab500(void) {
         TEST_ASSERT_EQUAL(signalData, can_kShim.pTableCurrent->current_mA[s]);
     }
 
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, sizeof(*(can_kShim.pTableCurrent)), STD_OK);
 
     CANRX_CsLemCab500(testMessageValid, &canData, &can_kShim);
 
@@ -343,7 +343,7 @@ void testCANRX_CsLemCab500(void) {
         TEST_ASSERT_EQUAL(signalData, can_kShim.pTableCurrent->current_mA[s]);
     }
 
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, sizeof(*(can_kShim.pTableCurrent)), STD_OK);
 
     CANRX_CsLemCab500(testMessageValid, &canData, &can_kShim);
 }

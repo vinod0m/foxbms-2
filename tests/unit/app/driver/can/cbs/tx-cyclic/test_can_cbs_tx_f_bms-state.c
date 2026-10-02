@@ -676,11 +676,15 @@ void testCANTX_BmsState(void) {
     /* ======= RT1/1: Test implementation */
     DATA_Read4DataBlocks_ExpectAndReturn(
         can_kShim.pTableErrorState,
+        sizeof(*(can_kShim.pTableErrorState)),
         can_kShim.pTableInsulation,
+        sizeof(*(can_kShim.pTableInsulation)),
         can_kShim.pTableMsl,
+        sizeof(*(can_kShim.pTableMsl)),
         can_kShim.pTableBalancingControl,
+        sizeof(*(can_kShim.pTableBalancingControl)),
         STD_OK);
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePhy, sizeof(*(can_kShim.pTablePhy)), STD_OK);
     BMS_GetState_ExpectAndReturn(bms_state.state);
     CAN_TxSetMessageDataWithSignalData_Expect(
         &testMessageData[0u], 3u, 4u, bms_state.state, CANTX_BMS_STATE_ENDIANNESS);
@@ -775,11 +779,15 @@ void testCANTX_TransmitBmsState(void) {
     /* ======= RT1/2: Test implementation */
     DATA_Read4DataBlocks_ExpectAndReturn(
         can_kShim.pTableErrorState,
+        sizeof(*(can_kShim.pTableErrorState)),
         can_kShim.pTableInsulation,
+        sizeof(*(can_kShim.pTableInsulation)),
         can_kShim.pTableMsl,
+        sizeof(*(can_kShim.pTableMsl)),
         can_kShim.pTableBalancingControl,
+        sizeof(*(can_kShim.pTableBalancingControl)),
         STD_OK);
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePhy, sizeof(*(can_kShim.pTablePhy)), STD_OK);
     BMS_GetState_ExpectAndReturn(bms_state.state);
     CAN_TxSetMessageDataWithSignalData_Expect(
         &testMessageData[0u], 3u, 4u, bms_state.state, CANTX_BMS_STATE_ENDIANNESS);
@@ -838,11 +846,15 @@ void testCANTX_TransmitBmsState(void) {
     /* ======= RT2/2: Test implementation */
     DATA_Read4DataBlocks_ExpectAndReturn(
         can_kShim.pTableErrorState,
+        sizeof(*(can_kShim.pTableErrorState)),
         can_kShim.pTableInsulation,
+        sizeof(*(can_kShim.pTableInsulation)),
         can_kShim.pTableMsl,
+        sizeof(*(can_kShim.pTableMsl)),
         can_kShim.pTableBalancingControl,
+        sizeof(*(can_kShim.pTableBalancingControl)),
         STD_OK);
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePhy, sizeof(*(can_kShim.pTablePhy)), STD_OK);
     BMS_GetState_ExpectAndReturn(bms_state.state);
     CAN_TxSetMessageDataWithSignalData_Expect(
         &testMessageData[0u], 3u, 4u, bms_state.state, CANTX_BMS_STATE_ENDIANNESS);

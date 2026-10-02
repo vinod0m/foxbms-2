@@ -496,20 +496,20 @@ void testBMS_CheckCanRequest(void) {
     /* ======= Routine tests =============================================== */
     DATA_BLOCK_STATE_REQUEST_s request = {.header.uniqueId = DATA_BLOCK_ID_STATE_REQUEST};
     /* ======= RT1/1: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(&request, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&request, sizeof(*(&request)), STD_OK);
     TEST_BMS_CheckCanRequests();
     /* TODO: Not Working Currently */
     /* ======= RT1/2: Test implementation */
     request.stateRequestViaCan = BMS_REQ_ID_CHARGE;
-    DATA_Read1DataBlock_ExpectAndReturn(&request, STD_NOT_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&request, sizeof(*(&request)), STD_NOT_OK);
     TEST_BMS_CheckCanRequests();
     /* ======= RT1/3: Test implementation */
     request.stateRequestViaCan = BMS_REQ_ID_NORMAL;
-    DATA_Read1DataBlock_ExpectAndReturn(&request, STD_NOT_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&request, sizeof(*(&request)), STD_NOT_OK);
     TEST_BMS_CheckCanRequests();
     /* ======= RT1/4: Test implementation */
     request.stateRequestViaCan = BMS_REQ_ID_STANDBY;
-    DATA_Read1DataBlock_ExpectAndReturn(&request, STD_NOT_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&request, sizeof(*(&request)), STD_NOT_OK);
     TEST_BMS_CheckCanRequests();
 }
 
@@ -544,7 +544,7 @@ void testBMS_IsContactorFeedbackValid(void) {
     uint8_t stringNumber      = 0u;
     CONT_TYPE_e contactorType = {0};
     /* ======= RT1/1: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(&tableErrorFlags, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&tableErrorFlags, sizeof(*(&tableErrorFlags)), STD_OK);
     TEST_BMS_IsContactorFeedbackValid(stringNumber, contactorType);
 }
 
@@ -646,7 +646,14 @@ void testBmsStateMessageIsRequested(void) {
     BMS_SetStateRequest(BMS_STATE_ERROR_REQUEST);
     OS_GetTickCount_ExpectAndReturn(0u);
     /* State changes to Error state -> message transmitted */
-    DATA_Read3DataBlocks_ExpectAndReturn(&bms_tablePackValues, &bms_tableOpenWire, &bms_tableMinMax, STD_OK);
+    DATA_Read3DataBlocks_ExpectAndReturn(
+        &bms_tablePackValues,
+        sizeof(*(&bms_tablePackValues)),
+        &bms_tableOpenWire,
+        sizeof(*(&bms_tableOpenWire)),
+        &bms_tableMinMax,
+        sizeof(*(&bms_tableMinMax)),
+        STD_OK);
     SOA_CheckVoltages_Expect(&bms_tableMinMax);
     SOA_CheckTemperatures_Expect(&bms_tableMinMax, &bms_tablePackValues);
     SOA_CheckCurrent_Expect(&bms_tablePackValues);

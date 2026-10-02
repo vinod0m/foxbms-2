@@ -785,7 +785,12 @@ void testCANTX_PackStateEstimation(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Read2DataBlocks_ExpectAndReturn(can_kShim.pTableSoc, can_kShim.pTableSoe, STD_OK);
+    DATA_Read2DataBlocks_ExpectAndReturn(
+        can_kShim.pTableSoc,
+        sizeof(*(can_kShim.pTableSoc)),
+        can_kShim.pTableSoe,
+        sizeof(*(can_kShim.pTableSoe)),
+        STD_OK);
     float_t signalDataMinSoc = 0;
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxPrepareSignalData_Expect(&signalDataMinSoc, cantx_testSignalMinimumSoc);

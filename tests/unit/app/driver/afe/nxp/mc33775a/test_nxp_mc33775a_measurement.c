@@ -200,8 +200,11 @@ void testN77x_CaptureMeasurement(void) {
     }
     DATA_Write3DataBlocks_ExpectAndReturn(
         n77xTestState.n77xData.cellVoltage,
+        sizeof(*(n77xTestState.n77xData.cellVoltage)),
         n77xTestState.n77xData.cellTemperature,
+        sizeof(*(n77xTestState.n77xData.cellTemperature)),
         n77xTestState.n77xData.allGpioVoltage,
+        sizeof(*(n77xTestState.n77xData.allGpioVoltage)),
         STD_OK);
 
     TEST_ASSERT_PASS_ASSERT(N77x_CaptureMeasurement(&n77xTestState));
@@ -418,8 +421,11 @@ void testN77x_RetrieveMeasurement(void) {
     }
     DATA_Write3DataBlocks_ExpectAndReturn(
         n77xTestState.n77xData.cellVoltage,
+        sizeof(*(n77xTestState.n77xData.cellVoltage)),
         n77xTestState.n77xData.cellTemperature,
+        sizeof(*(n77xTestState.n77xData.cellTemperature)),
         n77xTestState.n77xData.allGpioVoltage,
+        sizeof(*(n77xTestState.n77xData.allGpioVoltage)),
         STD_OK);
 
     TEST_ASSERT_PASS_ASSERT(TEST_N77x_RetrieveMeasurement(&n77xTestState));
@@ -454,8 +460,11 @@ void testN77x_RetrieveMeasurement(void) {
     }
     DATA_Write3DataBlocks_ExpectAndReturn(
         n77xTestState.n77xData.cellVoltage,
+        sizeof(*(n77xTestState.n77xData.cellVoltage)),
         n77xTestState.n77xData.cellTemperature,
+        sizeof(*(n77xTestState.n77xData.cellTemperature)),
         n77xTestState.n77xData.allGpioVoltage,
+        sizeof(*(n77xTestState.n77xData.allGpioVoltage)),
         STD_OK);
 
     TEST_ASSERT_PASS_ASSERT(TEST_N77x_RetrieveMeasurement(&n77xTestState));
@@ -492,8 +501,11 @@ void testN77x_RetrieveMeasurement(void) {
     }
     DATA_Write3DataBlocks_ExpectAndReturn(
         n77xTestState.n77xData.cellVoltage,
+        sizeof(*(n77xTestState.n77xData.cellVoltage)),
         n77xTestState.n77xData.cellTemperature,
+        sizeof(*(n77xTestState.n77xData.cellTemperature)),
         n77xTestState.n77xData.allGpioVoltage,
+        sizeof(*(n77xTestState.n77xData.allGpioVoltage)),
         STD_OK);
 
     TEST_ASSERT_PASS_ASSERT(TEST_N77x_RetrieveMeasurement(&n77xTestState));

@@ -95,9 +95,13 @@ DATA_BLOCK_CELL_TEMPERATURE_s testCellTemperatureRedundancy0 = {
 static inline void injectDatabaseEntries(void) {
     DATA_Read4DataBlocks_ExpectAndReturn(
         &testCellVoltageBase,
+        sizeof(*(&testCellVoltageBase)),
         &testCellVoltageRedundancy0,
+        sizeof(*(&testCellVoltageRedundancy0)),
         &testCellTemperatureBase,
+        sizeof(*(&testCellTemperatureBase)),
         &testCellTemperatureRedundancy0,
+        sizeof(*(&testCellTemperatureRedundancy0)),
         STD_OK);
 }
 

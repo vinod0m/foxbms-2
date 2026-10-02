@@ -142,8 +142,9 @@ void testMINFO_GetDebugProbeConnectionState(void) {
  * @details This function uses the callback #MockDATA_ReadBlock_Callback() in order to inject
  *          adc voltages into the returned database tables.
  */
-STD_RETURN_TYPE_e MockDATA_ReadBlock_Callback(void *pDataToReceiver, int num_calls) {
+STD_RETURN_TYPE_e MockDATA_ReadBlock_Callback(void *pDataToReceiver, uint32_t dataLength0, int num_calls) {
     int32_t adcVoltage_mV = 0;
+    (void)dataLength0;
 
     /* determine a value depending on num_calls (has to be synchronized with test) */
     switch (num_calls) {

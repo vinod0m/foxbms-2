@@ -330,7 +330,7 @@ void testCANTX_CellVoltages(void) {
     /* ======= RT2/2: Test implementation */
     testMuxId = 8u;
     cellId    = 0;
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableCellVoltage, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableCellVoltage, sizeof(*(can_kShim.pTableCellVoltage)), STD_OK);
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 7u, 8u, 0u, CAN_BIG_ENDIAN);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[1u]);
 

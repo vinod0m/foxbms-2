@@ -456,7 +456,7 @@ void testCANTX_StringMinimumMaximumVoltage(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, sizeof(*(can_kShim.pTableMinMax)), STD_OK);
 
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 3u, 4u, 0u, CAN_BIG_ENDIAN);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[1u]);
@@ -480,7 +480,7 @@ void testCANTX_StringMinimumMaximumVoltage(void) {
 
     /* ======= RT2/2: Test implementation */
     testMuxId = 1u;
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, sizeof(*(can_kShim.pTableMinMax)), STD_OK);
 
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 3u, 4u, 1u, CAN_BIG_ENDIAN);
 
@@ -557,7 +557,7 @@ void testCANTX_StringMinimumMaximumTemp(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, sizeof(*(can_kShim.pTableMinMax)), STD_OK);
 
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 3u, 4u, 0u, CAN_BIG_ENDIAN);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[1u]);
@@ -583,7 +583,7 @@ void testCANTX_StringMinimumMaximumTemp(void) {
 
     /* ======= RT2/2: Test implementation */
     testMuxId = 1u;
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, sizeof(*(can_kShim.pTableMinMax)), STD_OK);
 
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 3u, 4u, 1u, CAN_BIG_ENDIAN);
 

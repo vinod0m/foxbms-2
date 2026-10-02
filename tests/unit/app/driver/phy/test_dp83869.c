@@ -313,7 +313,7 @@ void testPHY_Initialize(void) {
     IO_SetPinDirectionToOutput_Expect(&PHY_POWER_DOWN_REG_DIR, PHY_POWER_DOWN_PIN);
     IO_PinSet_Expect(&PHY_POWER_DOWN_REG_DOUT, PHY_POWER_DOWN_PIN);
 
-    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     helper_HardwareReset();
 
     /* Call of PHY_GetId() */
@@ -347,9 +347,9 @@ void testPHY_Initialize(void) {
     uint16_t testLinkSuccess = 0x4u;
     MDIOPhyRegRead_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS, 0x1u, &testLinkStatus, true);
     MDIOPhyRegRead_ReturnThruPtr_dataPtr(&testLinkSuccess);
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
     /* ======= RT1/6: Call function under test */
     result = PHY_Initialize(TEST_MDIO_BASE_ADDRESS);
@@ -360,7 +360,7 @@ void testPHY_Initialize(void) {
     IO_SetPinDirectionToOutput_Expect(&PHY_POWER_DOWN_REG_DIR, PHY_POWER_DOWN_PIN);
     IO_PinSet_Expect(&PHY_POWER_DOWN_REG_DOUT, PHY_POWER_DOWN_PIN);
 
-    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     uint32_t phyIdReadCount = 0x0u;
 
     while (phyIdReadCount < 0xFu) {
@@ -373,7 +373,7 @@ void testPHY_Initialize(void) {
         phyIdReadCount++;
     }
 
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
     /* ======= RT2/6: Call function under test */
     result = PHY_Initialize(TEST_MDIO_BASE_ADDRESS);
@@ -386,14 +386,14 @@ void testPHY_Initialize(void) {
     IO_SetPinDirectionToOutput_Expect(&PHY_POWER_DOWN_REG_DIR, PHY_POWER_DOWN_PIN);
     IO_PinSet_Expect(&PHY_POWER_DOWN_REG_DOUT, PHY_POWER_DOWN_PIN);
 
-    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     /* Call of PHY_GetId() */
     MDIOPhyRegRead_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS, 0x2u, &testDataBuffer, true);
     MDIOPhyRegRead_ReturnThruPtr_dataPtr(&id1);
     MDIOPhyRegRead_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS, 0x3u, &id1, true);
     MDIOPhyRegRead_ReturnThruPtr_dataPtr(&testDataBuffer);
     OS_DelayTask_Expect(10u);
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
     /* ======= RT3/6: Call function under test */
     result = PHY_Initialize(TEST_MDIO_BASE_ADDRESS);
@@ -405,7 +405,7 @@ void testPHY_Initialize(void) {
     IO_SetPinDirectionToOutput_Expect(&PHY_POWER_DOWN_REG_DIR, PHY_POWER_DOWN_PIN);
     IO_PinSet_Expect(&PHY_POWER_DOWN_REG_DOUT, PHY_POWER_DOWN_PIN);
 
-    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     /* Call of PHY_GetId() */
     MDIOPhyRegRead_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS, 0x2u, &testDataBuffer, true);
     MDIOPhyRegRead_ReturnThruPtr_dataPtr(&id1);
@@ -415,7 +415,7 @@ void testPHY_Initialize(void) {
 
     /* Call of MDIOPhyAliveStatusGet() */
     MDIOPhyAliveStatusGet_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, 0x1u);
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
     /* ======= RT4/6: Call function under test */
     result = PHY_Initialize(TEST_MDIO_BASE_ADDRESS);
@@ -428,7 +428,7 @@ void testPHY_Initialize(void) {
     IO_SetPinDirectionToOutput_Expect(&PHY_POWER_DOWN_REG_DIR, PHY_POWER_DOWN_PIN);
     IO_PinSet_Expect(&PHY_POWER_DOWN_REG_DOUT, PHY_POWER_DOWN_PIN);
 
-    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     /* Call of PHY_GetId() */
     MDIOPhyRegRead_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS, 0x2u, &testDataBuffer, true);
     MDIOPhyRegRead_ReturnThruPtr_dataPtr(&id1);
@@ -452,7 +452,7 @@ void testPHY_Initialize(void) {
     restartComplete   = 0x0000u;
     helper_SwRestart(&restartComplete, &n_restartComplete);
     helper_ExtendedAddressSpaceRegRead(0x1DFu, &miiModeNotSet, &miiModeNotSet);
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
     /* ======= RT5/6: Call function under test */
     result = PHY_Initialize(TEST_MDIO_BASE_ADDRESS);
@@ -465,7 +465,7 @@ void testPHY_Initialize(void) {
     IO_SetPinDirectionToOutput_Expect(&PHY_POWER_DOWN_REG_DIR, PHY_POWER_DOWN_PIN);
     IO_PinSet_Expect(&PHY_POWER_DOWN_REG_DOUT, PHY_POWER_DOWN_PIN);
 
-    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     /* Call of PHY_GetId() */
     MDIOPhyRegRead_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS, 0x2u, &testDataBuffer, true);
     MDIOPhyRegRead_ReturnThruPtr_dataPtr(&id1);
@@ -501,9 +501,9 @@ void testPHY_Initialize(void) {
         OS_DelayTask_Expect(10u);
         retries++;
     }
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
 
     /* ======= RT6/6: Call function under test */
     result = PHY_Initialize(TEST_MDIO_BASE_ADDRESS);
@@ -533,7 +533,7 @@ void testPHY_LinkStatusGet(void) {
     /* ======= RT1/2: Test implementation */
     MDIOPhyRegRead_ExpectAndReturn(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS, 0x1u, &testLinkStatus, true);
     MDIOPhyRegRead_ReturnThruPtr_dataPtr(&testLinkSuccess);
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     /* ======= RT1/2: Call function under test */
     result = PHY_GetLinkStatus(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS);
     /* ======= RT1/2: Test output verification */
@@ -546,7 +546,7 @@ void testPHY_LinkStatusGet(void) {
         OS_DelayTask_Expect(10u);
         retries++;
     }
-    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&tablePhy, sizeof(*(&tablePhy)), STD_OK);
     /* ======= RT2/2: Call function under test */
     result = PHY_GetLinkStatus(TEST_MDIO_BASE_ADDRESS, TEST_PHY_ADDRESS);
     /* ======= RT2/2: Test output verification */

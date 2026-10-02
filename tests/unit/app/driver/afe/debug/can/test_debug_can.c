@@ -314,9 +314,9 @@ void testDECAN_ReceiveCanCellVoltages(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltage, STD_OK);
-    DATA_Read1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltage, sizeof(*(&decan_cellVoltage)), STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, sizeof(*(&decan_cellVoltageFromRead)), STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, sizeof(*(&decan_cellVoltageFromRead)), STD_OK);
     TEST_ASSERT_EQUAL(STD_OK, TEST_DECAN_ReceiveCanCellVoltages());
 }
 
@@ -344,9 +344,15 @@ void testDECAN_ReceiveCanCellTemperatures(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperature, STD_OK);
-    DATA_Read1DataBlock_ExpectAndReturn(&decan_cellTemperatureFromRead, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperatureFromRead, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperature, sizeof(*(&decan_cellTemperature)), STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        &decan_cellTemperatureFromRead,
+        sizeof(*(&decan_cellTemperatureFromRead)),
+        STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        &decan_cellTemperatureFromRead,
+        sizeof(*(&decan_cellTemperatureFromRead)),
+        STD_OK);
     TEST_ASSERT_EQUAL(STD_OK, TEST_DECAN_ReceiveCanCellTemperatures());
 }
 
@@ -389,9 +395,9 @@ void testDECAN_TriggerAfe(void) {
      * below check the product's processing of a KNOWN queue item rather than
      * of whatever the stack happened to hold. */
     OS_ReceiveFromQueue_ReturnThruPtr_pvBuffer(&expectedQueuePayload);
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltage, STD_OK);
-    DATA_Read1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltage, sizeof(*(&decan_cellVoltage)), STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, sizeof(*(&decan_cellVoltageFromRead)), STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellVoltageFromRead, sizeof(*(&decan_cellVoltageFromRead)), STD_OK);
 
     /* Second receive in this test case, on the temperatures queue. Reset the
      * expected payload the same way the first one is initialised, so the two
@@ -408,9 +414,15 @@ void testDECAN_TriggerAfe(void) {
      * below check the product's processing of a KNOWN queue item rather than
      * of whatever the stack happened to hold. */
     OS_ReceiveFromQueue_ReturnThruPtr_pvBuffer(&expectedQueuePayload);
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperature, STD_OK);
-    DATA_Read1DataBlock_ExpectAndReturn(&decan_cellTemperatureFromRead, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperatureFromRead, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(&decan_cellTemperature, sizeof(*(&decan_cellTemperature)), STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        &decan_cellTemperatureFromRead,
+        sizeof(*(&decan_cellTemperatureFromRead)),
+        STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        &decan_cellTemperatureFromRead,
+        sizeof(*(&decan_cellTemperatureFromRead)),
+        STD_OK);
 
     OS_GetTickCount_ExpectAndReturn(0u);
     uint32_t currentTime = 0u;

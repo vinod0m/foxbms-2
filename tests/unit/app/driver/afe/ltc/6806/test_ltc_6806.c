@@ -146,7 +146,10 @@ void testLTC_SaveVoltages(void) {
 
     DIAG_CheckEvent_ExpectAndReturn(
         cellVoltageMeasurementValid, DIAG_ID_AFE_CELL_VOLTAGE_MEAS_ERROR, DIAG_STRING, 0u, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(ltc_stateBase.ltcData.cellVoltage, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        ltc_stateBase.ltcData.cellVoltage,
+        sizeof(*(ltc_stateBase.ltcData.cellVoltage)),
+        STD_OK);
     LTC_SaveVoltages(&ltc_stateBase, 0u);
 }
 
@@ -163,12 +166,18 @@ void testLTC_SaveTemperatures(void) {
 
     DIAG_CheckEvent_ExpectAndReturn(
         cellTemperatureMeasurementValid, DIAG_ID_AFE_CELL_TEMPERATURE_MEAS_ERROR, DIAG_STRING, 0u, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(ltc_stateBase.ltcData.cellTemperature, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        ltc_stateBase.ltcData.cellTemperature,
+        sizeof(*(ltc_stateBase.ltcData.cellTemperature)),
+        STD_OK);
     LTC_SaveTemperatures(&ltc_stateBase, 0u);
 }
 
 void testLTC_SaveAllGpioMeasurement(void) {
-    DATA_Write1DataBlock_ExpectAndReturn(ltc_stateBase.ltcData.allGpioVoltages, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        ltc_stateBase.ltcData.allGpioVoltages,
+        sizeof(*(ltc_stateBase.ltcData.allGpioVoltages)),
+        STD_OK);
     LTC_SaveAllGpioMeasurement(&ltc_stateBase);
 }
 

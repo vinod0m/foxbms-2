@@ -132,8 +132,12 @@ static DATA_BLOCK_MIN_MAX_s tableMinMaxInjected = {
     .header.uniqueId = DATA_BLOCK_ID_MIN_MAX,
     .header.timestamp = 10u};
 
-static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(void *pDataToReceiver0, int cmock_num_calls) {
+static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(
+    void *pDataToReceiver0,
+    uint32_t dataLength0,
+    int cmock_num_calls) {
     (void)cmock_num_calls;
+    (void)dataLength0;
     TEST_ASSERT_NOT_NULL(pDataToReceiver0);
     DATA_BLOCK_MIN_MAX_s *pMinMax = (DATA_BLOCK_MIN_MAX_s *)pDataToReceiver0;
     TEST_ASSERT_EQUAL(DATA_BLOCK_ID_MIN_MAX, pMinMax->header.uniqueId);

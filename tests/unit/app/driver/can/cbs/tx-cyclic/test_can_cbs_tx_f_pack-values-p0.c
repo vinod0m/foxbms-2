@@ -336,7 +336,7 @@ void testCANTX_PackValuesP0(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePackValues, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePackValues, sizeof(*(can_kShim.pTablePackValues)), STD_OK);
     CAN_TxPrepareSignalData_Expect(&testBatteryVoltage, cantx_testSignalBatteryVoltage);
     CAN_TxSetMessageDataWithSignalData_Expect(
         &testMessageData[0u], 7u, 15u, can_tablePackValues.batteryVoltage_mV, CANTX_PACK_VALUES_P0_ENDIANNESS);

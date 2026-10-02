@@ -88,11 +88,19 @@ void tearDown(void) {
 /** compare the four data blocks by CONTENT rather than by address */
 static STD_RETURN_TYPE_e DIAG_Write4DataBlocksCallback(
     void *pDataFromSender0,
+    uint32_t dataLength0,
     void *pDataFromSender1,
+    uint32_t dataLength1,
     void *pDataFromSender2,
+    uint32_t dataLength2,
     void *pDataFromSender3,
+    uint32_t dataLength3,
     int cmock_num_calls) {
     (void)cmock_num_calls;
+    (void)dataLength0;
+    (void)dataLength1;
+    (void)dataLength2;
+    (void)dataLength3;
     TEST_ASSERT_EQUAL_MEMORY(&diag_tableErrorFlags, pDataFromSender0, sizeof(DATA_BLOCK_ERROR_STATE_s));
     TEST_ASSERT_EQUAL_MEMORY(&diag_tableMolFlags, pDataFromSender1, sizeof(DATA_BLOCK_MOL_FLAG_s));
     TEST_ASSERT_EQUAL_MEMORY(&diag_tableRslFlags, pDataFromSender2, sizeof(DATA_BLOCK_RSL_FLAG_s));

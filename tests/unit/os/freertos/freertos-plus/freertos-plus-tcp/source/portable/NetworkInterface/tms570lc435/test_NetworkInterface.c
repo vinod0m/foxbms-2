@@ -262,7 +262,7 @@ void testGetPhyLinkStatus(void) {
     /* ======= Assertion tests ============================================= */
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(&testTablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&testTablePhy, sizeof(*(&testTablePhy)), STD_OK);
     DATA_Read1DataBlock_ReturnThruPtr_pDataToReceiver0(&testTablePhy);
     EMAC_GetPhyLinkStatus_ExpectAndReturn(STD_OK);
     /* ======= RT1/1: Call function under test */
@@ -363,7 +363,7 @@ void testNIC_Receive(void) {
     /* ======= RT1/2: Test implementation */
     FOREVER_ExpectAndReturn(1u);
     OS_NotifyTake_ExpectAndReturn(false, (TickType_t)1000u, 0u);
-    DATA_Read1DataBlock_ExpectAndReturn(&testTablePhy, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(&testTablePhy, sizeof(*(&testTablePhy)), STD_OK);
     DATA_Read1DataBlock_ReturnThruPtr_pDataToReceiver0(&testTablePhy);
     EMAC_GetPhyLinkStatus_ExpectAndReturn(STD_OK);
     FOREVER_ExpectAndReturn(0u);

@@ -794,7 +794,7 @@ void testCANTX_PackMinimumMaximumVoltage(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, sizeof(*(can_kShim.pTableMinMax)), STD_OK);
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 37u, 14u, testMaximumCellVoltage0, CAN_BIG_ENDIAN);
@@ -872,7 +872,7 @@ void testCANTX_PackMinimumMaximumTemp(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableMinMax, sizeof(*(can_kShim.pTableMinMax)), STD_OK);
     BMS_GetNumberOfConnectedStrings_ExpectAndReturn(0u);
     CAN_TxPrepareSignalData_Expect(&testMaximumTemperature0, cantx_testSignalMaximumTemperature);
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 47u, 8u, (int64_t)testMaximumTemperature0, CAN_BIG_ENDIAN);

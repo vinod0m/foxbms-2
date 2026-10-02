@@ -129,7 +129,7 @@ void testADC_Control(void) {
      * assertion this test makes about that step is the state transition on the
      * next line, and the buffer is statically zero-initialised either way. */
     adcGetData_ReturnThruPtr_pBuffer(&adc_adc1RawVoltages[0]);
-    DATA_Write1DataBlock_ExpectAndReturn(TEST_ADC_GetAdc1Voltages(), STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(TEST_ADC_GetAdc1Voltages(), sizeof(*(TEST_ADC_GetAdc1Voltages())), STD_OK);
     ADC_Control();
     TEST_ASSERT_EQUAL(ADC_START_CONVERSION, TEST_ADC_GetAdcConversionState());
 }

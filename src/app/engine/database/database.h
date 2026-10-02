@@ -79,26 +79,63 @@
 
 /** helper macro for the variadic macros for read and write functions */
 /* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
-#define GET_MACRO(_1, _2, _3, _4, NAME, ...) (NAME)
+#define GET_MACRO(_1, _2, _3, _4, NAME, ...) NAME
+
+/** argument forwarding for the one-entry data access calls
+ * @details Each of the eight macros below takes the pointers the caller passed to
+ *          #DATA_READ_DATA() / #DATA_WRITE_DATA() and re-emits the matching
+ *          #DATA_Read1DataBlock() / #DATA_Write1DataBlock() ... call with one additional size
+ *          argument per pointer, so that the size of the object the caller referenced travels
+ *          with the request. The size is derived from the pointer the caller supplied
+ *          (sizeof(*(p))), which is why no call site has to change and why the database module
+ *          can check at the copy site that the destination really is large enough.
+ *          #GET_MACRO() selects one of these by the number of arguments, exactly as it
+ *          previously selected the function itself.
+ */
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_READ_ARGS_1(_1) DATA_Read1DataBlock((_1), sizeof(*(_1)))
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_READ_ARGS_2(_1, _2) DATA_Read2DataBlocks((_1), sizeof(*(_1)), (_2), sizeof(*(_2)))
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_READ_ARGS_3(_1, _2, _3) \
+    DATA_Read3DataBlocks((_1), sizeof(*(_1)), (_2), sizeof(*(_2)), (_3), sizeof(*(_3)))
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_READ_ARGS_4(_1, _2, _3, _4)                                    \
+    DATA_Read4DataBlocks(                                                   \
+        (_1), sizeof(*(_1)), (_2), sizeof(*(_2)), (_3), sizeof(*(_3)), (_4), sizeof(*(_4)))
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_WRITE_ARGS_1(_1) DATA_Write1DataBlock((_1), sizeof(*(_1)))
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_WRITE_ARGS_2(_1, _2) DATA_Write2DataBlocks((_1), sizeof(*(_1)), (_2), sizeof(*(_2)))
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_WRITE_ARGS_3(_1, _2, _3) \
+    DATA_Write3DataBlocks((_1), sizeof(*(_1)), (_2), sizeof(*(_2)), (_3), sizeof(*(_3)))
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_WRITE_ARGS_4(_1, _2, _3, _4)                                    \
+    DATA_Write4DataBlocks(                                                   \
+        (_1), sizeof(*(_1)), (_2), sizeof(*(_2)), (_3), sizeof(*(_3)), (_4), sizeof(*(_4)))
+
 /** variadic macro for read access to the database */
-#define DATA_READ_DATA(...)   \
-    GET_MACRO(                \
-        __VA_ARGS__,          \
-        DATA_Read4DataBlocks, \
-        DATA_Read3DataBlocks, \
-        DATA_Read2DataBlocks, \
-        DATA_Read1DataBlock,  \
-        DATA_DummyFunction)   \
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_READ_DATA(...)         \
+    GET_MACRO(                      \
+        __VA_ARGS__,                \
+        DATA_READ_ARGS_4,           \
+        DATA_READ_ARGS_3,           \
+        DATA_READ_ARGS_2,           \
+        DATA_READ_ARGS_1,           \
+        DATA_DummyFunction)         \
     (__VA_ARGS__)
 /** variadic macro for write access to the database */
-#define DATA_WRITE_DATA(...)   \
-    GET_MACRO(                 \
-        __VA_ARGS__,           \
-        DATA_Write4DataBlocks, \
-        DATA_Write3DataBlocks, \
-        DATA_Write2DataBlocks, \
-        DATA_Write1DataBlock,  \
-        DATA_DummyFunction)    \
+/* AXIVION Next Codeline Style Generic-NoUnsafeMacro: unsafe macro is needed for variadic macro magic */
+#define DATA_WRITE_DATA(...)        \
+    GET_MACRO(                      \
+        __VA_ARGS__,                \
+        DATA_WRITE_ARGS_4,          \
+        DATA_WRITE_ARGS_3,          \
+        DATA_WRITE_ARGS_2,          \
+        DATA_WRITE_ARGS_1,          \
+        DATA_DummyFunction)         \
     (__VA_ARGS__)
 
 /**
@@ -118,6 +155,14 @@ typedef enum {
 typedef struct {
     DATA_BLOCK_ACCESS_TYPE_e accessType;               /*!< read or write access type */
     void *pDatabaseEntry[DATA_MAX_ENTRIES_PER_ACCESS]; /*!< reference by general pointer */
+    uint32_t dataLength[DATA_MAX_ENTRIES_PER_ACCESS];  /*!< size of the object the caller referenced by the
+                                                            matching entry of #pDatabaseEntry, in bytes.
+                                                            Derived at the call site as sizeof(*(pointer)) by the
+                                                            #DATA_READ_ARGS_x() and #DATA_WRITE_ARGS_x()
+                                                            helpers, so a caller cannot misdeclare it
+                                                            without also misdeclaring the pointer. The
+                                                            database module checks it against the
+                                                            registered dataLength before it copies. */
 } DATA_QUEUE_MESSAGE_s;
 
 /*========== Extern Constant and Variable Declarations ======================*/
@@ -178,7 +223,7 @@ extern void DATA_Task(void);
  *                  the caller, see @details)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
-extern STD_RETURN_TYPE_e DATA_Write1DataBlock(void *pDataFromSender0);
+extern STD_RETURN_TYPE_e DATA_Write1DataBlock(void *pDataFromSender0, uint32_t dataLength0);
 
 /**
  * @brief   Stores two data blocks in database
@@ -190,7 +235,11 @@ extern STD_RETURN_TYPE_e DATA_Write1DataBlock(void *pDataFromSender0);
  * @param[in,out]  pDataFromSender1 (type: void *)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
-extern STD_RETURN_TYPE_e DATA_Write2DataBlocks(void *pDataFromSender0, void *pDataFromSender1);
+extern STD_RETURN_TYPE_e DATA_Write2DataBlocks(
+    void *pDataFromSender0,
+    uint32_t dataLength0,
+    void *pDataFromSender1,
+    uint32_t dataLength1);
 /**
  * @brief   Stores three data blocks in database
  * @details This function stores passed data in database and updates timestamp
@@ -202,7 +251,13 @@ extern STD_RETURN_TYPE_e DATA_Write2DataBlocks(void *pDataFromSender0, void *pDa
  * @param[in,out]  pDataFromSender2 (type: void *)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
-extern STD_RETURN_TYPE_e DATA_Write3DataBlocks(void *pDataFromSender0, void *pDataFromSender1, void *pDataFromSender2);
+extern STD_RETURN_TYPE_e DATA_Write3DataBlocks(
+    void *pDataFromSender0,
+    uint32_t dataLength0,
+    void *pDataFromSender1,
+    uint32_t dataLength1,
+    void *pDataFromSender2,
+    uint32_t dataLength2);
 /**
  * @brief   Stores four data blocks in database
  * @details This function stores passed data in database and updates timestamp
@@ -230,9 +285,13 @@ extern STD_RETURN_TYPE_e DATA_Write3DataBlocks(void *pDataFromSender0, void *pDa
  */
 extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(
     void *pDataFromSender0,
+    uint32_t dataLength0,
     void *pDataFromSender1,
+    uint32_t dataLength1,
     void *pDataFromSender2,
-    void *pDataFromSender3);
+    uint32_t dataLength2,
+    void *pDataFromSender3,
+    uint32_t dataLength3);
 
 /**
  * @brief   Reads one data block in database by value.
@@ -252,7 +311,7 @@ extern STD_RETURN_TYPE_e DATA_Write4DataBlocks(
  *              caller, see @details)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
-extern STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0);
+extern STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0, uint32_t dataLength0);
 /**
  * @brief   Reads two data blocks in database by value.
  * @details This function reads data from database and copy this content in
@@ -263,7 +322,11 @@ extern STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0);
  * @param[out]  pDataToReceiver1 (type: void *)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
-extern STD_RETURN_TYPE_e DATA_Read2DataBlocks(void *pDataToReceiver0, void *pDataToReceiver1);
+extern STD_RETURN_TYPE_e DATA_Read2DataBlocks(
+    void *pDataToReceiver0,
+    uint32_t dataLength0,
+    void *pDataToReceiver1,
+    uint32_t dataLength1);
 /**
  * @brief   Reads three data blocks in database by value.
  * @details This function reads data from database and copy this content in
@@ -275,7 +338,13 @@ extern STD_RETURN_TYPE_e DATA_Read2DataBlocks(void *pDataToReceiver0, void *pDat
  * @param[out]  pDataToReceiver2 (type: void *)
  * @return  #STD_OK if access was successful, otherwise #STD_NOT_OK
  */
-extern STD_RETURN_TYPE_e DATA_Read3DataBlocks(void *pDataToReceiver0, void *pDataToReceiver1, void *pDataToReceiver2);
+extern STD_RETURN_TYPE_e DATA_Read3DataBlocks(
+    void *pDataToReceiver0,
+    uint32_t dataLength0,
+    void *pDataToReceiver1,
+    uint32_t dataLength1,
+    void *pDataToReceiver2,
+    uint32_t dataLength2);
 /**
  * @brief   Reads four data blocks in database by value.
  * @details This function reads data from database and copy this content in
@@ -303,9 +372,13 @@ extern STD_RETURN_TYPE_e DATA_Read3DataBlocks(void *pDataToReceiver0, void *pDat
  */
 extern STD_RETURN_TYPE_e DATA_Read4DataBlocks(
     void *pDataToReceiver0,
+    uint32_t dataLength0,
     void *pDataToReceiver1,
+    uint32_t dataLength1,
     void *pDataToReceiver2,
-    void *pDataToReceiver3);
+    uint32_t dataLength2,
+    void *pDataToReceiver3,
+    uint32_t dataLength3);
 
 /**
  * @brief   Executes a built-in self-test for the database module
@@ -319,7 +392,16 @@ extern void DATA_ExecuteDataBist(void);
 #ifdef UNITY_UNIT_TEST
 /* clang-format off */
 extern void TEST_DATA_IterateOverDatabaseEntries(const DATA_QUEUE_MESSAGE_s *kpReceiveMessage) ;
-extern STD_RETURN_TYPE_e TEST_DATA_AccessDatabaseEntries(DATA_BLOCK_ACCESS_TYPE_e accessType, void *pData0, void *pData1, void *pData2, void *pData3);
+extern STD_RETURN_TYPE_e TEST_DATA_AccessDatabaseEntries(
+    DATA_BLOCK_ACCESS_TYPE_e accessType,
+    void *pData0,
+    uint32_t dataLength0,
+    void *pData1,
+    uint32_t dataLength1,
+    void *pData2,
+    uint32_t dataLength2,
+    void *pData3,
+    uint32_t dataLength3);
 extern void TEST_DATA_CopyData(DATA_BLOCK_ACCESS_TYPE_e accessType, uint32_t dataLength, void *pDatabaseStruct, void *pPassedDataStruct);
 /* clang-format on */
 #endif

@@ -150,7 +150,10 @@ void testN77x_BalanceControl(void) {
             (MC3377X_BAL_GLOB_CFG_TMRBALEN_STOP_ENUM_VAL << MC3377X_BAL_GLOB_CFG_TMRBALEN_POS),
         n77x_testState.pSpiTxSequence);
 
-    DATA_Read1DataBlock_ExpectAndReturn(n77x_testState.n77xData.balancingControl, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        n77x_testState.n77xData.balancingControl,
+        sizeof(*(n77x_testState.n77xData.balancingControl)),
+        STD_OK);
 
     /* Activate balancing for all cells */
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
@@ -200,7 +203,10 @@ void testN77x_BalanceControl(void) {
             (MC3377X_BAL_GLOB_CFG_TMRBALEN_STOP_ENUM_VAL << MC3377X_BAL_GLOB_CFG_TMRBALEN_POS),
         n77x_testState.pSpiTxSequence);
 
-    DATA_Read1DataBlock_ExpectAndReturn(n77x_testState.n77xData.balancingControl, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        n77x_testState.n77xData.balancingControl,
+        sizeof(*(n77x_testState.n77xData.balancingControl)),
+        STD_OK);
 
     /* Deactivate balancing for all cells */
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {

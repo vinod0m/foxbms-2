@@ -409,7 +409,12 @@ void testCANTX_PackLimits(void) {
     float_t minimumBatteryVoltage = (float_t)(BS_NR_OF_CELL_BLOCKS_PER_STRING * BC_VOLTAGE_MIN_MSL_mV);
     float_t maximumBatteryVoltage = (float_t)(BS_NR_OF_CELL_BLOCKS_PER_STRING * BC_VOLTAGE_MAX_MSL_mV);
     /* ======= RT1/1: Test implementation */
-    DATA_Read2DataBlocks_ExpectAndReturn(can_kShim.pTableSof, can_kShim.pTablePackValues, STD_OK);
+    DATA_Read2DataBlocks_ExpectAndReturn(
+        can_kShim.pTableSof,
+        sizeof(*(can_kShim.pTableSof)),
+        can_kShim.pTablePackValues,
+        sizeof(*(can_kShim.pTablePackValues)),
+        STD_OK);
     CAN_TxPrepareSignalData_Expect(&maximumDischargeCurrent, cantx_testSignalMaximumDischargeCurrent);
     CAN_TxSetMessageDataWithSignalData_Expect(
         &testMessageData[0u], 7u, 12u, (uint64_t)maximumDischargeCurrent, CANTX_PACK_LIMITS_ENDIANNESS);

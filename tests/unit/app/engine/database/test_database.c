@@ -232,10 +232,28 @@ void testDATA_AccessDatabaseEntries(void) {
 
     /* ======= AT1/2: Assertion test */
     TEST_ASSERT_FAIL_ASSERT(
-        TEST_DATA_AccessDatabaseEntries(invalidAccessType, pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3));
+        TEST_DATA_AccessDatabaseEntries(
+            invalidAccessType,
+            pValidDummy0,
+            sizeof(pValidDummy0),
+            pValidDummy1,
+            sizeof(pValidDummy1),
+            pValidDummy2,
+            sizeof(pValidDummy2),
+            pValidDummy3,
+            sizeof(pValidDummy3)));
     /* ======= AT2/2: Assertion test */
     TEST_ASSERT_FAIL_ASSERT(
-        TEST_DATA_AccessDatabaseEntries(validAccessType, NULL_PTR, pValidDummy1, pValidDummy2, pValidDummy3));
+        TEST_DATA_AccessDatabaseEntries(
+            validAccessType,
+            NULL_PTR,
+            0u,
+            pValidDummy1,
+            sizeof(pValidDummy1),
+            pValidDummy2,
+            sizeof(pValidDummy2),
+            pValidDummy3,
+            sizeof(pValidDummy3)));
 
     /* ======= Routine tests =============================================== */
     const DATA_BLOCK_ACCESS_TYPE_e readAccess  = DATA_WRITE_ACCESS;
@@ -244,7 +262,9 @@ void testDATA_AccessDatabaseEntries(void) {
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e readSuccessfully =
-        TEST_DATA_AccessDatabaseEntries(readAccess, pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
+        TEST_DATA_AccessDatabaseEntries(
+            readAccess, pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+            sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
@@ -256,7 +276,9 @@ void testDATA_AccessDatabaseEntries(void) {
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e writeUnsuccessfully =
-        TEST_DATA_AccessDatabaseEntries(writeAccess, pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
+        TEST_DATA_AccessDatabaseEntries(
+            writeAccess, pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+            sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -367,6 +389,7 @@ void testDATA_IterateOverDatabaseEntries(void) {
         {
                                   .accessType     = DATA_READ_ACCESS,
                                   .pDatabaseEntry = (void *)&entry_blockCellVoltage,
+                                  .dataLength[0]  = sizeof(entry_blockCellVoltage),
         },
         {
                                   .pDatabaseEntry = NULL_PTR,
@@ -389,6 +412,7 @@ void testDATA_IterateOverDatabaseEntries(void) {
         {
                           .accessType     = DATA_READ_ACCESS,
                           .pDatabaseEntry = (void *)&entry_blockInvalidId,
+                          .dataLength[0]  = sizeof(entry_blockInvalidId),
         },
         {
                           .pDatabaseEntry = NULL_PTR,
@@ -416,18 +440,18 @@ void testDATA_IterateOverDatabaseEntries(void) {
  *          selected entry are not touched, and exactly the registered length is
  *          written.
  *
- *          What this does *not* pin, and why, is the other half of the risk: the
- *          module has no knowledge of how large the caller's object actually is.
- *          #DATA_BASE_s carries a dataLength but the access API
- *          (#DATA_READ_DATA() / #DATA_WRITE_DATA() in database.h) passes bare
- *          void pointers, so a call site whose struct type does not match the
- *          struct type registered for the uniqueId it declares makes the module
- *          copy more bytes than the caller's object holds, silently. Closing that
- *          needs the caller's object size to reach DATA_CopyData(), which is an
- *          API change across every DATA_READ_DATA()/DATA_WRITE_DATA() call site
- *          (76 writes and 72 reads at the time of writing). It is deliberately
- *          not attempted here; see the defect report. This test therefore pins
- *          only the half the module can actually guarantee.
+ *          The other half of the risk, the destination being the caller's own
+ *          object and the module not knowing how large that object is, used to be
+ *          open: #DATA_BASE_s carries a dataLength but the access API passed bare
+ *          void pointers, so a call site whose struct type did not match the struct
+ *          type registered for the uniqueId it declared made the module copy more
+ *          bytes than the caller's object held, silently. #DATA_READ_DATA() /
+ *          #DATA_WRITE_DATA() now derive the caller's object size as
+ *          sizeof(*(pointer)) and carry it in the dataLength member of
+ *          #DATA_QUEUE_MESSAGE_s, and DATA_IterateOverDatabaseEntries() checks it
+ *          against the registered length before it copies. That half is pinned by
+ *          testDATA_IterateOverDatabaseEntries_tooSmallCallerObjectIsAsserted() and
+ *          testDATA_IterateOverDatabaseEntries_largerCallerObjectIsAccepted().
  */
 void testDATA_IterateOverDatabaseEntries_copiesExactlyTheRegisteredLength(void) {
     /* Populate data_uniqueIdToDatabaseEntry[] from the shipped registration table. */
@@ -452,6 +476,7 @@ void testDATA_IterateOverDatabaseEntries_copiesExactlyTheRegisteredLength(void) 
         {
                                   .accessType     = DATA_READ_ACCESS,
                                   .pDatabaseEntry = (void *)pPassedEntry,
+                                  .dataLength[0]  = sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s),
         },
         {
                                   .pDatabaseEntry = NULL_PTR,
@@ -513,7 +538,7 @@ void testDATA_Task(void) {
 void testDATA_Read1DataBlock(void) {
     /* ======= Assertion tests ============================================= */
     /* ======= AT1/1: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read1DataBlock(NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read1DataBlock(NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     uint8_t dummyValue = 0u;
@@ -529,7 +554,7 @@ void testDATA_Read1DataBlock(void) {
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
-    const STD_RETURN_TYPE_e readSuccessfully = DATA_Read1DataBlock(pValidDummy0);
+    const STD_RETURN_TYPE_e readSuccessfully = DATA_Read1DataBlock(pValidDummy0, sizeof(pValidDummy0));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
@@ -539,7 +564,7 @@ void testDATA_Read1DataBlock(void) {
      * would erase RT1/2's count and make the end-of-test _CallCount()
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
-    const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read1DataBlock(pValidDummy0);
+    const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read1DataBlock(pValidDummy0, sizeof(pValidDummy0));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -569,15 +594,16 @@ void testDATA_Read2DataBlocks(void) {
     data_sendMessage.accessType                   = DATA_READ_ACCESS;
 
     /* ======= AT1/2: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read2DataBlocks(NULL_PTR, pValidDummy1));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read2DataBlocks(NULL_PTR, 0u, pValidDummy1, sizeof(pValidDummy1)));
     /* ======= AT2/2: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read2DataBlocks(pValidDummy0, NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read2DataBlocks(pValidDummy0, sizeof(pValidDummy0), NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
-    const STD_RETURN_TYPE_e readSuccessfully = DATA_Read2DataBlocks(pValidDummy0, pValidDummy1);
+    const STD_RETURN_TYPE_e readSuccessfully = DATA_Read2DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                sizeof(pValidDummy1));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
@@ -587,7 +613,8 @@ void testDATA_Read2DataBlocks(void) {
      * would erase RT1/2's count and make the end-of-test _CallCount()
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
-    const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read2DataBlocks(pValidDummy0, pValidDummy1);
+    const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read2DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                  sizeof(pValidDummy1));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -619,17 +646,22 @@ void testDATA_Read3DataBlocks(void) {
     data_sendMessage.accessType                   = DATA_READ_ACCESS;
 
     /* ======= AT1/3: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read3DataBlocks(NULL_PTR, pValidDummy1, pValidDummy2));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read3DataBlocks(NULL_PTR, 0u, pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                                             sizeof(pValidDummy2)));
     /* ======= AT2/3: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read3DataBlocks(pValidDummy0, NULL_PTR, pValidDummy2));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read3DataBlocks(pValidDummy0, sizeof(pValidDummy0), NULL_PTR, 0u, pValidDummy2,
+                                             sizeof(pValidDummy2)));
     /* ======= AT3/3: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read3DataBlocks(pValidDummy0, pValidDummy1, NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read3DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1),
+                                             NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
-    const STD_RETURN_TYPE_e readSuccessfully = DATA_Read3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
+    const STD_RETURN_TYPE_e readSuccessfully = DATA_Read3DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                sizeof(pValidDummy1), pValidDummy2,
+                                                                sizeof(pValidDummy2));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
@@ -639,7 +671,9 @@ void testDATA_Read3DataBlocks(void) {
      * would erase RT1/2's count and make the end-of-test _CallCount()
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
-    const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
+    const STD_RETURN_TYPE_e readUnsuccessfully = DATA_Read3DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                  sizeof(pValidDummy1), pValidDummy2,
+                                                                  sizeof(pValidDummy2));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -673,20 +707,25 @@ void testDATA_Read4DataBlocks(void) {
     data_sendMessage.accessType                   = DATA_READ_ACCESS;
 
     /* ======= AT1/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(NULL_PTR, pValidDummy1, pValidDummy2, pValidDummy3));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(NULL_PTR, 0u, pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                                             sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3)));
     /* ======= AT2/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(pValidDummy0, NULL_PTR, pValidDummy2, pValidDummy3));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(pValidDummy0, sizeof(pValidDummy0), NULL_PTR, 0u, pValidDummy2,
+                                             sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3)));
     /* ======= AT3/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(pValidDummy0, pValidDummy1, NULL_PTR, pValidDummy3));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1),
+                                             NULL_PTR, 0u, pValidDummy3, sizeof(pValidDummy3)));
     /* ======= AT4/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Read4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1),
+                                             pValidDummy2, sizeof(pValidDummy2), NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e readSuccessfully =
-        DATA_Read4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
+        DATA_Read4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                         sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, readSuccessfully);
 
@@ -697,7 +736,8 @@ void testDATA_Read4DataBlocks(void) {
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e readUnsuccessfully =
-        DATA_Read4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
+        DATA_Read4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                         sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, readUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -715,7 +755,7 @@ void testDATA_Read4DataBlocks(void) {
 void testDATA_Write1DataBlock(void) {
     /* ======= Assertion tests ============================================= */
     /* ======= AT1/1: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write1DataBlock(NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write1DataBlock(NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     uint8_t dummyValue = 0u;
@@ -731,7 +771,7 @@ void testDATA_Write1DataBlock(void) {
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
-    const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write1DataBlock(pValidDummy0);
+    const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write1DataBlock(pValidDummy0, sizeof(pValidDummy0));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
@@ -741,7 +781,7 @@ void testDATA_Write1DataBlock(void) {
      * would erase RT1/2's count and make the end-of-test _CallCount()
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
-    const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write1DataBlock(pValidDummy0);
+    const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write1DataBlock(pValidDummy0, sizeof(pValidDummy0));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -771,15 +811,16 @@ void testDATA_Write2DataBlocks(void) {
     data_sendMessage.accessType                   = DATA_WRITE_ACCESS;
 
     /* ======= AT1/2: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write2DataBlocks(NULL_PTR, pValidDummy1));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write2DataBlocks(NULL_PTR, 0u, pValidDummy1, sizeof(pValidDummy1)));
     /* ======= AT2/2: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write2DataBlocks(pValidDummy0, NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write2DataBlocks(pValidDummy0, sizeof(pValidDummy0), NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
-    const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write2DataBlocks(pValidDummy0, pValidDummy1);
+    const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write2DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                  sizeof(pValidDummy1));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
@@ -789,7 +830,9 @@ void testDATA_Write2DataBlocks(void) {
      * would erase RT1/2's count and make the end-of-test _CallCount()
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
-    const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write2DataBlocks(pValidDummy0, pValidDummy1);
+    const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write2DataBlocks(pValidDummy0, sizeof(pValidDummy0),
+                                                                                                           pValidDummy1,
+                                                                    sizeof(pValidDummy1));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -821,17 +864,23 @@ void testDATA_Write3DataBlocks(void) {
     data_sendMessage.accessType                   = DATA_WRITE_ACCESS;
 
     /* ======= AT1/3: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write3DataBlocks(NULL_PTR, pValidDummy1, pValidDummy2));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write3DataBlocks(NULL_PTR, 0u, pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                                              sizeof(pValidDummy2)));
     /* ======= AT2/3: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write3DataBlocks(pValidDummy0, NULL_PTR, pValidDummy2));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write3DataBlocks(pValidDummy0, sizeof(pValidDummy0), NULL_PTR, 0u, pValidDummy2,
+                                              sizeof(pValidDummy2)));
     /* ======= AT3/3: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write3DataBlocks(pValidDummy0, pValidDummy1, NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write3DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                                                   sizeof(pValidDummy1),
+                                              NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
-    const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
+    const STD_RETURN_TYPE_e writeSuccessfully = DATA_Write3DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                  sizeof(pValidDummy1), pValidDummy2,
+                                                                  sizeof(pValidDummy2));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
@@ -841,7 +890,10 @@ void testDATA_Write3DataBlocks(void) {
      * would erase RT1/2's count and make the end-of-test _CallCount()
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
-    const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write3DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2);
+    const STD_RETURN_TYPE_e writeUnsuccessfully = DATA_Write3DataBlocks(pValidDummy0, sizeof(pValidDummy0),
+                                                                                                           pValidDummy1,
+                                                                    sizeof(pValidDummy1), pValidDummy2,
+                                                                    sizeof(pValidDummy2));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -875,20 +927,27 @@ void testDATA_Write4DataBlocks(void) {
     data_sendMessage.accessType                   = DATA_WRITE_ACCESS;
 
     /* ======= AT1/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(NULL_PTR, pValidDummy1, pValidDummy2, pValidDummy3));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(NULL_PTR, 0u, pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                                              sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3)));
     /* ======= AT2/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(pValidDummy0, NULL_PTR, pValidDummy2, pValidDummy3));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(pValidDummy0, sizeof(pValidDummy0), NULL_PTR, 0u, pValidDummy2,
+                                              sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3)));
     /* ======= AT3/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(pValidDummy0, pValidDummy1, NULL_PTR, pValidDummy3));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                                                   sizeof(pValidDummy1),
+                                              NULL_PTR, 0u, pValidDummy3, sizeof(pValidDummy3)));
     /* ======= AT4/4: Assertion test */
-    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, NULL_PTR));
+    TEST_ASSERT_FAIL_ASSERT(DATA_Write4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1,
+                                                                                                   sizeof(pValidDummy1),
+                                              pValidDummy2, sizeof(pValidDummy2), NULL_PTR, 0u));
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
     OS_SendToBackOfQueue_Stub(OS_SendToBackOfQueueCallback);
     /* ======= RT1/2: call function under test */
     const STD_RETURN_TYPE_e writeSuccessfully =
-        DATA_Write4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
+        DATA_Write4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                          sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3));
     /* ======= RT1/2: test output verification */
     TEST_ASSERT_EQUAL(STD_OK, writeSuccessfully);
 
@@ -899,7 +958,8 @@ void testDATA_Write4DataBlocks(void) {
      * assertion unable to see the two calls this test must make. */
     /* ======= RT2/2: call function under test */
     const STD_RETURN_TYPE_e writeUnsuccessfully =
-        DATA_Write4DataBlocks(pValidDummy0, pValidDummy1, pValidDummy2, pValidDummy3);
+        DATA_Write4DataBlocks(pValidDummy0, sizeof(pValidDummy0), pValidDummy1, sizeof(pValidDummy1), pValidDummy2,
+                          sizeof(pValidDummy2), pValidDummy3, sizeof(pValidDummy3));
     /* ======= RT2/2: test output verification */
     TEST_ASSERT_EQUAL(STD_NOT_OK, writeUnsuccessfully);
     /* RT1/2 and RT2/2 each queue exactly one message */
@@ -936,3 +996,129 @@ void testDATA_ExecuteDataBist(void) {
 }
 
 /*========== Test Cases =====================================================*/
+
+/**
+ * @brief   Testing that a caller whose object is smaller than the registered entry is caught
+ * @details The number of bytes DATA_IterateOverDatabaseEntries() copies is taken from the
+ *          database header entry that the caller's header.uniqueId selects, so the length itself is
+ *          correct by construction. On a read access, however, the destination of that copy is the
+ *          caller's own object, and the module used to have no way of knowing how large that object
+ *          is: the access API passed a bare void pointer through #DATA_QUEUE_MESSAGE_s. A call site
+ *          whose struct type does not match the type registered for the uniqueId it declares
+ *          therefore made the module copy more bytes than the caller's object holds, silently and
+ *          without any diagnostic.
+ *
+ *          #DATA_READ_DATA() / #DATA_WRITE_DATA() now derive the size of the object the caller
+ *          referenced as sizeof(*(pointer)) and carry it in the dataLength member of
+ *          #DATA_QUEUE_MESSAGE_s, so the module can check it at the copy site. This test pins that
+ *          check from the outside using the hazard itself: a caller that declares the smallest
+ *          registered struct but the uniqueId of a much larger registered entry. Both types are the
+ *          shipped ones, so the size difference comes from the registration table rather than from
+ *          a type invented for the test.
+ *
+ *          A type smaller than #DATA_BLOCK_HEADER_s cannot be exercised this way at all: the module
+ *          reads header.uniqueId out of the first bytes of the caller's object before it knows
+ *          anything else, so an object that cannot hold the header is already outside what the
+ *          interface can express. The reachable case is the one above.
+ *
+ *          The check is the module's own #FAS_ASSERT(), the project's idiom for a precondition,
+ *          and #TEST_ASSERT_FAIL_ASSERT() is the idiom for asserting on it.
+ */
+void testDATA_IterateOverDatabaseEntries_tooSmallCallerObjectIsAsserted(void) {
+    /* Populate data_uniqueIdToDatabaseEntry[] from the shipped registration table. */
+    ftsk_allQueuesCreated = 1;
+    (void)DATA_Initialize();
+
+    /* The caller's object is the smallest registered struct, ... */
+    const uint8_t canaryLength  = 32u;
+    const uint8_t canaryPattern = 0xC3u;
+    uint8_t backingStore[sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s) + canaryLength];
+    DATA_BLOCK_DUMMY_FOR_SELF_TEST_s *pPassedEntry =
+        (DATA_BLOCK_DUMMY_FOR_SELF_TEST_s *)(void *)backingStore;
+    memset(backingStore, (int)canaryPattern, sizeof(backingStore));
+    /* ... but it declares the uniqueId of a much larger registered entry, so the registered length
+     * it selects is larger than the object it actually owns */
+    pPassedEntry->header.uniqueId = DATA_BLOCK_ID_CELL_VOLTAGE;
+
+    DATA_QUEUE_MESSAGE_s messages[4u] = {
+        {
+                                  .accessType     = DATA_READ_ACCESS,
+                                  .pDatabaseEntry = (void *)pPassedEntry,
+                                  /* the caller declares its own object size, which is smaller than
+                                   * the length registered for the uniqueId it declares */
+                                  .dataLength[0]  = sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s),
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+    };
+    /* ======= RT1/1: call function under test */
+    /* the precondition is violated, so the module must trap instead of overrunning the object */
+    TEST_ASSERT_FAIL_ASSERT(TEST_DATA_IterateOverDatabaseEntries(messages));
+
+    /* ======= RT1/1: test output verification */
+    /* the trap happened before any byte was copied, so nothing of the caller's object and nothing
+     * behind it was touched: the canary still holds the pattern it was filled with */
+    for (uint8_t i = 0u; i < canaryLength; i++) {
+        TEST_ASSERT_EQUAL_UINT8(canaryPattern, backingStore[sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s) + i]);
+    }
+}
+
+/**
+ * @brief   Testing that a caller declaring an object larger than the registered entry is accepted
+ * @details The counterpart of
+ *          testDATA_IterateOverDatabaseEntries_tooSmallCallerObjectIsAsserted(), and the reason the
+ *          check at the copy site is a lower bound and not an equality: a caller whose object is
+ *          larger than the entry it selects is legitimate, and must neither trap nor cause more
+ *          than the registered number of bytes to be written. The object used here is the smallest
+ *          registered struct backed by a larger buffer, so the registered length is strictly
+ *          smaller than the declared size.
+ */
+void testDATA_IterateOverDatabaseEntries_largerCallerObjectIsAccepted(void) {
+    /* Populate data_uniqueIdToDatabaseEntry[] from the shipped registration table. */
+    ftsk_allQueuesCreated = 1;
+    (void)DATA_Initialize();
+
+    const uint8_t slackLength  = 32u;
+    const uint8_t slackPattern = 0x5Au;
+    uint8_t backingStore[sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s) + slackLength];
+    DATA_BLOCK_DUMMY_FOR_SELF_TEST_s *pPassedEntry =
+        (DATA_BLOCK_DUMMY_FOR_SELF_TEST_s *)(void *)backingStore;
+    memset(backingStore, (int)slackPattern, sizeof(backingStore));
+    pPassedEntry->header.uniqueId = DATA_BLOCK_ID_DUMMY_FOR_SELF_TEST;
+
+    DATA_QUEUE_MESSAGE_s messages[4u] = {
+        {
+                                  .accessType     = DATA_READ_ACCESS,
+                                  .pDatabaseEntry = (void *)pPassedEntry,
+                                  /* the caller declares the whole buffer it owns, which is larger
+                                   * than the registered length of the entry it selects */
+                                  .dataLength[0] = sizeof(backingStore),
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+    };
+    /* ======= RT1/1: call function under test, no assertion expected */
+    TEST_ASSERT_PASS_ASSERT(TEST_DATA_IterateOverDatabaseEntries(messages));
+
+    /* ======= RT1/1: test output verification */
+    /* the registered length was copied ... */
+    TEST_ASSERT_EQUAL(DATA_BLOCK_ID_DUMMY_FOR_SELF_TEST, pPassedEntry->header.uniqueId);
+    /* ... and nothing beyond it, not even though the caller declared more */
+    for (uint8_t i = 0u; i < slackLength; i++) {
+        TEST_ASSERT_EQUAL_UINT8(slackPattern, backingStore[sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s) + i]);
+    }
+}

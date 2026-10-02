@@ -114,8 +114,12 @@ static uint8_t stepSoc = 0u;
 static uint8_t stepSoh = 0u;
 static uint8_t stepSoe = 0u;
 
-static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(void *pDataFromSender0, int cmock_num_calls) {
+static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(
+    void *pDataFromSender0,
+    uint32_t dataLength0,
+    int cmock_num_calls) {
     (void)cmock_num_calls;
+    (void)dataLength0;
     const DATA_BLOCK_HEADER_s *pHeader = (const DATA_BLOCK_HEADER_s *)pDataFromSender0;
     TEST_ASSERT_NOT_NULL(pHeader);
     switch (pHeader->uniqueId) {
@@ -140,10 +144,16 @@ static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(void *pDataFromSender0, in
 
 static STD_RETURN_TYPE_e DATA_Write3DataBlocksCallback(
     void *pDataFromSender0,
+    uint32_t dataLength0,
     void *pDataFromSender1,
+    uint32_t dataLength1,
     void *pDataFromSender2,
+    uint32_t dataLength2,
     int cmock_num_calls) {
     (void)cmock_num_calls;
+    (void)dataLength0;
+    (void)dataLength1;
+    (void)dataLength2;
     const DATA_BLOCK_HEADER_s *pHeader0 = (const DATA_BLOCK_HEADER_s *)pDataFromSender0;
     const DATA_BLOCK_HEADER_s *pHeader1 = (const DATA_BLOCK_HEADER_s *)pDataFromSender1;
     const DATA_BLOCK_HEADER_s *pHeader2 = (const DATA_BLOCK_HEADER_s *)pDataFromSender2;

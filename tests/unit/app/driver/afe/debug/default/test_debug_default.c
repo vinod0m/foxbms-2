@@ -244,12 +244,20 @@ void testFAKE_SetFirstMeasurementCycleFinished(void) {
      * post-call content comparison below. */
     DATA_Write4DataBlocks_ExpectAndReturn(
         test_fake_state.data.cellVoltage,
+        sizeof(*(test_fake_state.data.cellVoltage)),
         test_fake_state.data.cellTemperature,
+        sizeof(*(test_fake_state.data.cellTemperature)),
         test_fake_state.data.balancingFeedback,
+        sizeof(*(test_fake_state.data.balancingFeedback)),
         test_fake_state.data.balancingControl,
+        sizeof(*(test_fake_state.data.balancingControl)),
         STD_OK);
     DATA_Write2DataBlocks_ExpectAndReturn(
-        test_fake_state.data.slaveControl, test_fake_state.data.openWire, STD_OK);
+        test_fake_state.data.slaveControl,
+        sizeof(*(test_fake_state.data.slaveControl)),
+        test_fake_state.data.openWire,
+        sizeof(*(test_fake_state.data.openWire)),
+        STD_OK);
 
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
         for (uint8_t m = 0u; m < BS_NR_OF_MODULES_PER_STRING; m++) {
@@ -291,7 +299,10 @@ void testFAKE_SaveFakeVoltageMeasurementData(void) {
                                   .data.cellVoltage = &test_fake_cellVoltage,
     };
     /* ======= RT1/1: Test implementation */
-    DATA_Write1DataBlock_ExpectAndReturn(test_fake_state.data.cellVoltage, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        test_fake_state.data.cellVoltage,
+        sizeof(*(test_fake_state.data.cellVoltage)),
+        STD_OK);
     TEST_FAKE_SaveFakeVoltageMeasurementData(&test_fake_state);
 }
 
@@ -306,7 +317,10 @@ void testFAKE_SaveFakeTemperatureMeasurementData(void) {
         .data.cellTemperature = &test_fake_cellTemperature,
     };
     /* ======= RT1/1: Test implementation */
-    DATA_Write1DataBlock_ExpectAndReturn(test_fake_state.data.cellTemperature, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        test_fake_state.data.cellTemperature,
+        sizeof(*(test_fake_state.data.cellTemperature)),
+        STD_OK);
     TEST_FAKE_SaveFakeTemperatureMeasurementData(&test_fake_state);
 }
 

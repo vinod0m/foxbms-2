@@ -305,7 +305,15 @@ void testDiag_UpdateFlags(void) {
 
     /* ======= AT1/1 ======= */
     DATA_Write4DataBlocks_ExpectAndReturn(
-        &diag_tableErrorFlags, &diag_tableMolFlags, &diag_tableRslFlags, &diag_tableMslFlags, STD_OK);
+        &diag_tableErrorFlags,
+        sizeof(*(&diag_tableErrorFlags)),
+        &diag_tableMolFlags,
+        sizeof(*(&diag_tableMolFlags)),
+        &diag_tableRslFlags,
+        sizeof(*(&diag_tableRslFlags)),
+        &diag_tableMslFlags,
+        sizeof(*(&diag_tableMslFlags)),
+        STD_OK);
     TEST_ASSERT_PASS_ASSERT(DIAG_UpdateFlags());
 }
 

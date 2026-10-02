@@ -379,7 +379,7 @@ void testCANTX_StringValuesP0(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/2: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePackValues, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTablePackValues, sizeof(*(can_kShim.pTablePackValues)), STD_OK);
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 7u, 3u, 0u, CAN_BIG_ENDIAN);
     CAN_TxPrepareSignalData_Expect(&testStringVoltage0, cantx_testSignalStringVoltage);
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 4u, 18u, testStringVoltage0, CAN_BIG_ENDIAN);

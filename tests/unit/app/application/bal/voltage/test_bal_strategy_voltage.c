@@ -101,8 +101,8 @@ void testCheckBalancingInitByDisablingBalancing(void) {
      * ever fail, and it asserted nothing about #BAL_Init at all. */
     DATA_BLOCK_BALANCING_CONTROL_s *pBalancing = TEST_BAL_GetBalancingControl();
     pBalancing->enableBalancing                = true;
-    DATA_Read1DataBlock_ExpectAndReturn(pBalancing, STD_OK);
-    DATA_Write1DataBlock_ExpectAndReturn(pBalancing, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(pBalancing, sizeof(*(pBalancing)), STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(pBalancing, sizeof(*(pBalancing)), STD_OK);
     BAL_Init(pBalancing);
     TEST_ASSERT_EQUAL(false, pBalancing->enableBalancing);
 }

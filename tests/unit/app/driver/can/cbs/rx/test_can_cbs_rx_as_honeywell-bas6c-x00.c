@@ -334,7 +334,10 @@ void testCANRX_AsHoneywellBas6cX00(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableAerosolSensor, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableAerosolSensor,
+        sizeof(*(can_kShim.pTableAerosolSensor)),
+        STD_OK);
     /* ======= RT1/1: call function under test */
     CANRX_AsHoneywellBas6cX00(validTestMessage, canData, &can_kShim);
 }

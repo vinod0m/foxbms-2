@@ -240,7 +240,7 @@ void testCANTX_PackValuesP1(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableInsulation, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableInsulation, sizeof(*(can_kShim.pTableInsulation)), STD_OK);
     CAN_TxPrepareSignalData_Expect(&testInsulationResistance_kOhm, cantx_testSignalInsulationResistance);
     CAN_TxSetMessageDataWithSignalData_Expect(
         &testMessageData[0u], 7u, 13u, testInsulationResistance_kOhm, CAN_BIG_ENDIAN);

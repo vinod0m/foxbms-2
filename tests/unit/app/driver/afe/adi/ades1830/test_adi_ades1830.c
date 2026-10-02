@@ -144,11 +144,20 @@ OS_QUEUE ftsk_afeRequestQueue;
 static void ADI_AccesstoDatabase_Expects(void) {
     /* Write measured data */
     DATA_Write3DataBlocks_ExpectAndReturn(
-        adi_stateBase.data.cellVoltage, adi_stateBase.data.allGpioVoltages, adi_stateBase.data.cellTemperature, STD_OK);
+        adi_stateBase.data.cellVoltage,
+        sizeof(*(adi_stateBase.data.cellVoltage)),
+        adi_stateBase.data.allGpioVoltages,
+        sizeof(*(adi_stateBase.data.allGpioVoltages)),
+        adi_stateBase.data.cellTemperature,
+        sizeof(*(adi_stateBase.data.cellTemperature)),
+        STD_OK);
     /* Leave some time for other tasks */
     ADI_Wait_Expect(2u);
     /* Read balancing orders */
-    DATA_Read1DataBlock_ExpectAndReturn(adi_stateBase.data.balancingControl, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        adi_stateBase.data.balancingControl,
+        sizeof(*(adi_stateBase.data.balancingControl)),
+        STD_OK);
 }
 
 static void ADI_BalanceControl_Expects(void) {
@@ -259,11 +268,20 @@ void testADI_AccessToDatabase(void) {
 
     /* Write measured data */
     DATA_Write3DataBlocks_ExpectAndReturn(
-        adi_stateBase.data.cellVoltage, adi_stateBase.data.allGpioVoltages, adi_stateBase.data.cellTemperature, STD_OK);
+        adi_stateBase.data.cellVoltage,
+        sizeof(*(adi_stateBase.data.cellVoltage)),
+        adi_stateBase.data.allGpioVoltages,
+        sizeof(*(adi_stateBase.data.allGpioVoltages)),
+        adi_stateBase.data.cellTemperature,
+        sizeof(*(adi_stateBase.data.cellTemperature)),
+        STD_OK);
     /* Leave some time for other tasks */
     ADI_Wait_Expect(2u);
     /* Read balancing orders */
-    DATA_Read1DataBlock_ExpectAndReturn(adi_stateBase.data.balancingControl, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        adi_stateBase.data.balancingControl,
+        sizeof(*(adi_stateBase.data.balancingControl)),
+        STD_OK);
     TEST_ADI_AccessToDatabase(&adi_stateBase);
 }
 

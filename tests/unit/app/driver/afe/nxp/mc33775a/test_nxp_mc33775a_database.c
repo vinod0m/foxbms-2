@@ -110,9 +110,13 @@ void testN77x_InitializeDatabase(void) {
     /* ======= RT1/1 ======= */
     DATA_Write4DataBlocks_ExpectAndReturn(
         n77xTestState.n77xData.cellVoltage,
+        sizeof(*(n77xTestState.n77xData.cellVoltage)),
         n77xTestState.n77xData.cellTemperature,
+        sizeof(*(n77xTestState.n77xData.cellTemperature)),
         n77xTestState.n77xData.minMax,
+        sizeof(*(n77xTestState.n77xData.minMax)),
         n77xTestState.n77xData.balancingControl,
+        sizeof(*(n77xTestState.n77xData.balancingControl)),
         STD_OK);
     TEST_ASSERT_PASS_ASSERT(N77x_InitializeDatabase(&n77xTestState));
 

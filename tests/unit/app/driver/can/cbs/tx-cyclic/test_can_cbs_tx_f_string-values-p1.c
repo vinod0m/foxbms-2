@@ -250,7 +250,10 @@ void test_CANTX_StringValuesP1(void) {
     /* test string 0 */
     muxId = 0u;
 
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableEnergyCounter, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        can_kShim.pTableEnergyCounter,
+        sizeof(*(can_kShim.pTableEnergyCounter)),
+        STD_OK);
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 7u, 4u, 0u, CANTX_STRING_VALUES_P1_ENDIANNESS);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[1u]);
     OS_EnterTaskCritical_Expect();

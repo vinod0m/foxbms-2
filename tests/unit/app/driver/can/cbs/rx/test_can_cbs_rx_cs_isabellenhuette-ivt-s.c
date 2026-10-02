@@ -262,49 +262,67 @@ void testCANRX_HandleSensorData(void) {
     /* case CANRX_CS_ISABELLENHUETTE_IVT_STRING0_CURR_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_CURR_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, sizeof(*(can_kShim.pTableCurrent)), STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 
     /* case CANRX_CS_ISABELLENHUETTE_IVT_STRING0_V1_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_V1_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableSystemVoltage1, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableSystemVoltage1,
+        sizeof(*(can_kShim.pTableSystemVoltage1)),
+        STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 
     /* case CANRX_CS_ISABELLENHUETTE_IVT_STRING0_V2_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_V2_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableSystemVoltage2, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableSystemVoltage2,
+        sizeof(*(can_kShim.pTableSystemVoltage2)),
+        STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 
     /* case CANRX_CS_ISABELLENHUETTE_IVT_STRING0_V3_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_V3_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableSystemVoltage3, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableSystemVoltage3,
+        sizeof(*(can_kShim.pTableSystemVoltage3)),
+        STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 
     /* case  CANRX_CS_ISABELLENHUETTE_IVT_STRING0_TEMP_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_TEMP_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrentSensorTemperature, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableCurrentSensorTemperature,
+        sizeof(*(can_kShim.pTableCurrentSensorTemperature)),
+        STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 
     /* case  CANRX_CS_ISABELLENHUETTE_IVT_STRING0_PWR_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_PWR_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTablePower, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTablePower, sizeof(*(can_kShim.pTablePower)), STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 
     /* case CANRX_CS_ISABELLENHUETTE_IVT_STRING0_CC_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_CC_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrentCounter, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableCurrentCounter,
+        sizeof(*(can_kShim.pTableCurrentCounter)),
+        STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 
     /* case CANRX_CS_ISABELLENHUETTE_IVT_STRING0_EC_ID */
     testMessageId = CANRX_CS_ISABELLENHUETTE_IVT_STRING0_EC_ID;
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableEnergyCounter, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableEnergyCounter,
+        sizeof(*(can_kShim.pTableEnergyCounter)),
+        STD_OK);
     TEST_CANRX_HandleSensorData(&can_kShim, testMessageId, validStringNumber, testSignalData);
 }
 
@@ -321,7 +339,7 @@ void testCANRX_SetCurrent(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, sizeof(*(can_kShim.pTableCurrent)), STD_OK);
     TEST_CANRX_SetCurrent(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -338,7 +356,10 @@ void testCANRX_SetVoltageU1(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableSystemVoltage1, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableSystemVoltage1,
+        sizeof(*(can_kShim.pTableSystemVoltage1)),
+        STD_OK);
     TEST_CANRX_SetVoltageU1(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -355,7 +376,10 @@ void testCANRX_SetVoltageU2(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableSystemVoltage2, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableSystemVoltage2,
+        sizeof(*(can_kShim.pTableSystemVoltage2)),
+        STD_OK);
     TEST_CANRX_SetVoltageU2(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -372,7 +396,10 @@ void testCANRX_SetVoltageU3(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableSystemVoltage3, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableSystemVoltage3,
+        sizeof(*(can_kShim.pTableSystemVoltage3)),
+        STD_OK);
     TEST_CANRX_SetVoltageU3(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -389,7 +416,10 @@ void testCANRX_SetTemperature(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrentSensorTemperature, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableCurrentSensorTemperature,
+        sizeof(*(can_kShim.pTableCurrentSensorTemperature)),
+        STD_OK);
     TEST_CANRX_SetTemperature(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -406,7 +436,7 @@ void testCANRX_SetPower(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTablePower, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTablePower, sizeof(*(can_kShim.pTablePower)), STD_OK);
     TEST_CANRX_SetPower(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -423,7 +453,10 @@ void testCANRX_SetCoulombCounting(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrentCounter, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableCurrentCounter,
+        sizeof(*(can_kShim.pTableCurrentCounter)),
+        STD_OK);
     TEST_CANRX_SetCoulombCounting(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -440,7 +473,10 @@ void testCANRX_SetEnergyCounting(void) {
 
     /* ======= Routine tests =============================================== */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableEnergyCounter, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(
+        can_kShim.pTableEnergyCounter,
+        sizeof(*(can_kShim.pTableEnergyCounter)),
+        STD_OK);
     TEST_CANRX_SetEnergyCounting(&can_kShim, validStringNumber, testSignalData);
 }
 
@@ -553,7 +589,7 @@ void testCANRX_CsIsabellenhuetteIvtS(void) {
 
     /* Expects from CANRX_HandleSensorData call */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, sizeof(*(can_kShim.pTableCurrent)), STD_OK);
 
     CANRX_CsIsabellenhuetteIvtS(testMessage, &testCanData, &can_kShim);
 
@@ -602,7 +638,7 @@ void testCANRX_CsIsabellenhuetteIvtS(void) {
 
     /* Expects from CANRX_HandleSensorData call */
     OS_GetTickCount_ExpectAndReturn(0u);
-    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(can_kShim.pTableCurrent, sizeof(*(can_kShim.pTableCurrent)), STD_OK);
 
     CANRX_CsIsabellenhuetteIvtS(testMessage, &testCanData, &can_kShim);
 }

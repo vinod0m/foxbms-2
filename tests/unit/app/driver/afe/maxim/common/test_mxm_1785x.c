@@ -305,7 +305,7 @@ void testMXM_ProcessOpenWire1SatelliteAlternatingPattern(void) {
     /* simulate 1 satellite */
     MXM_5XGetNumberOfSatellites_ExpectAndReturn(mxm_instance.pInstance5X, 1);
     /* don't care about the database call */
-    DATA_Write1DataBlock_ExpectAndReturn(mxm_instance.pOpenWire_table, STD_OK);
+    DATA_Write1DataBlock_ExpectAndReturn(mxm_instance.pOpenWire_table, sizeof(*(mxm_instance.pOpenWire_table)), STD_OK);
     TEST_ASSERT_PASS_ASSERT(MXM_ProcessOpenWire(&mxm_instance));
 
     /* check for the injected pattern */

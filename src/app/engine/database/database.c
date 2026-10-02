@@ -116,9 +116,13 @@ static void DATA_IterateOverDatabaseEntries(const DATA_QUEUE_MESSAGE_s *kpReceiv
 static STD_RETURN_TYPE_e DATA_AccessDatabaseEntries(
     DATA_BLOCK_ACCESS_TYPE_e accessType,
     void *pData0,
+    uint32_t dataLength0,
     void *pData1,
+    uint32_t dataLength1,
     void *pData2,
-    void *pData3);
+    uint32_t dataLength2,
+    void *pData3,
+    uint32_t dataLength3);
 
 static void DATA_CopyData(
     DATA_BLOCK_ACCESS_TYPE_e accessType,
@@ -130,9 +134,13 @@ static void DATA_CopyData(
 static STD_RETURN_TYPE_e DATA_AccessDatabaseEntries(
     DATA_BLOCK_ACCESS_TYPE_e accessType,
     void *pData0,
+    uint32_t dataLength0,
     void *pData1,
+    uint32_t dataLength1,
     void *pData2,
-    void *pData3) {
+    uint32_t dataLength2,
+    void *pData3,
+    uint32_t dataLength3) {
     FAS_ASSERT((accessType == DATA_WRITE_ACCESS) || (accessType == DATA_READ_ACCESS));
     FAS_ASSERT(pData0 != NULL_PTR);
     /* AXIVION Routine Generic-MissingParameterAssert: pData1: pointer might be NULL_PTR (i.e., if the caller
@@ -153,6 +161,10 @@ static STD_RETURN_TYPE_e DATA_AccessDatabaseEntries(
         .pDatabaseEntry[DATA_ENTRY_2] = pData2,
         .pDatabaseEntry[DATA_ENTRY_3] = pData3,
         .accessType                   = accessType,
+        .dataLength[DATA_ENTRY_0]     = dataLength0,
+        .dataLength[DATA_ENTRY_1]     = dataLength1,
+        .dataLength[DATA_ENTRY_2]     = dataLength2,
+        .dataLength[DATA_ENTRY_3]     = dataLength3,
     };
     /* Send a pointer to a message object and maximum block time: DATA_QUEUE_TIMEOUT_MS */
     if (OS_SendToBackOfQueue(ftsk_databaseQueue, (void *)&data_sendMessage, DATA_QUEUE_TIMEOUT_MS) == OS_SUCCESS) {
@@ -218,6 +230,20 @@ static void DATA_IterateOverDatabaseEntries(const DATA_QUEUE_MESSAGE_s *kpReceiv
             void *pDatabaseStruct = (void *)data_baseHeader.pDatabase[entryIndex].pDatabaseEntry;
             /* Get dataLength of database entry */
             uint32_t dataLength = data_baseHeader.pDatabase[entryIndex].dataLength;
+            /* The number of bytes that are about to be copied comes from the database, so it is
+             * correct by construction, but on a read access the destination is the caller's own
+             * object and the database cannot know how large that object is. The caller therefore
+             * declared its object size when it queued this message (the dataLength member of
+             * #DATA_QUEUE_MESSAGE_s, filled by #DATA_READ_DATA() / #DATA_WRITE_DATA() from
+             * sizeof(*(pointer))), and it has to be at least the registered length. A caller
+             * whose struct type does not match the type registered for the uniqueId it declares
+             * would otherwise be silently overrun by the memcpy() in DATA_CopyData(), and a
+             * destination shorter than the copy is caught here instead. A destination larger than
+             * the registered length is legitimate and is not copied beyond the registered length
+             * (see testDATA_IterateOverDatabaseEntries_copiesExactlyTheRegisteredLength). */
+            /* AXIVION Routine Generic-MissingParameterAssert: kpReceiveMessage->dataLength[queueEntry]: parameter
+             * accepts whole range */
+            FAS_ASSERT(kpReceiveMessage->dataLength[queueEntry] >= dataLength);
 
             DATA_CopyData(accessType, dataLength, pDatabaseStruct, pPassedDataStruct);
         }
@@ -296,67 +322,104 @@ void DATA_Task(void) {
 void DATA_DummyFunction(void) {
 }
 
-STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0) {
+STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0, uint32_t dataLength0) {
     FAS_ASSERT(pDataToReceiver0 != NULL_PTR);
-    return DATA_AccessDatabaseEntries(DATA_READ_ACCESS, pDataToReceiver0, NULL_PTR, NULL_PTR, NULL_PTR);
+    return DATA_AccessDatabaseEntries(
+        DATA_READ_ACCESS, pDataToReceiver0, dataLength0, NULL_PTR, 0u, NULL_PTR, 0u, NULL_PTR, 0u);
 }
 
-STD_RETURN_TYPE_e DATA_Read2DataBlocks(void *pDataToReceiver0, void *pDataToReceiver1) {
+STD_RETURN_TYPE_e DATA_Read2DataBlocks(
+    void *pDataToReceiver0,
+    uint32_t dataLength0,
+    void *pDataToReceiver1,
+    uint32_t dataLength1) {
     FAS_ASSERT(pDataToReceiver0 != NULL_PTR);
     FAS_ASSERT(pDataToReceiver1 != NULL_PTR);
-    return DATA_AccessDatabaseEntries(DATA_READ_ACCESS, pDataToReceiver0, pDataToReceiver1, NULL_PTR, NULL_PTR);
+    return DATA_AccessDatabaseEntries(
+        DATA_READ_ACCESS, pDataToReceiver0, dataLength0, pDataToReceiver1, dataLength1, NULL_PTR, 0u, NULL_PTR, 0u);
 }
 
-STD_RETURN_TYPE_e DATA_Read3DataBlocks(void *pDataToReceiver0, void *pDataToReceiver1, void *pDataToReceiver2) {
+STD_RETURN_TYPE_e DATA_Read3DataBlocks(
+    void *pDataToReceiver0,
+    uint32_t dataLength0,
+    void *pDataToReceiver1,
+    uint32_t dataLength1,
+    void *pDataToReceiver2,
+    uint32_t dataLength2) {
     FAS_ASSERT(pDataToReceiver0 != NULL_PTR);
     FAS_ASSERT(pDataToReceiver1 != NULL_PTR);
     FAS_ASSERT(pDataToReceiver2 != NULL_PTR);
-    return DATA_AccessDatabaseEntries(DATA_READ_ACCESS, pDataToReceiver0, pDataToReceiver1, pDataToReceiver2, NULL_PTR);
+    return DATA_AccessDatabaseEntries(
+        DATA_READ_ACCESS, pDataToReceiver0, dataLength0, pDataToReceiver1, dataLength1, pDataToReceiver2, dataLength2,
+        NULL_PTR, 0u);
 }
 
 STD_RETURN_TYPE_e DATA_Read4DataBlocks(
     void *pDataToReceiver0,
+    uint32_t dataLength0,
     void *pDataToReceiver1,
+    uint32_t dataLength1,
     void *pDataToReceiver2,
-    void *pDataToReceiver3) {
+    uint32_t dataLength2,
+    void *pDataToReceiver3,
+    uint32_t dataLength3) {
     FAS_ASSERT(pDataToReceiver0 != NULL_PTR);
     FAS_ASSERT(pDataToReceiver1 != NULL_PTR);
     FAS_ASSERT(pDataToReceiver2 != NULL_PTR);
     FAS_ASSERT(pDataToReceiver3 != NULL_PTR);
     return DATA_AccessDatabaseEntries(
-        DATA_READ_ACCESS, pDataToReceiver0, pDataToReceiver1, pDataToReceiver2, pDataToReceiver3);
+        DATA_READ_ACCESS, pDataToReceiver0, dataLength0, pDataToReceiver1, dataLength1, pDataToReceiver2, dataLength2,
+        pDataToReceiver3, dataLength3);
 }
 
-STD_RETURN_TYPE_e DATA_Write1DataBlock(void *pDataFromSender0) {
+STD_RETURN_TYPE_e DATA_Write1DataBlock(void *pDataFromSender0, uint32_t dataLength0) {
     FAS_ASSERT(pDataFromSender0 != NULL_PTR);
-    return DATA_AccessDatabaseEntries(DATA_WRITE_ACCESS, pDataFromSender0, NULL_PTR, NULL_PTR, NULL_PTR);
+    return DATA_AccessDatabaseEntries(
+        DATA_WRITE_ACCESS, pDataFromSender0, dataLength0, NULL_PTR, 0u, NULL_PTR, 0u, NULL_PTR, 0u);
 }
 
-STD_RETURN_TYPE_e DATA_Write2DataBlocks(void *pDataFromSender0, void *pDataFromSender1) {
+STD_RETURN_TYPE_e DATA_Write2DataBlocks(
+    void *pDataFromSender0,
+    uint32_t dataLength0,
+    void *pDataFromSender1,
+    uint32_t dataLength1) {
     FAS_ASSERT(pDataFromSender0 != NULL_PTR);
     FAS_ASSERT(pDataFromSender1 != NULL_PTR);
-    return DATA_AccessDatabaseEntries(DATA_WRITE_ACCESS, pDataFromSender0, pDataFromSender1, NULL_PTR, NULL_PTR);
+    return DATA_AccessDatabaseEntries(
+        DATA_WRITE_ACCESS, pDataFromSender0, dataLength0, pDataFromSender1, dataLength1, NULL_PTR, 0u, NULL_PTR, 0u);
 }
 
-STD_RETURN_TYPE_e DATA_Write3DataBlocks(void *pDataFromSender0, void *pDataFromSender1, void *pDataFromSender2) {
+STD_RETURN_TYPE_e DATA_Write3DataBlocks(
+    void *pDataFromSender0,
+    uint32_t dataLength0,
+    void *pDataFromSender1,
+    uint32_t dataLength1,
+    void *pDataFromSender2,
+    uint32_t dataLength2) {
     FAS_ASSERT(pDataFromSender0 != NULL_PTR);
     FAS_ASSERT(pDataFromSender1 != NULL_PTR);
     FAS_ASSERT(pDataFromSender2 != NULL_PTR);
     return DATA_AccessDatabaseEntries(
-        DATA_WRITE_ACCESS, pDataFromSender0, pDataFromSender1, pDataFromSender2, NULL_PTR);
+        DATA_WRITE_ACCESS, pDataFromSender0, dataLength0, pDataFromSender1, dataLength1, pDataFromSender2, dataLength2,
+        NULL_PTR, 0u);
 }
 
 STD_RETURN_TYPE_e DATA_Write4DataBlocks(
     void *pDataFromSender0,
+    uint32_t dataLength0,
     void *pDataFromSender1,
+    uint32_t dataLength1,
     void *pDataFromSender2,
-    void *pDataFromSender3) {
+    uint32_t dataLength2,
+    void *pDataFromSender3,
+    uint32_t dataLength3) {
     FAS_ASSERT(pDataFromSender0 != NULL_PTR);
     FAS_ASSERT(pDataFromSender1 != NULL_PTR);
     FAS_ASSERT(pDataFromSender2 != NULL_PTR);
     FAS_ASSERT(pDataFromSender3 != NULL_PTR);
     return DATA_AccessDatabaseEntries(
-        DATA_WRITE_ACCESS, pDataFromSender0, pDataFromSender1, pDataFromSender2, pDataFromSender3);
+        DATA_WRITE_ACCESS, pDataFromSender0, dataLength0, pDataFromSender1, dataLength1, pDataFromSender2, dataLength2,
+        pDataFromSender3, dataLength3);
 }
 
 extern void DATA_ExecuteDataBist(void) {
@@ -388,10 +451,15 @@ extern void TEST_DATA_IterateOverDatabaseEntries(const DATA_QUEUE_MESSAGE_s *kpR
 extern STD_RETURN_TYPE_e TEST_DATA_AccessDatabaseEntries(
     DATA_BLOCK_ACCESS_TYPE_e accessType,
     void *pData0,
+    uint32_t dataLength0,
     void *pData1,
+    uint32_t dataLength1,
     void *pData2,
-    void *pData3) {
-    return DATA_AccessDatabaseEntries(accessType, pData0, pData1, pData2, pData3);
+    uint32_t dataLength2,
+    void *pData3,
+    uint32_t dataLength3) {
+    return DATA_AccessDatabaseEntries(
+        accessType, pData0, dataLength0, pData1, dataLength1, pData2, dataLength2, pData3, dataLength3);
 }
 
 extern void TEST_DATA_CopyData(

@@ -157,7 +157,11 @@ DATA_BLOCK_INTERLOCK_FEEDBACK_s ilck_tableFeedback = {.header.uniqueId = DATA_BL
  */
 static uint8_t ilckPublishStep = 0u;
 
-static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(void *pDataToReceiver0, int cmock_num_calls) {
+static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(
+    void *pDataToReceiver0,
+    uint32_t dataLength0,
+    int cmock_num_calls) {
+    (void)dataLength0;
     const DATA_BLOCK_ADC_VOLTAGE_s *pBlock = (const DATA_BLOCK_ADC_VOLTAGE_s *)pDataToReceiver0;
     TEST_ASSERT_NOT_NULL(pBlock);
     TEST_ASSERT_EQUAL_MEMORY(&ilck_tableAdcVoltages, pBlock, sizeof(DATA_BLOCK_ADC_VOLTAGE_s));
@@ -168,7 +172,11 @@ static STD_RETURN_TYPE_e DATA_Read1DataBlockCallback(void *pDataToReceiver0, int
     return STD_OK;
 }
 
-static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(void *pDataFromSender0, int cmock_num_calls) {
+static STD_RETURN_TYPE_e DATA_Write1DataBlockCallback(
+    void *pDataFromSender0,
+    uint32_t dataLength0,
+    int cmock_num_calls) {
+    (void)dataLength0;
     const DATA_BLOCK_INTERLOCK_FEEDBACK_s *pBlock = (const DATA_BLOCK_INTERLOCK_FEEDBACK_s *)pDataFromSender0;
     TEST_ASSERT_NOT_NULL(pBlock);
     TEST_ASSERT_EQUAL(DATA_BLOCK_ID_INTERLOCK_FEEDBACK, pBlock->header.uniqueId);

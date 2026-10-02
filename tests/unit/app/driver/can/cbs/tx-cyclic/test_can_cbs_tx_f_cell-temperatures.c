@@ -396,7 +396,10 @@ void testCANTX_CellTemperatures(void) {
     testMuxId           = 2u;
     temperatureSensorId = 0;
 
-    DATA_Read1DataBlock_ExpectAndReturn(can_kShim.pTableCellTemperature, STD_OK);
+    DATA_Read1DataBlock_ExpectAndReturn(
+        can_kShim.pTableCellTemperature,
+        sizeof(*(can_kShim.pTableCellTemperature)),
+        STD_OK);
     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[0u], 7u, 8u, 0u, CAN_BIG_ENDIAN);
     CAN_TxSetMessageDataWithSignalData_ReturnThruPtr_pMessage(&testMessageData[1u]);
 

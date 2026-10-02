@@ -537,7 +537,12 @@ void testCANTX_StringState(void) {
     /* ======= RT1/2: Call function under test */
     /* test string 0 */
     muxId = 0u;
-    DATA_Read2DataBlocks_ExpectAndReturn(can_kShim.pTableRsl, can_kShim.pTableMol, STD_OK);
+    DATA_Read2DataBlocks_ExpectAndReturn(
+        can_kShim.pTableRsl,
+        sizeof(*(can_kShim.pTableRsl)),
+        can_kShim.pTableMol,
+        sizeof(*(can_kShim.pTableMol)),
+        STD_OK);
     BMS_IsStringClosed_ExpectAndReturn(0u, true);
     CANTX_StringState(testMessage, testCanData, &muxId, &can_kShim);
 
