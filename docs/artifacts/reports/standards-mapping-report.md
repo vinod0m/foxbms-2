@@ -123,7 +123,7 @@ what the records actually contain.
 | `ACQ.4` | Supplier List, Monitoring Records, Supplier Assessments | **Supplier Assessments** — no supplier is under contract, no advisory source consulted |
 | `SPL.2` | Release Plan, Release Notes, Release Checklist | **Release Notes**; nothing was released (`any_step_executed: false`) |
 | `SUP.1` | QA Plan, Review Records, Audit Records | **Audit Records**; review independence stated and explicitly not achieved |
-| `SUP.8` | CM Plan, Configuration Items, Baselines, Change Control | **Change Control** (deferred to `FB2-SUP-CHC-000001`) and **status accounting** (not automated; 326 of 489 links stale, none suspect) |
+| `SUP.8` | CM Plan, Configuration Items, Baselines, Change Control | **Change Control** (deferred to `FB2-SUP-CHC-000001`) and **status accounting** (not automated; 326 of 547 links stale, none suspect) |
 | `SUP.9` | Problem Reports, Resolution Records, Trend Analysis | **Trend Analysis** — the backing record says one intake cycle cannot produce one |
 | `SUP.10` | Change Requests, Impact Analyses, Change Decisions | Families all present for a **fictional project only**; nothing raised against the real product |
 | `SUP.11` | Traceability Matrix, Traceability Links, Coverage Reports | Families all present, but **link currency is not maintained** — 326 of 489 stale, none suspect |
@@ -175,7 +175,7 @@ contradicts that, because there is nothing to check. `SWE.3` sat at `mapped` in
 that state.
 
 `CORR-COV-016` asks a different question. It extracts each artefact's own
-`standards_mappings[].reference` strings — **183 of the 263 indexed records carry
+`standards_mappings[].reference` strings — **183 of the 298 indexed records carry
 such mappings, spanning 106 distinct reference strings; 80 carry none** — and
 builds every process's backing set from that, then asks whether the backing
 records carry the engineering that process defines. Three failure classes
@@ -200,7 +200,7 @@ the strongest form available here because the record says it itself:
 | `FB2-REL-RLS-000001` (SPL.2, ISO Part 7) | `any_step_executed: false`; "The release it describes has not happened" | documented, not performed → `partially_mapped` |
 
 **One measured figure carries most of the `SUP.11` demotion:** of the corpus's
-489 links, **326 record an endpoint revision that differs from the endpoint
+547 links, **326 record an endpoint revision that differs from the endpoint
 artefact's current revision, and all 489 carry `change_suspect_status: false`.**
 The status accounting the process defines would have produced 326 findings and
 produced none.

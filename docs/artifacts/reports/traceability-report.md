@@ -14,7 +14,7 @@
 ## 1. Overview
 
 The corpus implements bidirectional traceability as a set of canonical link
-registries. **Eleven** relation types are in use. All **489 links resolve, 0
+registries. **Eleven** relation types are in use. All **547 links resolve, 0
 dangling**.
 
 **Link *resolution* is verified. Link *currency* is not, and the difference
@@ -24,7 +24,7 @@ matters.** See §1.1.
 
 Every link carries both endpoint revisions. Comparing each link's recorded
 endpoint revision against the endpoint artefact's current revision, measured over
-all 489 links on 2026-10-01:
+all 547 links on 2026-10-01:
 
 | Measure | Value |
 |---|---:|
@@ -36,7 +36,7 @@ all 489 links on 2026-10-01:
 
 So the corpus holds **326 links whose recorded endpoint revision no longer
 matches the artefact they point at**, and marks **none** of them suspect. The
-`change_suspect_status` field is `false` on all 489 links, which means it is a
+`change_suspect_status` field is `false` on all 547 links, which means it is a
 blanket default rather than a derived value.
 
 This is a real gap, not a rounding artefact, and it is the specific shortfall
@@ -105,9 +105,9 @@ in a way that mattered:
 | `mitigates` | 3 | 2 | 1 | safety goal → hazard |
 | **Total** | **489** | **372** | **117** | |
 
-`reviewed_by` dominates at 229 of 489 links, because every artefact covered by a
+`reviewed_by` dominates at 229 of 547 links, because every artefact covered by a
 review record receives one. That is a direct consequence of automated review
-coverage, which is currently **144/224** distinct IDs — **80** IDs carry no
+coverage, which is currently **144/259** distinct IDs — **80** IDs carry no
 review link at all.
 
 `supports`, `changes`, `validates` and `depends_on` are entirely
@@ -237,7 +237,7 @@ Coverage: **20/20 mutations detected by the rule each declares; 3/3 change lifec
 
 ## 9. Traceability Limitations
 
-1. **Link revision currency is not maintained.** 326 of 489 links record a stale
+1. **Link revision currency is not maintained.** 326 of 547 links record a stale
    endpoint revision and **none** is marked `change_suspect_status: true`. See
    §1.1. This is the largest traceability limitation and the reason `SUP.11` is
    `partially_mapped`.
@@ -252,7 +252,7 @@ Coverage: **20/20 mutations detected by the rule each declares; 3/3 change lifec
 4. **75 links are `pending` review state** (15%).
 5. **80 distinct artifact IDs are covered by no review record**, so their
    `reviewed_by` links do not exist and automated review coverage is **64%**
-   (**144/224**). The unreviewed set includes every `post_development_record`,
+   (**144/259**). The unreviewed set includes every `post_development_record`,
    `process_record`, `measurement_plan`, `risk_register`, `project_plan`,
    `stakeholder_need`, `use_case` and `safety_concept` record — which is to say,
    the records the process-coverage claims rest on.

@@ -1,6 +1,6 @@
 # Management — project, changes and decisions (generated view)
 
-Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
+Generated: 2026-10-02T20:56:53Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
 
 ## Provenance and status of this file
 

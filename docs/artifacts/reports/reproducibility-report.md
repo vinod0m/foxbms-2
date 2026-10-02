@@ -6,7 +6,7 @@
 
 > Reproducibility and determinism results only. Nothing here asserts ISO 26262
 > conformity, ASIL capability, ASPICE capability level, certification, human
-> approval or tool qualification. All 263 indexed records are
+> approval or tool qualification. All 298 indexed records are
 > `human_approval_status: pending` and `production_authorized: false`.
 >
 > Every claim in this report was measured by running the tool twice and diffing.
@@ -51,8 +51,8 @@ $ diff -r                       /tmp/e1 /tmp/e2     # exports
 The only difference between the two runs is the timestamp in the preamble:
 
 ```
-run 1: Generated: 2026-10-01T04:44:12Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
-run 2: Generated: 2026-10-01T04:44:43Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
+run 1: Generated: 2026-10-01T04:44:12Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
+run 2: Generated: 2026-10-01T04:44:43Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
 ```
 
 `diff -r -I '^Generated:'` reports **no differences across all 11 view files**.
@@ -61,7 +61,7 @@ line of any view is excluded from the comparison.
 
 > The previous version of this report said "10 files" and quoted
 > `153 artifacts, 283 links`. Both were stale: the renderer emits 11 views, and
-> the corpus index held 263 records and 489 links on the day this was re-measured.
+> the corpus index held 298 records and 547 links on the day this was re-measured.
 
 ### Exports: 4 files, byte-identical apart from `generated_at`
 
@@ -226,8 +226,8 @@ suite, and the export twice — comparing the two export manifests' content hash
 | `[5/8] scenario-test` | PASS (23/23 lines; 20/20 mutations detected on their own declared detector) |
 | `[6/8] export` | PASS (263 nodes, 489 edges) |
 | `[6/8] deterministic export hashes` | PASS |
-| `[7/8] no production_authorized/approved artifacts` | PASS (0 violations this run; 263 records scanned) |
-| `[7b/8] provenance verification` | PASS (229 digests, 101 anchors, 46 log hashes, 34 evidence-file entries; 4 findings, none an error) |
+| `[7/8] no production_authorized/approved artifacts` | PASS (0 violations this run; 298 records scanned) |
+| `[7b/8] provenance verification` | PASS (229 digests, 130 anchors, 57 log hashes, 62 evidence-file entries; 4 findings, none an error) |
 | `[8/8] final status recorded` | PASS (`synthetic_ready_with_limitations`) |
 
 **`Acceptance suite: PASSED`** — re-run on 2026-10-01 after the coverage-plan
@@ -289,7 +289,7 @@ this workstream's write boundary.
    not deleted. Its sibling `links-concept-lifecycle.json` (177 links) is the
    **only** copy of those links and is load-bearing, not redundant.
 6. **Determinism is not correctness.** Link revision currency is not implemented,
-   so 326 of 489 links record an endpoint revision that differs from the
+   so 326 of 547 links record an endpoint revision that differs from the
    endpoint artefact's current revision, and all 489 are marked
    `change_suspect_status: false`. The export reproduces that exactly, staleness
    included.

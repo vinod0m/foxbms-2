@@ -2239,13 +2239,22 @@ class CorpusTool:
         ]
 
         def _config_check(aid, config):
+            # The set is rendered through sorted() on purpose. A bare set's repr
+            # order is a function of hash randomisation, so interpolating it
+            # directly made the finding text -- and therefore the generated
+            # scenario-validation-report.json that quotes it -- differ between
+            # runs on the same tree. A generated artefact that cannot be
+            # re-derived byte for byte is not verifiable.
+            def _shown(excl):
+                return "{" + ", ".join(repr(o) for o in sorted(excl)) + "}"
+
             if isinstance(config, list):
                 # bare multi-select list (e.g. configuration_selection)
                 if len(config) > 1:
                     for excl in MUTUALLY_EXCLUSIVE:
                         if excl.issubset(set(config)):
                             self.findings.add("high", "consistency", aid,
-                                              f"configuration {aid} enables mutually exclusive options: {excl}",
+                                              f"configuration {aid} enables mutually exclusive options: {_shown(excl)}",
                                               "configuration_consistency")
                 return
             if not isinstance(config, dict):
@@ -2255,7 +2264,7 @@ class CorpusTool:
                     for excl in MUTUALLY_EXCLUSIVE:
                         if excl.issubset(set(val_opt)):
                             self.findings.add("high", "consistency", aid,
-                                              f"configuration {aid} enables mutually exclusive options: {excl}",
+                                              f"configuration {aid} enables mutually exclusive options: {_shown(excl)}",
                                               "configuration_consistency")
 
         for key, (p, d) in index.items():
@@ -3034,16 +3043,58 @@ class CorpusTool:
                       if d.get("profile") == "synthetic_reference" and d.get("id")]
         synth_families = set(d.get("artifact_type", "unknown") for d in synth_recs)
         synth_missing = sorted(expected_families - synth_families)
+        # A family with no synthetic record is not automatically a gap. Some
+        # families are as_is-only BY CONSTRUCTION, and the reason is recorded
+        # here rather than left for a reader to infer from a missing row.
+        #
+        # `deviation` is that case. The deviation schema defines a record as a
+        # coding-guideline deviation "mined from in-source suppression
+        # annotations" and requires affected_file, affected_symbol,
+        # affected_lines, evidence_quote, suppression_form and tool_reference --
+        # every one of which is an observation of a real annotated source site.
+        # The synthetic_reference profile is a fictional reference project: it
+        # has no source tree, so there is no suppression annotation to observe
+        # and no file, symbol, line range or quotation that could be recorded
+        # without being invented. A synthetic deviation would therefore assert
+        # provenance the corpus does not have, which is the one thing this
+        # corpus exists not to do. The 26 as_is deviations are grounded in
+        # real suppressions and the family is fully populated on its own terms.
+        #
+        # This is a DISPOSITION, not a shortfall: the family is expected to be
+        # as_is-only, so the denominator for judging it is 0, not 1. It stays
+        # visible in families_missing so the relaxation cannot be mistaken for
+        # coverage that was achieved.
+        as_is_only_families = {"deviation"}
+        synth_unexpected = [f for f in synth_missing if f not in as_is_only_families]
+        missing_note = ""
+        if synth_missing:
+            parts = []
+            for f in synth_missing:
+                if f in as_is_only_families:
+                    parts.append(
+                        f"{f}: as_is-only by construction, a deliberate disposition and not "
+                        f"a gap -- a deviation is by definition an observation of an in-source "
+                        f"suppression annotation (affected_file, affected_symbol, "
+                        f"affected_lines, evidence_quote are all required by "
+                        f"deviation.schema.json) and the synthetic_reference profile is a "
+                        f"fictional project with no source tree to observe, so any synthetic "
+                        f"deviation record would carry invented provenance")
+                else:
+                    parts.append(f"{f}: no synthetic record and no recorded disposition -- a real gap")
+            missing_note = " families with no synthetic record: " + "; ".join(parts)
         dims["synthetic_fixture_coverage"] = {
             "numerator": len(expected_families & synth_families),
             "denominator": len(expected_families),
             "detail": (f"{len(expected_families & synth_families)}/{len(expected_families)} "
                        f"artefact families hold at least one synthetic_reference record; "
                        f"{len(synth_recs)} synthetic_reference records in total "
-                       f"(a count, not the numerator). "
-                       + (f"families with no synthetic record: {synth_missing}"
-                          if synth_missing else "every family the corpus defines has one")),
+                       f"(a count, not the numerator)."
+                       + (missing_note
+                          if synth_missing else " every family the corpus defines has one")),
             "families_missing": synth_missing,
+            "families_missing_with_no_disposition": synth_unexpected,
+            "families_as_is_only_by_construction": sorted(
+                f for f in synth_missing if f in as_is_only_families),
             "record_count": len(synth_recs),
         }
 
@@ -3267,7 +3318,15 @@ class CorpusTool:
     def _anchor_ids(self):
         return {a.get("anchor_id") for a in self._load_source_anchors()}
 
-    def cmd_trace(self, artifact_id):
+    # A trace is printed for a reader, so the walk is bounded on purpose. The
+    # bound is a node budget rather than a depth budget: the corpus is a dense
+    # graph (229 reviewed_by links alone), so a depth bound still admits an
+    # unbounded number of paths while a node bound always terminates. The budget
+    # and any truncation are reported, never applied silently.
+    TRACE_MAX_NODES = 5000
+    TRACE_MAX_DEPTH = 12
+
+    def cmd_trace(self, artifact_id, profile=None):
         index = self.load_artifact_index()
         links = self.load_links()
         index_ids = {k[1] if isinstance(k, tuple) else k for k in index}
@@ -3275,41 +3334,100 @@ class CorpusTool:
             print(f"Artifact {artifact_id} not found")
             return False
 
-        def neighbors(aid, direction):
-            out = []
-            for l in links:
-                if direction == "forward" and l["source_id"] == aid:
-                    out.append((l["relation_type"], l["target_id"]))
-                elif direction == "reverse" and l["target_id"] == aid:
-                    out.append((l["relation_type"], l["source_id"]))
-            return out
+        # Profile isolation is design decision #1 (see load_artifact_index): the
+        # same id legitimately exists in both profiles and the two graphs are
+        # independent. Walking one merged edge list answers a question about a
+        # graph that does not exist, and prints each shared edge once per
+        # profile, so each profile is walked separately and named on its header.
+        profiles = sorted({k[0] for k in index
+                           if (k[1] if isinstance(k, tuple) else k) == artifact_id})
+        if profile is not None:
+            if profile not in profiles:
+                print(f"Artifact {artifact_id} is not present in profile {profile}; "
+                      f"present in {profiles}")
+                return False
+            profiles = [profile]
 
-        def walk(aid, direction, depth, seen, path):
-            if depth > 10:
-                return
-            for rt, other in neighbors(aid, direction):
-                if other in seen:
-                    continue
-                seg = f"{aid} --{rt}--> {other}" if direction == "forward" else f"{other} --{rt}--> {aid}"
-                print("  " * depth + seg)
-                if other in index:
-                    walk(other, direction, depth + 1, seen | {other}, path + [seg])
+        for prof in profiles:
+            # One relationship is one printed line. A registry deliberately
+            # re-declares a link under a second link_id so that a chain stays
+            # navigable from another starting point (FB2-LNK-CPT-000001 says so
+            # in its own rationale), and load_links de-duplicates by
+            # (profile, link_id) rather than by edge. Walking the EDGE set is
+            # what stops one relationship printing twice.
+            edges = {(l["source_id"], l["relation_type"], l["target_id"])
+                     for l in links if l.get("_profile") == prof}
 
-        print(f"Forward trace from {artifact_id}:")
-        walk(artifact_id, "forward", 1, {artifact_id}, [])
-        print(f"Reverse trace to {artifact_id}:")
-        walk(artifact_id, "reverse", 1, {artifact_id}, [])
+            def neighbors(aid, direction):
+                if direction == "forward":
+                    return sorted((rt, t) for (s, rt, t) in edges if s == aid)
+                return sorted((rt, s) for (s, rt, t) in edges if t == aid)
 
-        # lateral: same-relation peers of linked elements (sibling requirements)
-        lateral = []
-        for rt, other in neighbors(artifact_id, "forward"):
-            for rt2, peer in neighbors(other, "reverse"):
-                if peer != artifact_id:
-                    lateral.append((other, peer))
-        if lateral:
-            print("Lateral peers (shared targets):")
-            for tgt, peer in sorted(set(lateral))[:20]:
-                print(f"  {artifact_id} ~ {peer} (both relate to {tgt})")
+            if len(profiles) > 1:
+                print(f"--- profile {prof} "
+                      f"(artefact id {artifact_id} exists in {len(profiles)} profiles; "
+                      f"use --profile to trace one) ---")
+
+            def walk(aid, direction, depth):
+                if depth > self.TRACE_MAX_DEPTH:
+                    return
+                for rt, other in neighbors(aid, direction):
+                    # One edge prints once for the whole walk, not once per path
+                    # that reaches it. The graph is a DAG, so a node reachable
+                    # by several routes would otherwise re-print its outgoing
+                    # edges under each route and the output would read as a
+                    # duplicated registry.
+                    edge = (aid, rt, other) if direction == "forward" else (other, rt, aid)
+                    if edge in printed_edges:
+                        continue
+                    printed_edges.add(edge)
+                    seg = (f"{aid} --{rt}--> {other}" if direction == "forward"
+                           else f"{other} --{rt}--> {aid}")
+                    print("  " * depth + seg)
+                    budget[0] -= 1
+                    if budget[0] <= 0:
+                        truncated[0] = True
+                        return
+                    # Membership is tested against index_ids, NOT against index:
+                    # index is keyed by (profile, id) tuples, so a bare id string
+                    # is never a key in it and the test was always False. That
+                    # made the recursion unreachable, so `trace` silently
+                    # reported only its direct neighbours while claiming to
+                    # traverse the graph.
+                    if other in index_ids and other not in expanded:
+                        expanded.add(other)
+                        walk(other, direction, depth + 1)
+
+            for direction, header in (
+                    ("forward", f"Forward trace from {artifact_id}"),
+                    ("reverse", f"Reverse trace to {artifact_id}")):
+                budget = [self.TRACE_MAX_NODES]
+                truncated = [False]
+                printed_edges = set()
+                expanded = {artifact_id}
+                print(f"{header} [profile {prof}]:")
+                walk(artifact_id, direction, 1)
+                if not printed_edges:
+                    # Nothing was emitted: say so, so an empty direction is
+                    # readable as a fact about the graph rather than as a
+                    # command that failed.
+                    print("  (none: this artefact has no "
+                          + ("outgoing" if direction == "forward" else "incoming")
+                          + " link in this profile)")
+                if truncated[0]:
+                    print(f"  ... output truncated at the {self.TRACE_MAX_NODES}-edge "
+                          f"budget; this profile is denser than one screen")
+
+            # lateral: same-relation peers of linked elements (sibling requirements)
+            lateral = set()
+            for _rt, other in neighbors(artifact_id, "forward"):
+                for _rt2, peer in neighbors(other, "reverse"):
+                    if peer != artifact_id:
+                        lateral.add((other, peer))
+            if lateral:
+                print("Lateral peers (shared targets):")
+                for tgt, peer in sorted(lateral)[:20]:
+                    print(f"  {artifact_id} ~ {peer} (both relate to {tgt})")
         return True
 
     # ------------------------------------------------------------ 15.6 impact
@@ -8233,6 +8351,10 @@ def main():
     sub.add_parser("coverage", help="Compute coverage metrics")
     p_trace = sub.add_parser("trace", help="Query traceability paths")
     p_trace.add_argument("artifact_id")
+    p_trace.add_argument("--profile", default=None,
+                         help="Trace within one profile. Omit to trace every profile "
+                              "the id occurs in; each is walked and named separately "
+                              "because the profiles are independent graphs.")
     p_imp = sub.add_parser("impact", help="Calculate change impact")
     p_imp.add_argument("artifact_id")
     sub.add_parser("render", help="Regenerate views")
@@ -8270,7 +8392,7 @@ def main():
     elif args.command == "coverage":
         tool.cmd_coverage()
     elif args.command == "trace":
-        rc = 0 if tool.cmd_trace(args.artifact_id) else 1
+        rc = 0 if tool.cmd_trace(args.artifact_id, profile=getattr(args, "profile", None)) else 1
     elif args.command == "impact":
         rc = 0 if tool.cmd_impact(args.artifact_id) else 1
     elif args.command == "render":

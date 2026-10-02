@@ -188,7 +188,7 @@ the specific missing family from the process's own `expected_artifacts`.
 | Configuration management (SUP.8) | `FB2-SUP-CFM-000001` | `partially_mapped` | **Change Control** (deferred) and **status accounting** (not automated) |
 | Problem resolution (SUP.9) | 13 `finding` records + `FB2-SUP-PRB-000001` | `partially_mapped` | **Trend Analysis** — the record says one cycle cannot produce one |
 | Change request management (SUP.10) | `FB2-MAN-CHG-000001..000003` | `partially_mapped` | families present for a **fictional project only** |
-| Traceability management (SUP.11) | 3 `change` records + **489 links** | `partially_mapped` | **link currency** — 326 of 489 links stale, none suspect |
+| Traceability management (SUP.11) | 3 `change` records + **547 links** | `partially_mapped` | **link currency** — 326 of 547 links stale, none suspect |
 | Reuse management (REU.2) | `FB2-SUP-RUS-000001` | `partially_mapped` | **Reuse Assessments** — none completed |
 | Supplier monitoring (ACQ.4) | `FB2-SUP-SPL-000001` | `partially_mapped` | **Supplier Assessments** — no supplier under contract |
 | Safety plan (ISO Part 2) | `FB2-MAN-SPL-000001` — **`artifact_type: design`**, six empty structural fields | `partially_mapped` | **Roles** and **Tailoring**; it is not a safety plan |
@@ -249,7 +249,7 @@ entirely synthetic.
 2. **A real threat analysis and security requirement set** — `FB2-SAF-TAR-000001`
    with 8 threats and 9 mitigations, and `FB2-SAF-SEC-000001`…`-000005`, with 5
    measurable security requirements.
-3. **Traceability** — **489 links, 0 dangling**, with a documented direction
+3. **Traceability** — **547 links, 0 dangling**, with a documented direction
    convention. And a measured limit: **326 links carry a stale endpoint revision
    and none is marked suspect** (§4.6, `SUP.11`).
 4. **Parameter and assumption registries** — 10 parameters, 12 assumptions with
@@ -259,7 +259,7 @@ entirely synthetic.
 7. **Negative-scenario machinery** — 20/20 mutation scenarios detected by the rule each declares (repaired 2026-09-29; see finding `FB2-REV-FND-000032`).
 8. **Adversarial review layer** — challenge, cross_domain and meta review passes
    that found **8 high-severity findings**, one of them about the original review
-   itself. **15 review records, 49 embedded findings, 144/224 = 64% coverage.**
+   itself. **15 review records, 49 embedded findings, 144/259 = 64% coverage.**
 9. **Process governance that states its own shortfalls** — 6 supporting-process
    records, a measurement plan, a risk register, a project plan and two
    improvement records, each naming the family it cannot discharge.
@@ -306,7 +306,7 @@ entirely synthetic.
     design files in the external `foxBMS2_hw` repository**, which this repository
     cannot verify (`content_hash: unresolved`). 4 more records (review records)
     cite the same three anchors.
-15. **Link revision currency** — 326 of 489 links are stale and none is marked
+15. **Link revision currency** — 326 of 547 links are stale and none is marked
     suspect (§4.6).
 16. **6 synthetic executions record `pass` with no retained evidence** — the
     fixture never existed and `evidence/synthetic-fixtures/` holds no fixture artefact
@@ -374,7 +374,7 @@ above, not gap 7.
 9. Give `render_e2e_html.py` an owning section for `artifact_type:
    implementation`, so its `--check` stops exiting 1 on 14 records.
 10. Implement link revision currency so `change_suspect_status` becomes a derived
-    value rather than a blanket `false` on all 489 links.
+    value rather than a blanket `false` on all 547 links.
 11. Retain the evidence for the 6 `synthetic_fixture` executions, or delete those
     execution records. A `pass` with no retained fixture is worse than an honest
     gap.

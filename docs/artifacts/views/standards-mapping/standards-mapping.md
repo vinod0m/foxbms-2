@@ -1,6 +1,6 @@
 # Standards mapping — ASPICE processes and ISO 26262 parts (generated view)
 
-Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
+Generated: 2026-10-02T20:56:53Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
 
 ## Provenance and status of this file
 
@@ -34,16 +34,16 @@ Derived from `governance/coverage-plan.json` (`process_inventory`). The disposit
 | `SYS.3` | System Architectural Design | `applicable` | partially_mapped - Two of the three expected families have backing records. HSI Specification: FB2-SYS-HSI-000001, whose own `design_level` is `interface_specification`, carries the electrical interface (SPI signals wit… |
 | `SYS.4` | System Integration and Integration Test | `applicable` | partially_mapped - Backing records name SYS.4 in their mappings: the test measures FB2-VER-TMS-000001..000008 area and the design record FB2-SYS-HSI-000001. Integration Plan: ABSENT - no integration plan record exists. … |
 | `SYS.5` | System Qualification Test | `applicable` | partially_mapped - Backing records: 15 test measures and 8 execution records carry SYS.5 or SYS.4/SYS.5 in their mappings. Qualification Test Plan: ABSENT. Qualification Test Specification: ABSENT - the measures are one… |
-| `SWE.1` | Software Requirements Analysis | `applicable` | partially_mapped - Software Requirements Specification has backing records with real content: FB2-SW-SWR-000001..000003 in both profiles, each carrying a statement, a rationale, a classification, acceptance criteria wit… |
-| `SWE.2` | Software Architectural Design | `applicable` | partially_mapped - Backing records: FB2-SW-DSN-000001..000003 in both profiles, each with `design_level: architecture`, responsibilities, a decomposition, interfaces with per-signal type, unit, range and rate, a behavio… |
-| `SWE.3` | Software Detailed Design and Unit Construction | `applicable` | gap - NO ARTEFACT REFERENCES SWE.3. Measured over the corpus by extracting every `standards_mappings[].reference` string from every one of the 263 indexed records and testing each string for the token SWE.3: SWE.3 occur… |
-| `SWE.4` | Software Unit Verification | `applicable` | partially_mapped - SW Unit Verification Measures have backing records with real content: FB2-VER-TMS-000001..000005 (as_is) and FB2-VER-TMS-000001..000016 (synthetic_reference) carry structured steps and oracles, and 15… |
-| `SWE.5` | Software Integration and Integration Test | `applicable` | partially_mapped - Backing records: the test measures FB2-VER-TMS-000001..000005 and FB2-VER-TMS-000007, the host-run execution records FB2-VER-EXE-000001..000007, and the change record FB2-MAN-CHG-000001. SW Integratio… |
-| `SWE.6` | Software Qualification Test | `applicable` | partially_mapped - Backing records: FB2-VER-TMS-000008 (the system-qualification stub) and the five network-security qualification measures FB2-VER-TMS-000016..000020, which carry structured steps, oracles and stated or… |
+| `SWE.1` | Software Requirements Analysis | `applicable` | partially_mapped - Software Requirements Specification has backing records: FB2-SW-SWR-000001..000003 in both profiles, each carrying a statement, a rationale, a classification, acceptance criteria with measure/threshol… |
+| `SWE.2` | Software Architectural Design | `applicable` | partially_mapped - Backing records: FB2-SW-DSN-000001..000003 in both profiles, each with `design_level: architecture`, responsibilities, a decomposition, a behaviour model expressed as a state machine with triggers, gu… |
+| `SWE.3` | Software Detailed Design and Unit Construction | `applicable` | partially_mapped - Detailed Design: BACKED for 3 of the 24 software modules the corpus's own source inventory names (docs/artifacts/sources/source-inventory.json, modules list). FB2-SW-DSN-000004, FB2-SW-DSN-000005 and … |
+| `SWE.4` | Software Unit Verification | `applicable` | partially_mapped - Unit Test Specifications: NOW BACKED. FB2-VER-UTS-000001 is a unit test specification against unit_test_specification.schema.json. It characterises 12 modules under test, each with the real test file … |
+| `SWE.5` | Software Integration and Integration Test | `applicable` | partially_mapped - SW Integration Plan: NOW BACKED. FB2-VER-SIP-000001 is a software integration and integration test plan against integration_plan.schema.json. Its order is derived from a measurement rather than assert… |
+| `SWE.6` | Software Qualification Test | `applicable` | partially_mapped - SW Qualification Test Plan: NOW BACKED. FB2-VER-SQP-000001 is a software qualification test plan against qualification_test_plan.schema.json, paired with FB2-VER-VSR-000001, a verification summary aga… |
 | `HWE.1` | Hardware Requirements Analysis | `applicable` | partially_mapped - Hardware Requirements Specification has backing records: FB2-HW-TSR-000001..000003 in both profiles and FB2-HW-TSR-000004 in the synthetic_reference profile, each carrying a statement, acceptance crit… |
-| `HWE.2` | Hardware Architectural Design | `applicable` | partially_mapped - Backing records: the seven `requirement` records FB2-HW-TSR-000001..000004 that carry HWE.1, HWE.2 in their mappings. Hardware Architecture: ABSENT - no record describes a hardware architecture. Block… |
-| `HWE.3` | Hardware Detailed Design | `applicable` | gap - NO ARTEFACT REFERENCES HWE.3. Measured the same way as SWE.3: across the 106 distinct `standards_mappings[].reference` strings in the corpus, HWE.3 occurs ZERO times. All four expected families are absent. Schemat… |
-| `HWE.4` | Hardware Integration and Test | `applicable` | gap - NO ARTEFACT REFERENCES HWE.4, measured across all 106 distinct `standards_mappings[].reference` strings. All three expected families are absent: no hardware integration plan, no hardware test specification and no … |
+| `HWE.2` | Hardware Architectural Design | `applicable` | partially_mapped - Backing records: the seven `requirement` records FB2-HW-TSR-000001..000004 that carry HWE.1, HWE.2 in their mappings, and now FB2-HW-HCB-000001, which identifies the released hardware set the architec… |
+| `HWE.3` | Hardware Detailed Design | `applicable` | gap - NO BACKING DETAILED-DESIGN CONTENT. FB2-HW-HDD-000001 now references HWE.3 in its own standards_mappings, with status gap, so the earlier claim that no artefact in the corpus references HWE.3 at all no longer hold… |
+| `HWE.4` | Hardware Integration and Test | `applicable` | partially_mapped - Backing record: FB2-HW-HVP-000001, a hardware verification plan authored against the board set and released versions fixed by FB2-HW-HCB-000001, carrying 5 verification levels, 4 environments, 6 entry… |
 | `VAL.1` | Validation | `applicable` | partially_mapped - Backing records: the planning stub FB2-VER-TMS-000009 and four real validation measures, FB2-VER-TMS-000012 (no false reaction over a full charge), FB2-VER-TMS-000013 (driver-facing outcome of a genui… |
 | `ACQ.4` | Supplier Monitoring | `applicable` | partially_mapped - Backing records: the supporting process record FB2-SUP-SPL-000001 (9,553 bytes, `aspice_process_id: ACQ.4`) and the post-development record FB2-PRD-EOL-000001. Supplier List: PRESENT as a fictional in… |
 | `SPL.2` | Release Management | `applicable` | partially_mapped - Backing records: the post-development records FB2-REL-RLS-000001 (15,412 bytes), FB2-PRD-CAL-000001 and FB2-PRD-EOL-000001, and the supporting process record FB2-SUP-CHC-000001. Release Plan: PRESENT … |
@@ -70,8 +70,8 @@ Derived from `governance/coverage-plan.json` (`process_inventory`). The disposit
 | applicable | 28 | 32 |
 | not_applicable | 4 | 32 |
 | disposition starts `mapped` | 4 | 32 |
-| disposition contains `partially_mapped` | 21 | 32 |
-| disposition starts `gap` | 3 | 32 |
+| disposition contains `partially_mapped` | 23 | 32 |
+| disposition starts `gap` | 1 | 32 |
 
 The four MLE processes are recorded as explicitly `not_applicable` with a rationale. Per the master prompt, non-applicability here is a recorded decision, not an absence.
 

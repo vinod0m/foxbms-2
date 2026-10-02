@@ -1,6 +1,6 @@
 # System — requirements, interfaces and architecture (generated view)
 
-Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
+Generated: 2026-10-02T20:56:53Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
 
 ## Provenance and status of this file
 
@@ -113,6 +113,7 @@ Signals (system-owned authority; hardware and software views link here rather th
 | `FB2-LNK-ELC-000063` | `FB2-SYS-SYR-000004` | refines | `FB2-SYS-UC-000003` | derived | reviewed |
 | `FB2-LNK-ELC-000064` | `FB2-SYS-SYR-000008` | refines | `FB2-SYS-UC-000004` | derived | reviewed |
 | `FB2-LNK-FND-000114` | `FB2-REV-FND-000027` | supports | `FB2-SYS-SYR-000005` | derived | reviewed |
+| `FB2-LNK-HW-000003` | `FB2-SYS-HVA-000001` | refines | `FB2-HW-HCB-000001` | derived | pending |
 | `FB2-LNK-IMP-000107` | `FB2-SW-IMP-000004` | implements | `FB2-SYS-SYR-000007` | synthetic | pending |
 | `FB2-LNK-LIF-000099` | `FB2-REL-RLS-000001` | depends_on | `FB2-SYS-SYR-000003` | derived | reviewed |
 | `FB2-LNK-LIF-000100` | `FB2-PRD-EOL-000001` | depends_on | `FB2-SYS-SYR-000003` | derived | reviewed |

@@ -9,7 +9,7 @@
 > Every number below comes from a live tool run on 2026-10-01. This report
 > states structural mapping coverage only. It asserts **no ISO 26262
 > conformity**, no ASIL capability, no IEC 61508 conformity, no certification,
-> no tool qualification and no ASPICE capability level. All 263 indexed records
+> no tool qualification and no ASPICE capability level. All 298 indexed records
 > are `human_approval_status: pending` and `production_authorized: false`.
 
 ## 1. The 15 Coverage Dimensions
@@ -26,7 +26,7 @@ population its denominator counts, because they are not the same population.**
 | 4 | source_grounding | all artifacts | **99/263** | 38% | **partial** | population **B** (263) |
 | 5 | traceability_integrity | 0 dangling | **489/489** | 100% | complete | every link in the registry |
 | 6 | semantic_consistency | all checks | 10/10 | 100% | complete (4 findings, 0 errors) | declared count of categories |
-| 7 | automated_review_coverage | all artifacts | **144/224** | 64% | **partial** | population **C** (224) |
+| 7 | automated_review_coverage | all artifacts | **144/259** | 64% | **partial** | population **C** (224) |
 | 8 | verification_planning | measures per FSR | **33/7** | 471% | over-covered | 7 distinct FSR ids |
 | 9 | actual_product_evidence | target executions | **0/33** | 0% | **blocked by policy** | population **B** execution records |
 | 10 | synthetic_fixture_coverage | 43 artifacts | **173/43** | 402% | over-covered | `synthetic_reference` records |
@@ -37,11 +37,11 @@ population its denominator counts, because they are not the same population.**
 | 15 | production_authorization | — | **0/263** | 0% | **false by policy** | population **B** |
 
 `source_grounding` detail, verbatim from the tool: *99/263 - artifacts with
-source_refs (101 anchors available)*. The 164 records without `source_refs` are
+source_refs (130 anchors available)*. The 164 records without `source_refs` are
 overwhelmingly synthetic, which is expected — a synthetic record has nothing in
 the pinned source to point at.
 
-`automated_review_coverage` detail, verbatim from the tool: *144/224 artifacts
+`automated_review_coverage` detail, verbatim from the tool: *144/259 artifacts
 covered by 15 review records; reviewed_by links consistent with reviewed_ids*.
 The denominator is 224 rather than 263 because it counts distinct artifact
 **IDs** across both profiles, and 39 IDs exist in both `as_is` and
@@ -208,7 +208,7 @@ unbacked ISO entries are `part_1_vocabulary` and `part_10_guidelines`, both
 
 ## 4. Traceability
 
-**489 links, 0 dangling.** De-duplicated by `(profile, link_id)`.
+**547 links, 0 dangling.** De-duplicated by `(profile, link_id)`.
 
 | Relation | Count | | Relation | Count |
 |---|---|---|---|---|
@@ -227,7 +227,7 @@ By review state: reviewed 414, pending 75.
 > **Link currency is not maintained, and this is measured, not suspected.**
 > Every link carries both endpoint revisions. Comparing each link's recorded
 > endpoint revision against the endpoint artefact's current revision:
-> **326 of 489 links differ, and all 489 carry `change_suspect_status: false`.**
+> **326 of 547 links differ, and all 489 carry `change_suspect_status: false`.**
 > So the corpus holds 326 links whose recorded endpoint revision is stale and
 > marks none of them suspect. Link *resolution* is verified on every run; link
 > *currency* is not. This is the specific shortfall behind `SUP.11
@@ -286,7 +286,7 @@ fields:
    `FB2-SRC-COD-000088` (the copyright/licence header of `dp83869.c`, lines
    1–59). Each is legitimately about a whole file, a whole module or a prose
    block, so no identifier can be named without understating the claim.
-3. **7 of the 101 anchors name no file in this repository, so their content hash
+3. **7 of the 130 anchors name no file in this repository, so their content hash
    cannot be verified here** — and the arithmetic is exact, not approximate:
    **94 verified + 7 without a local file = 101**, with 0 placeholder, 0
    mismatched and 0 naming a missing file.
@@ -306,7 +306,7 @@ fields:
 | `FB2-REV-000001` in two files | medium | **closed** | The duplicate `corpus/as_is/reviews/records/review-vertical-slice.json` has been removed. `reviews/records/` now holds 15 files for 15 review records and every `(profile, id)` pair in the corpus is unique, so the index collapses nothing. |
 | Redundant link-registry copy | low | accepted, reported | 51 links duplicated inside `corpus/`; de-duplicated by the tool. The sibling 177-link concept-lifecycle file is **not** redundant. |
 | Stale `summary.total_features` | low | accepted, reported | Says 20, holds 22. |
-| 326 of 489 links carry a stale endpoint revision, none marked suspect | medium | **open** | See §4. `SUP.11` demoted for it. |
+| 326 of 547 links carry a stale endpoint revision, none marked suspect | medium | **open** | See §4. `SUP.11` demoted for it. |
 | 6 `synthetic_fixture` executions record `pass` with no retained evidence | medium | **open** | See §9 item 4. |
 | 5 execution records cite a `.work` scratch digest in `output_hashes` | medium | **open** | See §9 item 5. |
 | Conformity claim in the hand-authored root document | high | **accepted** | `TRACEABILITY_DOCUMENT.md` at the repository root, recorded as finding `FB2-REV-FND-000022`. Corrected by hand on 2026-09-29 (finding revision 3), then made **tool-owned** at revision 4: the document is now generated at `docs/artifacts/views/traceability/traceability-document.md` by `corpus.py render`, and both hand-authored copies — the root file and `docs/artifacts/reports/TRACEABILITY_DOCUMENT.md` — were reduced to content-free pointers. The drift risk is closed by construction rather than by human discipline. |
@@ -379,7 +379,7 @@ chains for two of them** and partial or parameter-level material for the rest.
    eight `.work/` paths directly in its `logs[]`. The reproducible command for
    the SIL run is in the **tracked**
    `evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md`.
-6. **Link currency is not maintained.** 326 of 489 links carry a stale endpoint
+6. **Link currency is not maintained.** 326 of 547 links carry a stale endpoint
    revision and all 489 are marked `change_suspect_status: false`. See §4.
 7. **The pre-SIL host run remains the only evidence for the first five
    failures**, root-caused to untyped `void *` parameters in
@@ -387,7 +387,7 @@ chains for two of them** and partial or parameter-level material for the rest.
    configuration. A real product defect, not a harness artefact. No result was
    adjusted to make a test pass. The SIL run adds a separate and worse finding:
    **53 of its 245 green tests assert nothing** (`FB2-REV-FND-000042`).
-8. **Automated review coverage 64%** (144/224). **80** distinct artifact IDs are
+8. **Automated review coverage 64%** (144/259). **80** distinct artifact IDs are
    uncovered by any review record.
 9. **Three applicable processes have no backing artefact of any kind:** `SWE.3`,
    `HWE.3`, `HWE.4`. All three are `gap`, and all three were previously recorded
@@ -397,7 +397,7 @@ chains for two of them** and partial or parameter-level material for the rest.
 10. **Human approval 0%.** No human has approved any record.
 11. **Production authorization 0%.** Every record is `production_authorized:
     false`, by policy.
-12. **`source_grounding` 38%.** 164 of 263 records carry no `source_refs`; these
+12. **`source_grounding` 38%.** 164 of 298 records carry no `source_refs`; these
     are mostly synthetic records with nothing in the pinned source to anchor to.
 13. **`render_e2e_html.py --check` exits 1** on 14 `implementation` records that
     have no owning section in the renderer. Tool-side; outside this

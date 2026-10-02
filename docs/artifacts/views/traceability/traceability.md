@@ -1,6 +1,6 @@
 # Traceability — links, chains and coverage (generated view)
 
-Generated: 2026-10-01T05:09:29Z | Baseline: BAS-REF-001 | 263 artifacts, 489 links
+Generated: 2026-10-02T20:56:53Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
 
 ## Provenance and status of this file
 
@@ -31,16 +31,18 @@ Derived from the canonical link registries. Counts are computed here, not transc
 |---|---|---|---|
 | `allocated_to` | 9 | 37 | 46 |
 | `changes` | 0 | 16 | 16 |
-| `depends_on` | 0 | 12 | 12 |
-| `implements` | 6 | 7 | 13 |
+| `consumes` | 3 | 0 | 3 |
+| `depends_on` | 1 | 26 | 27 |
+| `implements` | 6 | 10 | 16 |
 | `mitigates` | 1 | 2 | 3 |
-| `refines` | 9 | 32 | 41 |
+| `refines` | 9 | 42 | 51 |
 | `result_of` | 5 | 28 | 33 |
 | `reviewed_by` | 78 | 151 | 229 |
+| `specified_by` | 0 | 15 | 15 |
 | `supports` | 0 | 29 | 29 |
-| `validates` | 0 | 12 | 12 |
-| `verifies` | 9 | 46 | 55 |
-| **Total** | 117 | 372 | 489 |
+| `validates` | 0 | 15 | 15 |
+| `verifies` | 12 | 52 | 64 |
+| **Total** | 124 | 423 | 547 |
 
 `related_to` is forbidden in canonical registries and appears only in mutation fixtures, where it is the injected defect.
 
@@ -89,7 +91,7 @@ Cross-cutting relations that do not sit on a single vertical chain.
 
 | Link | Profile | Relation | Source | Target | Review state | Change-suspect |
 |---|---|---|---|---|---|---|
-| `FB2-LNK-CHG-000001` | synthetic_reference | changes | `FB2-MAN-CHG-000001` | `FB2-SAF-FSR-000002` | pending | false |
+| `FB2-LNK-CHG-000001` | synthetic_reference | changes | `FB2-MAN-CHG-000001` | `FB2-SAF-FSR-000002` | pending | true |
 | `FB2-LNK-CHG-000002` | synthetic_reference | changes | `FB2-MAN-CHG-000001` | `FB2-SAF-HAZ-000001` | pending | false |
 | `FB2-LNK-CHG-000003` | synthetic_reference | changes | `FB2-MAN-CHG-000001` | `FB2-HW-TSR-000001` | pending | false |
 | `FB2-LNK-CHG-000004` | synthetic_reference | changes | `FB2-MAN-CHG-000001` | `FB2-SW-DSN-000002` | pending | false |
@@ -101,75 +103,77 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-CHG-000010` | synthetic_reference | changes | `FB2-MAN-CHG-000002` | `FB2-SW-DSN-000001` | pending | false |
 | `FB2-LNK-CHG-000011` | synthetic_reference | changes | `FB2-MAN-CHG-000002` | `FB2-VER-TMS-000003` | pending | false |
 | `FB2-LNK-CHG-000012` | synthetic_reference | changes | `FB2-MAN-CHG-000002` | `FB2-VER-TMS-000005` | pending | false |
-| `FB2-LNK-CHG-000013` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-SAF-FSR-000002` | pending | false |
+| `FB2-LNK-CHG-000013` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-SAF-FSR-000002` | pending | true |
 | `FB2-LNK-CHG-000014` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-SW-DSN-000002` | pending | false |
 | `FB2-LNK-CHG-000015` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-SW-SWR-000002` | pending | false |
 | `FB2-LNK-CHG-000016` | synthetic_reference | changes | `FB2-MAN-CHG-000003` | `FB2-VER-TMS-000001` | pending | false |
-| `FB2-LNK-CPT-000015` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000001` | reviewed | false |
-| `FB2-LNK-CPT-000016` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000002` | reviewed | false |
-| `FB2-LNK-CPT-000017` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000003` | reviewed | false |
-| `FB2-LNK-CPT-000018` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000004` | reviewed | false |
+| `FB2-LNK-CPT-000015` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000001` | reviewed | true |
+| `FB2-LNK-CPT-000016` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000002` | reviewed | true |
+| `FB2-LNK-CPT-000017` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000003` | reviewed | true |
+| `FB2-LNK-CPT-000018` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SAF-FSR-000004` | reviewed | true |
 | `FB2-LNK-CPT-000019` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000001` | reviewed | false |
 | `FB2-LNK-CPT-000020` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000002` | reviewed | false |
 | `FB2-LNK-CPT-000021` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000003` | reviewed | false |
 | `FB2-LNK-CPT-000022` | synthetic_reference | supports | `FB2-SAF-ITE-000001` | `FB2-SYS-UC-000004` | reviewed | false |
-| `FB2-LNK-FND-000111` | synthetic_reference | supports | `FB2-REV-FND-000025` | `FB2-SAF-TSC-000001` | reviewed | false |
-| `FB2-LNK-FND-000112` | synthetic_reference | supports | `FB2-REV-FND-000024` | `FB2-SAF-TSC-000001` | reviewed | false |
-| `FB2-LNK-FND-000113` | synthetic_reference | supports | `FB2-REV-FND-000026` | `FB2-SAF-TSC-000001` | reviewed | false |
-| `FB2-LNK-FND-000114` | synthetic_reference | supports | `FB2-REV-FND-000027` | `FB2-SYS-SYR-000005` | reviewed | false |
-| `FB2-LNK-FND-000115` | synthetic_reference | supports | `FB2-REV-FND-000028` | `FB2-VER-TMS-000018` | reviewed | false |
+| `FB2-LNK-FND-000111` | synthetic_reference | supports | `FB2-REV-FND-000025` | `FB2-SAF-TSC-000001` | reviewed | true |
+| `FB2-LNK-FND-000112` | synthetic_reference | supports | `FB2-REV-FND-000024` | `FB2-SAF-TSC-000001` | reviewed | true |
+| `FB2-LNK-FND-000113` | synthetic_reference | supports | `FB2-REV-FND-000026` | `FB2-SAF-TSC-000001` | reviewed | true |
+| `FB2-LNK-FND-000114` | synthetic_reference | supports | `FB2-REV-FND-000027` | `FB2-SYS-SYR-000005` | reviewed | true |
+| `FB2-LNK-FND-000115` | synthetic_reference | supports | `FB2-REV-FND-000028` | `FB2-VER-TMS-000018` | reviewed | true |
+| `FB2-LNK-HW-000001` | synthetic_reference | depends_on | `FB2-HW-HVP-000001` | `FB2-HW-HCB-000001` | pending | false |
+| `FB2-LNK-HW-000002` | synthetic_reference | depends_on | `FB2-HW-HDD-000001` | `FB2-HW-HCB-000001` | pending | false |
 | `FB2-LNK-LIF-000099` | synthetic_reference | depends_on | `FB2-REL-RLS-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
 | `FB2-LNK-LIF-000100` | synthetic_reference | depends_on | `FB2-PRD-EOL-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
 | `FB2-LNK-LIF-000101` | synthetic_reference | depends_on | `FB2-PRD-CAL-000001` | `FB2-SYS-SYR-000002` | reviewed | false |
-| `FB2-LNK-LIF-000102` | synthetic_reference | depends_on | `FB2-PRD-CAL-000001` | `FB2-SYS-SYR-000006` | reviewed | false |
-| `FB2-LNK-LIF-000103` | synthetic_reference | depends_on | `FB2-SVC-SVC-000001` | `FB2-SYS-SYR-000008` | reviewed | false |
+| `FB2-LNK-LIF-000102` | synthetic_reference | depends_on | `FB2-PRD-CAL-000001` | `FB2-SYS-SYR-000006` | reviewed | true |
+| `FB2-LNK-LIF-000103` | synthetic_reference | depends_on | `FB2-SVC-SVC-000001` | `FB2-SYS-SYR-000008` | reviewed | true |
 | `FB2-LNK-LIF-000104` | synthetic_reference | depends_on | `FB2-OPS-MON-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
 | `FB2-LNK-LIF-000105` | synthetic_reference | depends_on | `FB2-MAN-PLN-000001` | `FB2-SYS-SYR-000001` | reviewed | false |
-| `FB2-LNK-LIF-000106` | synthetic_reference | depends_on | `FB2-MAN-RSK-000001` | `FB2-SAF-TSC-000001` | reviewed | false |
+| `FB2-LNK-LIF-000106` | synthetic_reference | depends_on | `FB2-MAN-RSK-000001` | `FB2-SAF-TSC-000001` | reviewed | true |
 | `FB2-LNK-LIF-000107` | synthetic_reference | depends_on | `FB2-MAN-MSM-000001` | `FB2-SUP-QAP-000001` | reviewed | false |
 | `FB2-LNK-LIF-000108` | synthetic_reference | depends_on | `FB2-SUP-CFM-000001` | `FB2-MAN-PLN-000001` | reviewed | false |
 | `FB2-LNK-LIF-000109` | synthetic_reference | depends_on | `FB2-SUP-QAP-000001` | `FB2-PIM-IMP-000001` | reviewed | false |
 | `FB2-LNK-LIF-000110` | synthetic_reference | depends_on | `FB2-DEC-DCM-000001` | `FB2-SAF-ITE-000001` | reviewed | false |
-| `FB2-LNK-REVB-000001` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-HAZ-000001` | reviewed | false |
-| `FB2-LNK-REVB-000001` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-HAZ-000001` | reviewed | false |
-| `FB2-LNK-REVB-000002` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-SGO-000001` | reviewed | false |
-| `FB2-LNK-REVB-000002` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SGO-000001` | reviewed | false |
-| `FB2-LNK-REVB-000003` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-FSR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000003` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000004` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-FSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000004` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000005` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-FSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000005` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000006` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-HW-TSR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000006` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000004` | reviewed | false |
-| `FB2-LNK-REVB-000007` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-HW-TSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000007` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000001` | reviewed | false |
-| `FB2-LNK-REVB-000008` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-HW-TSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000008` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000002` | reviewed | false |
-| `FB2-LNK-REVB-000009` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-SWR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000009` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000003` | reviewed | false |
-| `FB2-LNK-REVB-000010` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-SWR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000010` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000004` | reviewed | false |
-| `FB2-LNK-REVB-000011` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-SWR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000011` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SCS-000001` | reviewed | false |
-| `FB2-LNK-REVB-000012` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-DSN-000001` | reviewed | false |
-| `FB2-LNK-REVB-000012` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-TAR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000013` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-DSN-000002` | reviewed | false |
-| `FB2-LNK-REVB-000013` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000001` | reviewed | false |
-| `FB2-LNK-REVB-000014` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-DSN-000003` | reviewed | false |
-| `FB2-LNK-REVB-000014` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000002` | reviewed | false |
-| `FB2-LNK-REVB-000015` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-VER-TMS-000001` | reviewed | false |
-| `FB2-LNK-REVB-000015` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000003` | reviewed | false |
-| `FB2-LNK-REVB-000016` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-VER-TMS-000002` | reviewed | false |
-| `FB2-LNK-REVB-000016` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000004` | reviewed | false |
+| `FB2-LNK-REVB-000001` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-HAZ-000001` | reviewed | true |
+| `FB2-LNK-REVB-000001` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-HAZ-000001` | reviewed | true |
+| `FB2-LNK-REVB-000002` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-SGO-000001` | reviewed | true |
+| `FB2-LNK-REVB-000002` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SGO-000001` | reviewed | true |
+| `FB2-LNK-REVB-000003` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-FSR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000003` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000004` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-FSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000004` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000005` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-FSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000005` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000006` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-HW-TSR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000006` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-FSR-000004` | reviewed | true |
+| `FB2-LNK-REVB-000007` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-HW-TSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000007` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000001` | reviewed | true |
+| `FB2-LNK-REVB-000008` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-HW-TSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000008` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000002` | reviewed | true |
+| `FB2-LNK-REVB-000009` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-SWR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000009` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000003` | reviewed | true |
+| `FB2-LNK-REVB-000010` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-SWR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000010` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-ANL-000004` | reviewed | true |
+| `FB2-LNK-REVB-000011` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-SWR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000011` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SCS-000001` | reviewed | true |
+| `FB2-LNK-REVB-000012` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-DSN-000001` | reviewed | true |
+| `FB2-LNK-REVB-000012` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-TAR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000013` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-DSN-000002` | reviewed | true |
+| `FB2-LNK-REVB-000013` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000001` | reviewed | true |
+| `FB2-LNK-REVB-000014` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SW-DSN-000003` | reviewed | true |
+| `FB2-LNK-REVB-000014` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000002` | reviewed | true |
+| `FB2-LNK-REVB-000015` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-VER-TMS-000001` | reviewed | true |
+| `FB2-LNK-REVB-000015` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000003` | reviewed | true |
+| `FB2-LNK-REVB-000016` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-VER-TMS-000002` | reviewed | true |
+| `FB2-LNK-REVB-000016` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000004` | reviewed | true |
 | `FB2-LNK-REVB-000017` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000001` | reviewed | false |
-| `FB2-LNK-REVB-000017` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000005` | reviewed | false |
+| `FB2-LNK-REVB-000017` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-SEC-000005` | reviewed | true |
 | `FB2-LNK-REVB-000018` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000002` | reviewed | false |
-| `FB2-LNK-REVB-000018` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-MAN-CHG-000001` | reviewed | false |
+| `FB2-LNK-REVB-000018` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-MAN-CHG-000001` | reviewed | true |
 | `FB2-LNK-REVB-000019` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000003` | reviewed | false |
-| `FB2-LNK-REVB-000019` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-MAN-CHG-000002` | reviewed | false |
+| `FB2-LNK-REVB-000019` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-MAN-CHG-000002` | reviewed | true |
 | `FB2-LNK-REVB-000020` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000004` | reviewed | false |
-| `FB2-LNK-REVB-000020` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-MAN-CHG-000003` | reviewed | false |
+| `FB2-LNK-REVB-000020` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-MAN-CHG-000003` | reviewed | true |
 | `FB2-LNK-REVB-000021` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000005` | reviewed | false |
 | `FB2-LNK-REVB-000021` | synthetic_reference | reviewed_by | `FB2-REV-000004` | `FB2-MAN-CHG-000001` | reviewed | false |
 | `FB2-LNK-REVB-000022` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000006` | reviewed | false |
@@ -177,206 +181,237 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-REVB-000023` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000007` | reviewed | false |
 | `FB2-LNK-REVB-000023` | synthetic_reference | reviewed_by | `FB2-REV-000004` | `FB2-MAN-CHG-000003` | reviewed | false |
 | `FB2-LNK-REVB-000024` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000008` | reviewed | false |
-| `FB2-LNK-REVB-000024` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-TAR-000001` | reviewed | false |
+| `FB2-LNK-REVB-000024` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-TAR-000001` | reviewed | true |
 | `FB2-LNK-REVB-000025` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000009` | reviewed | false |
-| `FB2-LNK-REVB-000025` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000001` | reviewed | false |
+| `FB2-LNK-REVB-000025` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000001` | reviewed | true |
 | `FB2-LNK-REVB-000026` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000010` | reviewed | false |
-| `FB2-LNK-REVB-000026` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000002` | reviewed | false |
+| `FB2-LNK-REVB-000026` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000002` | reviewed | true |
 | `FB2-LNK-REVB-000027` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000011` | reviewed | false |
-| `FB2-LNK-REVB-000027` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000003` | reviewed | false |
+| `FB2-LNK-REVB-000027` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000003` | reviewed | true |
 | `FB2-LNK-REVB-000028` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000012` | reviewed | false |
-| `FB2-LNK-REVB-000028` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000004` | reviewed | false |
+| `FB2-LNK-REVB-000028` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000004` | reviewed | true |
 | `FB2-LNK-REVB-000029` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000013` | reviewed | false |
-| `FB2-LNK-REVB-000029` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000005` | reviewed | false |
+| `FB2-LNK-REVB-000029` | synthetic_reference | reviewed_by | `FB2-REV-000003` | `FB2-SAF-SEC-000005` | reviewed | true |
 | `FB2-LNK-REVB-000030` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000014` | reviewed | false |
-| `FB2-LNK-REVB-000030` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000001` | reviewed | false |
+| `FB2-LNK-REVB-000030` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000001` | reviewed | true |
 | `FB2-LNK-REVB-000031` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000015` | reviewed | false |
-| `FB2-LNK-REVB-000031` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000002` | reviewed | false |
+| `FB2-LNK-REVB-000031` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000002` | reviewed | true |
 | `FB2-LNK-REVB-000032` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000016` | reviewed | false |
-| `FB2-LNK-REVB-000032` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000003` | reviewed | false |
+| `FB2-LNK-REVB-000032` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000003` | reviewed | true |
 | `FB2-LNK-REVB-000033` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000017` | reviewed | false |
-| `FB2-LNK-REVB-000033` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000004` | reviewed | false |
+| `FB2-LNK-REVB-000033` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-ANL-000004` | reviewed | true |
 | `FB2-LNK-REVB-000034` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000018` | reviewed | false |
-| `FB2-LNK-REVB-000034` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SCS-000001` | reviewed | false |
+| `FB2-LNK-REVB-000034` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SCS-000001` | reviewed | true |
 | `FB2-LNK-REVB-000035` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000019` | reviewed | false |
-| `FB2-LNK-REVB-000035` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000004` | reviewed | false |
+| `FB2-LNK-REVB-000035` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000004` | reviewed | true |
 | `FB2-LNK-REVB-000036` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000020` | reviewed | false |
-| `FB2-LNK-REVB-000036` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-HW-TSR-000004` | reviewed | false |
+| `FB2-LNK-REVB-000036` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-HW-TSR-000004` | reviewed | true |
 | `FB2-LNK-REVB-000037` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000021` | reviewed | false |
-| `FB2-LNK-REVB-000037` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000006` | reviewed | false |
+| `FB2-LNK-REVB-000037` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000006` | reviewed | true |
 | `FB2-LNK-REVB-000038` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000022` | reviewed | false |
-| `FB2-LNK-REVB-000038` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000007` | reviewed | false |
+| `FB2-LNK-REVB-000038` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000007` | reviewed | true |
 | `FB2-LNK-REVB-000039` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000023` | reviewed | false |
-| `FB2-LNK-REVB-000039` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000008` | reviewed | false |
+| `FB2-LNK-REVB-000039` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000008` | reviewed | true |
 | `FB2-LNK-REVB-000040` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000024` | reviewed | false |
-| `FB2-LNK-REVB-000040` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000009` | reviewed | false |
+| `FB2-LNK-REVB-000040` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000009` | reviewed | true |
 | `FB2-LNK-REVB-000041` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000025` | reviewed | false |
-| `FB2-LNK-REVB-000041` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000010` | reviewed | false |
+| `FB2-LNK-REVB-000041` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000010` | reviewed | true |
 | `FB2-LNK-REVB-000042` | as_is | reviewed_by | `FB2-REV-000002` | `FB2-SW-DEV-000026` | reviewed | false |
-| `FB2-LNK-REVB-000042` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000011` | reviewed | false |
-| `FB2-LNK-REVB-000043` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-HAZ-000001` | reviewed | false |
-| `FB2-LNK-REVB-000043` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000006` | reviewed | false |
-| `FB2-LNK-REVB-000044` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-SGO-000001` | reviewed | false |
-| `FB2-LNK-REVB-000044` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000007` | reviewed | false |
-| `FB2-LNK-REVB-000045` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-FSR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000045` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000008` | reviewed | false |
-| `FB2-LNK-REVB-000046` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-FSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000046` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000009` | reviewed | false |
-| `FB2-LNK-REVB-000047` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-FSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000047` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000010` | reviewed | false |
-| `FB2-LNK-REVB-000048` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-HW-TSR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000048` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000011` | reviewed | false |
-| `FB2-LNK-REVB-000049` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-HW-TSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000049` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-HAZ-000001` | reviewed | false |
-| `FB2-LNK-REVB-000050` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-HW-TSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000050` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SGO-000001` | reviewed | false |
-| `FB2-LNK-REVB-000051` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-SWR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000051` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000052` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-SWR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000052` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000053` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-SWR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000053` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000054` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-DSN-000001` | reviewed | false |
-| `FB2-LNK-REVB-000054` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-TAR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000055` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-DSN-000002` | reviewed | false |
-| `FB2-LNK-REVB-000055` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000001` | reviewed | false |
-| `FB2-LNK-REVB-000056` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-DSN-000003` | reviewed | false |
-| `FB2-LNK-REVB-000056` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000002` | reviewed | false |
-| `FB2-LNK-REVB-000057` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-VER-TMS-000001` | reviewed | false |
-| `FB2-LNK-REVB-000057` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000003` | reviewed | false |
-| `FB2-LNK-REVB-000058` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-VER-TMS-000002` | reviewed | false |
-| `FB2-LNK-REVB-000058` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000004` | reviewed | false |
+| `FB2-LNK-REVB-000042` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-TMS-000011` | reviewed | true |
+| `FB2-LNK-REVB-000043` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-HAZ-000001` | reviewed | true |
+| `FB2-LNK-REVB-000043` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000006` | reviewed | true |
+| `FB2-LNK-REVB-000044` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-SGO-000001` | reviewed | true |
+| `FB2-LNK-REVB-000044` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000007` | reviewed | true |
+| `FB2-LNK-REVB-000045` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-FSR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000045` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000008` | reviewed | true |
+| `FB2-LNK-REVB-000046` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-FSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000046` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000009` | reviewed | true |
+| `FB2-LNK-REVB-000047` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SAF-FSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000047` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000010` | reviewed | true |
+| `FB2-LNK-REVB-000048` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-HW-TSR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000048` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-VER-EXE-000011` | reviewed | true |
+| `FB2-LNK-REVB-000049` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-HW-TSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000049` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-HAZ-000001` | reviewed | true |
+| `FB2-LNK-REVB-000050` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-HW-TSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000050` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SGO-000001` | reviewed | true |
+| `FB2-LNK-REVB-000051` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-SWR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000051` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000052` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-SWR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000052` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000053` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-SWR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000053` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-FSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000054` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-DSN-000001` | reviewed | true |
+| `FB2-LNK-REVB-000054` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-TAR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000055` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-DSN-000002` | reviewed | true |
+| `FB2-LNK-REVB-000055` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000001` | reviewed | true |
+| `FB2-LNK-REVB-000056` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-SW-DSN-000003` | reviewed | true |
+| `FB2-LNK-REVB-000056` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000002` | reviewed | true |
+| `FB2-LNK-REVB-000057` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-VER-TMS-000001` | reviewed | true |
+| `FB2-LNK-REVB-000057` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000003` | reviewed | true |
+| `FB2-LNK-REVB-000058` | as_is | reviewed_by | `FB2-REV-000011` | `FB2-VER-TMS-000002` | reviewed | true |
+| `FB2-LNK-REVB-000058` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000004` | reviewed | true |
 | `FB2-LNK-REVB-000059` | as_is | reviewed_by | `FB2-REV-000006` | `FB2-VER-TMS-000003` | reviewed | false |
-| `FB2-LNK-REVB-000059` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000005` | reviewed | false |
+| `FB2-LNK-REVB-000059` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-SAF-SEC-000005` | reviewed | true |
 | `FB2-LNK-REVB-000060` | as_is | reviewed_by | `FB2-REV-000006` | `FB2-VER-TMS-000004` | reviewed | false |
-| `FB2-LNK-REVB-000060` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-MAN-CHG-000001` | reviewed | false |
+| `FB2-LNK-REVB-000060` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-MAN-CHG-000001` | reviewed | true |
 | `FB2-LNK-REVB-000061` | as_is | reviewed_by | `FB2-REV-000006` | `FB2-VER-TMS-000005` | reviewed | false |
-| `FB2-LNK-REVB-000061` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-MAN-CHG-000002` | reviewed | false |
-| `FB2-LNK-REVB-000062` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-SGO-000001` | reviewed | false |
-| `FB2-LNK-REVB-000062` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-MAN-CHG-000003` | reviewed | false |
-| `FB2-LNK-REVB-000063` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000063` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000001` | reviewed | false |
-| `FB2-LNK-REVB-000064` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000064` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000002` | reviewed | false |
-| `FB2-LNK-REVB-000065` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-HW-TSR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000065` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000003` | reviewed | false |
-| `FB2-LNK-REVB-000066` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-HW-TSR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000066` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000004` | reviewed | false |
-| `FB2-LNK-REVB-000067` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-HW-TSR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000067` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-SCS-000001` | reviewed | false |
-| `FB2-LNK-REVB-000068` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-SWR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000068` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-FSR-000004` | reviewed | false |
-| `FB2-LNK-REVB-000069` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-SWR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000069` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-HW-TSR-000004` | reviewed | false |
-| `FB2-LNK-REVB-000070` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-SWR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000070` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-MAN-SCO-000001` | reviewed | false |
-| `FB2-LNK-REVB-000071` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-DSN-000001` | reviewed | false |
-| `FB2-LNK-REVB-000071` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-MAN-SPL-000001` | reviewed | false |
-| `FB2-LNK-REVB-000072` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-DSN-000002` | reviewed | false |
-| `FB2-LNK-REVB-000072` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SYS-HSI-000001` | reviewed | false |
-| `FB2-LNK-REVB-000073` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-DSN-000003` | reviewed | false |
-| `FB2-LNK-REVB-000073` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-MUT-000001` | reviewed | false |
-| `FB2-LNK-REVB-000074` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-VER-TMS-000001` | reviewed | false |
-| `FB2-LNK-REVB-000074` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-MUT-000002` | reviewed | false |
-| `FB2-LNK-REVB-000075` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-VER-TMS-000002` | reviewed | false |
-| `FB2-LNK-REVB-000075` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-CHG-000001` | reviewed | false |
-| `FB2-LNK-REVB-000076` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-VER-EXE-000001` | reviewed | false |
-| `FB2-LNK-REVB-000076` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-CHG-000002` | reviewed | false |
-| `FB2-LNK-REVB-000077` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-CHG-000003` | reviewed | false |
-| `FB2-LNK-REVB-000078` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000006` | reviewed | false |
-| `FB2-LNK-REVB-000079` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000007` | reviewed | false |
-| `FB2-LNK-REVB-000080` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000008` | reviewed | false |
-| `FB2-LNK-REVB-000081` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000009` | reviewed | false |
-| `FB2-LNK-REVB-000082` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000010` | reviewed | false |
-| `FB2-LNK-REVB-000083` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000011` | reviewed | false |
-| `FB2-LNK-REVB-000084` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000006` | reviewed | false |
-| `FB2-LNK-REVB-000085` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000007` | reviewed | false |
-| `FB2-LNK-REVB-000086` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000008` | reviewed | false |
-| `FB2-LNK-REVB-000087` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000009` | reviewed | false |
-| `FB2-LNK-REVB-000088` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000010` | reviewed | false |
-| `FB2-LNK-REVB-000089` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000011` | reviewed | false |
-| `FB2-LNK-REVB-000116` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-ITE-000001` | reviewed | false |
-| `FB2-LNK-REVB-000117` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-FSC-000001` | reviewed | false |
-| `FB2-LNK-REVB-000118` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-TSC-000001` | reviewed | false |
-| `FB2-LNK-REVB-000119` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000012` | reviewed | false |
-| `FB2-LNK-REVB-000120` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000013` | reviewed | false |
-| `FB2-LNK-REVB-000121` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000014` | reviewed | false |
-| `FB2-LNK-REVB-000122` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000015` | reviewed | false |
-| `FB2-LNK-REVB-000123` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000012` | reviewed | false |
-| `FB2-LNK-REVB-000124` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000013` | reviewed | false |
-| `FB2-LNK-REVB-000125` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000014` | reviewed | false |
-| `FB2-LNK-REVB-000126` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000015` | reviewed | false |
-| `FB2-LNK-REVB-000127` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000001` | reviewed | false |
-| `FB2-LNK-REVB-000128` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000002` | reviewed | false |
-| `FB2-LNK-REVB-000129` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000003` | reviewed | false |
-| `FB2-LNK-REVB-000130` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000004` | reviewed | false |
-| `FB2-LNK-REVB-000131` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000005` | reviewed | false |
-| `FB2-LNK-REVB-000132` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000001` | reviewed | false |
-| `FB2-LNK-REVB-000133` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000002` | reviewed | false |
-| `FB2-LNK-REVB-000134` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000003` | reviewed | false |
-| `FB2-LNK-REVB-000135` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000004` | reviewed | false |
-| `FB2-LNK-REVB-000136` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-PLN-000001` | reviewed | false |
-| `FB2-LNK-REVB-000137` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-RSK-000001` | reviewed | false |
-| `FB2-LNK-REVB-000138` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-MSM-000001` | reviewed | false |
-| `FB2-LNK-REVB-000139` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PIM-IMP-000001` | reviewed | false |
-| `FB2-LNK-REVB-000140` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PIM-IMP-000002` | reviewed | false |
-| `FB2-LNK-REVB-000141` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-QAP-000001` | reviewed | false |
-| `FB2-LNK-REVB-000142` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-CFM-000001` | reviewed | false |
-| `FB2-LNK-REVB-000143` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-PRB-000001` | reviewed | false |
-| `FB2-LNK-REVB-000144` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-CHC-000001` | reviewed | false |
-| `FB2-LNK-REVB-000145` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-SPL-000001` | reviewed | false |
-| `FB2-LNK-REVB-000146` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-RUS-000001` | reviewed | false |
-| `FB2-LNK-REVB-000147` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-REL-RLS-000001` | reviewed | false |
-| `FB2-LNK-REVB-000148` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PRD-EOL-000001` | reviewed | false |
-| `FB2-LNK-REVB-000149` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PRD-CAL-000001` | reviewed | false |
-| `FB2-LNK-REVB-000150` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-OPS-MON-000001` | reviewed | false |
-| `FB2-LNK-REVB-000151` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SVC-SVC-000001` | reviewed | false |
-| `FB2-LNK-REVB-000152` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-DEC-DCM-000001` | reviewed | false |
-| `FB2-LNK-REVB-000153` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000001` | reviewed | false |
-| `FB2-LNK-REVB-000154` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000002` | reviewed | false |
-| `FB2-LNK-REVB-000155` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000003` | reviewed | false |
-| `FB2-LNK-REVB-000156` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000004` | reviewed | false |
-| `FB2-LNK-REVB-000157` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000005` | reviewed | false |
-| `FB2-LNK-REVB-000158` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000006` | reviewed | false |
-| `FB2-LNK-REVB-000159` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000007` | reviewed | false |
-| `FB2-LNK-REVB-000160` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000008` | reviewed | false |
-| `FB2-LNK-REVB-000161` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000016` | reviewed | false |
-| `FB2-LNK-REVB-000162` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000017` | reviewed | false |
-| `FB2-LNK-REVB-000163` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000018` | reviewed | false |
-| `FB2-LNK-REVB-000164` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000019` | reviewed | false |
-| `FB2-LNK-REVB-000165` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000020` | reviewed | false |
-| `FB2-LNK-REVB-000166` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000016` | reviewed | false |
-| `FB2-LNK-REVB-000167` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000017` | reviewed | false |
-| `FB2-LNK-REVB-000168` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000018` | reviewed | false |
-| `FB2-LNK-REVB-000169` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000019` | reviewed | false |
-| `FB2-LNK-REVB-000170` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000020` | reviewed | false |
-| `FB2-LNK-REVB-000171` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000023` | reviewed | false |
-| `FB2-LNK-REVB-000172` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000024` | reviewed | false |
-| `FB2-LNK-REVB-000173` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000025` | reviewed | false |
-| `FB2-LNK-REVB-000174` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000026` | reviewed | false |
-| `FB2-LNK-REVB-000175` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000027` | reviewed | false |
-| `FB2-LNK-REVB-000176` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000028` | reviewed | false |
-| `FB2-LNK-REVB-000177` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000029` | reviewed | false |
-| `FB2-LNK-SAF-000019` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-HAZ-000001` | reviewed | false |
-| `FB2-LNK-SAF-000020` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000001` | reviewed | false |
-| `FB2-LNK-SEC-000001` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000001` | pending | false |
-| `FB2-LNK-SEC-000002` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000002` | pending | false |
-| `FB2-LNK-SEC-000003` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000003` | pending | false |
-| `FB2-LNK-SEC-000004` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000004` | pending | false |
-| `FB2-LNK-SEC-000005` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000005` | pending | false |
-| `FB2-LNK-SEC-000006` | synthetic_reference | supports | `FB2-SAF-SEC-000001` | `FB2-SAF-SGO-000001` | pending | false |
-| `FB2-LNK-SEC-000007` | synthetic_reference | supports | `FB2-SAF-SEC-000002` | `FB2-SAF-SGO-000001` | pending | false |
-| `FB2-LNK-SEC-000008` | synthetic_reference | supports | `FB2-SAF-SEC-000003` | `FB2-SAF-FSR-000001` | pending | false |
-| `FB2-LNK-SEC-000009` | synthetic_reference | supports | `FB2-SAF-SEC-000003` | `FB2-SAF-FSR-000002` | pending | false |
-| `FB2-LNK-SEC-000010` | synthetic_reference | supports | `FB2-SAF-SEC-000004` | `FB2-SAF-SGO-000001` | pending | false |
-| `FB2-LNK-SEC-000011` | synthetic_reference | supports | `FB2-SAF-SEC-000005` | `FB2-SAF-SCS-000001` | pending | false |
-| `FB2-LNK-SEC-000012` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SGO-000001` | pending | false |
-| `FB2-LNK-SEC-000013` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-FSR-000001` | pending | false |
-| `FB2-LNK-SEC-000014` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-FSR-000002` | pending | false |
-| `FB2-LNK-SEC-000015` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-FSR-000003` | pending | false |
-| `FB2-LNK-SEC-000016` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SCS-000001` | pending | false |
+| `FB2-LNK-REVB-000061` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-MAN-CHG-000002` | reviewed | true |
+| `FB2-LNK-REVB-000062` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-SGO-000001` | reviewed | true |
+| `FB2-LNK-REVB-000062` | synthetic_reference | reviewed_by | `FB2-REV-000012` | `FB2-MAN-CHG-000003` | reviewed | true |
+| `FB2-LNK-REVB-000063` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000063` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000001` | reviewed | true |
+| `FB2-LNK-REVB-000064` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000064` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000002` | reviewed | true |
+| `FB2-LNK-REVB-000065` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-HW-TSR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000065` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000003` | reviewed | true |
+| `FB2-LNK-REVB-000066` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-HW-TSR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000066` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-ANL-000004` | reviewed | true |
+| `FB2-LNK-REVB-000067` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-HW-TSR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000067` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-SCS-000001` | reviewed | true |
+| `FB2-LNK-REVB-000068` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-SWR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000068` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-SAF-FSR-000004` | reviewed | true |
+| `FB2-LNK-REVB-000069` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-SWR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000069` | synthetic_reference | reviewed_by | `FB2-REV-000005` | `FB2-HW-TSR-000004` | reviewed | true |
+| `FB2-LNK-REVB-000070` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-SWR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000070` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-MAN-SCO-000001` | reviewed | true |
+| `FB2-LNK-REVB-000071` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-DSN-000001` | reviewed | true |
+| `FB2-LNK-REVB-000071` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-MAN-SPL-000001` | reviewed | true |
+| `FB2-LNK-REVB-000072` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-DSN-000002` | reviewed | true |
+| `FB2-LNK-REVB-000072` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SYS-HSI-000001` | reviewed | true |
+| `FB2-LNK-REVB-000073` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SW-DSN-000003` | reviewed | true |
+| `FB2-LNK-REVB-000073` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-MUT-000001` | reviewed | true |
+| `FB2-LNK-REVB-000074` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-VER-TMS-000001` | reviewed | true |
+| `FB2-LNK-REVB-000074` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-MUT-000002` | reviewed | true |
+| `FB2-LNK-REVB-000075` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-VER-TMS-000002` | reviewed | true |
+| `FB2-LNK-REVB-000075` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-CHG-000001` | reviewed | true |
+| `FB2-LNK-REVB-000076` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-VER-EXE-000001` | reviewed | true |
+| `FB2-LNK-REVB-000076` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-CHG-000002` | reviewed | true |
+| `FB2-LNK-REVB-000077` | synthetic_reference | reviewed_by | `FB2-REV-000008` | `FB2-SCN-CHG-000003` | reviewed | true |
+| `FB2-LNK-REVB-000078` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000006` | reviewed | true |
+| `FB2-LNK-REVB-000079` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000007` | reviewed | true |
+| `FB2-LNK-REVB-000080` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000008` | reviewed | true |
+| `FB2-LNK-REVB-000081` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000009` | reviewed | true |
+| `FB2-LNK-REVB-000082` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000010` | reviewed | true |
+| `FB2-LNK-REVB-000083` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-TMS-000011` | reviewed | true |
+| `FB2-LNK-REVB-000084` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000006` | reviewed | true |
+| `FB2-LNK-REVB-000085` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000007` | reviewed | true |
+| `FB2-LNK-REVB-000086` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000008` | reviewed | true |
+| `FB2-LNK-REVB-000087` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000009` | reviewed | true |
+| `FB2-LNK-REVB-000088` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000010` | reviewed | true |
+| `FB2-LNK-REVB-000089` | synthetic_reference | reviewed_by | `FB2-REV-000007` | `FB2-VER-EXE-000011` | reviewed | true |
+| `FB2-LNK-REVB-000116` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-ITE-000001` | reviewed | true |
+| `FB2-LNK-REVB-000117` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-FSC-000001` | reviewed | true |
+| `FB2-LNK-REVB-000118` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SAF-TSC-000001` | reviewed | true |
+| `FB2-LNK-REVB-000119` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000012` | reviewed | true |
+| `FB2-LNK-REVB-000120` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000013` | reviewed | true |
+| `FB2-LNK-REVB-000121` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000014` | reviewed | true |
+| `FB2-LNK-REVB-000122` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000015` | reviewed | true |
+| `FB2-LNK-REVB-000123` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000012` | reviewed | true |
+| `FB2-LNK-REVB-000124` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000013` | reviewed | true |
+| `FB2-LNK-REVB-000125` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000014` | reviewed | true |
+| `FB2-LNK-REVB-000126` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000015` | reviewed | true |
+| `FB2-LNK-REVB-000127` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000001` | reviewed | true |
+| `FB2-LNK-REVB-000128` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000002` | reviewed | true |
+| `FB2-LNK-REVB-000129` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000003` | reviewed | true |
+| `FB2-LNK-REVB-000130` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000004` | reviewed | true |
+| `FB2-LNK-REVB-000131` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-NED-000005` | reviewed | true |
+| `FB2-LNK-REVB-000132` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000001` | reviewed | true |
+| `FB2-LNK-REVB-000133` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000002` | reviewed | true |
+| `FB2-LNK-REVB-000134` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000003` | reviewed | true |
+| `FB2-LNK-REVB-000135` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-UC-000004` | reviewed | true |
+| `FB2-LNK-REVB-000136` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-PLN-000001` | reviewed | true |
+| `FB2-LNK-REVB-000137` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-RSK-000001` | reviewed | true |
+| `FB2-LNK-REVB-000138` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-MAN-MSM-000001` | reviewed | true |
+| `FB2-LNK-REVB-000139` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PIM-IMP-000001` | reviewed | true |
+| `FB2-LNK-REVB-000140` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PIM-IMP-000002` | reviewed | true |
+| `FB2-LNK-REVB-000141` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-QAP-000001` | reviewed | true |
+| `FB2-LNK-REVB-000142` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-CFM-000001` | reviewed | true |
+| `FB2-LNK-REVB-000143` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-PRB-000001` | reviewed | true |
+| `FB2-LNK-REVB-000144` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-CHC-000001` | reviewed | true |
+| `FB2-LNK-REVB-000145` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-SPL-000001` | reviewed | true |
+| `FB2-LNK-REVB-000146` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SUP-RUS-000001` | reviewed | true |
+| `FB2-LNK-REVB-000147` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-REL-RLS-000001` | reviewed | true |
+| `FB2-LNK-REVB-000148` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PRD-EOL-000001` | reviewed | true |
+| `FB2-LNK-REVB-000149` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-PRD-CAL-000001` | reviewed | true |
+| `FB2-LNK-REVB-000150` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-OPS-MON-000001` | reviewed | true |
+| `FB2-LNK-REVB-000151` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-SVC-SVC-000001` | reviewed | true |
+| `FB2-LNK-REVB-000152` | synthetic_reference | reviewed_by | `FB2-REV-000014` | `FB2-DEC-DCM-000001` | reviewed | true |
+| `FB2-LNK-REVB-000153` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000001` | reviewed | true |
+| `FB2-LNK-REVB-000154` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000002` | reviewed | true |
+| `FB2-LNK-REVB-000155` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000003` | reviewed | true |
+| `FB2-LNK-REVB-000156` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000004` | reviewed | true |
+| `FB2-LNK-REVB-000157` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000005` | reviewed | true |
+| `FB2-LNK-REVB-000158` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000006` | reviewed | true |
+| `FB2-LNK-REVB-000159` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000007` | reviewed | true |
+| `FB2-LNK-REVB-000160` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-SYS-SYR-000008` | reviewed | true |
+| `FB2-LNK-REVB-000161` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000016` | reviewed | true |
+| `FB2-LNK-REVB-000162` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000017` | reviewed | true |
+| `FB2-LNK-REVB-000163` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000018` | reviewed | true |
+| `FB2-LNK-REVB-000164` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000019` | reviewed | true |
+| `FB2-LNK-REVB-000165` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-TMS-000020` | reviewed | true |
+| `FB2-LNK-REVB-000166` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000016` | reviewed | true |
+| `FB2-LNK-REVB-000167` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000017` | reviewed | true |
+| `FB2-LNK-REVB-000168` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000018` | reviewed | true |
+| `FB2-LNK-REVB-000169` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000019` | reviewed | true |
+| `FB2-LNK-REVB-000170` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-VER-EXE-000020` | reviewed | true |
+| `FB2-LNK-REVB-000171` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000023` | reviewed | true |
+| `FB2-LNK-REVB-000172` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000024` | reviewed | true |
+| `FB2-LNK-REVB-000173` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000025` | reviewed | true |
+| `FB2-LNK-REVB-000174` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000026` | reviewed | true |
+| `FB2-LNK-REVB-000175` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000027` | reviewed | true |
+| `FB2-LNK-REVB-000176` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000028` | reviewed | true |
+| `FB2-LNK-REVB-000177` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000029` | reviewed | true |
+| `FB2-LNK-SAF-000019` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-HAZ-000001` | reviewed | true |
+| `FB2-LNK-SAF-000020` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000001` | reviewed | true |
+| `FB2-LNK-SEC-000001` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000001` | pending | true |
+| `FB2-LNK-SEC-000002` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000002` | pending | true |
+| `FB2-LNK-SEC-000003` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000003` | pending | true |
+| `FB2-LNK-SEC-000004` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000004` | pending | true |
+| `FB2-LNK-SEC-000005` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000005` | pending | true |
+| `FB2-LNK-SEC-000006` | synthetic_reference | supports | `FB2-SAF-SEC-000001` | `FB2-SAF-SGO-000001` | pending | true |
+| `FB2-LNK-SEC-000007` | synthetic_reference | supports | `FB2-SAF-SEC-000002` | `FB2-SAF-SGO-000001` | pending | true |
+| `FB2-LNK-SEC-000008` | synthetic_reference | supports | `FB2-SAF-SEC-000003` | `FB2-SAF-FSR-000001` | pending | true |
+| `FB2-LNK-SEC-000009` | synthetic_reference | supports | `FB2-SAF-SEC-000003` | `FB2-SAF-FSR-000002` | pending | true |
+| `FB2-LNK-SEC-000010` | synthetic_reference | supports | `FB2-SAF-SEC-000004` | `FB2-SAF-SGO-000001` | pending | true |
+| `FB2-LNK-SEC-000011` | synthetic_reference | supports | `FB2-SAF-SEC-000005` | `FB2-SAF-SCS-000001` | pending | true |
+| `FB2-LNK-SEC-000012` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SGO-000001` | pending | true |
+| `FB2-LNK-SEC-000013` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-FSR-000001` | pending | true |
+| `FB2-LNK-SEC-000014` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-FSR-000002` | pending | true |
+| `FB2-LNK-SEC-000015` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-FSR-000003` | pending | true |
+| `FB2-LNK-SEC-000016` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SCS-000001` | pending | true |
+| `FB2-LNK-SIR-000020` | synthetic_reference | specified_by | `FB2-SW-SIR-000001` | `FB2-SW-IFS-000001` | pending | false |
+| `FB2-LNK-SIR-000021` | synthetic_reference | specified_by | `FB2-SW-SIR-000001` | `FB2-SW-IFS-000002` | pending | false |
+| `FB2-LNK-SIR-000022` | synthetic_reference | specified_by | `FB2-SW-SIR-000002` | `FB2-SW-IFS-000003` | pending | false |
+| `FB2-LNK-SIR-000023` | synthetic_reference | specified_by | `FB2-SW-SIR-000003` | `FB2-SW-IFS-000004` | pending | false |
+| `FB2-LNK-SIR-000024` | synthetic_reference | specified_by | `FB2-SW-SIR-000003` | `FB2-SW-IFS-000005` | pending | false |
+| `FB2-LNK-SIR-000025` | synthetic_reference | specified_by | `FB2-SW-SIR-000004` | `FB2-SW-IFS-000007` | pending | false |
+| `FB2-LNK-SIR-000026` | synthetic_reference | specified_by | `FB2-SW-SIR-000004` | `FB2-SW-IFS-000008` | pending | false |
+| `FB2-LNK-SIR-000027` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000009` | pending | false |
+| `FB2-LNK-SIR-000028` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000010` | pending | false |
+| `FB2-LNK-SIR-000029` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000011` | pending | false |
+| `FB2-LNK-SIR-000030` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000012` | pending | false |
+| `FB2-LNK-SIR-000031` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000013` | pending | false |
+| `FB2-LNK-SIR-000032` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000014` | pending | false |
+| `FB2-LNK-SIR-000033` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000015` | pending | false |
+| `FB2-LNK-SIR-000034` | synthetic_reference | specified_by | `FB2-SW-SIR-000006` | `FB2-SW-IFS-000016` | pending | false |
+| `FB2-LNK-USW-000004` | as_is | depends_on | `FB2-VER-UTS-000002` | `FB2-VER-EXE-000015` | pending | false |
+| `FB2-LNK-USW-000005` | as_is | consumes | `FB2-VER-UTS-000002` | `FB2-VER-TMS-000004` | pending | false |
+| `FB2-LNK-USW-000006` | as_is | consumes | `FB2-VER-UTS-000002` | `FB2-VER-TMS-000001` | pending | false |
+| `FB2-LNK-USW-000007` | as_is | consumes | `FB2-VER-UTS-000002` | `FB2-VER-TMS-000002` | pending | false |
+| `FB2-LNK-VSW-000001` | synthetic_reference | depends_on | `FB2-VER-SIP-000001` | `FB2-VER-UTS-000001` | pending | false |
+| `FB2-LNK-VSW-000002` | synthetic_reference | depends_on | `FB2-VER-SQP-000001` | `FB2-VER-UTS-000001` | pending | false |
+| `FB2-LNK-VSW-000003` | synthetic_reference | depends_on | `FB2-VER-SQP-000001` | `FB2-VER-SIP-000001` | pending | false |
+| `FB2-LNK-VSW-000004` | synthetic_reference | depends_on | `FB2-VER-VSR-000001` | `FB2-VER-SQP-000001` | pending | false |
+| `FB2-LNK-VSW-000005` | synthetic_reference | depends_on | `FB2-VER-VSR-000001` | `FB2-VER-SIP-000001` | pending | false |
+| `FB2-LNK-VSW-000006` | synthetic_reference | depends_on | `FB2-VER-VSR-000001` | `FB2-VER-UTS-000001` | pending | false |
+| `FB2-LNK-VSW-000007` | synthetic_reference | depends_on | `FB2-MAN-VDR-000001` | `FB2-VER-UTS-000001` | pending | false |
+| `FB2-LNK-VSW-000008` | synthetic_reference | depends_on | `FB2-MAN-VDR-000001` | `FB2-VER-SIP-000001` | pending | false |
+| `FB2-LNK-VSW-000009` | synthetic_reference | depends_on | `FB2-MAN-VDR-000001` | `FB2-VER-SQP-000001` | pending | false |
+| `FB2-LNK-VSW-000010` | synthetic_reference | depends_on | `FB2-MAN-VDR-000001` | `FB2-VER-VSR-000001` | pending | false |
+| `FB2-LNK-VSW-000017` | synthetic_reference | depends_on | `FB2-VER-SIP-000001` | `FB2-VER-TMS-000007` | pending | false |
+| `FB2-LNK-VSW-000018` | synthetic_reference | depends_on | `FB2-VER-SQP-000001` | `FB2-VER-EXE-000008` | pending | false |
 
-Relation types defined by the model but **not used by any canonical link in this corpus**: `constrained_by`, `consumes`, `produces`, `specified_by`, `supersedes`. Their absence is reported rather than hidden.
+Relation types defined by the model but **not used by any canonical link in this corpus**: `constrained_by`, `produces`, `supersedes`. Their absence is reported rather than hidden.
 
 ## Requirement-to-test coverage matrix
 
@@ -433,6 +468,9 @@ Built from `verifies` and `validates` links only. A requirement with no row in t
 | synthetic_reference | `FB2-VER-TMS-000020` | Verification: the initial sequence number is unpredictable across con… | `FB2-SAF-SEC-000005` | SEC-000005: Cryptographically strong entropy for network security par… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000020` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000020` | Verification: the initial sequence number is unpredictable across con… | `FB2-SYS-SYR-000007` | SYR: the item shall publish its state and shall not accept a request … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000020` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000020` | Verification: the initial sequence number is unpredictable across con… | `FB2-SYS-SYR-000008` | SYR: commissioning and service shall not permit the item to energise … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000020` none/blocked |
+| synthetic_reference | `FB2-SW-SIR-000005` | Triage of the seven unsatisfied software interface-requirement elemen… | `FB2-SW-SIR-000002` | Software interface requirements: the actuation interface | profile=`synthetic_reference` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| synthetic_reference | `FB2-SW-SIR-000005` | Triage of the seven unsatisfied software interface-requirement elemen… | `FB2-SW-SIR-000003` | Software interface requirements: the communication and data-exchange … | profile=`synthetic_reference` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| synthetic_reference | `FB2-SW-SIR-000005` | Triage of the seven unsatisfied software interface-requirement elemen… | `FB2-SW-SIR-000004` | Software interface requirements: the platform-service and serial-bus … | profile=`synthetic_reference` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
 | synthetic_reference | `FB2-VER-TMS-000021` | Test: every transferred cell-voltage value is integrity-checked befor… | `FB2-SYS-SYR-000001` | SYR: every monitored cell voltage shall be acquired, validated and pu… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000021` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000022` | Test: the configured measurement period yields at least the acquisiti… | `FB2-SYS-SYR-000001` | SYR: every monitored cell voltage shall be acquired, validated and pu… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000022` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000023` | Test: an excursion into each safe-operating-area tier produces the gr… | `FB2-SYS-SYR-000002` | SYR: the item shall enforce the configured safe operating area, and s… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000023` none/blocked |
@@ -441,6 +479,9 @@ Built from `verifies` and `validates` links only. A requirement with no row in t
 | synthetic_reference | `FB2-VER-TMS-000026` | Test: the limit applied, and the reaction reached, depend on the mode… | `FB2-SYS-SYR-000004` | SYR: the fault reaction shall be selected by mode, and a degraded con… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000026` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000027` | Test: the second-barrier voltage monitor FB2-SYS-SYR-000005 requires … | `FB2-SYS-SYR-000005` | SYR: the item shall include a hardware voltage monitor that can detec… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000027` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000028` | Test: a current or temperature measurement whose trust cannot be esta… | `FB2-SYS-SYR-000006` | SYR: pack current and cell temperature shall be acquired, plausibilit… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000028` none/blocked |
+| as_is | `FB2-SW-SWR-000001` | SWR: AFE Driver - Cell Voltage Acquisition | `FB2-VER-UTS-000002` | Software unit test specification - foxBMS 2 SIL host unit-test suite … | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| as_is | `FB2-SW-SWR-000002` | SWR: SOA Voltage Limit Monitoring | `FB2-VER-UTS-000002` | Software unit test specification - foxBMS 2 SIL host unit-test suite … | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| as_is | `FB2-SW-SWR-000003` | SWR: Contactor State Machine and Fault Response | `FB2-VER-UTS-000002` | Software unit test specification - foxBMS 2 SIL host unit-test suite … | profile=`as_is` \| origin=`source_observed` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
 | synthetic_reference | `FB2-VER-TMS-000012` | Validation: charging a healthy pack at the limit does not cause a spu… | `FB2-SYS-NED-000001` | Stakeholder need: the pack manufacturer shall not lose usable capacit… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000012` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000012` | Validation: charging a healthy pack at the limit does not cause a spu… | `FB2-SYS-UC-000001` | Use case: charging a healthy 400 V pack to its declared full state | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000012` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000013` | Validation: the driver's usable experience after a genuine overvoltag… | `FB2-SYS-NED-000003` | Stakeholder need: a driver shall be left in control and told what hap… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000013` none/blocked |
@@ -451,6 +492,12 @@ Built from `verifies` and `validates` links only. A requirement with no row in t
 | synthetic_reference | `FB2-VER-TMS-000015` | Validation: the service technician can commission and service the ite… | `FB2-SYS-NED-000005` | Stakeholder need: a trained service technician shall be able to commi… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000015` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000015` | Validation: the service technician can commission and service the ite… | `FB2-SYS-UC-000004` | Use case: commissioning a new item and servicing it in the workshop | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000015` none/blocked |
 | synthetic_reference | `FB2-VER-TMS-000013` | Validation: the driver's usable experience after a genuine overvoltag… | `FB2-SAF-SGO-000001` | Cell Voltage Safety Goal | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | `FB2-VER-EXE-000013` none/blocked |
+| synthetic_reference | `FB2-VER-UTS-000001` | Unit Test Specification: foxBMS 2 software units under test in the SI… | `FB2-SW-DSN-000004` | Detailed Design: LTC 6813-1 AFE measurement driver - internal units, … | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| synthetic_reference | `FB2-VER-UTS-000001` | Unit Test Specification: foxBMS 2 software units under test in the SI… | `FB2-SW-DSN-000005` | Detailed Design: SOA monitoring - tiered limit evaluation, limit-prov… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| synthetic_reference | `FB2-VER-UTS-000001` | Unit Test Specification: foxBMS 2 software units under test in the SI… | `FB2-SW-DSN-000006` | Detailed Design: contactor actuation and auxiliary feedback - registr… | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| synthetic_reference | `FB2-VER-SQP-000001` | Software Qualification Test Plan: what would have to be true, at whic… | `FB2-SW-SWR-000001` | SWR: AFE Driver - Cell Voltage Acquisition | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| synthetic_reference | `FB2-VER-SQP-000001` | Software Qualification Test Plan: what would have to be true, at whic… | `FB2-SW-SWR-000002` | SWR: SOA Voltage Limit Monitoring | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
+| synthetic_reference | `FB2-VER-SQP-000001` | Software Qualification Test Plan: what would have to be true, at whic… | `FB2-SW-SWR-000003` | SWR: Contactor State Machine and Fault Response | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` | **no execution** |
 
 ### Coverage diagram
 

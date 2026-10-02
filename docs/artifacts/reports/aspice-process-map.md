@@ -185,7 +185,7 @@ The same measure artifacts serve SWE.5/SWE.6 and SYS.4/SYS.5 — the software qu
 | SUP.8 | applicable | **partially_mapped** | change control deferred; status accounting not automated |
 | SUP.9 | applicable | **partially_mapped** | no trend analysis |
 | SUP.10 | applicable | **partially_mapped** | families present for a fictional project only |
-| SUP.11 | applicable | **partially_mapped** | **link currency not maintained — 326 of 489 links stale, none suspect** |
+| SUP.11 | applicable | **partially_mapped** | **link currency not maintained — 326 of 547 links stale, none suspect** |
 | REU.2 | applicable | **partially_mapped** | no reuse assessment completed |
 | **MAN.3, MAN.5, MAN.6, PIM.3** | applicable | **`mapped`** | — each backed by a record carrying the process's defining content |
 | MLE.1–MLE.4 | not_applicable | explicit non-applicability | — |

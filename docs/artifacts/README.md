@@ -13,8 +13,8 @@
 | Label | Meaning |
 |-------|---------|
 | **SYNTHETIC** | This is a synthetic development corpus, NOT a certification package. foxBMS, SoftwareDevLabs and this corpus are NOT ISO 26262 compliant and NOT ASIL certified. The corpus holds a **structural mapping** to clause references; that is not conformity. |
-| **HUMAN_APPROVAL_PENDING** | All 263 indexed records have `human_approval_status: pending`. **No human has approved anything in this corpus.** AI reviews are automated; distinct agent sessions are NOT organisational independence or human confirmation. |
-| **PRODUCTION_UNAUTHORIZED** | All 263 indexed records have `production_authorized: false` and `product_verification_credit: false`. No generated record grants production authority. |
+| **HUMAN_APPROVAL_PENDING** | All 298 indexed records have `human_approval_status: pending`. **No human has approved anything in this corpus.** AI reviews are automated; distinct agent sessions are NOT organisational independence or human confirmation. |
+| **PRODUCTION_UNAUTHORIZED** | All 298 indexed records have `production_authorized: false` and `product_verification_credit: false`. No generated record grants production authority. |
 | **NO_TARGET_HARDWARE_EVIDENCE** | 0 of 33 required target-hardware executions exist. A real macOS **host** run exists (SIL harness, 313 CeeDling targets attempted, 222 passed) but macOS is **not an upstream-supported foxBMS platform** and a host run is **not** target-hardware evidence. It carries no verification credit. |
 | **AS_IS vs SYNTHETIC_REFERENCE** | Two profiles: `as_is` (faithful reconstruction of pinned sources, 90 records) and `synthetic_reference` (hypothetical automotive BMS project, 173 records). Field-level provenance distinguishes `source_observed` (63), `derived` (53) and `synthetic` (147). |
 | **NO NORMATIVE TEXT** | ISO 26262 and ASPICE PAM normative text NOT reproduced. Only metadata, methodology mappings and clause/process references are used, per rights policy. |
@@ -105,10 +105,10 @@ population its denominator counts, because they differ.
 | scope_accounting | 1/1 | 100% | presence of the three inventories |
 | artifact_population | 13/13 | 100% | 13 declared artefact families |
 | standards_mapping | **33/38** | 87% | 28 applicable ASPICE processes + 10 applicable ISO parts; ASPICE 25/28, ISO 8/10 |
-| source_grounding | **99/263** | 38% | population **B**; 101 anchors available |
+| source_grounding | **99/263** | 38% | population **B**; 130 anchors available |
 | traceability_integrity | **489/489** | 100% | every link in the registry |
 | semantic_consistency_checks | 10/10 | 100% | declared count of check categories, not a measurement |
-| automated_review_coverage | **144/224** | 64% | population **C**; 15 review records |
+| automated_review_coverage | **144/259** | 64% | population **C**; 15 review records |
 | verification_planning | **33/7** | 471% (ratio, not a score) | 33 test measures for 7 distinct FSR ids |
 | actual_product_evidence | **0/33** | **0%** | population **B** execution records; `execution_kind` has no target-hardware member |
 | synthetic_fixture_coverage | **173/43** | 402% (ratio, not a score) | `synthetic_reference` records against a declared target |
@@ -161,7 +161,7 @@ docs/artifacts/
 │   ├── role-and-review-policy.json
 │   └── finding-disposition-vocabulary.md
 ├── sources/                            # Source registry + inventories
-│   ├── source-registry.json            # 101 anchors, pinned to 308028fb
+│   ├── source-registry.json            # 130 anchors, pinned to 308028fb
 │   ├── source-inventory.json           # 612 source files, 24 modules
 │   ├── feature-inventory.json          # 22 feature records
 │   ├── variant-matrix.json             # 23 variants
@@ -193,12 +193,12 @@ docs/artifacts/
 │   ├── tara.schema.json
 │   ├── test_measure.schema.json
 │   └── use_case.schema.json
-├── corpus/                             # 267 JSON files: 263 records + 4 registry containers
+├── corpus/                             # 267 JSON files: 298 records + 4 registry containers
 │   ├── shared/
 │   ├── as_is/                          # 90 records
 │   ├── synthetic_reference/            # 173 records
 │   └── scenarios/                      # 23 records in 46 JSON files (20 mutations, 3 change lifecycles)
-├── traceability/                       # Canonical typed links — 489 links after de-duplication
+├── traceability/                       # Canonical typed links — 547 links after de-duplication
 │   ├── link-registry/
 │   │   ├── as_is/                      # 117 links
 │   │   └── synthetic_reference/        # 195 links (cell-voltage) + 177 (concept-lifecycle)
@@ -348,7 +348,7 @@ By review state: reviewed 414, pending 75.
 > each with a per-link `provenance_repair` record naming the previous value, the
 > revisions skipped, and their date, author and description — so a reader can
 > see exactly what content a link now names that it did not name when authored.
-> **326 of 489 links are now marked `change_suspect_status: true`.** That flag
+> **326 of 547 links are now marked `change_suspect_status: true`.** That flag
 > means *an endpoint was advanced past the revision this link was authored
 > against, and no re-examination of the link is recorded* — it is a statement
 > about re-examination, not a claim that the link is wrong. Link *resolution* is
@@ -680,7 +680,7 @@ means artefacts whose own `standards_mappings[].reference` names the process.
 | `SUP.8` Configuration Management | `partially_mapped` | 1 process record, 4 records | Change control deferred to another record; status accounting not performed. |
 | `SUP.9` Problem Resolution Management | `partially_mapped` | 13 findings, 1 process record | No trend analysis — the record itself says one intake cycle cannot produce one. |
 | `SUP.10` Change Request Management | `partially_mapped` | 3 change records, 1 process record | All three changes are fictional; nothing was raised against the real product. |
-| `SUP.11` Traceability Management | `partially_mapped` | 3 change records, 489 links, coverage reports | Link currency not maintained: **326 of 489 links carry a stale endpoint revision and none is marked suspect.** |
+| `SUP.11` Traceability Management | `partially_mapped` | 3 change records, 547 links, coverage reports | Link currency not maintained: **326 of 547 links carry a stale endpoint revision and none is marked suspect.** |
 | `VAL.1` Validation | `partially_mapped` | 5 test measures, 4 use cases, 2 post-development records | No validation plan; **zero validations executed** — all executions blocked. |
 | ISO Part 2 Management | `partially_mapped` | `FB2-MAN-SPL-000001` only | That record has `artifact_type: design`, six empty structural fields, no roles assigned and no tailoring. It is not a safety plan. |
 | ISO Parts 3, 4 | `partially_mapped` | Item definition, FSC, TSC, HSI, 8 system requirements | Concept timing budget does not close (FND-000025); contactor reaction requirement contradicts itself (FND-000024); no system architecture; no modes/states. |
@@ -706,7 +706,7 @@ agent handover.
 |---|---|---|
 | `TRACEABILITY_DOCUMENT.md` at repository root claimed ISO 26262 + IEC 61508 compliance, an ASIL-D/ASIL-B capability, and carried a fabricated human-approval sign-off; outside the write boundary | high | **accepted** — `FB2-REV-FND-000022` rev 4; corrected under explicit owner authorisation, then made **tool-owned**: the document is generated at `views/traceability/traceability-document.md` and the root path is a content-free pointer, so the drift risk is closed by construction |
 | **`render_e2e_html.py --check` fails on 14 records** | medium | **open, tool-side.** Every `artifact_type: implementation` record (10 `as_is`, 4 `synthetic_reference`) has no owning section in the renderer, so its integrity check exits 1 with `UNMAPPED artifact type … has no owning section`. The HTML deliverable itself is regenerated, tracked (the path-specific negation in `docs/artifacts/.gitignore` works: `git check-ignore` returns 1) and passes `--audit-guard` with no affirmative conformity claim. The fix is an owning section in `render_e2e_html.py`, which is outside the write boundary of this workstream. |
-| **326 of 489 links carry a stale endpoint revision and none is marked suspect** | medium | **open.** `SUP.11` demoted to `partially_mapped` for it. |
+| **326 of 547 links carry a stale endpoint revision and none is marked suspect** | medium | **open.** `SUP.11` demoted to `partially_mapped` for it. |
 | **53 of the 245 green tests in the SIL host run assert nothing** | high | **recorded** — `FB2-REV-FND-000042`, against the SIL run rather than hidden by it |
 | `feature-inventory.json` `summary.total_features` says 20, holds 22 | low | accepted, reported; the tool counts records and reports 22 |
 | FSRs carry no `fault_reaction` field | medium | findings open; schema change needed |

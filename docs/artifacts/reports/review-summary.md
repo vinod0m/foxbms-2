@@ -22,7 +22,7 @@
 | `reviewed_ids` entries summed across records | **229** |
 | Unique artifact IDs covered by a review (the union) | **144** |
 | Unique artifact IDs in the corpus | **224** |
-| **Automated review coverage** | **144/224 = 64%** |
+| **Automated review coverage** | **144/259 = 64%** |
 | Unique IDs **not** covered by any review | **80** |
 | `reviewed_by` link count | **229** |
 | Link/record agreement | consistent — `reviewed_by` links and `reviewed_ids` lists agree exactly |

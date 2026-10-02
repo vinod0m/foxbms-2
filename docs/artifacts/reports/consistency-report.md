@@ -63,7 +63,7 @@ records a defect outside the corpus write boundary that the validator cannot see
 |---|---|---|---|
 | 1 | JSON parseability | every corpus/review/scenario file parses | pass |
 | 2 | Schema validation | every record validates against its type schema | pass, 26 schemas, 286 files |
-| 3 | Link validity | no dangling link; no invalid relation type | pass, **489 links, 0 dangling** |
+| 3 | Link validity | no dangling link; no invalid relation type | pass, **547 links, 0 dangling** |
 | 4 | Source-reference resolution | every `source_refs` entry resolves to a registry anchor | pass |
 | 5 | Provenance / guard fields | no `production_authorized: true`, no approved artifact | pass, 0 violations this run |
 | 6 | Semantic rules | `execution_kind`/`outcome` enums, FTTI budget arithmetic | pass |
@@ -254,7 +254,7 @@ invited deleting 177 real links.
 
 ### 4.3 Link revision currency — **open, and larger than any defect above**
 
-Measured over all 489 links: **326 record an endpoint revision that differs from
+Measured over all 547 links: **326 record an endpoint revision that differs from
 the endpoint artefact's current revision, and all 489 carry
 `change_suspect_status: false`.** The `change_suspect_status` field is therefore
 a blanket default, not a derived value, and 109 artefacts have moved past
@@ -336,7 +336,7 @@ fabricated to make a status true.
 | source_grounding | **99/263** | 38% | 164 records carry no `source_refs`; mostly synthetic, which is expected |
 | traceability_integrity | **489/489** | 100% | 0 dangling, from a link validation re-run for this figure. Resolution yes; **currency no** — see §4.3 |
 | semantic_consistency_checks | 10/10 | 100% | 4 findings, 0 errors — **declared** count, not a measurement |
-| automated_review_coverage | **144/224** | 64% | **80** distinct IDs uncovered |
+| automated_review_coverage | **144/259** | 64% | **80** distinct IDs uncovered |
 | verification_planning | **33/7** | 471% | over-covered; a ratio, not a score |
 | actual_product_evidence | **0/33** | 0% | blocked by policy; no target-hardware member in the enum |
 | synthetic_fixture_coverage | **173/43** | 402% | over-covered |

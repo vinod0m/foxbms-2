@@ -42,8 +42,8 @@ Recorded by `corpus.py check` gate `[8/8] final status recorded`.
 | 5/8 | scenario-test | PASS (23/23 scenario lines; 20/20 mutations **detected on their own declared detector**) |
 | 6/8 | export | PASS (263 nodes, 489 edges) |
 | 6/8 | deterministic export hashes | PASS |
-| 7/8 | no production_authorized/approved artifacts | PASS (0 violations this run; 263 records scanned) |
-| 7b/8 | provenance verification | PASS (229 digests, 101 anchors, 46 log hashes, 34 evidence-file entries; 4 findings, none an error) |
+| 7/8 | no production_authorized/approved artifacts | PASS (0 violations this run; 298 records scanned) |
+| 7b/8 | provenance verification | PASS (229 digests, 130 anchors, 57 log hashes, 62 evidence-file entries; 4 findings, none an error) |
 | 8/8 | final status recorded | PASS (`synthetic_ready_with_limitations`) |
 
 **14** gate lines PASS, 0 FAIL (the earlier "10 gate lines" predates the
@@ -202,7 +202,7 @@ score.
 | 4 | source_grounding | **99/263** | 38% | **partial** | 101 source anchors available; 164 records carry no `source_refs` | population **B** (263) |
 | 5 | traceability_integrity | **489/489** | 100% | complete as to **resolution** | 0 dangling, from a link validation re-run for this figure. **Currency is not maintained** — see §6.2 | every link in the registry |
 | 6 | semantic_consistency_checks | 10/10 | 100% | complete, **declared** | 10 check categories per run — a declared constant, not a measured result | declared count |
-| 7 | automated_review_coverage | **144/224** | 64% | **partial** | 15 review records; `reviewed_by` links consistent with `reviewed_ids` | population **C** (224) |
+| 7 | automated_review_coverage | **144/259** | 64% | **partial** | 15 review records; `reviewed_by` links consistent with `reviewed_ids` | population **C** (224) |
 | 8 | verification_planning | **33/7** | 471% | over-covered | 33 test measures for 7 distinct FSR ids; a ratio, not a score | 7 distinct FSR ids |
 | 9 | actual_product_evidence | **0/33** | 0% | **blocked by policy** | 0 target-hardware executions; see §7 | population **B** execution records |
 | 10 | synthetic_fixture_coverage | **173/43** | 402% | over-covered | 173 `synthetic_reference` records against a target of 43 | `synthetic_reference` records |
@@ -306,11 +306,11 @@ existed; the duplicate is gone and the count is now three.
 Every one of the **263** records carries `human_approval_status: pending`,
 `production_authorized: false` and `product_verification_credit: false`. The
 validator raises a finding on any record that does not, and gate `[7/8]`
-reports 0 violations over all 263 records.
+reports 0 violations over all 298 records.
 
 ## 5. Traceability
 
-**489 links**, **0 dangling**. De-duplicated by `(profile, link_id)` across all
+**547 links**, **0 dangling**. De-duplicated by `(profile, link_id)` across all
 registries.
 
 | Relation type | Count | | Relation type | Count |
@@ -369,7 +369,7 @@ record carries the process's defining engineering content. None is an upgrade.
 
 **The 3 `gap` processes — `SWE.3`, `HWE.3`, `HWE.4` — have no backing artefact
 of any kind.** Measured by extracting every artefact's own
-`standards_mappings[].reference` string (183 of 263 records carry one, spanning
+`standards_mappings[].reference` string (183 of 298 records carry one, spanning
 106 distinct strings; 80 carry none) and testing each for the token: **SWE.3
 occurs ZERO times.** `SWE.3` was recorded `mapped` until 2026-10-01.
 
@@ -608,7 +608,7 @@ findings are `info`. The table is generated and is left as generated.
 promoted to records; they are a different set from the 49 embedded above and are
 not added together.
 
-Automated review coverage: **144/224 = 64%**, 15 review records,
+Automated review coverage: **144/259 = 64%**, 15 review records,
 `reviewed_by` links consistent with `reviewed_ids` (229 each). **80 distinct
 artefact IDs are covered by no review record.**
 
@@ -869,7 +869,7 @@ left to an agent handover, and each names what was measured and how.
    scratch file** rather than the evidence file they name. See §7.1a for the
    digests, the paths they resolve to, and the tracked runbook that regenerates
    the run.
-6. **Link revision currency is not maintained.** 326 of 489 links record a stale
+6. **Link revision currency is not maintained.** 326 of 547 links record a stale
    endpoint revision and **none** is marked suspect (§5.1). This is the largest
    traceability limitation and the specific reason `SUP.11` is
    `partially_mapped`.
@@ -901,7 +901,7 @@ left to an agent handover, and each names what was measured and how.
     have no owning section in the renderer. The HTML deliverable is regenerated,
     tracked and guard-audited; the fix is tool-side and outside this workstream's
     write boundary.
-14. **Automated review coverage 64%** (144/224 distinct IDs). **80** distinct
+14. **Automated review coverage 64%** (144/259 distinct IDs). **80** distinct
     IDs are covered by no review record — and the unreviewed set includes every
     `post_development_record`, `process_record`, `measurement_plan`,
     `risk_register`, `project_plan`, `stakeholder_need`, `use_case` and
@@ -955,7 +955,7 @@ left to an agent handover, and each names what was measured and how.
 - Target-hardware product evidence is **0/33**, and the tool states the
   `execution_kind` enum has no target-hardware member, so none can be claimed
   without fabricating one.
-- **326 of 489 links carry a stale endpoint revision and none is marked suspect.**
+- **326 of 547 links carry a stale endpoint revision and none is marked suspect.**
 - Two of the five cross-domain walkthroughs are still parameters-only, and two
   of the other three terminate at a concept phase that does not close.
 
@@ -980,7 +980,7 @@ tool qualification, certification, or target-hardware verification.
 | 15 coverage dimensions and all ratios | `corpus.py coverage` |
 | 8 stages, 14 gate lines, 23 scenario lines, 20/20 mutations detected on their own declared detector | `corpus.py check` |
 | **48/48** selftests, including 9 provenance tests and 2 that break the mutation gate on purpose | `corpus.py selftest` |
-| 229 review digests, 101 anchors, 46 log hashes, 34 evidence-file entries verified; 4 anchors prose-only | `corpus.py validate` provenance tally |
+| 229 review digests, 130 anchors, 57 log hashes, 62 evidence-file entries verified; 4 anchors prose-only | `corpus.py validate` provenance tally |
 | every `safety_goal_ref` and payload-field cross-reference resolves; every FTTI allocation closes | `docs/artifacts/tools/check_references.py` |
 | 612/612, 24 modules, 22 features, 23 variants | `corpus.py inventory` |
 | 32/28/4 processes, **16** corrections, ASPICE 4/21/3, ISO 0/8/2 | `governance/coverage-plan.json` |
@@ -1020,7 +1020,7 @@ was corrected here.
 | Traceability links | 460 | **489** | `load_links` |
 | `source_grounding` | 80/223 | **99/263** | `coverage` |
 | `traceability_integrity` | 460/460 | **489/489** | `coverage` |
-| `automated_review_coverage` | 144/187 | **144/224** | `coverage` |
+| `automated_review_coverage` | 144/259 | **144/259** | `coverage` |
 | `verification_planning` | 25/7 | **33/7** | `coverage` |
 | `actual_product_evidence` | 0/25 | **0/33** | `coverage` |
 | `synthetic_fixture_coverage` | 148/43 | **173/43** | `coverage` |
