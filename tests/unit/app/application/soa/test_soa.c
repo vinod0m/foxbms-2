@@ -91,7 +91,8 @@ void tearDown(void) {
  *          - Argument validation:
  *            - AT1/1: NULL_PTR for pMinimumMaximumCellVoltages &rarr; assert
  *          - Routine validation:
- *            - RT1/x: TODO
+ *            - RT1/1: complete cell voltage measurement &rarr; limit verdict per string
+ *            - RT2/1: incomplete cell voltage measurement &rarr; no limit verdict at all
  */
 void testSOA_CheckVoltages(void) {
     /* ======= Assertion tests ============================================= */
@@ -100,7 +101,11 @@ void testSOA_CheckVoltages(void) {
     TEST_ASSERT_FAIL_ASSERT(SOA_CheckVoltages(NULL_PTR));
 
     /* ======= Routine tests =============================================== */
-    /* ======= RT1/x: Test implementation */
+    /* ======= RT1/1: complete measurement of every cell of every string */
+    for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
+        pMinimumMaximumCellVoltages.validMeasuredCellVoltages[s] = (uint16_t)BS_NR_OF_CELL_BLOCKS_PER_STRING;
+    }
+    /* ======= RT1/1: Test implementation */
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
         DIAG_Handler_ExpectAndReturn(
             DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MSL, DIAG_EVENT_OK, DIAG_STRING, s, DIAG_HANDLER_RETURN_OK);
@@ -120,7 +125,46 @@ void testSOA_CheckVoltages(void) {
     SOA_CheckVoltages(&pMinimumMaximumCellVoltages);
 
     /* ======= RT1/1: test output verification */
-    /* TODO */
+    /* all six expected calls per string were consumed, in order, by the mock */
+}
+
+/**
+ * @brief   Testing function SOA_CheckVoltages with an incomplete measurement
+ * @details The minimum/maximum fields are computed over the valid cells only
+ *          (MRC_CalculateCellVoltageMinMaxAverage()), so they do not describe the
+ *          string unless every cell contributed. SOA_CheckVoltages must then report
+ *          no limit verdict for that string: no DIAG_EVENT_OK, because that would
+ *          claim "within limits" for cells that were not measured, and no
+ *          DIAG_EVENT_NOT_OK, because that would claim a violation that was not
+ *          measured. Both a fully and a partially incomplete string are covered,
+ *          so the check cannot be satisfied by merely testing for a zero count.
+ */
+void testSOA_CheckVoltages_incompleteMeasurementReportsNoVerdict(void) {
+    /* ======= Assertion tests ============================================= */
+    /* ======= RT2/1: Test implementation, case 1: nothing was measured at all */
+    /* Redundancy leaves maximumCellVoltage_mV at INT16_MAX and minimumCellVoltage_mV
+     * at INT16_MIN in this case. Both would be evaluated against the limits without
+     * the validity check and raise a false over- and undervoltage diagnosis. */
+    DATA_BLOCK_MIN_MAX_s nothingMeasured = {
+        .header.uniqueId           = DATA_BLOCK_ID_MIN_MAX,
+        .maximumCellVoltage_mV     = INT16_MAX,
+        .minimumCellVoltage_mV     = INT16_MIN,
+        .validMeasuredCellVoltages = {0u},
+    };
+    /* No DIAG_Handler_Expect* is registered: any call made by the module under test
+     * is an unexpected call and fails this test. */
+    SOA_CheckVoltages(&nothingMeasured);
+    TEST_ASSERT_EQUAL_INT(0, DIAG_Handler_CallCount());
+
+    /* ======= RT2/1: Test implementation, case 2: all but one cell measured */
+    DATA_BLOCK_MIN_MAX_s oneCellMissing = {
+        .header.uniqueId           = DATA_BLOCK_ID_MIN_MAX,
+        .maximumCellVoltage_mV     = INT16_MAX,
+        .minimumCellVoltage_mV     = INT16_MIN,
+        .validMeasuredCellVoltages = {(uint16_t)(BS_NR_OF_CELL_BLOCKS_PER_STRING - 1u)},
+    };
+    SOA_CheckVoltages(&oneCellMissing);
+    TEST_ASSERT_EQUAL_INT(0, DIAG_Handler_CallCount());
 }
 
 /**
@@ -130,7 +174,8 @@ void testSOA_CheckVoltages(void) {
  *            - AT1/2: NULL_PTR for pMinimumMaximumCellTemperatures &rarr; assert
  *            - AT2/2: NULL_PTR for pCurrent &rarr; assert
  *          - Routine validation:
- *            - RT1/x: TODO
+ *            - RT1/1: complete cell temperature measurement &rarr; limit verdict per string
+ *            - RT2/1: incomplete cell temperature measurement &rarr; no limit verdict at all
  */
 void testSOA_CheckTemperatures(void) {
     /* ======= Assertion tests ============================================= */
@@ -144,7 +189,11 @@ void testSOA_CheckTemperatures(void) {
     TEST_ASSERT_FAIL_ASSERT(SOA_CheckTemperatures(&pMinimumMaximumCellVoltages, NULL_PTR));
 
     /* ======= Routine tests =============================================== */
-    /* ======= RT1/x: Test implementation */
+    /* ======= RT1/1: complete measurement of every sensor of every string */
+    for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
+        pMinimumMaximumCellVoltages.validMeasuredCellTemperatures[s] = (uint16_t)BS_NR_OF_TEMP_SENSORS_PER_STRING;
+    }
+    /* ======= RT1/1: Test implementation */
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
         i_current = pCurrent.stringCurrent_mA[s];
         BMS_GetCurrentFlowDirection_ExpectAndReturn(i_current, BMS_AT_REST);
@@ -166,5 +215,70 @@ void testSOA_CheckTemperatures(void) {
     SOA_CheckTemperatures(&pMinimumMaximumCellVoltages, &pCurrent);
 
     /* ======= RT1/1: test output verification */
-    /* TODO */
+    /* all six expected calls per string were consumed, in order, by the mock */
+}
+
+/**
+ * @brief   Testing function SOA_CheckTemperatures with an incomplete measurement
+ * @details The full sensor count for temperatures is BS_NR_OF_TEMP_SENSORS_PER_STRING,
+ *          which differs from BS_NR_OF_CELL_BLOCKS_PER_STRING used for cell voltages.
+ *          A measurement that is complete for voltages must therefore still be
+ *          treated as incomplete for temperatures unless every sensor contributed.
+ *          Neither the current flow direction lookup nor any limit verdict may be
+ *          derived from such a measurement.
+ */
+void testSOA_CheckTemperatures_incompleteMeasurementReportsNoVerdict(void) {
+    /* ======= RT2/1: Test implementation, case 1: nothing was measured at all */
+    DATA_BLOCK_MIN_MAX_s nothingMeasured = {
+        .header.uniqueId             = DATA_BLOCK_ID_MIN_MAX,
+        .maximumTemperature_ddegC    = INT16_MAX,
+        .minimumTemperature_ddegC    = INT16_MIN,
+        .validMeasuredCellTemperatures = {0u},
+    };
+    DATA_BLOCK_PACK_VALUES_s pCurrent = {.header.uniqueId = DATA_BLOCK_ID_PACK_VALUES};
+    SOA_CheckTemperatures(&nothingMeasured, &pCurrent);
+    TEST_ASSERT_EQUAL_INT(0, DIAG_Handler_CallCount());
+    TEST_ASSERT_EQUAL_INT(0, BMS_GetCurrentFlowDirection_CallCount());
+
+    /* ======= RT2/1: Test implementation, case 2: a sensor count that is complete
+     * for cell voltages but one short for temperatures */
+    DATA_BLOCK_MIN_MAX_s oneSensorMissing = {
+        .header.uniqueId             = DATA_BLOCK_ID_MIN_MAX,
+        .maximumTemperature_ddegC    = INT16_MAX,
+        .minimumTemperature_ddegC    = INT16_MIN,
+        .validMeasuredCellTemperatures = {(uint16_t)(BS_NR_OF_TEMP_SENSORS_PER_STRING - 1u)},
+    };
+    SOA_CheckTemperatures(&oneSensorMissing, &pCurrent);
+    TEST_ASSERT_EQUAL_INT(0, DIAG_Handler_CallCount());
+    TEST_ASSERT_EQUAL_INT(0, BMS_GetCurrentFlowDirection_CallCount());
+}
+
+/**
+ * @brief   Testing function SOA_CheckCurrent with an invalid current measurement
+ * @details An invalid string or pack current measurement must not produce an
+ *          overcurrent verdict in either direction, because no current was
+ *          measured. The invalidity of the measurement is reported by the module
+ *          that owns the measurement: the redundancy module sets
+ *          invalidStringCurrent and reports #DIAG_ID_CURRENT_MEASUREMENT_ERROR
+ *          (redundancy.c), the AFE driver reports
+ *          #DIAG_ID_AFE_CELL_VOLTAGE_MEAS_ERROR for the cell voltages. This test
+ *          pins that the skip in SOA_CheckCurrent() is total and one-sided, so it
+ *          cannot drift into either silently reporting OK or silently reporting
+ *          NOT_OK for a quantity that was not measured.
+ */
+void testSOA_CheckCurrent_invalidMeasurementReportsNoVerdict(void) {
+    DATA_BLOCK_PACK_VALUES_s invalidStringAndPackCurrent = {
+        .header.uniqueId          = DATA_BLOCK_ID_PACK_VALUES,
+        .stringCurrent_mA         = {INT32_MAX},
+        .invalidStringCurrent     = {1u},
+        .packCurrent_mA           = INT32_MAX,
+        .invalidPackCurrent       = 1u,
+    };
+    /* No expectation is registered on any mock: the module under test must not
+     * call DIAG_Handler nor any soa_cfg helper for an unmeasured current. */
+    SOA_CheckCurrent(&invalidStringAndPackCurrent);
+    TEST_ASSERT_EQUAL_INT(0, DIAG_Handler_CallCount());
+    TEST_ASSERT_EQUAL_INT(0, SOA_IsStringCurrentLimitViolated_CallCount());
+    TEST_ASSERT_EQUAL_INT(0, SOA_IsPackCurrentLimitViolated_CallCount());
+    TEST_ASSERT_EQUAL_INT(0, SOA_IsCurrentOnOpenString_CallCount());
 }

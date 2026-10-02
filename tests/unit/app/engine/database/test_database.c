@@ -67,6 +67,8 @@
 #include "test_assert_helper.h"
 
 #include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 
 /*========== Unit Testing Framework Directives ==============================*/
 TEST_INCLUDE_PATH("../../src/app/driver/config")
@@ -402,6 +404,75 @@ void testDATA_IterateOverDatabaseEntries(void) {
     TEST_ASSERT_FAIL_ASSERT(TEST_DATA_IterateOverDatabaseEntries(invalidMessages));
     /* ======= RT2/2: test output verification */
     /* nothing to do */
+}
+
+/**
+ * @brief   Testing that the copy length taken from the database header is bounded
+ * @details DATA_IterateOverDatabaseEntries() takes the copy length from the
+ *          registered database header entry of the struct that the caller's
+ *          header.uniqueId selects and DATA_CopyData() memcpy()s exactly that many
+ *          bytes in both directions. This test pins that bound from the outside:
+ *          the bytes of the caller's object beyond the registered length of the
+ *          selected entry are not touched, and exactly the registered length is
+ *          written.
+ *
+ *          What this does *not* pin, and why, is the other half of the risk: the
+ *          module has no knowledge of how large the caller's object actually is.
+ *          #DATA_BASE_s carries a dataLength but the access API
+ *          (#DATA_READ_DATA() / #DATA_WRITE_DATA() in database.h) passes bare
+ *          void pointers, so a call site whose struct type does not match the
+ *          struct type registered for the uniqueId it declares makes the module
+ *          copy more bytes than the caller's object holds, silently. Closing that
+ *          needs the caller's object size to reach DATA_CopyData(), which is an
+ *          API change across every DATA_READ_DATA()/DATA_WRITE_DATA() call site
+ *          (76 writes and 72 reads at the time of writing). It is deliberately
+ *          not attempted here; see the defect report. This test therefore pins
+ *          only the half the module can actually guarantee.
+ */
+void testDATA_IterateOverDatabaseEntries_copiesExactlyTheRegisteredLength(void) {
+    /* Populate data_uniqueIdToDatabaseEntry[] from the shipped registration table. */
+    ftsk_allQueuesCreated = 1;
+    (void)DATA_Initialize();
+
+    /* The self-test entry is the smallest registered struct, so a canary placed
+     * directly behind the caller's object is guaranteed to be inside the address
+     * range the copy is allowed to touch and outside the range it must not. The
+     * caller's object is declared as the very type the self-test entry is
+     * registered with, so the registered length and the object size agree by
+     * construction rather than by coincidence of struct layout. */
+    const uint8_t canaryLength  = 32u;
+    const uint8_t canaryPattern = 0xA5u;
+    uint8_t backingStore[sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s) + canaryLength];
+    DATA_BLOCK_DUMMY_FOR_SELF_TEST_s *pPassedEntry =
+        (DATA_BLOCK_DUMMY_FOR_SELF_TEST_s *)(void *)backingStore;
+    memset(backingStore, (int)canaryPattern, sizeof(backingStore));
+    pPassedEntry->header.uniqueId = DATA_BLOCK_ID_DUMMY_FOR_SELF_TEST;
+
+    DATA_QUEUE_MESSAGE_s messages[4u] = {
+        {
+                                  .accessType     = DATA_READ_ACCESS,
+                                  .pDatabaseEntry = (void *)pPassedEntry,
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+        {
+                                  .pDatabaseEntry = NULL_PTR,
+        },
+    };
+    /* ======= RT1/1: call function under test */
+    TEST_DATA_IterateOverDatabaseEntries(messages);
+
+    /* ======= RT1/1: test output verification */
+    /* the registered length of the self-test entry was copied ... */
+    TEST_ASSERT_EQUAL(DATA_BLOCK_ID_DUMMY_FOR_SELF_TEST, pPassedEntry->header.uniqueId);
+    /* ... and nothing beyond it was */
+    for (uint8_t i = 0u; i < canaryLength; i++) {
+        TEST_ASSERT_EQUAL_UINT8(canaryPattern, backingStore[sizeof(DATA_BLOCK_DUMMY_FOR_SELF_TEST_s) + i]);
+    }
 }
 
 /**

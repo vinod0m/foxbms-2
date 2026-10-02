@@ -83,6 +83,24 @@ extern void SOA_CheckVoltages(DATA_BLOCK_MIN_MAX_s *pMinimumMaximumCellVoltages)
     DIAG_RETURNTYPE_e retvalUndervoltageMSL = DIAG_HANDLER_RETURN_ERR_OCCURRED;
 
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
+        /* The minimum/maximum cell voltage fields hold the extreme value over the *valid* cells of
+         * the string only (see MRC_CalculateCellVoltageMinMaxAverage()). They therefore describe the
+         * whole string only if every cell of the string contributed. If not, they are either a subset
+         * of the string or - if nothing was measured at all - the sentinels INT16_MAX / INT16_MIN,
+         * neither of which is a measurement. No limit verdict can be derived from them, so no verdict
+         * is reported for that string: DIAG_EVENT_OK would claim "within limits" for cells that were
+         * not measured and DIAG_EVENT_NOT_OK would claim a limit violation that was not measured. The
+         * untrustworthy cell voltage measurement itself is reported by the AFE driver on
+         * #DIAG_ID_AFE_CELL_VOLTAGE_MEAS_ERROR (severity #DIAG_WARNING). Withholding the verdict is
+         * the same convention SOA_CheckCurrent() applies to an invalid current measurement, and it can
+         * only ever withhold a verdict, never raise one: DIAG_EVENT_OK and DIAG_EVENT_RESET are the
+         * only two events that clear a diagnosis channel (see DIAG_Handler()), and neither is emitted
+         * here for a measurement that does not exist. */
+        if (pMinimumMaximumCellVoltages->validMeasuredCellVoltages[s] !=
+            (uint32_t)BS_NR_OF_CELL_BLOCKS_PER_STRING) {
+            continue;
+        }
+
         int16_t voltageMax_mV = pMinimumMaximumCellVoltages->maximumCellVoltage_mV[s];
         int16_t voltageMin_mV = pMinimumMaximumCellVoltages->minimumCellVoltage_mV[s];
 
@@ -152,6 +170,20 @@ extern void SOA_CheckTemperatures(
     FAS_ASSERT(pCurrent != NULL_PTR);
     /* Iterate over each string and check temperatures */
     for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
+        /* Same reasoning as in SOA_CheckVoltages(): the minimum/maximum cell temperature fields hold
+         * the extreme value over the *valid* sensors of the string only (see
+         * MRC_CalculateCellTemperatureMinMaxAverage()) and describe the whole string only if every
+         * sensor of the string contributed. Note that the full count differs from the cell voltage
+         * case: temperatures are covered by BS_NR_OF_TEMP_SENSORS_PER_STRING sensors, not by
+         * BS_NR_OF_CELL_BLOCKS_PER_STRING cell blocks. If the measurement is incomplete, no verdict
+         * is reported for that string; the untrustworthy cell temperature measurement itself is
+         * reported by the AFE driver on #DIAG_ID_AFE_CELL_TEMPERATURE_MEAS_ERROR (severity
+         * #DIAG_WARNING). */
+        if (pMinimumMaximumCellTemperatures->validMeasuredCellTemperatures[s] !=
+            (uint32_t)BS_NR_OF_TEMP_SENSORS_PER_STRING) {
+            continue;
+        }
+
         int32_t i_current            = pCurrent->stringCurrent_mA[s];
         int16_t temperatureMin_ddegC = pMinimumMaximumCellTemperatures->minimumTemperature_ddegC[s];
         int16_t temperatureMax_ddegC = pMinimumMaximumCellTemperatures->maximumTemperature_ddegC[s];
