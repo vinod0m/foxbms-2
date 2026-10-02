@@ -1,0 +1,74 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test
+
+Ceedling set up completed in 114 milliseconds
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_can_helper.c for user & system #includes...
+Parsing test_can_helper.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_can_helper.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+
+👟 Test Runners
+---------------
+Generating runner for test_can_helper.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_can_helper.c...
+Compiling test_can_helper::can_helper.c...
+Compiling test_can_helper::unity.c...
+Compiling test_can_helper::CException.c...
+Compiling test_can_helper::struct_helper.c...
+Compiling test_can_helper::test_fake_functions.c...
+Compiling test_can_helper::sil_hal_model.c...
+Compiling test_can_helper::test_can_helper_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/bootloader/driver/can/test_can_helper.c:145:44: error: use of undeclared identifier 'NULL_PTR'
+  145 |         CAN_TxSetMessageDataWithSignalData(NULL_PTR, bitStart, bitLength, canSignal, CAN_LITTLE_ENDIAN));
+      |                                            ^
+../../tests/unit/bootloader/driver/can/test_can_helper.c:203:78: error: use of undeclared identifier 'NULL_PTR'
+  203 |     TEST_ASSERT_FAIL_ASSERT(CAN_TxSetCanDataWithMessageData(testMessageData, NULL_PTR, CAN_LITTLE_ENDIAN));
+      |                                                                              ^
+../../tests/unit/bootloader/driver/can/test_can_helper.c:248:81: error: use of undeclared identifier 'NULL_PTR'
+  248 |     TEST_ASSERT_FAIL_ASSERT(CAN_RxGetSignalDataFromMessageData(message, 1u, 1u, NULL_PTR, endianness));
+      |                                                                                 ^
+../../tests/unit/bootloader/driver/can/test_can_helper.c:284:90: error: use of undeclared identifier 'NULL_PTR'
+  284 |         CAN_RxGetSignalDataFromMessageData(testMessageData, testBitStart, testBitLength, NULL_PTR, CAN_LITTLE_ENDIAN));
+      |                                                                                          ^
+../../tests/unit/bootloader/driver/can/test_can_helper.c:351:61: error: use of undeclared identifier 'NULL_PTR'
+  351 |     TEST_ASSERT_FAIL_ASSERT(CAN_RxGetMessageDataFromCanData(NULL_PTR, testCanData, CAN_LITTLE_ENDIAN));
+      |                                                             ^
+../../tests/unit/bootloader/driver/can/test_can_helper.c:353:79: error: use of undeclared identifier 'NULL_PTR'
+  353 |     TEST_ASSERT_FAIL_ASSERT(CAN_RxGetMessageDataFromCanData(&testMessageData, NULL_PTR, CAN_LITTLE_ENDIAN));
+      |                                                                               ^
+6 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_can_helper" -I"../../src/bootloader/driver/can" -I"../../src/bootloader/driver/config" -I"../../src/bootloader/engine/boot" -I"../../tests/unit/support" -I"sil_model" -I"include" -I"sil_hal" -I"../../src/bootloader/main/include" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/bootloader/driver/can/test_can_helper.c" -o "./test/out/test_can_helper/test_can_helper.o" -MMD -MF "./test/dependencies/test_can_helper/test_can_helper.d"
+🌱 Ceedling could not complete operations because of errors

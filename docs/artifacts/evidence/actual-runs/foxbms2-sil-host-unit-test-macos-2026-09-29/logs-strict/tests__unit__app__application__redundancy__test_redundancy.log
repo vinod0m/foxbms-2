@@ -1,0 +1,98 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 349 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_redundancy.c for user & system #includes...
+Parsing test_redundancy.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_redundancy.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_redundancy::bms.h...
+Generating mock for test_redundancy::database.h...
+Generating mock for test_redundancy::database_helper.h...
+Generating mock for test_redundancy::diag.h...
+Generating mock for test_redundancy::plausibility.h...
+Generating mock for test_redundancy::os.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_redundancy.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_redundancy.c...
+Compiling test_redundancy::redundancy.c...
+Compiling test_redundancy::foxmath.c...
+Compiling test_redundancy::Mockbms.c...
+Compiling test_redundancy::Mockdatabase_helper.c...
+Compiling test_redundancy::Mockdiag.c...
+Compiling test_redundancy::Mockdatabase.c...
+Compiling test_redundancy::Mockos.c...
+Compiling test_redundancy::Mockplausibility.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/application/redundancy/test_redundancy.c:236:92: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'DIAG_RETURNTYPE_e' [-Werror,-Wenum-conversion]
+  235 |     DIAG_Handler_ExpectAndReturn(
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  236 |         DIAG_ID_BASE_CELL_VOLTAGE_MEASUREMENT_TIMEOUT, DIAG_EVENT_NOT_OK, DIAG_SYSTEM, 0u, STD_OK);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_redundancy/Mockdiag.h:43:154: note: expanded from macro 'DIAG_Handler_ExpectAndReturn'
+   43 | #define DIAG_Handler_ExpectAndReturn(diagId, event, impact, data, cmock_retval) DIAG_Handler_CMockExpectAndReturn(__LINE__, diagId, event, impact, data, cmock_retval)
+      |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                        ^~~~~~~~~~~~
+../../tests/unit/app/application/redundancy/test_redundancy.c:240:95: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'DIAG_RETURNTYPE_e' [-Werror,-Wenum-conversion]
+  239 |     DIAG_Handler_ExpectAndReturn(
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  240 |         DIAG_ID_REDUNDANCY0_CELL_VOLTAGE_MEASUREMENT_TIMEOUT, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_redundancy/Mockdiag.h:43:154: note: expanded from macro 'DIAG_Handler_ExpectAndReturn'
+   43 | #define DIAG_Handler_ExpectAndReturn(diagId, event, impact, data, cmock_retval) DIAG_Handler_CMockExpectAndReturn(__LINE__, diagId, event, impact, data, cmock_retval)
+      |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                        ^~~~~~~~~~~~
+../../tests/unit/app/application/redundancy/test_redundancy.c:246:96: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'DIAG_RETURNTYPE_e' [-Werror,-Wenum-conversion]
+  245 |     DIAG_Handler_ExpectAndReturn(
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  246 |         DIAG_ID_BASE_CELL_TEMPERATURE_MEASUREMENT_TIMEOUT, DIAG_EVENT_NOT_OK, DIAG_SYSTEM, 0u, STD_OK);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_redundancy/Mockdiag.h:43:154: note: expanded from macro 'DIAG_Handler_ExpectAndReturn'
+   43 | #define DIAG_Handler_ExpectAndReturn(diagId, event, impact, data, cmock_retval) DIAG_Handler_CMockExpectAndReturn(__LINE__, diagId, event, impact, data, cmock_retval)
+      |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                        ^~~~~~~~~~~~
+../../tests/unit/app/application/redundancy/test_redundancy.c:250:99: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'DIAG_RETURNTYPE_e' [-Werror,-Wenum-conversion]
+  249 |     DIAG_Handler_ExpectAndReturn(
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  250 |         DIAG_ID_REDUNDANCY0_CELL_TEMPERATURE_MEASUREMENT_TIMEOUT, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, STD_OK);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_redundancy/Mockdiag.h:43:154: note: expanded from macro 'DIAG_Handler_ExpectAndReturn'
+   43 | #define DIAG_Handler_ExpectAndReturn(diagId, event, impact, data, cmock_retval) DIAG_Handler_CMockExpectAndReturn(__LINE__, diagId, event, impact, data, cmock_retval)
+      |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                        ^~~~~~~~~~~~
+4 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_redundancy" -I"../../src/app/application/bms" -I"../../src/app/application/plausibility" -I"../../src/app/application/redundancy" -I"../../src/app/driver/config" -I"../../src/app/driver/contactor" -I"../../src/app/driver/foxmath" -I"../../src/app/driver/sps" -I"../../src/app/engine/database" -I"../../src/app/engine/diag" -I"../../src/app/task/config" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/application/redundancy/test_redundancy.c" -o "./test/out/test_redundancy/test_redundancy.o" -MMD -MF "./test/dependencies/test_redundancy/test_redundancy.d"
+🌱 Ceedling could not complete operations because of errors

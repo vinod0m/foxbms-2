@@ -37,7 +37,14 @@ RECORDS = [
     ART / "corpus/synthetic_reference/verification/svs-verification-summary.json",
     ART / "corpus/synthetic_reference/management/verification-deficiency-register.json",
 ]
-REGISTRY = (ART / "corpus/synthetic_reference/traceability/link-registry"
+# Canonical link registry. The synthetic profile's registries were consolidated
+# into docs/artifacts/traceability/link-registry/synthetic_reference/, which is
+# the only place corpus.py reads links from; this file and its sibling
+# links-concept-lifecycle.json used to live under
+# corpus/synthetic_reference/traceability/link-registry/synthetic_reference/,
+# which is no longer a registry and no longer exists. Pointing at the old path
+# made this script read a file that is not there.
+REGISTRY = (ART / "traceability/link-registry"
                  / "synthetic_reference/links-verification-planning.json")
 
 TESTFN = re.compile(r"^\s*(?:static\s+)?void\s+(test\w*)\s*\(\s*void\s*\)", re.M)

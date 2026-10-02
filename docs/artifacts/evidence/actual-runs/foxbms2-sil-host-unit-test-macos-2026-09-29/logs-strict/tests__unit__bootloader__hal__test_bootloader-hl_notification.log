@@ -1,0 +1,87 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test
+
+Ceedling set up completed in 121 milliseconds
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_bootloader-hl_notification.c for user & system #includes...
+Parsing test_bootloader-hl_notification.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_bootloader-hl_notification.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_bootloader-hl_notification::infinite-loop-helper.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_bootloader-hl_notification.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_bootloader-hl_notification.c...
+Compiling test_bootloader-hl_notification::bootloader-hl_notification.c...
+Compiling test_bootloader-hl_notification::unity.c...
+Compiling test_bootloader-hl_notification::cmock.c...
+Compiling test_bootloader-hl_notification::CException.c...
+Compiling test_bootloader-hl_notification::struct_helper.c...
+Compiling test_bootloader-hl_notification::test_bootloader-hl_notification_runner.c...
+Compiling test_bootloader-hl_notification::Mockinfinite-loop-helper.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:86:27: error: use of undeclared identifier 'NULL_PTR'
+   86 |     esmGroup1Notification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                           ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:90:27: error: use of undeclared identifier 'NULL_PTR'
+   90 |     esmGroup2Notification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                           ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:95:27: error: use of undeclared identifier 'NULL_PTR'
+   95 |     esmGroup3Notification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                           ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:99:27: error: use of undeclared identifier 'NULL_PTR'
+   99 |     esmGroup3Notification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                           ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:107:21: error: use of undeclared identifier 'NULL_PTR'
+  107 |     rtiNotification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                     ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:111:26: error: use of undeclared identifier 'NULL_PTR'
+  111 |     canErrorNotification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                          ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:115:33: error: use of undeclared identifier 'NULL_PTR'
+  115 |     canStatusChangeNotification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                                 ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:119:21: error: use of undeclared identifier 'NULL_PTR'
+  119 |     gioNotification(NULL_PTR, 0u); /* arguments do not matter as unused */
+      |                     ^
+../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c:123:28: error: too few arguments to function call, single argument 'msg' was not specified
+  123 |     epcCAMFullNotification(); /* arguments do not matter as unused */
+      |     ~~~~~~~~~~~~~~~~~~~~~~ ^
+sil_hal/HL_epc.h:19:13: note: 'epcCAMFullNotification' declared here
+   19 | extern void epcCAMFullNotification(uint32_t msg);
+      |             ^                      ~~~~~~~~~~~~
+9 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_bootloader-hl_notification" -I"../../tests/unit/support" -I"sil_model" -I"include" -I"sil_hal" -I"../../src/bootloader/main/include" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/bootloader/hal/test_bootloader-hl_notification.c" -o "./test/out/test_bootloader-hl_notification/test_bootloader-hl_notification.o" -MMD -MF "./test/dependencies/test_bootloader-hl_notification/test_bootloader-hl_notification.d"
+🌱 Ceedling could not complete operations because of errors

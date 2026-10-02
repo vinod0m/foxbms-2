@@ -1,0 +1,313 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 434 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_uart_sci_notification.c for user & system #includes...
+Parsing test_uart_sci_notification.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_uart_sci_notification.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_uart_sci_notification::HL_sys_dma.h...
+Generating mock for test_uart_sci_notification::mpu_prototypes.h...
+Generating mock for test_uart_sci_notification::os.h...
+Generating mock for test_uart_sci_notification::HL_reg_sci.h...
+Generating mock for test_uart_sci_notification::ftask.h...
+Generating mock for test_uart_sci_notification::portmacro.h...
+WARNING: No function prototypes found by CMock in HL_reg_sci
+
+👟 Test Runners
+---------------
+Generating runner for test_uart_sci_notification.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_uart_sci_notification.c...
+Compiling test_uart_sci_notification::uart.c...
+Compiling test_uart_sci_notification::MockHL_sys_dma.c...
+Compiling test_uart_sci_notification::Mockftask.c...
+Compiling test_uart_sci_notification::MockHL_reg_sci.c...
+Compiling test_uart_sci_notification::Mockmpu_prototypes.c...
+Compiling test_uart_sci_notification::Mockportmacro.c...
+Compiling test_uart_sci_notification::Mockos.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:279:14: error: expected ')'
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:44: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:279:14: note: to match this '('
+sil_hal/HL_reg_sci.h:100:31: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:280:14: error: expected ')'
+  280 |     uint32_t DADD;      /*!< destination address           */
+      |              ^
+sil_hal/HL_reg_sci.h:105:44: note: expanded from macro 'DADD'
+  105 | #define DADD                  ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:280:14: note: to match this '('
+sil_hal/HL_reg_sci.h:105:31: note: expanded from macro 'DADD'
+  105 | #define DADD                  ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:280:14: error: duplicate member 'sciField_t'
+  280 |     uint32_t DADD;      /*!< destination address           */
+      |              ^
+sil_hal/HL_reg_sci.h:105:33: note: expanded from macro 'DADD'
+  105 | #define DADD                  ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:281:14: error: expected ')'
+  281 |     uint32_t CHCTRL;    /*!< channel chain control         */
+      |              ^
+sil_hal/HL_reg_sci.h:95:44: note: expanded from macro 'CHCTRL'
+   95 | #define CHCTRL                ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:281:14: note: to match this '('
+sil_hal/HL_reg_sci.h:95:31: note: expanded from macro 'CHCTRL'
+   95 | #define CHCTRL                ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:281:14: error: duplicate member 'sciField_t'
+  281 |     uint32_t CHCTRL;    /*!< channel chain control         */
+      |              ^
+sil_hal/HL_reg_sci.h:95:33: note: expanded from macro 'CHCTRL'
+   95 | #define CHCTRL                ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:282:14: error: expected ')'
+  282 |     uint32_t FRCNT;     /*!< frame count                   */
+      |              ^
+sil_hal/HL_reg_sci.h:115:44: note: expanded from macro 'FRCNT'
+  115 | #define FRCNT                 ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:282:14: note: to match this '('
+sil_hal/HL_reg_sci.h:115:31: note: expanded from macro 'FRCNT'
+  115 | #define FRCNT                 ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:282:14: error: duplicate member 'sciField_t'
+  282 |     uint32_t FRCNT;     /*!< frame count                   */
+      |              ^
+sil_hal/HL_reg_sci.h:115:33: note: expanded from macro 'FRCNT'
+  115 | #define FRCNT                 ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:283:14: error: expected ')'
+  283 |     uint32_t ELCNT;     /*!< element count                 */
+      |              ^
+sil_hal/HL_reg_sci.h:110:44: note: expanded from macro 'ELCNT'
+  110 | #define ELCNT                 ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:283:14: note: to match this '('
+sil_hal/HL_reg_sci.h:110:31: note: expanded from macro 'ELCNT'
+  110 | #define ELCNT                 ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:283:14: error: duplicate member 'sciField_t'
+  283 |     uint32_t ELCNT;     /*!< element count                 */
+      |              ^
+sil_hal/HL_reg_sci.h:110:33: note: expanded from macro 'ELCNT'
+  110 | #define ELCNT                 ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:284:14: error: expected ')'
+  284 |     uint32_t ELDOFFSET; /*!< element destination offset    */
+      |              ^
+sil_hal/HL_reg_sci.h:150:44: note: expanded from macro 'ELDOFFSET'
+  150 | #define ELDOFFSET             ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:284:14: note: to match this '('
+sil_hal/HL_reg_sci.h:150:31: note: expanded from macro 'ELDOFFSET'
+  150 | #define ELDOFFSET             ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:284:14: error: duplicate member 'sciField_t'
+  284 |     uint32_t ELDOFFSET; /*!< element destination offset    */
+      |              ^
+sil_hal/HL_reg_sci.h:150:33: note: expanded from macro 'ELDOFFSET'
+  150 | #define ELDOFFSET             ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:285:14: error: expected ')'
+  285 |     uint32_t ELSOFFSET; /*!< element source offset         */
+      |              ^
+sil_hal/HL_reg_sci.h:145:44: note: expanded from macro 'ELSOFFSET'
+  145 | #define ELSOFFSET             ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:285:14: note: to match this '('
+sil_hal/HL_reg_sci.h:145:31: note: expanded from macro 'ELSOFFSET'
+  145 | #define ELSOFFSET             ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:285:14: error: duplicate member 'sciField_t'
+  285 |     uint32_t ELSOFFSET; /*!< element source offset         */
+      |              ^
+sil_hal/HL_reg_sci.h:145:33: note: expanded from macro 'ELSOFFSET'
+  145 | #define ELSOFFSET             ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:286:14: error: expected ')'
+  286 |     uint32_t FRDOFFSET; /*!< frame destination offset      */
+      |              ^
+sil_hal/HL_reg_sci.h:160:44: note: expanded from macro 'FRDOFFSET'
+  160 | #define FRDOFFSET             ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:286:14: note: to match this '('
+sil_hal/HL_reg_sci.h:160:31: note: expanded from macro 'FRDOFFSET'
+  160 | #define FRDOFFSET             ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:286:14: error: duplicate member 'sciField_t'
+  286 |     uint32_t FRDOFFSET; /*!< frame destination offset      */
+      |              ^
+sil_hal/HL_reg_sci.h:160:33: note: expanded from macro 'FRDOFFSET'
+  160 | #define FRDOFFSET             ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:287:14: error: expected ')'
+  287 |     uint32_t FRSOFFSET; /*!< frame source offset           */
+      |              ^
+sil_hal/HL_reg_sci.h:155:44: note: expanded from macro 'FRSOFFSET'
+  155 | #define FRSOFFSET             ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:287:14: note: to match this '('
+sil_hal/HL_reg_sci.h:155:31: note: expanded from macro 'FRSOFFSET'
+  155 | #define FRSOFFSET             ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:287:14: error: duplicate member 'sciField_t'
+  287 |     uint32_t FRSOFFSET; /*!< frame source offset           */
+      |              ^
+sil_hal/HL_reg_sci.h:155:33: note: expanded from macro 'FRSOFFSET'
+  155 | #define FRSOFFSET             ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:288:14: error: expected ')'
+  288 |     uint32_t PORTASGN;  /*!< port assignment               */
+      |              ^
+sil_hal/HL_reg_sci.h:90:44: note: expanded from macro 'PORTASGN'
+   90 | #define PORTASGN              ((sciField_t)0U)
+      |                                            ^
+sil_hal/HL_sys_dma.h:288:14: note: to match this '('
+sil_hal/HL_reg_sci.h:90:31: note: expanded from macro 'PORTASGN'
+   90 | #define PORTASGN              ((sciField_t)0U)
+      |                               ^
+In file included from ../../tests/unit/app/driver/uart/test_uart_sci_notification.c:59:
+In file included from ./mocks/test_uart_sci_notification/MockHL_sys_dma.h:17:
+sil_hal/HL_sys_dma.h:288:14: error: duplicate member 'sciField_t'
+  288 |     uint32_t PORTASGN;  /*!< port assignment               */
+      |              ^
+sil_hal/HL_reg_sci.h:90:33: note: expanded from macro 'PORTASGN'
+   90 | #define PORTASGN              ((sciField_t)0U)
+      |                                 ^
+sil_hal/HL_sys_dma.h:279:14: note: previous declaration is here
+  279 |     uint32_t SADD;      /*!< source address                */
+      |              ^
+sil_hal/HL_reg_sci.h:100:33: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                                 ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_uart_sci_notification" -I"../../src/app/driver/uart" -I"../../src/app/driver/config" -I"../../src/app/driver/dma" -I"../../src/app/driver/rtc" -I"../../src/app/driver/spi" -I"../../src/app/task/config" -I"../../src/app/task/ftask" -I"../../src/os/freertos/freertos-plus/freertos-plus-tcp/source/include" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"COMPILE_FOR_UNIT_TEST=1" -D"FOXBMS_UART_SUPPORT=1" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/driver/uart/test_uart_sci_notification.c" -o "./test/out/test_uart_sci_notification/test_uart_sci_notification.o" -MMD -MF "./test/dependencies/test_uart_sci_notification/test_uart_sci_notification.d"
+🌱 Ceedling could not complete operations because of errors

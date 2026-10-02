@@ -1,0 +1,120 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test
+
+Ceedling set up completed in 116 milliseconds
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_crc_semi_auto_crc_calculation.c for user & system #includes...
+Parsing test_crc_semi_auto_crc_calculation.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_crc_semi_auto_crc_calculation.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_crc_semi_auto_crc_calculation::HL_crc.h...
+Generating mock for test_crc_semi_auto_crc_calculation::HL_sys_core.h...
+Generating mock for test_crc_semi_auto_crc_calculation::HL_sys_dma.h...
+Generating mock for test_crc_semi_auto_crc_calculation::HL_rti.h...
+Generating mock for test_crc_semi_auto_crc_calculation::crc64_calc.h...
+Generating mock for test_crc_semi_auto_crc_calculation::rti.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_crc_semi_auto_crc_calculation.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_crc_semi_auto_crc_calculation.c...
+Compiling test_crc_semi_auto_crc_calculation::crc.c...
+Compiling test_crc_semi_auto_crc_calculation::Mockrti.c...
+Compiling test_crc_semi_auto_crc_calculation::MockHL_rti.c...
+Compiling test_crc_semi_auto_crc_calculation::MockHL_sys_dma.c...
+Compiling test_crc_semi_auto_crc_calculation::Mockcrc64_calc.c...
+Compiling test_crc_semi_auto_crc_calculation::MockHL_sys_core.c...
+Compiling test_crc_semi_auto_crc_calculation::MockHL_crc.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../src/bootloader/driver/crc/crc.c:179:27: error: use of undeclared identifier 'crcREG1'
+  179 |     crcEnableNotification(crcREG1, CRC_CH1_CC);
+      |                           ^
+../../src/bootloader/driver/crc/crc.c:186:38: error: use of undeclared identifier 'crcREG1'
+  186 |     g_dmaCTRLPKT.DADD = (uint32_t)(&(crcREG1->PSA_SIGREGL1));
+      |                                      ^
+../../src/bootloader/driver/crc/crc.c:190:27: error: use of undeclared identifier 'ACCESS_64_BIT'
+  190 |     g_dmaCTRLPKT.RDSIZE = ACCESS_64_BIT;
+      |                           ^
+../../src/bootloader/driver/crc/crc.c:192:27: error: use of undeclared identifier 'ACCESS_64_BIT'
+  192 |     g_dmaCTRLPKT.WRSIZE = ACCESS_64_BIT;
+      |                           ^
+../../src/bootloader/driver/crc/crc.c:219:5: error: use of undeclared identifier 'crcConfig_t'
+  219 |     crcConfig_t sCrcParams;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:220:5: error: use of undeclared identifier 'sCrcParams'
+  220 |     sCrcParams.crc_channel = CRC_CH1;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:221:5: error: use of undeclared identifier 'sCrcParams'
+  221 |     sCrcParams.mode        = CRC_SEMI_CPU;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:222:5: error: use of undeclared identifier 'sCrcParams'
+  222 |     sCrcParams.pcount      = g_dmaCTRLPKT.ELCNT;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:223:5: error: use of undeclared identifier 'sCrcParams'
+  223 |     sCrcParams.scount      = g_dmaCTRLPKT.FRCNT;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:224:5: error: use of undeclared identifier 'sCrcParams'
+  224 |     sCrcParams.wdg_preload = 0u;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:228:5: error: use of undeclared identifier 'sCrcParams'
+  228 |     sCrcParams.block_preload = (g_dmaCTRLPKT.FRCNT * CRC_TIME_RTI_COMPARE_3_us * CRC_HCLK_FREQ_MHz) /
+      |     ^
+../../src/bootloader/driver/crc/crc.c:232:21: error: use of undeclared identifier 'crcREG1'
+  232 |     crcChannelReset(crcREG1, CRC_CH1);
+      |                     ^
+../../src/bootloader/driver/crc/crc.c:233:18: error: use of undeclared identifier 'crcREG1'
+  233 |     crcSetConfig(crcREG1, &sCrcParams);
+      |                  ^
+../../src/bootloader/driver/crc/crc.c:233:28: error: use of undeclared identifier 'sCrcParams'
+  233 |     crcSetConfig(crcREG1, &sCrcParams);
+      |                            ^
+../../src/bootloader/driver/crc/crc.c:236:5: error: use of undeclared identifier 'crcREG1'
+  236 |     crcREG1->CTRL2 &= CRC_DATA_CAPTURE_MODE_CLEAR_MASK;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:240:5: error: use of undeclared identifier 'crcREG1'
+  240 |     crcREG1->PSA_SIGREGH1 = (uint32_t)(root);
+      |     ^
+../../src/bootloader/driver/crc/crc.c:244:5: error: use of undeclared identifier 'crcREG1'
+  244 |     crcREG1->PSA_SIGREGL1 = (uint32_t)(root >> CRC_NUM_OF_BITS_PSA_SIGREGH1);
+      |     ^
+../../src/bootloader/driver/crc/crc.c:246:5: error: use of undeclared identifier 'crcREG1'
+  246 |     crcREG1->CTRL2 |= CRC_SEMI_CPU_MODE_SET_MASK;
+      |     ^
+../../src/bootloader/driver/crc/crc.c:252:33: error: use of undeclared identifier 'FTC'
+  252 |     dmaEnableInterrupt(DMA_CH1, FTC, DMA_INTA);
+      |                                 ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_crc_semi_auto_crc_calculation" -I"../../src/bootloader/driver/crc" -I"../../src/bootloader/driver/crc/vendor" -I"../../src/bootloader/driver/rti" -I"../../tests/unit/support" -I"sil_model" -I"include" -I"sil_hal" -I"../../src/bootloader/main/include" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../src/bootloader/driver/crc/crc.c" -o "./test/out/test_crc_semi_auto_crc_calculation/crc.o" -MMD -MF "./test/dependencies/test_crc_semi_auto_crc_calculation/crc.d"
+🌱 Ceedling could not complete operations because of errors

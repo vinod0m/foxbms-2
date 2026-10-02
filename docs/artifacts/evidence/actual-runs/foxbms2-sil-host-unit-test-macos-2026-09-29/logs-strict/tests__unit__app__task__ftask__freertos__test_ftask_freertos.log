@@ -1,0 +1,83 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 455 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_ftask_freertos.c for user & system #includes...
+Parsing test_ftask_freertos.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_ftask_freertos.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_ftask_freertos::mpu_prototypes.h...
+Generating mock for test_ftask_freertos::os.h...
+Generating mock for test_ftask_freertos::ftask_cfg.h...
+Generating mock for test_ftask_freertos::infinite-loop-helper.h...
+Generating mock for test_ftask_freertos::sys_mon.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_ftask_freertos.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_ftask_freertos.c...
+Compiling test_ftask_freertos::ftask_freertos.c...
+Compiling test_ftask_freertos::ftask.c...
+Compiling test_ftask_freertos::Mocksys_mon.c...
+Compiling test_ftask_freertos::Mockmpu_prototypes.c...
+Compiling test_ftask_freertos::Mockinfinite-loop-helper.c...
+Compiling test_ftask_freertos::Mockftask_cfg.c...
+Compiling test_ftask_freertos::Mockos.c...
+Compiling test_ftask_freertos::test_ftask_freertos_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/task/ftask/freertos/test_ftask_freertos.c:296:90: error: missing field 'xDummy2' initializer [-Werror,-Wmissing-field-initializers]
+  296 |     static StaticTask_t ftsk_taskEngineFail                                       = {NULL};
+      |                                                                                          ^
+../../tests/unit/app/task/ftask/freertos/test_ftask_freertos.c:311:90: error: missing field 'xDummy2' initializer [-Werror,-Wmissing-field-initializers]
+  311 |     StaticTask_t ftsk_taskCyclic1msFail                                           = {NULL};
+      |                                                                                          ^
+../../tests/unit/app/task/ftask/freertos/test_ftask_freertos.c:325:92: error: missing field 'xDummy2' initializer [-Werror,-Wmissing-field-initializers]
+  325 |     StaticTask_t ftsk_taskCyclic10msFail                                            = {NULL};
+      |                                                                                            ^
+../../tests/unit/app/task/ftask/freertos/test_ftask_freertos.c:339:94: error: missing field 'xDummy2' initializer [-Werror,-Wmissing-field-initializers]
+  339 |     StaticTask_t ftsk_taskCyclic100msFail                                             = {NULL};
+      |                                                                                              ^
+../../tests/unit/app/task/ftask/freertos/test_ftask_freertos.c:353:113: error: missing field 'xDummy2' initializer [-Werror,-Wmissing-field-initializers]
+  353 |     StaticTask_t ftsk_taskCyclicAlgorithm100msFail                                                       = {NULL};
+      |                                                                                                                 ^
+../../tests/unit/app/task/ftask/freertos/test_ftask_freertos.c:367:81: error: missing field 'xDummy2' initializer [-Werror,-Wmissing-field-initializers]
+  367 |     StaticTask_t ftsk_taskI2cFail                                        = {NULL};
+      |                                                                                 ^
+6 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_ftask_freertos" -I"../../src/app/driver/afe/api" -I"../../src/app/driver/config" -I"../../src/app/driver/fram" -I"../../src/app/driver/rtc" -I"../../src/app/engine/sys_mon" -I"../../src/app/task/config" -I"../../src/app/task/ftask" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/task/ftask/freertos/test_ftask_freertos.c" -o "./test/out/test_ftask_freertos/test_ftask_freertos.o" -MMD -MF "./test/dependencies/test_ftask_freertos/test_ftask_freertos.d"
+🌱 Ceedling could not complete operations because of errors

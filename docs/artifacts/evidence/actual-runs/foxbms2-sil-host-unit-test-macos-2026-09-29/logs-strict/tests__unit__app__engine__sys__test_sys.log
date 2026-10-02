@@ -1,0 +1,194 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 457 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_sys.c for user & system #includes...
+Parsing test_sys.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_sys.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_sys::algorithm.h...
+Generating mock for test_sys::bal.h...
+Generating mock for test_sys::bms.h...
+Generating mock for test_sys::can.h...
+Generating mock for test_sys::database.h...
+Generating mock for test_sys::afe.h...
+Generating mock for test_sys::contactor.h...
+Generating mock for test_sys::diag.h...
+Generating mock for test_sys::fassert.h...
+Generating mock for test_sys::fram.h...
+Generating mock for test_sys::imd.h...
+Generating mock for test_sys::interlock.h...
+Generating mock for test_sys::meas.h...
+Generating mock for test_sys::os.h...
+Generating mock for test_sys::rtc.h...
+Generating mock for test_sys::sbc.h...
+Generating mock for test_sys::sof_trapezoid.h...
+Generating mock for test_sys::state_estimation.h...
+Generating mock for test_sys::sys_cfg.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_sys.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_sys.c...
+Compiling test_sys::sys.c...
+Compiling test_sys::fram_cfg.c...
+Compiling test_sys::Mockafe.c...
+Compiling test_sys::Mockbms.c...
+Compiling test_sys::Mockalgorithm.c...
+Compiling test_sys::Mockbal.c...
+Compiling test_sys::Mockcan.c...
+Compiling test_sys::Mockcontactor.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/engine/sys/test_sys.c:139:70: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'FRAM_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  139 |     FRAM_ReadData_ExpectAndReturn(FRAM_BLOCK_ID_DEEP_DISCHARGE_FLAG, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockfram.h:67:116: note: expanded from macro 'FRAM_ReadData_ExpectAndReturn'
+   67 | #define FRAM_ReadData_ExpectAndReturn(blockId, cmock_retval) FRAM_ReadData_CMockExpectAndReturn(__LINE__, blockId, cmock_retval)
+      |                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:143:90: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'SBC_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  143 |     SBC_SetStateRequest_ExpectAndReturn(&sbc_stateMcuSupervisor, SBC_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mocksbc.h:43:160: note: expanded from macro 'SBC_SetStateRequest_ExpectAndReturn'
+   43 | #define SBC_SetStateRequest_ExpectAndReturn(pInstance, stateRequest, cmock_retval) SBC_SetStateRequest_CMockExpectAndReturn(__LINE__, pInstance, stateRequest, cmock_retval)
+      |                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:171:77: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'ILCK_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  171 |     ILCK_SetStateRequest_ExpectAndReturn(ILCK_STATE_INITIALIZATION_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockinterlock.h:43:132: note: expanded from macro 'ILCK_SetStateRequest_ExpectAndReturn'
+   43 | #define ILCK_SetStateRequest_ExpectAndReturn(statereq, cmock_retval) ILCK_SetStateRequest_CMockExpectAndReturn(__LINE__, statereq, cmock_retval)
+      |                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                     ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:175:65: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'BAL_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  175 |     BAL_SetStateRequest_ExpectAndReturn(BAL_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockbal.h:139:138: note: expanded from macro 'BAL_SetStateRequest_ExpectAndReturn'
+  139 | #define BAL_SetStateRequest_ExpectAndReturn(stateRequest, cmock_retval) BAL_SetStateRequest_CMockExpectAndReturn(__LINE__, stateRequest, cmock_retval)
+      |                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:181:75: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'BAL_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  181 |     BAL_SetStateRequest_ExpectAndReturn(BAL_STATE_GLOBAL_DISABLE_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockbal.h:139:138: note: expanded from macro 'BAL_SetStateRequest_ExpectAndReturn'
+  139 | #define BAL_SetStateRequest_ExpectAndReturn(stateRequest, cmock_retval) BAL_SetStateRequest_CMockExpectAndReturn(__LINE__, stateRequest, cmock_retval)
+      |                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:215:75: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'BMS_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  215 |     BMS_SetStateRequest_ExpectAndReturn(BMS_STATE_INITIALIZATION_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockbms.h:43:130: note: expanded from macro 'BMS_SetStateRequest_ExpectAndReturn'
+   43 | #define BMS_SetStateRequest_ExpectAndReturn(statereq, cmock_retval) BMS_SetStateRequest_CMockExpectAndReturn(__LINE__, statereq, cmock_retval)
+      |                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                     ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:260:70: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'FRAM_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  260 |     FRAM_ReadData_ExpectAndReturn(FRAM_BLOCK_ID_DEEP_DISCHARGE_FLAG, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockfram.h:67:116: note: expanded from macro 'FRAM_ReadData_ExpectAndReturn'
+   67 | #define FRAM_ReadData_ExpectAndReturn(blockId, cmock_retval) FRAM_ReadData_CMockExpectAndReturn(__LINE__, blockId, cmock_retval)
+      |                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:264:90: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'SBC_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  264 |     SBC_SetStateRequest_ExpectAndReturn(&sbc_stateMcuSupervisor, SBC_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mocksbc.h:43:160: note: expanded from macro 'SBC_SetStateRequest_ExpectAndReturn'
+   43 | #define SBC_SetStateRequest_ExpectAndReturn(pInstance, stateRequest, cmock_retval) SBC_SetStateRequest_CMockExpectAndReturn(__LINE__, pInstance, stateRequest, cmock_retval)
+      |                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:289:70: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'FRAM_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  289 |     FRAM_ReadData_ExpectAndReturn(FRAM_BLOCK_ID_DEEP_DISCHARGE_FLAG, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockfram.h:67:116: note: expanded from macro 'FRAM_ReadData_ExpectAndReturn'
+   67 | #define FRAM_ReadData_ExpectAndReturn(blockId, cmock_retval) FRAM_ReadData_CMockExpectAndReturn(__LINE__, blockId, cmock_retval)
+      |                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:293:90: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'SBC_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  293 |     SBC_SetStateRequest_ExpectAndReturn(&sbc_stateMcuSupervisor, SBC_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mocksbc.h:43:160: note: expanded from macro 'SBC_SetStateRequest_ExpectAndReturn'
+   43 | #define SBC_SetStateRequest_ExpectAndReturn(pInstance, stateRequest, cmock_retval) SBC_SetStateRequest_CMockExpectAndReturn(__LINE__, pInstance, stateRequest, cmock_retval)
+      |                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:316:77: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'ILCK_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  316 |     ILCK_SetStateRequest_ExpectAndReturn(ILCK_STATE_INITIALIZATION_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockinterlock.h:43:132: note: expanded from macro 'ILCK_SetStateRequest_ExpectAndReturn'
+   43 | #define ILCK_SetStateRequest_ExpectAndReturn(statereq, cmock_retval) ILCK_SetStateRequest_CMockExpectAndReturn(__LINE__, statereq, cmock_retval)
+      |                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                     ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:320:65: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'BAL_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  320 |     BAL_SetStateRequest_ExpectAndReturn(BAL_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockbal.h:139:138: note: expanded from macro 'BAL_SetStateRequest_ExpectAndReturn'
+  139 | #define BAL_SetStateRequest_ExpectAndReturn(stateRequest, cmock_retval) BAL_SetStateRequest_CMockExpectAndReturn(__LINE__, stateRequest, cmock_retval)
+      |                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:345:70: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'FRAM_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  345 |     FRAM_ReadData_ExpectAndReturn(FRAM_BLOCK_ID_DEEP_DISCHARGE_FLAG, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockfram.h:67:116: note: expanded from macro 'FRAM_ReadData_ExpectAndReturn'
+   67 | #define FRAM_ReadData_ExpectAndReturn(blockId, cmock_retval) FRAM_ReadData_CMockExpectAndReturn(__LINE__, blockId, cmock_retval)
+      |                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:349:90: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'SBC_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  349 |     SBC_SetStateRequest_ExpectAndReturn(&sbc_stateMcuSupervisor, SBC_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mocksbc.h:43:160: note: expanded from macro 'SBC_SetStateRequest_ExpectAndReturn'
+   43 | #define SBC_SetStateRequest_ExpectAndReturn(pInstance, stateRequest, cmock_retval) SBC_SetStateRequest_CMockExpectAndReturn(__LINE__, pInstance, stateRequest, cmock_retval)
+      |                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:372:77: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'ILCK_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  372 |     ILCK_SetStateRequest_ExpectAndReturn(ILCK_STATE_INITIALIZATION_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockinterlock.h:43:132: note: expanded from macro 'ILCK_SetStateRequest_ExpectAndReturn'
+   43 | #define ILCK_SetStateRequest_ExpectAndReturn(statereq, cmock_retval) ILCK_SetStateRequest_CMockExpectAndReturn(__LINE__, statereq, cmock_retval)
+      |                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                     ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:376:65: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'BAL_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  376 |     BAL_SetStateRequest_ExpectAndReturn(BAL_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockbal.h:139:138: note: expanded from macro 'BAL_SetStateRequest_ExpectAndReturn'
+  139 | #define BAL_SetStateRequest_ExpectAndReturn(stateRequest, cmock_retval) BAL_SetStateRequest_CMockExpectAndReturn(__LINE__, stateRequest, cmock_retval)
+      |                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:383:79: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'BAL_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  383 |         BAL_SetStateRequest_ExpectAndReturn(BAL_STATE_GLOBAL_DISABLE_REQUEST, STD_NOT_OK);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+./mocks/test_sys/Mockbal.h:139:138: note: expanded from macro 'BAL_SetStateRequest_ExpectAndReturn'
+  139 | #define BAL_SetStateRequest_ExpectAndReturn(stateRequest, cmock_retval) BAL_SetStateRequest_CMockExpectAndReturn(__LINE__, stateRequest, cmock_retval)
+      |                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:404:70: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'FRAM_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  404 |     FRAM_ReadData_ExpectAndReturn(FRAM_BLOCK_ID_DEEP_DISCHARGE_FLAG, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mockfram.h:67:116: note: expanded from macro 'FRAM_ReadData_ExpectAndReturn'
+   67 | #define FRAM_ReadData_ExpectAndReturn(blockId, cmock_retval) FRAM_ReadData_CMockExpectAndReturn(__LINE__, blockId, cmock_retval)
+      |                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                    ^~~~~~~~~~~~
+../../tests/unit/app/engine/sys/test_sys.c:408:90: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'SBC_RETURN_TYPE_e' [-Werror,-Wenum-conversion]
+  408 |     SBC_SetStateRequest_ExpectAndReturn(&sbc_stateMcuSupervisor, SBC_STATE_INIT_REQUEST, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_sys/Mocksbc.h:43:160: note: expanded from macro 'SBC_SetStateRequest_ExpectAndReturn'
+   43 | #define SBC_SetStateRequest_ExpectAndReturn(pInstance, stateRequest, cmock_retval) SBC_SetStateRequest_CMockExpectAndReturn(__LINE__, pInstance, stateRequest, cmock_retval)
+      |                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                    ^~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_sys" -I"../../src/app/application/algorithm" -I"../../src/app/application/algorithm/config" -I"../../src/app/application/algorithm/state_estimation" -I"../../src/app/application/algorithm/state_estimation/sof/trapezoid" -I"../../src/app/application/bal" -I"../../src/app/application/bms" -I"../../src/app/driver/afe/api" -I"../../src/app/driver/can" -I"../../src/app/driver/config" -I"../../src/app/driver/contactor" -I"../../src/app/driver/fram" -I"../../src/app/driver/imd" -I"../../src/app/driver/interlock" -I"../../src/app/driver/meas" -I"../../src/app/driver/rtc" -I"../../src/app/driver/sbc" -I"../../src/app/driver/sbc/fs8x_driver" -I"../../src/app/driver/spi" -I"../../src/app/driver/sps" -I"../../src/app/engine/diag" -I"../../src/app/engine/sys" -I"../../src/app/task/config" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/engine/sys/test_sys.c" -o "./test/out/test_sys/test_sys.o" -MMD -MF "./test/dependencies/test_sys/test_sys.d"
+🌱 Ceedling could not complete operations because of errors

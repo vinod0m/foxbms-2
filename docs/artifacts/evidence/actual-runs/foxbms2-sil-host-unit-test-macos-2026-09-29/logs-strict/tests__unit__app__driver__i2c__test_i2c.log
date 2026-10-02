@@ -1,0 +1,91 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 438 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_i2c.c for user & system #includes...
+Parsing test_i2c.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_i2c.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_i2c::HL_sys_dma.h...
+Generating mock for test_i2c::mcu.h...
+Generating mock for test_i2c::HL_i2c.h...
+Generating mock for test_i2c::os.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_i2c.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_i2c.c...
+Compiling test_i2c::i2c.c...
+Compiling test_i2c::unity.c...
+Compiling test_i2c::MockHL_sys_dma.c...
+Compiling test_i2c::Mockos.c...
+Compiling test_i2c::MockHL_i2c.c...
+Compiling test_i2c::Mockmcu.c...
+Compiling test_i2c::test_i2c_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/driver/i2c/test_i2c.c:163:83: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'OS_STD_RETURN_e' [-Werror,-Wenum-conversion]
+  162 |     OS_WaitForNotificationIndexed_ExpectAndReturn(
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  163 |         I2C_NOTIFICATION_TX_INDEX, &notifiedValueTx, I2C_NOTIFICATION_TIMEOUT_ms, STD_OK);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_i2c/Mockos.h:175:210: note: expanded from macro 'OS_WaitForNotificationIndexed_ExpectAndReturn'
+  175 | #define OS_WaitForNotificationIndexed_ExpectAndReturn(indexToWaitOn, pNotifiedValue, timeout, cmock_retval) OS_WaitForNotificationIndexed_CMockExpectAndReturn(__LINE__, indexToWaitOn, pNotifiedValue, timeout, cmock_retval)
+      |                                                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                   ^~~~~~~~~~~~
+../../tests/unit/app/driver/i2c/test_i2c.c:176:83: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'OS_STD_RETURN_e' [-Werror,-Wenum-conversion]
+  175 |     OS_WaitForNotificationIndexed_ExpectAndReturn(
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  176 |         I2C_NOTIFICATION_RX_INDEX, &notifiedValueRx, I2C_NOTIFICATION_TIMEOUT_ms, STD_OK);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_i2c/Mockos.h:175:210: note: expanded from macro 'OS_WaitForNotificationIndexed_ExpectAndReturn'
+  175 | #define OS_WaitForNotificationIndexed_ExpectAndReturn(indexToWaitOn, pNotifiedValue, timeout, cmock_retval) OS_WaitForNotificationIndexed_CMockExpectAndReturn(__LINE__, indexToWaitOn, pNotifiedValue, timeout, cmock_retval)
+      |                                                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                   ^~~~~~~~~~~~
+../../tests/unit/app/driver/i2c/test_i2c.c:183:76: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'OS_STD_RETURN_e' [-Werror,-Wenum-conversion]
+  183 |     OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_TX_INDEX, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_i2c/Mockos.h:195:154: note: expanded from macro 'OS_ClearNotificationIndexed_ExpectAndReturn'
+  195 | #define OS_ClearNotificationIndexed_ExpectAndReturn(indexToClear, cmock_retval) OS_ClearNotificationIndexed_CMockExpectAndReturn(__LINE__, indexToClear, cmock_retval)
+      |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~
+../../tests/unit/app/driver/i2c/test_i2c.c:184:76: error: implicit conversion from enumeration type 'STD_RETURN_TYPE_e' to different enumeration type 'OS_STD_RETURN_e' [-Werror,-Wenum-conversion]
+  184 |     OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_RX_INDEX, STD_OK);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+./mocks/test_i2c/Mockos.h:195:154: note: expanded from macro 'OS_ClearNotificationIndexed_ExpectAndReturn'
+  195 | #define OS_ClearNotificationIndexed_ExpectAndReturn(indexToClear, cmock_retval) OS_ClearNotificationIndexed_CMockExpectAndReturn(__LINE__, indexToClear, cmock_retval)
+      |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         ^~~~~~~~~~~~
+4 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_i2c" -I"../../src/app/driver/config" -I"../../src/app/driver/dma" -I"../../src/app/driver/i2c" -I"../../src/app/engine/diag" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/driver/i2c/test_i2c.c" -o "./test/out/test_i2c/test_i2c.o" -MMD -MF "./test/dependencies/test_i2c/test_i2c.d"
+🌱 Ceedling could not complete operations because of errors

@@ -1,0 +1,65 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 382 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_mxm_1785x_tools.c for user & system #includes...
+Parsing test_mxm_1785x_tools.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_mxm_1785x_tools.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_mxm_1785x_tools::fassert.h...
+Generating mock for test_mxm_1785x_tools::mxm_cfg.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_mxm_1785x_tools.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_mxm_1785x_tools.c...
+Compiling test_mxm_1785x_tools::mxm_1785x_tools.c...
+Compiling test_mxm_1785x_tools::unity.c...
+Compiling test_mxm_1785x_tools::cmock.c...
+Compiling test_mxm_1785x_tools::CException.c...
+Compiling test_mxm_1785x_tools::test_mxm_1785x_tools_runner.c...
+Compiling test_mxm_1785x_tools::Mockmxm_cfg.c...
+Compiling test_mxm_1785x_tools::Mockfassert.c...
+Compiling test_mxm_1785x_tools::struct_helper.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/driver/afe/maxim/common/test_mxm_1785x_tools.c:57:32: error: unknown warning group '-Wmaybe-uninitialized', ignored [-Werror,-Wunknown-warning-option]
+   57 | #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+      |                                ^
+1 error generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_mxm_1785x_tools" -I"../../src/app/driver/afe/maxim/common" -I"../../src/app/driver/afe/maxim/common/config" -I"../../src/app/driver/config" -I"../../src/app/driver/spi" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"FOXBMS_AFE_DRIVER_MAXIM=1u" -D"TEST_BS_NR_OF_CELL_BLOCKS_PER_MODULE=14u" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/driver/afe/maxim/common/test_mxm_1785x_tools.c" -o "./test/out/test_mxm_1785x_tools/test_mxm_1785x_tools.o" -MMD -MF "./test/dependencies/test_mxm_1785x_tools/test_mxm_1785x_tools.d"
+🌱 Ceedling could not complete operations because of errors

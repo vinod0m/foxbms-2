@@ -1,0 +1,86 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 426 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_nxp_mc33775a_alarm.c for user & system #includes...
+Parsing test_nxp_mc33775a_alarm.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_nxp_mc33775a_alarm.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_nxp_mc33775a_alarm::database.h...
+Generating mock for test_nxp_mc33775a_alarm::diag.h...
+Generating mock for test_nxp_mc33775a_alarm::nxp_mc3377x-ll.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_nxp_mc33775a_alarm.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_nxp_mc33775a_alarm.c...
+Compiling test_nxp_mc33775a_alarm::nxp_mc33775a_alarm.c...
+Compiling test_nxp_mc33775a_alarm::unity.c...
+Compiling test_nxp_mc33775a_alarm::cmock.c...
+Compiling test_nxp_mc33775a_alarm::test_nxp_mc33775a_alarm_runner.c...
+Compiling test_nxp_mc33775a_alarm::Mocknxp_mc3377x-ll.c...
+Compiling test_nxp_mc33775a_alarm::Mockdatabase.c...
+Compiling test_nxp_mc33775a_alarm::Mockdiag.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:213:18: error: expected expression
+  213 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 1u << 4u;
+      |                  ^
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:213:7: error: use of undeclared identifier 'gioPORT_t'
+  213 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 1u << 4u;
+      |       ^
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:219:18: error: expected expression
+  219 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 0u << 4u;
+      |                  ^
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:219:7: error: use of undeclared identifier 'gioPORT_t'
+  219 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 0u << 4u;
+      |       ^
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:225:18: error: expected expression
+  225 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 1u << 4u;
+      |                  ^
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:225:7: error: use of undeclared identifier 'gioPORT_t'
+  225 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 1u << 4u;
+      |       ^
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:233:18: error: expected expression
+  233 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 0u << 4u;
+      |                  ^
+../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c:233:7: error: use of undeclared identifier 'gioPORT_t'
+  233 |     ((gioPORT_t *)N77X_ALARM_PORT)->DIN = 0u << 4u;
+      |       ^
+8 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_nxp_mc33775a_alarm" -I"../../src/app/driver/afe/nxp/common/mc3377x" -I"../../src/app/driver/afe/nxp/common/mc3377x/vendor" -I"../../src/app/driver/afe/nxp/mc33775a" -I"../../src/app/driver/afe/nxp/mc33775a/config" -I"../../src/app/driver/afe/nxp/mc33775a/vendor" -I"../../src/app/driver/config" -I"../../src/app/driver/spi" -I"../../src/app/engine/diag" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"FOXBMS_AFE_DRIVER_TYPE_NO_FSM=1" -D"FOXBMS_AFE_DRIVER_NXP=1u" -D"FOXBMS_AFE_DRIVER_NXP_MC33775A" -D"TEST_BS_NR_OF_CELL_BLOCKS_PER_MODULE=14u" -D"TEST_BS_NR_OF_TEMP_SENSORS_PER_MODULE=16u" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_alarm.c" -o "./test/out/test_nxp_mc33775a_alarm/test_nxp_mc33775a_alarm.o" -MMD -MF "./test/dependencies/test_nxp_mc33775a_alarm/test_nxp_mc33775a_alarm.d"
+🌱 Ceedling could not complete operations because of errors

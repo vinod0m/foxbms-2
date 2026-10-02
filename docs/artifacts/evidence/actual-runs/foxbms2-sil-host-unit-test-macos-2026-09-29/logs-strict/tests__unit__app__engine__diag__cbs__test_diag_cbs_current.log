@@ -1,0 +1,98 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 439 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_diag_cbs_current.c for user & system #includes...
+Parsing test_diag_cbs_current.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_diag_cbs_current.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_diag_cbs_current::diag_cfg.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_diag_cbs_current.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_diag_cbs_current.c...
+Compiling test_diag_cbs_current::diag_cbs_current.c...
+Compiling test_diag_cbs_current::unity.c...
+Compiling test_diag_cbs_current::cmock.c...
+Compiling test_diag_cbs_current::CException.c...
+Compiling test_diag_cbs_current::struct_helper.c...
+Compiling test_diag_cbs_current::Mockdiag_cfg.c...
+Compiling test_diag_cbs_current::test_diag_cbs_current_runner.c...
+Compiling test_diag_cbs_current::test_fake_functions.c...
+Compiling test_diag_cbs_current::sil_hal_model.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:112:5: error: array index 1 is past the end of the array (that has type 'uint8_t[1]' (aka 'unsigned char[1]')) [-Werror,-Warray-bounds]
+  112 |     diag_kpkDatabaseShim.pTableMsl->cellChargeOvercurrent[BS_NR_OF_STRINGS]   = 1;
+      |     ^                                                     ~~~~~~~~~~~~~~~~
+../../src/app/engine/config/database_cfg.h:521:5: note: array 'cellChargeOvercurrent' declared here
+  521 |     uint8_t cellChargeOvercurrent[BS_NR_OF_STRINGS];      /*!< 0 -> MSL NOT violated, 1 -> MSL violated */
+      |     ^
+../../tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:113:5: error: array index 1 is past the end of the array (that has type 'uint8_t[1]' (aka 'unsigned char[1]')) [-Werror,-Warray-bounds]
+  113 |     diag_kpkDatabaseShim.pTableRsl->cellChargeOvercurrent[BS_NR_OF_STRINGS]   = 1;
+      |     ^                                                     ~~~~~~~~~~~~~~~~
+../../src/app/engine/config/database_cfg.h:541:5: note: array 'cellChargeOvercurrent' declared here
+  541 |     uint8_t cellChargeOvercurrent[BS_NR_OF_STRINGS];      /*!< 0 -> RSL NOT violated, 1 -> RSL violated */
+      |     ^
+../../tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:114:5: error: array index 1 is past the end of the array (that has type 'uint8_t[1]' (aka 'unsigned char[1]')) [-Werror,-Warray-bounds]
+  114 |     diag_kpkDatabaseShim.pTableMol->cellChargeOvercurrent[BS_NR_OF_STRINGS]   = 1;
+      |     ^                                                     ~~~~~~~~~~~~~~~~
+../../src/app/engine/config/database_cfg.h:561:5: note: array 'cellChargeOvercurrent' declared here
+  561 |     uint8_t cellChargeOvercurrent[BS_NR_OF_STRINGS];      /*!< 0 -> MOL NOT violated, 1 -> MOL violated */
+      |     ^
+../../tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:115:5: error: array index 1 is past the end of the array (that has type 'uint8_t[1]' (aka 'unsigned char[1]')) [-Werror,-Warray-bounds]
+  115 |     diag_kpkDatabaseShim.pTableMsl->stringChargeOvercurrent[BS_NR_OF_STRINGS] = 1;
+      |     ^                                                       ~~~~~~~~~~~~~~~~
+../../src/app/engine/config/database_cfg.h:522:5: note: array 'stringChargeOvercurrent' declared here
+  522 |     uint8_t stringChargeOvercurrent[BS_NR_OF_STRINGS];    /*!< 0 -> MSL NOT violated, 1 -> MSL violated */
+      |     ^
+../../tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:116:5: error: array index 1 is past the end of the array (that has type 'uint8_t[1]' (aka 'unsigned char[1]')) [-Werror,-Warray-bounds]
+  116 |     diag_kpkDatabaseShim.pTableRsl->stringChargeOvercurrent[BS_NR_OF_STRINGS] = 1;
+      |     ^                                                       ~~~~~~~~~~~~~~~~
+../../src/app/engine/config/database_cfg.h:542:5: note: array 'stringChargeOvercurrent' declared here
+  542 |     uint8_t stringChargeOvercurrent[BS_NR_OF_STRINGS];    /*!< 0 -> RSL NOT violated, 1 -> RSL violated */
+      |     ^
+../../tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:117:5: error: array index 1 is past the end of the array (that has type 'uint8_t[1]' (aka 'unsigned char[1]')) [-Werror,-Warray-bounds]
+  117 |     diag_kpkDatabaseShim.pTableMol->stringChargeOvercurrent[BS_NR_OF_STRINGS] = 1;
+      |     ^                                                       ~~~~~~~~~~~~~~~~
+../../src/app/engine/config/database_cfg.h:562:5: note: array 'stringChargeOvercurrent' declared here
+  562 |     uint8_t stringChargeOvercurrent[BS_NR_OF_STRINGS];    /*!< 0 -> MOL NOT violated, 1 -> MOL violated */
+      |     ^
+6 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_diag_cbs_current" -I"../../src/app/engine/diag/cbs" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c" -o "./test/out/test_diag_cbs_current/test_diag_cbs_current.o" -MMD -MF "./test/dependencies/test_diag_cbs_current/test_diag_cbs_current.d"
+🌱 Ceedling could not complete operations because of errors

@@ -1,0 +1,23 @@
+test_os_freertos.c, 24 clean runs (rm -rf mocks test/out test/dependencies before each),
+error-text-set md5 per run.  See evidence-classifier-nondeterminism-24runs.txt.
+
+  22/24 runs -> { Mockqueue.c: expected identifier or '('   (x3) }
+   2/24 runs -> { test_os_freertos.c:400: -Wnon-literal-null-conversion (pdFALSE) }
+
+Direct re-invocation of the identical gcc argv 6/6 times: 1 error, identical every time.
+=> the compiler is deterministic; the SURFACED SET is not, because Ceedling aborts the
+   build at the first failing translation unit and the unit order is unstable.
+
+Compile order, 3 consecutive clean runs (test file is always first):
+  run A: test_os_freertos.c os_freertos.c os.c Mockcan_cbs_tx_f_crash-dump.c
+         MockHL_sys_core.c Mockportmacro.c Mockftask_cfg.c Mockftask.c Mockqueue.c Mockrtc.c
+  run B: test_os_freertos.c os_freertos.c os.c Mockftask.c MockHL_sys_core.c
+         Mockcan_cbs_tx_f_crash-dump.c Mockportmacro.c Mockftask_cfg.c
+  run C: test_os_freertos.c os_freertos.c os.c Mockcan_cbs_tx_f_crash-dump.c
+         MockHL_sys_core.c Mockportmacro.c os.c Mockftask.c Mockftask_cfg.c ...
+
+Consequence for the recorded corpus: test_os_freertos.c lands in
+  build:ceedling_cmock_config_quirk  (when the Mockqueue error surfaces first), or
+  build:other                        (when the test-file error surfaces first).
+The recorded evidence file has it in ceedling_cmock_config_quirk (class size 8);
+the 2026-09-29 re-measurement has it in build:other (class size 7, build:other 41).

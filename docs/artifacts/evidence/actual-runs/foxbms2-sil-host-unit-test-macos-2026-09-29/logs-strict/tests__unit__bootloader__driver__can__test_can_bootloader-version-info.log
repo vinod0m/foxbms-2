@@ -1,0 +1,74 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/bootloader_host_unit_test
+
+Ceedling set up completed in 115 milliseconds
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_can_bootloader-version-info.c for user & system #includes...
+Parsing test_can_bootloader-version-info.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_can_bootloader-version-info.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_can_bootloader-version-info::can_cfg.h...
+Generating mock for test_can_bootloader-version-info::can_helper.h...
+Generating mock for test_can_bootloader-version-info::foxmath.h...
+Generating mock for test_can_bootloader-version-info::utils.h...
+Generating mock for test_can_bootloader-version-info::can.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_can_bootloader-version-info.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_can_bootloader-version-info.c...
+Compiling test_can_bootloader-version-info::can_bootloader-version-info.c...
+Compiling test_can_bootloader-version-info::test_can_bootloader-version-info_runner.c...
+Compiling test_can_bootloader-version-info::Mockcan_helper.c...
+Compiling test_can_bootloader-version-info::Mockcan_cfg.c...
+Compiling test_can_bootloader-version-info::Mockfoxmath.c...
+Compiling test_can_bootloader-version-info::Mockutils.c...
+Compiling test_can_bootloader-version-info::Mockcan.c...
+Compiling test_can_bootloader-version-info::unity.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/bootloader/driver/can/test_can_bootloader-version-info.c:145:32: error: unknown warning group '-Wdiscarded-qualifiers', ignored [-Werror,-Wunknown-warning-option]
+  145 | #pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+      |                                ^
+../../tests/unit/bootloader/driver/can/test_can_bootloader-version-info.c:146:15: error: initializing 'uint16_t *' (aka 'unsigned short *') with an expression of type 'const uint16_t *' (aka 'const unsigned short *') discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+  146 |     uint16_t *tmpDistanceFromLastRelease = &ver_versionInformation.distanceFromLastRelease;
+      |               ^                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../tests/unit/bootloader/driver/can/test_can_bootloader-version-info.c:148:11: error: initializing 'bool *' with an expression of type 'const bool *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+  148 |     bool *tmpIsDirty                     = &ver_versionInformation.isDirty;
+      |           ^                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../tests/unit/bootloader/driver/can/test_can_bootloader-version-info.c:150:11: error: initializing 'bool *' with an expression of type 'const bool *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+  150 |     bool *tmpUnderVersionControl         = &ver_versionInformation.underVersionControl;
+      |           ^                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+4 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_can_bootloader-version-info" -I"../../src/bootloader/driver/can" -I"../../src/bootloader/driver/config" -I"../../src/bootloader/driver/foxmath" -I"../../src/bootloader/main/include" -I"../../src/bootloader/engine/can" -I"../../src/bootloader/engine/boot" -I"../../src/version" -I"../../tests/unit/support" -I"sil_model" -I"include" -I"sil_hal" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/bootloader/driver/can/test_can_bootloader-version-info.c" -o "./test/out/test_can_bootloader-version-info/test_can_bootloader-version-info.o" -MMD -MF "./test/dependencies/test_can_bootloader-version-info/test_can_bootloader-version-info.d"
+🌱 Ceedling could not complete operations because of errors

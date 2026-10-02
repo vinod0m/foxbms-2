@@ -1,0 +1,177 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 390 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_can_cbs_tx_f_cell-temperatures.c for user & system #includes...
+Parsing test_can_cbs_tx_f_cell-temperatures.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_can_cbs_tx_f_cell-temperatures.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_can_cbs_tx_f_cell-temperatures::can.h...
+Generating mock for test_can_cbs_tx_f_cell-temperatures::can_helper.h...
+Generating mock for test_can_cbs_tx_f_cell-temperatures::database_helper.h...
+Generating mock for test_can_cbs_tx_f_cell-temperatures::diag.h...
+Generating mock for test_can_cbs_tx_f_cell-temperatures::foxmath.h...
+Generating mock for test_can_cbs_tx_f_cell-temperatures::imd.h...
+Generating mock for test_can_cbs_tx_f_cell-temperatures::os.h...
+Generating mock for test_can_cbs_tx_f_cell-temperatures::database.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_can_cbs_tx_f_cell-temperatures.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_can_cbs_tx_f_cell-temperatures.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::can_cbs_tx_f_cell-temperatures.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::database_cfg.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::Mockdatabase.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::Mockdatabase_helper.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::Mockcan_helper.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::Mockdiag.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::Mockcan.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::Mockfoxmath.c...
+Compiling test_can_cbs_tx_f_cell-temperatures::Mockimd.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:381:52: error: array index 4 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  381 |     CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(&testSignalData[4u]);
+      |                                                    ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:50:128: note: expanded from macro 'CAN_TxPrepareSignalData_ReturnThruPtr_pSignal'
+   50 | #define CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(pSignal) CAN_TxPrepareSignalData_CMockReturnMemThruPtr_pSignal(__LINE__, pSignal, sizeof(float_t))
+      |                                                                                                                                ^~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:382:78: error: array index 4 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  382 |     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[4u], 31u, 8u, testSignalData[4u], CAN_BIG_ENDIAN);
+      |                                                                              ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:67:193: note: expanded from macro 'CAN_TxSetMessageDataWithSignalData_Expect'
+   67 | #define CAN_TxSetMessageDataWithSignalData_Expect(pMessage, bitStart, bitLength, canSignal, endianness) CAN_TxSetMessageDataWithSignalData_CMockExpect(__LINE__, pMessage, bitStart, bitLength, canSignal, endianness)
+      |                                                                                                                                                                                                 ^~~~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:420:52: error: array index 4 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  420 |     CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(&testSignalData[4u]);
+      |                                                    ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:50:128: note: expanded from macro 'CAN_TxPrepareSignalData_ReturnThruPtr_pSignal'
+   50 | #define CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(pSignal) CAN_TxPrepareSignalData_CMockReturnMemThruPtr_pSignal(__LINE__, pSignal, sizeof(float_t))
+      |                                                                                                                                ^~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:421:78: error: array index 4 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  421 |     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[4u], 31u, 8u, testSignalData[4u], CAN_BIG_ENDIAN);
+      |                                                                              ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:67:193: note: expanded from macro 'CAN_TxSetMessageDataWithSignalData_Expect'
+   67 | #define CAN_TxSetMessageDataWithSignalData_Expect(pMessage, bitStart, bitLength, canSignal, endianness) CAN_TxSetMessageDataWithSignalData_CMockExpect(__LINE__, pMessage, bitStart, bitLength, canSignal, endianness)
+      |                                                                                                                                                                                                 ^~~~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:431:52: error: array index 6 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  431 |     CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(&testSignalData[6u]);
+      |                                                    ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:50:128: note: expanded from macro 'CAN_TxPrepareSignalData_ReturnThruPtr_pSignal'
+   50 | #define CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(pSignal) CAN_TxPrepareSignalData_CMockReturnMemThruPtr_pSignal(__LINE__, pSignal, sizeof(float_t))
+      |                                                                                                                                ^~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:432:78: error: array index 6 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  432 |     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[6u], 39u, 8u, testSignalData[6u], CAN_BIG_ENDIAN);
+      |                                                                              ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:67:193: note: expanded from macro 'CAN_TxSetMessageDataWithSignalData_Expect'
+   67 | #define CAN_TxSetMessageDataWithSignalData_Expect(pMessage, bitStart, bitLength, canSignal, endianness) CAN_TxSetMessageDataWithSignalData_CMockExpect(__LINE__, pMessage, bitStart, bitLength, canSignal, endianness)
+      |                                                                                                                                                                                                 ^~~~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:442:52: error: array index 8 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  442 |     CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(&testSignalData[8u]);
+      |                                                    ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:50:128: note: expanded from macro 'CAN_TxPrepareSignalData_ReturnThruPtr_pSignal'
+   50 | #define CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(pSignal) CAN_TxPrepareSignalData_CMockReturnMemThruPtr_pSignal(__LINE__, pSignal, sizeof(float_t))
+      |                                                                                                                                ^~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:443:78: error: array index 8 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  443 |     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[8u], 47u, 8u, testSignalData[8u], CAN_BIG_ENDIAN);
+      |                                                                              ^              ~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:67:193: note: expanded from macro 'CAN_TxSetMessageDataWithSignalData_Expect'
+   67 | #define CAN_TxSetMessageDataWithSignalData_Expect(pMessage, bitStart, bitLength, canSignal, endianness) CAN_TxSetMessageDataWithSignalData_CMockExpect(__LINE__, pMessage, bitStart, bitLength, canSignal, endianness)
+      |                                                                                                                                                                                                 ^~~~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:453:52: error: array index 10 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  453 |     CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(&testSignalData[10u]);
+      |                                                    ^              ~~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:50:128: note: expanded from macro 'CAN_TxPrepareSignalData_ReturnThruPtr_pSignal'
+   50 | #define CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(pSignal) CAN_TxPrepareSignalData_CMockReturnMemThruPtr_pSignal(__LINE__, pSignal, sizeof(float_t))
+      |                                                                                                                                ^~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:454:79: error: array index 10 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  454 |     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[10u], 55u, 8u, testSignalData[10u], CAN_BIG_ENDIAN);
+      |                                                                               ^              ~~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:67:193: note: expanded from macro 'CAN_TxSetMessageDataWithSignalData_Expect'
+   67 | #define CAN_TxSetMessageDataWithSignalData_Expect(pMessage, bitStart, bitLength, canSignal, endianness) CAN_TxSetMessageDataWithSignalData_CMockExpect(__LINE__, pMessage, bitStart, bitLength, canSignal, endianness)
+      |                                                                                                                                                                                                 ^~~~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:464:52: error: array index 12 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  464 |     CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(&testSignalData[12u]);
+      |                                                    ^              ~~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:50:128: note: expanded from macro 'CAN_TxPrepareSignalData_ReturnThruPtr_pSignal'
+   50 | #define CAN_TxPrepareSignalData_ReturnThruPtr_pSignal(pSignal) CAN_TxPrepareSignalData_CMockReturnMemThruPtr_pSignal(__LINE__, pSignal, sizeof(float_t))
+      |                                                                                                                                ^~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:465:79: error: array index 12 is past the end of the array (that has type 'float_t[3]' (aka 'float[3]')) [-Werror,-Warray-bounds]
+  465 |     CAN_TxSetMessageDataWithSignalData_Expect(&testMessageData[12u], 63u, 8u, testSignalData[12u], CAN_BIG_ENDIAN);
+      |                                                                               ^              ~~~
+./mocks/test_can_cbs_tx_f_cell-temperatures/Mockcan_helper.h:67:193: note: expanded from macro 'CAN_TxSetMessageDataWithSignalData_Expect'
+   67 | #define CAN_TxSetMessageDataWithSignalData_Expect(pMessage, bitStart, bitLength, canSignal, endianness) CAN_TxSetMessageDataWithSignalData_CMockExpect(__LINE__, pMessage, bitStart, bitLength, canSignal, endianness)
+      |                                                                                                                                                                                                 ^~~~~~~~~
+../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93:1: note: array 'testSignalData' declared here
+   93 | float_t testSignalData[3u] = {0u, 1u, 2u};
+      | ^
+12 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_can_cbs_tx_f_cell-temperatures" -I"../../src/app/driver/can" -I"../../src/app/driver/can/cbs" -I"../../src/app/driver/can/cbs/tx-cyclic" -I"../../src/app/driver/config" -I"../../src/app/driver/foxmath" -I"../../src/app/driver/fram" -I"../../src/app/driver/imd" -I"../../src/app/engine/database" -I"../../src/app/engine/diag" -I"../../src/app/engine/sys_mon" -I"../../src/app/task/config" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c" -o "./test/out/test_can_cbs_tx_f_cell-temperatures/test_can_cbs_tx_f_cell-temperatures.o" -MMD -MF "./test/dependencies/test_can_cbs_tx_f_cell-temperatures/test_can_cbs_tx_f_cell-temperatures.d"
+🌱 Ceedling could not complete operations because of errors

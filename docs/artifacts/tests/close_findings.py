@@ -119,7 +119,7 @@ GROUP_B = (
     "WHAT FIXED IT. The measures and their links, which this record's own "
     "resolution said did not exist. @tms@ was authored for @subject@ and linked by "
     "@link@ with relation_type 'verifies' in "
-    "docs/artifacts/corpus/synthetic_reference/traceability/link-registry/"
+    "docs/artifacts/traceability/link-registry/"
     "synthetic_reference/links-concept-lifecycle.json. Each measure carries an "
     "oracle_detail block declaring the oracle's kind and why that oracle is the "
     "right one for the requirement rather than borrowed from elsewhere; the kinds "

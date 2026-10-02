@@ -1,0 +1,187 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 411 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_dma_uart.c for user & system #includes...
+Parsing test_dma_uart.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_dma_uart.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_dma_uart::afe_dma.h...
+Generating mock for test_dma_uart::i2c.h...
+Generating mock for test_dma_uart::io.h...
+Generating mock for test_dma_uart::task.h...
+Generating mock for test_dma_uart::HL_i2c.h...
+Generating mock for test_dma_uart::HL_spi.h...
+Generating mock for test_dma_uart::HL_sys_dma.h...
+Generating mock for test_dma_uart::spi.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_dma_uart.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_dma_uart.c...
+Compiling test_dma_uart::dma.c...
+Compiling test_dma_uart::Mockio.c...
+Compiling test_dma_uart::MockHL_spi.c...
+Compiling test_dma_uart::MockHL_sys_dma.c...
+Compiling test_dma_uart::Mockafe_dma.c...
+Compiling test_dma_uart::MockHL_i2c.c...
+Compiling test_dma_uart::Mocki2c.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/driver/dma/test_dma_uart.c:150:10: error: expected a field designator, such as '.field = 4'
+  150 |         .SADD      = 0u,                               /* source address             */
+      |          ^
+sil_hal/HL_reg_sci.h:100:31: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:169:10: error: expected a field designator, such as '.field = 4'
+  169 |         .SADD      = 0u,                               /* source address             */
+      |          ^
+sil_hal/HL_reg_sci.h:100:31: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:189:10: error: expected a field designator, such as '.field = 4'
+  189 |         .SADD      = 0u,                               /* source address             */
+      |          ^
+sil_hal/HL_reg_sci.h:100:31: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:208:10: error: expected a field designator, such as '.field = 4'
+  208 |         .SADD      = 0u,                               /* source address             */
+      |          ^
+sil_hal/HL_reg_sci.h:100:31: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:228:10: error: expected a field designator, such as '.field = 4'
+  228 |         .SADD      = 0u,                               /* source address             */
+      |          ^
+sil_hal/HL_reg_sci.h:100:31: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:257:95: error: too many arguments provided to function-like macro invocation
+  257 |             (dmaChannel_t)(dmaChannel_t)dma_spiDmaChannels[i].txChannel, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                               ^
+./mocks/test_dma_uart/MockHL_sys_dma.h:67:9: note: macro 'dmaEnableInterrupt_Expect' defined here
+   67 | #define dmaEnableInterrupt_Expect(channel, interrupt) dmaEnableInterrupt_CMockExpect(__LINE__, channel, interrupt)
+      |         ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:256:9: error: use of undeclared identifier 'dmaEnableInterrupt_Expect'; did you mean 'dmaEnableInterrupt_CMockExpect'?
+  256 |         dmaEnableInterrupt_Expect(
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+      |         dmaEnableInterrupt_CMockExpect
+./mocks/test_dma_uart/MockHL_sys_dma.h:68:6: note: 'dmaEnableInterrupt_CMockExpect' declared here
+   68 | void dmaEnableInterrupt_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaInterrupt_t interrupt);
+      |      ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:259:32: error: expected identifier
+  259 |         dma_controlPacketSpiTx.DADD = (uint32_t)(&(dma_spiInterfaces[i]->DAT1)) + DMA_BIG_ENDIAN_ADDRESS_16BIT;
+      |                                ^
+sil_hal/HL_reg_sci.h:105:31: note: expanded from macro 'DADD'
+  105 | #define DADD                  ((sciField_t)0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:259:74: error: expected identifier
+  259 |         dma_controlPacketSpiTx.DADD = (uint32_t)(&(dma_spiInterfaces[i]->DAT1)) + DMA_BIG_ENDIAN_ADDRESS_16BIT;
+      |                                                                          ^
+sil_hal/HL_reg_sci.h:310:31: note: expanded from macro 'DAT1'
+  310 | #define DAT1                  (0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:260:32: error: expected identifier
+  260 |         dma_controlPacketSpiRx.SADD = (uint32_t)(&(dma_spiInterfaces[i]->BUF)) + DMA_BIG_ENDIAN_ADDRESS_16BIT;
+      |                                ^
+sil_hal/HL_reg_sci.h:100:31: note: expanded from macro 'SADD'
+  100 | #define SADD                  ((sciField_t)0U)
+      |                               ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:263:95: error: too many arguments provided to function-like macro invocation
+  263 |             (dmaChannel_t)(dmaChannel_t)dma_spiDmaChannels[i].rxChannel, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                               ^
+./mocks/test_dma_uart/MockHL_sys_dma.h:67:9: note: macro 'dmaEnableInterrupt_Expect' defined here
+   67 | #define dmaEnableInterrupt_Expect(channel, interrupt) dmaEnableInterrupt_CMockExpect(__LINE__, channel, interrupt)
+      |         ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:262:9: error: use of undeclared identifier 'dmaEnableInterrupt_Expect'; did you mean 'dmaEnableInterrupt_CMockExpect'?
+  262 |         dmaEnableInterrupt_Expect(
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+      |         dmaEnableInterrupt_CMockExpect
+./mocks/test_dma_uart/MockHL_sys_dma.h:68:6: note: 'dmaEnableInterrupt_CMockExpect' declared here
+   68 | void dmaEnableInterrupt_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaInterrupt_t interrupt);
+      |      ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:264:102: error: too few arguments provided to function-like macro invocation
+  264 |         dmaSetCtrlPacket_Expect((dmaChannel_t)dma_spiDmaChannels[i].txChannel, dma_controlPacketSpiTx);
+      |                                                                                                      ^
+./mocks/test_dma_uart/MockHL_sys_dma.h:99:9: note: macro 'dmaSetCtrlPacket_Expect' defined here
+   99 | #define dmaSetCtrlPacket_Expect(channel, trigger, pControlPacket) dmaSetCtrlPacket_CMockExpect(__LINE__, channel, trigger, pControlPacket)
+      |         ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:264:9: error: use of undeclared identifier 'dmaSetCtrlPacket_Expect'; did you mean 'dmaSetCtrlPacket_CMockExpect'?
+  264 |         dmaSetCtrlPacket_Expect((dmaChannel_t)dma_spiDmaChannels[i].txChannel, dma_controlPacketSpiTx);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+      |         dmaSetCtrlPacket_CMockExpect
+./mocks/test_dma_uart/MockHL_sys_dma.h:100:6: note: 'dmaSetCtrlPacket_CMockExpect' declared here
+  100 | void dmaSetCtrlPacket_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaTriggerType_t trigger, g_dmaCTRL* pControlPacket);
+      |      ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:265:102: error: too few arguments provided to function-like macro invocation
+  265 |         dmaSetCtrlPacket_Expect((dmaChannel_t)dma_spiDmaChannels[i].rxChannel, dma_controlPacketSpiRx);
+      |                                                                                                      ^
+./mocks/test_dma_uart/MockHL_sys_dma.h:99:9: note: macro 'dmaSetCtrlPacket_Expect' defined here
+   99 | #define dmaSetCtrlPacket_Expect(channel, trigger, pControlPacket) dmaSetCtrlPacket_CMockExpect(__LINE__, channel, trigger, pControlPacket)
+      |         ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:265:9: error: use of undeclared identifier 'dmaSetCtrlPacket_Expect'; did you mean 'dmaSetCtrlPacket_CMockExpect'?
+  265 |         dmaSetCtrlPacket_Expect((dmaChannel_t)dma_spiDmaChannels[i].rxChannel, dma_controlPacketSpiRx);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+      |         dmaSetCtrlPacket_CMockExpect
+./mocks/test_dma_uart/MockHL_sys_dma.h:100:6: note: 'dmaSetCtrlPacket_CMockExpect' declared here
+  100 | void dmaSetCtrlPacket_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaTriggerType_t trigger, g_dmaCTRL* pControlPacket);
+      |      ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:275:79: error: too many arguments provided to function-like macro invocation
+  275 |         (dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_TX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                               ^
+./mocks/test_dma_uart/MockHL_sys_dma.h:67:9: note: macro 'dmaEnableInterrupt_Expect' defined here
+   67 | #define dmaEnableInterrupt_Expect(channel, interrupt) dmaEnableInterrupt_CMockExpect(__LINE__, channel, interrupt)
+      |         ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:274:5: error: use of undeclared identifier 'dmaEnableInterrupt_Expect'; did you mean 'dmaEnableInterrupt_CMockExpect'?
+  274 |     dmaEnableInterrupt_Expect(
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+      |     dmaEnableInterrupt_CMockExpect
+./mocks/test_dma_uart/MockHL_sys_dma.h:68:6: note: 'dmaEnableInterrupt_CMockExpect' declared here
+   68 | void dmaEnableInterrupt_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaInterrupt_t interrupt);
+      |      ^
+../../tests/unit/app/driver/dma/test_dma_uart.c:277:79: error: too many arguments provided to function-like macro invocation
+  277 |         (dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_RX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                               ^
+./mocks/test_dma_uart/MockHL_sys_dma.h:67:9: note: macro 'dmaEnableInterrupt_Expect' defined here
+   67 | #define dmaEnableInterrupt_Expect(channel, interrupt) dmaEnableInterrupt_CMockExpect(__LINE__, channel, interrupt)
+      |         ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I ../../src/os/freertos/freertos/include -include FreeRTOSConfig.h -I"./mocks/test_dma_uart" -I"../../src/app/driver/afe/api" -I"../../src/app/driver/config" -I"../../src/app/driver/dma" -I"../../src/app/driver/i2c" -I"../../src/app/driver/io" -I"../../src/app/driver/rtc" -I"../../src/app/driver/spi" -I"../../src/app/driver/uart" -I"../../src/app/task/config" -I"../../src/app/task/ftask" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"FOXBMS_UART_SUPPORT=1" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/driver/dma/test_dma_uart.c" -o "./test/out/test_dma_uart/test_dma_uart.o" -MMD -MF "./test/dependencies/test_dma_uart/test_dma_uart.d"
+🌱 Ceedling could not complete operations because of errors

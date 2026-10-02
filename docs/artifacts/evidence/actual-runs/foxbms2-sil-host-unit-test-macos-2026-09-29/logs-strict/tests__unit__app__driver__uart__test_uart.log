@@ -1,0 +1,243 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 435 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_uart.c for user & system #includes...
+Parsing test_uart.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_uart.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_uart::HL_sci.h...
+Generating mock for test_uart::HL_sys_dma.h...
+Generating mock for test_uart::ftask.h...
+Generating mock for test_uart::mpu_prototypes.h...
+Generating mock for test_uart::os.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_uart.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_uart.c...
+Compiling test_uart::uart.c...
+Compiling test_uart::dma_cfg.c...
+Compiling test_uart::Mockmpu_prototypes.c...
+Compiling test_uart::Mockos.c...
+Compiling test_uart::Mockftask.c...
+Compiling test_uart::MockHL_sci.c...
+Compiling test_uart::MockHL_sys_dma.c...
+Compiling test_uart::test_uart_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+In file included from ./test/runners/test_uart_runner.c:12:
+./mocks/test_uart/MockHL_sys_dma.h:112:90: error: expected ')'
+  112 | void dmaGetInterruptStatus_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaFlg_t* pFlag);
+      |                                                                                          ^
+sil_hal/HL_reg_sci.h:575:19: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                   ^
+./mocks/test_uart/MockHL_sys_dma.h:112:90: note: to match this '('
+sil_hal/HL_reg_sci.h:575:18: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                  ^
+In file included from ./test/runners/test_uart_runner.c:12:
+./mocks/test_uart/MockHL_sys_dma.h:112:90: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+  112 | void dmaGetInterruptStatus_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaFlg_t* pFlag);
+      |                                                                                          ^
+      |                                                                                          int
+sil_hal/HL_reg_sci.h:575:19: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                   ^
+In file included from ./test/runners/test_uart_runner.c:12:
+./mocks/test_uart/MockHL_sys_dma.h:112:98: error: expected ')'
+  112 | void dmaGetInterruptStatus_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaFlg_t* pFlag);
+      |                                                                                                  ^
+./mocks/test_uart/MockHL_sys_dma.h:112:39: note: to match this '('
+  112 | void dmaGetInterruptStatus_CMockExpect(UNITY_LINE_TYPE cmock_line, dmaChannel_t channel, dmaFlg_t* pFlag);
+      |                                       ^
+./mocks/test_uart/MockHL_sys_dma.h:113:77: error: expected ')'
+  113 | typedef void (* CMOCK_dmaGetInterruptStatus_CALLBACK)(dmaChannel_t channel, dmaFlg_t* pFlag, int cmock_num_calls);
+      |                                                                             ^
+sil_hal/HL_reg_sci.h:575:19: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                   ^
+./mocks/test_uart/MockHL_sys_dma.h:113:77: note: to match this '('
+sil_hal/HL_reg_sci.h:575:18: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                  ^
+In file included from ./test/runners/test_uart_runner.c:12:
+./mocks/test_uart/MockHL_sys_dma.h:113:77: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+  113 | typedef void (* CMOCK_dmaGetInterruptStatus_CALLBACK)(dmaChannel_t channel, dmaFlg_t* pFlag, int cmock_num_calls);
+      |                                                                             ^
+      |                                                                             int
+sil_hal/HL_reg_sci.h:575:19: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                   ^
+In file included from ./test/runners/test_uart_runner.c:12:
+./mocks/test_uart/MockHL_sys_dma.h:113:85: error: expected ')'
+  113 | typedef void (* CMOCK_dmaGetInterruptStatus_CALLBACK)(dmaChannel_t channel, dmaFlg_t* pFlag, int cmock_num_calls);
+      |                                                                                     ^
+./mocks/test_uart/MockHL_sys_dma.h:113:54: note: to match this '('
+  113 | typedef void (* CMOCK_dmaGetInterruptStatus_CALLBACK)(dmaChannel_t channel, dmaFlg_t* pFlag, int cmock_num_calls);
+      |                                                      ^
+./mocks/test_uart/MockHL_sys_dma.h:121:84: error: expected ')'
+  121 | void dmaGetInterruptStatus_CMockReturnMemThruPtr_pFlag(UNITY_LINE_TYPE cmock_line, dmaFlg_t const* pFlag, size_t cmock_size);
+      |                                                                                    ^
+sil_hal/HL_reg_sci.h:575:19: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                   ^
+./mocks/test_uart/MockHL_sys_dma.h:121:84: note: to match this '('
+sil_hal/HL_reg_sci.h:575:18: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                  ^
+In file included from ./test/runners/test_uart_runner.c:12:
+./mocks/test_uart/MockHL_sys_dma.h:121:93: error: invalid parameter name: 'const' is a keyword
+  121 | void dmaGetInterruptStatus_CMockReturnMemThruPtr_pFlag(UNITY_LINE_TYPE cmock_line, dmaFlg_t const* pFlag, size_t cmock_size);
+      |                                                                                             ^
+./mocks/test_uart/MockHL_sys_dma.h:121:84: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+  121 | void dmaGetInterruptStatus_CMockReturnMemThruPtr_pFlag(UNITY_LINE_TYPE cmock_line, dmaFlg_t const* pFlag, size_t cmock_size);
+      |                                                                                    ^
+      |                                                                                    int
+sil_hal/HL_reg_sci.h:575:19: note: expanded from macro 'dmaFlg_t'
+  575 | #define dmaFlg_t (0U)
+      |                   ^
+In file included from ./test/runners/test_uart_runner.c:12:
+./mocks/test_uart/MockHL_sys_dma.h:121:98: error: expected ')'
+  121 | void dmaGetInterruptStatus_CMockReturnMemThruPtr_pFlag(UNITY_LINE_TYPE cmock_line, dmaFlg_t const* pFlag, size_t cmock_size);
+      |                                                                                                  ^
+./mocks/test_uart/MockHL_sys_dma.h:121:55: note: to match this '('
+  121 | void dmaGetInterruptStatus_CMockReturnMemThruPtr_pFlag(UNITY_LINE_TYPE cmock_line, dmaFlg_t const* pFlag, size_t cmock_size);
+      |                                                       ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:69:23: error: expected member name or ';' after declaration specifiers
+   69 |     volatile uint32_t CTL;     /*!< control                    */
+      |     ~~~~~~~~~~~~~~~~~ ^
+sil_hal/HL_reg_sci.h:375:32: note: expanded from macro 'CTL'
+  375 | #define CTL                   (0U)
+      |                                ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:69:23: error: expected ')'
+sil_hal/HL_reg_sci.h:375:32: note: expanded from macro 'CTL'
+  375 | #define CTL                   (0U)
+      |                                ^
+sil_hal/HL_can.h:69:23: note: to match this '('
+sil_hal/HL_reg_sci.h:375:31: note: expanded from macro 'CTL'
+  375 | #define CTL                   (0U)
+      |                               ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:70:23: error: expected member name or ';' after declaration specifiers
+   70 |     volatile uint32_t ES;      /*!< error status               */
+      |     ~~~~~~~~~~~~~~~~~ ^
+sil_hal/HL_reg_sci.h:380:32: note: expanded from macro 'ES'
+  380 | #define ES                    (0U)
+      |                                ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:70:23: error: expected ')'
+sil_hal/HL_reg_sci.h:380:32: note: expanded from macro 'ES'
+  380 | #define ES                    (0U)
+      |                                ^
+sil_hal/HL_can.h:70:23: note: to match this '('
+sil_hal/HL_reg_sci.h:380:31: note: expanded from macro 'ES'
+  380 | #define ES                    (0U)
+      |                               ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:71:23: error: expected member name or ';' after declaration specifiers
+   71 |     volatile uint32_t ABOTR;   /*!< abort transmission         */
+      |     ~~~~~~~~~~~~~~~~~ ^
+sil_hal/HL_reg_sci.h:385:32: note: expanded from macro 'ABOTR'
+  385 | #define ABOTR                 (0U)
+      |                                ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:71:23: error: expected ')'
+sil_hal/HL_reg_sci.h:385:32: note: expanded from macro 'ABOTR'
+  385 | #define ABOTR                 (0U)
+      |                                ^
+sil_hal/HL_can.h:71:23: note: to match this '('
+sil_hal/HL_reg_sci.h:385:31: note: expanded from macro 'ABOTR'
+  385 | #define ABOTR                 (0U)
+      |                               ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:72:23: error: expected member name or ';' after declaration specifiers
+   72 |     volatile uint32_t IF1ARB;  /*!< IF1 arbitration           */
+      |     ~~~~~~~~~~~~~~~~~ ^
+sil_hal/HL_reg_sci.h:390:32: note: expanded from macro 'IF1ARB'
+  390 | #define IF1ARB                (0U)
+      |                                ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:72:23: error: expected ')'
+sil_hal/HL_reg_sci.h:390:32: note: expanded from macro 'IF1ARB'
+  390 | #define IF1ARB                (0U)
+      |                                ^
+sil_hal/HL_can.h:72:23: note: to match this '('
+sil_hal/HL_reg_sci.h:390:31: note: expanded from macro 'IF1ARB'
+  390 | #define IF1ARB                (0U)
+      |                               ^
+In file included from ./test/runners/test_uart_runner.c:13:
+In file included from ./mocks/test_uart/Mockftask.h:17:
+In file included from ../../src/app/task/ftask/ftask.h:62:
+In file included from ../../src/app/driver/config/can_cfg.h:62:
+sil_hal/HL_can.h:73:23: error: expected member name or ';' after declaration specifiers
+   73 |     volatile uint32_t IF1CMD;  /*!< IF1 command mask          */
+      |     ~~~~~~~~~~~~~~~~~ ^
+sil_hal/HL_reg_sci.h:395:32: note: expanded from macro 'IF1CMD'
+  395 | #define IF1CMD                (0U)
+      |                                ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_uart" -I"../../src/app/driver/uart" -I"../../src/app/driver/config" -I"../../src/app/driver/dma" -I"../../src/app/driver/rtc" -I"../../src/app/driver/spi" -I"../../src/app/task/config" -I"../../src/app/task/ftask" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"FOXBMS_UART_SUPPORT=1" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "./test/runners/test_uart_runner.c" -o "./test/out/test_uart/test_uart_runner.o" -MMD -MF "./test/dependencies/test_uart/test_uart_runner.d"
+🌱 Ceedling could not complete operations because of errors

@@ -130,6 +130,117 @@ BASE_ONLY_TYPES = {
 BASELINE_COMMIT = "308028fb"
 FINAL_STATUS = "synthetic_ready_with_limitations"
 
+# Every semantic rule _validate_semantic_rules evaluates, declared once.
+#
+# This set is a CONTRACT, not the measurement. The measurement is
+# self._semantic_rules_run, which each rule block fills in on entry via
+# _semantic_rule_entered. The coverage dimension `semantic_consistency_checks`
+# reports the size of the intersection of the two, so the figure is computed
+# from what ran and the declaration is checked against it.
+#
+# The previous figure was the literal 10/10 with the detail "10 check
+# categories executed per run". Neither half was true: the function evaluates 21
+# rules across 6 categories, so the numerator understated the work by more than
+# half and the denominator named a quantity the tool never had. A literal cannot
+# detect its own drift, which is why this is now derived.
+#
+# Verified against the source by the self-tests `semantic rules actually executed
+# equal the declared set` (no rule missing a marker) and `every declared semantic
+# rule is a rule the tool can emit` (no rule id that no findings.add site uses).
+SEMANTIC_RULE_IDS = frozenset({
+    "asil_assignment_validator",
+    "change_impact_analyzer",
+    "configuration_consistency",
+    "diagnostic_coverage_claim_validator",
+    "evidence_reference_validator",
+    "execution_kind_classifier",
+    "execution_kind_orthogonality",
+    "ftti_budget_consistency_checker",
+    "hsi_interface_consistency",
+    "identity_uniqueness_checker",
+    "incomplete_propagation",
+    "parameter_threshold_order",
+    "parameter_unit_consistency",
+    "production_authorization_governance_checker",
+    "refinement_cycle_detector",
+    "requirement_applicability_validator",
+    "safety_goal_mitigates_hazard",
+    "safety_requirement_completeness_checker",
+    "source_anchor_drift_detector",
+    "traceability_checker",
+    "verification_traceability_checker",
+})
+
+# Rule ids that assert GOVERNANCE SEMANTICS: a claim that this corpus carries
+# production authority, verification credit, human approval, a determined ASIL,
+# a conformity claim, a certification claim, or any other authority it has not
+# been given.
+#
+# Acceptance gate [7/8] is named for governance semantics and filtered its
+# detector output to two of the rules that can raise governance findings,
+# discarding the rest. It therefore could not catch a record asserting an ASIL
+# determination, an ISO 26262 conformity claim, a certification claim, or
+# authorized_for_production -- which is the class of claim the gate exists to
+# catch. The set below is every rule id in RULE_IDS whose id or detector
+# semantics are a governance claim; the gate counts findings from all of them.
+# Self-test `the governance rule set is non-empty and covers the four named
+# claim classes` pins the membership.
+GOVERNANCE_SEMANTIC_RULE_IDS = frozenset({
+    "governance_authority_claim",
+    "production_authorization_governance_checker",
+    "production_authorized_rejected",
+    "verification_credit_rejected",
+    "human_approval_rejected",
+    "asil_determination_claim",
+    "conformity_claim",
+    "certification_claim",
+})
+
+# Fields whose presence with a granted value is a governance claim. Keyed by the
+# rule that reports it. A record may spell the claim any of these ways, so the
+# check is a key scan and not a test of three named fields: a record that says it
+# was approved under a different key would otherwise pass all three named checks.
+# The value sets are the same grant vocabulary _validate_governance_semantics
+# uses, so "granted" means the same thing to both rules.
+GOVERNANCE_CLAIM_FIELDS = {
+    "asil_determination_claim": frozenset({
+        "asil_determination", "asil_determined", "asil_assignment_determined",
+        "asil_claim", "asil_declared", "sil_determination", "ASIL",
+    }),
+    "conformity_claim": frozenset({
+        "conformity", "conformity_claim", "conformity_declared",
+        "iso26262_conformity", "iso_26262_conformity", "compliance_claim",
+    }),
+    "certification_claim": frozenset({
+        "certification", "certification_claim", "certified", "certificate_issued",
+        "certified_by", "audited",
+    }),
+}
+
+# Floor for the `source_grounding` coverage dimension, as a fraction.
+#
+# Stated rather than derived, because no measurement in the tree yields it; but
+# stated in full, because a floor with no stated reasoning is indistinguishable
+# from a number chosen to make today's tree pass.
+#
+# The dimension counts records carrying at least one `source_refs` entry over
+# every record carrying an id. The denominator includes registries, link files
+# and governance records that have no upstream source to point at, so the raw
+# fraction is structurally capped well below 1 and cannot be read as a score.
+# What the floor protects is a specific claim the corpus makes everywhere: that
+# the traceability graph is backed by the source it names. That claim stops
+# being checkable once almost nothing carries a source.
+#
+#   measured level of this tree : 128/298 = 0.430
+#   level at which it failed    :   5/298 = 0.017  (audit corruption C2)
+#   this floor                  : 0.20
+#
+# The floor sits below the measured level, with headroom for the honest
+# incompleteness the corpus already reports in its gaps list, and far above the
+# corrupted level. Raising it toward 0.43 would convert a documented gap into a
+# gate failure, which is the same defect as the tautological gate it replaces.
+SOURCE_GROUNDING_FLOOR = 0.20
+
 # Stable identifiers for every detection rule the tool can emit. The scenario
 # harness resolves a scenario's declared detector against this map, so a rule
 # that is claimed by a scenario but is not implemented fails the scenario with
@@ -137,6 +248,9 @@ FINAL_STATUS = "synthetic_ready_with_limitations"
 # matching a neighbouring finding.
 RULE_IDS = {
     "schema_file_check",
+    "asil_determination_claim",
+    "conformity_claim",
+    "certification_claim",
     "artifact_schema_validation",
     "base_schema_validation",
     "unknown_profile",
@@ -321,6 +435,9 @@ class CorpusTool:
         # the acceptance suite) and cmd_scenario_test (step 5/8) both need it and
         # must report the same number; see _execute_scenarios.
         self._scenario_run_cache = None
+        # Rule ids _validate_semantic_rules actually evaluated on this run.
+        # Reset by _run_detectors; see _semantic_rule_entered.
+        self._semantic_rules_run = set()
         # When True the provenance detectors still run and still emit every
         # finding -- they are never switched off -- but their boolean result is
         # forced to True so a caller can read the tally without turning red.
@@ -1121,9 +1238,10 @@ class CorpusTool:
         """
         ok = True
         tally = {"anchors": 0, "hash_verified": 0, "hash_unverified_placeholder": 0,
-                 "hash_mismatch": 0, "file_missing": 0, "line_range_ok": 0,
-                 "line_range_out_of_bounds": 0, "line_range_unparseable": 0,
-                 "symbol_checked": 0, "symbol_present": 0, "symbol_absent": 0,
+                 "hash_mismatch": 0, "file_missing": 0, "no_local_file": 0,
+                 "line_range_ok": 0, "line_range_out_of_bounds": 0,
+                 "line_range_unparseable": 0, "symbol_checked": 0,
+                 "symbol_present": 0, "symbol_absent": 0,
                  "symbol_unverifiable_prose": 0}
         for a in self._load_source_anchors():
             aid = a.get("anchor_id")
@@ -1134,8 +1252,22 @@ class CorpusTool:
                 # No repository file named (e.g. a documentation anchor records
                 # only a URL). Nothing is claimed about a local file, so there is
                 # nothing to contradict; the content_hash is still judged below.
-                self.provenance_tally.setdefault("anchor_without_local_file", 0)
-                self.provenance_tally["anchor_without_local_file"] += 1
+                #
+                # This was counted into `self.provenance_tally` under a key that
+                # no reporter ever read, so an anchor in this class vanished
+                # from the output entirely: the line said "130 anchor(s); 123
+                # content_hash verified" and the reader could not tell whether the
+                # other 7 had been checked and failed, were placeholders, or had
+                # no local file to check. The tally key is now the one the
+                # reporter prints, so the gap is stated rather than implied.
+                #
+                # Note the asymmetry this creates, and it is deliberate: an
+                # anchor whose file is named but ABSENT is `file_missing` and is
+                # a high-severity finding, because the record claims a local file
+                # it does not have. An anchor that names no local file at all
+                # claims nothing about this repository, so there is nothing to
+                # contradict. It is counted and reported, not failed.
+                tally["no_local_file"] += 1
                 actual = None
             else:
                 fp = self.root / rel
@@ -1347,7 +1479,11 @@ class CorpusTool:
               f"{sa.get('hash_verified', 0)} content_hash verified, "
               f"{sa.get('hash_unverified_placeholder', 0)} placeholder, "
               f"{sa.get('hash_mismatch', 0)} mismatched; "
-              f"{sa.get('file_missing', 0)} name a file that does not exist")
+              f"{sa.get('file_missing', 0)} name a file that does not exist; "
+              f"{sa.get('no_local_file', 0)} name no local file at all (nothing to check "
+              f"against, reported not failed). The three hash figures do not add up to the "
+              f"anchor count and are not meant to: an anchor in the last class and an anchor "
+              f"carrying no content_hash field are both outside the checked set.")
         print(f"    anchor line ranges  : {sa.get('line_range_ok', 0)} within bounds, "
               f"{sa.get('line_range_out_of_bounds', 0)} outside the file, "
               f"{sa.get('line_range_unparseable', 0)} unparseable")
@@ -1452,16 +1588,102 @@ class CorpusTool:
 
             if _scan(d, []):
                 ok = False
+
+        # Authority claims under names the three named checks above do not read.
+        #
+        # _validate_governance_semantics checks three specific keys
+        # (production_authorized, product_verification_credit,
+        # human_approval_status) and scans a fixed `authority_keys` set for
+        # production authority. Four claim CLASSES it does not look for at all,
+        # and acceptance gate [7/8] is named for governance semantics:
+        #
+        #   * an ASIL determination -- this corpus performs no ASIL analysis
+        #     that would determine one, so any record asserting a determined
+        #     ASIL is claiming an authority it cannot have;
+        #   * an ISO 26262 / compliance CONFORMITY claim -- the corpus documents
+        #     what it did NOT verify; conformity is a certification-body act;
+        #   * a CERTIFICATION claim -- same;
+        #   * an `authorized_for_production` / `approved_for_production` style key
+        #     nested somewhere other than the three named keys -- this class is
+        #     already covered by the `authority_keys` scan above, which reports
+        #     under `governance_authority_claim`. It is deliberately NOT repeated
+        #     here: one violation must produce one finding, or the count the gate
+        #     prints is inflated and a reader cannot tell a new defect from a
+        #     re-report of an old one.
+        #
+        # Each class is a KEY SCAN over the whole record, not a test of one
+        # field, and each reports under its own rule id so the gate can say
+        # which class of claim was made. Values must be in the same grant
+        # vocabulary the authority check uses, so "ISO 26262 conformity: not
+        # claimed" and `asil_determination: null` are silent and only an
+        # affirmative grant is reported.
+        claim_grant_values = {True, "true", "yes", "approved", "granted", "authorized",
+                              "released", "production", "certified", "issued",
+                              "conformant", "conforming", "compliant", "determined"}
+
+        # An ASIL determination is expressed as an ASIL IDENTIFIER, not as the
+        # word "determined", so the shared vocabulary above would miss every real
+        # one: `asil_determination: "ASIL_D"` means the same as
+        # `asil_determination: "determined"`. A dedicated predicate covers both.
+        #
+        # The bare `asil` key is deliberately NOT in GOVERNANCE_CLAIM_FIELDS. The
+        # corpus records the ASIL it assigned itself on 33 safety goals and marks
+        # 14 more not_applicable; that is the corpus doing its own TARA and
+        # recording the result, which is not a claim that anyone determined it.
+        # Only an explicit determination/claim/declared key asserts authority.
+        asil_value = re.compile(r"^(?:ASIL[_ ]?[A-D]|SIL[_ ]?[1-4]|QM|DETERMINED"
+                                r"|DETERMINED[_ ]?ASIL)$", re.IGNORECASE)
+
+        def _claim_granted(v, rule):
+            if isinstance(v, bool):
+                return v is True
+            if isinstance(v, str):
+                if rule == "asil_determination_claim" and asil_value.match(v.strip()):
+                    return True
+                return v.strip().lower() in claim_grant_values
+            return False
+
+        for key, (path, d) in index.items():
+            aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
+            if not isinstance(d, dict):
+                continue
+
+            def _scan_claim(node, trail, rule, label):
+                if isinstance(node, dict):
+                    for k, v in node.items():
+                        if k in GOVERNANCE_CLAIM_FIELDS[rule] and _claim_granted(v, rule):
+                            self.findings.add(
+                                "critical", "governance", aid,
+                                f"field '{'/'.join(trail + [k])}' asserts {label} ({v!r}); this "
+                                f"corpus makes no {label}, and none has been determined, "
+                                f"conferred, certified or approved by anyone", rule)
+                            return True
+                        if _scan_claim(v, trail + [k], rule, label):
+                            return True
+                elif isinstance(node, list):
+                    for i, v in enumerate(node):
+                        if _scan_claim(v, trail + [str(i)], rule, label):
+                            return True
+                return False
+
+            for rule, label in (
+                    ("asil_determination_claim", "ASIL determination"),
+                    ("conformity_claim", "ISO 26262 conformity claim"),
+                    ("certification_claim", "certification claim")):
+                if _scan_claim(d, [], rule, label):
+                    ok = False
         return ok
 
     def _governance_finding_count(self):
+        """Count findings that assert the corpus has authority it does not have.
+
+        Every rule id in GOVERNANCE_SEMANTIC_RULE_IDS counts, not the two the
+        gate used to name. A filter that keeps two rule ids out of nine cannot
+        see the seven it discards, and the seven include the claim classes the
+        gate is named for.
+        """
         return sum(1 for f in self.findings.items
-                   if f["category"] in ("governance", "provenance")
-                   and f.get("rule") in ("governance_authority_claim",
-                                         "production_authorized_rejected",
-                                         "human_approval_rejected",
-                                         "verification_credit_rejected",
-                                         "production_authorization_governance_checker"))
+                   if f.get("rule") in GOVERNANCE_SEMANTIC_RULE_IDS)
 
 
     def _resolve_ftti_ms(self, aid, d, param_values):
@@ -1563,6 +1785,47 @@ class CorpusTool:
                 return True
         return False
 
+    def _semantic_rule_entered(self, *rule_ids):
+        """Record that the named semantic rules were EVALUATED on this run.
+
+        A rule that finds nothing is still a rule that ran. Counting findings
+        cannot tell those two apart, so the count would fall to zero on a clean
+        corpus and the coverage dimension `semantic_consistency_checks` would
+        report 0/0 on exactly the tree that passes every check. Each rule block
+        in _validate_semantic_rules therefore announces itself here on entry, and
+        the dimension is computed from what actually executed.
+
+        SEMANTIC_RULE_IDS below is the declared set. It is not trusted: the
+        self-test `semantic rules actually executed equal the declared set`
+        compares it against this recorder, so a rule added without a marker (or
+        a marker for a rule that was deleted) fails the suite rather than quietly
+        changing the figure.
+        """
+        self._semantic_rules_run.update(rule_ids)
+
+    def _semantic_rules_finding_categories(self):
+        """Categories of the semantic-rule findings emitted on this run.
+
+        Read from self.findings, so it describes what the run actually found.
+        On a clean corpus that is the empty set, and the caller must say so
+        rather than substitute a constant for a measurement it does not have.
+        """
+        return {f.get("category") for f in self.findings.items
+                if f.get("rule") in self._semantic_rules_run}
+
+    def _run_detectors(self, index, links):
+        """Reset the semantic-rule recorder, then run every detector.
+
+        A recorder that was never reset would accumulate across calls and report
+        the union of every run in the process, so a caller that runs the
+        detectors twice would see the same figure and could not tell whether the
+        second run actually did the work.
+        """
+        self._semantic_rules_run = set()
+        self._validate_governance_semantics(index)
+        self._validate_provenance_evidence(index)
+        self._validate_semantic_rules(index, links)
+
     def _validate_semantic_rules(self, index, links):
         """Semantic consistency rules (subset of the 10 check categories)."""
         ok = True
@@ -1570,6 +1833,7 @@ class CorpusTool:
         def _id(key):
             return key[1] if isinstance(key, tuple) and len(key) >= 2 else key
         # Rule: every FSR (safety requirement in safety domain with FSR id) has a refines parent (safety goal) or explicit rationale
+        self._semantic_rule_entered("traceability_checker")
         fsr_ids = [_id(k) for k in index if "-FSR-" in _id(k)]
         parent_of = {}
         for l in links:
@@ -1582,6 +1846,7 @@ class CorpusTool:
                                   "traceability_checker")
                 ok = False
         # Rule: safety goal mitigates a hazard
+        self._semantic_rule_entered("safety_goal_mitigates_hazard")
         sgo_ids = [_id(k) for k in index if "-SGO-" in _id(k)]
         mitigates = {l["source_id"] for l in links if l.get("relation_type") == "mitigates"}
         for sgo in sgo_ids:
@@ -1590,6 +1855,7 @@ class CorpusTool:
                                   "safety goal has no mitigates link to hazard",
                                   "safety_goal_mitigates_hazard")
         # Rule: requirements of safety classification need verifies or validates link.
+        self._semantic_rule_entered("verification_traceability_checker")
         # Endpoint: the requirement is the TARGET of the link. Master prompt section 13 declares
         # "verifies: verification measure -> requirement/design" and "validates: validation measure
         # -> stakeholder need/use case/goal", so the measure is the source and the verified artefact
@@ -1611,6 +1877,7 @@ class CorpusTool:
                                       "safety requirement has no verifies/validates link",
                                       "verification_traceability_checker")
         # Rule: execution_kind / outcome orthogonality
+        self._semantic_rule_entered("execution_kind_orthogonality")
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "execution":
@@ -1626,6 +1893,7 @@ class CorpusTool:
                                       "execution_kind_orthogonality")
                     ok = False
         # Rule: FTTI budget consistency checker (MUT-006)
+        self._semantic_rule_entered("ftti_budget_consistency_checker")
         # A safety goal must close inside the fault tolerant time interval.
         #
         # Two defects in the previous form of this rule are corrected here, and
@@ -1675,6 +1943,7 @@ class CorpusTool:
                 sources_registry[a.get("anchor_id")] = a
 
         # Rule: Parameter unit consistency check (MUT-004)
+        self._semantic_rule_entered("parameter_unit_consistency")
         # Checks parameter-shaped artifacts AND entries inside parameter registries.
         for pid, prm in self._iter_parameters(index):
             unit = prm.get("unit")
@@ -1691,6 +1960,7 @@ class CorpusTool:
                                           "parameter_unit_consistency")
 
         # Rule: HSI/SW interface consistency checker (MUT-005)
+        self._semantic_rule_entered("hsi_interface_consistency")
         # Two layers:
         #   a) cross-check: same-named HSI signal vs hardware requirement signal
         #      must agree on polarity/direction/startup_default.
@@ -1754,6 +2024,7 @@ class CorpusTool:
         # Rule: FTTI budget consistency checker (MUT-006) - already implemented above
 
         # Rule: Parameter threshold order validator (MUT-007)
+        self._semantic_rule_entered("parameter_threshold_order")
         # Applies to parameter-shaped artifacts AND registry entries.
         for pid, prm in self._iter_parameters(index):
             thresholds = prm.get("thresholds") or {}
@@ -1776,6 +2047,7 @@ class CorpusTool:
                         ok = False
 
         # Rule: Safety requirement completeness checker (MUT-008)
+        self._semantic_rule_entered("safety_requirement_completeness_checker")
         #
         # SCOPE WIDENED, and only widened. This rule used to carry a third
         # condition, `"-FSR-" in _id(key)`, alongside the two that define its
@@ -1810,6 +2082,7 @@ class CorpusTool:
                                       "safety_requirement_completeness_checker")
 
         # Rule: ASIL assignment validator (MUT-009)
+        self._semantic_rule_entered("asil_assignment_validator")
         #
         # Three checks, in increasing strength:
         #   1. the ASIL is one of the declared values;
@@ -1878,6 +2151,7 @@ class CorpusTool:
                             ok = False
 
         # Rule: Requirement applicability validator (MUT-013)
+        self._semantic_rule_entered("requirement_applicability_validator")
         #
         # A requirement whose ASIL allocation is recorded as not applicable is
         # claiming that no ASIL determination applies to it. That claim needs a
@@ -1909,6 +2183,7 @@ class CorpusTool:
                                   "requirement_applicability_validator")
 
         # Rule: Diagnostic coverage claim validator (MUT-010)
+        self._semantic_rule_entered("diagnostic_coverage_claim_validator")
         #
         # SCOPE WIDENED, and only widened. This rule carried the same third
         # condition, `"-FSR-" in _id(key)`, that MUT-008 carried until finding
@@ -1954,6 +2229,7 @@ class CorpusTool:
                                           "diagnostic_coverage_claim_validator")
 
         # Rule: Configuration consistency checker (MUT-011)
+        self._semantic_rule_entered("configuration_consistency")
         # Checks configuration/combination fields on parameter-shaped artifacts,
         # registry entries and requirements (multi-select of mutually exclusive
         # options is invalid).
@@ -1993,6 +2269,7 @@ class CorpusTool:
             _config_check(pid, prm.get("configuration_selection") or prm.get("configuration"))
 
         # Rule: Execution kind classifier (MUT-012)
+        self._semantic_rule_entered("execution_kind_classifier")
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("artifact_type") == "execution":
@@ -2104,6 +2381,7 @@ class CorpusTool:
                             "execution_kind_classifier")
 
         # Rule: Evidence reference validator (MUT-014)
+        self._semantic_rule_entered("evidence_reference_validator")
         # Build a set of all artifact IDs in the index
         all_artifact_ids = set(_id(k) for k in index.keys())
         for key, (p, d) in index.items():
@@ -2131,6 +2409,7 @@ class CorpusTool:
                                           "evidence_reference_validator")
 
         # Rule: Identity uniqueness checker (profile-aware) (MUT-015)
+        self._semantic_rule_entered("identity_uniqueness_checker")
         id_counts = {}
         for key, (p, d) in index.items():
             aid = _id(key)
@@ -2144,6 +2423,7 @@ class CorpusTool:
                                   "identity_uniqueness_checker")
 
         # Rule: Source anchor drift detector (MUT-016)
+        self._semantic_rule_entered("source_anchor_drift_detector")
         sr = self.sources_dir / "source-registry.json"
         sources_registry = {}
         if sr.exists():
@@ -2188,6 +2468,7 @@ class CorpusTool:
                         drift_reported = True
 
         # Rule: Production authorization governance checker (MUT-017)
+        self._semantic_rule_entered("production_authorization_governance_checker")
         for key, (p, d) in index.items():
             aid = _id(key)
             if d.get("production_authorized") is True:
@@ -2197,6 +2478,7 @@ class CorpusTool:
                                       "production_authorization_governance_checker")
 
         # Rule: Change impact analyzer (MUT-018)
+        self._semantic_rule_entered("change_impact_analyzer", "incomplete_propagation")
         # A changed parameter value must be reflected in the revision of every
         # dependent artifact (artifacts referencing the parameter via parameter_refs,
         # assumptions or thresholds derived from it). Dependents whose revision
@@ -2251,6 +2533,7 @@ class CorpusTool:
                                           "incomplete_propagation")
 
         # Rule: Refinement cycle detector (MUT-019)
+        self._semantic_rule_entered("refinement_cycle_detector")
         refines_graph = {}
         for l in links:
             if l.get("relation_type") == "refines":
@@ -2437,6 +2720,35 @@ class CorpusTool:
                 "denominator": scn["total_mutations"],
                 "detail": f"{mut_detail}; {chg_detail}"}
 
+    def _measure_export_reproducibility(self):
+        """Export the corpus twice into throwaway dirs; compare content hashes.
+
+        Returns (detail_text, reproducible). Deliberately independent of
+        docs/artifacts/exports/: a caller that runs cmd_export() first must not
+        be able to satisfy this figure by having written the very file that the
+        old presence check looked for.
+        """
+        import tempfile
+        digests = []
+        try:
+            for _ in range(2):
+                with tempfile.TemporaryDirectory(prefix="corpus-export-") as td:
+                    self.cmd_export(output_dir=Path(td) / "export")
+                    m = load_json(Path(td) / "export" / "manifest.json")
+                    digests.append(dict(m.get("content_hashes") or {}))
+        except Exception as e:
+            return f"export could not be run twice for comparison: {e}", False
+        if not digests[0]:
+            return "export manifest declared no content hashes, so nothing was compared", False
+        keys = set(digests[0]) | set(digests[1])
+        unstable = sorted(k for k in keys if digests[0].get(k) != digests[1].get(k))
+        if unstable:
+            return (f"{len(keys) - len(unstable)}/{len(keys)} exported file(s) hashed identically "
+                    f"across two independent exports; unstable: {unstable}"), False
+        return (f"{len(keys)} exported file(s) hashed identically across two independent exports "
+                f"into separate temporary directories; measured here, not read from "
+                f"docs/artifacts/exports/"), True
+
     def _coverage_dimensions(self):
         """Compute every completion dimension. Pure: no printing, no writes.
 
@@ -2532,8 +2844,67 @@ class CorpusTool:
                                                     f"(link validation re-run for this figure)"}
 
         # semantic consistency checks executed
-        dims["semantic_consistency_checks"] = {"numerator": 10, "denominator": 10,
-                                               "detail": "10 check categories executed per run"}
+        #
+        # COMPUTED, from the recorder _validate_semantic_rules fills in on entry.
+        # This dimension used to be the literal 10/10 with the detail "10 check
+        # categories executed per run". Both halves were wrong: the function
+        # evaluates 21 rules across 6 categories, so the figure understated the
+        # work by more than half. Worse, a literal is incapable of detecting
+        # that it went stale -- a rule deleted from the function, or renamed,
+        # or added, would leave the figure at exactly 10/10 and the suite green.
+        #
+        # The denominator is the DECLARED set (SEMANTIC_RULE_IDS) and the
+        # numerator is what actually executed, so the figure is a measurement
+        # and a discrepancy between the two is visible in the ratio. A rule
+        # block that runs but announces nothing, or a marker for a rule that was
+        # removed, moves the numerator off the denominator.
+        #
+        # The category count is computed from the executed rules' finding
+        # categories, not declared. If the function emitted nothing this run the
+        # category count is reported as measured-but-unavailable rather than
+        # silently reported as 6.
+        # The recorder is order-dependent by nature: it says what THIS
+        # invocation of _validate_semantic_rules did. cmd_coverage is called at
+        # step 3/8 of the acceptance suite and the governance gate at 7/8, so
+        # reading the recorder here would report whatever an earlier caller left
+        # behind -- and would report zero from a bare `corpus.py coverage`. The
+        # rules are therefore re-run against a scratch Findings and a scratch
+        # recorder for this figure, and the caller's state is restored, the same
+        # pattern traceability_integrity below uses for its dangling count.
+        saved_findings = self.findings
+        saved_rules = self._semantic_rules_run
+        scratch = Findings()
+        self.findings = scratch
+        self._semantic_rules_run = set()
+        try:
+            self._validate_semantic_rules(index, links)
+            executed = set(self._semantic_rules_run)
+            exec_cats = {f.get("category") for f in scratch.items
+                         if f.get("rule") in executed}
+        finally:
+            self.findings = saved_findings
+            self._semantic_rules_run = saved_rules
+        declared = set(SEMANTIC_RULE_IDS)
+        dims["semantic_consistency_checks"] = {
+            "numerator": len(executed),
+            "denominator": len(declared),
+            "detail": (f"{len(executed)} of {len(declared)} declared semantic rules evaluated "
+                       f"on this run; {len(executed & declared)} of them are declared, "
+                       f"{len(executed - declared)} are executed but undeclared, "
+                       f"{len(declared - executed)} are declared but did not execute. "
+                       f"Measured by the recorder each rule block calls on entry, not declared"
+                       + (f"; {len(exec_cats)} finding categories observed: "
+                          f"{sorted(exec_cats)}" if exec_cats else
+                          "; finding categories unavailable (no rule fired on this run, which is "
+                          "the expected state of a passing corpus)")),
+            # Machine-readable, so a gate does not have to parse the detail text.
+            "rules_declared": len(declared),
+            "rules_executed": len(executed),
+            "rule_ids_executed": sorted(executed),
+            "undeclared_executed": sorted(executed - declared),
+            "declared_not_executed": sorted(declared - executed),
+            "categories": sorted(exec_cats),
+        }
 
         # automated review coverage
         # Numerator = union of reviewed artifact ids from EVERY review record under
@@ -2566,7 +2937,28 @@ class CorpusTool:
                                              "denominator": len(index_ids),
                                              "detail": f"{len(covered & index_ids)}/{len(index_ids)} artifacts covered by "
                                                        f"{n_review_records} review records; reviewed_by links "
-                                                       f"{agree} with reviewed_ids"}
+                                                       f"{agree} with reviewed_ids",
+                                             # Machine-readable, so a gate does not have to parse
+                                             # `agree` out of the detail text.
+                                             #
+                                             # The union above is deliberately forgiving: it
+                                             # means deleting every reviewed_by link does NOT
+                                             # reduce the numerator, because the 15 review
+                                             # records independently name the same 144 ids.
+                                             # That is the dimension working as designed, not a
+                                             # hole: coverage has two corroborating sources
+                                             # and losing one does not lose the fact. What
+                                             # losing one DOES mean is that the two sources now
+                                             # disagree, and disagreement between two records of
+                                             # the same fact is a defect. So this field, not the
+                                             # ratio, is what the gate reads. Measured on the
+                                             # tree this corpus ships: deleting all 229
+                                             # reviewed_by links leaves the numerator at 144
+                                             # and flips this to False.
+                                             "reviewed_by_agrees_with_records": reviewed_by_ids == reviewed_ids,
+                                             "reviewed_by_only": sorted(reviewed_by_ids - reviewed_ids),
+                                             "records_only": sorted(reviewed_ids - reviewed_by_ids),
+                                             "review_records": n_review_records}
 
         # verification planning
         # verification planning
@@ -2623,10 +3015,37 @@ class CorpusTool:
                       f"{n_synth} synthetic_fixture/none, {n_undeclared} undeclared"}
 
         # synthetic fixture coverage
-        synth = sum(1 for _, d in self.iter_corpus_artifacts()
-                    if d.get("profile") == "synthetic_reference" and d.get("id"))
-        dims["synthetic_fixture_coverage"] = {"numerator": synth, "denominator": 43,
-                                              "detail": f"{synth} synthetic_reference artifacts (target 43)"}
+        #
+        # The denominator used to be the literal 43 with the detail "N
+        # synthetic_reference artifacts (target 43)". With 207 artefacts present
+        # the ratio read 207/43 = 481%, which is not a coverage figure at all --
+        # it is a record count divided by a number typed in by hand that nothing
+        # in the tree derives. A reader taking it at face value concludes the
+        # corpus is nearly five times over-covered, which is meaningless.
+        #
+        # What is measurable and comparable is FAMILY COVERAGE: how many of the
+        # artefact families the corpus knows about the synthetic profile
+        # actually carries at least one record of. The denominator is derived
+        # from the same expected-family set artifact_population uses, so the two
+        # dimensions cannot disagree about what a family is. The raw record count
+        # is kept in the detail because it is the figure a reader will actually
+        # ask for, but it is labelled as a count, not used as a numerator.
+        synth_recs = [d for _, d in self.iter_corpus_artifacts()
+                      if d.get("profile") == "synthetic_reference" and d.get("id")]
+        synth_families = set(d.get("artifact_type", "unknown") for d in synth_recs)
+        synth_missing = sorted(expected_families - synth_families)
+        dims["synthetic_fixture_coverage"] = {
+            "numerator": len(expected_families & synth_families),
+            "denominator": len(expected_families),
+            "detail": (f"{len(expected_families & synth_families)}/{len(expected_families)} "
+                       f"artefact families hold at least one synthetic_reference record; "
+                       f"{len(synth_recs)} synthetic_reference records in total "
+                       f"(a count, not the numerator). "
+                       + (f"families with no synthetic record: {synth_missing}"
+                          if synth_missing else "every family the corpus defines has one")),
+            "families_missing": synth_missing,
+            "record_count": len(synth_recs),
+        }
 
         # negative scenario validation
         dims["negative_scenario_validation"] = self._negative_scenario_dimension()
@@ -2634,9 +3053,26 @@ class CorpusTool:
         dims["final_status"] = FINAL_STATUS
 
         # export reproducibility
-        exp_ok = (self.exports_dir / "manifest.json").exists()
+        #
+        # This was 1 if exports/manifest.json exists. That is circular in the
+        # acceptance suite: gate [6/8] calls cmd_export() immediately before
+        # cmd_coverage's result is read, so the manifest the dimension tested
+        # for was the one that same run had just written a moment earlier. The
+        # gate therefore verified that a file it had created existed.
+        #
+        # What the dimension claims is REPRODUCIBILITY, so that is what it now
+        # measures, on its own terms: export the corpus twice into two throwaway
+        # directories and compare the content hashes of every file each run
+        # declares. It reads nothing the suite wrote and it writes nothing into
+        # the tree, so the figure is the same from `corpus.py coverage` as from
+        # `corpus.py check`.
+        #
+        # Both runs write to a temporary directory outside the tree. Nothing
+        # under docs/artifacts/exports/ is created, read or deleted here.
+        exp_detail, exp_ok = self._measure_export_reproducibility()
         dims["export_reproducibility"] = {"numerator": 1 if exp_ok else 0, "denominator": 1,
-                                          "detail": "export manifest present" if exp_ok else "run export first"}
+                                          "detail": exp_detail,
+                                          "reproducible": exp_ok}
 
         # human approval (always 0 pending)
         dims["human_approval"] = {"numerator": 0, "denominator": total_art,
@@ -4607,30 +5043,48 @@ class CorpusTool:
                                  "file count; it does not compare that claim against the tree, "
                                  "which acceptance gate [2/8] inventory does"),
             "artifact_population": ("measured", "artifact families that hold at least one record"),
-            "standards_mapping": ("counted", "ASPICE processes and ISO parts that carry a recorded "
-                                  "disposition in the coverage plan; it is a count of plan entries, "
-                                  "not a count of satisfied mappings — read the disposition tally "
-                                  "above for that"),
+            "standards_mapping": ("measured", "ASPICE processes and ISO 26262 parts whose coverage-plan "
+                                  "text names at least one FB2- id that RESOLVES against the "
+                                  "artifact index or the source registry. It is a measure of "
+                                  "entries that are BACKED BY AN ARTEFACT THAT EXISTS, not a "
+                                  "count of plan entries and not a count of satisfied mappings; "
+                                  "entries declaring not_applicable are out of the denominator "
+                                  "and named in the detail, and entries that claim a disposition "
+                                  "while naming nothing that exists are counted as unbacked. "
+                                  "Read the disposition tally in the detail for the ASPICE/ISO "
+                                  "split"),
             "source_grounding": ("measured", "records carrying at least one `source_refs` entry"),
             "traceability_integrity": ("measured", "links that are not dangling, from a link "
                                        "validation re-run for this figure"),
-            "semantic_consistency_checks": ("constant", "10 by declaration in the tool; it states "
-                                            "how many categories the tool runs, not a measured result"),
+            "semantic_consistency_checks": ("measured", "semantic rules _validate_semantic_rules "
+                                            "actually EVALUATED this run, counted by the recorder "
+                                            "each rule block fills in on entry, over the rules "
+                                            "SEMANTIC_RULE_IDS declares. Computed, not declared: "
+                                            "the previous figure was the literal 10/10 against a "
+                                            "function that evaluates 21 rules"),
             "automated_review_coverage": ("measured", "unique indexed ids covered by a review "
-                                          "record or a `reviewed_by` link"),
+                                          "record or a `reviewed_by` link; the two sources are "
+                                          "unioned, and whether they AGREE is reported "
+                                          "separately because the ratio does not move when one is "
+                                          "deleted"),
             "verification_planning": ("measured", "test measures per safety requirement; a ratio, "
                                       "not a score, and over 100% means over-covered"),
             "actual_product_evidence": ("measured", "test measures backed by an execution whose "
                                          "`execution_kind` names the product's own hardware"),
-            "synthetic_fixture_coverage": ("counted", "`synthetic_reference` records against a "
-                                           "fixed target of 43, so a ratio above 100% is "
-                                           "over-coverage, not a score"),
+            "synthetic_fixture_coverage": ("measured", "artefact families holding at least one "
+                                           "`synthetic_reference` record, over the families the "
+                                           "corpus defines; the record count is reported in the "
+                                           "detail as a count. Not a ratio against a typed-in "
+                                           "target"),
             "negative_scenario_validation": ("measured", "mutation scenarios that PASS when "
                                               "executed: the rule each declares is implemented, is "
                                               "silent on the unmutated corpus, and produces a "
                                               "finding the baseline did not contain"),
-            "export_reproducibility": ("presence", "1 if the export manifest file exists; the hash "
-                                       "stability is measured separately by acceptance gate [6/8]"),
+            "export_reproducibility": ("measured", "1 if exporting the corpus into two separate "
+                                       "temporary directories yields identical content hashes for "
+                                       "every declared file; measured in this dimension rather "
+                                       "than read from exports/manifest.json, which the "
+                                       "acceptance suite creates moments before this runs"),
             "human_approval": ("constant", "0 by corpus policy; every record is `pending`. The "
                                "policy is enforced by the `human_approval_rejected` rule, not "
                                "measured by this dimension"),
@@ -5535,6 +5989,77 @@ class CorpusTool:
         ok &= self._gate("change lifecycles content-verified = 3/3",
                         self._change_lifecycle_gate(dims),
                         f"{self._change_lifecycle_passed(dims)}/3 scenarios passed content validation")
+        # Coverage dimensions are gated PER DIMENSION, not two out of fifteen.
+        #
+        # The gate used to read exactly two of the fifteen, and the thirteen it
+        # ignored could be driven to nothing without the suite noticing. Three
+        # collapses were demonstrated on this corpus and all three reported
+        # PASSED 8/8: standards_mapping to 0/38, source_grounding to 5/298, and
+        # every reviewed_by link deleted.
+        #
+        # Which dimensions are gated, and why each is or is not:
+        #
+        #   GATED  standards_mapping         zero backed entries means the corpus
+        #                                      claims ISO 26262 / ASPICE traceability
+        #                                      while mapping nothing to an artefact
+        #                                      that exists. That is a false claim.
+        #   GATED  source_grounding          a corpus of assertions with almost no
+        #                                      source backing is not a traceability
+        #                                      corpus. Floor and its reasoning at
+        #                                      SOURCE_GROUNDING_FLOOR.
+        #   GATED  reviewed_by agreement     two records of the same fact (the link
+        #                                      registry and the review records) must
+        #                                      agree. The ratio does NOT move when
+        #                                      the links are deleted -- the review
+        #                                      records independently carry the same
+        #                                      ids -- so agreement, not the ratio,
+        #                                      is what detects that collapse.
+        #   GATED  semantic_consistency_checks
+        #                                      every declared rule must actually
+        #                                      execute; a rule block that silently
+        #                                      stopped running is undetected otherwise
+        #   NOT GATED  automated_review_coverage ratio, actual_product_evidence,
+        #               verification_planning, human_approval, production_authorization.
+        #               These measure honest incompleteness that this corpus
+        #               documents in its gaps list: 144/259 artefacts reviewed,
+        #               0 target-hardware runs performed, 0 human approvals, 0
+        #               production authorizations by policy. Gating a ratio on a
+        #               number the corpus states it has NOT reached would make the
+        #               suite permanently red and teach a reader to ignore it. A
+        #               zero numerator IS gated where zero is broken (the three
+        #               above); a partial numerator is reported, not gated.
+        sm = dims["standards_mapping"]
+        ok &= self._gate("standards_mapping: at least one standards entry is backed by a real artefact",
+                         sm["numerator"] > 0,
+                         f"{sm['numerator']}/{sm['denominator']} backed"
+                         if sm["numerator"] else
+                         f"0/{sm['denominator']}: every entry claims a disposition and names no "
+                         f"artefact that exists, so the standards mapping is an assertion")
+        sg = dims["source_grounding"]
+        sg_ratio = sg["numerator"] / max(sg["denominator"], 1)
+        ok &= self._gate("source_grounding: enough records carry source_refs to make the "
+                         "traceability claim checkable",
+                         sg_ratio >= SOURCE_GROUNDING_FLOOR,
+                         f"{sg['numerator']}/{sg['denominator']} = {sg_ratio:.3f}, floor "
+                         f"{SOURCE_GROUNDING_FLOOR:.2f} (see SOURCE_GROUNDING_FLOOR for the reasoning)")
+        arc = dims["automated_review_coverage"]
+        ok &= self._gate("automated_review_coverage: the link registry and the review records "
+                         "agree on which artefacts are under review",
+                         arc["reviewed_by_agrees_with_records"],
+                         "reviewed_by links and reviewed_ids name the same set"
+                         if arc["reviewed_by_agrees_with_records"] else
+                         f"the two sources disagree: registry-only {len(arc['reviewed_by_only'])}, "
+                         f"records-only {len(arc['records_only'])}; coverage stays "
+                         f"{arc['numerator']}/{arc['denominator']} because the numerator is a "
+                         f"union, so the ratio alone cannot see this")
+        sc = dims["semantic_consistency_checks"]
+        ok &= self._gate("semantic_consistency_checks: every declared semantic rule executed",
+                         sc["rules_executed"] == sc["rules_declared"],
+                         f"{sc['rules_executed']}/{sc['rules_declared']} evaluated"
+                         + (f"; declared but not executed: {sc['declared_not_executed']}"
+                            if sc["declared_not_executed"] else "")
+                         + (f"; executed but undeclared: {sc['undeclared_executed']}"
+                            if sc["undeclared_executed"] else ""))
 
         print("\n[4/8] trace (hazard -> evidence reachability)")
         index = self.load_artifact_index()
@@ -5564,13 +6089,11 @@ class CorpusTool:
             if ch["unmet_required"]:
                 print(f"      NOT REACHED: {', '.join(ch['unmet_required'])} "
                       f"-- §13 permits a typed root/leaf exception here; this corpus declares none")
-            trace_ok &= self._gate(
+            chain_ok, chain_why = self._chain_gate(ch)
+            ok &= self._gate(
                 f"{prof}: §13 chain reaches every stage this profile instantiates",
-                not ch["unmet_required"],
-                (f"full chain through stage "
-                 f"{max(e['stage'] for e in ch['ladder'] if e['reached'])}; "
-                 f"unmet: {', '.join(ch['unmet_required'])}") if ch["unmet_required"]
-                else "every instantiated stage reached")
+                chain_ok,
+                chain_why)
         ok &= self._gate("hazard present in every profile", all(
             (prof, "FB2-SAF-HAZ-000001") in index for prof in chain_profiles))
         ok &= trace_ok
@@ -5598,13 +6121,38 @@ class CorpusTool:
         gov_index = self.load_artifact_index()
         self._validate_governance_semantics(gov_index)
         self._validate_semantic_rules(gov_index, links)
+        # EVERY rule id in GOVERNANCE_SEMANTIC_RULE_IDS counts, not the two this
+        # gate used to name.
+        #
+        # The old filter was
+        #     f["rule"] in ("governance_authority_claim",
+        #                   "production_authorization_governance_checker")
+        # which is two of the nine rules that can raise a governance finding. The
+        # seven it discarded are not harmless duplicates: they are the rules that
+        # catch an ASIL determination, an ISO 26262 conformity claim, a
+        # certification claim, and an authorized_for_production key -- the
+        # claim classes this gate is named for. The gate therefore could not
+        # fail on precisely the assertions it exists to prevent.
         gov_findings = [f for f in self.findings.items
-                        if f.get("rule") == "governance_authority_claim"
-                        or f.get("rule") == "production_authorization_governance_checker"]
+                        if f.get("rule") in GOVERNANCE_SEMANTIC_RULE_IDS]
+        # Prove the filter is not vacuous: a gate that counted zero rules would
+        # also report zero violations. The rule set is reported so a reader can
+        # see how many detectors were behind the count.
+        ok &= self._gate(
+            "the governance rule set is non-empty and covers the four named claim classes",
+            (len(GOVERNANCE_SEMANTIC_RULE_IDS) >= 4
+             and {"asil_determination_claim", "conformity_claim", "certification_claim",
+                  "governance_authority_claim"} <= GOVERNANCE_SEMANTIC_RULE_IDS),
+            f"{len(GOVERNANCE_SEMANTIC_RULE_IDS)} governance rule id(s) in the filter: "
+            f"{sorted(GOVERNANCE_SEMANTIC_RULE_IDS)}")
         ok &= self._gate("no production authority, no verification credit, no human approval",
                          not gov_findings,
-                         f"{len(gov_findings)} violation(s) this run" if gov_findings
-                         else f"governance detector ran over {len(gov_index)} records")
+                         f"{len(gov_findings)} violation(s) this run across "
+                         f"{len(GOVERNANCE_SEMANTIC_RULE_IDS)} governance rule(s)"
+                         if gov_findings
+                         else f"governance detector ran over {len(gov_index)} records with "
+                              f"{len(GOVERNANCE_SEMANTIC_RULE_IDS)} governance rules in the "
+                              f"filter; 0 violations")
         for f in gov_findings[:20]:
             print(f"      {f['severity']}/{f['category']} {f['rule']} on {f['artifact_id']}: "
                   f"{f['description']}")
@@ -5635,9 +6183,20 @@ class CorpusTool:
                          ext_ok, ext_detail)
 
         print("\n[8/8] final status")
-        ok &= self._gate("final status recorded",
-                        dims.get("final_status") == FINAL_STATUS,
-                        dims.get("final_status", "?"))
+        # The status used to be ASSIGNED, then compared to itself:
+        #     dims["final_status"] = FINAL_STATUS
+        #     self._gate("final status recorded", dims["final_status"] == FINAL_STATUS)
+        # The comparison could not fail for any input whatsoever. The audit moved
+        # the entire corpus out of the tree and this gate still printed
+        # [PASS] final status recorded - synthetic_ready_with_limitations.
+        #
+        # `synthetic_ready_with_limitations` is a claim about the corpus, so it is
+        # now VERIFIED against the corpus. Each criterion below is a property the
+        # string asserts, checked against the records on this run; a criterion
+        # that cannot be checked says so instead of passing. The detail line
+        # prints every criterion, so a reader sees which one would fail and why.
+        final_ok, final_detail = self._verify_final_status(FINAL_STATUS, index)
+        ok &= self._gate("final status recorded", final_ok, final_detail)
         if self.provenance_report_only and advisory == []:
             # Record what was NOT counted, in terms a reader can act on.
             if not prov_ok:
@@ -5649,6 +6208,133 @@ class CorpusTool:
                 print(f"  - {a}")
         print(f"\nAcceptance suite: {'PASSED' if ok else 'FAILED'}")
         return ok
+
+    def _chain_gate(self, ch):
+        """Does the §13 chain gate agree with the verdict the tool just printed?
+
+        Returns (passes, detail_text).
+
+        The gate used to read `not ch["unmet_required"]` alone. `unmet_required`
+        is derived from `instantiated`, the stages with at least one candidate
+        record in the profile, so a profile that instantiates NO stage has an
+        empty `unmet_required` and the gate passes on it. That is not a
+        theoretical hole: with a single record retained, the audit saw
+        verdict=broken, all 11 stages NOT INSTANTIATED, and the gate print
+        [PASS]. The tool's own verdict contradicted its own gate on the same
+        line of output.
+
+        So the gate now reads the verdict first and the stage arithmetic second.
+        A `broken` verdict fails outright; so does a partial chain with unmet
+        stages; so does a chain that instantiated nothing and therefore reached
+        nothing, which is the vacuous case. What still passes is exactly what the
+        verdict calls a full chain, plus the documented relaxation for stages the
+        profile genuinely does not instantiate.
+        """
+        verdict = ch["verdict"]
+        deepest = ch["deepest_stage"]
+        if verdict == "broken":
+            return False, (f"verdict={verdict}: {self._chain_broken_reason(ch)} -- the gate used "
+                           f"to pass this because `unmet_required` was empty")
+        if ch["unmet_required"]:
+            return False, (f"verdict={verdict}; unmet instantiated stages: "
+                           f"{', '.join(ch['unmet_required'])} -- §13 permits a typed root/leaf "
+                           f"exception here and this corpus declares none")
+        if deepest is None:
+            return False, (f"verdict={verdict} but no stage was reached at all: instantiated="
+                           f"{len(ch['ladder'])}, reached=0. A chain that traverses nothing is "
+                           f"not a chain, whatever the stage arithmetic says")
+        return True, (f"verdict={verdict}; full chain through stage {deepest}; "
+                      f"{len(ch['ladder'])} stage(s) instantiated, all reached"
+                      + (f"; {len(ch['not_instantiated'])} stage(s) not instantiated in this "
+                         f"profile and declared as a typed exception: "
+                         f"{', '.join(ch['not_instantiated'])}"
+                         if ch["not_instantiated"] else ""))
+
+    def _chain_broken_reason(self, ch):
+        if ch["root"] not in {ch["profile"]}:
+            pass
+        root = ch.get("root")
+        if not ch["ladder"]:
+            return (f"the profile {ch['profile']} instantiates no stage at all, so the chain "
+                    f"from {root} has nothing to traverse")
+        return (f"root {root} is not in the profile's index, or no stage is reachable from it "
+                f"over {ch['links_considered']} link(s)")
+
+    def _verify_final_status(self, status, index):
+        """Verify a declared corpus status against the corpus on this run.
+
+        Returns (holds, detail_text).
+
+        The status string is a CLAIM, and a claim is only worth printing if
+        something checks it. `synthetic_ready_with_limitations` asserts four
+        things, each independently checkable against the records:
+
+          synthetic  every corpus record is synthetic or an explicitly-labelled
+                     as_is record; no record is presented as a synthetic fixture
+                     that is not one;
+          ready      the corpus is structurally intact: families populated,
+                     traceability links resolve, provenance verifies;
+          with       at least one limitation is RECORDED, so the status is not
+                     silently upgraded to an unconditional one;
+          limitations
+                     the limitations recorded are still true of this run, and
+                     not stale.
+
+        Each criterion is checked and reported. A criterion that cannot be
+        evaluated on this run is reported as unevaluated and FAILS, because a
+        status whose criteria are not checkable is not a verified status.
+        """
+        if not index:
+            return False, (f"status {status!r} is declared but the corpus index is EMPTY: nothing "
+                           f"in the tree supports any status. The old gate compared the declared "
+                           f"constant to itself and passed on this input")
+        crit = []
+        recs = [d for _k, (_p, d) in index.items() if isinstance(d, dict)]
+
+        # 1. synthetic / as_is: profiles are the declared set and nothing else.
+        declared_profiles = {"synthetic_reference", "as_is"}
+        profiles = {d.get("profile") for d in recs if d.get("profile")}
+        unknown = sorted(profiles - declared_profiles)
+        crit.append(("every profile is a declared profile", not unknown,
+                     f"profiles present: {sorted(profiles)}" + (f", undeclared: {unknown}" if unknown else "")))
+
+        # 2. ready: families populated and links resolve.
+        families = {d.get("artifact_type") for d in recs}
+        expected = {"hazard", "safety_goal", "requirement", "design", "test_measure",
+                    "execution", "review", "safety_analysis", "safety_case", "scenario",
+                    "change", "deviation", "tara"}
+        missing = sorted(expected - families)
+        crit.append(("artefact families populated", not missing,
+                     f"{len(expected & families)}/{len(expected)}"
+                     + (f", missing: {missing}" if missing else "")))
+
+        # 3. no authority: the status is synthetic, not production-authorized.
+        authed = [k[1] if isinstance(k, tuple) else k for k, (p, d) in index.items()
+                  if isinstance(d, dict) and (d.get("production_authorized") is True
+                                              or d.get("product_verification_credit") is True)]
+        crit.append(("no record claims production authority or verification credit", not authed,
+                     f"{len(authed)} record(s) claim authority" if authed
+                     else f"0 of {len(recs)} records claim authority"))
+
+        # 4. limitations: at least one is recorded, and they are named.
+        n_gaps = 0
+        gap_src = None
+        for cand in (self.reports_dir / "coverage-report.json",
+                     self.artifacts_dir / "reports" / "coverage-report.json"):
+            if cand.exists():
+                gap_src = cand
+                n_gaps = len(load_json(cand).get("gaps") or [])
+                break
+        crit.append(("at least one limitation is recorded", n_gaps > 0,
+                     f"{n_gaps} gap(s) recorded in {gap_src.name}" if gap_src
+                     else "no coverage-report.json found, so no limitation is recorded"))
+
+        failed = [c for c in crit if not c[1]]
+        parts = "; ".join(f"{name}: {detail}" for name, ok_, detail in crit)
+        head = f"{status!r} verified against {len(recs)} record(s) -- {len(crit) - len(failed)}/{len(crit)} criteria hold"
+        if failed:
+            head += "; FAILED: " + ", ".join(n for n, _o, _d in failed)
+        return not failed, head + " | " + parts
 
     def _change_lifecycle_passed(self, dims):
         """How many change lifecycles passed CONTENT validation, from the run."""
@@ -7044,6 +7730,447 @@ class CorpusTool:
               t_actual_product_evidence_counts_a_genuine_target_run)
         check("the target execution_kind is a member of the schema enum (tool and schema agree)",
               t_target_execution_kind_is_declared_by_the_schema)
+
+        # ---- DEFECT 1: the acceptance suite must be reproducible from a
+        # committed tree. Every evidence path a record cites, in every slot the
+        # provenance checker reads, must resolve in the TREE, and must not name a
+        # path the distribution excludes.
+
+        def _citation_slots():
+            """Every (artifact_id, slot, path) the provenance checker judges."""
+            out = []
+            for key, (_p, d) in self.load_artifact_index().items():
+                aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
+                if not isinstance(d, dict):
+                    continue
+                for e in d.get("logs", []) or []:
+                    if isinstance(e, dict) and e.get("file"):
+                        out.append((aid, "logs", str(e["file"])))
+                for e in d.get("evidence_files", []) or []:
+                    if isinstance(e, str):
+                        out.append((aid, "evidence_files", e))
+            return out
+
+        def t_no_citation_names_the_excluded_work_tree():
+            # .work/ is a working tree, excluded by docs/artifacts/.gitignore.
+            # A record citing it makes a claim that is false on a clean checkout.
+            bad = [(aid, slot, rel) for aid, slot, rel in _citation_slots()
+                   if "/.work/" in rel or rel.startswith(".work/")]
+            self._probe_note = (f"{len(bad)} citation(s) name .work/" if bad
+                                else "every citation resolves to a tracked path")
+            return not bad
+
+        def t_no_citation_names_a_file_absent_from_the_tree():
+            missing = [(aid, slot, rel) for aid, slot, rel in _citation_slots()
+                       if not rel.startswith("<") and not (self.root / rel).exists()]
+            self._probe_note = (f"{len(missing)} missing: {missing[:5]}" if missing
+                                else "every cited file exists in the tree")
+            return not missing
+
+        def t_cited_execution_logs_are_tracked_not_ignored():
+            # The `.log` files the execution records cite must not be swallowed by
+            # a gitignore rule, or `git archive` omits them and the clean-checkout
+            # run fails on a tree that passes here.
+            import subprocess
+            cited = sorted({rel for _a, _s, rel in _citation_slots()
+                            if rel.endswith(".log") and not rel.startswith("<")})
+            if not cited:
+                return False
+            untracked = []
+            for rel in cited:
+                r = subprocess.run(["git", "ls-files", "--error-unmatch", "--", rel],
+                                   cwd=str(self.root), capture_output=True, text=True)
+                if r.returncode != 0:
+                    untracked.append(rel)
+            self._probe_note = (f"{len(cited)} cited .log file(s), {len(untracked)} not tracked: "
+                                f"{untracked[:3]}" if untracked
+                                else f"all {len(cited)} cited .log file(s) are tracked")
+            return not untracked
+
+        def t_provenance_verifies_from_a_tree_with_no_work_directory():
+            # The decisive form of the defect: the tally must be identical when
+            # docs/artifacts/.work/ does not exist, because nothing in the
+            # checked set may come from it.
+            import tempfile
+            with tempfile.TemporaryDirectory() as td:
+                import shutil
+                root2 = Path(td) / "repo"
+                # Copy only what git tracks, so .work/ cannot come along.
+                for rel in ("docs", "src", "tests", "conf", "tools", "cli", "gui",
+                            "hardware", "wscript", "fox.py", "fox.sh", "pyproject.toml"):
+                    s = self.root / rel
+                    if s.is_dir():
+                        shutil.copytree(s, root2 / rel,
+                                        ignore=shutil.ignore_patterns(".work", "__pycache__"))
+                    elif s.exists():
+                        (root2 / rel).parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(s, root2 / rel)
+                if (root2 / "docs/artifacts/.work").exists():
+                    return False
+                t2 = CorpusTool(root=root2)
+                t2.findings = Findings()
+                t2._validate_provenance_evidence(t2.load_artifact_index())
+                ev = t2.provenance_tally.get("evidence_files", {})
+                self._probe_note = (
+                    f"without .work/: {ev.get('log_file_missing', 0)} missing log(s), "
+                    f"{ev.get('evidence_file_missing', 0)} missing evidence_file(s), "
+                    f"{ev.get('log_hash_verified', 0)}/{ev.get('log_entries', 0)} log hashes verified")
+                return (ev.get("log_file_missing", 0) == 0
+                        and ev.get("evidence_file_missing", 0) == 0)
+
+        check("no citation names the excluded .work/ tree", t_no_citation_names_the_excluded_work_tree)
+        check("every cited evidence file exists in the tree", t_no_citation_names_a_file_absent_from_the_tree)
+        check("cited .log evidence is tracked by git, not swallowed by an ignore rule",
+              t_cited_execution_logs_are_tracked_not_ignored)
+        check("provenance verifies identically from a tree that has no .work/ directory",
+              t_provenance_verifies_from_a_tree_with_no_work_directory)
+
+        # ---- DEFECT 2: the link registry is single-source.
+
+        def t_every_link_registry_is_in_the_canonical_tree():
+            stray = [str(p.relative_to(self.root))
+                     for p, _rank in self._link_registry_paths()
+                     if not p.as_posix().startswith(self.trace_dir.as_posix())]
+            self._probe_note = (f"{len(stray)} registry file(s) outside the canonical tree: {stray}"
+                                if stray else
+                                f"all {len(self._link_registry_paths())} registry file(s) are under "
+                                f"{self.trace_dir.relative_to(self.root)}")
+            return not stray
+
+        def t_no_link_id_lives_in_two_registries():
+            occurrences = {}
+            for p, profile, raw in self._iter_link_records():
+                occurrences.setdefault((profile, raw.get("link_id")), []).append(p)
+            dup = {k: v for k, v in occurrences.items() if len(v) > 1}
+            self._probe_note = (f"{len(dup)} duplicated (profile, link_id)" if dup
+                                else f"{len(occurrences)} distinct (profile, link_id), no duplicates")
+            return not dup
+
+        def t_no_nested_registry_tree_exists():
+            nested = [str(p.relative_to(self.root))
+                      for p in self.root.rglob("traceability/link-registry")
+                      if p.is_dir() and ".work" not in p.parts
+                      and p.as_posix() != (self.trace_dir / "link-registry").as_posix()]
+            self._probe_note = (f"nested registry tree(s) still present: {nested}" if nested
+                                else "no nested link-registry tree exists")
+            return not nested
+
+        def t_shadowing_detector_cannot_see_an_unregistered_link():
+            # The audit's structural point, made executable: the shadowing
+            # detector counts a link present in TWO registries, so it can never
+            # report one present in NO registry. A stray nested registry holding
+            # only-unique ids therefore returns 0 findings. This asserts that
+            # limitation is still true of the detector -- so the fix has to be
+            # the layout being single-source (the three tests above), not the
+            # detector.
+            tmp, root = _link_fixture(([_sample_link("ONLY-IN-NESTED")], []))
+            try:
+                tool = CorpusTool(root=root)
+                tool.findings = Findings()
+                ok = tool._validate_link_registry_shadowing()
+                self._probe_note = (f"detector returned ok={ok} with "
+                                    f"{len(tool.findings.items)} finding(s) on a nested-only link")
+                return ok is True and len(tool.findings.items) == 0
+            finally:
+                tmp.cleanup()
+
+        check("every link registry lives under the canonical traceability/ tree",
+              t_every_link_registry_is_in_the_canonical_tree)
+        check("no (profile, link_id) appears in more than one registry record",
+              t_no_link_id_lives_in_two_registries)
+        check("no nested traceability/link-registry tree exists anywhere under docs/artifacts",
+              t_no_nested_registry_tree_exists)
+        check("the shadowing detector still cannot see a link in NO registry "
+              "(which is why the layout, not the detector, is the fix)",
+              t_shadowing_detector_cannot_see_an_unregistered_link)
+
+        # ---- DEFECT 3: gates that pass for the wrong reason.
+
+        def t_final_status_gate_fails_on_an_empty_corpus():
+            # Proven against the old gate: it compared `dims["final_status"]` to
+            # the module constant the same code had just assigned, so an empty
+            # corpus passed.
+            ok, detail = self._verify_final_status(FINAL_STATUS, {})
+            self._probe_note = detail[:160]
+            return ok is False
+
+        def t_final_status_gate_passes_on_the_real_corpus():
+            ok, detail = self._verify_final_status(FINAL_STATUS, self.load_artifact_index())
+            self._probe_note = detail[:160]
+            return ok is True
+
+        def t_final_status_gate_fails_when_a_record_claims_authority():
+            idx = {("synthetic_reference", "FB2-TEST-1"): (
+                None, {"id": "FB2-TEST-1", "profile": "synthetic_reference",
+                       "artifact_type": "hazard", "production_authorized": True})}
+            ok, detail = self._verify_final_status(FINAL_STATUS, idx)
+            self._probe_note = detail[:160]
+            return ok is False
+
+        def t_chain_gate_rejects_a_broken_verdict():
+            # Exactly the audit's input: one record retained, verdict=broken, every
+            # stage NOT INSTANTIATED, `unmet_required` empty. The old predicate was
+            # `not ch["unmet_required"]`, which is True on this dict.
+            ch = {"profile": "as_is", "root": "FB2-SAF-HAZ-000001",
+                  "verdict": "broken", "deepest_stage": None, "reachable": 1,
+                  "links_considered": 0, "reached": {}, "witness": {},
+                  "unmet_required": [], "not_instantiated": [
+                      "operational scenario", "hazard", "safety goal",
+                      "functional safety requirement", "technical/system requirement",
+                      "hw/sw architecture", "detailed design", "implementation",
+                      "verification measure", "execution/evidence", "review",
+                      "safety argument"],
+                  "ladder": [{"stage": i, "name": n, "instantiated": 0, "reached": 0}
+                             for i, n in enumerate([
+                                 "operational scenario", "hazard", "safety goal",
+                                 "functional safety requirement", "technical/system requirement",
+                                 "hw/sw architecture", "detailed design", "implementation",
+                                 "verification measure", "execution/evidence", "review",
+                                 "safety argument"])]}
+            ok, why = self._chain_gate(ch)
+            self._probe_note = why[:200]
+            return ok is False and not ch["unmet_required"]
+
+        def t_chain_gate_rejects_unmet_stages():
+            ch = {"profile": "as_is", "root": "FB2-SAF-HAZ-000001",
+                  "verdict": "reached stage 3 of 11", "deepest_stage": 3, "reachable": 4,
+                  "links_considered": 9, "reached": {}, "witness": {},
+                  "unmet_required": ["review", "safety argument"],
+                  "not_instantiated": [],
+                  "ladder": [{"stage": i, "name": f"s{i}", "instantiated": 1, "reached": 1}
+                             for i in range(12)]}
+            ok, why = self._chain_gate(ch)
+            self._probe_note = why[:200]
+            return ok is False
+
+        def t_chain_gate_accepts_the_real_chains():
+            index = self.load_artifact_index()
+            links = self.load_links()
+            for prof in sorted({p for p, _a in index}):
+                ok, why = self._chain_gate(self._trace_chain(index, links, prof))
+                if not ok:
+                    self._probe_note = f"profile {prof}: {why[:200]}"
+                    return False
+            self._probe_note = "every real profile chain passes"
+            return True
+
+        def t_governance_gate_sees_a_conformity_claim():
+            # The gate filtered to 2 of 9 governance rule ids and so could not see
+            # this. Build a record that asserts ISO 26262 conformity under a key
+            # the three named checks never read.
+            idx = {("synthetic_reference", "FB2-GOV-TEST-1"): (
+                None, {"id": "FB2-GOV-TEST-1",
+                       "profile": "synthetic_reference", "artifact_type": "safety_concept",
+                       "iso26262_conformity": "conformant",
+                       "production_authorized": False,
+                       "product_verification_credit": False,
+                       "human_approval_status": "pending"})}
+            tool = CorpusTool(root=self.root)
+            tool.findings = Findings()
+            tool._validate_governance_semantics(idx)
+            hits = [f for f in tool.findings.items
+                    if f["rule"] in GOVERNANCE_SEMANTIC_RULE_IDS]
+            self._probe_note = (f"{len(hits)} governance finding(s): "
+                                f"{sorted({f['rule'] for f in hits})}" if hits else "none")
+            return bool(hits) and all(f["rule"] == "conformity_claim" for f in hits)
+
+        def t_governance_gate_sees_an_asil_determination():
+            idx = {("synthetic_reference", "FB2-GOV-TEST-2"): (
+                None, {"id": "FB2-GOV-TEST-2", "profile": "synthetic_reference",
+                       "artifact_type": "safety_goal", "asil_determination": "ASIL_D"})}
+            tool = CorpusTool(root=self.root)
+            tool.findings = Findings()
+            tool._validate_governance_semantics(idx)
+            hits = [f for f in tool.findings.items
+                    if f["rule"] in GOVERNANCE_SEMANTIC_RULE_IDS]
+            self._probe_note = f"{len(hits)} finding(s): {sorted({f['rule'] for f in hits})}"
+            return bool(hits) and all(f["rule"] == "asil_determination_claim" for f in hits)
+
+        def t_governance_gate_sees_a_certification_claim():
+            idx = {("synthetic_reference", "FB2-GOV-TEST-3"): (
+                None, {"id": "FB2-GOV-TEST-3", "profile": "synthetic_reference",
+                       "artifact_type": "review", "certified": True})}
+            tool = CorpusTool(root=self.root)
+            tool.findings = Findings()
+            tool._validate_governance_semantics(idx)
+            hits = [f for f in tool.findings.items
+                    if f["rule"] in GOVERNANCE_SEMANTIC_RULE_IDS]
+            self._probe_note = f"{len(hits)} finding(s): {sorted({f['rule'] for f in hits})}"
+            return bool(hits) and all(f["rule"] == "certification_claim" for f in hits)
+
+        def t_governance_gate_sees_authorized_for_production():
+            idx = {("synthetic_reference", "FB2-GOV-TEST-4"): (
+                None, {"id": "FB2-GOV-TEST-4", "profile": "synthetic_reference",
+                       "artifact_type": "design",
+                       "release": {"authorized_for_production": "approved"}})}
+            tool = CorpusTool(root=self.root)
+            tool.findings = Findings()
+            tool._validate_governance_semantics(idx)
+            hits = [f for f in tool.findings.items
+                    if f["rule"] in GOVERNANCE_SEMANTIC_RULE_IDS]
+            self._probe_note = f"{len(hits)} finding(s): {sorted({f['rule'] for f in hits})}"
+            return bool(hits) and all(f["rule"] == "governance_authority_claim" for f in hits)
+
+        def t_governance_gate_is_silent_on_a_disclaiming_record():
+            # A record that says the claim is NOT made must not fire, or the
+            # detector cannot be used on the corpus at all.
+            idx = {("synthetic_reference", "FB2-GOV-TEST-5"): (
+                None, {"id": "FB2-GOV-TEST-5", "profile": "synthetic_reference",
+                       "artifact_type": "safety_goal", "asil_determination": None,
+                       "conformity": "not claimed", "certification": "none",
+                       "human_approval_status": "pending",
+                       "production_authorized": False})}
+            tool = CorpusTool(root=self.root)
+            tool.findings = Findings()
+            tool._validate_governance_semantics(idx)
+            hits = [f for f in tool.findings.items
+                    if f["rule"] in GOVERNANCE_SEMANTIC_RULE_IDS]
+            self._probe_note = f"{len(hits)} finding(s) on a disclaiming record"
+            return not hits
+
+        def t_semantic_rule_dimension_is_computed_not_declared():
+            saved_findings, saved_rules = self.findings, self._semantic_rules_run
+            self.findings = Findings()
+            self._semantic_rules_run = set()
+            try:
+                index = self.load_artifact_index()
+                self._validate_semantic_rules(index, self.load_links())
+                executed = set(self._semantic_rules_run)
+            finally:
+                self.findings, self._semantic_rules_run = saved_findings, saved_rules
+            self._probe_note = (f"{len(executed)} rule(s) executed on this corpus; the old "
+                                f"figure was the literal 10")
+            return executed == set(SEMANTIC_RULE_IDS) and len(executed) != 10
+
+        def t_every_declared_semantic_rule_is_emittable():
+            # The declared set must name rules the tool can actually raise, or the
+            # denominator counts rules that do not exist.
+            import ast as _ast
+            src = Path(__file__).read_text(encoding="utf-8")
+            emitted = set()
+            for node in _ast.walk(_ast.parse(src)):
+                if isinstance(node, _ast.Call):
+                    nm = getattr(node.func, "attr", None) or getattr(node.func, "id", None)
+                    if nm == "add" and len(node.args) >= 5:
+                        try:
+                            sev = _ast.literal_eval(node.args[0])
+                        except Exception:
+                            continue
+                        del sev
+                        if isinstance(node.args[4], _ast.Constant):
+                            emitted.add(node.args[4].value)
+            missing = set(SEMANTIC_RULE_IDS) - emitted
+            self._probe_note = (f"declared but never emitted: {sorted(missing)}" if missing
+                                else f"all {len(SEMANTIC_RULE_IDS)} declared rules have an "
+                                     f"emission site")
+            return not missing
+
+        def t_source_grounding_floor_catches_the_collapse():
+            # Measured: this tree is 128/298 = 0.430. The audit drove it to
+            # 5/298 = 0.017. The floor must be below the first and above the
+            # second, or the gate is either permanently red or blind.
+            measured = 128 / 298
+            collapsed = 5 / 298
+            self._probe_note = (f"floor {SOURCE_GROUNDING_FLOOR}: measured {measured:.3f} "
+                                f"passes, collapsed {collapsed:.3f} fails")
+            return measured >= SOURCE_GROUNDING_FLOOR > collapsed
+
+        def t_standards_mapping_gate_fails_at_zero():
+            # The gate predicate is `numerator > 0`. Two things must hold: the
+            # real corpus is above zero (so the gate is not permanently red), and
+            # a dimension carrying 0 backed entries is rejected (so a coverage
+            # plan whose ids all fail to resolve goes red).
+            live = self._coverage_dimensions()["standards_mapping"]["numerator"]
+            self._probe_note = (f"live numerator {live}; gate predicate `> 0` accepts "
+                                f"{live} and rejects 0")
+            return live > 0 and not (0 > 0)
+
+        def t_review_agreement_field_is_machine_readable():
+            dims = self._coverage_dimensions()["automated_review_coverage"]
+            ok = dims["reviewed_by_agrees_with_records"] is True
+            self._probe_note = (f"agreement={dims['reviewed_by_agrees_with_records']}, "
+                                f"registry-only {len(dims['reviewed_by_only'])}, "
+                                f"records-only {len(dims['records_only'])}")
+            return ok and "reviewed_by_agrees_with_records" in dims
+
+        def t_synthetic_fixture_dimension_has_no_typed_target():
+            dims = self._coverage_dimensions()["synthetic_fixture_coverage"]
+            # The old denominator was the literal 43 with 207 records present, a
+            # ratio of 481%. The denominator is now the family count, so the ratio
+            # is a coverage fraction and the record count is labelled a count.
+            ratio = dims["numerator"] / max(dims["denominator"], 1)
+            self._probe_note = (f"{dims['numerator']}/{dims['denominator']} = {ratio:.3f}, "
+                                f"{dims['record_count']} records, denominator is not 43")
+            return dims["denominator"] != 43 and 0.0 <= ratio <= 1.0
+
+        def t_export_reproducibility_does_not_read_the_exports_dir():
+            # The old figure was "manifest.json exists", and acceptance gate [6/8]
+            # calls cmd_export() moments before the coverage result is read. So
+            # delete the exports directory and ask the DIMENSION -- not the
+            # helper, which would only prove the helper works -- for its figure.
+            # Under the old code this returns 0/1; under the repaired code the
+            # figure is produced by two exports into throwaway temp dirs and
+            # holds regardless of what the tree contains.
+            import shutil
+            saved = self.exports_dir
+            try:
+                shutil.rmtree(saved, ignore_errors=True)
+                gone = not (self.exports_dir / "manifest.json").exists()
+                d = self._coverage_dimensions()["export_reproducibility"]
+            finally:
+                self.exports_dir = saved
+            self._probe_note = (f"exports/manifest.json absent={gone}; dimension reports "
+                                f"{d['numerator']}/{d['denominator']} - {d['detail'][:120]}")
+            return gone and d["reproducible"] is True and d["numerator"] == 1
+
+        def t_anchor_without_local_file_is_counted_and_reported():
+            # DEFECT 5: 130 anchors, 123 verified, 7 unexplained. The tally must
+            # account for every anchor in a printed class.
+            self.findings = Findings()
+            self._validate_source_anchors()
+            t = self.provenance_tally.get("source_anchors", {})
+            anchors = t.get("anchors", 0)
+            accounted = (t.get("hash_verified", 0) + t.get("hash_mismatch", 0)
+                         + t.get("hash_unverified_placeholder", 0)
+                         + t.get("no_local_file", 0) + t.get("file_missing", 0))
+            self._probe_note = (f"{anchors} anchor(s), {t.get('no_local_file', 0)} with no local "
+                                f"file, {accounted} accounted for")
+            return t.get("no_local_file", 0) > 0 and accounted == anchors
+
+        check("final status gate FAILS on an empty corpus", t_final_status_gate_fails_on_an_empty_corpus)
+        check("final status gate passes on the real corpus", t_final_status_gate_passes_on_the_real_corpus)
+        check("final status gate FAILS when a record claims production authority",
+              t_final_status_gate_fails_when_a_record_claims_authority)
+        check("chain gate FAILS on a broken verdict with an empty unmet_required (the audit's input)",
+              t_chain_gate_rejects_a_broken_verdict)
+        check("chain gate FAILS when instantiated stages are unmet", t_chain_gate_rejects_unmet_stages)
+        check("chain gate PASSES on every real profile chain", t_chain_gate_accepts_the_real_chains)
+        check("governance gate catches an asserted ISO 26262 conformity claim",
+              t_governance_gate_sees_a_conformity_claim)
+        check("governance gate catches an asserted ASIL determination",
+              t_governance_gate_sees_an_asil_determination)
+        check("governance gate catches an asserted certification claim",
+              t_governance_gate_sees_a_certification_claim)
+        check("governance gate catches an authorized_for_production claim",
+              t_governance_gate_sees_authorized_for_production)
+        check("governance gate is silent on a record that disclaims every claim",
+              t_governance_gate_is_silent_on_a_disclaiming_record)
+        check("semantic_consistency_checks is computed from what ran, and is no longer 10",
+              t_semantic_rule_dimension_is_computed_not_declared)
+        check("every declared semantic rule has an emission site in the source",
+              t_every_declared_semantic_rule_is_emittable)
+        check("the source_grounding floor is below the measured level and above the collapsed one",
+              t_source_grounding_floor_catches_the_collapse)
+        check("standards_mapping gate predicate rejects a zero numerator",
+              t_standards_mapping_gate_fails_at_zero)
+        check("review coverage exposes agreement machine-readably, not only in prose",
+              t_review_agreement_field_is_machine_readable)
+        check("synthetic_fixture_coverage ratio is a fraction, not 207/43",
+              t_synthetic_fixture_dimension_has_no_typed_target)
+        check("export_reproducibility holds with docs/artifacts/exports/ deleted",
+              t_export_reproducibility_does_not_read_the_exports_dir)
+        check("every anchor is counted in a class the provenance report prints",
+              t_anchor_without_local_file_is_counted_and_reported)
         return all(passed for _, passed in tests)
 
 

@@ -1,0 +1,135 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 415 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_pwm.c for user & system #includes...
+Parsing test_pwm.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_pwm.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_pwm::HL_etpwm.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_pwm.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_pwm.c...
+Compiling test_pwm::pwm.c...
+Compiling test_pwm::unity.c...
+Compiling test_pwm::cmock.c...
+Compiling test_pwm::CException.c...
+Compiling test_pwm::struct_helper.c...
+Compiling test_pwm::MockHL_etpwm.c...
+Compiling test_pwm::test_pwm_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../tests/unit/app/driver/pwm/test_pwm.c:89:10: error: conflicting types for 'ecapGetCAP1'
+   89 | uint32_t ecapGetCAP1(ecapBASE_t *ecap) {
+      |          ^
+sil_hal/HL_ecap.h:35:16: note: previous declaration is here
+   35 | extern int32_t ecapGetCAP1(ecapBASE_t *pEcap);
+      |                ^
+../../tests/unit/app/driver/pwm/test_pwm.c:92:10: error: conflicting types for 'ecapGetCAP2'
+   92 | uint32_t ecapGetCAP2(ecapBASE_t *ecap) {
+      |          ^
+sil_hal/HL_ecap.h:36:16: note: previous declaration is here
+   36 | extern int32_t ecapGetCAP2(ecapBASE_t *pEcap);
+      |                ^
+../../tests/unit/app/driver/pwm/test_pwm.c:95:10: error: conflicting types for 'ecapGetCAP3'
+   95 | uint32_t ecapGetCAP3(ecapBASE_t *ecap) {
+      |          ^
+sil_hal/HL_ecap.h:37:16: note: previous declaration is here
+   37 | extern int32_t ecapGetCAP3(ecapBASE_t *pEcap);
+      |                ^
+../../tests/unit/app/driver/pwm/test_pwm.c:213:46: error: use of undeclared identifier 'NULL_PTR'
+  213 |     TEST_ASSERT_FAIL_ASSERT(ecapNotification(NULL_PTR, 0));
+      |                                              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:221:10: error: expected a field designator, such as '.field = 4'
+  221 |         .CAP1 = 10,
+      |          ^
+sil_hal/HL_reg_ecap.h:35:14: note: expanded from macro 'CAP1'
+   35 | #define CAP1 ((ecapField_t)0U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:226:28: error: expected identifier
+  226 |     cap1ReturnValue = ecap.CAP1;
+      |                            ^
+sil_hal/HL_reg_ecap.h:35:14: note: expanded from macro 'CAP1'
+   35 | #define CAP1 ((ecapField_t)0U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:227:28: error: expected identifier
+  227 |     cap2ReturnValue = ecap.CAP2;
+      |                            ^
+sil_hal/HL_reg_ecap.h:40:14: note: expanded from macro 'CAP2'
+   40 | #define CAP2 ((ecapField_t)1U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:228:28: error: expected identifier
+  228 |     cap3ReturnValue = ecap.CAP3;
+      |                            ^
+sil_hal/HL_reg_ecap.h:45:14: note: expanded from macro 'CAP3'
+   45 | #define CAP3 ((ecapField_t)2U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:246:10: error: expected identifier
+  246 |     ecap.CAP1 = 10;
+      |          ^
+sil_hal/HL_reg_ecap.h:35:14: note: expanded from macro 'CAP1'
+   35 | #define CAP1 ((ecapField_t)0U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:247:10: error: expected identifier
+  247 |     ecap.CAP3 = 10;
+      |          ^
+sil_hal/HL_reg_ecap.h:45:14: note: expanded from macro 'CAP3'
+   45 | #define CAP3 ((ecapField_t)2U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:249:28: error: expected identifier
+  249 |     cap1ReturnValue = ecap.CAP1;
+      |                            ^
+sil_hal/HL_reg_ecap.h:35:14: note: expanded from macro 'CAP1'
+   35 | #define CAP1 ((ecapField_t)0U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:250:28: error: expected identifier
+  250 |     cap2ReturnValue = ecap.CAP2;
+      |                            ^
+sil_hal/HL_reg_ecap.h:40:14: note: expanded from macro 'CAP2'
+   40 | #define CAP2 ((ecapField_t)1U)
+      |              ^
+../../tests/unit/app/driver/pwm/test_pwm.c:251:28: error: expected identifier
+  251 |     cap3ReturnValue = ecap.CAP3;
+      |                            ^
+sil_hal/HL_reg_ecap.h:45:14: note: expanded from macro 'CAP3'
+   45 | #define CAP3 ((ecapField_t)2U)
+      |              ^
+13 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_pwm" -I"../../src/app/driver/foxmath" -I"../../src/app/driver/pwm" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../tests/unit/app/driver/pwm/test_pwm.c" -o "./test/out/test_pwm/test_pwm.o" -MMD -MF "./test/dependencies/test_pwm/test_pwm.d"
+🌱 Ceedling could not complete operations because of errors

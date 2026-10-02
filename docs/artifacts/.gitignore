@@ -13,6 +13,31 @@ __pycache__/
 *.sqlite
 *.db
 
+# Evidence that the `*.log` rule would otherwise swallow
+#
+# `*.log` above (and `*.log*` / `*.log` in the root .gitignore) is there to keep
+# harness scratch logs out of the distribution. It also swallowed the 317 `.log`
+# files under evidence/actual-runs/, and nine of those are cited by name, with a
+# recorded sha256, from `logs[]`/`evidence_files[]` slots in the execution
+# records FB2-VER-EXE-000008..000012 and FB2-VER-EXE-000015. A citation that names
+# a file the distribution does not contain is a checkable claim that is false on a
+# clean checkout: `corpus.py check` failed there with 14 `evidence_file_missing`
+# findings that this working tree cannot reproduce, because the files were present.
+#
+# Measurement, so the decision is auditable rather than asserted:
+#   317 files, 1,708,413 bytes total (1.63 MiB), all under
+#   docs/artifacts/evidence/actual-runs/ (logs-strict/, -task3/, -task4/).
+# That is small enough to distribute in full, so all of it is tracked and nothing
+# is excluded with a rewritten citation. The corpus is the product of this
+# repository; shipping its execution logs is the point, not an accident.
+#
+# This is a path-scoped negation, not `!*.log`, for the same reason the HTML
+# negation below is path-scoped: a blanket `!*.log` would re-include every stray
+# harness log anywhere under docs/artifacts/, including logs inside the excluded
+# `.work/` tree. Verified with `git check-ignore -v` on a cited log, on an
+# uncited scratch log under .work/ (still ignored), and on the HTML deliverable.
+!evidence/**/*.log
+
 # Deliverables that the root Sphinx rule would otherwise exclude
 #
 # The root .gitignore carries `*.html` at line 36 for the Sphinx build tree, and

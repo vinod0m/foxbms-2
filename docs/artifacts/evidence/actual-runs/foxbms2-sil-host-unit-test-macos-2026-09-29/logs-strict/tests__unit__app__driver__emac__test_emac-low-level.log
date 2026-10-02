@@ -1,0 +1,117 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 409 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_emac-low-level.c for user & system #includes...
+Parsing test_emac-low-level.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_emac-low-level.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+
+👟 Test Runners
+---------------
+Generating runner for test_emac-low-level.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_emac-low-level.c...
+Compiling test_emac-low-level::emac-low-level.c...
+Compiling test_emac-low-level::unity.c...
+Compiling test_emac-low-level::CException.c...
+Compiling test_emac-low-level::struct_helper.c...
+Compiling test_emac-low-level::test_fake_functions.c...
+Compiling test_emac-low-level::sil_hal_model.c...
+Compiling test_emac-low-level::test_emac-low-level_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../src/app/driver/emac/emac-low-level.c:102:65: error: use of undeclared identifier 'EMAC_MACCONTROL'
+  102 |     FAS_ASSERT((emacBase != 0x0u) || ((emacBase < (UINT32_MAX - EMAC_MACCONTROL))));
+      |                                                                 ^
+../../src/app/driver/emac/emac-low-level.c:106:5: error: call to undeclared function 'HWREG'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+  106 |     HWREG(emacBase + EMAC_MACCONTROL) &= (~(uint32_t)EMAC_MACCONTROL_FULLDUPLEX);
+      |     ^
+../../src/app/driver/emac/emac-low-level.c:106:54: error: use of undeclared identifier 'EMAC_MACCONTROL_FULLDUPLEX'
+  106 |     HWREG(emacBase + EMAC_MACCONTROL) &= (~(uint32_t)EMAC_MACCONTROL_FULLDUPLEX);
+      |                                                      ^
+../../src/app/driver/emac/emac-low-level.c:106:22: error: use of undeclared identifier 'EMAC_MACCONTROL'
+  106 |     HWREG(emacBase + EMAC_MACCONTROL) &= (~(uint32_t)EMAC_MACCONTROL_FULLDUPLEX);
+      |                      ^
+../../src/app/driver/emac/emac-low-level.c:108:22: error: use of undeclared identifier 'EMAC_MACCONTROL'
+  108 |     HWREG(emacBase + EMAC_MACCONTROL) |= duplexMode;
+      |                      ^
+../../src/app/driver/emac/emac-low-level.c:118:5: error: call to undeclared function 'HWREG'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+  118 |     HWREG(emacCtrlBase + EMAC_CONTROL_SOFTRESET) = EMAC_CONTROL_RESET;
+      |     ^
+../../src/app/driver/emac/emac-low-level.c:118:50: error: expression is not assignable
+  118 |     HWREG(emacCtrlBase + EMAC_CONTROL_SOFTRESET) = EMAC_CONTROL_RESET;
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+../../src/app/driver/emac/emac-low-level.c:124:22: error: use of undeclared identifier 'EMAC_SOFTRESET'
+  124 |     HWREG(emacBase + EMAC_SOFTRESET) = EMAC_SOFTRESET_SOFTRESET;
+      |                      ^
+../../src/app/driver/emac/emac-low-level.c:124:40: error: use of undeclared identifier 'EMAC_SOFTRESET_SOFTRESET'
+  124 |     HWREG(emacBase + EMAC_SOFTRESET) = EMAC_SOFTRESET_SOFTRESET;
+      |                                        ^
+../../src/app/driver/emac/emac-low-level.c:126:30: error: use of undeclared identifier 'EMAC_SOFTRESET'
+  126 |     while ((HWREG(emacBase + EMAC_SOFTRESET) & EMAC_SOFTRESET_SOFTRESET) == EMAC_SOFTRESET_SOFTRESET) {
+      |                              ^
+../../src/app/driver/emac/emac-low-level.c:126:48: error: use of undeclared identifier 'EMAC_SOFTRESET_SOFTRESET'
+  126 |     while ((HWREG(emacBase + EMAC_SOFTRESET) & EMAC_SOFTRESET_SOFTRESET) == EMAC_SOFTRESET_SOFTRESET) {
+      |                                                ^
+../../src/app/driver/emac/emac-low-level.c:126:77: error: use of undeclared identifier 'EMAC_SOFTRESET_SOFTRESET'
+  126 |     while ((HWREG(emacBase + EMAC_SOFTRESET) & EMAC_SOFTRESET_SOFTRESET) == EMAC_SOFTRESET_SOFTRESET) {
+      |                                                                             ^
+../../src/app/driver/emac/emac-low-level.c:129:22: error: use of undeclared identifier 'EMAC_MACCONTROL'
+  129 |     HWREG(emacBase + EMAC_MACCONTROL) = 0u;
+      |                      ^
+../../src/app/driver/emac/emac-low-level.c:130:22: error: use of undeclared identifier 'EMAC_RXCONTROL'
+  130 |     HWREG(emacBase + EMAC_RXCONTROL)  = 0u;
+      |                      ^
+../../src/app/driver/emac/emac-low-level.c:131:22: error: use of undeclared identifier 'EMAC_TXCONTROL'
+  131 |     HWREG(emacBase + EMAC_TXCONTROL)  = 0u;
+      |                      ^
+../../src/app/driver/emac/emac-low-level.c:135:26: error: call to undeclared function 'EMAC_RXHDP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+  135 |         HWREG(emacBase + EMAC_RXHDP(cnt))        = 0u;
+      |                          ^
+../../src/app/driver/emac/emac-low-level.c:135:50: error: expression is not assignable
+  135 |         HWREG(emacBase + EMAC_RXHDP(cnt))        = 0u;
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        ^
+../../src/app/driver/emac/emac-low-level.c:136:26: error: call to undeclared function 'EMAC_TXHDP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+  136 |         HWREG(emacBase + EMAC_TXHDP(cnt))        = 0u;
+      |                          ^
+../../src/app/driver/emac/emac-low-level.c:136:50: error: expression is not assignable
+  136 |         HWREG(emacBase + EMAC_TXHDP(cnt))        = 0u;
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I"./mocks/test_emac-low-level" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../src/app/driver/emac/emac-low-level.c" -o "./test/out/test_emac-low-level/emac-low-level.o" -MMD -MF "./test/dependencies/test_emac-low-level/emac-low-level.d"
+🌱 Ceedling could not complete operations because of errors

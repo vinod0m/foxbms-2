@@ -1,0 +1,112 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 366 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_debug_can.c for user & system #includes...
+Parsing test_debug_can.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_debug_can.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_debug_can::database_cfg.h...
+Generating mock for test_debug_can::ftask.h...
+Generating mock for test_debug_can::os.h...
+Generating mock for test_debug_can::can_helper.h...
+Generating mock for test_debug_can::database.h...
+WARNING: No function prototypes found by CMock in database_cfg
+
+👟 Test Runners
+---------------
+Generating runner for test_debug_can.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_debug_can.c...
+Compiling test_debug_can::debug_can.c...
+Compiling test_debug_can::Mockos.c...
+Compiling test_debug_can::Mockcan_helper.c...
+Compiling test_debug_can::Mockdatabase.c...
+Compiling test_debug_can::Mockdatabase_cfg.c...
+Compiling test_debug_can::Mockftask.c...
+Compiling test_debug_can::test_debug_can_runner.c...
+Compiling test_debug_can::unity.c...
+Compiling test_debug_can::cmock.c...
+Compiling test_debug_can::CException.c...
+Compiling test_debug_can::struct_helper.c...
+Compiling test_debug_can::test_fake_functions.c...
+Compiling test_debug_can::sil_hal_model.c...
+
+👟 Building Test Executables
+----------------------------
+Linking test_debug_can.out...
+
+👟 Executing
+------------
+Running test_debug_can.out...
+
+Running Test Suite Reports
+--------------------------
+Generating artifact ./artifacts/test/tests_report.json...
+Generating artifact ./artifacts/test/junit_tests_report.xml...
+Generating artifact ./artifacts/test/cppunit_tests_report.xml...
+Generating artifact ./artifacts/test/tests_report.html...
+
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+
+Ceedling operations completed in 521 milliseconds
+
+-------------------
+FAILED TEST SUMMARY
+-------------------
+[../../tests/unit/app/driver/afe/debug/can/test_debug_can.c]
+  Test: testDECAN_ReceiveCanCellVoltages
+  At line (300): "Expected 0x000000016F94E458 Was 0x000000016F94E408:Function OS_ReceiveFromQueue Argument pvBuffer:Function called with unexpected argument value."
+
+  Test: testDECAN_ReceiveCanCellTemperatures
+  At line (321): "Expected 0x000000016F94E458 Was 0x000000016F94E408:Function OS_ReceiveFromQueue Argument pvBuffer:Function called with unexpected argument value."
+
+  Test: testDECAN_TriggerAfe
+  At line (360): "Expected 0x000000016F94E458 Was 0x000000016F94E3D8:Function OS_ReceiveFromQueue Argument pvBuffer:Function called with unexpected argument value."
+
+-----------------------
+❌ OVERALL TEST SUMMARY
+-----------------------
+TESTED:  7
+PASSED:  4
+FAILED:  3
+IGNORED: 0
+
+------------------------
+❌ BUILD FAILURE SUMMARY
+------------------------
+ • Unit test failures
+

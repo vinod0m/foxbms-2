@@ -1,0 +1,140 @@
+wrote /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/iface/sil_clock_constants.h
+  RTI_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_RTI1_FREQ.VALUE = 100.000
+  HCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_HCLK_FREQ.VALUE = 100.000
+  VCLK_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_VCLK1_FREQ.VALUE = 100.000
+  AVCLK1_FREQ            <- DRIVER.SYSTEM.VAR.CLKT_AVCLK1_FREQ.VALUE = 100.000
+  CPU_FREQ               <- DRIVER.SYSTEM.VAR.CLKT_GCLK_FREQ.VALUE = 300.000
+  PLL1_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL1_FREQ.VALUE = 300.00
+  PLL2_FREQ              <- DRIVER.SYSTEM.VAR.CLKT_PLL2_FREQ.VALUE = 80.00
+  OSCILLATOR_FREQ        <- DRIVER.SYSTEM.VAR.CLKT_OSCILLATOR_FREQ.VALUE = 20.0
+  EXTERNAL_FREQ_INPUT    <- DRIVER.SYSTEM.VAR.CLKT_EXTERNAL_FREQ_INPUT.VALUE = 25.0
+🚧 Loaded project configuration from working directory.
+ > Using: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/project.yml
+ > Working directory: /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test
+
+Ceedling set up completed in 411 milliseconds
+Running Command Hook :pre_build...
+Command Hook :pre_build output >> /Users/vinod/Downloads/SoftwareDevLabs/foxbms-2/docs/artifacts/.work/verification-env/sil/build/app_host_unit_test/../../conf/unit/mock.py
+    --> Create diagnosis mocks <--
+
+👟 Preparing Build Paths...
+
+👟 Collecting Essential Test Context
+------------------------------------
+Parsing test_dma_dma_group_a_notification.c for user & system #includes...
+Parsing test_dma_dma_group_a_notification.c for build directive macros and test case names...
+
+👟 Ingesting Test Configurations
+--------------------------------
+Collecting search paths, flags, and defines for test_dma_dma_group_a_notification.c...
+
+👟 Determining Files to Be Generated...
+
+👟 Mocking
+----------
+Generating mock for test_dma_dma_group_a_notification::HL_spi.h...
+Generating mock for test_dma_dma_group_a_notification::afe_dma.h...
+Generating mock for test_dma_dma_group_a_notification::i2c.h...
+Generating mock for test_dma_dma_group_a_notification::spi.h...
+Generating mock for test_dma_dma_group_a_notification::task.h...
+Generating mock for test_dma_dma_group_a_notification::HL_i2c.h...
+Generating mock for test_dma_dma_group_a_notification::HL_sys_dma.h...
+Generating mock for test_dma_dma_group_a_notification::io.h...
+
+👟 Test Runners
+---------------
+Generating runner for test_dma_dma_group_a_notification.c...
+
+👟 Determining Artifacts to Be Built...
+
+👟 Building Objects
+-------------------
+Compiling test_dma_dma_group_a_notification.c...
+Compiling test_dma_dma_group_a_notification::dma.c...
+Compiling test_dma_dma_group_a_notification::MockHL_i2c.c...
+Compiling test_dma_dma_group_a_notification::Mockafe_dma.c...
+Compiling test_dma_dma_group_a_notification::MockHL_sys_dma.c...
+Compiling test_dma_dma_group_a_notification::MockHL_spi.c...
+Compiling test_dma_dma_group_a_notification::Mocki2c.c...
+Compiling test_dma_dma_group_a_notification::Mockio.c...
+Compiling test_dma_dma_group_a_notification::Mockspi.c...
+Compiling test_dma_dma_group_a_notification::Mocktask.c...
+Compiling test_dma_dma_group_a_notification::test_dma_dma_group_a_notification_runner.c...
+
+Running Raw Tests Output Report
+-------------------------------
+Tests produced no extra console output.
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+../../src/app/driver/dma/dma.c:222:90: error: use of undeclared identifier 'BTC'
+  222 |             (dmaChannel_t)(dmaChannel_t)dma_spiDmaChannels[i].txChannel, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                          ^
+../../src/app/driver/dma/dma.c:222:96: error: use of undeclared identifier 'dmaIntGroup_t'
+  222 |             (dmaChannel_t)(dmaChannel_t)dma_spiDmaChannels[i].txChannel, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                                ^
+../../src/app/driver/dma/dma.c:227:90: error: use of undeclared identifier 'BTC'
+  227 |             (dmaChannel_t)(dmaChannel_t)dma_spiDmaChannels[i].rxChannel, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                          ^
+../../src/app/driver/dma/dma.c:227:96: error: use of undeclared identifier 'dmaIntGroup_t'
+  227 |             (dmaChannel_t)(dmaChannel_t)dma_spiDmaChannels[i].rxChannel, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                                ^
+../../src/app/driver/dma/dma.c:233:95: error: too few arguments to function call, expected 3, have 2
+  233 |         dmaSetCtrlPacket((dmaChannel_t)dma_spiDmaChannels[i].txChannel, dma_controlPacketSpiTx);
+      |         ~~~~~~~~~~~~~~~~                                                                      ^
+sil_hal/HL_sys_dma.h:339:13: note: 'dmaSetCtrlPacket' declared here
+  339 | extern void dmaSetCtrlPacket(dmaChannel_t channel, dmaTriggerType_t trigger, g_dmaCTRL *pControlPacket);
+      |             ^                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/app/driver/dma/dma.c:236:95: error: too few arguments to function call, expected 3, have 2
+  236 |         dmaSetCtrlPacket((dmaChannel_t)dma_spiDmaChannels[i].rxChannel, dma_controlPacketSpiRx);
+      |         ~~~~~~~~~~~~~~~~                                                                      ^
+sil_hal/HL_sys_dma.h:339:13: note: 'dmaSetCtrlPacket' declared here
+  339 | extern void dmaSetCtrlPacket(dmaChannel_t channel, dmaTriggerType_t trigger, g_dmaCTRL *pControlPacket);
+      |             ^                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/app/driver/dma/dma.c:253:89: error: use of undeclared identifier 'BTC'
+  253 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_TX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                         ^
+../../src/app/driver/dma/dma.c:253:95: error: use of undeclared identifier 'dmaIntGroup_t'
+  253 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_TX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                               ^
+../../src/app/driver/dma/dma.c:254:89: error: use of undeclared identifier 'BTC'
+  254 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_RX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                         ^
+../../src/app/driver/dma/dma.c:254:95: error: use of undeclared identifier 'dmaIntGroup_t'
+  254 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_RX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                               ^
+../../src/app/driver/dma/dma.c:255:89: error: use of undeclared identifier 'LFS'
+  255 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_RX, (dmaInterrupt_t)LFS, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                         ^
+../../src/app/driver/dma/dma.c:255:95: error: use of undeclared identifier 'dmaIntGroup_t'
+  255 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C1_RX, (dmaInterrupt_t)LFS, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                               ^
+../../src/app/driver/dma/dma.c:261:79: error: too few arguments to function call, expected 3, have 2
+  261 |     dmaSetCtrlPacket((dmaChannel_t)DMA_CHANNEL_I2C1_TX, dma_controlPacketI2cTx);
+      |     ~~~~~~~~~~~~~~~~                                                          ^
+sil_hal/HL_sys_dma.h:339:13: note: 'dmaSetCtrlPacket' declared here
+  339 | extern void dmaSetCtrlPacket(dmaChannel_t channel, dmaTriggerType_t trigger, g_dmaCTRL *pControlPacket);
+      |             ^                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/app/driver/dma/dma.c:264:79: error: too few arguments to function call, expected 3, have 2
+  264 |     dmaSetCtrlPacket((dmaChannel_t)DMA_CHANNEL_I2C1_RX, dma_controlPacketI2cRx);
+      |     ~~~~~~~~~~~~~~~~                                                          ^
+sil_hal/HL_sys_dma.h:339:13: note: 'dmaSetCtrlPacket' declared here
+  339 | extern void dmaSetCtrlPacket(dmaChannel_t channel, dmaTriggerType_t trigger, g_dmaCTRL *pControlPacket);
+      |             ^                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../src/app/driver/dma/dma.c:280:89: error: use of undeclared identifier 'BTC'
+  280 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C2_TX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                         ^
+../../src/app/driver/dma/dma.c:280:95: error: use of undeclared identifier 'dmaIntGroup_t'
+  280 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C2_TX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                               ^
+../../src/app/driver/dma/dma.c:281:89: error: use of undeclared identifier 'BTC'
+  281 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C2_RX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                         ^
+../../src/app/driver/dma/dma.c:281:95: error: use of undeclared identifier 'dmaIntGroup_t'
+  281 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C2_RX, (dmaInterrupt_t)BTC, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                               ^
+../../src/app/driver/dma/dma.c:282:89: error: use of undeclared identifier 'LFS'
+  282 |     dmaEnableInterrupt((dmaChannel_t)(dmaChannel_t)DMA_CHANNEL_I2C2_RX, (dmaInterrupt_t)LFS, (dmaIntGroup_t)DMA_INTA);
+      |                                                                                         ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+Executed Command: gcc -std=c11 -Wextra -Wall -pedantic -include test_ignore_list.h -include foxbms_host_port_shim.h -Wno-strict-prototypes -Wno-deprecated-non-prototype -Werror -I ../../src/os/freertos/freertos/include -include FreeRTOSConfig.h -I"./mocks/test_dma_dma_group_a_notification" -I"../../src/app/driver/afe/api" -I"../../src/app/driver/config" -I"../../src/app/driver/dma" -I"../../src/app/driver/i2c" -I"../../src/app/driver/io" -I"../../src/app/driver/rtc" -I"../../src/app/driver/spi" -I"../../src/app/task/config" -I"../../src/app/task/ftask" -I"../../tests/unit/app/application/config" -I"../../tests/unit/support" -I"sil_model" -I"." -I"include" -I"sil_hal" -I"../../src/os/freertos/freertos/include" -I"../../src/os/freertos/freertos/portable/ccs/arm_cortex-r5" -I"../../src/app/main/include" -I"../../src/app/application/config" -I"../../src/app/engine/config" -I"../../src/app/engine/database" -I"../../src/app/driver/mcu" -I"../../src/app/task/os" -I"./vendor/unity/src" -I"./vendor/cmock/src" -I"./vendor/c_exception/lib" -D"UNITY_UNIT_TEST" -D"FAS_ASSERT_LEVEL=2" -D"FOXBMS_HOST_SIL=1" -D"UNITY_INCLUDE_EXEC_TIME" -D"FOXBMS_RTOS_FREERTOS=1" -D"_POSIX_C_SOURCE=200809L" -D"CMOCK_MOCK_PREFIX=Mock" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "../../src/app/driver/dma/dma.c" -o "./test/out/test_dma_dma_group_a_notification/dma.o" -MMD -MF "./test/dependencies/test_dma_dma_group_a_notification/dma.d"
+🌱 Ceedling could not complete operations because of errors
