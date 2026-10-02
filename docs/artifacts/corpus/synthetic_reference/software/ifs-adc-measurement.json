@@ -1,0 +1,223 @@
+{
+  "id": "FB2-SW-IFS-000013",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Interface Specification: the analog-to-digital conversion interface",
+  "owner_role": "sw_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000095",
+    "FB2-SRC-COD-000094"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.2",
+      "status": "partially_mapped",
+      "rationale": "Backs SWE.2 with a real interface specification: providing and consuming module, the real C signature transcribed from the header at 308028fb, per-parameter direction, unit, meaning and valid range with the mechanism that enforces it, a return contract whose values are the enumerators the source defines, validity signalling read off the real error paths, timing where the source imposes one, concurrency, and a required not_specified_by_source list. Two elements over the ADC conversion sequence, and records the shared 10 ms task budget the interface does not expose. The status stays partially_mapped: the whole family remains a reconstruction of an existing implementation rather than the product of an architectural design activity, and Component Design remains absent."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-01T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "interface_id": "IFS-ADC-000013",
+  "interface_class": "acquisition",
+  "analysis": {
+    "method": "source_analysis_at_pinned_commit",
+    "commit": "308028fb",
+    "direction": "source_to_specification",
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+    "tools_used": [
+      "graft skeleton",
+      "graft callers",
+      "git show 308028fb:<path>"
+    ],
+    "what_this_record_is_not": [
+      "Not a requirement. It records what the source does, not what it ought to do.",
+      "Not evidence that any check fires at run time; nothing here was executed.",
+      "Not an interface agreement; no consuming module has signed this."
+    ]
+  },
+  "providing_module": {
+    "name": "ADC driver",
+    "role": "Drives the on-chip analog-to-digital converter as a three-state sequence: start the conversion, wait for it to finish, then read the results and publish them. It owns a module-static conversion state and the raw count buffer, and it is the only producer of the measured analogue voltages the supervision path uses.",
+    "source_paths": [
+      "src/app/driver/adc/adc.h",
+      "src/app/driver/adc/adc.c"
+    ]
+  },
+  "consuming_modules": [
+    {
+      "name": "The 10 ms cyclic task",
+      "source_path": "src/app/task/config/ftask_cfg.c",
+      "calls": [
+        "ADC_Control"
+      ],
+      "consumption_evidence": "ADC_Control is called from FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L264, in the same function that calls SPS_Ctrl at L265 and SBC_Trigger at L269. The 10 ms task config is anchored at src/app/task/config/ftask_cfg.h L94."
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "IFSE-001301",
+      "symbol": "ADC_Control",
+      "declaration": "extern void ADC_Control(void);",
+      "declaration_path": "src/app/driver/adc/adc.h",
+      "declaration_line": 94,
+      "implementation_path": "src/app/driver/adc/adc.c",
+      "implementation_line": 118,
+      "providing_module": "ADC driver",
+      "consuming_module": "The 10 ms cyclic task",
+      "parameters": [],
+      "return_contract": {
+        "c_type": "void",
+        "values": {
+          "(no return value)": "The function returns nothing; it advances the conversion state and, when the conversion has finished, publishes the measured voltages to the database."
+        },
+        "default_on_no_information": "A void acquisition entry point gives the caller no way to learn whether a conversion has finished, whether it timed out, or whether the published data is fresh.",
+        "evidence": "src/app/driver/adc/adc.h L94 declares void; src/app/driver/adc/adc.c L118 is the definition."
+      },
+      "validity_signalling": {
+        "mechanism": "No return value. The conversion state is module-static and a caller can only observe it through the test accessor.",
+        "failure_is_observable_to_caller": false,
+        "evidence": "The three-state machine is driven entirely by the module-static adc_conversionState at src/app/driver/adc/adc.c L121; nothing is returned to the 10 ms task that called the function."
+      },
+      "timing": {
+        "period_ms": 10,
+        "period_imposed_by_source": true,
+        "evidence": "Called every 10 ms from FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L264. The source imposes the period by its caller, not by any statement in adc.h.",
+        "timeouts": [
+          {
+            "name": "ADC conversion latency",
+            "value": "spans at least two calls of the 10 ms task",
+            "unit": "ms",
+            "meaning": "The conversion sequence needs one call to start, at least one to observe completion, and one to read the results, so a value is published at best three task periods after the start.",
+            "evidence": "The three states are entered in order at src/app/driver/adc/adc.c L122, L127 and L138, each handled once per call, and completion is tested at L129."
+          }
+        ]
+      },
+      "concurrency": {
+        "calling_context": "task",
+        "reentrancy": "not_reentrant",
+        "evidence": "Called from the 10 ms cyclic task. The state is module-static and is read-modify-written with no lock, so two concurrent invocations would corrupt the sequence; the source does not guard it.",
+        "protection_mechanism": "none - module-static state written without a lock"
+      },
+      "error_paths": [
+        {
+          "condition": "the conversion does not complete within the expected window",
+          "observed_behaviour": "The state remains ADC_WAIT_CONVERSION_FINISHED and no data is published; the function returns void so the caller is not told.",
+          "evidence": "The completion test is at src/app/driver/adc/adc.c L129 and the state is only advanced when conversionFinished is true at L132-L133."
+        },
+        {
+          "condition": "ADC_Control is called twice within one period",
+          "observed_behaviour": "The sequence is advanced twice, potentially reading a conversion that has not finished; the source has no re-entrance guard.",
+          "evidence": "No re-entrance check exists in src/app/driver/adc/adc.c L118-L135."
+        }
+      ],
+      "not_specified_by_source": [
+        "The interface does not state a timeout for the conversion, so a conversion that never finishes leaves the sequence stuck in ADC_WAIT_CONVERSION_FINISHED indefinitely and nothing reports it.",
+        "It does not state the age or freshness of the data it publishes, so a consumer cannot tell a current reading from one left over from a previous sequence.",
+        "adc.h carries only the TEST_ADC_* accessors for the conversion state and the voltage table, so the production interface exposes no way to observe this element's progress at all."
+      ]
+    },
+    {
+      "element_id": "IFSE-001302",
+      "symbol": "TEST_ADC_GetAdcConversionState",
+      "declaration": "extern ADC_STATE_e TEST_ADC_GetAdcConversionState(void);",
+      "declaration_path": "src/app/driver/adc/adc.h",
+      "declaration_line": 100,
+      "implementation_path": "src/app/driver/adc/adc.c",
+      "implementation_line": 161,
+      "providing_module": "ADC driver",
+      "consuming_module": "The unit test harness only",
+      "parameters": [],
+      "return_contract": {
+        "c_type": "ADC_STATE_e",
+        "values": {
+          "ADC_START_CONVERSION": "The next call will start a conversion.",
+          "ADC_WAIT_CONVERSION_FINISHED": "A conversion has been started and the driver is polling for completion.",
+          "ADC_CONVERSION_FINISHED": "The conversion has completed and the next call will read the results and publish them."
+        },
+        "default_on_no_information": "A read of a module-static state that a caller can interpret; the enumerators are declared at src/app/driver/adc/adc.h L80-L85.",
+        "evidence": "The accessor is declared in the TEST_ADC_ block at src/app/driver/adc/adc.h L100 and defined at src/app/driver/adc/adc.c L161, where it returns the module-static adc_conversionState that ADC_Control switches on at src/app/driver/adc/adc.c L121."
+      },
+      "validity_signalling": {
+        "mechanism": "Return value only. This accessor exists solely to let the test harness observe the state, so it is not a production validity channel.",
+        "failure_is_observable_to_caller": true,
+        "evidence": "Declared among the TEST_ADC_ accessors at src/app/driver/adc/adc.h L98-L101, which the header places in a unit-test-only section."
+      },
+      "timing": {
+        "period_ms": null,
+        "period_imposed_by_source": false,
+        "evidence": "An on-demand read; no period.",
+        "timeouts": []
+      },
+      "concurrency": {
+        "calling_context": "task",
+        "reentrancy": "unspecified",
+        "evidence": "A unit-test read; not part of the production calling context."
+      },
+      "error_paths": [
+        {
+          "condition": "none - the read cannot fail",
+          "observed_behaviour": "Returns the current state unconditionally.",
+          "evidence": "src/app/driver/adc/adc.h L100."
+        }
+      ],
+      "not_specified_by_source": [
+        "The interface is a test hook, not a production contract, and the record says so rather than presenting it as part of the module's observable interface.",
+        "It cannot express a stuck or timed-out conversion, because the state set has no error member."
+      ]
+    }
+  ],
+  "interface_level_gaps": [
+    {
+      "gap": "The conversion sequence has no timeout and no error state, and the production interface has no way to observe it.",
+      "consequence": "A conversion that never completes leaves the driver in ADC_WAIT_CONVERSION_FINISHED indefinitely, no data is published, and no production consumer can tell that the analogue measurements have gone stale.",
+      "evidence": "The state machine is src/app/driver/adc/adc.c L118-L135 with the enumerators at src/app/driver/adc/adc.h L80-L85, none of which is an error value; the only state accessor is the test hook at src/app/driver/adc/adc.h L100."
+    },
+    {
+      "gap": "ADC_Control, SPS_Ctrl and SBC_Trigger all run in the same 10 ms task function and none of them reports its own execution time.",
+      "consequence": "A latency in one of the three lengthens the budget of the others. The task calls them back to back with no timing check between them, so a slow power-path cycle can delay a contactor or SBC action without any of the three reporting it.",
+      "evidence": "The three calls are at src/app/task/config/ftask_cfg.c L264, L265 and L269 in FTSK_RunUserCodeCyclic10ms."
+    }
+  ],
+  "verification_status": {
+    "analysed_against_running_code": false,
+    "conformance_tested": false,
+    "statement": "Read from the source at commit 308028fb only. Not analysed against a running build and not conformance-tested: nothing in this record was observed executing. Where a value is described as enforced, the enforcement is the code path named in the evidence field, not an observation of the check firing."
+  },
+  "authority_and_independence": {
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+    "approval_claimed": false,
+    "interface_agreement_status": "none - no consuming module has agreed this interface"
+  },
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "Two elements over the ADC boundary, read from adc.h and adc.c at 308028fb. The boundary is a three-state conversion sequence driven by a 10 ms task, and the record records that the sequence is time-triggered from the same task function that also drives the power-path switches and the SBC, so a latency in one of those is visible in the others' cycle budget."
+    }
+  ]
+}

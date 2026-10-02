@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-01T19:25:12Z |
+| Generated | 2026-10-02T01:21:37Z |
 
 ## Scope
 
@@ -139,4 +139,4 @@ The BMS hardware/software configuration is integrated through `conf/bms/bms.json
 
 ---
 
-*Generated: 2026-10-01T19:25:12Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-02T01:21:37Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

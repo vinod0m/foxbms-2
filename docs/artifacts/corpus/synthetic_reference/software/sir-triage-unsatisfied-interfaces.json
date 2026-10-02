@@ -1,0 +1,212 @@
+{
+  "id": "FB2-SW-SIR-000005",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "requirement",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Triage of the seven unsatisfied software interface-requirement elements",
+  "owner_role": "sw_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000097",
+    "FB2-SRC-COD-000104",
+    "FB2-SRC-COD-000047",
+    "FB2-SRC-COD-000048",
+    "FB2-SRC-COD-000110",
+    "FB2-SRC-COD-000111",
+    "FB2-SRC-COD-000112",
+    "FB2-SRC-COD-000113",
+    "FB2-SRC-COD-000114",
+    "FB2-SRC-COD-000115",
+    "FB2-SRC-COD-000101",
+    "FB2-SRC-COD-000102"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.1",
+      "status": "partially_mapped",
+      "rationale": "Analyses the seven element requirements that the four interface-requirement records mark NOT SATISFIED at 308028fb, and for each records whether the gap is an unimplemented requirement, a mis-derived requirement, or a requirement the code satisfies only partially, with file:line evidence and the engineering action it needs. It does not restate a single requirement to make it match the code: four of the seven are genuine product gaps and are left as gaps. The status stays partially_mapped because the requirements being triaged were themselves derived from the implementation rather than analysed downward."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-01T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "Authored as the disposition half of the interface-requirement family. For each of the seven NOT SATISFIED elements it records the classification (unimplemented requirement, mis-derived requirement, or partially satisfied), the source evidence read at 308028fb, the product-versus-documentation split, and the engineering action required. It deliberately does not edit the four requirement records to close any of the seven."
+    }
+  ],
+  "asil_justification": {
+    "severity": {
+      "rating": "not_applicable"
+    },
+    "exposure": {
+      "rating": "not_applicable"
+    },
+    "derived_asil": "not_applicable",
+    "statement": "Not applicable, and deliberately so. This triage record carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. This is not a statement that the four product gaps it records are unimportant; it is a statement that the classification apparatus is not available in this repository, and a reader must not read 'not_applicable' as 'no consequence'."
+  },
+  "requirement_kind": "interface_requirement_triage",
+  "classification": "interface",
+  "statement": "Seven element requirements across FB2-SW-SIR-000002, FB2-SW-SIR-000003 and FB2-SW-SIR-000004 are not satisfied by the implementation at 308028fb. This record gives each one a disposition. Four are unimplemented product behaviour the requirements correctly call for and the code does not provide (FB2-SW-SIR-000002-E, FB2-SW-SIR-000003-B, FB2-SW-SIR-000004-A, FB2-SW-SIR-000004-C). One is a mis-derived requirement that asks for more than the interface is for (FB2-SW-SIR-000004-D, a lock owner and timeout where a boolean flag is the whole design). One is satisfied only partially, on the documentation rather than the mechanism (FB2-SW-SIR-000004-B, a time base whose unit is documented but whose resolution is not). One is a documentation gap with a real safety consequence (FB2-SW-SIR-000004-E, unbounded transfer lengths). None of the seven is closed by this record and none of the four requirement records is rewritten.",
+  "rationale": "The interface-requirement family was authored by analysing the source and then stating what the interface would have to do for a consumer to rely on it. Seven of those statements are not met. The honest next step is to say, per requirement, whether the code is wrong, the requirement is wrong, or the code is half-right, and to name the engineering action. This record does that and stops there. In particular it does not restate any requirement to fit the code, because four of the seven are real gaps and rewriting them would convert a recorded product weakness into a green tick.",
+  "safety_allocation": {
+    "asil": "not_applicable",
+    "safety_goal_ref": "not_applicable",
+    "mitigation": "No ASIL is allocated to this triage record. It classifies existing software interface requirements; it does not allocate a safety requirement to an ASIL and it creates no new obligation on the product. The product it describes has had no hazard analysis and risk assessment, no ASIL determination and no certification, and none is claimed. Four of the seven gaps it records would matter to a safety case if one were ever built, which is why they are recorded as product gaps rather than as documentation tidiness."
+  },
+  "acceptance_criteria": [
+    {
+      "criterion": "Each of the seven NOT SATISFIED elements has a disposition of unimplemented_requirement, mis_derived_requirement, or partially_satisfied, with file:line evidence that exists at the pinned commit",
+      "measure": "Read each disposition's evidence file:line against commit 308028fb",
+      "threshold": "7 of 7 dispositions carry evidence that resolves at the pinned commit"
+    },
+    {
+      "criterion": "No requirement record is rewritten to agree with the code as part of this triage",
+      "measure": "Compare the statements of FB2-SW-SIR-000002..000004 before and after this record",
+      "threshold": "0 requirement statements altered; all seven remain recorded as NOT SATISFIED at 308028fb"
+    }
+  ],
+  "verification_approach": "analysis",
+  "assumptions": [
+    "The four interface-requirement records accurately state which of their twenty elements are satisfied and which are not, as recorded at commit 308028fb; this record re-reads the source behind each of the seven rather than trusting the status field.",
+    "STD_RETURN_TYPE_e still has exactly the two members STD_OK and STD_NOT_OK at 308028fb, which is what makes a single negative unable to distinguish two physical causes in FB2-SW-SIR-000002-E."
+  ],
+  "conditions_modes": [
+    "The dispositions are stated for the code as it stands at 308028fb and are not re-verified against any later tree state."
+  ],
+  "feasibility_dependencies": [
+    "FB2-SW-SIR-000002, FB2-SW-SIR-000003 and FB2-SW-SIR-000004, the requirement records being triaged."
+  ],
+  "triage_method": "For each element the source was re-read at 308028fb along the real error path named in the requirement record, and the requirement was classified by asking one question: does the code fail to do something the interface legitimately owes a consumer (unimplemented_requirement), does the requirement ask for something outside the interface's purpose (mis_derived_requirement), or does the code do part of what is asked (partially_satisfied)? The evidence field cites the declaration and the implementation line at the pinned commit for each.",
+  "element_triage": [
+    {
+      "requirement": "FB2-SW-SIR-000002-E",
+      "statement": "An actuation request that matches no configured contactor and an actuation request that matched but could not be completed shall be distinguishable to the caller.",
+      "interface_spec": "FB2-SW-IFS-000003",
+      "disposition": "unimplemented_requirement",
+      "reasoning": "The requirement is correctly derived. A caller that asks to open a contactor needs to know whether nothing matched the request or whether a match was found and then failed, because those are different faults with different reactions. The return type cannot express the difference: STD_RETURN_TYPE_e has exactly two members.",
+      "evidence": "STD_RETURN_TYPE_e is declared with only STD_OK and STD_NOT_OK at src/app/main/include/fstd_types.h L82-L85. CONT_OpenContactor initialises retval to STD_NOT_OK at src/app/driver/contactor/contactor.c L168 and only sets it to STD_OK on a match at L177, so both the no-match case and the failed case leave the same value. CONT_CloseContactor repeats the pattern at src/app/driver/contactor/contactor.c L187 and L196.",
+      "product_or_documentation": "product",
+      "product_gap": true,
+      "engineering_action": "Add a third return value, or a distinct out-parameter, that separates 'no configured contactor matched' from 'a contactor matched and the actuation did not complete'. This is a change to the return type of the actuation entry points and to every caller, so it is an interface change and a design decision, not a one-line fix. It is surfaced as a product gap and is not resolved by this record."
+    },
+    {
+      "requirement": "FB2-SW-SIR-000003-B",
+      "statement": "The identifier argument shall be bounded by the identifier width the caller selected, and an identifier wider than that width shall be rejected.",
+      "interface_spec": "FB2-SW-IFS-000004",
+      "disposition": "unimplemented_requirement",
+      "reasoning": "The requirement is correctly derived. The caller selects an 11-bit or a 29-bit identifier width in the same call, so a value that does not fit the selected width is a caller error that the interface can detect. The source records the omission deliberately: the assertion above the parameter is suppressed with a comment that the parameter accepts the whole range.",
+      "evidence": "The suppression is recorded at src/app/driver/can/can.c L933, reading 'id: parameter accepts whole range'. The identifier is then shifted into the controller register with no mask at src/app/driver/can/can.c L952-L966, in both the standard and the extended branch. A 29-bit value passed with the 11-bit width selected is shifted and written without truncation or refusal.",
+      "product_or_documentation": "product",
+      "product_gap": true,
+      "engineering_action": "Bound the identifier against the width implied by idType, either by an assertion that traps or by a returned error, and remove or justify the AXIVION suppression at src/app/driver/can/can.c L933. The choice between trapping and returning an error is a design decision that depends on whether an out-of-range identifier is a development fault or a runtime condition; this record does not make it."
+    },
+    {
+      "requirement": "FB2-SW-SIR-000004-A",
+      "statement": "A masking entry point shall state what it excludes and shall reject a nested entry.",
+      "interface_spec": "FB2-SW-IFS-000007",
+      "disposition": "unimplemented_requirement",
+      "reasoning": "The requirement is correctly derived, and it is the one with the weakest engineering answer. Both masking entry points are thin wrappers over a single global switch with no depth counter, and the global mask itself is a pragma-bound assembler routine, so the interface cannot know whether it is already masked.",
+      "evidence": "OS_EnterTaskCritical at src/app/task/os/freertos/os_freertos.c L153-L155 is a single call to taskENTER_CRITICAL with no counter, and OS_ExitTaskCritical at src/app/task/os/freertos/os_freertos.c L157-L159 is the matching exit. The global mask is a pragma-bound assembler routine at src/app/main/include/fassert.h L112, anchored as FB2-SRC-COD-000047.",
+      "product_or_documentation": "product",
+      "product_gap": true,
+      "engineering_action": "Decide whether the masking interface should detect nesting at all, then implement the decision: a depth counter with a defined overflow behaviour, or an explicit statement that nesting is not detected and is the caller's responsibility. This needs a hardware engineer's input because the global mask is an assembler primitive and the cost of counting it is a privilege-level question."
+    },
+    {
+      "requirement": "FB2-SW-SIR-000004-C",
+      "statement": "A serial read shall report a transfer that did not start as a failure.",
+      "interface_spec": "FB2-SW-IFS-000008",
+      "disposition": "unimplemented_requirement",
+      "reasoning": "The requirement is correctly derived and it is the most serious of the four product gaps, because the failure it describes is silent and looks like success. The success value is assigned before the code that decides whether the transfer runs at all, and the entire transfer sits inside a bus-not-busy test, so a bus that is not free returns without ever having started a transfer and without changing the value the caller receives.",
+      "evidence": "retVal is initialised to STD_OK at src/app/driver/i2c/i2c.c L235, and the whole transfer is inside the test at src/app/driver/i2c/i2c.c L237, so the not-busy-skipped path returns the success value.",
+      "product_or_documentation": "product",
+      "product_gap": true,
+      "engineering_action": "Set the failure value on the path where the transfer body is skipped, so a transfer that did not start is reported as a failure. This is a one-line change in intent and is the highest-value item in this triage: a caller can currently believe it holds sensor data it never received. The record does not apply the change; it names it."
+    },
+    {
+      "requirement": "FB2-SW-SIR-000004-D",
+      "statement": "A lock shall state its owner, its timeout and the consequence of a release that the caller does not hold.",
+      "interface_spec": "FB2-SW-IFS-000008",
+      "disposition": "mis_derived_requirement",
+      "reasoning": "This is the one requirement in the seven that asks for more than this interface is for, and the disposition is deliberately different from the other four. The lock is a single busy-flag array guarded by a task critical section, with no owner recorded and no timeout mechanism anywhere in the module. Demanding an owner and a timeout of it is asking for a different lock: a counted semaphore or a mutex with an owner, rather than an advisory flag. As written the requirement cannot be satisfied by correcting a defect; satisfying it would replace the mechanism. The requirement is therefore recorded as mis-derived, and it is left in place rather than quietly rewritten, because the underlying concern is real: a caller cannot tell a lost release from a correct one.",
+      "evidence": "SPI_Lock is declared at src/app/driver/spi/spi.h L178 and defined at src/app/driver/spi/spi.c L513; it initialises retVal to STD_NOT_OK at src/app/driver/spi/spi.c L516, tests the flag inside a task critical section at L518-L523, and returns the bare result at L525 with no owner recorded and no timing information. SPI_Unlock at src/app/driver/spi/spi.c L528-L534 is void: it writes SPI_IDLE at L532 with no test of the previous state and no return value, so a spurious release is indistinguishable from a correct one.",
+      "product_or_documentation": "product, by way of a mechanism the requirement does not match",
+      "product_gap": true,
+      "engineering_action": "Do not implement this requirement as written against the current mechanism. Decide first whether the SPI boundary needs owner and timeout semantics, which means choosing a different primitive; if it does, replace the flag array and re-derive the requirement against the new mechanism. If it does not, the requirement should be withdrawn by the requirement's author rather than reinterpreted here. Either way the record that a release cannot be refused is a real finding about the current interface."
+    },
+    {
+      "requirement": "FB2-SW-SIR-000004-B",
+      "statement": "The time base shall state its unit and its resolution at the interface.",
+      "interface_spec": "FB2-SW-IFS-000007",
+      "disposition": "partially_satisfied",
+      "reasoning": "The requirement is half met, and the half that is met is the documentation half. The unit is stated: the header's return comment says the value is a timestamp in milliseconds. The resolution is not stated anywhere at the interface or in the conversion macro, so a caller cannot convert a tick difference into a time difference with a known bound. The requirement record's own basis line says the unit and the conversion are not stated; that is imprecise about the unit, which is in fact documented, and this triage records the correction rather than repeating it.",
+      "evidence": "OS_GetTickCount is declared as returning uint32_t at src/app/task/os/os.h L244, and the doc comment immediately above it states 'time stamp in milliseconds, based on the operating system time' at src/app/task/os/os.h L242. The implementation returns xTaskGetTickCount with no unit or resolution stated at src/app/task/os/freertos/os_freertos.c L161. The tick rate is a separate macro, OS_TICK_RATE_MS, defined at src/app/task/os/os.h L75, and no resolution figure appears at the interface.",
+      "product_or_documentation": "documentation, with a real consequence",
+      "product_gap": false,
+      "engineering_action": "State the resolution at the interface, next to the unit that is already there, or state explicitly that the resolution is the FreeRTOS tick and name the configuration that sets it. This is a documentation change rather than a code change, but it is not cosmetic: a consumer that computes a timeout from tick differences cannot currently bound the error."
+    },
+    {
+      "requirement": "FB2-SW-SIR-000004-E",
+      "statement": "Every transfer-length parameter shall be bounded against the destination buffer the caller supplies.",
+      "interface_spec": "FB2-SW-IFS-000008",
+      "disposition": "unimplemented_requirement",
+      "reasoning": "The requirement is correctly derived, and the two instances show the same omission in two different forms. The I2C read asserts only that the length is greater than zero and stops there. The UART read does not even assert that; the source records the absence of a check as a deliberate suppression, so the parameter accepts its whole range. Neither is bounded against the buffer the caller supplied, and a length larger than that buffer is a write past the end of caller memory.",
+      "evidence": "I2C_Read asserts only nrBytes > 0u at src/app/driver/i2c/i2c.c L233; no assertion relates nrBytes to the size of readData, whose only check is non-null at src/app/driver/i2c/i2c.c L232. UART_Read records the omission at src/app/driver/uart/uart.c L198-L199, reading 'nrBytes: accepts whole range', with the only assertion on readData being non-null at src/app/driver/uart/uart.c L197.",
+      "product_or_documentation": "product",
+      "product_gap": true,
+      "engineering_action": "Add a maximum length to each transfer-length parameter and check the caller's buffer against it, or change the interface to take the buffer size and reject a mismatch. For the UART variant the suppression comment at src/app/driver/uart/uart.c L198-L199 has to be removed or justified. Recorded as a product gap because the failure mode is a buffer overrun driven by a parameter the interface says nothing about."
+    }
+  ],
+  "triage_tally": {
+    "unimplemented_requirement": [
+      "FB2-SW-SIR-000002-E",
+      "FB2-SW-SIR-000003-B",
+      "FB2-SW-SIR-000004-A",
+      "FB2-SW-SIR-000004-C",
+      "FB2-SW-SIR-000004-E"
+    ],
+    "mis_derived_requirement": [
+      "FB2-SW-SIR-000004-D"
+    ],
+    "partially_satisfied": [
+      "FB2-SW-SIR-000004-B"
+    ],
+    "count_check": "5 + 1 + 1 = 7, which is the number of elements the four records mark NOT SATISFIED at 308028fb."
+  },
+  "not_established_by_this_record": [
+    "No requirement is closed here. All seven remain recorded as NOT SATISFIED at 308028fb in the records that state them, and this record does not edit those records.",
+    "None of the seven engineering actions has been carried out, scheduled or accepted. Naming an action is not doing it.",
+    "The classification of a requirement as mis_derived is a judgement about the requirement's fit to the current mechanism, not a verdict that the concern behind it is unfounded. FB2-SW-SIR-000004-D's underlying concern, that a release cannot be refused, is a real property of the interface and is recorded as such.",
+    "The disposition that FB2-SW-SIR-000004-B is partially satisfied corrects an imprecision in the requirement record's own basis text, which says the unit is not stated; the unit is stated at src/app/task/os/os.h L242 and the resolution is not. The requirement itself is not restated.",
+    "This record allocates no ASIL, asserts no conformity, and claims no certification. It was authored by an AI agent and carries no human approval; human_approval_status is pending and production_authorized is false.",
+    "Whether each of the four product gaps would matter to a real safety case was not assessed here. That assessment does not exist for this product, and this record does not stand in for it."
+  ],
+  "authority_and_independence": {
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the source at commit 308028fb. Reproducible, not independent: no software engineer has reviewed these dispositions, no hardware engineer has confirmed the masking and lock findings, and no product owner has accepted the four product gaps. An AI-authored artefact is not independent evidence.",
+    "approval_claimed": false,
+    "requirement_agreement_status": "none - no requirement author has agreed these dispositions"
+  }
+}

@@ -293,7 +293,7 @@ void testFTSK_CreateTasks(void) {
     /* ===========*/
 
     OS_TASK_HANDLE dummyHandleFail                                                = (OS_TASK_HANDLE)NULL;
-    static StaticTask_t ftsk_taskEngineFail                                       = {NULL};
+    static StaticTask_t ftsk_taskEngineFail                                       = {0};
     static StackType_t ftsk_stackEngineFail[FTSK_TASK_ENGINE_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_AddCallback(MPU_xTaskCreateStatic_TestCallback);
     MPU_xTaskCreateStatic_ExpectAndReturn(
@@ -308,7 +308,7 @@ void testFTSK_CreateTasks(void) {
     TEST_ASSERT_EQUAL(NULL, dummyHandleFail);
 
     /* Cyclic Task 1ms */
-    StaticTask_t ftsk_taskCyclic1msFail                                           = {NULL};
+    StaticTask_t ftsk_taskCyclic1msFail                                           = {0};
     StackType_t ftsk_stackCyclic1msFail[FTSK_TASK_CYCLIC_1MS_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_ExpectAndReturn(
         (TaskFunction_t)FTSK_CreateTaskCyclic1ms,
@@ -322,7 +322,7 @@ void testFTSK_CreateTasks(void) {
     TEST_ASSERT_EQUAL(NULL, dummyHandleFail);
 
     /* Cyclic Task 10ms */
-    StaticTask_t ftsk_taskCyclic10msFail                                            = {NULL};
+    StaticTask_t ftsk_taskCyclic10msFail                                            = {0};
     StackType_t ftsk_stackCyclic10msFail[FTSK_TASK_CYCLIC_10MS_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_ExpectAndReturn(
         (TaskFunction_t)FTSK_CreateTaskCyclic10ms,
@@ -336,7 +336,7 @@ void testFTSK_CreateTasks(void) {
     TEST_ASSERT_EQUAL(NULL, dummyHandleFail);
 
     /* Cyclic Task 100ms */
-    StaticTask_t ftsk_taskCyclic100msFail                                             = {NULL};
+    StaticTask_t ftsk_taskCyclic100msFail                                             = {0};
     StackType_t ftsk_stackCyclic100msFail[FTSK_TASK_CYCLIC_100MS_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_ExpectAndReturn(
         (TaskFunction_t)FTSK_CreateTaskCyclic100ms,
@@ -350,7 +350,7 @@ void testFTSK_CreateTasks(void) {
     TEST_ASSERT_EQUAL(NULL, dummyHandleFail);
 
     /* Cyclic Task 100ms for algorithms */
-    StaticTask_t ftsk_taskCyclicAlgorithm100msFail                                                       = {NULL};
+    StaticTask_t ftsk_taskCyclicAlgorithm100msFail                                                       = {0};
     StackType_t ftsk_stackCyclicAlgorithm100msFail[FTSK_TASK_CYCLIC_ALGORITHM_100MS_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_ExpectAndReturn(
         (TaskFunction_t)FTSK_CreateTaskCyclicAlgorithm100ms,
@@ -364,7 +364,7 @@ void testFTSK_CreateTasks(void) {
     TEST_ASSERT_EQUAL(NULL, dummyHandleFail);
 
     /* Continuously running Task for I2C */
-    StaticTask_t ftsk_taskI2cFail                                        = {NULL};
+    StaticTask_t ftsk_taskI2cFail                                        = {0};
     StackType_t ftsk_stackSizeI2cFail[FTSK_TASK_I2C_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_ExpectAndReturn(
         (TaskFunction_t)FTSK_CreateTaskI2c,

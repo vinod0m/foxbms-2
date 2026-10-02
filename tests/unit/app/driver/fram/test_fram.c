@@ -83,7 +83,27 @@ TEST_INCLUDE_PATH("../../src/app/engine/diag")
 TEST_INCLUDE_PATH("../../src/version")
 
 /*========== Definitions and Implementations for Unit Test ==================*/
-VER_VERSION_s ver_versionInformation VER_VERSION_INFORMATION = {
+/* VER_VERSION_INFORMATION is deliberately NOT applied here.
+ *
+ * src/version/version.h:83 spells it
+ *     #define VER_VERSION_INFORMATION __attribute__((section(".versionInformation")))
+ * which tells the TARGET linker script where to place the version block. Mach-O
+ * has no spelling for a bare ELF section name -- it requires a SEGMENT,SECTION
+ * pair -- so applying it on this host is a hard error that no -W flag suppresses
+ * (tested: -Wno-section and -Wno-ignored-attributes both leave it):
+ *
+ *     error: argument to 'section' attribute is not valid for this target:
+ *            mach-o section specifier requires a segment and section separated
+ *            by a comma
+ *
+ * src/version/version.h is NOT modified and the macro keeps its product meaning.
+ * What is dropped is the attribute on the test's own definition of the stand-in
+ * for the HALCoGen-generated version.c, because on a host there is no linker
+ * script to honour it and no assertion in this test observes it: ver_versionInformation
+ * is read here only for its commitHash (test_fram.c FRAM_READ_CRC_ERROR path),
+ * which the attribute does not touch. Grep confirms this is the only test in the
+ * suite that applies the macro at all. */
+VER_VERSION_s ver_versionInformation = {
     .underVersionControl     = true,
     .isDirty                 = true,
     .major                   = 120,

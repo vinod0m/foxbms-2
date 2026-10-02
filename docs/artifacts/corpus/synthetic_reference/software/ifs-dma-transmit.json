@@ -1,0 +1,258 @@
+{
+  "id": "FB2-SW-IFS-000014",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Interface Specification: the DMA enable and SPI-transmit-in-progress interface",
+  "owner_role": "sw_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000112",
+    "FB2-SRC-COD-000113"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.2",
+      "status": "partially_mapped",
+      "rationale": "Backs SWE.2 with a real interface specification: providing and consuming module, the real C signature transcribed from the header at 308028fb, per-parameter direction, unit, meaning and valid range with the mechanism that enforces it, a return contract whose values are the enumerators the source defines, validity signalling read off the real error paths, timing where the source imposes one, concurrency, and a required not_specified_by_source list. Three elements, two of which record a declared-but-unimplemented interface, which is the finding rather than a gap in the record. The status stays partially_mapped: the whole family remains a reconstruction of an existing implementation rather than the product of an architectural design activity, and Component Design remains absent."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-01T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "interface_id": "IFS-DMA-000014",
+  "interface_class": "serial_bus",
+  "analysis": {
+    "method": "source_analysis_at_pinned_commit",
+    "commit": "308028fb",
+    "direction": "source_to_specification",
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+    "tools_used": [
+      "graft skeleton",
+      "graft callers",
+      "git show 308028fb:<path>"
+    ],
+    "what_this_record_is_not": [
+      "Not a requirement. It records what the source does, not what it ought to do.",
+      "Not evidence that any check fires at run time; nothing here was executed.",
+      "Not an interface agreement; no consuming module has signed this."
+    ]
+  },
+  "providing_module": {
+    "name": "DMA driver",
+    "role": "Configures and enables the DMA control packets used by the SPI, I2C and UART paths, and is the module a transmit-in-progress flag is expected to live in. Its public header is small: one initialiser and the two transmit-status accessors.",
+    "source_paths": [
+      "src/app/driver/dma/dma.h",
+      "src/app/driver/dma/dma.c"
+    ]
+  },
+  "consuming_modules": [
+    {
+      "name": "SPI, I2C and UART drivers, and the AFE drivers",
+      "source_path": "src/app/driver/spi/spi.c",
+      "calls": [
+        "DMA_Initialize",
+        "DMA_IsTransmitOngoing",
+        "DMA_SetTransmitOngoing"
+      ],
+      "consumption_evidence": "The SPI boundary specified in FB2-SW-IFS-000008 depends on the DMA being initialised; the SPI boundary is anchored at src/app/driver/spi/spi.h L178-L186 and src/app/driver/spi/spi.c L513-L526. The AFE drivers call the transmit-status symbols that are actually defined, at src/app/driver/afe/ltc/6806/ltc_6806.c L650 and L723."
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "IFSE-001401",
+      "symbol": "DMA_Initialize",
+      "declaration": "extern void DMA_Initialize(void);",
+      "declaration_path": "src/app/driver/dma/dma.h",
+      "declaration_line": 74,
+      "implementation_path": "src/app/driver/dma/dma.c",
+      "implementation_line": 93,
+      "providing_module": "DMA driver",
+      "consuming_module": "Start-up, before the bus drivers use DMA",
+      "parameters": [],
+      "return_contract": {
+        "c_type": "void",
+        "values": {
+          "(no return value)": "The function returns nothing; it builds the DMA control packets and enables the DMA streams."
+        },
+        "default_on_no_information": "A void initialiser for a resource that every serial bus later depends on gives no signal if it was never called or if a stream failed to enable.",
+        "evidence": "src/app/driver/dma/dma.h L74 declares void; src/app/driver/dma/dma.c L93 is the definition, building control packets for SPI at L95, SPI receive at L114 and I2C1 at L134 and ending at src/app/driver/dma/dma.c L170."
+      },
+      "validity_signalling": {
+        "mechanism": "No return value. Nothing reports whether the streams were enabled.",
+        "failure_is_observable_to_caller": false,
+        "evidence": "src/app/driver/dma/dma.c L93-L170 contains no return and no error result; the function signature is void."
+      },
+      "timing": {
+        "period_ms": null,
+        "period_imposed_by_source": false,
+        "evidence": "Called once at start-up, not periodically.",
+        "timeouts": []
+      },
+      "concurrency": {
+        "calling_context": "task",
+        "reentrancy": "not_reentrant",
+        "evidence": "A start-up initialiser writing module-static control packets; not re-entrant and unguarded."
+      },
+      "error_paths": [
+        {
+          "condition": "a DMA stream fails to enable",
+          "observed_behaviour": "Not detected. The function is void and reports nothing.",
+          "evidence": "src/app/driver/dma/dma.c L93-L170."
+        }
+      ],
+      "not_specified_by_source": [
+        "The interface does not state which streams it enables, in what order relative to the bus drivers, or how a caller learns that DMA is available.",
+        "The header does not say that calling it more than once is unsafe, although it rebuilds the control packets unconditionally."
+      ]
+    },
+    {
+      "element_id": "IFSE-001402",
+      "symbol": "DMA_IsTransmitOngoing",
+      "declaration": "extern bool DMA_IsTransmitOngoing(void);",
+      "declaration_path": "src/app/driver/dma/dma.h",
+      "declaration_line": 80,
+      "implementation_path": "src/app/driver/dma/dma.h",
+      "implementation_line": 80,
+      "providing_module": "Declared in the DMA driver header; no implementation exists at this commit",
+      "consuming_module": "No caller at this commit calls this symbol",
+      "parameters": [],
+      "return_contract": {
+        "c_type": "bool",
+        "values": {
+          "true": "transmission still ongoing",
+          "false": "otherwise"
+        },
+        "default_on_no_information": "The header documents the two values at src/app/driver/dma/dma.h L77-L79, but the function has no body anywhere in the source tree at 308028fb, so the interface promises a capability that is not implemented.",
+        "evidence": "The declaration is at src/app/driver/dma/dma.h L80 and the doc comment at L77-L79. A search of the whole tree at 308028fb finds DMA_IsTransmitOngoing only at that declaration; there is no definition."
+      },
+      "validity_signalling": {
+        "mechanism": "The declared return value is a boolean, but there is no implementation, so the validity question is not reached: the symbol cannot be called.",
+        "failure_is_observable_to_caller": false,
+        "evidence": "No definition exists at 308028fb; the only occurrence of the symbol in the tree is the declaration at src/app/driver/dma/dma.h L80."
+      },
+      "timing": {
+        "period_ms": null,
+        "period_imposed_by_source": false,
+        "evidence": "No period.",
+        "timeouts": []
+      },
+      "concurrency": {
+        "calling_context": "unspecified",
+        "reentrancy": "unspecified",
+        "evidence": "Nothing can be said about the calling context of a function that has no body; the header gives no context either."
+      },
+      "error_paths": [
+        {
+          "condition": "the symbol is linked against",
+          "observed_behaviour": "A link error, because no definition exists at 308028fb.",
+          "evidence": "The declaration at src/app/driver/dma/dma.h L80 is the only occurrence in the tree."
+        }
+      ],
+      "not_specified_by_source": [
+        "The declaration has no implementation at 308028fb, so the interface as declared is not satisfiable; any caller would fail to link.",
+        "The symbols the AFE drivers actually use for this purpose are AFE_IsTransmitOngoing and AFE_SetTransmitOngoing, declared at src/app/driver/afe/ltc/common/ltc_afe_dma.h L88 and L95 and defined at src/app/driver/afe/ltc/common/ltc_afe_dma.c L77 and L82. The header name and the implemented name do not correspond.",
+        "The interface does not say whether the flag is per-channel, per-bus or global, which is the first thing a caller would need to know."
+      ]
+    },
+    {
+      "element_id": "IFSE-001403",
+      "symbol": "DMA_SetTransmitOngoing",
+      "declaration": "extern void DMA_SetTransmitOngoing(void);",
+      "declaration_path": "src/app/driver/dma/dma.h",
+      "declaration_line": 85,
+      "implementation_path": "src/app/driver/dma/dma.h",
+      "implementation_line": 85,
+      "providing_module": "Declared in the DMA driver header; no implementation exists at this commit",
+      "consuming_module": "No caller at this commit calls this symbol",
+      "parameters": [],
+      "return_contract": {
+        "c_type": "void",
+        "values": {
+          "(no return value)": "The function returns nothing; the header describes it as setting the SPI transmit status."
+        },
+        "default_on_no_information": "Like its counterpart, the declared interface has no body at 308028fb.",
+        "evidence": "The declaration is at src/app/driver/dma/dma.h L85 and the doc comment at L82-L84. No definition exists in the tree at 308028fb."
+      },
+      "validity_signalling": {
+        "mechanism": "None: the symbol cannot be called because it has no definition.",
+        "failure_is_observable_to_caller": false,
+        "evidence": "The only occurrence of DMA_SetTransmitOngoing in the tree at 308028fb is the declaration at src/app/driver/dma/dma.h L85."
+      },
+      "timing": {
+        "period_ms": null,
+        "period_imposed_by_source": false,
+        "evidence": "No period.",
+        "timeouts": []
+      },
+      "concurrency": {
+        "calling_context": "unspecified",
+        "reentrancy": "unspecified",
+        "evidence": "No body and no context is stated in the header."
+      },
+      "error_paths": [
+        {
+          "condition": "the symbol is linked against",
+          "observed_behaviour": "A link error, because no definition exists at 308028fb.",
+          "evidence": "src/app/driver/dma/dma.h L85 is the only occurrence in the tree."
+        }
+      ],
+      "not_specified_by_source": [
+        "The declaration has no implementation at 308028fb.",
+        "The implemented counterpart is AFE_SetTransmitOngoing at src/app/driver/afe/ltc/common/ltc_afe_dma.c L82, which takes an LTC_STATE_s pointer, so the header's zero-argument signature and the real function's signature do not match.",
+        "The interface does not state who clears the flag it sets."
+      ]
+    }
+  ],
+  "interface_level_gaps": [
+    {
+      "gap": "Two functions declared in the public DMA header, DMA_IsTransmitOngoing and DMA_SetTransmitOngoing, have no definition anywhere in the source tree at 308028fb.",
+      "consequence": "The declared interface is not satisfiable. Any consumer that trusted the header and called either symbol would fail to link. The functionality exists, but under different names in a different module: AFE_IsTransmitOngoing and AFE_SetTransmitOngoing, which take an LTC_STATE_s pointer rather than none.",
+      "evidence": "A whole-tree search at 308028fb finds DMA_IsTransmitOngoing only at the declaration src/app/driver/dma/dma.h L80 and DMA_SetTransmitOngoing only at src/app/driver/dma/dma.h L85; the implemented symbols are at src/app/driver/afe/ltc/common/ltc_afe_dma.c L77 and L82."
+    },
+    {
+      "gap": "The transmit-in-progress flag is scoped to the AFE module state rather than to the DMA, so the boundary that owns the DMA does not own the flag its header advertises.",
+      "consequence": "A caller of the DMA interface cannot reason about transmit-in-progress at all, because the flag lives in an AFE structure and the DMA header's version does not exist.",
+      "evidence": "The real flag is the transmit_ongoing field of LTC_STATE_s, read at src/app/driver/afe/ltc/common/ltc_afe_dma.c L79 and set at L84."
+    }
+  ],
+  "verification_status": {
+    "analysed_against_running_code": false,
+    "conformance_tested": false,
+    "statement": "Read from the source at commit 308028fb only. Not analysed against a running build and not conformance-tested: nothing in this record was observed executing. Where a value is described as enforced, the enforcement is the code path named in the evidence field, not an observation of the check firing."
+  },
+  "authority_and_independence": {
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+    "approval_claimed": false,
+    "interface_agreement_status": "none - no consuming module has agreed this interface"
+  },
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "Three elements over the DMA boundary, read from dma.h and dma.c at 308028fb. This record also carries the most concrete defect the extension found: two functions declared in dma.h, DMA_IsTransmitOngoing and DMA_SetTransmitOngoing, have no definition anywhere in the source tree at this commit, while the symbols the AFE drivers actually call are AFE_IsTransmitOngoing and AFE_SetTransmitOngoing in the AFE tree. The record states that rather than papering over it."
+    }
+  ]
+}

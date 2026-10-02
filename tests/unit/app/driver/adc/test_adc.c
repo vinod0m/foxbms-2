@@ -110,7 +110,25 @@ void testADC_Control(void) {
     static adcData_t adc_adc1RawVoltages[MCU_ADC1_MAX_NR_CHANNELS] = {0};
 
     adcGetData_ExpectAndReturn(adcREG1, adcGROUP1, &adc_adc1RawVoltages[0], 0u);
-    adcGetData_ReturnArrayThruPtr_data(&adc_adc1RawVoltages[0], MCU_ADC1_MAX_NR_CHANNELS);
+    /* ReturnThruPtr_pBuffer, not ReturnArrayThruPtr_data.
+     *
+     * adcGetData's third parameter is a POINTER (HL_adc.h, and the product
+     * passes &adc_adc1RawVoltages[0] at src/app/driver/adc/adc.c:139), so
+     * CMock generates no ReturnArrayThruPtr_* family for it -- that family only
+     * exists for an argument that carries a depth, i.e. an array.
+     *
+     * ReturnArrayThruPtr_data would also have been the wrong instruction here,
+     * not merely an uncompilable one: it copies FROM &adc_adc1RawVoltages[0]
+     * INTO the pointer the mock hands the product, and that pointer IS
+     * &adc_adc1RawVoltages[0] -- the very same array (line 112). It would
+     * memcpy the array onto itself. ReturnThruPtr_pBuffer states what the test
+     * actually means: the mock returns this address.
+     *
+     * No assertion is lost. ADC_Control() at ADC_CONVERSION_FINISHED calls
+     * adcGetData and then ADC_ConvertVoltage over the buffer, but the only
+     * assertion this test makes about that step is the state transition on the
+     * next line, and the buffer is statically zero-initialised either way. */
+    adcGetData_ReturnThruPtr_pBuffer(&adc_adc1RawVoltages[0]);
     DATA_Write1DataBlock_ExpectAndReturn(TEST_ADC_GetAdc1Voltages(), STD_OK);
     ADC_Control();
     TEST_ASSERT_EQUAL(ADC_START_CONVERSION, TEST_ADC_GetAdcConversionState());

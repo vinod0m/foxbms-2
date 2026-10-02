@@ -704,7 +704,26 @@ static void MXM_41BStateHandlerUartTransaction(MXM_41B_INSTANCE_s *pInstance) {
             }
         }
     } else if (pInstance->substate == MXM_41B_UART_READ_BACK_RECEIVE_BUFFER_SAVE) {
-        if ((pInstance->spiRxBuffer != NULL_PTR) && (pInstance->pRxBuffer != NULL_PTR)) {
+        /* The spiRxBuffer conjunct was removed: it could never be false.
+         *
+         * pInstance->spiRxBuffer is an ARRAY member --
+         * src/app/driver/afe/maxim/common/mxm_17841b.h:182
+         *     uint16_t spiRxBuffer[MXM_SPI_RX_BUFFER_LENGTH];
+         * -- so the comparison decays to a pointer to the array's first element
+         * (C11 6.3.2.1p3) and a pointer to an object is never a null pointer.
+         * `array != NULL` is therefore the constant 1 for every value of
+         * pInstance, `1 && B` is `B`, and the guard's value -- hence the control
+         * flow into and out of the loop, and every store the loop makes -- is
+         * bit-for-bit identical with and without it. pRxBuffer
+         * (mxm_17841b.h:165, `uint16_t *`) is the real check and is kept.
+         *
+         * The compiler reaches the same conclusion independently, which is what
+         * made this visible at all: clang reports
+         *   error: comparison of array 'spiRxBuffer' not equal to a null pointer
+         *          is always true [-Wtautological-pointer-compare]
+         * and gcc's -Waddress, which IS in -Wall, covers the same construct, so
+         * this is not a host-only diagnostic. */
+        if (pInstance->pRxBuffer != NULL_PTR) {
             for (uint16_t i = 0; i < ((uint16_t)pInstance->payloadLength + pInstance->extendMessageBytes); i++) {
                 if (i < pInstance->rxBufferLength) {
                     pInstance->pRxBuffer[i] = pInstance->spiRxBuffer[i + 1u];

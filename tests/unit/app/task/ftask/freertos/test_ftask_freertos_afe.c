@@ -318,7 +318,7 @@ void testFTSK_CreateTasks(void) {
 
     OS_TASK_HANDLE dummyHandleFail = (OS_TASK_HANDLE)NULL;
     /* Continuously running Task for AFE */
-    StaticTask_t ftsk_taskAfeFail                                        = {NULL};
+    StaticTask_t ftsk_taskAfeFail                                        = {0};
     StackType_t ftsk_stackSizeAfeFail[FTSK_TASK_AFE_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_ExpectAndReturn(
         (TaskFunction_t)FTSK_CreateTaskAfe,

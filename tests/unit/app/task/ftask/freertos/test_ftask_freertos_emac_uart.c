@@ -350,7 +350,7 @@ void testFTSK_CreateTasks(void) {
 
     OS_TASK_HANDLE dummyHandleFail = (OS_TASK_HANDLE)NULL;
     /* Task for receiving ethernet packages */
-    StaticTask_t ftsk_taskEmacFail                                         = {NULL};
+    StaticTask_t ftsk_taskEmacFail                                         = {0};
     StackType_t ftsk_stackSizeEmacFail[FTSK_TASK_EMAC_STACK_SIZE_IN_WORDS] = {0};
     MPU_xTaskCreateStatic_ExpectAndReturn(
         (TaskFunction_t)FTSK_CreateTaskEmac,

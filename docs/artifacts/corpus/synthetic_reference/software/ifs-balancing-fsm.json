@@ -1,0 +1,287 @@
+{
+  "id": "FB2-SW-IFS-000012",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Interface Specification: the balancing state-machine interface",
+  "owner_role": "sw_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000019",
+    "FB2-SRC-COD-000020"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.2",
+      "status": "partially_mapped",
+      "rationale": "Backs SWE.2 with a real interface specification: providing and consuming module, the real C signature transcribed from the header at 308028fb, per-parameter direction, unit, meaning and valid range with the mechanism that enforces it, a return contract whose values are the enumerators the source defines, validity signalling read off the real error paths, timing where the source imposes one, concurrency, and a required not_specified_by_source list. Three elements over the balancing state machine, and records the strategy-vtable structure the interface does not express. The status stays partially_mapped: the whole family remains a reconstruction of an existing implementation rather than the product of an architectural design activity, and Component Design remains absent."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-01T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "interface_id": "IFS-BAL-000012",
+  "interface_class": "actuation",
+  "analysis": {
+    "method": "source_analysis_at_pinned_commit",
+    "commit": "308028fb",
+    "direction": "source_to_specification",
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+    "tools_used": [
+      "graft skeleton",
+      "graft callers",
+      "git show 308028fb:<path>"
+    ],
+    "what_this_record_is_not": [
+      "Not a requirement. It records what the source does, not what it ought to do.",
+      "Not evidence that any check fires at run time; nothing here was executed.",
+      "Not an interface agreement; no consuming module has signed this."
+    ]
+  },
+  "providing_module": {
+    "name": "Balancing driver, BAL",
+    "role": "Decides whether and when to balance individual cells toward a target, and drives the AFE balancing commands. It is a state machine whose behaviour is supplied by a linked strategy: a voltage strategy, a history strategy and a do-nothing strategy each provide their own copy of the same three entry points.",
+    "source_paths": [
+      "src/app/application/bal/bal.h",
+      "src/app/application/bal/bal.c",
+      "src/app/application/bal/voltage/bal_strategy_voltage.c",
+      "src/app/application/bal/bal_cfg.h"
+    ]
+  },
+  "consuming_modules": [
+    {
+      "name": "The balancing cyclic task",
+      "source_path": "src/app/task/config/ftask_cfg.c",
+      "calls": [
+        "BAL_Trigger",
+        "BAL_SetStateRequest",
+        "BAL_GetState"
+      ],
+      "consumption_evidence": "The header states BAL_Trigger must be called time-triggered every 100 milliseconds at src/app/application/bal/bal.h L229; the cyclic task config is anchored at src/app/task/config/ftask_cfg.h L330-L338. The anchor FB2-SRC-COD-000019 records the shared BAL_TransferStateRequest at src/app/application/bal/bal.c L100-L180 and FB2-SRC-COD-000020 records the voltage strategy's BAL_ActivateBalancing at src/app/application/bal/voltage/bal_strategy_voltage.c L122-L153."
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "IFSE-001201",
+      "symbol": "BAL_Trigger",
+      "declaration": "extern void BAL_Trigger(void);",
+      "declaration_path": "src/app/application/bal/bal.h",
+      "declaration_line": 231,
+      "implementation_path": "src/app/application/bal/voltage/bal_strategy_voltage.c",
+      "implementation_line": 297,
+      "providing_module": "Balancing driver, BAL (voltage strategy build)",
+      "consuming_module": "The 100 ms cyclic task",
+      "parameters": [],
+      "return_contract": {
+        "c_type": "void",
+        "values": {
+          "(no return value)": "The function returns nothing; its effect is on the AFE balancing commands and on the module-static state."
+        },
+        "default_on_no_information": "A void periodic entry point gives the caller no way to learn whether the cycle ran or was skipped by its re-entrance or timer guards.",
+        "evidence": "src/app/application/bal/bal.h L231 declares void; the voltage strategy defines it at src/app/application/bal/voltage/bal_strategy_voltage.c L297. The history and none strategies define their own at src/app/application/bal/history/bal_strategy_history.c L345 and src/app/application/bal/none/bal_strategy_none.c L82."
+      },
+      "validity_signalling": {
+        "mechanism": "No return value. Both the re-entrance guard and the timer guard return early without effect and without a signal.",
+        "failure_is_observable_to_caller": false,
+        "evidence": "The re-entrance guard returns at src/app/application/bal/voltage/bal_strategy_voltage.c L301-L303 and the timer guard returns at L308; neither reports that it skipped the cycle."
+      },
+      "timing": {
+        "period_ms": 100,
+        "period_imposed_by_source": true,
+        "evidence": "The header states the function must be called time-triggered every 100 milliseconds at src/app/application/bal/bal.h L229.",
+        "timeouts": []
+      },
+      "concurrency": {
+        "calling_context": "task",
+        "reentrancy": "guarded_by_critical_section",
+        "evidence": "Called from the 100 ms cyclic task. State changes inside the strategy are guarded by a task critical section around the state request at src/app/application/bal/voltage/bal_strategy_voltage.c L286-L292.",
+        "protection_mechanism": "re-entrance flag and a down-counting timer; a task critical section around the request write"
+      },
+      "error_paths": [
+        {
+          "condition": "re-entrance detected",
+          "observed_behaviour": "Returns immediately without advancing the state machine.",
+          "evidence": "src/app/application/bal/voltage/bal_strategy_voltage.c L301-L303."
+        },
+        {
+          "condition": "the state timer has not elapsed",
+          "observed_behaviour": "Decrements the timer and returns without handling the state machine this cycle.",
+          "evidence": "src/app/application/bal/voltage/bal_strategy_voltage.c L305-L309."
+        }
+      ],
+      "not_specified_by_source": [
+        "The interface does not state which strategy supplies this element, although bal.h declares it once and three separate source files define it; the caller cannot tell from the interface whether balancing is active at all in a given build.",
+        "The guards skip work silently, so a persistently re-entrant or timer-blocked cycle is invisible through this interface.",
+        "The header does not state what BAL_Trigger does in each state, only that it holds the sequence."
+      ]
+    },
+    {
+      "element_id": "IFSE-001202",
+      "symbol": "BAL_SetStateRequest",
+      "declaration": "extern BAL_RETURN_TYPE_e BAL_SetStateRequest(BAL_STATE_REQUEST_e stateRequest);",
+      "declaration_path": "src/app/application/bal/bal.h",
+      "declaration_line": 216,
+      "implementation_path": "src/app/application/bal/voltage/bal_strategy_voltage.c",
+      "implementation_line": 283,
+      "providing_module": "Balancing driver, BAL (voltage strategy build)",
+      "consuming_module": "Application code that requests a balancing state",
+      "parameters": [
+        {
+          "name": "stateRequest",
+          "c_type": "BAL_STATE_REQUEST_e",
+          "direction": "in",
+          "unit": "the requested balancing state (BAL_STATE_REQUEST_e)",
+          "meaning": "Which state to move the balancing state machine to.",
+          "valid_range": "A member of BAL_STATE_REQUEST_e. The source does not assert on it; legality is decided by BAL_CheckStateRequest, whose verdict is returned.",
+          "range_evidence": "Checked by BAL_CheckStateRequest rather than by an assertion; src/app/application/bal/voltage/bal_strategy_voltage.c L287 delegates to it and the shared implementation is at src/app/application/bal/bal.c L112.",
+          "range_enforcement": "returned_error",
+          "nullable": false
+        }
+      ],
+      "return_contract": {
+        "c_type": "BAL_RETURN_TYPE_e",
+        "values": {
+          "BAL_OK": "The request was legal in the current state and has been recorded.",
+          "BAL_BUSY_OK / BAL_REQUEST_PENDING": "Accepted but deferred; the state machine is busy or the request is queued for a later cycle.",
+          "BAL_ILLEGAL_REQUEST": "The request is not permitted in the current state; it is discarded.",
+          "BAL_INIT_ERROR / BAL_ERROR / BAL_ALREADY_INITIALIZED / BAL_ILLEGAL_TASK_TYPE": "The module is not in a state from which the request can be honoured."
+        },
+        "default_on_no_information": "Unlike STD_RETURN_TYPE_e this enumerator distinguishes legal, deferred, illegal and error outcomes, so the caller can tell a refusal from a deferral. The source does not state which of the remaining enumerators a given misuse produces.",
+        "evidence": "The enumerators are declared at src/app/application/bal/bal.h L115-L125; the value comes from BAL_CheckStateRequest at src/app/application/bal/bal.c L112, invoked at src/app/application/bal/voltage/bal_strategy_voltage.c L287 and returned at L294."
+      },
+      "validity_signalling": {
+        "mechanism": "Return value BAL_RETURN_TYPE_e, which is a genuine multi-valued refusal channel.",
+        "failure_is_observable_to_caller": true,
+        "evidence": "src/app/application/bal/voltage/bal_strategy_voltage.c L284 initialises BAL_OK, overwrites it with the check at L287 and returns it at L294; the request is only recorded when the check returned BAL_OK at L289-L291."
+      },
+      "timing": {
+        "period_ms": null,
+        "period_imposed_by_source": false,
+        "evidence": "Not periodic; applied to module state immediately and acted on by the 100 ms cycle on IFSE-001201.",
+        "timeouts": []
+      },
+      "concurrency": {
+        "calling_context": "task",
+        "reentrancy": "guarded_by_critical_section",
+        "evidence": "Called from a task. The request read-modify-write is inside a task critical section at src/app/application/bal/voltage/bal_strategy_voltage.c L286-L292, so a concurrent request cannot interleave with the check.",
+        "protection_mechanism": "OS_EnterTaskCritical / OS_ExitTaskCritical around the check and the write"
+      },
+      "error_paths": [
+        {
+          "condition": "the request is illegal in the current state",
+          "observed_behaviour": "Returns BAL_ILLEGAL_REQUEST and does not record the request.",
+          "evidence": "src/app/application/bal/voltage/bal_strategy_voltage.c L287-L291."
+        },
+        {
+          "condition": "the state machine is busy",
+          "observed_behaviour": "Returns a deferred verdict and the request is not recorded for this cycle.",
+          "evidence": "The shared BAL_CheckStateRequest at src/app/application/bal/bal.c L112 produces the BAL_BUSY_OK and BAL_REQUEST_PENDING verdicts."
+        }
+      ],
+      "not_specified_by_source": [
+        "As with BAL_Trigger, the interface does not name the strategy that implements it, so the set of verdicts a caller can actually receive is build-dependent.",
+        "The nine-value enumerator is not documented per value in the header, so a caller cannot know which enumeration a particular misuse yields.",
+        "The interface does not state whether a deferred request is guaranteed to be honoured later."
+      ]
+    },
+    {
+      "element_id": "IFSE-001203",
+      "symbol": "BAL_GetState",
+      "declaration": "extern BAL_FSM_e BAL_GetState(void);",
+      "declaration_path": "src/app/application/bal/bal.h",
+      "declaration_line": 241,
+      "implementation_path": "src/app/application/bal/voltage/bal_strategy_voltage.c",
+      "implementation_line": 348,
+      "providing_module": "Balancing driver, BAL (voltage strategy build)",
+      "consuming_module": "Diagnostic and monitoring code",
+      "parameters": [],
+      "return_contract": {
+        "c_type": "BAL_FSM_e",
+        "values": {
+          "(state enumerators)": "The current state of the balancing state machine, one of the BAL_FSM_e values declared at src/app/application/bal/bal.h L71-L85."
+        },
+        "default_on_no_information": "A state read has no failure value, so a caller cannot distinguish a module that is idle by design from one that is stuck in an error state without consulting the enumerator meanings.",
+        "evidence": "The value is read directly from the module-static state at src/app/application/bal/voltage/bal_strategy_voltage.c L349."
+      },
+      "validity_signalling": {
+        "mechanism": "Return value only. There is no error channel, but the enumerator set includes error states, so the state read does convey a fault when one is present.",
+        "failure_is_observable_to_caller": true,
+        "evidence": "src/app/application/bal/voltage/bal_strategy_voltage.c L348-L350 returns the state field; BAL_FSM_e at src/app/application/bal/bal.h L71-L85 includes error states."
+      },
+      "timing": {
+        "period_ms": null,
+        "period_imposed_by_source": false,
+        "evidence": "A read of module-static state; no period.",
+        "timeouts": []
+      },
+      "concurrency": {
+        "calling_context": "task",
+        "reentrancy": "unspecified",
+        "evidence": "A plain read of a module-static field with no lock; the source does not guard it, so a read concurrent with a state change is not serialised by this interface."
+      },
+      "error_paths": [
+        {
+          "condition": "none - the read cannot fail",
+          "observed_behaviour": "Returns the current state unconditionally.",
+          "evidence": "src/app/application/bal/voltage/bal_strategy_voltage.c L348-L350."
+        }
+      ],
+      "not_specified_by_source": [
+        "The interface does not name the providing strategy, so a caller cannot know which state set is live.",
+        "The read is unguarded while the writes it observes are inside a task critical section (IFSE-001202), so the interface does not describe an atomic relationship between them.",
+        "The header does not state when the state is last updated relative to the 100 ms cycle."
+      ]
+    }
+  ],
+  "interface_level_gaps": [
+    {
+      "gap": "The three entry points are declared once in bal.h and defined once per strategy file, so the interface a caller compiles against does not identify the implementation it will link.",
+      "consequence": "A caller cannot tell from the interface whether balancing is active, which strategy enforces it, or what behaviour to expect. In a build that links the none strategy the functions exist and do nothing.",
+      "evidence": "BAL_Trigger, BAL_SetStateRequest and BAL_GetState are declared at src/app/application/bal/bal.h L231, L216 and L241, and are defined three times over: voltage strategy at src/app/application/bal/voltage/bal_strategy_voltage.c L297, L283 and L348; history strategy at src/app/application/bal/history/bal_strategy_history.c L345, L331 and L393; none strategy at src/app/application/bal/none/bal_strategy_none.c L82 and L76."
+    },
+    {
+      "gap": "BAL_Trigger skips cycles on re-entrance and on its timer without signalling that it did.",
+      "consequence": "A balancing state machine that is persistently deferred is indistinguishable at this interface from one that is running normally, so a stuck balancing cycle is not observable from outside.",
+      "evidence": "The two early returns are at src/app/application/bal/voltage/bal_strategy_voltage.c L301-L303 and L305-L309, and the function returns void."
+    }
+  ],
+  "verification_status": {
+    "analysed_against_running_code": false,
+    "conformance_tested": false,
+    "statement": "Read from the source at commit 308028fb only. Not analysed against a running build and not conformance-tested: nothing in this record was observed executing. Where a value is described as enforced, the enforcement is the code path named in the evidence field, not an observation of the check firing."
+  },
+  "authority_and_independence": {
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+    "approval_claimed": false,
+    "interface_agreement_status": "none - no consuming module has agreed this interface"
+  },
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "Three elements over the balancing boundary, read from bal.h and, for the strategy implementations, bal_strategy_voltage.c at 308028fb. The most important interface-level fact is that BAL_SetStateRequest, BAL_Trigger and BAL_GetState are declared once in bal.h but defined once per strategy file, so which behaviour a caller gets is a build-time choice the interface does not express."
+    }
+  ]
+}

@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-01T19:25:12Z |
+| Generated | 2026-10-02T01:21:37Z |
 
 ## Scope
 
@@ -282,9 +282,11 @@ One row per requirement artifact across FSR/TSR/SWR/management classes, both pro
 | `synthetic_reference` | `FB2-SAF-SEC-000004` | SEC | **COVERED-DIRECT** | `FB2-VER-TMS-000019` | — | `FB2-VER-TMS-000019` |  |
 | `synthetic_reference` | `FB2-SAF-SEC-000005` | SEC | **COVERED-DIRECT** | `FB2-VER-TMS-000020` | — | `FB2-VER-TMS-000020` |  |
 | `synthetic_reference` | `FB2-SW-SIR-000001` | MGT | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
-| `synthetic_reference` | `FB2-SW-SIR-000002` | MGT | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
-| `synthetic_reference` | `FB2-SW-SIR-000003` | MGT | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
-| `synthetic_reference` | `FB2-SW-SIR-000004` | MGT | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SW-SIR-000002` | MGT | **COVERED-DIRECT** | `FB2-SW-SIR-000005` | — | `FB2-SW-SIR-000005` |  |
+| `synthetic_reference` | `FB2-SW-SIR-000003` | MGT | **COVERED-DIRECT** | `FB2-SW-SIR-000005` | — | `FB2-SW-SIR-000005` |  |
+| `synthetic_reference` | `FB2-SW-SIR-000004` | MGT | **COVERED-DIRECT** | `FB2-SW-SIR-000005` | — | `FB2-SW-SIR-000005` |  |
+| `synthetic_reference` | `FB2-SW-SIR-000005` | MGT | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
+| `synthetic_reference` | `FB2-SW-SIR-000006` | MGT | **UNCOVERED** | — | — | — | No direct, indirect, or embedded test coverage in corpus |
 | `synthetic_reference` | `FB2-SW-SWR-000001` | SWR | **COVERED-DIRECT** | `FB2-VER-SQP-000001`, `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` | — | `FB2-VER-SQP-000001`, `FB2-VER-TMS-000003`, `FB2-VER-TMS-000007` |  |
 | `synthetic_reference` | `FB2-SW-SWR-000002` | SWR | **COVERED-DIRECT** | `FB2-VER-SQP-000001`, `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` | — | `FB2-VER-SQP-000001`, `FB2-VER-TMS-000001`, `FB2-VER-TMS-000007`, `FB2-VER-TMS-000010` |  |
 | `synthetic_reference` | `FB2-SW-SWR-000003` | SWR | **COVERED-DIRECT** | `FB2-VER-SQP-000001`, `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` | — | `FB2-VER-SQP-000001`, `FB2-VER-TMS-000002`, `FB2-VER-TMS-000007` |  |
@@ -299,15 +301,14 @@ One row per requirement artifact across FSR/TSR/SWR/management classes, both pro
 
 ### Coverage Summary
 
-- **Total requirement artifacts**: 38
-- **Covered (any status)**: 34 (89%)
-- **UNCOVERED**: 4
+- **Total requirement artifacts**: 40
+- **Covered (any status)**: 37 (92%)
+- **UNCOVERED**: 3
   - `FB2-SW-SIR-000001` (`synthetic_reference`)
-  - `FB2-SW-SIR-000002` (`synthetic_reference`)
-  - `FB2-SW-SIR-000003` (`synthetic_reference`)
-  - `FB2-SW-SIR-000004` (`synthetic_reference`)
+  - `FB2-SW-SIR-000005` (`synthetic_reference`)
+  - `FB2-SW-SIR-000006` (`synthetic_reference`)
 
-4 requirement artifact(s) remain UNCOVERED and that is the honest corpus state; the gaps are tracked by review dispositions and by the gap report. No coverage is fabricated.
+3 requirement artifact(s) remain UNCOVERED and that is the honest corpus state; the gaps are tracked by review dispositions and by the gap report. No coverage is fabricated.
 
 ## Change Impact Mapping
 
@@ -370,4 +371,4 @@ Three slots in these records are empty by schema rather than by omission, and th
 
 ---
 
-*Generated: 2026-10-01T19:25:12Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-02T01:21:37Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*

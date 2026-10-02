@@ -1,0 +1,282 @@
+{
+  "id": "FB2-SW-SIR-000006",
+  "revision": "1",
+  "schema_version": "1.0.0",
+  "artifact_type": "requirement",
+  "engineering_domain": "software",
+  "profile": "synthetic_reference",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "title": "Software interface requirements: the power-path, balancing, redundancy, insulation, ADC, DMA and SBC interfaces",
+  "owner_role": "sw_engineer",
+  "origin": "derived",
+  "source_refs": [
+    "FB2-SRC-COD-000031",
+    "FB2-SRC-COD-000038",
+    "FB2-SRC-COD-000027",
+    "FB2-SRC-COD-000026",
+    "FB2-SRC-COD-000014",
+    "FB2-SRC-COD-000112",
+    "FB2-SRC-COD-000113",
+    "FB2-SRC-COD-000095",
+    "FB2-SRC-COD-000019",
+    "FB2-SRC-COD-000020",
+    "FB2-SRC-COD-000003",
+    "FB2-SRC-COD-000097"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.1",
+      "status": "partially_mapped",
+      "rationale": "Backs SWE.1 with a fifth interface-requirement record, covering the eight boundaries specified in FB2-SW-IFS-000009..000016, and gives every element requirement an explicit upward traceability to a safety goal, FSR or system requirement so that the obligation is not orphaned. The status stays partially_mapped and the reason is stated in the record itself: these requirements were produced specification-to-requirement, from interface specifications that were themselves produced by analysing the source. The process's defining activity, analysing requirements downward from a higher-level requirement, has still not occurred for any requirement in this corpus. Recording upward traceability makes the gap legible; it does not close it."
+    },
+    {
+      "standard_id": "ASPICE_PAM_41",
+      "reference": "SWE.2",
+      "status": "partially_mapped",
+      "rationale": "Consumes the eight interface specifications this requirement set is derived from, FB2-SW-IFS-000009..000016. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation, which is the reverse of the direction the process expects."
+    }
+  ],
+  "lifecycle_status": "draft",
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false,
+  "created_at": "2026-10-01T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-01T00:00:00Z",
+      "author": "sw_engineer",
+      "description": "Eight element requirements over the eight boundaries specified in FB2-SW-IFS-000009..000016: the power-path switch, the plausibility checks, the redundancy management, the balancing state machine, the ADC conversion sequence, the DMA transmit-status interface, the SBC supervisor and the insulation monitoring. Each element requirement names the interface element it obliges, the upstream safety goal, FSR or system requirement it serves, and the source behaviour it rests on. Six of the eight are unsatisfied by the implementation at 308028fb and are recorded as such."
+    }
+  ],
+  "requirement_kind": "software_interface_requirement",
+  "classification": "interface",
+  "statement": "The power-path, plausibility, redundancy, balancing, ADC, DMA, SBC and insulation interfaces shall present the following to their consumers: (a) a switch-feedback read that distinguishes a closed contactor from a faulty feedback line and states a settling time; (b) a plausibility comparison that states its tolerance and that does not publish an averaged value it has just declared implausible; (c) a redundancy validation that identifies which quantity failed rather than returning one aggregate verdict; (d) a balancing interface that identifies the strategy that provides it; (e) a conversion sequence with a timeout and an observable state; (f) a transmit-status interface whose declared symbols have definitions; (g) a supervisor trigger that reports whether its watchdog was refreshed; and (h) an insulation trigger whose success return means the cycle did work.",
+  "rationale": "These eight boundaries were specified in this pass because the corpus already treats them as safety-relevant and the software-in-the-loop run already exercises them. What the specification of each boundary exposed is the same class of problem the earlier four interface-requirement records found: the interface promises less than a consumer needs, and the shortfall is not visible in a signature. A contactor feedback read returns the same value for a closed contactor and a broken feedback line. A plausibility check averages two measurements and publishes the average even when it has just rejected them. A redundancy check returns one verdict for every cell of every string. A conversion sequence can be stuck with no error state. Two declared transmit-status symbols do not exist. A watchdog refresh is invisible. None of that is a code defect in the ordinary sense; it is the absence of a stated contract, which is precisely what an interface requirement exists to put right.",
+  "asil_justification": {
+    "severity": {
+      "rating": "not_applicable"
+    },
+    "exposure": {
+      "rating": "not_applicable"
+    },
+    "derived_asil": "not_applicable",
+    "statement": "Not applicable, and deliberately so. This requirement set carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. The upstream safety goal, FSR and system requirement each element names is a traceability relationship recorded for the corpus, not an ASIL allocation. A reader must not read 'not_applicable' as 'no consequence': six of these eight requirements are unsatisfied and at least two of them, the contactor feedback read and the insulation trigger, would matter to a safety case if one were ever built."
+  },
+  "safety_allocation": {
+    "asil": "not_applicable",
+    "safety_goal_ref": "not_applicable",
+    "mitigation": "No ASIL is allocated. The upstream references named per element below are recorded so that no obligation in this set is orphaned, not as an allocation. The product has had no hazard analysis and risk assessment, no ASIL determination and no certification, and none is claimed for it or for anything in this corpus."
+  },
+  "acceptance_criteria": [
+    {
+      "criterion": "A switch-feedback read shall distinguish a closed contactor from a faulty feedback line and shall state a settling time between command and read",
+      "measure": "Inspect the return contract of the feedback read for a fault state distinct from the open state, and the timing field for a stated settling interval",
+      "threshold": "a fault state distinct from CONT_SWITCH_OFF, and a stated settling time"
+    },
+    {
+      "criterion": "A plausibility comparison shall state its tolerance and shall not publish an averaged output on the path where it rejected the inputs",
+      "measure": "Inspect the tolerance declaration in the header and the write to the output parameter on both the accepted and the rejected path",
+      "threshold": "tolerance stated at the interface, and no output write on the rejected path"
+    },
+    {
+      "criterion": "A redundancy validation shall identify which measured quantity failed",
+      "measure": "Inspect the return contract for a per-quantity verdict or an out-parameter naming the failing quantity",
+      "threshold": "the failing quantity is recoverable from the interface alone"
+    },
+    {
+      "criterion": "A balancing interface shall identify which strategy provides it",
+      "measure": "Inspect the interface for a statement of the providing implementation, given that three source files define the same three symbols",
+      "threshold": "the providing strategy is named or selected through the interface"
+    },
+    {
+      "criterion": "A conversion sequence shall have a timeout and an observable state in the production interface",
+      "measure": "Inspect the state machine for a timeout and for a production-visible state accessor",
+      "threshold": "a timeout, and a state accessor outside the unit-test section"
+    },
+    {
+      "criterion": "A declared transmit-status symbol shall have a definition in the source tree",
+      "measure": "Search the whole tree at 308028fb for the definition of every symbol the header declares",
+      "threshold": "every declared symbol has a definition, or the declaration is withdrawn"
+    },
+    {
+      "criterion": "A supervisor trigger shall report whether its device watchdog was refreshed",
+      "measure": "Inspect the return contract of the trigger for a watchdog outcome",
+      "threshold": "the watchdog outcome is observable to the caller"
+    },
+    {
+      "criterion": "An insulation trigger shall return success only on a cycle in which the state machine advanced",
+      "measure": "Inspect the return contract for the skipped-cycle path",
+      "threshold": "a skipped cycle is distinguishable from an advancing one"
+    }
+  ],
+  "verification_approach": "analysis",
+  "assumptions": [
+    "The eight interface specifications FB2-SW-IFS-000009..000016 accurately transcribe the source at commit 308028fb; every element requirement below names the element and line it rests on.",
+    "The upstream safety goal, FSR and system requirement identifiers named per element exist in this corpus and state what this record says they state; the traceability is recorded as a relationship between records, not as an allocation."
+  ],
+  "conditions_modes": [
+    "The requirements are stated for the code as it stands at 308028fb and are not re-verified against any later tree state."
+  ],
+  "feasibility_dependencies": [
+    "FB2-SW-IFS-000009 through FB2-SW-IFS-000016, the interface specifications these requirements are derived from."
+  ],
+  "derivation": {
+    "direction": "specification_to_requirement",
+    "derived_from_interface_specifications": [
+      "FB2-SW-IFS-000009",
+      "FB2-SW-IFS-000010",
+      "FB2-SW-IFS-000011",
+      "FB2-SW-IFS-000012",
+      "FB2-SW-IFS-000013",
+      "FB2-SW-IFS-000014",
+      "FB2-SW-IFS-000015",
+      "FB2-SW-IFS-000016"
+    ],
+    "method": "Every element requirement below names the interface element it obliges, the upstream safety goal, FSR or system requirement it serves, and the source behaviour at 308028fb it rests on.",
+    "authoring_independence": "not_independent",
+    "authoring_independence_statement": "Authored by an AI agent from the interface specifications and the source. No requirements engineer confirmed that this is the interface that was wanted, no stakeholder stated a need these requirements answer, and no human approved them."
+  },
+  "derivation_direction_is_reversed": {
+    "statement": "The derivation direction of this record remains reversed relative to what the process expects, and this record does not paper over that. SWE.1 expects software requirements to be analysed downward from software requirements or system requirements, so that the system requirement is the reason the software requirement exists. These eight requirements were produced in the opposite direction: eight interface specifications were written by analysing an existing implementation, and these requirements were then derived from those specifications. The upstream references recorded per element below were added afterwards, by asking which safety goal, FSR or system requirement each obligation would serve. That is a traceability exercise conducted after the fact, not a derivation. It makes each obligation non-orphaned and reviewable against a higher-level statement; it does not make the requirement the origin of the obligation. The gap is not closed by this record and cannot be closed from the evidence present in this repository, because there is no elicited need and no system requirement above these modules to derive from.",
+    "consequence_for_the_status": "SWE.1 therefore remains partially_mapped. Recording upward traceability is the most that can honestly be done with the evidence available, and it is a real improvement over an untraceable requirement set; it is not the activity the process names, so it does not earn a mapped status."
+  },
+  "element_requirements": [
+    {
+      "id": "FB2-SW-SIR-000006-A",
+      "statement": "A switch-feedback read shall distinguish a closed contactor from a faulty feedback line, and shall state the settling time between a command and a readable feedback level.",
+      "source_element": "IFSE-000903 SPS_GetChannelPexFeedback",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000004",
+        "system_requirement": "FB2-SYS-SYR-000007",
+        "why_this_obligation_serves_it": "FB2-SAF-SGO-000001 is the cell-voltage safety goal and FB2-SYS-SYR-000007 requires the item to publish its state rather than accept a request that contradicts its own safety evaluation. A contactor-closure claim is part of the state the item publishes, and the independent hardware monitor named in FB2-SAF-FSR-000004 is a second barrier over the same quantity. If the feedback read cannot distinguish a closed contactor from a broken feedback line, then the software-side barrier and the wiring are not independent, and the published state can be wrong in a way the second barrier is meant to catch."
+      },
+      "basis": "The return contract offers only CONT_SWITCH_ON and CONT_SWITCH_OFF, and the port-expander read is not checked, so a failed read and an open contactor are the same value.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    },
+    {
+      "id": "FB2-SW-SIR-000006-B",
+      "statement": "A plausibility comparison shall state its tolerance at the interface, and shall not publish an averaged output on the path where it rejected its inputs.",
+      "source_element": "IFSE-001002 PL_CheckCellVoltage and IFSE-001003 PL_CheckCellTemperature",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000001",
+        "system_requirement": "FB2-SYS-SYR-000006",
+        "why_this_obligation_serves_it": "FB2-SYS-SYR-000006 requires pack current and cell temperature to be plausibility-checked before they are supplied to the supervisory functions, and FB2-SAF-FSR-000001 is the cell-voltage acquisition and validation requirement. A check that publishes the average of two measurements it has just declared implausible does not perform the check its system requirement asks for: a consumer that takes the value gets a plausible-looking number built from a measurement the check rejected, and the rejection is only discoverable by a caller that bothers to read the return value."
+      },
+      "basis": "The average is written unconditionally at the output parameter on both paths, and the tolerance macros are used in the comparison without being stated in any header the specification transcribes.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    },
+    {
+      "id": "FB2-SW-SIR-000006-C",
+      "statement": "A redundancy validation shall identify which measured quantity failed, rather than returning a single aggregate verdict.",
+      "source_element": "IFSE-001102 MRC_ValidateAfeMeasurement and IFSE-001103 MRC_ValidatePackMeasurement",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000002",
+        "system_requirement": "FB2-SYS-SYR-000002",
+        "why_this_obligation_serves_it": "FB2-SYS-SYR-000002 requires the item to enforce the configured safe operating area and share the result, and FB2-SAF-FSR-000002 is the SOA voltage-limit monitoring requirement. The redundancy module is the second barrier whose verdict the supervision path acts on. If a failure cannot be attributed to a quantity, then the reaction cannot be selected on the basis of which quantity failed, and the diagnosis that would name the failing cell has to be reconstructed by a second reader of the database rather than read from the interface."
+      },
+      "basis": "Both elements return one aggregate verdict, over respectively every cell of every string and four pack quantities, and the per-quantity detail is written to the database rather than returned.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    },
+    {
+      "id": "FB2-SW-SIR-000006-D",
+      "statement": "A balancing interface shall identify the strategy that provides it, so that a caller can tell which behaviour it is linked against.",
+      "source_element": "IFSE-001201 BAL_Trigger, IFSE-001202 BAL_SetStateRequest and IFSE-001203 BAL_GetState",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000002",
+        "system_requirement": "FB2-SYS-SYR-000004",
+        "why_this_obligation_serves_it": "FB2-SYS-SYR-000004 requires the fault reaction to be selected by mode and a degraded condition to be recognisable, which means the state machine that decides how the item reacts has to be identifiable. Balancing is a degradation-handling function, and in a build that links the do-nothing strategy the three entry points still exist, still return plausible values, and do nothing. An interface that does not name its provider cannot distinguish a balanced cell from an unbalanced one."
+      },
+      "basis": "The three symbols are declared once in bal.h and defined once in each of three strategy files, so the declared interface does not identify the implementation a caller will link.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    },
+    {
+      "id": "FB2-SW-SIR-000006-E",
+      "statement": "A conversion sequence shall have a timeout, and its state shall be observable in the production interface rather than only through a unit-test accessor.",
+      "source_element": "IFSE-001301 ADC_Control",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000001",
+        "system_requirement": "FB2-SYS-SYR-000001",
+        "why_this_obligation_serves_it": "FB2-SYS-SYR-000001 requires every monitored cell voltage to be acquired, validated and published, and FB2-SAF-FSR-000001 is the acquisition and validation requirement. The conversion sequence produces the analogue measurements that feed acquisition. A sequence with no timeout can stop advancing with no data published and no production-visible sign of it, so the acquisition requirement is met vacuously: the item neither publishes a wrong value nor a right one, and nothing says which."
+      },
+      "basis": "The three-state machine has no timeout and no error member, and the only state accessor is declared in the unit-test section of the header.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    },
+    {
+      "id": "FB2-SW-SIR-000006-F",
+      "statement": "Every symbol a public header declares shall have a definition in the source tree, or the declaration shall be withdrawn.",
+      "source_element": "IFSE-001402 DMA_IsTransmitOngoing and IFSE-001403 DMA_SetTransmitOngoing",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000001",
+        "system_requirement": "FB2-SYS-SYR-000001",
+        "why_this_obligation_serves_it": "The transmit-in-progress flag is what keeps a second acquisition from starting while one is in flight, so it sits directly under the acquisition requirement that measurements be acquired and published correctly. As declared, the interface is not satisfiable: a caller that trusted the DMA header and called either symbol would fail to link, and the functionality that exists under a different name in a different module is scoped to an AFE state structure rather than to a DMA channel. The gap is not cosmetic; it means the acquisition path's concurrency guard is not the one its header advertises."
+      },
+      "basis": "A whole-tree search at 308028fb finds both symbols only at their declarations in dma.h; the implemented counterparts are AFE_IsTransmitOngoing and AFE_SetTransmitOngoing in the AFE tree, with a different signature.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    },
+    {
+      "id": "FB2-SW-SIR-000006-G",
+      "statement": "A supervisor trigger that drives a device watchdog shall report whether the watchdog was refreshed.",
+      "source_element": "IFSE-001501 SBC_Trigger",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000003",
+        "system_requirement": "FB2-SYS-SYR-000003",
+        "why_this_obligation_serves_it": "FB2-SYS-SYR-000003 requires the item to reach and confirm the safe state within the fault-tolerant time interval, and FB2-SAF-FSR-000003 is the contactor-opening-on-SOA-violation requirement. The SBC arbitrates the high-voltage contactor sequence, and the periodic watchdog is what keeps it alive to carry that out. If the watchdog refresh fails silently, the device times out and the safe state is reached by the device rather than by the item, with no confirmation through this interface. The requirement to confirm arrival at the safe state cannot be met by a trigger that cannot say whether it did its part."
+      },
+      "basis": "SBC_Trigger is void and the periodic watchdog refresh it performs discards its own return value with an explicit cast, so neither the refresh nor its failure is observable to the caller.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    },
+    {
+      "id": "FB2-SW-SIR-000006-H",
+      "statement": "An insulation trigger shall return success only on a cycle in which its state machine advanced, so that a skipped cycle is distinguishable from an advancing one.",
+      "source_element": "IFSE-001601 IMD_Trigger",
+      "upward_traceability": {
+        "safety_goal": "FB2-SAF-SGO-000001",
+        "fsr": "FB2-SAF-FSR-000001",
+        "system_requirement": "FB2-SYS-SYR-000006",
+        "why_this_obligation_serves_it": "FB2-SYS-SYR-000006 requires cell temperature and pack measurements to be acquired and supplied to the supervisory functions, and the insulation measurement shares that acquisition cycle. A trigger that returns success on a cycle it deliberately skipped cannot be used as a liveness signal, so a supervisory function watching it sees a healthy insulation monitor while the monitor is not running. The trigger is the only element in this extension that reports its own failure at all, which is why this requirement is about the meaning of its success value rather than about a missing error channel."
+      },
+      "basis": "The default return is STD_OK and the timer early-exit leaves it at that value, so a cycle in which the state machine deliberately did not advance reports success.",
+      "gap": "unsatisfied_by_the_analysed_implementation"
+    }
+  ],
+  "element_requirements_note": "All eight are unsatisfied by the implementation as analysed at 308028fb, and this record does not claim otherwise. That ratio is the finding, not a defect in the record. The common thread is that each of these boundaries was specified in this pass, and in every case what the specification found is the same thing: the interface does not state something a consumer needs in order to know whether the thing it asked for happened. None of the eight is visible in a signature, and all eight are the kind of property an interface requirement exists to state.",
+  "failure_reaction": "Eight of eight are unsatisfied by the implementation as analysed, and this record does not claim otherwise. Two are the highest consequence in the set: the switch-feedback read that cannot distinguish a closed contactor from a faulty feedback line, and the insulation trigger whose success value does not mean the cycle did work, because both corrupt the second barrier the safety case relies on. Three are interface-clarity gaps with a bounded fix: the tolerance statements, the per-quantity verdict, and the conversion timeout. Three need a decision before they can be fixed at all: which balancing strategy provides the interface, whether the DMA declarations are withdrawn or implemented, and whether the watchdog refresh is reportable. The engineering actions themselves belong with the module owners; this record names the obligation and stops.",
+  "not_established_by_this_record": [
+    "Every requirement in this set is unsatisfied by the implementation as analysed at 308028fb. The record exists to state what these interfaces would owe a consumer, and it must not be read as a description of what the code does today.",
+    "The derivation direction remains reversed. These requirements were derived from interface specifications that were themselves produced by analysing an existing implementation. The upward traceability recorded per element was added afterwards as a traceability exercise; it makes each obligation non-orphaned and does not make the requirement the origin of that obligation. See derivation_direction_is_reversed.",
+    "No requirement in this set is elicited from a stakeholder, a system requirement or a safety goal. The upstream identifiers named per element are recorded as traceability relationships between records in this corpus, not as allocations and not as a derivation.",
+    "No requirement in this set has a test measure. The eight boundaries have software-in-the-loop unit tests, which exercise the code as it is; none of those tests asserts any obligation stated here, because six of these requirements would fail if one did.",
+    "No requirement in this set is approved. human_approval_status is pending, production_authorized is false, and the record was authored by an AI agent, which is not independent evidence.",
+    "The ASIL allocation is not applicable because no hazard analysis and risk assessment exists for this product, which is a statement about the absence of the classification apparatus and not about the absence of consequence.",
+    "The DMA finding is recorded as it was found: two declared symbols with no definition. This record does not implement them, withdraw them, or decide which of the two candidate resolutions is right.",
+    "Whether the contactor feedback path is genuinely independent of the feedback wiring is a hardware question this record cannot answer; it records that the interface does not let a consumer tell the two apart."
+  ],
+  "authority_and_independence": {
+    "independence": "not_independent",
+    "independence_statement": "Authored by an AI agent from the eight interface specifications and the source at commit 308028fb. Reproducible, not independent: no software engineer has reviewed these requirements, no requirements engineer has confirmed that this is the set of obligations that was wanted, no hardware engineer has confirmed the feedback-path findings, and no human has approved any of it. An AI-authored artefact is not independent evidence.",
+    "approval_claimed": false,
+    "requirement_agreement_status": "none - no requirement author has agreed this set"
+  }
+}

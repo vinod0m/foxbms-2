@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0.0",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "links": [
+    {
+      "link_id": "FB2-LNK-IFS-000008",
+      "source_id": "FB2-SW-IFS-000009",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000006",
+      "target_revision": "1",
+      "relation_type": "refines",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The power-path switch interface refines the contactor detailed-design record. That record already names SPS_RequestContactorState, SPS_GetChannelPexFeedback and SPS_GetChannelCurrentFeedback as the contactor driver's outbound calls, and it is a named symbol list rather than an interface specification. This link records the relationship so the design record is not read as having specified the boundary: it names the calls and this record gives their signatures, ranges, error paths and the two interface-level gaps the design record does not carry. The direction is specification refines design, because the specification is the finer statement.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-IFS-000009",
+      "source_id": "FB2-SW-IFS-000011",
+      "source_revision": "1",
+      "target_id": "FB2-SW-DSN-000002",
+      "target_revision": "1",
+      "relation_type": "refines",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The redundancy-management interface refines the SOA voltage-monitoring design record, because the validity flags this interface produces are an input to the SOA checks that record describes. The design record states that the SOA module judges measured values against configured limits; it does not say where the judgement of whether those values may be trusted comes from. This link declares that dependency rather than leaving it implicit, and the direction is specification refines design because the interface is the finer statement about the input boundary.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000027",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000009",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement A of this set obliges the switch-feedback read that FB2-SW-IFS-000009 specifies, and rests on the return contract that specification transcribes. The link records the direction honestly: the requirement was derived from the specification, not the other way round. A reader tracing upward from the requirement reaches the specification and can see that the obligation was found by reading the code, not by analysing a higher-level requirement; that reversed direction is the record's own stated gap and is not concealed by this link.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000028",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000010",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement B obliges the plausibility comparisons that FB2-SW-IFS-000010 specifies, and rests on that specification's finding that the averaged output is written on the rejected path and that the tolerance is not stated in any header. Direction is specification to requirement, and the requirement does not exist independently of the analysis that produced the specification.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000029",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000011",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement C obliges the redundancy validators that FB2-SW-IFS-000011 specifies, and rests on that specification's finding that both elements return a single aggregate verdict over every quantity they check. Direction is specification to requirement.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000030",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000012",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement D obliges the balancing entry points that FB2-SW-IFS-000012 specifies, and rests on that specification's finding that the three symbols are declared once and defined once per strategy file. Direction is specification to requirement.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000031",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000013",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement E obliges the conversion sequence that FB2-SW-IFS-000013 specifies, and rests on that specification's finding that the state machine has no timeout and no production-visible state. Direction is specification to requirement.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000032",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000014",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement F obliges the transmit-status interface that FB2-SW-IFS-000014 specifies, and rests on that specification's finding that two declared symbols have no definition anywhere in the tree at the pinned commit. Direction is specification to requirement.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000033",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000015",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement G obliges the supervisor trigger that FB2-SW-IFS-000015 specifies, and rests on that specification's finding that the watchdog refresh discards its own result. Direction is specification to requirement.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000034",
+      "source_id": "FB2-SW-SIR-000006",
+      "source_revision": "1",
+      "target_id": "FB2-SW-IFS-000016",
+      "target_revision": "1",
+      "relation_type": "specified_by",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "Element requirement H obliges the insulation trigger that FB2-SW-IFS-000016 specifies, and rests on that specification's finding that a timer-skipped cycle returns the success value. Direction is specification to requirement.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000035",
+      "source_id": "FB2-SW-SIR-000005",
+      "source_revision": "1",
+      "target_id": "FB2-SW-SIR-000002",
+      "target_revision": "1",
+      "relation_type": "validates",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The triage record classifies the disposition of element FB2-SW-SIR-000002-E, which the actuation interface-requirement record states and marks NOT SATISFIED. The triage depends on that record's element statement and its evidence; if the record were wrong about the return type having two members, the disposition of that element would be wrong too. The dependency is declared rather than left implicit, and the triage does not edit the record it triages.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000036",
+      "source_id": "FB2-SW-SIR-000005",
+      "source_revision": "1",
+      "target_id": "FB2-SW-SIR-000003",
+      "target_revision": "1",
+      "relation_type": "validates",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The triage record classifies the disposition of element FB2-SW-SIR-000003-B, which the communication interface-requirement record states and marks NOT SATISFIED. Same dependency direction as the actuation triage: the disposition rests on the requirement record's element statement and is re-read against the source rather than trusted from the status field.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    },
+    {
+      "link_id": "FB2-LNK-SIR-000037",
+      "source_id": "FB2-SW-SIR-000005",
+      "source_revision": "1",
+      "target_id": "FB2-SW-SIR-000004",
+      "target_revision": "1",
+      "relation_type": "validates",
+      "profile": "synthetic_reference",
+      "scenario_id": "SCN-BASELINE",
+      "baseline_id": "BAS-REF-001",
+      "variant_applicability": [
+        "VAR-REF-001"
+      ],
+      "rationale": "The triage record classifies five of its seven dispositions against the platform-service interface-requirement record, including the one it classifies as mis-derived and the one it classifies as partially satisfied. The record carries a deliberate correction to that requirement's basis text for one element, and the correction is recorded in the triage rather than applied to the requirement; this link declares the dependency that correction rests on.",
+      "provenance": "derived",
+      "review_state": "pending",
+      "change_suspect_status": false
+    }
+  ]
+}
