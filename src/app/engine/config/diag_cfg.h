@@ -231,6 +231,13 @@ typedef enum {
     DIAG_EVENT_OK,     /**< diag channel event OK                */
     DIAG_EVENT_NOT_OK, /**< diag channel event NOK               */
     DIAG_EVENT_RESET,  /**< reset diag channel event counter to 0 */
+    /**< the quantity this channel watches was not measured, so no verdict was derived from
+     *   it. The channel holds its state: #DIAG_EVENT_NOT_EVALUATED neither clears nor raises
+     *   anything in #DIAG_Handler(), it writes no entry and invokes no callback. It exists so
+     *   that a channel whose input is unavailable can be told so explicitly instead of being
+     *   silently left on its previous verdict. It is added last so that the numeric values of
+     *   the members above it are unchanged. */
+    DIAG_EVENT_NOT_EVALUATED,
 } DIAG_EVENT_e;
 
 /** enable or disable the diagnosis handling for an event */

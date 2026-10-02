@@ -112,7 +112,9 @@ typedef struct {
  *          module itself, or can be done in the callback function defined in
  *          diag_cfg.c
  * @param   diagId #DIAG_ID_e of the event that has occurred
- * @param   event   event that occurred (OK, NOK, RESET)
+ * @param   event   event that occurred (OK, NOK, RESET or NOT_EVALUATED; see
+ *          #DIAG_EVENT_NOT_EVALUATED for what a channel does when the quantity it watches
+ *          could not be measured)
  * @param   impact  #DIAG_IMPACT_LEVEL_e of #DIAG_ID_e
  * @param   data    individual information for #DIAG_ID_e e.g. string number,..
  * @return  #DIAG_HANDLER_RETURN_UNKNOWN if invalid #DIAG_EVENT_e, otherwise

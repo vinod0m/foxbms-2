@@ -469,6 +469,32 @@ DIAG_RETURNTYPE_e DIAG_Handler(DIAG_ID_e diagId, DIAG_EVENT_e event, DIAG_IMPACT
             }
         }
         ret_val = DIAG_HANDLER_RETURN_OK; /* Function does not return an error-message! */
+    } else if (event == DIAG_EVENT_NOT_EVALUATED) {
+        /* The quantity this channel watches could not be measured, so no verdict was derived
+         * from it and the channel is to keep the state its last verdict left it in. This branch
+         * therefore touches nothing: not *pThresholdCounter, not *u32ptr_errCodemsk, not
+         * *u32ptr_warnCodemsk, and it neither calls DIAG_EntryWrite() nor invokes the channel's
+         * callback. It is a branch of its own rather than a fall-through from either of the two
+         * branches above, and that is the whole point of it:
+         *
+         *   - reaching the #DIAG_EVENT_OK branch would decrement the occurrence counter of a
+         *     developing diagnosis and, at a counter of 1, additionally clear the channel at
+         *     diag.c:400-402 and call DIAG_ClearFatalErrorById() at diag.c:408. A measurement
+         *     that cannot be trusted must not be able to close a contactor on a fault that is
+         *     still there.
+         *   - reaching the #DIAG_EVENT_RESET branch would clear errflag, warnflag and the
+         *     occurrence counter at diag.c:459-461, i.e. the same clearing without even the
+         *     fatal-error handling.
+         *   - reaching the #DIAG_EVENT_NOT_OK branch would increment the occurrence counter and,
+         *     at the threshold, set errflag and call DIAG_SetFatalErrorById() at diag.c:426-437.
+         *     A measurement that is merely absent must not be able to open a contactor either;
+         *     the absent measurement is reported on its own diagnosis channel by the module that
+         *     owns it (e.g. #DIAG_ID_CURRENT_MEASUREMENT_ERROR, see redundancy.c).
+         *
+         * So #DIAG_EVENT_NOT_EVALUATED can neither raise nor clear a diagnosis channel. It
+         * differs from emitting nothing at the call site only in that it makes the skipped
+         * evaluation explicit instead of leaving the previous verdict latched. */
+        ret_val = DIAG_HANDLER_RETURN_OK; /* Function does not return an error-message! */
     }
 
     return ret_val;

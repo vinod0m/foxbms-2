@@ -353,6 +353,27 @@ extern void SOA_CheckCurrent(DATA_BLOCK_PACK_VALUES_s *pTablePackValues) {
             } else {
                 DIAG_Handler(DIAG_ID_CURRENT_ON_OPEN_STRING, DIAG_EVENT_NOT_OK, DIAG_STRING, s);
             }
+        } else {
+            /* The current of this string was not measured (invalidStringCurrent is a count of
+             * invalid measurements per string, see database_cfg.h), so not a single overcurrent
+             * limit can be evaluated in either flow direction. Report all four overcurrent
+             * channels of this string as #DIAG_EVENT_NOT_EVALUATED rather than emit nothing at
+             * all: emitting nothing leaves each channel on its last verdict, which for a channel
+             * that was last cleared is a latched "within limits" for a quantity that was never
+             * measured, and for a channel with a developing overcurrent freezes the occurrence
+             * counter that DIAG_Handler() would otherwise decrement on every DIAG_EVENT_OK.
+             * #DIAG_EVENT_NOT_EVALUATED holds the channel state, writes no entry and raises no
+             * callback, so this can neither open nor close a contactor - only #DIAG_EVENT_NOT_OK
+             * does the former and only #DIAG_EVENT_OK and #DIAG_EVENT_RESET do the latter (see
+             * DIAG_Handler()). The untrustworthy measurement itself is reported by the redundancy
+             * module on #DIAG_ID_CURRENT_MEASUREMENT_ERROR (severity #DIAG_FATAL_ERROR).
+             * #DIAG_ID_CURRENT_ON_OPEN_STRING is deliberately not reported here: it is not an
+             * overcurrent limit and its verdict also depends on the contactor state, so it is
+             * left exactly as it was before. */
+            DIAG_Handler(DIAG_ID_STRING_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, s);
+            DIAG_Handler(DIAG_ID_OVERCURRENT_CHARGE_CELL_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, s);
+            DIAG_Handler(DIAG_ID_STRING_OVERCURRENT_DISCHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, s);
+            DIAG_Handler(DIAG_ID_OVERCURRENT_DISCHARGE_CELL_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, s);
         }
     }
 
@@ -379,6 +400,13 @@ extern void SOA_CheckCurrent(DATA_BLOCK_PACK_VALUES_s *pTablePackValues) {
             DIAG_Handler(DIAG_ID_PACK_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_OK, DIAG_SYSTEM, 0u);
             DIAG_Handler(DIAG_ID_PACK_OVERCURRENT_DISCHARGE_MSL, DIAG_EVENT_OK, DIAG_SYSTEM, 0u);
         }
+    } else {
+        /* Same reasoning as for a string with an invalid current measurement above: the pack
+         * current was not measured, so no pack overcurrent limit can be evaluated in either flow
+         * direction. Both pack overcurrent channels are held on their last verdict by reporting
+         * #DIAG_EVENT_NOT_EVALUATED, which raises and clears nothing. */
+        DIAG_Handler(DIAG_ID_PACK_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_SYSTEM, 0u);
+        DIAG_Handler(DIAG_ID_PACK_OVERCURRENT_DISCHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_SYSTEM, 0u);
     }
 }
 

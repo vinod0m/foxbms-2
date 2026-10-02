@@ -253,32 +253,208 @@ void testSOA_CheckTemperatures_incompleteMeasurementReportsNoVerdict(void) {
     TEST_ASSERT_EQUAL_INT(0, BMS_GetCurrentFlowDirection_CallCount());
 }
 
+/*========== Recording of the #DIAG_Handler() calls made by the module under test ====
+ *
+ * #DIAG_Handler_CallCount() in this CMock configuration returns
+ * Mock.DIAG_Handler_CallbackCalls, i.e. it counts *callback* invocations, not calls:
+ * DIAG_Handler_CmockExpectAndReturn() never touches it. It therefore reads 0 unless a
+ * stub is installed, and an assertion of the form
+ * TEST_ASSERT_EQUAL_INT(0, DIAG_Handler_CallCount()) is satisfied by every possible
+ * behaviour of the module under test and pins nothing. The existing "no verdict"
+ * tests above are sound regardless, because they register no expectation at all and an
+ * unanticipated call trips CMock's "called more times than expected".
+ *
+ * To make the *positive* claims below - "exactly these channels, with exactly this event,
+ * in this order" - countable, #DIAG_Handler_Stub() is installed for the duration of the
+ * test. With a stub in place CMock still checks every registered argument expectation;
+ * the stub supplies the return value and its callback is what makes the call counter
+ * real. Each test uninstalls the stub again with DIAG_Handler_Stub(NULL_PTR), which
+ * restores the mock to the state it had before, so no state leaks into another test.
+ */
+#define TEST_DIAG_RECORD_MAX (16u)
+
+/** one recorded #DIAG_Handler() call */
+typedef struct {
+    DIAG_ID_e diagId;
+    DIAG_EVENT_e event;
+    DIAG_IMPACT_LEVEL_e impact;
+    uint32_t data;
+} TEST_DIAG_CALL_s;
+
+/** recorded calls, filled by #TEST_DIAG_RecordCallback() in call order */
+static TEST_DIAG_CALL_s test_diagCalls[TEST_DIAG_RECORD_MAX];
+/** number of recorded calls */
+static uint32_t test_diagCallCount = 0u;
+
+/**
+ * @brief   Callback that records one #DIAG_Handler() call and returns a benign value
+ */
+static DIAG_RETURNTYPE_e TEST_DIAG_RecordCallback(
+    DIAG_ID_e diagId,
+    DIAG_EVENT_e event,
+    DIAG_IMPACT_LEVEL_e impact,
+    uint32_t data,
+    int num_calls) {
+    (void)num_calls;
+    /* an overrun of the recording buffer is a test failure, not a silent truncation */
+    TEST_ASSERT_LESS_OR_EQUAL_UINT32((uint32_t)TEST_DIAG_RECORD_MAX, test_diagCallCount + 1u);
+    test_diagCalls[test_diagCallCount].diagId  = diagId;
+    test_diagCalls[test_diagCallCount].event   = event;
+    test_diagCalls[test_diagCallCount].impact  = impact;
+    test_diagCalls[test_diagCallCount].data    = data;
+    test_diagCallCount++;
+    return DIAG_HANDLER_RETURN_OK;
+}
+
+/**
+ * @brief   Verify that call number kpIndex was #DIAG_Handler(diagId, event, impact, data)
+ */
+static void TEST_DIAG_AssertCall(
+    uint32_t kpIndex,
+    DIAG_ID_e diagId,
+    DIAG_EVENT_e event,
+    DIAG_IMPACT_LEVEL_e impact,
+    uint32_t data) {
+    TEST_ASSERT_LESS_THAN_UINT32(test_diagCallCount, kpIndex);
+    TEST_ASSERT_EQUAL(diagId, test_diagCalls[kpIndex].diagId);
+    TEST_ASSERT_EQUAL(event, test_diagCalls[kpIndex].event);
+    TEST_ASSERT_EQUAL(impact, test_diagCalls[kpIndex].impact);
+    TEST_ASSERT_EQUAL(data, test_diagCalls[kpIndex].data);
+}
+
 /**
  * @brief   Testing function SOA_CheckCurrent with an invalid current measurement
- * @details An invalid string or pack current measurement must not produce an
- *          overcurrent verdict in either direction, because no current was
- *          measured. The invalidity of the measurement is reported by the module
- *          that owns the measurement: the redundancy module sets
- *          invalidStringCurrent and reports #DIAG_ID_CURRENT_MEASUREMENT_ERROR
- *          (redundancy.c), the AFE driver reports
- *          #DIAG_ID_AFE_CELL_VOLTAGE_MEAS_ERROR for the cell voltages. This test
- *          pins that the skip in SOA_CheckCurrent() is total and one-sided, so it
- *          cannot drift into either silently reporting OK or silently reporting
- *          NOT_OK for a quantity that was not measured.
+ * @details An invalid string or pack current measurement cannot yield an overcurrent verdict
+ *          in either flow direction, because no current was measured. The module must therefore
+ *          report the four string overcurrent channels of every invalid string and the two pack
+ *          overcurrent channels as #DIAG_EVENT_NOT_EVALUATED, rather than emit nothing at all.
+ *
+ *          Emitting nothing leaves each channel on whatever its last verdict was. For a channel
+ *          that was last cleared that is a latched "within limits" for a quantity that was
+ *          never measured; for a channel with a developing overcurrent it freezes the occurrence
+ *          counter that DIAG_Handler() decrements on every DIAG_EVENT_OK. Both are wrong, and
+ *          neither can be fixed by reporting DIAG_EVENT_NOT_OK, which would open the contactors
+ *          on a shunt fault.
+ *
+ *          #DIAG_EVENT_NOT_EVALUATED itself is verified to have no side effects on a diagnosis
+ *          channel in test_diag.c (testDIAG_HandlerNotEvaluatedHoldsState), so it can neither
+ *          raise nor clear one. The invalidity of the measurement remains reported by the module
+ *          that owns the measurement: the redundancy module sets invalidStringCurrent /
+ *          invalidPackCurrent and reports #DIAG_ID_CURRENT_MEASUREMENT_ERROR (redundancy.c).
+ *
+ *          No #soa_cfg limit helper and no current-flow direction lookup is registered as an
+ *          expectation below, so reaching one is an unexpected call and fails the test: nothing
+ *          may be derived from a current that does not exist.
  */
-void testSOA_CheckCurrent_invalidMeasurementReportsNoVerdict(void) {
+void testSOA_CheckCurrent_invalidMeasurementReportsNotEvaluated(void) {
     DATA_BLOCK_PACK_VALUES_s invalidStringAndPackCurrent = {
-        .header.uniqueId          = DATA_BLOCK_ID_PACK_VALUES,
-        .stringCurrent_mA         = {INT32_MAX},
-        .invalidStringCurrent     = {1u},
-        .packCurrent_mA           = INT32_MAX,
-        .invalidPackCurrent       = 1u,
+        .header.uniqueId      = DATA_BLOCK_ID_PACK_VALUES,
+        .stringCurrent_mA     = {INT32_MAX},
+        .invalidStringCurrent = {1u},
+        .packCurrent_mA       = INT32_MAX,
+        .invalidPackCurrent   = 1u,
     };
-    /* No expectation is registered on any mock: the module under test must not
-     * call DIAG_Handler nor any soa_cfg helper for an unmeasured current. */
+    /* ======= RT1/1: Test implementation */
+    test_diagCallCount = 0u;
+    DIAG_Handler_Stub(TEST_DIAG_RecordCallback);
     SOA_CheckCurrent(&invalidStringAndPackCurrent);
-    TEST_ASSERT_EQUAL_INT(0, DIAG_Handler_CallCount());
-    TEST_ASSERT_EQUAL_INT(0, SOA_IsStringCurrentLimitViolated_CallCount());
-    TEST_ASSERT_EQUAL_INT(0, SOA_IsPackCurrentLimitViolated_CallCount());
-    TEST_ASSERT_EQUAL_INT(0, SOA_IsCurrentOnOpenString_CallCount());
+    DIAG_Handler_Stub(NULL_PTR);
+
+    /* ======= RT1/1: test output verification */
+    TEST_ASSERT_EQUAL_UINT32(((uint32_t)BS_NR_OF_STRINGS * 4u) + 2u, test_diagCallCount);
+    /* channel by channel: every one of them held, none of them cleared, none of them raised */
+    for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
+        TEST_DIAG_AssertCall(
+            ((uint32_t)s * 4u) + 0u, DIAG_ID_STRING_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, s);
+        TEST_DIAG_AssertCall(
+            ((uint32_t)s * 4u) + 1u, DIAG_ID_OVERCURRENT_CHARGE_CELL_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, s);
+        TEST_DIAG_AssertCall(
+            ((uint32_t)s * 4u) + 2u,
+            DIAG_ID_STRING_OVERCURRENT_DISCHARGE_MSL,
+            DIAG_EVENT_NOT_EVALUATED,
+            DIAG_STRING,
+            s);
+        TEST_DIAG_AssertCall(
+            ((uint32_t)s * 4u) + 3u, DIAG_ID_OVERCURRENT_DISCHARGE_CELL_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, s);
+    }
+    TEST_DIAG_AssertCall(
+        (uint32_t)BS_NR_OF_STRINGS * 4u + 0u,
+        DIAG_ID_PACK_OVERCURRENT_CHARGE_MSL,
+        DIAG_EVENT_NOT_EVALUATED,
+        DIAG_SYSTEM,
+        0u);
+    TEST_DIAG_AssertCall(
+        (uint32_t)BS_NR_OF_STRINGS * 4u + 1u,
+        DIAG_ID_PACK_OVERCURRENT_DISCHARGE_MSL,
+        DIAG_EVENT_NOT_EVALUATED,
+        DIAG_SYSTEM,
+        0u);
+}
+
+/**
+ * @brief   Testing that SOA_CheckCurrent never reports an OK verdict for an unmeasured current
+ * @details The scenario is an overcurrent that is still developing. Cycle 1 has a measurable
+ *          current below every limit, so the module reports DIAG_EVENT_OK on all six
+ *          overcurrent channels. Cycle 2 has an unmeasurable current on string 0 and on the
+ *          pack, and every affected channel must report #DIAG_EVENT_NOT_EVALUATED.
+ *
+ *          The claim is asserted per channel and per event, not as a call count, because the
+ *          failure this pins is a *wrong* event rather than a missing one. An unmeasured
+ *          current reported as DIAG_EVENT_OK is exactly what keeps a stale "within limits"
+ *          verdict alive, and DIAG_Handler() decrements the occurrence counter of a developing
+ *          diagnosis on every DIAG_EVENT_OK - so a single channel drifting to DIAG_EVENT_OK in
+ *          either flow direction fails this test. Only string 0 and the pack lost their
+ *          measurement, so no other string may report anything at all in cycle 2.
+ */
+void testSOA_CheckCurrent_unmeasuredCurrentIsNeverReportedOk(void) {
+    DATA_BLOCK_PACK_VALUES_s measurableCurrent = {
+        .header.uniqueId          = DATA_BLOCK_ID_PACK_VALUES,
+        .stringCurrent_mA         = {0},
+        .invalidStringCurrent     = {0u},
+        .packCurrent_mA           = 0,
+        .invalidPackCurrent       = 0u,
+    };
+    /* ======= RT1/1: cycle 1, the current is measurable and below every limit */
+    for (uint8_t s = 0u; s < BS_NR_OF_STRINGS; s++) {
+        BMS_GetCurrentFlowDirection_ExpectAndReturn(0, BMS_AT_REST);
+        SOA_IsStringCurrentLimitViolated_ExpectAndReturn(0u, BMS_AT_REST, false);
+        SOA_IsCellCurrentLimitViolated_ExpectAndReturn(0u, BMS_AT_REST, false);
+        DIAG_Handler_ExpectAndReturn(
+            DIAG_ID_STRING_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_OK, DIAG_STRING, s, DIAG_HANDLER_RETURN_OK);
+        DIAG_Handler_ExpectAndReturn(
+            DIAG_ID_OVERCURRENT_CHARGE_CELL_MSL, DIAG_EVENT_OK, DIAG_STRING, s, DIAG_HANDLER_RETURN_OK);
+        DIAG_Handler_ExpectAndReturn(
+            DIAG_ID_STRING_OVERCURRENT_DISCHARGE_MSL, DIAG_EVENT_OK, DIAG_STRING, s, DIAG_HANDLER_RETURN_OK);
+        DIAG_Handler_ExpectAndReturn(
+            DIAG_ID_OVERCURRENT_DISCHARGE_CELL_MSL, DIAG_EVENT_OK, DIAG_STRING, s, DIAG_HANDLER_RETURN_OK);
+        SOA_IsCurrentOnOpenString_ExpectAndReturn(BMS_AT_REST, s, false);
+        DIAG_Handler_ExpectAndReturn(
+            DIAG_ID_CURRENT_ON_OPEN_STRING, DIAG_EVENT_OK, DIAG_STRING, s, DIAG_HANDLER_RETURN_OK);
+    }
+    BMS_GetCurrentFlowDirection_ExpectAndReturn(0, BMS_AT_REST);
+    SOA_IsPackCurrentLimitViolated_ExpectAndReturn(0u, BMS_AT_REST, false);
+    DIAG_Handler_ExpectAndReturn(
+        DIAG_ID_PACK_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
+    DIAG_Handler_ExpectAndReturn(
+        DIAG_ID_PACK_OVERCURRENT_DISCHARGE_MSL, DIAG_EVENT_OK, DIAG_SYSTEM, 0u, DIAG_HANDLER_RETURN_OK);
+    SOA_CheckCurrent(&measurableCurrent);
+
+    /* ======= RT2/1: cycle 2, the current of string 0 and of the pack became unmeasurable */
+    measurableCurrent.invalidStringCurrent[0] = 1u;
+    measurableCurrent.invalidPackCurrent         = 1u;
+    test_diagCallCount = 0u;
+    DIAG_Handler_Stub(TEST_DIAG_RecordCallback);
+    /* no #soa_cfg limit helper and no direction lookup is registered for this cycle: reaching
+     * one is an unexpected call and fails the test */
+    SOA_CheckCurrent(&measurableCurrent);
+    DIAG_Handler_Stub(NULL_PTR);
+
+    /* ======= RT2/1: test output verification */
+    TEST_ASSERT_EQUAL_UINT32(6u, test_diagCallCount);
+    TEST_DIAG_AssertCall(0u, DIAG_ID_STRING_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, 0u);
+    TEST_DIAG_AssertCall(1u, DIAG_ID_OVERCURRENT_CHARGE_CELL_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, 0u);
+    TEST_DIAG_AssertCall(2u, DIAG_ID_STRING_OVERCURRENT_DISCHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, 0u);
+    TEST_DIAG_AssertCall(3u, DIAG_ID_OVERCURRENT_DISCHARGE_CELL_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_STRING, 0u);
+    TEST_DIAG_AssertCall(4u, DIAG_ID_PACK_OVERCURRENT_CHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_SYSTEM, 0u);
+    TEST_DIAG_AssertCall(5u, DIAG_ID_PACK_OVERCURRENT_DISCHARGE_MSL, DIAG_EVENT_NOT_EVALUATED, DIAG_SYSTEM, 0u);
 }
