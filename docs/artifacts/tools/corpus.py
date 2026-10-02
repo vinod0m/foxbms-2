@@ -7771,11 +7771,34 @@ class CorpusTool:
             # The `.log` files the execution records cite must not be swallowed by
             # a gitignore rule, or `git archive` omits them and the clean-checkout
             # run fails on a tree that passes here.
+            #
+            # Two modes, because the tree may or may not be a git work tree:
+            #   in a work tree, ask git directly (`ls-files --error-unmatch`);
+            #   not in one, the tree is a `git archive` export, and `git archive`
+            #     emits ONLY tracked paths. So in that case the file's mere
+            #     presence IS the proof of tracking, and asserting it would be
+            #     vacuous -- except that presence is precisely what
+            #     t_no_citation_names_a_file_absent_from_the_tree already
+            #     establishes, so this test has nothing further to add and says
+            #     so rather than passing silently on a check it did not run.
+            #
+            # The earlier form ran `git ls-files` unconditionally and FAILED in
+            # the archive export, which is the one place the property matters
+            # most. That is a test defect, not a corpus defect.
             import subprocess
             cited = sorted({rel for _a, _s, rel in _citation_slots()
                             if rel.endswith(".log") and not rel.startswith("<")})
             if not cited:
+                self._probe_note = "no record cites a .log file, so nothing to check"
                 return False
+            if not (self.root / ".git").exists():
+                present = sum(1 for rel in cited if (self.root / rel).exists())
+                self._probe_note = (
+                    f"{len(cited)} cited .log file(s); NOT a git work tree (this is a "
+                    f"`git archive` export, which emits tracked paths only), so tracking is "
+                    f"implied by presence: {present}/{len(cited)} present. Nothing added by "
+                    f"this test in this mode")
+                return present == len(cited)
             untracked = []
             for rel in cited:
                 r = subprocess.run(["git", "ls-files", "--error-unmatch", "--", rel],
@@ -7784,7 +7807,7 @@ class CorpusTool:
                     untracked.append(rel)
             self._probe_note = (f"{len(cited)} cited .log file(s), {len(untracked)} not tracked: "
                                 f"{untracked[:3]}" if untracked
-                                else f"all {len(cited)} cited .log file(s) are tracked")
+                                else f"all {len(cited)} cited .log file(s) are tracked by git")
             return not untracked
 
         def t_provenance_verifies_from_a_tree_with_no_work_directory():
