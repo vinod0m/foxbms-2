@@ -120,6 +120,18 @@ ARTIFACT_TYPE_SCHEMAS = {
     "process_improvement": "process_improvement.schema.json",
     "process_record": "process_record.schema.json",
     "post_development_record": "post_development_record.schema.json",
+    # Added when the controlled-vocabulary and interpretation-guidelines records
+    # were authored, because the ISO 26262 Part 1 and Part 10 entries in the
+    # coverage plan had no backing artefact. Both are records ABOUT the corpus's
+    # own usage and conventions: neither reproduces normative text, and both
+    # require an explicitly named rejected alternative (the guidelines schema has
+    # no field for a guideline without one). Per the rule that a type belongs in
+    # exactly one of ARTIFACT_TYPE_SCHEMAS / expected_families, neither is added
+    # to expected_families below: that map is the denominator of the
+    # artifact_population coverage dimension and its definition is not changed by
+    # this authoring pass.
+    "controlled_vocabulary": "controlled_vocabulary.schema.json",
+    "interpretation_guidelines": "interpretation_guidelines.schema.json",
 }
 # artifact types validated against base schema only (no dedicated schema exists)
 BASE_ONLY_TYPES = {

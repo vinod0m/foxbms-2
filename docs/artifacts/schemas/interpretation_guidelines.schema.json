@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/interpretation_guidelines.schema.json",
+  "title": "Interpretation Guidelines Schema",
+  "description": "Schema for a corpus interpretation-guidelines record: the interpretation choices this corpus actually had to make while authoring its records, the convention adopted for each, the obvious alternative that was refused, and the corpus's own measured evidence for refusing it. A guideline that states only what the corpus does, without the rejected alternative and the evidence for the refusal, is not a guideline and is not admissible under this schema. No normative text of any standard is reproduced or paraphrased; clause references are identifiers only.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "guidelines_id",
+        "purpose",
+        "rights_statement",
+        "derivation_method",
+        "guidelines",
+        "conventions_taken_from_the_vocabulary_record",
+        "refusals_summary",
+        "limitations",
+        "what_this_record_does_not_assert"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "interpretation_guidelines"
+        },
+        "guidelines_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Identifier of this guidelines set, unique within the corpus."
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "What problem this record solves and for which readers. A reader who disagrees with a convention must be able to find the alternative that was refused."
+        },
+        "rights_statement": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "The rights position: no normative text of any standard is reproduced or paraphrased; clause identifiers only; the subject matter is this corpus's own decisions."
+        },
+        "derivation_method": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "How each guideline was selected and evidenced, stated so a reader can repeat it and disagree with it."
+        },
+        "guidelines": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The interpretation choices this corpus demonstrably made. Each carries the rejected alternative; there is no field for a guideline without one.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "id",
+              "title",
+              "question",
+              "convention",
+              "applies_to",
+              "alternative_rejected",
+              "why_the_alternative_was_refused",
+              "evidence",
+              "consequences"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^GDL-[0-9]{3}$"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "The interpretive question a reader would have to answer to use the corpus. Stated as a question so that disagreement is possible."
+              },
+              "convention": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "The reading this corpus adopts."
+              },
+              "applies_to": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "pattern": "\\S"
+                },
+                "description": "The records, fields or standards entries the convention governs."
+              },
+              "alternative_rejected": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "The obvious other reading. Naming it is what makes this a guideline rather than a description."
+              },
+              "why_the_alternative_was_refused": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "The argument against the rejected alternative, resting on this corpus's own records rather than on preference."
+              },
+              "evidence": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": [
+                    "anchor",
+                    "establishes"
+                  ],
+                  "properties": {
+                    "anchor": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S",
+                      "description": "repo-relative file path with a line number, or '308028fb:<path>' for a blob at the pinned baseline commit."
+                    },
+                    "establishes": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    }
+                  }
+                }
+              },
+              "clause_references": {
+                "type": "array",
+                "description": "Clause identifiers only, in the form the existing records already use, e.g. 'Part 6, Clause 8.4'. Never clause text.",
+                "items": {
+                  "type": "string",
+                  "pattern": "^Part [0-9]+, Clause [0-9]+(\\.[0-9]+)*"
+                }
+              },
+              "consequences": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "What a reader must do differently under this convention, and what would have to be re-examined if the convention were reversed."
+              },
+              "not_settled_by_this_guideline": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "What remains open. Present wherever the corpus cannot close the question with the evidence it holds."
+              },
+              "review_status": {
+                "type": "string",
+                "enum": [
+                  "adopted",
+                  "adopted_with_residual_ambiguity"
+                ]
+              }
+            }
+          }
+        },
+        "conventions_taken_from_the_vocabulary_record": {
+          "type": "array",
+          "description": "The term conventions this record relies on rather than restates, named so that the two records cannot drift apart silently.",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "refusals_summary": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Every alternative refused anywhere in this record, in one place, so the count of refused readings is visible without reading every guideline.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "guideline_id",
+              "alternative_refused",
+              "one_line_reason"
+            ],
+            "properties": {
+              "guideline_id": {
+                "type": "string",
+                "pattern": "^GDL-[0-9]{3}$"
+              },
+              "alternative_refused": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "one_line_reason": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "what_this_record_does_not_assert": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        }
+      }
+    }
+  ]
+}

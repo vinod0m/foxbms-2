@@ -1,0 +1,420 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foxbms2.softwaredevlabs.org/schemas/controlled_vocabulary.schema.json",
+  "title": "Controlled Vocabulary Schema",
+  "description": "Schema for a controlled-vocabulary record: the terms a corpus actually uses, each defined as that corpus uses it, each anchored to a file and line in the corpus or in the pinned documentation, each carrying the ambiguity the corpus previously had about it and the convention it now adopts. The record describes the corpus's own usage. It reproduces no normative text of any standard, and every standard reference is a clause identifier only.",
+  "allOf": [
+    {
+      "$ref": "artifact-base.schema.json"
+    },
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "vocabulary_id",
+        "vocabulary_scope",
+        "derivation_method",
+        "rights_statement",
+        "terms",
+        "terms_absent_from_this_corpus",
+        "identifier_vocabulary",
+        "limitations",
+        "what_this_record_does_not_assert"
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "controlled_vocabulary"
+        },
+        "vocabulary_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Identifier of this vocabulary, unique within the corpus."
+        },
+        "vocabulary_scope": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Which body of text is being given a vocabulary: the corpus's own records, or the corpus plus the pinned documentation. States what is deliberately outside the scope."
+        },
+        "derivation_method": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "How each definition was obtained, stated so a reader can repeat it. Every definition traces to a file and line in this repository or to a blob at the pinned baseline commit; nothing is recalled from memory."
+        },
+        "rights_statement": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "The rights position: no normative text of any standard is reproduced or paraphrased; clause identifiers only; the corpus's own conventions are the subject matter."
+        },
+        "terms": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The terms this corpus genuinely uses. Ordered by the ISO part of the standard whose vocabulary the term belongs to, then alphabetically.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "term",
+              "corpus_meaning",
+              "definition_status",
+              "evidence",
+              "adopted_convention",
+              "dependent_records"
+            ],
+            "properties": {
+              "term": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "corpus_meaning": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "What the term means AS THIS CORPUS USES IT. Not what the standard defines. Where the corpus's meaning departs from the usual meaning, that departure is stated."
+              },
+              "definition_status": {
+                "type": "string",
+                "enum": [
+                  "established_by_a_record",
+                  "established_by_a_field_value_only",
+                  "used_in_prose_only",
+                  "ambiguous_across_records",
+                  "overloaded_in_one_record",
+                  "absent_from_this_corpus"
+                ],
+                "description": "How firmly the corpus itself fixes the term. 'established_by_a_record' means a record's own field defines it. 'established_by_field_value_only' means a field carries a value but no record defines what the value means. 'used_in_prose_only' means the term appears in narrative text and in no field. 'absent_from_this_corpus' means the term has no occurrence at all and is therefore NOT defined here."
+              },
+              "evidence": {
+                "type": "array",
+                "minItems": 1,
+                "description": "At least one anchor per definition. A path that is a tracked file is written repo-relative; a blob at the pinned commit is written as the commit and path. Each entry names the anchor and what it anchors.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": [
+                    "anchor",
+                    "establishes"
+                  ],
+                  "properties": {
+                    "anchor": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S",
+                      "description": "repo-relative file path with a line number, e.g. 'docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:84'. A pinned-commit blob is written '308028fb:<path>'."
+                    },
+                    "establishes": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    }
+                  }
+                }
+              },
+              "adopted_convention": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "The reading this corpus now adopts wherever the term appears. Recorded even where the corpus is already consistent, so that a reader knows the term is settled rather than unexamined."
+              },
+              "dependent_records": {
+                "type": "array",
+                "minItems": 1,
+                "description": "Artefact ids whose content depends on this term, so that re-reading the term has a measurable blast radius. Ids only.",
+                "items": {
+                  "type": "string",
+                  "pattern": "^(FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}|FB2-ASM-[0-9]{3})$"
+                }
+              },
+              "blast_radius_note": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "was_ambiguous": {
+                "type": "boolean",
+                "description": "True where the corpus demonstrably used the term in two or more ways before this record fixed it. Each such entry also appears in `ambiguities_resolved` with both usages and their locations."
+              },
+              "conflicting_usages": {
+                "type": "array",
+                "description": "Present when was_ambiguous is true. Two or more readings, each with its own anchor, so the ambiguity is auditable rather than asserted.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": [
+                    "reading",
+                    "anchor"
+                  ],
+                  "properties": {
+                    "reading": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    "anchor": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    "records_in_this_reading": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^(FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}|FB2-ASM-[0-9]{3})$"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "terms_absent_from_this_corpus": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Terms a reader would expect in a functional-safety vocabulary that this corpus does not use at all. They are listed with their measured occurrence count so the omission is a measurement rather than a guess, and NO definition is given for any of them: a definition would have to come from the standard, which this corpus may not reproduce.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "term",
+              "measured_occurrences",
+              "why_absent",
+              "search_performed"
+            ],
+            "properties": {
+              "term": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "measured_occurrences": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of lines matching the term, case-insensitively and on word boundaries, across every artefact record and review record in the corpus."
+              },
+              "why_absent": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "search_performed": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "The search that produced the count, so it can be repeated."
+              },
+              "nearest_term_in_use": {
+                "type": "string",
+                "description": "The term the corpus does use where a reader might expect this one. Recorded because an absence with a near neighbour is a different situation from an absence with nothing."
+              }
+            }
+          }
+        },
+        "identifier_vocabulary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "artefact_identifier",
+            "why_it_is_a_vocabulary_problem"
+          ],
+          "properties": {
+            "artefact_identifier": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "why_it_is_a_vocabulary_problem": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "anchor",
+                  "establishes"
+                ],
+                "properties": {
+                  "anchor": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "establishes": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            },
+            "adopted_convention": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          }
+        },
+        "ambiguities_resolved": {
+          "type": "array",
+          "description": "One entry per term this corpus demonstrably used in more than one way. Each entry carries the two conflicting readings with their locations and the convention now adopted. This is the substantive content of the record; the term list without it would be a dictionary.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "id",
+              "term",
+              "reading_a",
+              "reading_b",
+              "convention_adopted",
+              "why_the_convention"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^VOC-AMB-[0-9]{3}$"
+              },
+              "term": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "reading_a": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "reading",
+                  "anchor",
+                  "records"
+                ],
+                "properties": {
+                  "reading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "anchor": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "records": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^(FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}|FB2-ASM-[0-9]{3})$"
+                    }
+                  }
+                }
+              },
+              "reading_b": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "reading",
+                  "anchor",
+                  "records"
+                ],
+                "properties": {
+                  "reading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "anchor": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "records": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^(FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}|FB2-ASM-[0-9]{3})$"
+                    }
+                  }
+                }
+              },
+              "reading_c": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Present only where a third reading exists.",
+                "required": [
+                  "reading",
+                  "anchor",
+                  "records"
+                ],
+                "properties": {
+                  "reading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "anchor": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "records": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^(FB2(-[A-Z]{2,4}){1,3}-[0-9]{6}|FB2-ASM-[0-9]{3})$"
+                    }
+                  }
+                }
+              },
+              "convention_adopted": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "why_the_convention": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "residual_ambiguity": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "What the convention does NOT settle. Present wherever settling it fully would have required editing records this pass does not own."
+              }
+            }
+          }
+        },
+        "review_policy_interaction": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Why this record is not itself a confirmation of its own content, stated against the corpus's review policy."
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "what_this_record_does_not_assert": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,2364 @@
+{
+ "schema_version": "1.0.0",
+ "id": "FB2-SAF-VOC-000001",
+ "revision": "1",
+ "artifact_type": "controlled_vocabulary",
+ "engineering_domain": "safety",
+ "profile": "synthetic_reference",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Controlled vocabulary of the foxBMS 2 corpus: the safety terms this corpus uses, how it uses them, and where it used them two ways at once",
+ "owner_role": "safety_engineer",
+ "origin": "derived",
+ "source_refs": [],
+ "assumption_refs": [],
+ "standards_mappings": [
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 1, Clause 4",
+   "status": "mapped",
+   "rationale": "The vocabulary of terms the other parts of the standard introduce. This record supplies the reading of those terms AS THIS CORPUS USES THEM, which is what the corpus needed and did not have. No clause text is reproduced or paraphrased; the clause identifier is the whole of the standard reference."
+  },
+  {
+   "standard_id": "ISO_26262_2018",
+   "reference": "Part 1, Clause 5",
+   "status": "partially_mapped",
+   "rationale": "The abbreviated terms the corpus uses (ASIL, FTTI, QM) and their expansions. The corpus uses all three abbreviations and defines none of them in a record; the expansions this record gives are the expansions the corpus's own prose and field names use, not a definition taken from the standard."
+  }
+ ],
+ "lifecycle_status": "baselined",
+ "lifecycle_status_note": "'baselined' rather than 'approved' or 'reviewed': this record fixes conventions inside the corpus and has no human reviewer. It is the output of an automated authoring pass, exactly like every review record in this corpus, and automated_review_status below refers to corpus automation only.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-01T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-01T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-01T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "First issue. Authored because the coverage plan's ISO 26262 Part 1 entry had no backing artefact, and because writing it exposed that eleven terms a reader would expect to find here have zero occurrences in this corpus - which is a measured finding rather than a defect in the record. Forty-seven terms are defined here, eleven terms are recorded as absent with their measured occurrence counts, fifteen ambiguities are resolved with both conflicting readings and their locations, and the artefact identifier is recorded as a vocabulary problem in its own right because thirty-nine identifier strings are carried by two records each. Every definition is traced to a file and line in this repository; nothing is recalled from memory. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
+  }
+ ],
+ "vocabulary_id": "VOC-001",
+ "vocabulary_scope": "The subject is the corpus's OWN usage of these terms, across both profiles and every artefact family, plus the fifteen review records and forty-two finding records under docs/artifacts/reviews/. It is deliberately NOT a glossary of the standard: this corpus may not reproduce or paraphrase normative text, so where the corpus's usage matches the usual meaning this record says so and where it differs it says that too, and where the corpus does not use a term at all this record says that and gives no definition. The pinned foxBMS documentation was searched as a cross-check and is cited only where the corpus's usage rests on the product: docs/general/safety/safety.rst and docs/software/modules/application/soa/soa.rst are physical-safety warnings and contain none of these terms, and the project ships no glossary - a negative result that is recorded in `derivation_method` because it means no product-side definition exists to reconcile against. Also outside the scope: any term whose only occurrence is incidental, which is why 'random failure' and 'systematic failure' are recorded as absent despite their words being present.",
+ "derivation_method": "For each term: (1) enumerate every line of every artefact and review record that contains the term, matched case-insensitively on word boundaries; (2) locate the lines where the term appears as a JSON key, because a key is the corpus's own act of naming something; (3) read the two or three records that carry the key in different shapes and compare them, which is where the ambiguities came from; (4) where the corpus's usage rests on the product, read the pinned blob with git show at commit 308028fb and cite that blob rather than the working tree. Counts are line counts, not record counts, and every count in this record is reproducible from the search described beside it. Definitions were written to describe usage; none was taken from the standard and none was taken from memory. Where a definition could not be evidenced, no definition is given and the term is listed in `terms_absent_from_this_corpus` with its measured count.",
+ "rights_statement": "No normative text of ISO 26262 or of any other standard is reproduced, paraphrased, translated or summarised in this record. Standard references are clause identifiers in the form the existing records already use, for example 'Part 1, Clause 4' and 'Part 6, Clause 9', and nothing more. The definitions below are descriptions of how this corpus uses each word, written from the corpus's own records. Where the corpus's usage departs from the usual meaning of a word, the departure is stated; that is a statement about the corpus and not about the standard. The rights position of the corpus as a whole is in docs/artifacts/governance/standards-lock.json and its rights_policy field, and this record does not widen or narrow it.",
+ "terms": [
+  {
+   "term": "automotive element",
+   "corpus_meaning": "The corpus does not use this phrase at all. It has no artefact and no field of this name. Where a reader would expect one - the parts of the item that carry safety requirements - the corpus records the item's architectural elements under its own name: `architecture_elements` with `element_id` values AR-001 to AR-006 in FB2-SAF-FSC-000001 and AR-001 to AR-005 in FB2-SAF-TSC-000001.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:145",
+     "establishes": "The functional safety concept allocates the goal's objective across five of six `architecture_elements`, each carrying an `element_id` of the AR-nnn form. That is the corpus's substitute for the phrase and the reason the absence is a naming absence and not a structural one."
+    },
+    {
+     "anchor": "308028fb:docs/introduction/bms-overview.rst",
+     "establishes": "The pinned product documentation names the hardware parts (master and slave boards, contactors, sensors) in prose. It does not use the phrase, so no product usage of it exists to cross-check."
+    }
+   ],
+   "adopted_convention": "No convention is adopted, because there is nothing to adopt. The corpus's own element vocabulary is `architecture_elements` / `element_id` / AR-nnn. A reader must not read `architecture_elements` as this term; they are the corpus's local construct.",
+   "dependent_records": [
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "item",
+   "corpus_meaning": "The product or subsystem under analysis: the traction battery monitoring and control unit. Established by FB2-SAF-ITE-000001, which names it and states its purpose. The same English word is ALSO used in the corpus for two unrelated bookkeeping senses (a line of a verification summary, a blocked activity), which is the reason this term is on the ambiguity list.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:65",
+     "establishes": "`item_name` fixes the referent: 'Traction battery monitoring and control unit (BMS), 400 V class'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:66",
+     "establishes": "`item_purpose` fixes the function the item is responsible for, and everything outside that function is placed outside the item's boundary."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/svs-verification-summary.json:68",
+     "establishes": "A second, unrelated use: `what_was_verified[].item` is a bullet of what the run covered."
+    }
+   ],
+   "adopted_convention": "Where the word appears beside `item_definition`, `item_name`, `item_purpose`, `item_ref`, `item_related_assumptions`, `interfaces_to_other_safety_related_items`, `assumptions_on_the_item` or `owner_outside_the_item`, it means the item in the ISO sense. In FB2-VER-VSR-000001 it means a list entry and must be read as 'an entry', never as the item. The unqualified English word inside a verification summary is the ambiguous case and the convention does not remove it; it names it.",
+   "dependent_records": [
+    "FB2-SAF-ITE-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-TAR-000001",
+    "FB2-HW-HDD-000001",
+    "FB2-REL-RLS-000001",
+    "FB2-VER-VSR-000001"
+   ],
+   "blast_radius_note": "Seven records carry an `item`-keyed field. Three of them carry it in the ISO sense and one carries it in the bookkeeping sense, so a mechanical search for the word reaches the wrong records.",
+   "was_ambiguous": false
+  },
+  {
+   "term": "item definition",
+   "corpus_meaning": "The artefact FB2-SAF-ITE-000001 itself: the record that fixes what is inside the item, what is outside it, the operating modes and the assumptions that attach to the item. The corpus uses the phrase for the record, not for a step.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:90",
+     "establishes": "`boundaries.included_elements[].why_inside` states the test applied to place an element inside: it produces the hazardous event, or it can detect and react to it."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:135",
+     "establishes": "`boundary_rationale` states where the boundary is drawn and why."
+    }
+   ],
+   "adopted_convention": "The corpus has exactly one item definition, in the synthetic_reference profile. There is no as_is item definition and none is claimed. Any sentence that says 'the item definition shows X' is talking about the fictional reference project, never about the pinned product.",
+   "dependent_records": [
+    "FB2-SAF-ITE-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "hazard",
+   "corpus_meaning": "The artefact type `hazard`, of which the corpus has one populated record in each profile, FB2-SAF-HAZ-000001. In the corpus the word does NOT denote a single hazard: the record is titled 'Cell Overvoltage / Undervoltage Hazard' and contains TWO `hazardous_events` entries, each in a different `operational_situation`. So one `hazard` record covers two hazardous events and two operational situations.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:62",
+     "establishes": "`hazardous_events` is a list of two, HE-01 and HE-02, each with its own description, operational situation and S/E/C ratings."
+    }
+   ],
+   "adopted_convention": "`hazard` names the RECORD, never an individual event. An individual event is named `HE-nn` and lives at `hazardous_events[].id`. The corpus has no artefact that is a hazard in the ISO sense of a source of danger; it has an artefact that is the output of a hazard analysis, and its scope is one title with two events.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SYS-UC-000001",
+    "FB2-SYS-UC-000002",
+    "FB2-SYS-UC-000004"
+   ],
+   "blast_radius_note": "Renaming or rescoping `hazard` would touch the safety goal, both concepts and three use cases. The record id is shared with the as_is profile, so a rename must be applied per profile.",
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "The `hazard` record is a single hazard with two descriptions of the same one.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:62",
+     "records_in_this_reading": [
+      "FB2-SAF-HAZ-000001"
+     ]
+    },
+    {
+     "reading": "The `hazard` record is two distinct hazardous events in two distinct operational situations, and therefore two hazards in the ISO sense.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:66",
+     "records_in_this_reading": [
+      "FB2-SAF-HAZ-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "hazardous event",
+   "corpus_meaning": "A combination of an operational situation and a malfunctioning behaviour with a credible consequence. In the corpus it exists only as an entry of `hazardous_events[]` inside the `hazard` record, and it is referenced from outside by the string `HE-nn`.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:67",
+     "establishes": "HE-01 carries severity S3, exposure E4, controllability C3 and asil ASIL_D on one entry, which is the granularity at which the corpus treats an event as identified."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:118",
+     "establishes": "The safety goal's ASIL derivation enumerates both events it covers and states that the goal inherits the highest, so the event is a first-class entity with its own identity."
+    }
+   ],
+   "adopted_convention": "An event is identified by its `HE-nn` string. It is never an artefact id and it is never a record of its own; `FB2-SAF-HAZ-000001` is the record and `HE-01`/`HE-02` are entries in it. A reference to 'the hazard' without an `HE-nn` is ambiguous where two events are in scope.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "hazardous situation",
+   "corpus_meaning": "The corpus does not use this phrase anywhere. There is no artefact, field or sentence in any record that names it. The corpus instead carries `operational_situation` on the hazardous event, and carries the malfunctioning behaviour as a single record-level field on the hazard. No term is defined here for it, because a definition would have to be taken from the standard.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:61",
+     "establishes": "The corpus's substitute is the record-level `malfunctioning_behavior` field, which is shared by BOTH hazardous events rather than being paired with either of them."
+    }
+   ],
+   "adopted_convention": "No convention is adopted. Where a reader needs this concept they must read `operational_situation` together with `malfunctioning_behavior`, and must notice that the corpus never pairs them: the malfunctioning behaviour is recorded once for the whole hazard record.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "malfunctioning behaviour",
+   "corpus_meaning": "The failure mode of the item's own functions that the analysis starts from. In the corpus it is a single free-text field on the hazard record, listing four alternatives joined by OR, and it is NOT paired with either hazardous event.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:61",
+     "establishes": "`malfunctioning_behavior` lists four alternatives: the front end reports an incorrect cell voltage, the safe-operating-area check fails to detect the violation, the contactor fails to open, or the BMS fails to request the opening. All four serve HE-01; whether all four also serve HE-02 is not stated."
+    }
+   ],
+   "adopted_convention": "Read `malfunctioning_behavior` as applying to the hazard record as a whole, not to a named event. Where a reader needs the behaviour for one event they must take it from `asil_justification.derivation` in FB2-SAF-SGO-000001, which is the only place in the corpus where a behaviour is paired with a named event.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "operational situation",
+   "corpus_meaning": "The circumstances under which the item operates when the event occurs: mode, state-of-charge band, charge-rate band and ambient band. The corpus requires it to be specific rather than general, and says why in the controllability assessment it feeds.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:66",
+     "establishes": "'CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45 degC' - four bands, not 'while charging'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:111",
+     "establishes": "The ASIL derivation states the purpose of that granularity: a C2 or C3 operational situation has to be described precisely enough that other items can be reasoned about."
+    }
+   ],
+   "adopted_convention": "Read `operational_situation` as the granularity the controllability assessment demands, and treat a coarser description as a defect in the record rather than as an acceptable summary. The same field name is used on the use-case records, where it names a scenario rather than an exposure class; the two uses are compatible and share no derivation.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-ITE-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SYS-UC-000001",
+    "FB2-SYS-UC-000002",
+    "FB2-SYS-UC-000003",
+    "FB2-SYS-UC-000004",
+    "FB2-SYS-NED-000001",
+    "FB2-SYS-NED-000002",
+    "FB2-SYS-NED-000003",
+    "FB2-SYS-NED-000004",
+    "FB2-SYS-NED-000005"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "safety goal",
+   "corpus_meaning": "The top-level safety obligation the corpus sets itself: detect a cell voltage limit violation and reach the safe state within the fault tolerant time interval. It is an artefact type (`safety_goal`), of which there are two records, one per profile, sharing the id FB2-SAF-SGO-000001.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:142",
+     "establishes": "The record fixes the goal's safe state, its degraded state, its FTTI and its ASIL, so the term has an artefact that carries it."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:120",
+     "establishes": "The derivation states the inheritance rule the corpus applies: the goal takes the highest ASIL among the hazardous events it covers."
+    }
+   ],
+   "adopted_convention": "A safety goal is a record, not an entry. Its id alone does not identify it - see `identifier_vocabulary` - so a reference to FB2-SAF-SGO-000001 must carry its profile or be read as the synthetic_reference copy, which is the copy every safety concept derives from.",
+   "dependent_records": [
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "functional safety requirement",
+   "corpus_meaning": "An artefact of type `requirement` in the safety domain, of which the corpus has four populated records (FB2-SAF-FSR-000001..000004) in each profile. It is the corpus's carrier of a safety obligation derived from the safety goal.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json:64",
+     "establishes": "The record states its own allocation: it is one of the four elements FB2-SAF-FSC-000001 allocates a reaction to, and it names the reaction the allocation gives it."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-cell-voltage.json:133",
+     "establishes": "`open_limits` records three limits that the requirement itself does not close, which is the corpus's use of the field."
+    }
+   ],
+   "adopted_convention": "The abbreviation FSR is used in prose throughout the corpus and names the artefact class, not an individual requirement unless an id is given. A record of this class is a requirement the corpus authored; it is not a requirement traced to any real product.",
+   "dependent_records": [
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "safety function",
+   "corpus_meaning": "The corpus uses this phrase only in narrative text, eleven occurrences in total, and never in a field. It refers to the collective behaviour of the item that protects against a hazard - detection plus reaction - rather than to any single record.",
+   "definition_status": "used_in_prose_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/system/stakeholder-need-no-false-reaction.json:65",
+     "establishes": "'A safety function that reacts to a healthy pack is a cost the pack manufacturer carries' - the phrase names the item's protective behaviour as a whole."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/sec-message-integrity-freshness-safety-bus.json:42",
+     "establishes": "'For every CAN identifier whose payload influences a safety function' - used as a scoping predicate on other requirements, with nothing named."
+    }
+   ],
+   "adopted_convention": "Read `safety function` as prose that scopes or characterises, never as a reference to a record. Where a reader needs the obligation, the corpus's carrier is the functional safety requirement, and the mapping from prose to requirements is not recorded anywhere. There is no `safety_function` artefact type and no `safety_function` field.",
+   "dependent_records": [
+    "FB2-SYS-NED-000002",
+    "FB2-SAF-SEC-000003"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "fault",
+   "corpus_meaning": "A departure of the item from its intended behaviour. The corpus never defines the term; it uses `diagnosis`, `fault_reaction`, `failure mode`, `fault_detection`, `fault entry`, `fault tolerant time interval` and `fault injection`, and it uses the bare word `fault` in prose throughout (290 lines).",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:226",
+     "establishes": "`fault_detection[].mechanism` names six detection mechanisms, so here 'fault' is the thing detected."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:285",
+     "establishes": "`fault_reaction[]` names what happens afterwards, so here 'fault' is the trigger of a reaction."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-afe-plausibility.json:89",
+     "establishes": "A test case expects 'Plausibility check flags implausible', i.e. a fault is an assertion outcome, not a system state."
+    }
+   ],
+   "adopted_convention": "Read `fault` in this corpus as one of three things depending on the field it sits in: an object of detection in `fault_detection`, a trigger in `fault_reaction`, and a database-recorded condition elsewhere. The corpus has no `fault` artefact, no fault list and no fault status model, so a sentence about 'the faults' is not traceable to a record. This is the largest un-anchored term in the safety vocabulary.",
+   "dependent_records": [
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-VER-TMS-000003"
+   ],
+   "blast_radius_note": "The word appears on 290 lines across the corpus but no record defines it. Any definition this corpus wanted would have to come from the standard, which it may not reproduce.",
+   "was_ambiguous": false
+  },
+  {
+   "term": "fault reaction",
+   "corpus_meaning": "What the item does once a fault is confirmed. The corpus gives it a field, `fault_reaction`, on the safety requirements and on the five network-security requirements - and it gives that field TWO different shapes.",
+   "definition_status": "overloaded_in_one_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json:97",
+     "establishes": "On a functional safety requirement `fault_reaction` is a single object with `allocated_element_id`, `element_owns_reaction` and a prose `reaction`."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:285",
+     "establishes": "On the functional safety concept the same key is a LIST of five objects, each with `reaction`, `triggered_by`, `element_id` and `reaction_time_budget_ms`."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/sec-authenticated-transport-network-service.json:137",
+     "establishes": "On a network-security requirement the same key is again a single object, and its `allocated_element_id` is null with `element_owns_reaction` false."
+    }
+   ],
+   "adopted_convention": "Read `fault_reaction` as 'the reaction this record specifies'. On a requirement it is one object naming the element that owns it; on a concept it is the list of all reactions the concept allocates, one entry per architectural element. A consumer must branch on the record type before it can read the field, and no schema in this corpus enforces that branch.",
+   "dependent_records": [
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-SAF-SEC-000001",
+    "FB2-SAF-SEC-000002",
+    "FB2-SAF-SEC-000003",
+    "FB2-SAF-SEC-000004",
+    "FB2-SAF-SEC-000005"
+   ],
+   "blast_radius_note": "Eleven records carry the key. Re-shaping it to one form would move five reactions in the two concepts or collapse five objects in the requirements, and would break the concept records' own allocation argument.",
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "One reaction per record: the single object naming the element that owns it.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json:97",
+     "records_in_this_reading": [
+      "FB2-SAF-FSR-000001",
+      "FB2-SAF-FSR-000002",
+      "FB2-SAF-FSR-000003",
+      "FB2-SAF-FSR-000004",
+      "FB2-SAF-SEC-000001",
+      "FB2-SAF-SEC-000002",
+      "FB2-SAF-SEC-000003",
+      "FB2-SAF-SEC-000004",
+      "FB2-SAF-SEC-000005"
+     ]
+    },
+    {
+     "reading": "A list of every reaction the concept allocates, one entry per element.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:285",
+     "records_in_this_reading": [
+      "FB2-SAF-FSC-000001",
+      "FB2-SAF-TSC-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "fault tolerant time interval",
+   "corpus_meaning": "The interval within which the reaction must have happened. The corpus fixes it once, in the parameter registry as `ftti_ms` = 100 with tolerance min = max = 100, binds the safety goal to that parameter, and then DECLARES the interval three more times under three different field names.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:137",
+     "establishes": "`ftti.parameter_ref` binds the record to FB2-PRM-000004, which is the authoritative home of the value."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:141",
+     "establishes": "`fault_tolerant_time_interval_ms` restates it as 100."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:151",
+     "establishes": "`timing_budget.total_ftti_ms` restates it a third time as 100."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:474",
+     "establishes": "`ftti_and_timing_budget.ftti_ms` restates it a fourth time as 100."
+    }
+   ],
+   "adopted_convention": "The parameter FB2-PRM-000004 is the authoritative value; the four declarations on records are cross-checked against it by the ftti budget consistency checker and must agree. Read the abbreviation FTTI as naming that interval and nothing else - the corpus never uses it for anything else. This corpus has already acted on the multiplicity: the binding was added precisely because the four spellings could drift, and the checker was widened at the same time.",
+   "dependent_records": [
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-TSC-000001"
+   ],
+   "blast_radius_note": "Two records carry the interval; four field names carry it between them. The binding already in place means a drift would be reported rather than read silently, so the risk here is reader confusion rather than value drift.",
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "The interval is a property of the parameter registry entry FB2-PRM-000004 and of nothing else.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:137",
+     "records_in_this_reading": [
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "reading": "The interval is a property of the safety goal, restated independently on three of its fields.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:141",
+     "records_in_this_reading": [
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "reading": "The interval is a property of the technical safety concept, which states its own copy.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:474",
+     "records_in_this_reading": [
+      "FB2-SAF-TSC-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "safe state",
+   "corpus_meaning": "The condition the item is brought into when a fault is confirmed. The corpus treats it as a set of conditions, and the set has THREE different memberships in three records - which matters because the whole timing argument is 'all contactors open within the interval'.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:142",
+     "establishes": "Four conditions: all HV contactors open, charging disabled, propulsion disabled, fault logged."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json:125",
+     "establishes": "TWO conditions: contactors open, charging disabled. Propulsion and logging are absent, even though the record id is identical and the ASIL is identical."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:84",
+     "establishes": "Four conditions, and the fourth is 'Vehicle propulsion disabled (torque request = 0)' - a different wording of the same third condition."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:371",
+     "establishes": "In operating modes the safe state is mode-dependent: in DEGRADED it is 'the same safe state as in FAULT', in COMMISSIONING it is 'the item cannot command the contactors closed in this circumstance'."
+    }
+   ],
+   "adopted_convention": "Read `safe_state` as a SET, never as one condition, and read the set from the record that declares it. Where a measure has to be judged, use the synthetic_reference set of four conditions, because that is the set the timing budget and both concepts are argued against. Where a mode-dependent safe state is in scope, use `safe_state_in_this_mode` from the item definition, never the goal's set. The as_is set of two is narrower than the synthetic set of four for the same id; a reader who silently merges them will believe the reaction obligation is smaller than the corpus argues it is.",
+   "dependent_records": [
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-ITE-000001",
+    "FB2-SYS-UC-000001",
+    "FB2-SYS-UC-000002",
+    "FB2-SYS-UC-000003",
+    "FB2-SYS-UC-000004",
+    "FB2-VER-TMS-000013"
+   ],
+   "blast_radius_note": "Twelve records carry a safe-state field. The mismatch is between two records that share one id, so a rename of the id would not remove it; only a value reconciliation would, and that is a content decision this record does not make.",
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "Two conditions: contactors open and charging disabled.",
+     "anchor": "docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json:125",
+     "records_in_this_reading": [
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "reading": "Four conditions: contactors open, charging disabled, propulsion disabled, fault logged.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:142",
+     "records_in_this_reading": [
+      "FB2-SAF-SGO-000001",
+      "FB2-SAF-FSC-000001",
+      "FB2-SAF-TSC-000001"
+     ]
+    },
+    {
+     "reading": "A mode-dependent condition, one per operating mode, which may forbid a transition the goal's set permits.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:371",
+     "records_in_this_reading": [
+      "FB2-SAF-ITE-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "degraded state",
+   "corpus_meaning": "The reduced-capability condition the item enters when a fault is detected but the full safe state is not required. The corpus gives it a plural field on the hazard record and a singular field on the safety goal, and the two do not enumerate the same conditions.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:86",
+     "establishes": "Four conditions: charge reduced to 0.1C, balancing disabled for the affected group, discharge reduced to 0.5C, monitoring raised to 1 Hz."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:143",
+     "establishes": "Three conditions and different ones: derated charging at 0.1C, reduced discharge at 0.5C, enhanced monitoring at 1 Hz. Balancing is dropped."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json:126",
+     "establishes": "Two conditions: 'Derated charging, balancing disabled'. No numeric value is given at all."
+    }
+   ],
+   "adopted_convention": "Read the degraded state from the record that declares it and do not merge the three enumerations. The hazard record's four-condition set is the widest and is the one a change impact analysis should start from: the cell-voltage-maximum-limit change FB2-MAN-CHG-000001 states its degraded-state boundary against the derating level precisely because the hazard record states it that way. Where a numeric threshold is needed, only the synthetic records give one.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-VER-TMS-000024"
+   ],
+   "blast_radius_note": "The degraded-to-fault boundary is separately declared as undeclared: FB2-SYS-UC-000004 records that no numerical value for it exists anywhere in the corpus, so the boundary between the two states is prose.",
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "Four conditions including balancing disabled.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:86",
+     "records_in_this_reading": [
+      "FB2-SAF-HAZ-000001"
+     ]
+    },
+    {
+     "reading": "Three conditions, balancing absent, with numeric values.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:143",
+     "records_in_this_reading": [
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "reading": "Two conditions with no numeric value.",
+     "anchor": "docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json:126",
+     "records_in_this_reading": [
+      "FB2-SAF-SGO-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "degraded operation",
+   "corpus_meaning": "The capability that survives entry into a degraded state, and the announcement of it. It is a distinct field from `degraded_state`: the state is the condition, the operation is what still works and what the vehicle is told.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/system/stakeholder-need-degraded-capability.json:65",
+     "establishes": "The need record states the distinction in stakeholder terms: an item that escalates every degradation to a safe state 'is not unsafe; it is unusable'."
+    }
+   ],
+   "adopted_convention": "Read `degraded_state` as the condition and `degraded_operation` as the retained capability plus its indication. The corpus records a latency for the announcement (`degraded_indication_latency_ms`) on a measure, not on a requirement, so the obligation to announce is currently only measurable.",
+   "dependent_records": [
+    "FB2-SYS-NED-000003",
+    "FB2-VER-TMS-000024"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "ASIL",
+   "corpus_meaning": "A four-value classification the corpus writes into an `asil` field: ASIL_A, ASIL_B, ASIL_C, ASIL_D. The corpus writes it in three incompatible vocabularies into that one field name - the four classes, the single value QM, and the single value not_applicable - and only one of the four classes is ever justified by a derivation.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:123",
+     "establishes": "`derived_asil_matches_record` is true: the corpus RECOMPUTED the ASIL from the severity and exposure ratings the justification itself records, using the determination table, and compared it with the value on the record. They agree."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/project-scope.json:78",
+     "establishes": "`asil` carries the value QM, with `safety_goal_ref` and `mitigation` both the string 'N/A' - the corpus's way of saying no ASIL is assigned here."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/sir-actuation-interfaces.json:90",
+     "establishes": "`asil` carries the value not_applicable, which is a member of the standards-mapping status vocabulary and not of the ASIL vocabulary at all."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:67",
+     "establishes": "The hazard record assigns ASIL_D and ASIL_B to its two hazardous events, i.e. the value is carried per event rather than per record."
+    }
+   ],
+   "adopted_convention": "Read `asil` as a classification ONLY where the record also carries an `asil_justification` that derives it; that is true of exactly two record ids in this corpus, FB2-SAF-SGO-000001 and the safety goal's own copy. Read it as an allocation only where the record carries `safety_allocation` with a `safety_goal_ref`. Read QM as 'no ASIL assigned to this record' and not_applicable as 'this record does not carry the concept of an ASIL because it is a security requirement'. The two negative values are interchangeable today and the corpus has not chosen between them; that is recorded as an unresolved ambiguity rather than settled here.",
+   "dependent_records": [
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-SW-SWR-000001",
+    "FB2-SW-SWR-000002",
+    "FB2-SW-SWR-000003",
+    "FB2-MAN-SCO-000001",
+    "FB2-SW-SIR-000001",
+    "FB2-SW-SIR-000002",
+    "FB2-SW-SIR-000003",
+    "FB2-SW-SIR-000004",
+    "FB2-SW-SIR-000005",
+    "FB2-SW-SIR-000006",
+    "FB2-SAF-SEC-000001",
+    "FB2-SAF-SEC-000002",
+    "FB2-SAF-SEC-000003",
+    "FB2-SAF-SEC-000004",
+    "FB2-SAF-SEC-000005"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Thirty-five records carry an `asil` value. Fourteen of them use not_applicable and one uses QM, so fifteen of thirty-five - the majority - use a value from the wrong vocabulary.",
+   "conflicting_usages": [
+    {
+     "reading": "A classification of the item's obligation, derived from severity and exposure.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:123",
+     "records_in_this_reading": [
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "reading": "An absence marker: no ASIL is assigned to this record.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/project-scope.json:78",
+     "records_in_this_reading": [
+      "FB2-MAN-SCO-000001"
+     ]
+    },
+    {
+     "reading": "A category error: a standards-mapping status written into an ASIL field, meaning the record is out of scope for classification because it is a security requirement.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/sir-actuation-interfaces.json:90",
+     "records_in_this_reading": [
+      "FB2-SW-SIR-000001",
+      "FB2-SW-SIR-000002",
+      "FB2-SW-SIR-000003",
+      "FB2-SW-SIR-000004",
+      "FB2-SW-SIR-000005",
+      "FB2-SW-SIR-000006",
+      "FB2-SAF-SEC-000001",
+      "FB2-SAF-SEC-000002",
+      "FB2-SAF-SEC-000003",
+      "FB2-SAF-SEC-000004",
+      "FB2-SAF-SEC-000005"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "QM",
+   "corpus_meaning": "A single occurrence in the whole corpus: the value of the `asil` field on FB2-MAN-SCO-000001, a project-scope record whose `safety_goal_ref` and `mitigation` are both the string 'N/A'. Nothing in the corpus defines what QM means or when it may be assigned.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/project-scope.json:78",
+     "establishes": "The only occurrence. The same record's `verification_approach` is the string 'review', which is itself not one of the vocabulary values the requirement schema admits."
+    },
+    {
+     "anchor": "docs/artifacts/tools/corpus.py:2108",
+     "establishes": "The asil_assignment_validator admits QM as a valid value in its list, which is why the occurrence is silent rather than reported. The rule is scoped to artefact_type safety_goal, so it never inspects this record."
+    }
+   ],
+   "adopted_convention": "Read QM in this corpus as 'this record asserts no ASIL'. Do not read it as an ASIL determination, and do not carry it across to the safety goal, whose ASIL is ASIL_D. Because the field is written on a project-scope record and not on a safety record, QM here marks a scope statement rather than a classification.",
+   "dependent_records": [
+    "FB2-MAN-SCO-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "One record. Removing the value or defining it would both be content decisions this record does not make; the convention records the reading and stops there."
+  },
+  {
+   "term": "severity",
+   "corpus_meaning": "Four different meanings on the field name `severity`, with four different value vocabularies.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:67",
+     "establishes": "The hazard reading: an exposure class, S2 or S3, that feeds the determination table."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/sit-integration-plan.json:588",
+     "establishes": "The integration reading: a defect-severity ladder S1 to S4 with an action per rung, e.g. 'S1 interface defect: two modules disagree about a data-block layout'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/operation/field-monitoring-and-incident-handling.json:248",
+     "establishes": "The field reading: named classes A, B and C with a definition and a response each, e.g. 'class A - safety event'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:350",
+     "establishes": "The scope reading: `hazard_class` on each element declared out of scope, with values like 'inherent_battery_hazard_outside_fuSaS_scope' and 'external_system_behaviour'."
+    }
+   ],
+   "adopted_convention": "Read `severity` only on a record that also carries `asil_justification` or `hazardous_events`, where it is the S class. On a test or integration plan it is a defect rung; on the field-monitoring record it is an incident class; on `hazard_class` it is a reason for exclusion and carries no severity at all. The value sets are disjoint, so a reader who treats them as one vocabulary will read 'S1' as the least severe hazard when it is the most severe defect.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-VER-SIP-000001",
+    "FB2-OPS-MON-000001",
+    "FB2-SW-SIR-000001",
+    "FB2-SW-SIR-000002",
+    "FB2-SW-SIR-000003",
+    "FB2-SW-SIR-000004",
+    "FB2-SW-SIR-000005",
+    "FB2-SW-SIR-000006"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Eighty-eight records carry a severity-keyed field, across four value sets. The count is large because the word is common in prose; the structural collisions are the four above.",
+   "conflicting_usages": [
+    {
+     "reading": "An exposure class S0..S3 feeding the determination table.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:67",
+     "records_in_this_reading": [
+      "FB2-SAF-HAZ-000001",
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "reading": "A defect rung S1..S4 in a test plan.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/sit-integration-plan.json:588",
+     "records_in_this_reading": [
+      "FB2-VER-SIP-000001"
+     ]
+    },
+    {
+     "reading": "An incident class A/B/C in field monitoring.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/operation/field-monitoring-and-incident-handling.json:248",
+     "records_in_this_reading": [
+      "FB2-OPS-MON-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "exposure",
+   "corpus_meaning": "Two meanings on one field name: the E class of a hazardous event, and a project-risk aggregate.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:68",
+     "establishes": "The hazard reading: exposure class E4, feeding the determination table together with severity."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:128",
+     "establishes": "The project reading: `residual_exposure` as the string 'high/moderate', a probability-and-impact grade in an ASPICE-flavoured register, with an `exposure_formula` and an `aggregate_exposure`."
+    }
+   ],
+   "adopted_convention": "Read `exposure` inside `asil_justification` or inside a `hazardous_events` entry as the E class. Read `residual_exposure`, `inherent_exposure` and `aggregate_exposure` in FB2-MAN-RSK-000001 as a project-risk grade. The two vocabularies do not intersect: 'E4' and 'high/moderate' cannot be converted into one another by anything in the corpus.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-MAN-RSK-000001",
+    "FB2-SAF-TAR-000001",
+    "FB2-SW-SIR-000001",
+    "FB2-SW-SIR-000002",
+    "FB2-SW-SIR-000003",
+    "FB2-SW-SIR-000004",
+    "FB2-SW-SIR-000005",
+    "FB2-SW-SIR-000006"
+   ],
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "The E class of a hazardous event's operational situation.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:68",
+     "records_in_this_reading": [
+      "FB2-SAF-HAZ-000001",
+      "FB2-SAF-SGO-000001"
+     ]
+    },
+    {
+     "reading": "A project-risk exposure grade combining probability and impact.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:128",
+     "records_in_this_reading": [
+      "FB2-MAN-RSK-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "controllability",
+   "corpus_meaning": "The C class of a hazardous event. The corpus records it, derives nothing from it, and says so explicitly: the C rating does not enter the determination table and its only effect is on how precisely the operational situation must be described.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:69",
+     "establishes": "HE-01 carries controllability C3."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:108",
+     "establishes": "`controllability.effect_on_this_classification` states 'None on the ASIL' and gives the real effect: the operational situation must be specified band by band."
+    }
+   ],
+   "adopted_convention": "Read `controllability` as recorded-but-not-used-in-the-determination. Never re-derive an ASIL from it. Its load-bearing use is as the test of whether `operational_situation` is specified finely enough.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Four records carry it; two in each profile carry the identical pair of ids."
+  },
+  {
+   "term": "diagnostic coverage",
+   "corpus_meaning": "The corpus uses this for a QUALITATIVE ordinal - the strings 'high' or 'medium' - on seven FMEA failure-mode entries in one record, and nowhere else. It is never a probability, a failure rate or a percentage, and no record defines what distinguishes 'high' from 'medium'.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/fmea-cell-voltage.json:76",
+     "establishes": "The first of seven entries carrying `diagnostic_coverage: \"high\"` or `\"medium\"`. No definition accompanies either value."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:500",
+     "establishes": "The concept states the limit in its own words: no diagnostic coverage figure in the concept is measured, and every one is a requirement-side claim, an analytical estimate on an assumed noise distribution, or an assumption about a component."
+    }
+   ],
+   "adopted_convention": "Read `diagnostic_coverage` in this corpus as the two-value ordinal 'high' or 'medium' and as nothing quantitative. Do not restate it as a percentage, do not aggregate it across failure modes, and do not compare it against the concept's own diagnostic-coverage assumptions, which are a different field. The ordinal has no definition, so a reader who needs to know why two entries differ has nothing to read.",
+   "dependent_records": [
+    "FB2-SAF-ANL-000001",
+    "FB2-SAF-TSC-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Two records carry a diagnostic-coverage-keyed field. Only one of them uses the ordinal; the other uses `diagnostic_coverage_assumptions`, a list of mechanisms each labelled with the kind of evidence it rests on. The word is shared and the quantity is not."
+  },
+  {
+   "term": "hardware fault tolerance",
+   "corpus_meaning": "The corpus does not use this phrase. The only occurrence of the words 'fault tolerance' at all is the string 'Redundant isolation, single-point fault tolerance', used as the rationale for choosing two contactors in series - which is a statement about the architecture, not a metric.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/design-contactor.json:288",
+     "establishes": "The single occurrence of the words, in an architecture decision's rationale. It asserts a property of a chosen topology and carries no metric, no HFM or PMHF figure and no target value."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/fmea-cell-voltage.json:76",
+     "establishes": "The corpus's nearest substitute is the qualitative `diagnostic_coverage` ordinal on the same record, which is a coverage judgement and not a hardware metric."
+    }
+   ],
+   "adopted_convention": "Read 'single-point fault tolerance' in DEC-CONT-001 as an architectural property claimed for a series contactor pair, and do not read it as this term. No convention is adopted for the term itself, and no numeric hardware metric exists anywhere in the corpus: there is no FMEDA record, which the coverage plan already records as absent.",
+   "dependent_records": [
+    "FB2-SW-DSN-000003"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "One occurrence, in two profiles with the same id and the same text. The consequence is that a reader searching the corpus for a hardware fault metric will find one sentence and may mistake it for one."
+  },
+  {
+   "term": "freedom from interference",
+   "corpus_meaning": "The corpus uses the phrase for two different things: an analysis that looks at interference between the item's own software elements, and - by explicit equation in two records - the independence of the second barrier from the first.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/freedom-from-interference.json:6",
+     "establishes": "`analysis_type: freedom_from_interference` on a safety_analysis record whose `interference_categories` are timing, memory and a third - i.e. interference BETWEEN ELEMENTS OF THE ITEM."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-independent-monitor.json:31",
+     "establishes": "`rationale: \"Freedom from interference / independence\"` - a hardware requirement whose entire standards mapping is that equation, with a slash."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-independent-monitor.json:31",
+     "establishes": "The same equation, verbatim, on the safety requirement for the same barrier."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:46",
+     "establishes": "The same phrase used as a clause label in a standards mapping: 'Part 9, Clause 7 (freedom from interference)'."
+    }
+   ],
+   "adopted_convention": "Read `analysis_type: freedom_from_interference` as the element-to-element analysis the corpus actually performed, and read the phrase on the independent-monitor records as a claim about barrier independence that the corpus itself states is ASSUMED rather than demonstrated - FB2-SAF-TSC-000001 names the absence of that demonstration as the largest open assumption of the ASIL D allocation. Do not read the analysed record as evidence for the independent-monitor claim: they are different questions and only one was asked.",
+   "dependent_records": [
+    "FB2-SAF-ANL-000004",
+    "FB2-SAF-FSR-000004",
+    "FB2-HW-TSR-000004",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-SEC-000001"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Four records carry a phrase-keyed field. The equation in the two barrier records is the corpus's own act of conflation and is preserved rather than silently rewritten.",
+   "conflicting_usages": [
+    {
+     "reading": "Interference among the item's own elements: timing starvation, memory corruption, and one further category.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/freedom-from-interference.json:6",
+     "records_in_this_reading": [
+      "FB2-SAF-ANL-000004"
+     ]
+    },
+    {
+     "reading": "Independence of a second barrier from the first - the same word, joined to independence by a slash in the record itself.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-independent-monitor.json:31",
+     "records_in_this_reading": [
+      "FB2-HW-TSR-000004",
+      "FB2-SAF-FSR-000004"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "independence",
+   "corpus_meaning": "FOUR distinct meanings in this corpus, carried on eleven different field names, and they are not the same concept.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:48",
+     "establishes": "MEANING 1 - authoring independence: `analysis.independence` and `authority_and_independence.independence` both carry the string 'not_independent', meaning the record was derived by the same process that wrote the corpus."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-sup1-quality-assurance.json:93",
+     "establishes": "MEANING 2 - organisational independence of a process role: 'The quality engineer may not review an artifact it authored, and may not close a finding it raised.'"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-independent-monitor.json:31",
+     "establishes": "MEANING 3 - independence of a technical barrier from the primary path, which the corpus states is assumed and not demonstrated."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:175",
+     "establishes": "MEANING 4 - independence of a REVIEWER from the process: risk RSK-003, the absence of an independent confirmation reviewer, which the register records as the single largest limitation of the project."
+    }
+   ],
+   "adopted_convention": "Read `analysis.independence` and `authority_and_independence.independence` as meaning 1 - whether the derivation is independent of the thing it describes. Read `accountable_role.independence` as meaning 2 - whether a role may perform a process activity. Read an independent-monitor record as meaning 3. Read RSK-003 as meaning 4. The corpus has no single independence definition and no schema constrains which of the four a given field means; the eleven field names are the only disambiguator.",
+   "dependent_records": [
+    "FB2-SW-IFS-000001",
+    "FB2-SW-IFS-000002",
+    "FB2-SW-IFS-000003",
+    "FB2-SW-IFS-000004",
+    "FB2-SW-IFS-000005",
+    "FB2-SW-IFS-000006",
+    "FB2-SW-IFS-000007",
+    "FB2-SW-IFS-000008",
+    "FB2-SW-IFS-000009",
+    "FB2-SW-IFS-000010",
+    "FB2-SW-IFS-000011",
+    "FB2-SW-IFS-000012",
+    "FB2-SW-IFS-000013",
+    "FB2-SW-IFS-000014",
+    "FB2-SW-IFS-000015",
+    "FB2-SW-IFS-000016",
+    "FB2-SW-SIR-000001",
+    "FB2-SW-SIR-000002",
+    "FB2-SW-SIR-000003",
+    "FB2-SW-SIR-000004",
+    "FB2-SW-SIR-000005",
+    "FB2-SW-SIR-000006",
+    "FB2-SYS-HVA-000001",
+    "FB2-HW-HCB-000001",
+    "FB2-SUP-QAP-000001",
+    "FB2-SUP-CFM-000001",
+    "FB2-SUP-PRB-000001",
+    "FB2-SUP-CHC-000001",
+    "FB2-SUP-SPL-000001",
+    "FB2-SUP-RUS-000001",
+    "FB2-MAN-RSK-000001",
+    "FB2-SAF-FSR-000004",
+    "FB2-HW-TSR-000004",
+    "FB2-SAF-TSC-000001"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Forty-two records carry an independence-keyed field on eleven names. Meanings 1 and 2 are compatible; meanings 3 and 4 are not, and meaning 3 is assumed while meaning 4 is absent. Merging them would let an assumed technical independence be read as a satisfied organisational one.",
+   "conflicting_usages": [
+    {
+     "reading": "Independence of a DERIVATION from its subject: 'not_independent' on every interface specification.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:48",
+     "records_in_this_reading": [
+      "FB2-SW-IFS-000001",
+      "FB2-SYS-HVA-000001",
+      "FB2-HW-HCB-000001"
+     ]
+    },
+    {
+     "reading": "Independence of a ROLE from the activity it controls, in the supporting-process records.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-sup1-quality-assurance.json:100",
+     "records_in_this_reading": [
+      "FB2-SUP-QAP-000001",
+      "FB2-SUP-CFM-000001",
+      "FB2-SUP-PRB-000001",
+      "FB2-SUP-CHC-000001",
+      "FB2-SUP-SPL-000001",
+      "FB2-SUP-RUS-000001"
+     ]
+    },
+    {
+     "reading": "Independence of a technical BARRIER from the primary path, assumed not demonstrated.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-independent-monitor.json:31",
+     "records_in_this_reading": [
+      "FB2-SAF-FSR-000004",
+      "FB2-HW-TSR-000004",
+      "FB2-SAF-TSC-000001"
+     ]
+    },
+    {
+     "reading": "Independence of a REVIEWER from the authoring process, recorded as absent.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:175",
+     "records_in_this_reading": [
+      "FB2-MAN-RSK-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "confirmation measure",
+   "corpus_meaning": "The phrase occurs exactly once in the corpus, as one of seven bare activity headings in the `responsibilities` list of FB2-MAN-SPL-000001 - a record that is not typed as a safety plan, whose `decomposition`, `interfaces`, `behavior_model`, `budgets` and `failure_response` fields are all empty, and which assigns none of its seven headings to a role. There is no confirmation measure in this corpus, and no record defines what one would be.",
+   "definition_status": "used_in_prose_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/safety-plan.json:59",
+     "establishes": "'Define confirmation measures and independence' - a heading with no content, no owner and no output."
+    },
+    {
+     "anchor": "docs/artifacts/governance/coverage-plan.json:590",
+     "establishes": "The coverage plan states in its own words that confirmation measures and their independence are recorded only as that heading and that the record's own constraint reads 'Independent confirmation for ASIL D (not achieved in synthetic)'."
+    }
+   ],
+   "adopted_convention": "Read the phrase as an intention recorded and not discharged. Do not read any record in this corpus as containing a confirmation measure, and do not read the fifteen automated reviews as confirmation measures - the corpus's review policy says in terms that AI reviews are automated reviews and are not organisational independence.",
+   "dependent_records": [
+    "FB2-MAN-SPL-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "One occurrence. The absence is the finding: the corpus has a heading where this concept belongs and nothing beneath it."
+  },
+  {
+   "term": "independence_of_confirmation",
+   "corpus_meaning": "The corpus's own reading of the confirmation-measure heading is recorded in exactly one place, and it is negative: the safety plan's `constraints` field carries the string 'Independent confirmation for ASIL D (not achieved in synthetic)'.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/safety-plan.json:69",
+     "establishes": "The `constraints` entry, stating the confirmation as not achieved."
+    },
+    {
+     "anchor": "docs/artifacts/governance/corpus-policy.json:250",
+     "establishes": "The review policy, stated as a rule: AI reviews are automated reviews; distinct agent sessions are not organisational independence and not human confirmation measures; real human approval remains pending."
+    }
+   ],
+   "adopted_convention": "Read any statement about independence of confirmation in this corpus as a declared absence. There is no second reading available.",
+   "dependent_records": [
+    "FB2-MAN-SPL-000001",
+    "FB2-MAN-RSK-000001"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "safety mechanism",
+   "corpus_meaning": "The corpus does not use this phrase. It uses the bare word `mechanism` on 82 field occurrences across FIVE unrelated senses, and the safety-mechanism sense is only one of them.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:226",
+     "establishes": "SENSE 1 - fault detection: `fault_detection[].mechanism`, six entries naming how a fault is found."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:490",
+     "establishes": "SENSE 2 - security mitigation: `mitigations[].mechanism`, ten entries on a threat model."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:122",
+     "establishes": "SENSE 3 - concurrency control: `protection_mechanism`, e.g. 'none - module-static state written without a lock'. This is a mutex, not a safety mechanism."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:99",
+     "establishes": "SENSE 4 - validity signalling: `validity_signalling.mechanism`, e.g. 'No return value. The conversion state is module-static and a caller can only observe it through the test accessor.' This is an error-reporting channel."
+    }
+   ],
+   "adopted_convention": "Read `mechanism` as a fault-detection measure only inside `safety_strategies.fault_detection` and inside `diagnostic_coverage_assumptions`. Everywhere else it is a security mitigation, a lock, or an error channel, and must be read as that. Do not aggregate `mechanism` values across records: a count of mechanisms would add detection measures to mutexes.",
+   "dependent_records": [
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-TAR-000001",
+    "FB2-SW-IFS-000001",
+    "FB2-SW-IFS-000002",
+    "FB2-SW-IFS-000003",
+    "FB2-SW-IFS-000004",
+    "FB2-SW-IFS-000005",
+    "FB2-SW-IFS-000006",
+    "FB2-SW-IFS-000007",
+    "FB2-SW-IFS-000008",
+    "FB2-SW-IFS-000009",
+    "FB2-SW-IFS-000010",
+    "FB2-SW-IFS-000011",
+    "FB2-SW-IFS-000012",
+    "FB2-SW-IFS-000013",
+    "FB2-SW-IFS-000014",
+    "FB2-SW-IFS-000015",
+    "FB2-SW-IFS-000016",
+    "FB2-SW-IFS-000016"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Twenty-one records carry a mechanism-keyed field. The four senses are distinguished only by the path of the key, and three of the four have nothing to do with safety mechanisms as the phrase would mean them.",
+   "conflicting_usages": [
+    {
+     "reading": "A fault-detection measure, in the safety concepts.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:226",
+     "records_in_this_reading": [
+      "FB2-SAF-FSC-000001",
+      "FB2-SAF-TSC-000001"
+     ]
+    },
+    {
+     "reading": "A security mitigation in a threat analysis.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:490",
+     "records_in_this_reading": [
+      "FB2-SAF-TAR-000001"
+     ]
+    },
+    {
+     "reading": "A concurrency control primitive: a critical section, a queue, or 'none'.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:122",
+     "records_in_this_reading": [
+      "FB2-SW-IFS-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "residual risk",
+   "corpus_meaning": "FOUR different meanings on four field-name families in this corpus. There is no single definition and no schema that chooses one.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:267",
+     "establishes": "MEANING 1 - security residual rating on a threat: the value 'medium', with a `residual_risk_justification` beside it. The value set is low / medium / not_rated."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000003-reaction-time-budget.json:165",
+     "establishes": "MEANING 2 - residual risk OF THE ORACLE: a field on every test measure stating what would still be wrong with the verdict if the requirement were implemented differently. It is prose, not a rating."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:108",
+     "establishes": "MEANING 3 - residual risk OUTSIDE the item: `residual_risk_owner` names the fictional role that owns the risk the item passes to somebody else, once per excluded element."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:128",
+     "establishes": "MEANING 4 - residual EXPOSURE of a project risk: an ordinal probability/impact pair such as 'high/moderate', with its own `exposure_formula` defining the pair, and it is not called residual risk at all."
+    }
+   ],
+   "adopted_convention": "Read `residual_risk` on a threat as the security rating, `residual_risk` on a test measure as a limitation of the oracle and nothing else, `residual_risk_owner` as an ownership assignment outside the item, and the residual_*_exposure family in FB2-MAN-RSK-000001 as a project-risk grade. The TARA record states in terms that acceptance of its residual risks does not exist: `residual_risk_acceptance.acceptance_exists` is false and `accepted_by` is 'none'. No reading of any of the four implies that a residual risk has been accepted anywhere in this corpus.",
+   "dependent_records": [
+    "FB2-SAF-TAR-000001",
+    "FB2-VER-TMS-000001",
+    "FB2-VER-TMS-000002",
+    "FB2-VER-TMS-000003",
+    "FB2-VER-TMS-000004",
+    "FB2-VER-TMS-000005",
+    "FB2-VER-TMS-000006",
+    "FB2-VER-TMS-000007",
+    "FB2-VER-TMS-000008",
+    "FB2-VER-TMS-000009",
+    "FB2-VER-TMS-000010",
+    "FB2-SAF-ITE-000001",
+    "FB2-MAN-RSK-000001"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Seventeen records carry a residual-risk-keyed field. Reading them as one vocabulary would let a 'low' security rating be reported as a low safety residual risk.",
+   "conflicting_usages": [
+    {
+     "reading": "A residual security rating on a threat, low/medium/not_rated.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:267",
+     "records_in_this_reading": [
+      "FB2-SAF-TAR-000001"
+     ]
+    },
+    {
+     "reading": "The residual risk of an ORACLE, i.e. what a passing verdict would still not prove.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000003-reaction-time-budget.json:165",
+     "records_in_this_reading": [
+      "FB2-VER-TMS-000003"
+     ]
+    },
+    {
+     "reading": "Risk the item hands to a named outside owner.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:108",
+     "records_in_this_reading": [
+      "FB2-SAF-ITE-000001"
+     ]
+    },
+    {
+     "reading": "A project-risk exposure grade, named residual_exposure and on a different scale.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:128",
+     "records_in_this_reading": [
+      "FB2-MAN-RSK-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "safety case",
+   "corpus_meaning": "The artefact FB2-SAF-SCS-000001, of type `safety_case`, titled 'Cell Voltage Protection Safety Case Skeleton'. It is a skeleton: claims, each with arguments, each with evidence ids - and a release recommendation that is explicitly conditional and authorises nothing.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-case-skeleton.json:47",
+     "establishes": "`claims[].arguments[].evidence` names the records each argument rests on, so the case is a set of claims with cited support rather than prose."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-case-skeleton.json:98",
+     "establishes": "`release_recommendation` reads 'Conditional release for development use only. Not for production deployment without independent assessment', with `production_authorized` false."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-case-skeleton.json:67",
+     "establishes": "ARG-003 is the timing argument: it sums four allocations to 70 ms against a 100 ms FTTI. It is an argument in the skeleton, and the technical safety concept elsewhere computes a different figure for the same quantity - see the ambiguity entry on the timing budget."
+    }
+   ],
+   "adopted_convention": "Read 'safety case' as this skeleton and never as an assurance argument that has been made. The word 'skeleton' is load-bearing: the record carries no completeness argument, and its own title says so. A reader must not infer that an ASIL D claim is argued from the existence of this record.",
+   "dependent_records": [
+    "FB2-SAF-SCS-000001",
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-SAF-TSC-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "One safety_case record exists. Four records elsewhere refer to 'the safety-case skeleton' by name and none of them treats it as satisfied."
+  },
+  {
+   "term": "safety argument",
+   "corpus_meaning": "Used in prose, nineteen occurrences, in at least three distinct senses, and never on a field that a reader can trace to a claim.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:80",
+     "establishes": "SENSE 1 - the reasoning chain of the item as a whole: 'Both directions of the safety argument pass through it.'"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:272",
+     "establishes": "SENSE 2 - an assumption made by an argument: 'The safety argument's assumption that components meet their specification has no monitoring behind it.'"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/sit-integration-plan.json:427",
+     "establishes": "SENSE 3 - the engineering content at a verification level: 'The safety argument lives here - SOA classification, debounce, contactor opening on fault'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/dependent-failure-analysis.json:68",
+     "establishes": "SENSE 4 - a field: `independence_argument` on a safety_analysis record, the only structural carrier of the phrase anywhere in the corpus."
+    }
+   ],
+   "adopted_convention": "Read 'safety argument' as the reasoning that connects the claims in FB2-SAF-SCS-000001 to the evidence ids it cites, and as nothing that has been independently assessed. Senses 1, 2 and 3 above use the same words for three different objects and none of them is a record. Where an argument needs a structural carrier, the only one that exists is `independence_argument` on a safety_analysis record, and that carries one argument and not the case.",
+   "dependent_records": [
+    "FB2-SAF-ANL-000003",
+    "FB2-SAF-ITE-000001",
+    "FB2-MAN-RSK-000001",
+    "FB2-MAN-VDR-000001",
+    "FB2-VER-SIP-000001",
+    "FB2-SUP-SPL-000001"
+   ],
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "The reasoning chain of the item, asserted in prose.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:80",
+     "records_in_this_reading": [
+      "FB2-SAF-ITE-000001"
+     ]
+    },
+    {
+     "reading": "An assumption an argument depends on, named as unmonitored.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:272",
+     "records_in_this_reading": [
+      "FB2-MAN-RSK-000001"
+     ]
+    },
+    {
+     "reading": "The engineering content located at a verification level.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/sit-integration-plan.json:427",
+     "records_in_this_reading": [
+      "FB2-VER-SIP-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "verification",
+   "corpus_meaning": "Confirmation that a requirement or design is met by the artefact that claims to meet it. The corpus types it as `test_measure` with a closed `test_type` enum of eight values, of which the corpus uses seven; one verification measure's type is recorded but never exercised.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/schemas/test_measure.schema.json:30",
+     "establishes": "`test_type` is a closed enum: unit, integration, system, qualification, validation, fault_injection, robustness, boundary. 'boundary' is declared and unused, so one eighth of the verification vocabulary is unexercised."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-afe-plausibility.json:90",
+     "establishes": "A measure carries an oracle: an expected outcome. `oracle_basis` is a second closed enum of four values - source_grounded, analytical_model, synthetic_assumption, measured_reference - so the corpus distinguishes a verification result from the kind of expectation it rests on."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000003-reaction-time-budget.json:165",
+     "establishes": "`residual_risk` on the measure states what a pass would still not prove, which is the corpus's own definition of the limit of a verification claim."
+    }
+   ],
+   "adopted_convention": "Read `test_measure` with `test_type` in {unit, integration, system, qualification, fault_injection, robustness} as verification, and with `test_type` validation as validation - but note that the enum makes them siblings, so the record type alone does not distinguish them and the `test_type` value must always be read. Read `oracle_basis` before reading any expected outcome: a synthetic_assumption oracle can only ever confirm internal consistency.",
+   "dependent_records": [
+    "FB2-VER-TMS-000001",
+    "FB2-VER-TMS-000002",
+    "FB2-VER-TMS-000003",
+    "FB2-VER-TMS-000004",
+    "FB2-VER-TMS-000005",
+    "FB2-VER-TMS-000006",
+    "FB2-VER-TMS-000007",
+    "FB2-VER-TMS-000008",
+    "FB2-VER-TMS-000009",
+    "FB2-VER-TMS-000010",
+    "FB2-VER-TMS-000011",
+    "FB2-VER-TMS-000012",
+    "FB2-VER-TMS-000013",
+    "FB2-VER-TMS-000014",
+    "FB2-VER-TMS-000015"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Thirty-three test measures share one artefact type and one enum with validation, so 'verification' and 'validation' are distinguished by a value and not by a type."
+  },
+  {
+   "term": "validation",
+   "corpus_meaning": "Confirmation that what was built does what a stakeholder needed. In the corpus it is a `test_type` value, not an artefact type: five measures carry `test_type: validation` and each one names its subject in free text in its title.",
+   "definition_status": "established_by_a_field_value_only",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-validation-charging-no-false-reaction.json:2",
+     "establishes": "One of five validation measures. Its subject is recorded in the title - '(stakeholder intent: pack manufacturer)' - because no field carries it."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-validation-degraded-operation.json:2",
+     "establishes": "Another of the five, whose subject is an operational scenario rather than a stakeholder. The two are different kinds of validation target under one value."
+    }
+   ],
+   "adopted_convention": "Read `test_type: validation` as validation and read the subject from the title, because the schema has nowhere else to put it. Read the word 'stakeholder' in a title as the person the need is traced to, and note that the corpus has five stakeholder_need records and five validation measures while nothing links each measure to its need except the title text and whatever `referenced_requirements` happens to name.",
+   "dependent_records": [
+    "FB2-VER-TMS-000009",
+    "FB2-VER-TMS-000012",
+    "FB2-VER-TMS-000013",
+    "FB2-VER-TMS-000014",
+    "FB2-VER-TMS-000015"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Five measures. The link from a validation measure to the stakeholder need it validates is carried by free text, so it cannot be checked mechanically - which is a reason this term is on the list at all."
+  },
+  {
+   "term": "review",
+   "corpus_meaning": "A record of type `review`, of which the corpus has fifteen, plus 229 `reviewed_by` links. Every one of the fifteen is an automated review produced by the same process that produced the records it reviews, and every one carries that as a limitation.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/reviews/records/review-vertical-slice.json:3",
+     "establishes": "`reviewer_identity` names the role, a session id, the model, and the note 'AI-assisted review; human confirmation pending' - so the review's own identity field records who reviewed it and that a human did not."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-sup1-quality-assurance.json:93",
+     "establishes": "The process record states it in terms: 'every review record in the corpus is an automated review produced by the same process that produced the artifacts, and no human reviewer exists'."
+    },
+    {
+     "anchor": "docs/artifacts/governance/corpus-policy.json:250",
+     "establishes": "The review policy states the rule behind it: distinct agent sessions are not organisational independence and not human confirmation measures."
+    }
+   ],
+   "adopted_convention": "Read `review` as a record that an automated pass ran and what it found. It is never evidence of independence, of engineering validity, or of human approval. Where a review disagrees with a record, the finding is in reviews/findings/ and the review record's `lifecycle_status` stays 'draft' precisely because nothing human has confirmed it.",
+   "dependent_records": [
+    "FB2-REV-000001",
+    "FB2-REV-000002",
+    "FB2-REV-000003",
+    "FB2-REV-000004",
+    "FB2-REV-000005",
+    "FB2-REV-000006",
+    "FB2-REV-000007",
+    "FB2-REV-000008",
+    "FB2-REV-000009",
+    "FB2-REV-000010",
+    "FB2-REV-000011",
+    "FB2-REV-000012",
+    "FB2-REV-000013",
+    "FB2-REV-000014",
+    "FB2-REV-000015"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Fifteen review records cover 144 of the artefacts. The corpus's own coverage dimension reports the ratio and the corpus's own risk register records that the ratio is not independence."
+  },
+  {
+   "term": "audit",
+   "corpus_meaning": "The corpus uses the word for TWO different things and holds NO audit record of either kind. There is no `audit` artefact type.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/as_is/safety/hazard-analysis-cell-voltage.json:63",
+     "establishes": "USE 1 - a past external assessment: 'An independent audit flagged the ASIL_D on this record's HE-01 entry as an unqualified classification on an as_is record.' Ten revision-history entries across the as_is profile narrate what such an audit found. No audit record, no auditor, no scope and no date exist."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/measurement-plan.json:106",
+     "establishes": "USE 2 - the corpus tool's own output: `record_location` names an 'execution evidence-classification audit in the generated verification view', i.e. a check the corpus runs on itself."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-sup9-problem-resolution.json:155",
+     "establishes": "A third, narrower use: 'no revision-history audit tool exists', i.e. a capability the corpus does not have."
+    },
+    {
+     "anchor": "docs/artifacts/governance/coverage-plan.json:596",
+     "establishes": "The coverage plan records the consequence: SUP.1 has no audit records, which is one of the five named reasons SUP.1 is recorded as partially mapped."
+    }
+   ],
+   "adopted_convention": "Read 'audit' in an as_is revision history as a report of an assessment whose record does not exist in this corpus - treat its findings as the corpus's current content and its process as unevidenced. Read 'audit' in a verification or measurement record as the corpus's own self-check, which validates the corpus and not the product. Do not read either as an audit of the product: no such audit exists here, and the policy is explicit that generated consistency-check results validate the corpus and not the BMS.",
+   "dependent_records": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-HW-TSR-000001",
+    "FB2-HW-TSR-000002",
+    "FB2-HW-TSR-000003",
+    "FB2-SW-SWR-000001",
+    "FB2-SW-SWR-000002",
+    "FB2-SW-SWR-000003",
+    "FB2-MAN-MSM-000001",
+    "FB2-SUP-QAP-000001",
+    "FB2-SUP-PRB-000001"
+   ],
+   "was_ambiguous": true,
+   "conflicting_usages": [
+    {
+     "reading": "An external assessment that found defects in these records, narrated in revision history.",
+     "anchor": "docs/artifacts/corpus/as_is/safety/hazard-analysis-cell-voltage.json:63",
+     "records_in_this_reading": [
+      "FB2-SAF-HAZ-000001",
+      "FB2-SAF-FSR-000001",
+      "FB2-SAF-FSR-000002",
+      "FB2-SAF-FSR-000003",
+      "FB2-HW-TSR-000001",
+      "FB2-HW-TSR-000002",
+      "FB2-HW-TSR-000003",
+      "FB2-SW-SWR-000001",
+      "FB2-SW-SWR-000002",
+      "FB2-SW-SWR-000003"
+     ]
+    },
+    {
+     "reading": "The corpus tool's own consistency check on its own records.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/measurement-plan.json:106",
+     "records_in_this_reading": [
+      "FB2-MAN-MSM-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "plausibility check",
+   "corpus_meaning": "A check that a measured value is credible. The corpus has an interface specification for the module that performs it (FB2-SW-IFS-000010, source `src/app/application/plausibility/plausibility.h`), a test measure, and an execution record - and it also uses the word for something structurally different in the safety concepts.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-plausibility-checks.json:62",
+     "establishes": "MEANING 1 - a real module boundary: `providing_module` names the plausibility module over `PL_CheckStringVoltage`, `PL_CheckCellVoltage` and `PL_CheckCellTemperature`, whose declaration takes a base value and a redundancy-0 value."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:226",
+     "establishes": "MEANING 2 - a check named together with redundancy: 'Measurement plausibility and spread checks against independent channels', i.e. two checks under one noun."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:219",
+     "establishes": "MEANING 3 - 'Plausibility and redundancy comparison', which names a COMPARISON, not a plausibility check. The same pair of words is also an architectural element name in the item definition: 'Measurement plausibility and redundancy'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-afe-plausibility.json:90",
+     "establishes": "MEANING 4 - a test case expectation: 'Plausibility check passes' and 'Plausibility check flags implausible', which are two outcomes of the module."
+    }
+   ],
+   "adopted_convention": "Read 'plausibility check' as the base-versus-redundancy-0 comparison performed by the PL_ functions when a symbol or a file names it. Read the phrase 'plausibility and redundancy' in the safety concepts and requirements as the PAIR, because that is how those records use it and because both halves are needed for the disagreement the corpus describes. Do not read 'plausibility and redundancy comparison' as a single check, and do not count plausibility checks by counting records with the word in the title.",
+   "dependent_records": [
+    "FB2-SW-IFS-000010",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SYS-SYR-000003",
+    "FB2-VER-TMS-000003",
+    "FB2-VER-EXE-000003"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Seven records carry the word structurally. The concepts and the requirement use it as half of a compound, and a reader who counts checks will undercount by counting the compound once.",
+   "conflicting_usages": [
+    {
+     "reading": "A module boundary over base-versus-redundancy-0 comparison.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-plausibility-checks.json:62",
+     "records_in_this_reading": [
+      "FB2-SW-IFS-000010"
+     ]
+    },
+    {
+     "reading": "Half of a compound 'plausibility and redundancy', which is one architectural responsibility.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:219",
+     "records_in_this_reading": [
+      "FB2-SAF-TSC-000001",
+      "FB2-SAF-FSC-000001",
+      "FB2-SAF-FSR-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "redundancy",
+   "corpus_meaning": "Two things under one word: the architectural technique of having more than one channel, and - in this corpus specifically - the foxBMS module that performs the base-versus-redundancy-0 comparison and sets a per-quantity validity flag.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-redundancy-mrc.json:64",
+     "establishes": "MEANING 1 - a MODULE: `providing_module.role` reads 'Owns the validity of every measured quantity in a redundant system. It reads the base and redundancy-0 database tables, compares them quantity by quantity, and sets a per-quantity validity flag'. The interface specification's title is 'the redundancy-management interface'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:536",
+     "establishes": "MEANING 2 - the ARCHITECTURAL TECHNIQUE: 'A shared supply, a shared reference or a shared configuration source defeats redundancy without producing a disagreement.' The paragraph is about what the technique needs and cannot guarantee."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/fta-overvoltage.json:138",
+     "establishes": "MEANING 3 - a gate in a fault tree: 'AND gate implements redundancy (main ASIL_D path + independent ASIL_B monitor).'"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-plausibility-checks.json:72",
+     "establishes": "MEANING 4 - a CONSUMER: the plausibility interface names the redundancy module as the module that consumes the PL_ functions. So the module consumes the plausibility check while also being named redundancy, and the two records describe adjacent halves of one boundary."
+    }
+   ],
+   "adopted_convention": "Read 'redundancy' on a source-level interface record as the MRC module and its validity flags. Read it on a safety concept, requirement, fault tree or assumption as the architectural technique. Do not read the MRC module as an independent channel: the corpus states that a shared configuration source defeats it without producing a disagreement, which is exactly what an independent-channel claim would have to exclude.",
+   "dependent_records": [
+    "FB2-SW-IFS-000010",
+    "FB2-SW-IFS-000011",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-ANL-000002",
+    "FB2-SAF-FSR-000001",
+    "FB2-SW-SIR-000005"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Seven records. The overlap between the module sense and the technique sense is the reason both readings are recorded here: the module is named after the technique and is not an instance of it.",
+   "conflicting_usages": [
+    {
+     "reading": "A module that compares base against redundancy-0 and sets a validity flag.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-redundancy-mrc.json:64",
+     "records_in_this_reading": [
+      "FB2-SW-IFS-000011"
+     ]
+    },
+    {
+     "reading": "The architectural technique, with its known defeat condition.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:536",
+     "records_in_this_reading": [
+      "FB2-SAF-TSC-000001",
+      "FB2-SAF-FSC-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "diversity",
+   "corpus_meaning": "The corpus uses this word TWICE and both times means the diversity of TEST ORACLES. It never uses the word for the architectural technique of differing the failure modes of redundant channels.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/as_is/verification/uts-sil-host-unit-test-specification.json:42",
+     "establishes": "'The six modules chosen here were chosen by the authoring agent for oracle diversity, and the corpus contains no statement-coverage measurement...'"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/as_is/verification/uts-sil-host-unit-test-specification.json:654",
+     "establishes": "'This is a sample chosen for oracle diversity, not a census of the suite, and no claim is made about the other 307 files.'"
+    }
+   ],
+   "adopted_convention": "Read 'diversity' in this corpus as variety of oracle method and nothing else. This is a MISUSE of the architectural term and is recorded as such rather than quietly reinterpreted: the corpus has no diversity analysis, and the independent-monitor barrier whose independence it assumes rests on FB2-ASM-008, a declared assumption, not on a demonstrated difference of failure modes.",
+   "dependent_records": [
+    "FB2-VER-UTS-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "One record, two occurrences, both about oracles. The risk is a reader who greps for 'diversity' in order to assess the second barrier and finds only the word in a test plan."
+  },
+  {
+   "term": "systematic failure",
+   "corpus_meaning": "The corpus does not use this phrase. The word 'systematic' appears five times in the whole corpus and none of them is a failure taxonomy.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/operation/field-monitoring-and-incident-handling.json:213",
+     "establishes": "The nearest use: 'the earliest available signal of a systematic problem', i.e. a statistical divergence in a field signal population. That is a detection signal, not a failure class."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:512",
+     "establishes": "The second use, and the closest to the engineering sense: 'a systematic offset in the measurement chain, which a debounce makes worse' - a single-cause offset that defeats a debounce. It is a property of one chain, named in a limitation."
+    }
+   ],
+   "adopted_convention": "No convention is adopted for the term. Where the corpus means a single-cause offset that a debounce cannot detect it says 'a systematic offset in the measurement chain'; where it means a statistical trend it says 'a systematic problem'. Do not read either as this term, and do not infer that the corpus has classified failures as systematic or random.",
+   "dependent_records": [
+    "FB2-OPS-MON-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSR-000002"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "random failure",
+   "corpus_meaning": "The corpus does not use this phrase. The word 'random' appears four times and all four are incidental.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:456",
+     "establishes": "'5 g random vibration, 30 g shock' - an environmental qualification condition, where 'random' qualifies vibration profile."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:187",
+     "establishes": "'TCP/IP stack entropy source for sequence numbers and random values' - randomness of a value, not of a failure."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-sec-000004-serial-framing-authorisation.json:101",
+     "establishes": "'random bytes including 0x11 and 0x13 at arbitrary positions' - test stimulus."
+    }
+   ],
+   "adopted_convention": "No convention is adopted. Do not read 'random' in any of these as this term. The corpus contains no probabilistic reliability model at all: the fault-tree analysis states in its own words that its probabilities are deliberately illustrative and that no supplier failure-rate data is represented, and the coverage plan records the absence of any FMEDA record.",
+   "dependent_records": [
+    "FB2-SAF-ITE-000001",
+    "FB2-SAF-TAR-000001",
+    "FB2-VER-TMS-000016"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "No numeric hardware metric exists anywhere in the corpus, so no record could quantify this term even if it used it."
+  },
+  {
+   "term": "common-cause failure",
+   "corpus_meaning": "Used twice, both times as an analysis the corpus did NOT perform, and once more as a risk statement on an assumption.",
+   "definition_status": "ambiguous_across_records",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:501",
+     "establishes": "USE 1 - a hypothetical analysis: 'An independent-monitor concept that had been analysed for common-cause failure would state which failures it does not tolerate.' The concept says the analysis is absent."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:566",
+     "establishes": "USE 2 - the same absence, with its consequence: 'The independent monitor becomes a second channel with the same failure modes as the first. Two agreeing channels would then be read as corroboration when in fact they are one.'"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/shared/assumption-registry.json:74",
+     "establishes": "USE 3 - a live example on an assumption: FB2-ASM-007's validity condition reads 'Requires correct SBC configuration. Shared power supply is common cause.'"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:512",
+     "establishes": "The corpus's own nearest structure: a `common_cause_note` on one element, naming the shared sources the concept cannot rule out."
+    }
+   ],
+   "adopted_convention": "Read 'common-cause failure' as a class of failure that defeats two channels at once, and note that the corpus asserts the absence of that analysis rather than its result. The one concrete instance in the corpus is the shared power supply named in FB2-ASM-007's validity conditions, and it is recorded as an assumption condition rather than as an analysed finding.",
+   "dependent_records": [
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001"
+   ],
+   "was_ambiguous": true,
+   "blast_radius_note": "Two concept records. Both state the absence; neither closes it. Reading the dependent-failure analysis as a common-cause analysis would be a category error - the coverage plan already records it as a dependent-failure analysis and not an FMEDA.",
+   "conflicting_usages": [
+    {
+     "reading": "An analysis that was not performed and whose absence is the finding.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:501",
+     "records_in_this_reading": [
+      "FB2-SAF-FSC-000001"
+     ]
+    },
+    {
+     "reading": "A concrete shared resource named on an assumption's validity conditions.",
+     "anchor": "docs/artifacts/corpus/synthetic_reference/shared/assumption-registry.json:74",
+     "records_in_this_reading": [
+      "FB2-SAF-TSC-000001"
+     ]
+    }
+   ]
+  },
+  {
+   "term": "safety diagnostics",
+   "corpus_meaning": "The corpus does not use this phrase. It uses `diagnosis`, `diagnosis_entries`, `diagnostic_coverage`, `diagnostic_coverage_assumptions`, `fault_detection` and `diagnosis` events, and it has a whole module for diagnosis in the product source.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "308028fb:src/app/engine/diag/diag.h",
+     "establishes": "The product has a diagnosis module with its own public interface. The corpus records it as an architectural element in the item definition and as an interface consumer, never under the phrase 'safety diagnostics'."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:226",
+     "establishes": "The corpus's substitute is `fault_detection`, a list of six mechanisms of which the diagnosis entry is one."
+    }
+   ],
+   "adopted_convention": "No convention is adopted for the phrase. The corpus's own vocabulary is `diagnosis` (a recorded event with an id and a severity) and `fault_detection` (a mechanism). A reader looking for 'safety diagnostics' should read `fault_detection` for what detects and `diagnosis` for what is recorded.",
+   "dependent_records": [
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-FSR-000002"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "ASIL decomposition",
+   "corpus_meaning": "The corpus does not use this phrase. It uses `decomposition` for two unrelated things: the decomposition of an architectural decision in the design records, and the high-level functional decomposition in the safety concepts.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:119",
+     "establishes": "The nearest thing the corpus has: an `allocation_statement` in which the main path is allocated at ASIL D and an independent path at ASIL B, and the technical concept states that this difference is the decomposition the ASIL D goal rests on. It is stated in prose, not under the phrase, and the ASIL D goal's own derivation repeats the same argument as its seventh step."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/design-afe-driver-detailed.json:68",
+     "establishes": "The unrelated engineering use: `decomposition` inside a software design record, listing a design element's internal units named from the source."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/software/design-contactor.json:65",
+     "establishes": "And the empty case: `decomposition: []` in a high-level design record that carries none."
+    }
+   ],
+   "adopted_convention": "Read the ASIL difference between the main path and the independent path as this corpus's ASIL-decomposition argument, and read it from `allocation_statement` in the technical concept plus step 7 of the safety goal's `asil_justification.derivation`. Do not read `decomposition` in a design record as this term: it lists internal units of one element and carries no ASIL.",
+   "dependent_records": [
+    "FB2-SAF-TSC-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSC-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Seventeen records carry a `decomposition` key, of which the design records are a separate vocabulary. A search for 'decomposition' returns software design decomposition first and the safety argument not at all."
+  },
+  {
+   "term": "leading safety provider",
+   "corpus_meaning": "The corpus does not use this phrase anywhere, and it does not use the word 'provider' in this sense either. It assigns the responsibility for a safety obligation to an architectural element inside a safety concept.",
+   "definition_status": "absent_from_this_corpus",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:145",
+     "establishes": "The corpus's substitute: an `allocation_statement` that splits the goal's objective across five of six `architecture_elements` and allocates each element's part, with a `what_is_not_achieved` for the sixth."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-sup1-quality-assurance.json:93",
+     "establishes": "The nearest organisational equivalent, and it is a process constraint on a role, not a designation of a supplier: 'The quality engineer may not review an artifact it authored'."
+    }
+   ],
+   "adopted_convention": "No convention is adopted. Where a reader needs responsibility for a safety obligation they must read the element allocations in the two safety concepts, which are fictional-project allocations and not supplier designations. FB2-SUP-SPL-000001 records a supplier-monitoring process with fictional suppliers and states that no supplier has submitted anything.",
+   "dependent_records": [
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001",
+    "FB2-SUP-SPL-000001"
+   ],
+   "was_ambiguous": false
+  },
+  {
+   "term": "execution kind",
+   "corpus_meaning": "The `execution_kind` field on every execution record: the evidence class of the run, orthogonal to the outcome. It is a closed enum of five values in the execution schema, and the corpus uses three of them.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/schemas/execution.schema.json:43",
+     "establishes": "The enum: none, actual_host_run, actual_simulation_run, actual_target_hardware_run, synthetic_fixture. The description names actual_target_hardware_run as the only member that constitutes product-hardware evidence."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/execution-afe-communication.json:48",
+     "establishes": "A record whose `execution_kind` is synthetic_fixture while its own `environment.hardware` field reads 'x86_64 Linux host (simulated)' - so the prose environment and the classification disagree in kind, and the classification is the one that counts."
+    },
+    {
+     "anchor": "docs/artifacts/governance/corpus-policy.json:235",
+     "establishes": "The policy rules: missing target hardware or proprietary compilers is blocked, not fabricated success; and generated consistency-check results validate the corpus, not the BMS product."
+    }
+   ],
+   "adopted_convention": "Read `execution_kind` as the classification and `environment` as prose. Where they disagree in kind, as in the record above, `execution_kind` governs. The four real-run members are not equivalent to one another: the corpus's measured coverage figure treats the host and simulation members as developer-infrastructure evidence and the target-hardware member as the only product-hardware evidence.",
+   "dependent_records": [
+    "FB2-VER-EXE-000001",
+    "FB2-VER-EXE-000002",
+    "FB2-VER-EXE-000003",
+    "FB2-VER-EXE-000004",
+    "FB2-VER-EXE-000005",
+    "FB2-VER-EXE-000006",
+    "FB2-VER-EXE-000007",
+    "FB2-VER-EXE-000008",
+    "FB2-VER-EXE-000009",
+    "FB2-VER-EXE-000010"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Forty-four execution records. Two enum members are never used by any record, which is itself the load-bearing fact about this term and is what the corpus's actual_product_evidence figure reports."
+  },
+  {
+   "term": "origin",
+   "corpus_meaning": "The `origin` field on every artefact record: how the content came to be. A closed enum of three values, and the corpus's own validator makes one of them illegal in one profile.",
+   "definition_status": "established_by_a_record",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/schemas/artifact-base.schema.json:216",
+     "establishes": "The enum: source_observed, derived, synthetic."
+    },
+    {
+     "anchor": "docs/artifacts/tools/corpus.py:780",
+     "establishes": "The validator: an as_is artefact carrying origin=synthetic is a high-severity profile-contamination finding. This is the rule that makes origin load-bearing rather than decorative."
+    },
+    {
+     "anchor": "docs/artifacts/tools/corpus.py:5345",
+     "establishes": "The policy text: the as_is profile admits origin in {source_observed, derived} and the synthetic_reference profile may add synthetic; and importing systems must not treat synthetic origin as observed evidence."
+    }
+   ],
+   "adopted_convention": "Read `origin: source_observed` as 'this content was read from the pinned source and can be re-read at that commit'. Read `origin: derived` as 'this content is a mechanical or reasoned transformation of the pinned source, reproducible but not observed'. Read `origin: synthetic` as 'this content describes the fictional reference project and asserts nothing about the product'. Never read synthetic as evidence about the product; that is the rule the import contract states.",
+   "dependent_records": [
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-HAZ-000001",
+    "FB2-SW-IMP-000001",
+    "FB2-VER-EXE-000001"
+   ],
+   "was_ambiguous": false,
+   "blast_radius_note": "Every record carries the field, so a change to its meaning would reach the entire corpus. The measured distribution is 58 as_is source_observed, 14 as_is derived, 138 synthetic_reference synthetic and 31 synthetic_reference derived."
+  }
+ ],
+ "terms_absent_from_this_corpus": [
+  {
+   "term": "hazardous situation",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'hazardous situation' over every corpus and review record. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The corpus's substitute is `operational_situation` on a hazardous event plus a record-level `malfunctioning_behavior`, and the two are never paired. Its absence is a structural gap in the corpus rather than a naming choice: a hazardous situation is the pair, and the pair is not a record.",
+   "nearest_term_in_use": "operational situation"
+  },
+  {
+   "term": "automotive element",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'automotive element' over every corpus and review record. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The corpus names its elements `architecture_elements` with `element_id` values AR-nnn. That is a local construct and is not this term.",
+   "nearest_term_in_use": "architecture element (corpus-local: architecture_elements / element_id)"
+  },
+  {
+   "term": "hardware fault tolerance",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'hardware fault tolerance' over every corpus and review record, and separately 'fault tolerance', which returned 2 lines, both the single string 'Redundant isolation, single-point fault tolerance'. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "No hardware metric of any kind exists in the corpus. The coverage plan already records FMEDA and quantitative hardware analysis as absent, and the fault-tree analysis states its probabilities are deliberately illustrative with no supplier failure-rate data. The one sentence that contains the words is an architectural claim, not a metric.",
+   "nearest_term_in_use": "diagnostic_coverage, the two-value ordinal high/medium on seven FMEA entries"
+  },
+  {
+   "term": "confirmation measure",
+   "measured_occurrences": 1,
+   "search_performed": "grep -Eiw 'confirmation measure' over every corpus and review record. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The single occurrence is a bare activity heading in the `responsibilities` list of FB2-MAN-SPL-000001, a record that is not typed as a safety plan, whose decomposition/interfaces/behavior_model/budgets/failure_response fields are all empty, and which assigns none of its seven headings to a role. There is no confirmation measure and no record defines what one would be.",
+   "nearest_term_in_use": "independence of confirmation, recorded negatively as 'Independent confirmation for ASIL D (not achieved in synthetic)'"
+  },
+  {
+   "term": "safety mechanism",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'safety mechanism' over every corpus and review record, and separately 'safety_mechanism', also 0. The bare word 'mechanism' returned 82 field occurrences across five unrelated senses. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The corpus performs and names its detection measures as `fault_detection[].mechanism` and `diagnostic_coverage_assumptions[].mechanism`. The phrase is absent while the concept is present, so the absence is naming, not substance.",
+   "nearest_term_in_use": "mechanism, inside fault_detection"
+  },
+  {
+   "term": "ASIL decomposition",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'ASIL decomposition' and 'asil_decomposition' over every corpus and review record, both 0. The bare word 'decomposition' returned 17 lines across two unrelated senses. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The corpus makes the ASIL-difference argument in prose, in the technical concept's allocation_statement and as step 7 of the safety goal's asil_justification.derivation. It is not titled as this term and no record is about it.",
+   "nearest_term_in_use": "decomposition (two unrelated senses: software design units, and the high-level functional decomposition of a concept)"
+  },
+  {
+   "term": "leading safety provider",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'leading safety provider' and 'LSP' over every corpus and review record, both 0. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "Responsibility for a safety obligation is allocated to a fictional architectural element inside a safety concept. FB2-SUP-SPL-000001 records a supplier-monitoring process with fictional suppliers and states that no supplier has submitted anything, so there is no provider to designate.",
+   "nearest_term_in_use": "architecture element allocation inside FB2-SAF-FSC-000001"
+  },
+  {
+   "term": "systematic failure",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'systematic failure' over every corpus and review record. The bare word 'systematic' returned 5 lines, none of them a failure taxonomy. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The corpus uses 'a systematic offset in the measurement chain' for a single-cause offset that defeats a debounce, and 'a systematic problem' for a statistical divergence in a field signal. Neither is a failure class, and the corpus has no failure taxonomy of any kind.",
+   "nearest_term_in_use": "a systematic offset in the measurement chain (safety-concept-technical.json)"
+  },
+  {
+   "term": "random failure",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'random failure' over every corpus and review record. The bare word 'random' returned 4 lines, all incidental: an environmental qualification condition, an entropy source, and a test stimulus. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The corpus has no probabilistic reliability model, so there is nothing to which this term would apply. The absence of an FMEDA record is already recorded in the coverage plan.",
+   "nearest_term_in_use": "none; no record distinguishes failure kinds"
+  },
+  {
+   "term": "safety diagnostics",
+   "measured_occurrences": 0,
+   "search_performed": "grep -Eiw 'safety diagnostic' over every corpus and review record, 0. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "The corpus's own vocabulary is `diagnosis` for a recorded event and `fault_detection` for a mechanism. The product does have a diagnosis module in the pinned source, which the corpus records as an architectural element and an interface consumer rather than under this phrase.",
+   "nearest_term_in_use": "diagnosis / fault_detection"
+  },
+  {
+   "term": "fault",
+   "measured_occurrences": 290,
+   "search_performed": "Not a candidate for omission: the word occurs on 290 lines and every safety record depends on it. A case-insensitive, word-boundary regular-expression search over every line of every artefact record under docs/artifacts/corpus/ (both profiles, all artefact families) and every review and finding record under docs/artifacts/reviews/. A pinned-commit blob was searched with git grep at the commit. Counts are lines matching, not records matching, and are reproducible with the pattern given.",
+   "why_absent": "This entry records a MEASURED GAP rather than an absent term: the word is everywhere and defined nowhere. There is no `fault` artefact type, no fault list, no fault status model and no record that fixes what the word denotes. A definition would have to be supplied, and this corpus declines to author one it cannot evidence.",
+   "nearest_term_in_use": "fault_reaction, fault_detection, diagnosis"
+  }
+ ],
+ "identifier_vocabulary": {
+  "artefact_identifier": "The string in the `id` field: the pattern FB2-<DOMAIN>-<TYPE>-<NNNNNN>, per the corpus policy's id_scheme. It is the key of every artefact index, every link endpoint and every cross-reference in this corpus - and it does NOT identify a record on its own, because 39 identifier strings are carried by two different records, one in each profile, and from FB2-VER-EXE-000004 onwards the two records are about different subjects entirely.",
+  "why_it_is_a_vocabulary_problem": "Three distinct failures follow, and each one produces a wrong answer rather than a missing one. (1) An unqualified identifier reference is ambiguous: FB2-SAF-SGO-000001 names two safety goals whose safe states and degraded states differ. (2) An identifier can be rebound: FB2-VER-EXE-000005 is the contactor-driver host run in one profile and the AFE-communication fixture in the other, so 'FB2-VER-EXE-000005' does not even name a stable subject. (3) The corpus policy states that identifiers must be globally unique across profiles and the corpus does not satisfy it, so a reader who trusts the policy over the data will look for a record that does not exist. The corpus's own validator deliberately permits this: it keys duplicates by (profile, id) and only fails on a duplicate WITHIN one profile, so the cross-profile reuse is by construction invisible to the validator.",
+  "evidence": [
+   {
+    "anchor": "docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json:2",
+    "establishes": "The identifier FB2-SAF-SGO-000001 in the as_is profile."
+   },
+   {
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:2",
+    "establishes": "The SAME identifier in the synthetic_reference profile, on a record whose safe_state and degraded_state differ from the as_is copy. Two records, one identifier, different content."
+   },
+   {
+    "anchor": "docs/artifacts/corpus/as_is/verification/execution-afe-ltc-driver.json:2",
+    "establishes": "FB2-VER-EXE-000004 in the as_is profile, on the AFE LTC driver execution."
+   },
+   {
+    "anchor": "docs/artifacts/corpus/synthetic_reference/verification/execution-independent-monitor.json:2",
+    "establishes": "FB2-VER-EXE-000004 in the synthetic_reference profile, on the independent-monitor execution. The identifier no longer names the same subject, let alone the same content."
+   },
+   {
+    "anchor": "docs/artifacts/corpus/as_is/safety/fsr-soa-monitoring.json:97",
+    "establishes": "The corpus's de facto disambiguator: the as_is requirement carries `fault_reaction.profile_basis = \"as_is\"`, so the record itself declares which profile it belongs to. This is a working convention and it is recorded here as one, not as something this record introduced."
+   },
+   {
+    "anchor": "docs/artifacts/governance/corpus-policy.json:98",
+    "establishes": "The policy rule the corpus does not satisfy: 'IDs must be globally unique across profiles', rule ID-RULE-004."
+   },
+   {
+    "anchor": "docs/artifacts/tools/corpus.py:823",
+    "establishes": "The validator that permits it: `_validate_no_duplicate_ids` keys on (profile, id) and reports only a duplicate within one profile, so cross-profile reuse cannot be detected by that rule."
+   }
+  ],
+  "adopted_convention": "Resolve an identifier as the PAIR (profile, id), never as the id alone. Where a record is quoted without its profile, read it as the synthetic_reference copy - that is the copy every safety concept derives from and the copy every safety argument in this corpus is made against. Prefer a field that states the profile, as `profile_basis` does on the as_is functional safety requirements, over inferring it from the directory a record happens to sit in. Do not renumber: the policy forbids renumbering established identifiers, and 39 of them are shared, so a rename is not available as a repair. The full list of shared identifiers, and the point at which the rebound identifiers stop naming a stable subject, are recorded in `limitations`."
+ },
+ "ambiguities_resolved": [
+  {
+   "id": "VOC-AMB-001",
+   "term": "artefact identifier",
+   "reading_a": {
+    "reading": "The identifier names one record.",
+    "anchor": "docs/artifacts/corpus/as_is/verification/execution-afe-ltc-driver.json:2",
+    "records": [
+     "FB2-VER-EXE-000004",
+     "FB2-SAF-SGO-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "The identifier names two records, one per profile, and from FB2-VER-EXE-000004 onwards not even the same subject.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/verification/execution-independent-monitor.json:2",
+    "records": [
+     "FB2-VER-EXE-000004",
+     "FB2-SAF-SGO-000001"
+    ]
+   },
+   "convention_adopted": "Resolve as (profile, id). Default an unqualified reference to the synthetic_reference copy.",
+   "why_the_convention": "Because the two profiles genuinely describe different things and neither is derived from the other, there is no correct way to collapse them; and because renumbering is forbidden by ID-RULE-001, the pair is the only available repair. The corpus already does this in the index, in the link endpoint check and in the duplicate check, all of which key on (profile, id).",
+   "residual_ambiguity": "The corpus policy still asserts global uniqueness, and the as_is records that quote a safety-goal value in prose do not always say which profile they mean. FB2-SAF-SGO-000001's own asil_justification states it is the synthetic_reference copy, so the convention is readable, but it is not stated by the identifier itself."
+  },
+  {
+   "id": "VOC-AMB-002",
+   "term": "safe state",
+   "reading_a": {
+    "reading": "A set of two conditions: contactors open and charging disabled.",
+    "anchor": "docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json:125",
+    "records": [
+     "FB2-SAF-SGO-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "A set of four conditions, adding propulsion disabled and fault logged, and a mode-dependent condition per operating mode.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:142",
+    "records": [
+     "FB2-SAF-SGO-000001",
+     "FB2-SAF-ITE-000001",
+     "FB2-SAF-FSC-000001",
+     "FB2-SAF-TSC-000001"
+    ]
+   },
+   "convention_adopted": "Read the set from the declaring record; where a measure is judged against the reaction obligation, use the synthetic_reference four-condition set, because that is the set both concepts argue against. Read a per-mode safe state from safe_state_in_this_mode and never from the goal.",
+   "why_the_convention": "The two sets appear on records that share one identifier and one ASIL, so a reader cannot tell them apart from the identifier, and the narrower set understates the obligation the corpus spends most of its safety argument on. Choosing the wider set is the conservative direction: it cannot make the reaction requirement look smaller than the corpus claims it is.",
+   "residual_ambiguity": "The two sets are not reconciled and this record does not reconcile them. A genuine resolution needs a decision about whether the as_is profile may carry a narrower set at all, which is a content question for the records themselves."
+  },
+  {
+   "id": "VOC-AMB-003",
+   "term": "ASIL",
+   "reading_a": {
+    "reading": "An assigned classification, derived from severity and exposure.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:123",
+    "records": [
+     "FB2-SAF-SGO-000001",
+     "FB2-SAF-HAZ-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "An absence marker meaning no ASIL is assigned, written as either QM or not_applicable into the same field.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/management/project-scope.json:78",
+    "records": [
+     "FB2-MAN-SCO-000001",
+     "FB2-SW-SIR-000001",
+     "FB2-SW-SIR-000002",
+     "FB2-SW-SIR-000003",
+     "FB2-SW-SIR-000004",
+     "FB2-SW-SIR-000005",
+     "FB2-SW-SIR-000006",
+     "FB2-SAF-SEC-000001",
+     "FB2-SAF-SEC-000002",
+     "FB2-SAF-SEC-000003",
+     "FB2-SAF-SEC-000004",
+     "FB2-SAF-SEC-000005"
+    ]
+   },
+   "convention_adopted": "Read `asil` as a classification only where the record also carries an asil_justification that derives it; read it as an allocation only where it carries safety_allocation with a goal reference; read QM and not_applicable both as absence.",
+   "why_the_convention": "The asil_assignment_validator only inspects artefact_type safety_goal, so fifteen records writing an absence marker into the same field are outside its scope and cannot be caught by it. The two absence values are not interchangeable in principle - one says 'no ASIL here' and the other says 'this record is out of scope for classification because it is a security requirement' - but nothing in the corpus distinguishes them today.",
+   "residual_ambiguity": "QM and not_applicable are still two words for absence in one field, on fifteen records. Choosing between them, and moving the security requirements to a field that does not borrow the standards-mapping vocabulary, would be content revisions this record does not make."
+  },
+  {
+   "id": "VOC-AMB-004",
+   "term": "fault reaction",
+   "reading_a": {
+    "reading": "One reaction per record: a single object naming the element that owns it.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json:97",
+    "records": [
+     "FB2-SAF-FSR-000001",
+     "FB2-SAF-FSR-000002",
+     "FB2-SAF-FSR-000003",
+     "FB2-SAF-FSR-000004",
+     "FB2-SAF-SEC-000001",
+     "FB2-SAF-SEC-000002",
+     "FB2-SAF-SEC-000003",
+     "FB2-SAF-SEC-000004",
+     "FB2-SAF-SEC-000005"
+    ]
+   },
+   "reading_b": {
+    "reading": "A list of every reaction the record allocates, one entry per architectural element.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:285",
+    "records": [
+     "FB2-SAF-FSC-000001",
+     "FB2-SAF-TSC-000001"
+    ]
+   },
+   "convention_adopted": "Read by record type: an object on a requirement, a list on a concept.",
+   "why_the_convention": "A single shape would move five reactions in the two concept records or collapse nine objects in the requirements, and the concept records' own allocation argument depends on having one entry per element. The distinction between 'the reaction this requirement specifies' and 'the reactions this concept allocates' is real, so the two shapes are not an error in the records - they are an under-specified schema.",
+   "residual_ambiguity": "No schema in the corpus constrains the field by record type, so a consumer that reads fault_reaction without branching gets an object where it expected a list or the reverse."
+  },
+  {
+   "id": "VOC-AMB-005",
+   "term": "independence",
+   "reading_a": {
+    "reading": "Independence of a derivation or of a role: whether the thing describing the subject may be the thing that produced it.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:48",
+    "records": [
+     "FB2-SW-IFS-000001",
+     "FB2-SYS-HVA-000001",
+     "FB2-HW-HCB-000001",
+     "FB2-SUP-QAP-000001",
+     "FB2-SUP-CFM-000001",
+     "FB2-SUP-PRB-000001",
+     "FB2-SUP-CHC-000001",
+     "FB2-SUP-SPL-000001",
+     "FB2-SUP-RUS-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "Independence of a technical barrier or of a reviewer: whether the second channel is genuinely separate, and whether a second person confirmed the work.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:175",
+    "records": [
+     "FB2-SAF-FSR-000004",
+     "FB2-HW-TSR-000004",
+     "FB2-SAF-TSC-000001",
+     "FB2-MAN-RSK-000001"
+    ]
+   },
+   "convention_adopted": "Four distinct readings keyed on the field name: analysis.independence and authority_and_independence.independence mean authoring independence; accountable_role.independence means organisational independence of a role; an independent-monitor record means barrier independence; RSK-003 means reviewer independence.",
+   "why_the_convention": "The four are genuinely different questions and merging them would produce a false assurance in a specific direction: an assumed barrier independence would be readable as a satisfied organisational independence. The corpus already keeps them apart on eleven field names; recording the four readings makes the separation usable rather than incidental.",
+   "residual_ambiguity": "Nothing enforces the mapping from field name to meaning. Eleven independence-keyed fields and no schema that says which meaning a given field carries, so the convention lives only in this record and in the reader's attention."
+  },
+  {
+   "id": "VOC-AMB-006",
+   "term": "residual risk",
+   "reading_a": {
+    "reading": "A security rating on a threat, on the scale low / medium / not_rated.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:267",
+    "records": [
+     "FB2-SAF-TAR-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "A limitation of an oracle, an ownership of risk outside the item, and a project-risk exposure grade - three further meanings on three field families.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000003-reaction-time-budget.json:165",
+    "records": [
+     "FB2-VER-TMS-000001",
+     "FB2-VER-TMS-000002",
+     "FB2-VER-TMS-000003",
+     "FB2-VER-TMS-000004",
+     "FB2-VER-TMS-000005",
+     "FB2-VER-TMS-000006",
+     "FB2-VER-TMS-000007",
+     "FB2-VER-TMS-000008",
+     "FB2-VER-TMS-000009",
+     "FB2-VER-TMS-000010",
+     "FB2-SAF-ITE-000001",
+     "FB2-MAN-RSK-000001"
+    ]
+   },
+   "convention_adopted": "Four readings keyed on the field family: threats[].residual_risk, test_measure oracle_detail.residual_risk, excluded element residual_risk_owner, and the risk register's residual_*_exposure family.",
+   "why_the_convention": "None of the four value sets can be converted into any other, and a reader who reports 'residual risk is low' must say which of the four they mean. The TARA record states in its own words that acceptance of its residual risks does not exist, so no reading may be reported as an accepted risk anywhere in this corpus.",
+   "residual_ambiguity": "The project-risk grade is not even called residual risk - it is residual_exposure - so a search for the phrase finds three of the four meanings and misses the register entirely."
+  },
+  {
+   "id": "VOC-AMB-007",
+   "term": "severity",
+   "reading_a": {
+    "reading": "An exposure class S0..S3 on a hazardous event, feeding the determination table.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:67",
+    "records": [
+     "FB2-SAF-HAZ-000001",
+     "FB2-SAF-SGO-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "A defect rung S1..S4 in a test plan and a named incident class A/B/C in field monitoring, both on the same field name.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/verification/sit-integration-plan.json:588",
+    "records": [
+     "FB2-VER-SIP-000001",
+     "FB2-OPS-MON-000001"
+    ]
+   },
+   "convention_adopted": "Three readings: S-class on a hazard record, defect rung on a test or integration plan, incident class on the field-monitoring record. hazard_class on a concept is a reason for exclusion and carries no severity.",
+   "why_the_convention": "The value sets are disjoint and the labels collide - 'S1' is the lowest hazard class and the highest defect rung - so a merged reading inverts an ordering. Separating them by field is the only reading that does not produce a wrong severity.",
+   "residual_ambiguity": "The word appears on 84 further lines in prose across the corpus, where it takes its meaning from context and cannot be disambiguated mechanically."
+  },
+  {
+   "id": "VOC-AMB-008",
+   "term": "freedom from interference",
+   "reading_a": {
+    "reading": "Interference among the item's own elements: the analysis the corpus actually performed.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/freedom-from-interference.json:6",
+    "records": [
+     "FB2-SAF-ANL-000004"
+    ]
+   },
+   "reading_b": {
+    "reading": "Independence of the second barrier from the first - which two records assert by writing the two words joined by a slash.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-independent-monitor.json:31",
+    "records": [
+     "FB2-HW-TSR-000004",
+     "FB2-SAF-FSR-000004"
+    ]
+   },
+   "convention_adopted": "Read the safety_analysis record as the element-to-element analysis, and read the phrase on the two barrier records as an assumed independence that the corpus states is not demonstrated.",
+   "why_the_convention": "They are different questions and only one was asked. Reading the performed analysis as evidence for the barrier claim would be the more dangerous direction, because it would convert an assumed independence into an analysed one - and the technical safety concept names that absence as the largest open assumption of the ASIL D allocation.",
+   "residual_ambiguity": "The slash in the two records' rationale is the corpus's own conflation and is preserved rather than rewritten, since rewriting a standards-mapping rationale is a content revision to records this pass does not own."
+  },
+  {
+   "id": "VOC-AMB-009",
+   "term": "mechanism",
+   "reading_a": {
+    "reading": "A fault-detection measure, in the safety concepts.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:226",
+    "records": [
+     "FB2-SAF-FSC-000001",
+     "FB2-SAF-TSC-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "A security mitigation, a concurrency control primitive, and an error-reporting channel - three further senses on three other field paths.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:122",
+    "records": [
+     "FB2-SAF-TAR-000001",
+     "FB2-SW-IFS-000001",
+     "FB2-SW-IFS-000002",
+     "FB2-SW-IFS-000003",
+     "FB2-SW-IFS-000004",
+     "FB2-SW-IFS-000005",
+     "FB2-SW-IFS-000006",
+     "FB2-SW-IFS-000007",
+     "FB2-SW-IFS-000008",
+     "FB2-SW-IFS-000009",
+     "FB2-SW-IFS-000010",
+     "FB2-SW-IFS-000011",
+     "FB2-SW-IFS-000012",
+     "FB2-SW-IFS-000013",
+     "FB2-SW-IFS-000014",
+     "FB2-SW-IFS-000015",
+     "FB2-SW-IFS-000016",
+     "FB2-SW-IFS-000016"
+    ]
+   },
+   "convention_adopted": "Read `mechanism` as a detection measure only inside safety_strategies.fault_detection and diagnostic_coverage_assumptions; read it as a mitigation, a lock or an error channel everywhere else.",
+   "why_the_convention": "A count of mechanisms across records would add fault-detection measures to mutexes, and the word appears on 82 field occurrences with no field distinguishing them. The path of the key is the only disambiguator the corpus provides.",
+   "residual_ambiguity": "The path is not a rule: no schema distinguishes the five senses, so the convention is only enforceable by a reader who knows the corpus."
+  },
+  {
+   "id": "VOC-AMB-010",
+   "term": "audit",
+   "reading_a": {
+    "reading": "An external assessment of these records, whose findings are narrated in ten as_is revision-history entries.",
+    "anchor": "docs/artifacts/corpus/as_is/safety/hazard-analysis-cell-voltage.json:63",
+    "records": [
+     "FB2-SAF-HAZ-000001",
+     "FB2-SAF-FSR-000001",
+     "FB2-SAF-FSR-000002",
+     "FB2-SAF-FSR-000003",
+     "FB2-HW-TSR-000001",
+     "FB2-HW-TSR-000002",
+     "FB2-HW-TSR-000003",
+     "FB2-SW-SWR-000001",
+     "FB2-SW-SWR-000002",
+     "FB2-SW-SWR-000003"
+    ]
+   },
+   "reading_b": {
+    "reading": "The corpus tool's own consistency check on the corpus, named as such in a measurement plan and in a generated view.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/measurement-plan.json:106",
+    "records": [
+     "FB2-MAN-MSM-000001",
+     "FB2-SUP-PRB-000001"
+    ]
+   },
+   "convention_adopted": "Read 'audit' in an as_is revision history as a report of an assessment whose record does not exist here, and read it in a verification or measurement record as the corpus checking itself.",
+   "why_the_convention": "The two must not be merged in either direction. Reading a self-check as an external audit would manufacture assurance; reading a self-check as nothing at all would discard the real check the corpus runs. The policy already states that generated consistency-check results validate the corpus and not the product, which is the boundary.",
+   "residual_ambiguity": "No audit record exists for either sense, so the coverage plan records SUP.1 as partially mapped partly for this reason. The first sense additionally has no auditor, scope or date recorded anywhere, so its findings are carried forward as content without their process."
+  },
+  {
+   "id": "VOC-AMB-011",
+   "term": "diversity",
+   "reading_a": {
+    "reading": "Variety of oracle method in a unit-test specification.",
+    "anchor": "docs/artifacts/corpus/as_is/verification/uts-sil-host-unit-test-specification.json:42",
+    "records": [
+     "FB2-VER-UTS-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "Nothing else: the architectural diversity of redundant channels is absent, and the barrier whose independence the corpus assumes rests on a declared assumption rather than on an analysis of differing failure modes.",
+    "anchor": "docs/artifacts/corpus/as_is/verification/execution-sil-host-unit-test-sweep.json:261",
+    "records": [
+     "FB2-VER-UTS-000001",
+     "FB2-ASM-008"
+    ]
+   },
+   "convention_adopted": "Read 'diversity' in this corpus as oracle variety only, and record the architectural sense as absent.",
+   "why_the_convention": "The word occurs twice and both times means the same thing, so the corpus is consistent - but it is consistent about a different concept than the word normally carries in this domain. Recording the absence is more useful than reinterpreting the two occurrences, because the reader who greps for diversity to assess the second barrier must be told it is not there.",
+   "residual_ambiguity": "The absence is not closed by this record. Closing it would require an analysis of the failure modes of the independent monitor against those of the main path, which no record in this corpus performs."
+  },
+  {
+   "id": "VOC-AMB-012",
+   "term": "execution kind",
+   "reading_a": {
+    "reading": "The classification of the run: one of five enum values, of which the corpus uses three.",
+    "anchor": "docs/artifacts/schemas/execution.schema.json:43",
+    "records": [
+     "FB2-VER-EXE-000001",
+     "FB2-VER-EXE-000003",
+     "FB2-VER-EXE-000005"
+    ]
+   },
+   "reading_b": {
+    "reading": "The prose environment of the same record, which on at least one record names a different kind of platform from the classification - a synthetic_fixture whose environment reads 'x86_64 Linux host (simulated)'.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/verification/execution-afe-communication.json:51",
+    "records": [
+     "FB2-VER-EXE-000005",
+     "FB2-VER-EXE-000001",
+     "FB2-VER-EXE-000002"
+    ]
+   },
+   "convention_adopted": "Read execution_kind as the classification and environment as prose; where they disagree in kind, execution_kind governs.",
+   "why_the_convention": "The enum exists precisely so that the classification is machine-checkable and the prose is not. A reader who took environment at face value would count a fixture as a host run, and the corpus's own measured coverage figure would then be wrong in the direction of overstating product evidence.",
+   "residual_ambiguity": "The disagreement is preserved rather than corrected, because rewriting an execution record's environment is a content revision to a record this pass does not own. Two of the five enum members are also never used by any record, so the vocabulary is declared wider than the corpus exercises."
+  },
+  {
+   "id": "VOC-AMB-013",
+   "term": "plausibility check",
+   "reading_a": {
+    "reading": "A module boundary: the PL_ functions comparing a base value against its redundancy-0 counterpart.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-plausibility-checks.json:62",
+    "records": [
+     "FB2-SW-IFS-000010"
+    ]
+   },
+   "reading_b": {
+    "reading": "Half of a compound - 'plausibility and redundancy' - used as one architectural responsibility in the concepts, the requirements and the item definition.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:219",
+    "records": [
+     "FB2-SAF-TSC-000001",
+     "FB2-SAF-FSC-000001",
+     "FB2-SAF-FSR-000001"
+    ]
+   },
+   "convention_adopted": "Read the module boundary where a symbol or a file names it, and read the compound as the pair in the safety records, because both halves are needed for the disagreement the corpus describes.",
+   "why_the_convention": "The corpus uses both forms and each is right in its place: the module compares values, and the concept names a responsibility that needs both the comparison and the redundancy verdict. Collapsing them would either lose the module boundary or lose the responsibility.",
+   "residual_ambiguity": "The two interface specifications describe adjacent halves of one boundary and both claim the caller receives a verdict together with a value, so the corpus does not say which of the two performs the averaging. This record does not resolve that."
+  },
+  {
+   "id": "VOC-AMB-014",
+   "term": "diagnostic coverage",
+   "reading_a": {
+    "reading": "The two-value ordinal 'high' or 'medium' on FMEA failure-mode entries, with no definition of either value.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/analyses/fmea-cell-voltage.json:76",
+    "records": [
+     "FB2-SAF-ANL-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "A different quantity entirely: the technical concept's `diagnostic_coverage_assumptions`, a list of mechanisms each labelled with the kind of evidence it rests on.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:82",
+    "records": [
+     "FB2-SAF-TSC-000001"
+    ]
+   },
+   "convention_adopted": "Read the FMEA ordinal as an ordinal with no numeric value, and read the concept's assumptions as a separate field. Never restate either as a percentage.",
+   "why_the_convention": "The concept states in its own words that no diagnostic coverage figure in it is measured, and the FMEA ordinal has no definition at all, so a percentage reading would be fabricated in both cases. Sharing a word is not sharing a quantity.",
+   "residual_ambiguity": "The ordinal is still undefined, so a reader cannot tell why one failure mode is 'high' and another 'medium'. That needs a definition this corpus cannot supply without inventing one."
+  },
+  {
+   "id": "VOC-AMB-015",
+   "term": "degraded state",
+   "reading_a": {
+    "reading": "The hazard record's four-condition set, including balancing disabled for the affected group.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json:86",
+    "records": [
+     "FB2-SAF-HAZ-000001",
+     "FB2-MAN-CHG-000001"
+    ]
+   },
+   "reading_b": {
+    "reading": "The safety goal's three-condition set with balancing dropped and numeric values added - and the as_is copy's two-condition set with no numeric value at all.",
+    "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:143",
+    "records": [
+     "FB2-SAF-SGO-000001"
+    ]
+   },
+   "convention_adopted": "Read the degraded state from the declaring record; start a change impact analysis from the hazard record's four-condition set, because FB2-MAN-CHG-000001 states its degraded-state boundary against that set.",
+   "why_the_convention": "The widest set is the one a change record already reasons from, so choosing it makes this vocabulary consistent with an existing change analysis rather than inventing a new basis. The numeric values exist only on the synthetic records, so a threshold argument has to cite them explicitly.",
+   "residual_ambiguity": "The three enumerations are not reconciled. Reconciling them is a content decision for the records, and the boundary between degraded and fault is separately recorded as having no numerical value anywhere in the corpus."
+  }
+ ],
+ "review_policy_interaction": "This record is not a confirmation of its own content. It was authored by the same automated process that authored the records whose vocabulary it fixes, which is precisely the independence the corpus's own risk register records as absent in RSK-003. It is therefore an input to a future human review and not a substitute for one, and its own `human_approval_status` is pending. A reader who needs to know whether these conventions are right must ask a person who did not author the corpus, and this record makes no claim that such a person has.",
+ "limitations": [
+  "This record cannot be a review. It was written by the same process that wrote the records it describes, so it inherits the independence limitation recorded as RSK-003 and it cannot confirm its own definitions.",
+  "Eleven terms have no entry beyond their absence: hazardous situation, automotive element, hardware fault tolerance, confirmation measure, safety mechanism, ASIL decomposition, leading safety provider, systematic failure, random failure, safety diagnostics, and the architectural sense of diversity. Their absence is measured, not argued, but this record does not supply the definitions and must not be read as doing so.",
+  "The word 'fault' occurs on 290 lines and is defined nowhere. This record names the gap in `terms_absent_from_this_corpus` as a measured gap and declines to fill it, because a definition would have to be invented or taken from the standard.",
+  "Thirty-nine identifier strings are shared between the two profiles. The convention resolves them as (profile, id) but does not renumber them, because ID-RULE-001 forbids renumbering established identifiers. The sharing therefore remains a property of the corpus after this record.",
+  "The cross-profile reuse of identifiers is invisible to the corpus's own duplicate check, which keys on (profile, id) by design. A reader who trusts the policy statement of global uniqueness over the data will look for a single record where there are two.",
+  "Several of the ambiguities are recorded rather than settled, because settling them needs a content revision to records this authoring pass does not own: the two safe-state sets on one shared identifier, the two absence markers in the asil field on fifteen records, and the fault_reaction field's two shapes.",
+  "The counts in this record are counts of LINES matching a term, not counts of records using it. A record that discusses a term in prose raises the count without depending on the term, so the dependent_records lists were built from field positions rather than from these counts and are the authoritative dependency figures.",
+  "The pinned documentation cross-check produced a negative result: neither docs/general/safety/safety.rst nor docs/software/modules/application/soa/soa.rst at commit 308028fb contains any of these terms, and the project ships no glossary. So there is no product-side definition of any of them to reconcile this corpus's usage against, and every definition here rests on the corpus alone."
+ ],
+ "what_this_record_does_not_assert": [
+  "It does not define any term of ISO 26262. It describes how this corpus uses words, and a reader must not read any entry here as a definition from the standard.",
+  "It does not establish that the conventions it adopts are correct. It records them so that a reader can disagree with a specific statement rather than with a vague usage.",
+  "It does not repair the ambiguities it names. It names them, locates both readings and states which one this corpus now reads by; the underlying records are unchanged.",
+  "It does not renumber, merge or withdraw any record, including the thirty-nine whose identifiers are shared between profiles.",
+  "It does not assert an ASIL for any product. It records how the ASIL field is used and how the one ASIL derivation in this corpus was performed, including that its exposure input is unevidenced.",
+  "It does not assert human approval, production authorisation, product verification credit, ISO 26262 conformity, certification, tool qualification or an ASPICE capability level. human_approval_status is pending, production_authorized is false and product_verification_credit is false, and nothing in this record is evidence of any of them.",
+  "It does not assert that the corpus's safety records are complete. Several of the terms it defines exist because a record is absent, and the term list is therefore also a list of what is missing."
+ ]
+}
