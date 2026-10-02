@@ -139,6 +139,32 @@ void testUART_Initialize(void) {
         queueQUEUE_TYPE_BINARY_SEMAPHORE,
         (SemaphoreHandle_t)uart_txSemaphore);
     OS_SemaphoreGive_Expect(uart_txSemaphore);
+    /* KNOWN BLOCKER - this case is red on purpose, and the reason is the
+     * signature of TI's sciReceive(), not this file and not the product.
+     *
+     * `sciReceive_Expect` is CMock's expectation macro for a `void`-returning
+     * function. For a non-void function CMock instead defines it as
+     *     #define sciReceive_Expect(...) \
+     *         TEST_FAIL_MESSAGE("sciReceive requires _ExpectAndReturn");
+     * (ceedling-1.1.9/vendor/cmock, cmock_generator_plugin_expect_*.rb). So the
+     * line below COMPILES under either signature and FAILS AT RUNTIME with the
+     * message above, which is exactly what this test reports. The correct macro
+     * for a `bool` signature would be sciReceive_ExpectAndReturn(..., true).
+     *
+     * Nothing in the repository decides which signature is correct:
+     *   - the product discards the result of all four calls
+     *     (src/app/driver/uart/uart.c:163, :228, :235, :279 are each a bare
+     *     statement), which is consistent with either return type;
+     *   - src/app/driver/uart/uart.h does not declare either function, so the
+     *     only declaration in the tree is the TI-generated HL_sci.h, which is
+     *     not vendored (no HL_sci.h anywhere in the repository or its history);
+     *   - tests/unit/app/driver/uart/test_uart_sci_notification.c:126,144
+     *     defines its own `bool` stubs, which is the other half of the
+     *     contradiction and not independent evidence for it.
+     *
+     * Switching to _ExpectAndReturn here would make this case green by
+     * ASSUMING the signature, and would contradict that file. It is left red
+     * until TI's HL_sci.h is available. */
     sciReceive_Expect(UART_REG, 1u, TEST_UART_GetRxDataAddr());
     UART_Initialize();
 }
@@ -228,6 +254,10 @@ void testUART_HandleFlowControl(void) {
     TEST_UART_SetReceiving(false);
     OS_GetNumberOfStoredMessagesInQueue_ExpectAndReturn(ftsk_uartRxQueue, 0u);
     OS_SemaphoreTake_ExpectAndReturn(uart_txSemaphore, portMAX_DELAY, OS_SUCCESS);
+    /* KNOWN BLOCKER - see the long KNOWN BLOCKER note at the
+     * sciReceive_Expect in testUART_Initialize above.
+     * Same signature question, same unresolved cause: CMock defines
+     * sciSendByte_Expect as TEST_FAIL_MESSAGE for a non-void return. */
     sciSendByte_Expect(UART_REG, UART_XON);
     OS_SemaphoreGive_Expect(uart_txSemaphore);
     UART_HandleFlowControl();
@@ -237,6 +267,8 @@ void testUART_HandleFlowControl(void) {
     TEST_UART_SetReceiving(true);
     OS_GetNumberOfStoredMessagesInQueue_ExpectAndReturn(ftsk_uartRxQueue, uart_upperLimit);
     OS_SemaphoreTake_ExpectAndReturn(uart_txSemaphore, portMAX_DELAY, OS_SUCCESS);
+    /* KNOWN BLOCKER - see the long KNOWN BLOCKER note at the
+     * sciReceive_Expect in testUART_Initialize above. */
     sciSendByte_Expect(UART_REG, UART_XOFF);
     OS_SemaphoreGive_Expect(uart_txSemaphore);
     UART_HandleFlowControl();

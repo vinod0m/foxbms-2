@@ -112,17 +112,37 @@ long FSYS_RaisePrivilege(void) {
 
 void sciInit(void) {
 }
-/* Return type and width follow the interface declaration, not an earlier
- * spelling: sil/iface/HL_sci.h:86-87 declares
- *     bool sciSendByte(sciBASE_t *pSci, uint8_t byte);
- *     bool sciReceive(sciBASE_t *pSci, uint8_t length, uint8_t *pData);
- * The product's own call sites agree on the second parameter's width -
- * src/app/driver/uart/uart.c:163 and :279 pass a length of 1 - so the width is
- * uint8_t, not uint32_t. A `void` stub for a `bool` function is a conflicting
- * declaration, which is the build failure this file had.
+/* These two stubs return `bool` because the harness interface header
+ * sil/iface/HL_sci.h:105-106 declares them so. That is a HARNESS choice, not
+ * product evidence, and it is the weaker half of a contradiction the repository
+ * cannot currently resolve:
  *
- * Both stubs report false: nothing was transferred, because these stubs only
- * exist so uart.c links, and sciNotification does not call them. */
+ *   - the product discards the result of all four calls
+ *     (src/app/driver/uart/uart.c:163, :228, :235, :279 are each a bare
+ *     statement), which is consistent with EITHER return type;
+ *   - src/app/driver/uart/uart.h declares neither function, so the only
+ *     declaration anywhere is the TI-generated HL_sci.h, which is not vendored -
+ *     there is no HL_sci.h in this repository or anywhere in its history;
+ *   - tests/unit/app/driver/uart/test_uart.c:142,231,240 uses CMock's plain
+ *     `sciReceive_Expect` / `sciSendByte_Expect`, which is CMock's family for a
+ *     `void` return and which CMock also defines as TEST_FAIL_MESSAGE for a
+ *     non-void one. That test therefore fails at runtime today, by name:
+ *     "sciReceive requires _ExpectAndReturn".
+ *
+ * An earlier revision of this comment justified `bool` by pointing at the
+ * interface header as though it were the interface. It is not: sil/iface/ is a
+ * reconstruction of TI's HAL that this harness had to write, so citing it
+ * argues for `bool` only in a circle. The statement has been corrected, not the
+ * code: `bool` is kept here because it is the only choice under which both this
+ * file and sil/iface/HL_sci.h are self-consistent, and changing either side to
+ * accommodate the other would be picking a signature to make a build green.
+ *
+ * The second parameter's width IS settled by the product, unlike the return
+ * type: uart.c:163 and :279 pass a length of 1, and the driver never passes
+ * anything wider, so `uint8_t` is correct and is not in question here.
+ *
+ * Both stubs exist so uart.c links. Both report false: nothing was transferred.
+ * sciNotification does not call either. */
 bool sciSendByte(sciBASE_t *sci, uint8_t byte) {
     (void)sci;
     (void)byte;

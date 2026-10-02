@@ -160,7 +160,7 @@ void testI2C_WaitForTxCompletedNotification(void) {
 
     /* ======= RT1/1: Test implementation */
     OS_WaitForNotificationIndexed_ExpectAndReturn(
-        I2C_NOTIFICATION_TX_INDEX, &notifiedValueTx, I2C_NOTIFICATION_TIMEOUT_ms, STD_OK);
+        I2C_NOTIFICATION_TX_INDEX, &notifiedValueTx, I2C_NOTIFICATION_TIMEOUT_ms, OS_SUCCESS);
     TEST_I2C_WaitForTxCompletedNotification();
 }
 
@@ -173,15 +173,20 @@ void testI2C_WaitForRxCompletedNotification(void) {
 
     /* ======= RT1/1: Test implementation */
     OS_WaitForNotificationIndexed_ExpectAndReturn(
-        I2C_NOTIFICATION_RX_INDEX, &notifiedValueRx, I2C_NOTIFICATION_TIMEOUT_ms, STD_OK);
+        I2C_NOTIFICATION_RX_INDEX, &notifiedValueRx, I2C_NOTIFICATION_TIMEOUT_ms, OS_SUCCESS);
     TEST_I2C_WaitForRxCompletedNotification();
 }
 
 void testI2C_ClearNotifications(void) {
     /* ======= Routine tests =============================================== */
     /* ======= RT1/1: Test implementation */
-    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_TX_INDEX, STD_OK);
-    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_RX_INDEX, STD_OK);
+    /* OS_ClearNotificationIndexed returns OS_STD_RETURN_e
+     * (src/app/task/os/os.h:104-107), whose success value is OS_SUCCESS. STD_OK is
+     * an enumerator of the unrelated STD_RETURN_TYPE_e
+     * (src/app/main/include/fstd_types.h:82-85) and is rejected by
+     * -Wenum-conversion. */
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_TX_INDEX, OS_SUCCESS);
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_RX_INDEX, OS_SUCCESS);
     TEST_I2C_ClearNotifications();
 }
 
@@ -379,4 +384,147 @@ void testI2C_WriteReadDma(void) {
 
     /* ======= Routine tests =============================================== */
     /* ======= RT1/x: Test implementation */
+}
+
+/**
+ * @brief   Put the interface in the state that makes the driver skip a transfer
+ * @param  pI2cInterface interface to drive
+ * @details The bus-busy bit is taken from the same macro the driver itself tests
+ *          at src/app/driver/i2c/i2c.c:237 and its five siblings, and is never
+ *          written out as a literal, so this test cannot encode a register value
+ *          of its own.
+ */
+static void TEST_I2CbusBusy_SetBusBusy(i2cBASE_t *const pI2cInterface) {
+    pI2cInterface->STR = (uint32_t)I2C_BUSBUSY;
+}
+
+/*
+ * ==========================================================================
+ * A skipped transfer must be reported as a failure
+ * ==========================================================================
+ *
+ * Every public entry point of src/app/driver/i2c/i2c.c gates the whole transfer
+ * on the bus not being busy and returns STD_NOT_OK from the `else` arm when it
+ * is. The six cases below assert that return.
+ *
+ * Two things are asserted at once, and the second is what makes the first
+ * meaningful: the return value is STD_NOT_OK, AND not a single i2c* call is
+ * made. The second is not written as a count - it is asserted by leaving zero
+ * `i2cSet*_Expect` calls on the mocks. Had the driver transferred anything,
+ * CMock would abort with an unexpected-call failure. So a STD_NOT_OK return
+ * cannot be bought by doing the work anyway.
+ *
+ * The three DMA entry points additionally clear the TX/RX notifications
+ * before they test the bus (i2c.c:426 for I2C_ReadDma, :521 for I2C_WriteDma,
+ * :616 for I2C_WriteReadDma). That is bookkeeping, not a transfer, and those two
+ * calls are the only ones those three make on this path.
+ */
+
+/** A read that was never started must not report success */
+void testI2C_busBusy_I2C_Read_reportsFailure(void) {
+    i2cBASE_t pI2cInterface = {0};
+    uint32_t slaveAddress   = 0u;
+    uint32_t nrBytes        = 1u;
+    uint8_t readData        = 0u;
+
+    TEST_I2CbusBusy_SetBusBusy(&pI2cInterface);
+
+    TEST_ASSERT_EQUAL(STD_NOT_OK, I2C_Read(&pI2cInterface, slaveAddress, nrBytes, &readData));
+}
+
+/** A write that was never started must not report success */
+void testI2C_busBusy_I2C_Write_reportsFailure(void) {
+    i2cBASE_t pI2cInterface = {0};
+    uint32_t slaveAddress   = 0u;
+    uint32_t nrBytes        = 1u;
+    uint8_t writeData       = 0u;
+
+    TEST_I2CbusBusy_SetBusBusy(&pI2cInterface);
+
+    TEST_ASSERT_EQUAL(STD_NOT_OK, I2C_Write(&pI2cInterface, slaveAddress, nrBytes, &writeData));
+}
+
+/** A combined write-then-read that was never started must not report success */
+void testI2C_busBusy_I2C_WriteRead_reportsFailure(void) {
+    i2cBASE_t pI2cInterface = {0};
+    uint32_t slaveAddress   = 0u;
+    uint32_t nrBytesWrite   = 1u;
+    uint8_t writeData       = 0u;
+    uint32_t nrBytesRead    = 1u;
+    uint8_t readData        = 0u;
+
+    TEST_I2CbusBusy_SetBusBusy(&pI2cInterface);
+
+    TEST_ASSERT_EQUAL(
+        STD_NOT_OK, I2C_WriteRead(&pI2cInterface, slaveAddress, nrBytesWrite, &writeData, nrBytesRead, &readData));
+}
+
+/** A DMA read that was never started must not report success */
+void testI2C_busBusy_I2C_ReadDma_reportsFailure(void) {
+    i2cBASE_t pI2cInterface = {0};
+    uint32_t slaveAddress   = 0u;
+    uint32_t nrBytes        = 2u;
+    uint8_t readData[2]     = {0u, 0u};
+
+    TEST_I2CbusBusy_SetBusBusy(&pI2cInterface);
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_TX_INDEX, OS_SUCCESS);
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_RX_INDEX, OS_SUCCESS);
+
+    TEST_ASSERT_EQUAL(STD_NOT_OK, I2C_ReadDma(&pI2cInterface, slaveAddress, nrBytes, readData));
+}
+
+/** A DMA write that was never started must not report success */
+void testI2C_busBusy_I2C_WriteDma_reportsFailure(void) {
+    i2cBASE_t pI2cInterface = {0};
+    uint32_t slaveAddress   = 0u;
+    uint32_t nrBytes        = 2u;
+    uint8_t writeData[2]    = {0u, 0u};
+
+    TEST_I2CbusBusy_SetBusBusy(&pI2cInterface);
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_TX_INDEX, OS_SUCCESS);
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_RX_INDEX, OS_SUCCESS);
+
+    TEST_ASSERT_EQUAL(STD_NOT_OK, I2C_WriteDma(&pI2cInterface, slaveAddress, nrBytes, writeData));
+}
+
+/** A combined DMA write-then-read that was never started must not report success */
+void testI2C_busBusy_I2C_WriteReadDma_reportsFailure(void) {
+    i2cBASE_t pI2cInterface = {0};
+    uint32_t slaveAddress   = 0u;
+    uint32_t nrBytesWrite   = 2u;
+    uint8_t writeData[2]    = {0u, 0u};
+    uint32_t nrBytesRead    = 2u;
+    uint8_t readData[2]     = {0u, 0u};
+
+    TEST_I2CbusBusy_SetBusBusy(&pI2cInterface);
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_TX_INDEX, OS_SUCCESS);
+    OS_ClearNotificationIndexed_ExpectAndReturn(I2C_NOTIFICATION_RX_INDEX, OS_SUCCESS);
+
+    TEST_ASSERT_EQUAL(
+        STD_NOT_OK,
+        I2C_WriteReadDma(&pI2cInterface, slaveAddress, nrBytesWrite, writeData, nrBytesRead, readData));
+}
+
+/**
+ * @brief   The busy-bus arm is reachable, so the six cases above are not vacuous
+ * @details Guards them against silently becoming so. If I2C_BUSBUSY were ever
+ *          zero, the condition at i2c.c:237 and its five siblings would always
+ *          take the transfer arm, and the six cases above would then be
+ *          asserting against a transfer path their mocks do not describe. This
+ *          asserts the precondition directly so that such a failure is named
+ *          here rather than surfacing as a confusing mock mismatch elsewhere.
+ */
+void testI2C_busBusy_bitIsNonZero(void) {
+    TEST_ASSERT_NOT_EQUAL_MESSAGE(
+        0u, (uint32_t)I2C_BUSBUSY, "I2C_BUSBUSY is zero: the bus-busy gate cannot be exercised");
+
+    i2cBASE_t busy = {0};
+    i2cBASE_t idle = {0};
+
+    TEST_I2CbusBusy_SetBusBusy(&busy);
+
+    /* The exact condition the driver evaluates at i2c.c:237 and its five
+     * siblings: false for a busy bus, true for an idle one. */
+    TEST_ASSERT_EQUAL(0u, (uint32_t)((busy.STR & (uint32_t)I2C_BUSBUSY) == 0u));
+    TEST_ASSERT_EQUAL(1u, (uint32_t)((idle.STR & (uint32_t)I2C_BUSBUSY) == 0u));
 }
