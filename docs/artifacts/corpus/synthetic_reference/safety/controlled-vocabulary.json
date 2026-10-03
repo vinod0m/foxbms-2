@@ -1,7 +1,7 @@
 {
  "schema_version": "1.0.0",
  "id": "FB2-SAF-VOC-000001",
- "revision": "1",
+ "revision": "2",
  "artifact_type": "controlled_vocabulary",
  "engineering_domain": "safety",
  "profile": "synthetic_reference",
@@ -42,13 +42,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-10-01T00:00:00Z",
- "updated_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-03T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-10-01T00:00:00Z",
    "author": "safety_engineer",
    "description": "First issue. Authored because the coverage plan's ISO 26262 Part 1 entry had no backing artefact, and because writing it exposed that eleven terms a reader would expect to find here have zero occurrences in this corpus - which is a measured finding rather than a defect in the record. Forty-seven terms are defined here, eleven terms are recorded as absent with their measured occurrence counts, fifteen ambiguities are resolved with both conflicting readings and their locations, and the artefact identifier is recorded as a vocabulary problem in its own right because thirty-nine identifier strings are carried by two records each. Every definition is traced to a file and line in this repository; nothing is recalled from memory. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-03T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "Second issue. This pass was given ownership of the corpus records, which the first pass did not have, so it could do what the first pass recorded as needing a decision it was not entitled to make. Six of the fifteen ambiguities recorded below were the ones named as unsettled at revision 1; they are now dispositioned one by one, each with the evidence that decided it and an explicit statement of what remains open. What moved, in the corpus: two schema constraints were declared, both of which the corpus already obeyed and neither of which moves a single record's content. requirement.schema.json now declares fault_reaction on a requirement as the single object the nine requirement records actually carry, which ends the condition recorded at VOC-AMB-004 that no schema constrained the field by record type. tara.schema.json now enumerates threats[].residual_risk as low, medium or not_rated, the only value set the corpus uses there, replacing an unconstrained minLength 3 that would have accepted prose. One record moved: FB2-MAN-SCO-000001 to revision 2, converting safety_allocation.asil from QM to not_applicable and adding the asil_justification that its fourteen peer records already carry. One review record moved with it, FB2-REV-000008 to revision 3, re-deriving the single digest of that artefact and keeping the superseded digest and revision in digest_corrections; no finding, disposition, scope item or checklist entry of that review moved. Nine link endpoints were advanced in the synthetic_reference cell-voltage link registry, each keeping its superseded value, the date, the author and the description of the revision passed through, and each staying change-suspect because none of them was re-examined. What did NOT move, and why, is recorded rather than glossed. The thirty-nine identifier strings that two profiles share were analysed per identifier and the analysis is settled; the re-issue itself was not performed, and the reason is a boundary rather than a preference: docs/artifacts/README.md names seven of those identifiers in prose ranges and is outside this pass's ownership, so renaming would leave a committed document asserting identifiers that no longer exist. The two safe-state sets on FB2-SAF-SGO-000001 were shown to belong to two different subjects rather than to one record disagreeing with itself, which means the instruction to make them agree would make one of them false; that one is left open with the evidence that would settle it. The bare word fault is now given a usage-keyed definition drawn from the corpus's own records, with its three senses stated and the field path that distinguishes them named, because the gap measured at revision 1 was the absence of a usage map and not the absence of evidence: three hundred and ninety occurrences were available and three of them are sufficient to fix the sense. It remains a description of corpus usage and not a definition from the standard, because this corpus may not reproduce normative text. Two factual corrections were made to this record's own text: the fault_reaction list on the two safety concepts has four entries and not five, and the identifier count of thirty-nine was verified by enumeration rather than carried forward. Nothing here asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level, human approval, production authorisation or product verification credit. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
   }
  ],
  "vocabulary_id": "VOC-001",
@@ -324,23 +330,31 @@
   },
   {
    "term": "fault",
-   "corpus_meaning": "A departure of the item from its intended behaviour. The corpus never defines the term; it uses `diagnosis`, `fault_reaction`, `failure mode`, `fault_detection`, `fault entry`, `fault tolerant time interval` and `fault injection`, and it uses the bare word `fault` in prose throughout (290 lines).",
-   "definition_status": "ambiguous_across_records",
+   "corpus_meaning": "In this corpus the word names whatever the field it sits in is about, and there are exactly three of those in the corpus's own structured fields. (1) The thing a measure looks for: in `fault_detection[].mechanism` and in `diagnostic_coverage_assumptions[].mechanism`, a fault is an object of detection, and the concept enumerates the mechanisms that detect it. (2) The condition that makes a reaction obligatory: in `fault_reaction[]`, a fault is a trigger, and the reaction is what the item then does. (3) An assertion outcome rather than a system state: on a test measure, a fault is what the oracle reports, so 'Plausibility check flags implausible' names the oracle's verdict and not a stored condition of the product. Outside those fields the word appears only in prose and in the composite terms `diagnosis`, `failure mode`, `fault entry`, `fault tolerant time interval` and `fault injection`, each of which has its own artefact or field and does not need this entry to be read.",
+   "definition_status": "established_by_a_field_value_only",
    "evidence": [
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:226",
-     "establishes": "`fault_detection[].mechanism` names six detection mechanisms, so here 'fault' is the thing detected."
+     "establishes": "`fault_detection[].mechanism` enumerates the detection mechanisms, so in this field 'fault' is the object being detected. This is sense (1).",
+     "line_range": "226-232"
     },
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:285",
-     "establishes": "`fault_reaction[]` names what happens afterwards, so here 'fault' is the trigger of a reaction."
+     "establishes": "`fault_reaction[]` names what happens after, so in this field 'fault' is the trigger of an obligation rather than an object. This is sense (2).",
+     "line_range": "285-291"
     },
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-afe-plausibility.json:89",
-     "establishes": "A test case expects 'Plausibility check flags implausible', i.e. a fault is an assertion outcome, not a system state."
+     "establishes": "The expected result reads 'Plausibility check flags implausible', which is an oracle's verdict on a value rather than a stored condition of the item. This is sense (3), and it is the sense that makes the word unresolvable from the word alone.",
+     "line_range": "89-89"
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json:97",
+     "establishes": "`triggered_by` names a diagnosis identifier on the real implementation side and a described condition on the fictional-project side, so even inside `fault_reaction` the trigger is a named condition rather than a generic 'fault'. The corpus never has a field, artefact or list called `fault`, so a sentence about 'the faults' resolves to no record.",
+     "line_range": "97-100"
     }
    ],
-   "adopted_convention": "Read `fault` in this corpus as one of three things depending on the field it sits in: an object of detection in `fault_detection`, a trigger in `fault_reaction`, and a database-recorded condition elsewhere. The corpus has no `fault` artefact, no fault list and no fault status model, so a sentence about 'the faults' is not traceable to a record. This is the largest un-anchored term in the safety vocabulary.",
+   "adopted_convention": "Read `fault` by the field it sits in, never by the word. In `fault_detection` and `diagnostic_coverage_assumptions` it is the thing detected; in `fault_reaction` and in `triggered_by` it is the condition that makes the reaction obligatory, and the record names which condition; in a test measure's expected result or `oracle_detail` it is an assertion outcome. Where the word stands alone in prose, the corpus provides no referent: there is no `fault` artefact, no fault list, no fault status model and no fault identifier anywhere in the 300 records, and a reader who needs the set of faults must go to the detection mechanism list of the concept that names them, which is the only enumeration in the corpus. This entry is a map of corpus usage. It is not a definition of the term and must not be read as one.",
    "dependent_records": [
     "FB2-SAF-FSC-000001",
     "FB2-SAF-TSC-000001",
@@ -348,28 +362,33 @@
     "FB2-SAF-FSR-000003",
     "FB2-VER-TMS-000003"
    ],
-   "blast_radius_note": "The word appears on 290 lines across the corpus but no record defines it. Any definition this corpus wanted would have to come from the standard, which it may not reproduce.",
-   "was_ambiguous": false
+   "blast_radius_note": "The word appears on 290 lines across the corpus. The three senses above are fixed by field path, which is a disambiguator the corpus already provides for every other overloaded key and which nothing enforces. No record was renamed or reworded to carry the sense it uses, because doing so would touch every one of those lines to replace a word the field already distinguishes.",
+   "was_ambiguous": false,
+   "what_would_make_this_stronger": "A `fault` artefact type, or a fault list on one record, would give the word a referent and let three senses collapse into one definition. That is a new artefact, not a vocabulary decision, and this corpus has no evidence for one: the pinned product's DIAG engine is the nearest thing and it is described by records that name diagnosis identifiers, not faults.",
+   "definition_provenance": "Derived entirely from the corpus's own records. No clause of ISO 26262 is reproduced, paraphrased or summarised here, and no definition was recalled from memory. Where the corpus's usage departs from the usual meaning of the word - sense (3), an oracle verdict rather than a system state - the departure is stated rather than smoothed over."
   },
   {
    "term": "fault reaction",
-   "corpus_meaning": "What the item does once a fault is confirmed. The corpus gives it a field, `fault_reaction`, on the safety requirements and on the five network-security requirements - and it gives that field TWO different shapes.",
+   "corpus_meaning": "What the item does once a fault is confirmed. The corpus gives it the key `fault_reaction` in two shapes and the two shapes answer two different questions: on the two safety concepts it is a LIST of four entries, one per allocated architectural element, and it is the concept's whole allocation; on the nine safety and network-security requirements it is a SINGLE OBJECT and it is the reaction that one requirement specifies, together with the element it is allocated to and whether that element owns it. Both shapes are now declared in schema: safety_concept.schema.json has always constrained the list and requires an `element_id` on every entry, and requirement.schema.json declares the object at revision 2 of this pass.",
    "definition_status": "overloaded_in_one_record",
    "evidence": [
     {
+     "anchor": "docs/artifacts/schemas/safety_concept.schema.json:131",
+     "establishes": "The concept-side declaration: `safety_strategies.fault_reaction` is type array, minItems 1, every entry requires reaction, triggered_by, element_id matching ^AR-[0-9]{3}$, and reaction_time_budget_ms. This is what fixes the concept's list as one entry per architectural element and makes a single merged object impossible for a concept.",
+     "line_range": "131-142"
+    },
+    {
+     "anchor": "docs/artifacts/schemas/requirement.schema.json:133",
+     "establishes": "The requirement-side declaration, added at this pass: `fault_reaction` is a single object whose required core is reaction, triggered_by, allocated_element_id, element_owns_reaction, allocation_basis, mode_dependence and open_limits. The core is identical on all nine records; the remaining properties are optional and each is present only where a record needs it.",
+     "line_range": "133-142"
+    },
+    {
      "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json:97",
-     "establishes": "On a functional safety requirement `fault_reaction` is a single object with `allocated_element_id`, `element_owns_reaction` and a prose `reaction`."
-    },
-    {
-     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:285",
-     "establishes": "On the functional safety concept the same key is a LIST of five objects, each with `reaction`, `triggered_by`, `element_id` and `reaction_time_budget_ms`."
-    },
-    {
-     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/sec-authenticated-transport-network-service.json:137",
-     "establishes": "On a network-security requirement the same key is again a single object, and its `allocated_element_id` is null with `element_owns_reaction` false."
+     "establishes": "One of the nine objects, unchanged by this pass. It records element_owns_reaction false, so a list of one entry would have named the very element the concept allocates no reaction to.",
+     "line_range": "97-100"
     }
    ],
-   "adopted_convention": "Read `fault_reaction` as 'the reaction this record specifies'. On a requirement it is one object naming the element that owns it; on a concept it is the list of all reactions the concept allocates, one entry per architectural element. A consumer must branch on the record type before it can read the field, and no schema in this corpus enforces that branch.",
+   "adopted_convention": "Read `fault_reaction` by artefact type, and the type is now machine-checkable rather than reader-supplied: an array on a safety concept, an object on a requirement. The requirement-side object answers 'what does this one requirement require, and who owns it'; the concept-side list answers 'what does this concept allocate, to which element, with what budget'. They are not two shapes of one answer, so nothing was rewritten to make them agree and no reaction was moved. Note one shape fact recorded wrongly at revision 1 of this record and corrected here: the concept list has four entries, not five.",
    "dependent_records": [
     "FB2-SAF-FSC-000001",
     "FB2-SAF-TSC-000001",
@@ -383,7 +402,7 @@
     "FB2-SAF-SEC-000004",
     "FB2-SAF-SEC-000005"
    ],
-   "blast_radius_note": "Eleven records carry the key. Re-shaping it to one form would move five reactions in the two concepts or collapse five objects in the requirements, and would break the concept records' own allocation argument.",
+   "blast_radius_note": "Eleven records carry the key: two concepts as a list of four, nine requirements as an object. Both shapes were already schema-legal before this pass because requirement.schema.json set additionalProperties true and declared nothing about the key, so the declaration adds a constraint the corpus already satisfies and rejects no existing record.",
    "was_ambiguous": true,
    "conflicting_usages": [
     {
@@ -409,7 +428,9 @@
       "FB2-SAF-TSC-000001"
      ]
     }
-   ]
+   ],
+   "what_would_make_this_stronger": "A consumer-side rule that refuses to read the key without branching on artefact_type would make the remaining half of the problem impossible to hit. The schema now makes each shape correct per type; it does not yet make a mixed reader fail.",
+   "definition_status_note": "definition_status remains 'overloaded_in_one_record' because the key still carries two shapes; what changed at this pass is that each shape is now declared in the schema that governs its own record type, so the second status in the enum - a shape the corpus has itself declared - is not needed and was not invented."
   },
   {
    "term": "fault tolerant time interval",
@@ -466,8 +487,8 @@
   },
   {
    "term": "safe state",
-   "corpus_meaning": "The condition the item is brought into when a fault is confirmed. The corpus treats it as a set of conditions, and the set has THREE different memberships in three records - which matters because the whole timing argument is 'all contactors open within the interval'.",
-   "definition_status": "ambiguous_across_records",
+   "corpus_meaning": "The condition the item must reach within the fault tolerant time interval when a safety goal's hazardous event occurs. The corpus states it as free prose in a `safe_state` string on the safety goal and again in `safe_state_in_this_mode` per operating mode. The two records that share the identifier FB2-SAF-SGO-000001 state different sets - two conditions in the as_is profile, four in the synthetic_reference profile - and revision 2 of this record establishes that those are not two answers to one question: they are the answers for two different subjects, the pinned product and the fictional reference project.",
+   "definition_status": "established_by_a_field_value_only",
    "evidence": [
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:142",
@@ -484,20 +505,18 @@
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json:371",
      "establishes": "In operating modes the safe state is mode-dependent: in DEGRADED it is 'the same safe state as in FAULT', in COMMISSIONING it is 'the item cannot command the contactors closed in this circumstance'."
+    },
+    {
+     "anchor": "308028fb:docs/introduction/bms-overview.rst",
+     "establishes": "The pinned product documentation describes the item's parts as master and slave boards, contactors and sensors. The word 'propulsion' does not occur anywhere in the pinned tree at this commit, so the two extra conditions the synthetic_reference set carries - propulsion disabled and fault logged - are properties of the fictional reference project's own design and not capabilities of the product the as_is record describes."
     }
    ],
-   "adopted_convention": "Read `safe_state` as a SET, never as one condition, and read the set from the record that declares it. Where a measure has to be judged, use the synthetic_reference set of four conditions, because that is the set the timing budget and both concepts are argued against. Where a mode-dependent safe state is in scope, use `safe_state_in_this_mode` from the item definition, never the goal's set. The as_is set of two is narrower than the synthetic set of four for the same id; a reader who silently merges them will believe the reaction obligation is smaller than the corpus argues it is.",
+   "adopted_convention": "Read the set from the record that declares it, and resolve which record that is by profile before reading, because the identifier alone does not say. The as_is copy is a two-condition set - HV contactors open, charging disabled - and it is the only set the pinned source supports, since the pinned tree at commit 308028fb contains no occurrence of the word propulsion. The synthetic_reference copy is a four-condition set - contactors open, charging disabled, propulsion disabled, fault logged - and it is the set both safety concepts argue against, so a measure judged against the reaction obligation must use it. Read a per-mode safe state from `safe_state_in_this_mode` and never from the goal. Do NOT merge the two sets: merging them would put a vehicle-level claim into a record that describes a battery monitoring unit, or would strip the fictional project's own concepts of the obligation they allocate. The two records are left disagreeing on purpose and the disagreement is recorded at VOC-AMB-002.",
    "dependent_records": [
     "FB2-SAF-SGO-000001",
-    "FB2-SAF-HAZ-000001",
-    "FB2-SAF-FSC-000001",
-    "FB2-SAF-TSC-000001",
     "FB2-SAF-ITE-000001",
-    "FB2-SYS-UC-000001",
-    "FB2-SYS-UC-000002",
-    "FB2-SYS-UC-000003",
-    "FB2-SYS-UC-000004",
-    "FB2-VER-TMS-000013"
+    "FB2-SAF-FSC-000001",
+    "FB2-SAF-TSC-000001"
    ],
    "blast_radius_note": "Twelve records carry a safe-state field. The mismatch is between two records that share one id, so a rename of the id would not remove it; only a value reconciliation would, and that is a content decision this record does not make.",
    "was_ambiguous": true,
@@ -599,7 +618,7 @@
   {
    "term": "ASIL",
    "corpus_meaning": "A four-value classification the corpus writes into an `asil` field: ASIL_A, ASIL_B, ASIL_C, ASIL_D. The corpus writes it in three incompatible vocabularies into that one field name - the four classes, the single value QM, and the single value not_applicable - and only one of the four classes is ever justified by a derivation.",
-   "definition_status": "ambiguous_across_records",
+   "definition_status": "established_by_a_field_value_only",
    "evidence": [
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:123",
@@ -618,7 +637,7 @@
      "establishes": "The hazard record assigns ASIL_D and ASIL_B to its two hazardous events, i.e. the value is carried per event rather than per record."
     }
    ],
-   "adopted_convention": "Read `asil` as a classification ONLY where the record also carries an `asil_justification` that derives it; that is true of exactly two record ids in this corpus, FB2-SAF-SGO-000001 and the safety goal's own copy. Read it as an allocation only where the record carries `safety_allocation` with a `safety_goal_ref`. Read QM as 'no ASIL assigned to this record' and not_applicable as 'this record does not carry the concept of an ASIL because it is a security requirement'. The two negative values are interchangeable today and the corpus has not chosen between them; that is recorded as an unresolved ambiguity rather than settled here.",
+   "adopted_convention": "One field, `safety_allocation.asil`, carries one vocabulary: the ASIL classification scale QM, ASIL_A, ASIL_B, ASIL_C, ASIL_D, plus the schema's own enumerated absence member `not_applicable`. QM is a classification in this reading, not an absence marker, and three independent parts of the corpus already say so. Both requirement.schema.json and safety_concept.schema.json enumerate the field as those six values. The asil_assignment_validator lists QM among its valid_asils. And the requirement_applicability_validator fires on exactly one absence token, `not_applicable`, and demands an asil_justification for it - so a record that writes QM is simply outside that validator's reach. After the conversion recorded at VOC-AMB-003 all forty records that carry the field conform: twenty-five carry a classification, fifteen carry the absence member, and each of the fifteen carries the justification. Where the record also carries an `asil_justification` that derives the classification, read the classification; where the record is a safety goal, read the top-level `asil` field, which is a separate field with its own validator and is not the field this entry is about.",
    "dependent_records": [
     "FB2-SAF-SGO-000001",
     "FB2-SAF-HAZ-000001",
@@ -645,7 +664,7 @@
     "FB2-SAF-SEC-000005"
    ],
    "was_ambiguous": true,
-   "blast_radius_note": "Thirty-five records carry an `asil` value. Fourteen of them use not_applicable and one uses QM, so fifteen of thirty-five - the majority - use a value from the wrong vocabulary.",
+   "blast_radius_note": "Forty records carry the field across both profiles. One of them, FB2-MAN-SCO-000001, wrote QM where its two sibling fields both read 'N/A' and it carried no justification; it was converted at revision 2 and is the only record whose content moved for this term. Fifteen records still borrow the absence token `not_applicable` from the standards-mapping status enum, which is a naming debt recorded as open at VOC-AMB-003 rather than repaired.",
    "conflicting_usages": [
     {
      "reading": "A classification of the item's obligation, derived from severity and exposure.",
@@ -928,8 +947,8 @@
   },
   {
    "term": "independence",
-   "corpus_meaning": "FOUR distinct meanings in this corpus, carried on eleven different field names, and they are not the same concept.",
-   "definition_status": "ambiguous_across_records",
+   "corpus_meaning": "Five distinct concepts across fourteen field names, not four. (1) AUTHORING INDEPENDENCE - whether the thing that described a subject may be the thing that produced it: `analysis.independence`, `authority_and_independence.independence`, `derivation.authoring_independence` and the accompanying `independence_statement`. Forty-two of these carry the two-valued verdict {not_independent, independent} and four schemas enumerate it. (2) ORGANISATIONAL INDEPENDENCE OF A ROLE - whether a named role may approve work it produced; `accountable_role.independence` on the six process records, which is the one site where the bare key carries prose instead of the verdict. (3) BARRIER INDEPENDENCE - whether a second channel is genuinely separate from the first, carried by `architecture_elements[].independence_note` and by `independence_assumption` inside the technical concept's `diagnostic_coverage_assumptions`; in this corpus it is an ASSUMPTION, named FB2-ASM-008, and never an analysis. (4) REVIEWER INDEPENDENCE - whether a second person confirmed the work; `results_summary.independent_reviewer_used`, false on all three review records. (5) Not a concept: two fields that borrow the word for COUNTS, `tolerances.independence_requirements_enumerated` and `tolerances.independence_requirements_with_evidence_in_corpus` on one test measure, plus `independence_absence` in a summary table.",
+   "definition_status": "established_by_a_field_value_only",
    "evidence": [
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/software/ifs-adc-measurement.json:48",
@@ -948,7 +967,7 @@
      "establishes": "MEANING 4 - independence of a REVIEWER from the process: risk RSK-003, the absence of an independent confirmation reviewer, which the register records as the single largest limitation of the project."
     }
    ],
-   "adopted_convention": "Read `analysis.independence` and `authority_and_independence.independence` as meaning 1 - whether the derivation is independent of the thing it describes. Read `accountable_role.independence` as meaning 2 - whether a role may perform a process activity. Read an independent-monitor record as meaning 3. Read RSK-003 as meaning 4. The corpus has no single independence definition and no schema constrains which of the four a given field means; the eleven field names are the only disambiguator.",
+   "adopted_convention": "Read `independence` by its full field path, never by the bare word, and never merge the senses. The direction that would manufacture a false assurance is reading a barrier independence as a satisfied organisational independence, or an assumed barrier independence as an analysed one - FB2-SAF-TSC-000001 names that absence as the largest open assumption of the ASIL D allocation, and converting it into a verdict would convert an assumption into evidence. Where the field is enumerated, read the verdict; where it is `accountable_role.independence` on a process record, read prose that may or may not be asserting a verdict, and see VOC-AMB-005 for why three of those six cannot be converted at all. The counts are not independence and must not be reported as a verdict.",
    "dependent_records": [
     "FB2-SW-IFS-000001",
     "FB2-SW-IFS-000002",
@@ -986,7 +1005,7 @@
     "FB2-SAF-TSC-000001"
    ],
    "was_ambiguous": true,
-   "blast_radius_note": "Forty-two records carry an independence-keyed field on eleven names. Meanings 1 and 2 are compatible; meanings 3 and 4 are not, and meaning 3 is assumed while meaning 4 is absent. Merging them would let an assumed technical independence be read as a satisfied organisational one.",
+   "blast_radius_note": "Fourteen field names, forty-nine sites, and four schemas that already agree on the verdict form. One schema - process_record.schema.json - deliberately leaves its site as prose, and reconciling it needs a governance decision on the enum rather than a vocabulary one. Recorded at VOC-AMB-005; nothing in the corpus was renamed.",
    "conflicting_usages": [
     {
      "reading": "Independence of a DERIVATION from its subject: 'not_independent' on every interface specification.",
@@ -1025,7 +1044,8 @@
       "FB2-MAN-RSK-000001"
      ]
     }
-   ]
+   ],
+   "definition_status_note": "Status is 'established_by_a_field_value_only' and not 'established_by_a_record': no record in this corpus states what any of these senses MEANS, but each sense is fixed by the field it sits in and by the value kind that field carries, which is what the enum defines. The distinction is the corpus's own, taken from the schema, and it is why a reader must go by field path rather than by the word."
   },
   {
    "term": "confirmation measure",
@@ -1143,8 +1163,8 @@
   },
   {
    "term": "residual risk",
-   "corpus_meaning": "FOUR different meanings on four field-name families in this corpus. There is no single definition and no schema that chooses one.",
-   "definition_status": "ambiguous_across_records",
+   "corpus_meaning": "Five distinct concepts, not four, and the bare key name alone carries four of them across five field families with four different value kinds. (1) THREAT RESIDUAL EXPOSURE - a grade on a threat after its listed mitigations, on the three-value scale low, medium, not_rated; `threats[].residual_risk` on FB2-SAF-TAR-000001. (2) FAILURE-MODE DISPOSITION - free prose saying whether the residual risk of one failure mode is accepted, mitigated or not closed; `failure_modes[].residual_risk` on FB2-SAF-ANL-000001. (3) COUPLING DISPOSITION - the same free-prose kind for one coupling category; `coupling_categories[].residual_risk` on FB2-SAF-ANL-000003. (4) INTERFERENCE DISPOSITION - the same for one interference category; `interference_categories[].residual_risk` on FB2-SAF-ANL-000004. (5) ORACLE VALIDITY LIMITATION - what a test measure's oracle cannot establish, which is a disclaimer and not a risk at all; `oracle_detail.residual_risk` on ten test measures. A sixth family is not called residual risk at all: the project risk register's `residual_probability`, `residual_impact`, `residual_exposure` and `aggregate_exposure.highest_residual_exposure`, which a search for the phrase finds none of.",
+   "definition_status": "established_by_a_field_value_only",
    "evidence": [
     {
      "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:267",
@@ -1163,7 +1183,7 @@
      "establishes": "MEANING 4 - residual EXPOSURE of a project risk: an ordinal probability/impact pair such as 'high/moderate', with its own `exposure_formula` defining the pair, and it is not called residual risk at all."
     }
    ],
-   "adopted_convention": "Read `residual_risk` on a threat as the security rating, `residual_risk` on a test measure as a limitation of the oracle and nothing else, `residual_risk_owner` as an ownership assignment outside the item, and the residual_*_exposure family in FB2-MAN-RSK-000001 as a project-risk grade. The TARA record states in terms that acceptance of its residual risks does not exist: `residual_risk_acceptance.acceptance_exists` is false and `accepted_by` is 'none'. No reading of any of the four implies that a residual risk has been accepted anywhere in this corpus.",
+   "adopted_convention": "Read `residual_risk` by its field family, and say which family when reporting a value. Only family (1) is a grade and only family (1) may be reported as 'low', 'medium' or 'not_rated'. Families (2), (3) and (4) are dispositions and a reader must read the prose. Family (5) is a limitation on what the measurement can show and must never be reported as an assurance. None of the five converts into any other. No reading may be reported as an ACCEPTED risk anywhere in this corpus: FB2-SAF-TAR-000001's own residual_risk_acceptance field states that acceptance of its residual risks does not exist. The naming debt - four families sharing one key - is recorded as open at VOC-AMB-006 with the map that makes the rename a checklist.",
    "dependent_records": [
     "FB2-SAF-TAR-000001",
     "FB2-VER-TMS-000001",
@@ -1180,7 +1200,7 @@
     "FB2-MAN-RSK-000001"
    ],
    "was_ambiguous": true,
-   "blast_radius_note": "Seventeen records carry a residual-risk-keyed field. Reading them as one vocabulary would let a 'low' security rating be reported as a low safety residual risk.",
+   "blast_radius_note": "Twenty-six field occurrences across fifteen records, of which ten are the oracle-validity family. Only family (1) is now schema-constrained, because it is the only one where the value set is a vocabulary the corpus could enumerate; the other four carry prose and a schema cannot make prose into a quantity. Renaming families (2) to (5) would touch fifteen records and every prose reference to them, and was not done.",
    "conflicting_usages": [
     {
      "reading": "A residual security rating on a threat, low/medium/not_rated.",
@@ -1210,7 +1230,8 @@
       "FB2-MAN-RSK-000001"
      ]
     }
-   ]
+   ],
+   "definition_status_note": "Status is 'established_by_a_field_value_only' and not 'established_by_a_record': no record in this corpus states what any of these senses MEANS, but each sense is fixed by the field it sits in and by the value kind that field carries, which is what the enum defines. The distinction is the corpus's own, taken from the schema, and it is why a reader must go by field path rather than by the word."
   },
   {
    "term": "safety case",
@@ -1935,7 +1956,449 @@
     "establishes": "The validator that permits it: `_validate_no_duplicate_ids` keys on (profile, id) and reports only a duplicate within one profile, so cross-profile reuse cannot be detected by that rule."
    }
   ],
-  "adopted_convention": "Resolve an identifier as the PAIR (profile, id), never as the id alone. Where a record is quoted without its profile, read it as the synthetic_reference copy - that is the copy every safety concept derives from and the copy every safety argument in this corpus is made against. Prefer a field that states the profile, as `profile_basis` does on the as_is functional safety requirements, over inferring it from the directory a record happens to sit in. Do not renumber: the policy forbids renumbering established identifiers, and 39 of them are shared, so a rename is not available as a repair. The full list of shared identifiers, and the point at which the rebound identifiers stop naming a stable subject, are recorded in `limitations`."
+  "adopted_convention": "Resolve an identifier as the PAIR (profile, id), never as the id alone. Where a record is quoted without its profile, read it as the synthetic_reference copy - that is the copy every safety concept derives from and the copy every safety argument in this corpus is made against. Prefer a field that states the profile, as `profile_basis` does on the as_is functional safety requirements, over inferring it from the directory a record happens to sit in. Do not renumber: the policy forbids renumbering established identifiers, and 39 of them are shared, so a rename is not available as a repair. The full list of shared identifiers, and the point at which the rebound identifiers stop naming a stable subject, are recorded in `limitations`.",
+  "per_identifier_determination": {
+   "how_this_was_determined": "Enumerated every corpus record, grouped its `id` field by value, and compared the two records carrying each shared string. The deciding evidence is mechanical rather than interpretive and it is the same for all thirty-nine: the `origin` field of the two records never agrees. Fourteen as_is records carry origin 'derived' and twenty-five carry 'source_observed'; all thirty-nine synthetic_reference counterparts carry origin 'synthetic'. A record whose origin is source_observed or derived reports the pinned foxBMS sources at commit 308028fb, and a record whose origin is synthetic reports a fictional reference project. No record can be both. Therefore not one of the thirty-nine pairs is a duplicate of a single subject: there are zero duplicates and thirty-nine pairs of distinct subjects sharing one identifier. Three secondary signals corroborate without deciding anything. 16 pairs share a filename and 23 share a title - 16 share both, and every one of the 39 is listed individually in the table below - which is why the collision is easy to miss on inspection: the labels are parallel because the two profiles were authored as a matched pair, not because the two records describe one thing. The label divergence was measured per pair rather than assumed, and the two signals do not start at the same place. Titles diverge earliest, at FB2-VER-EXE-000001, and every execution and test pair from FB2-VER-EXE-000001 onward carries a different title: the as_is copy of EXE-000001 is a real macOS host run of production code and the synthetic_reference copy of the same identifier is a synthetic_fixture. Filenames still coincide for EXE-000001 through EXE-000003 and diverge from FB2-VER-EXE-000004 onward, which is the point at which the identifier stops even naming the same kind of thing. The rebound spans two namespaces: FB2-VER-TMS-000004 pairs the as_is LTC 6813-1 driver communication test against a synthetic independent-monitor test, the same pairing as EXE-000004, and FB2-VER-TMS-000005 pairs the contactor-driver test against the AFE-communication test, the same pairing as EXE-000005. Seven pairs share a filename but not a title - the three FB2-SW-IMP records, EXE-000001 to 000003 and TMS-000002 - which is the signature of the two profiles having been authored as a matched pair whose filenames were kept aligned while the content diverged.",
+   "records_checked": 39,
+   "duplicate_pairs_same_subject": 0,
+   "different_subject_pairs": 39,
+   "why_no_pair_is_a_duplicate": "A duplicate would be two records asserting the same thing about the same subject, in which case one of them could be withdrawn and every reference would survive pointed at the survivor. That is not the case here. The clearest worked example is FB2-SAF-FSR-000001, which shares its filename and its title across the two profiles while its fault_reaction differs in substance: the synthetic_reference copy records a latched FAULT mode entered within a 3 ms budget, and the as_is copy records that a measurement failure carrying DIAG severity WARNING does not open the contactors while a DIAG_FATAL_ERROR entry does, at src/app/engine/config/diag_cfg.c:180 and diag_cfg.c:159-162, with the aggregation path through BMS_IsAnyFatalErrorFlagSet() at bms.c:515-531. One copy describes a fictional project and one describes the pinned code. Withdrawing either would delete an entire profile's account of a subject.",
+   "determination_per_identifier": [
+    {
+     "id": "FB2-HW-TSR-000001",
+     "as_is_file": "as_is/hardware/tsr-afe-cell-voltage.json",
+     "synthetic_reference_file": "synthetic_reference/hardware/tsr-afe-cell-voltage.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-HW-TSR-000002",
+     "as_is_file": "as_is/hardware/tsr-afe-communication.json",
+     "synthetic_reference_file": "synthetic_reference/hardware/tsr-afe-communication.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-HW-TSR-000003",
+     "as_is_file": "as_is/hardware/tsr-contactor-driver.json",
+     "synthetic_reference_file": "synthetic_reference/hardware/tsr-contactor-driver.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SAF-FSR-000001",
+     "as_is_file": "as_is/safety/fsr-cell-voltage.json",
+     "synthetic_reference_file": "synthetic_reference/safety/fsr-cell-voltage.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SAF-FSR-000002",
+     "as_is_file": "as_is/safety/fsr-soa-monitoring.json",
+     "synthetic_reference_file": "synthetic_reference/safety/fsr-soa-monitoring.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SAF-FSR-000003",
+     "as_is_file": "as_is/safety/fsr-contactor-response.json",
+     "synthetic_reference_file": "synthetic_reference/safety/fsr-contactor-response.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SAF-HAZ-000001",
+     "as_is_file": "as_is/safety/hazard-analysis-cell-voltage.json",
+     "synthetic_reference_file": "synthetic_reference/safety/hazard-analysis-cell-voltage.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SAF-SGO-000001",
+     "as_is_file": "as_is/safety/safety-goal-cell-voltage.json",
+     "synthetic_reference_file": "synthetic_reference/safety/safety-goal-cell-voltage.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-DSN-000001",
+     "as_is_file": "as_is/software/design-afe-driver.json",
+     "synthetic_reference_file": "synthetic_reference/software/design-afe-driver.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-DSN-000002",
+     "as_is_file": "as_is/software/design-soa.json",
+     "synthetic_reference_file": "synthetic_reference/software/design-soa.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-DSN-000003",
+     "as_is_file": "as_is/software/design-contactor.json",
+     "synthetic_reference_file": "synthetic_reference/software/design-contactor.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-IMP-000001",
+     "as_is_file": "as_is/software/implementation-afe-ltc-driver.json",
+     "synthetic_reference_file": "synthetic_reference/software/implementation-afe-ltc-driver.json",
+     "same_filename": true,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-IMP-000002",
+     "as_is_file": "as_is/software/implementation-soa-supervision.json",
+     "synthetic_reference_file": "synthetic_reference/software/implementation-soa-supervision.json",
+     "same_filename": true,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-IMP-000003",
+     "as_is_file": "as_is/software/implementation-contactor-driver.json",
+     "synthetic_reference_file": "synthetic_reference/software/implementation-contactor-driver.json",
+     "same_filename": true,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-IMP-000004",
+     "as_is_file": "as_is/software/implementation-can-driver.json",
+     "synthetic_reference_file": "synthetic_reference/software/implementation-can-transport.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-SWR-000001",
+     "as_is_file": "as_is/software/swr-afe-driver.json",
+     "synthetic_reference_file": "synthetic_reference/software/swr-afe-driver.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-SWR-000002",
+     "as_is_file": "as_is/software/swr-soa-monitoring.json",
+     "synthetic_reference_file": "synthetic_reference/software/swr-soa-monitoring.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-SW-SWR-000003",
+     "as_is_file": "as_is/software/swr-contactor-control.json",
+     "synthetic_reference_file": "synthetic_reference/software/swr-contactor-control.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "derived",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000001",
+     "as_is_file": "as_is/verification/execution-soa-voltage.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-soa-voltage.json",
+     "same_filename": true,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000002",
+     "as_is_file": "as_is/verification/execution-contactor-statemachine.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-contactor-statemachine.json",
+     "same_filename": true,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000003",
+     "as_is_file": "as_is/verification/execution-afe-plausibility.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-afe-plausibility.json",
+     "same_filename": true,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000004",
+     "as_is_file": "as_is/verification/execution-afe-ltc-driver.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-independent-monitor.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000005",
+     "as_is_file": "as_is/verification/execution-contactor-driver.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-afe-communication.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000006",
+     "as_is_file": "as_is/verification/execution-host-unit-test-sweep-strict.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-contactor-driver.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000007",
+     "as_is_file": "as_is/verification/execution-host-unit-test-sweep-relaxed.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-sw-integration.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000008",
+     "as_is_file": "as_is/verification/execution-defect-test_moving_average.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-sys-qualification.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000009",
+     "as_is_file": "as_is/verification/execution-defect-test_soc_lookup-table.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-validation.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000010",
+     "as_is_file": "as_is/verification/execution-defect-test_state_estimation.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-component-soa-diag.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000011",
+     "as_is_file": "as_is/verification/execution-defect-test_debug_default.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-hil-fault-reaction.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000012",
+     "as_is_file": "as_is/verification/execution-defect-test_diag_cfg.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-validation-charging.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000013",
+     "as_is_file": "as_is/verification/execution-defect-test_redundancy.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-validation-driver-indication.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000014",
+     "as_is_file": "as_is/verification/execution-defect-test_diag.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-validation-degraded-operation.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000015",
+     "as_is_file": "as_is/verification/execution-sil-host-unit-test-sweep.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-validation-service-commissioning.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-EXE-000016",
+     "as_is_file": "as_is/verification/execution-sil-halcogen-blocked-sweep.json",
+     "synthetic_reference_file": "synthetic_reference/verification/execution-sec-000001-authenticated-transport.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-TMS-000001",
+     "as_is_file": "as_is/verification/test-soa-voltage-limits.json",
+     "synthetic_reference_file": "synthetic_reference/verification/test-soa-voltage-limits.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-TMS-000002",
+     "as_is_file": "as_is/verification/test-contactor-statemachine.json",
+     "synthetic_reference_file": "synthetic_reference/verification/test-contactor-statemachine.json",
+     "same_filename": true,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-TMS-000003",
+     "as_is_file": "as_is/verification/test-afe-plausibility.json",
+     "synthetic_reference_file": "synthetic_reference/verification/test-afe-plausibility.json",
+     "same_filename": true,
+     "same_title": true,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-TMS-000004",
+     "as_is_file": "as_is/verification/test-afe-ltc-driver.json",
+     "synthetic_reference_file": "synthetic_reference/verification/test-independent-monitor.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    },
+    {
+     "id": "FB2-VER-TMS-000005",
+     "as_is_file": "as_is/verification/test-contactor-driver.json",
+     "synthetic_reference_file": "synthetic_reference/verification/test-afe-communication.json",
+     "same_filename": false,
+     "same_title": false,
+     "as_is_origin": "source_observed",
+     "synthetic_reference_origin": "synthetic",
+     "determination": "different_subjects_different_provenance",
+     "label_parallelism_note": "Measured, not asserted: whether the two files carry the same filename and the same title is recorded per row. Parallel labels are a property of the authoring pattern, not evidence that the two records describe one subject."
+    }
+   ],
+   "resolution_performed": "NONE, deliberately, and the reason is a boundary and not a preference. Re-issuing either side of thirty-nine identifiers is the policy-sanctioned route - ID-RULE-003 requires supersession and migration to be defined, so a deliberate migration is available and is the right instrument here - but the identifiers are named outside the boundary this pass owns. docs/artifacts/README.md, which this pass may not edit, names seven of them: FB2-SAF-HAZ-000001, FB2-SAF-SGO-000001, FB2-VER-EXE-000001, FB2-VER-EXE-000006, FB2-VER-EXE-000008, FB2-VER-EXE-000012 and FB2-VER-EXE-000015, two of them inside prose ranges written as 'FB2-VER-EXE-000008...000012' and 'FB2-VER-EXE-000001...000006', and one of those sentences already qualifies the range with the words '(profile synthetic_reference)'. test_schemas.py at the repository root names four more. The generated directories docs/artifacts/views and docs/artifacts/spec-documents carry 124 and 157 further occurrences and are produced by two renderers this pass may not edit, so their content cannot be brought back into agreement with a renamed corpus. A rename performed now would leave a committed document, a root-level test and two generated trees asserting identifiers that no longer exist. That is a larger and less honest change than the ambiguity it would settle, so the re-issue is left undone and specified instead.",
+   "what_a_migration_must_touch": "Recorded so the migration is a checklist rather than a second investigation. Within the corpus and its registries: the 39 records' own `id` fields, with a supersession entry naming the retired identifier and the new one and the date and author of the move, per ID-RULE-003; every link endpoint in docs/artifacts/traceability/link-registry/ that names one of the 39, in both the source and the target slot and in the `provenance_repair.endpoint_revision_refreshes` history of each; every reviewed_ids entry and every digest_corrections entry in the review records under docs/artifacts/reviews/ that names one of the 39; every standards_mapping backing_artifact and every coverage-plan entry; and every `dependent_records` list in this record. Outside the corpus boundary and therefore not available to this pass: docs/artifacts/README.md, test_schemas.py, the generated views and spec-documents trees, and the graphify-out and graft indexes at the repository root, which hold 195 and 13 occurrences respectively and are caches rather than records. A migration owner needs those four in scope, or needs to accept that the identifiers they name go stale.",
+   "which_side_should_move": "The as_is side, if either does, and the reason is referential load rather than preference. The as_is records are the corpus's evidence-bearing profile: they are the ones whose content is anchored to the pinned source at commit 308028fb, they are the copies a reader checking a claim about the real product would land on, and the as_is functional safety requirements already carry `fault_reaction.profile_basis = \"as_is\"` as the corpus's own de facto profile marker. Renumbering the synthetic_reference side leaves the pinned-product account on its established identifiers and moves only the fictional project. That is a recommendation for the migration owner, not an action taken here, and it is contingent on the four out-of-boundary surfaces above being in scope.",
+   "invariant_this_pass_preserved": "No record was renumbered, merged, withdrawn or superseded. All thirty-nine identifiers are exactly as they stood at revision 1 of this record. The corpus-wide invariant (profile, id) -> one record still holds, and so does id -> at most two records, one per profile. Both invariants were true before this pass and both are true after it. What is new is that the second is now documented with the evidence that it is a policy violation rather than a coincidence, and with the cost of repairing it."
+  }
  },
  "ambiguities_resolved": [
   {
@@ -1959,7 +2422,32 @@
    },
    "convention_adopted": "Resolve as (profile, id). Default an unqualified reference to the synthetic_reference copy.",
    "why_the_convention": "Because the two profiles genuinely describe different things and neither is derived from the other, there is no correct way to collapse them; and because renumbering is forbidden by ID-RULE-001, the pair is the only available repair. The corpus already does this in the index, in the link endpoint check and in the duplicate check, all of which key on (profile, id).",
-   "residual_ambiguity": "The corpus policy still asserts global uniqueness, and the as_is records that quote a safety-goal value in prose do not always say which profile they mean. FB2-SAF-SGO-000001's own asil_justification states it is the synthetic_reference copy, so the convention is readable, but it is not stated by the identifier itself."
+   "residual_ambiguity": "The corpus policy still asserts global uniqueness, and the as_is records that quote a safety-goal value in prose do not always say which profile they mean. FB2-SAF-SGO-000001's own asil_justification states it is the synthetic_reference copy, so the convention is readable, but it is not stated by the identifier itself.",
+   "settlement": "PARTIALLY_SETTLED_analysis_closed_repair_deferred",
+   "what_was_settled": "The per-identifier question is closed and it is closed the same way for all thirty-nine: every pair is two DIFFERENT subjects, not one subject recorded twice, and there are therefore zero duplicates to resolve. The deciding evidence is the `origin` field, which differs on thirty-nine of thirty-nine pairs - source_observed or derived on the as_is side against synthetic on the other - so no pair can be one subject recorded twice. The full per-identifier table, with each pair's two filenames, two titles, two origins and its determination, is in `identifier_vocabulary.per_identifier_determination`, and the method is in `how_this_was_determined`.",
+   "what_remains_open": "The identifier scheme still violates ID-RULE-004, which requires identifiers to be globally unique across profiles, and the corpus still satisfies only the weaker convention that an identifier is unique WITHIN a profile. The re-issue was not performed. It is the policy-sanctioned instrument - ID-RULE-003 requires supersession and migration to be defined - and it is unavailable inside this pass's boundary, because docs/artifacts/README.md names seven of the thirty-nine in prose this pass may not edit, test_schemas.py at the repository root names four, and the generated views and spec-documents trees carry a further 281 occurrences that two renderers this pass may not edit would have to regenerate. Renaming now would leave committed and generated text asserting identifiers that no longer exist.",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/as_is/safety/fsr-cell-voltage.json:15",
+     "establishes": "origin 'derived' on the as_is copy of FB2-SAF-FSR-000001. The pinned-source side of every one of the thirty-nine pairs carries source_observed or derived; that is what makes the pair two subjects rather than two records."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/fsr-cell-voltage.json:15",
+     "establishes": "origin 'synthetic' on the synthetic_reference copy of the same identifier. A record that reports a fictional reference project cannot also report the pinned code, so the two copies cannot be one subject recorded twice and neither can be withdrawn without deleting that profile's account of it."
+    },
+    {
+     "anchor": "docs/artifacts/README.md:258",
+     "establishes": "The out-of-boundary dependency that blocks the repair: the README names 'FB2-VER-EXE-000008...000012' as a prose range and this pass may not edit that file. Four more identifiers are named at README lines 265, 397, 521, 689, 700, 701 and 714."
+    },
+    {
+     "anchor": "docs/artifacts/governance/corpus-policy.json:97",
+     "establishes": "ID-RULE-004, 'IDs must be globally unique across profiles', is the rule the corpus does not satisfy; ID-RULE-003 at the line above it requires supersession, deletion and migration to be defined, which is the instrument the repair needs and the reason the deferred repair is specified rather than dismissed."
+    }
+   ],
+   "records_changed": [
+    "FB2-SAF-VOC-000001 (this record, revision 2 only)"
+   ],
+   "referential_integrity_impact": "None. No identifier moved, so no link endpoint, review digest, standards_mapping backing or reference needed to follow anything. The corpus-wide invariants are unchanged: (profile, id) resolves to exactly one record, and an identifier resolves to at most two records, one per profile. The cost of the deferral is that the policy text and the data still disagree, which is recorded rather than hidden."
   },
   {
    "id": "VOC-AMB-002",
@@ -1983,7 +2471,33 @@
    },
    "convention_adopted": "Read the set from the declaring record; where a measure is judged against the reaction obligation, use the synthetic_reference four-condition set, because that is the set both concepts argue against. Read a per-mode safe state from safe_state_in_this_mode and never from the goal.",
    "why_the_convention": "The two sets appear on records that share one identifier and one ASIL, so a reader cannot tell them apart from the identifier, and the narrower set understates the obligation the corpus spends most of its safety argument on. Choosing the wider set is the conservative direction: it cannot make the reaction requirement look smaller than the corpus claims it is.",
-   "residual_ambiguity": "The two sets are not reconciled and this record does not reconcile them. A genuine resolution needs a decision about whether the as_is profile may carry a narrower set at all, which is a content question for the records themselves."
+   "residual_ambiguity": "The two sets are not reconciled and this record does not reconcile them. A genuine resolution needs a decision about whether the as_is profile may carry a narrower set at all, which is a content question for the records themselves.",
+   "settlement": "OPEN_not_settleable_as_instructed",
+   "what_was_settled": "One thing, and it is the thing that decides how to read the rest: the two sets do not belong to one record disagreeing with itself. They belong to two different subjects, which VOC-AMB-001 establishes for all thirty-nine shared identifiers. The as_is copy states what the pinned foxBMS 2 product can be made to do; the synthetic_reference copy states what the fictional reference project's own safety concepts allocate. So the instruction to make the two records agree cannot be carried out as written, and carrying it out would make one of them false.",
+   "what_remains_open": "Which safe state the corpus should hold, and how the collision should be broken. The two sets stay as they are.",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json:125",
+     "establishes": "The as_is set is two conditions: 'HV contactors open, charging disabled'. This is a statement about the pinned product."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json:142",
+     "establishes": "The synthetic_reference set is four conditions and is the strict superset: contactors open and charging disabled, plus propulsion disabled and fault logged. FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 argue against this set, so a reaction measure judged against the corpus's own safety argument must use it."
+    },
+    {
+     "anchor": "308028fb:docs/introduction/bms-overview.rst",
+     "establishes": "The word 'propulsion' occurs nowhere in the pinned tree at commit 308028fb - not in src, not in conf, not in docs. The item is a battery monitoring and control unit. A safe state naming propulsion as a condition the item disables would therefore be a claim about a vehicle-level system that the pinned product does not contain, written into a record whose origin is derived from the pinned source."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/as_is/safety/fsr-cell-voltage.json:105",
+     "establishes": "The corpus's own de facto profile marker on the as_is functional safety requirements: fault_reaction.profile_basis = 'as_is'. It is what makes an unqualified identifier reference resolvable today, and it is a convention the corpus already keeps rather than one this pass introduced."
+    }
+   ],
+   "why_the_two_directions_are_both_wrong": "Widening the as_is record to the four-condition set would put 'propulsion disabled' into a record about a battery monitoring unit that the pinned source does not support. Narrowing the synthetic_reference record to two conditions would strip both safety concepts of the obligation they allocate, and FB2-SAF-FSC-000001, FB2-SAF-TSC-000001 and FB2-SAF-ITE-000001 all read that set. There is no third direction that does not require deciding which of the two subjects the corpus intends this identifier to name, and that decision is the identifier question, not the vocabulary question.",
+   "what_would_settle_it": "Either of two decisions, both outside this pass. (1) The identifier migration of VOC-AMB-001: if the two profiles were given distinct identifiers, the two safe states would stop sharing a name and each would be read unambiguously, with no content decision needed and no risk of one record being made false. (2) A per-profile statement on both records naming which product each set describes, which would make the record-level difference correct as it stands but would not make it correct for a reader who searches on the identifier alone. Option (1) is the real fix and it is recorded as the prerequisite.",
+   "records_changed": [
+    "FB2-SAF-VOC-000001 (this record, revision 2 only) - no safety record's safe_state was altered"
+   ]
   },
   {
    "id": "VOC-AMB-003",
@@ -2016,7 +2530,39 @@
    },
    "convention_adopted": "Read `asil` as a classification only where the record also carries an asil_justification that derives it; read it as an allocation only where it carries safety_allocation with a goal reference; read QM and not_applicable both as absence.",
    "why_the_convention": "The asil_assignment_validator only inspects artefact_type safety_goal, so fifteen records writing an absence marker into the same field are outside its scope and cannot be caught by it. The two absence values are not interchangeable in principle - one says 'no ASIL here' and the other says 'this record is out of scope for classification because it is a security requirement' - but nothing in the corpus distinguishes them today.",
-   "residual_ambiguity": "QM and not_applicable are still two words for absence in one field, on fifteen records. Choosing between them, and moving the security requirements to a field that does not borrow the standards-mapping vocabulary, would be content revisions this record does not make."
+   "residual_ambiguity": "QM and not_applicable are still two words for absence in one field, on fifteen records. Choosing between them, and moving the security requirements to a field that does not borrow the standards-mapping vocabulary, would be content revisions this record does not make.",
+   "settlement": "PARTIALLY_SETTLED_vocabulary_established_one_record_converted",
+   "what_was_settled": "The vocabulary is established: `safety_allocation.asil` carries the ASIL classification scale - QM, ASIL_A, ASIL_B, ASIL_C, ASIL_D - plus the schema's own enumerated absence member `not_applicable`. QM is a classification, not an absence marker. Three parts of the corpus's own machinery say so independently of this record: both requirement.schema.json and safety_concept.schema.json enumerate the field as exactly those six values; the asil_assignment_validator lists QM among its valid_asils; and the requirement_applicability_validator fires on `not_applicable` alone and demands an asil_justification for it, which is why a record writing QM was never caught.",
+   "what_was_converted": "One record of forty. FB2-MAN-SCO-000001 wrote QM where its two sibling fields both read 'N/A', carried no safety goal and carried no asil_justification, so the token was doing absence work. It now reads not_applicable and carries the justification its fourteen peers already carry. After the conversion: twenty-five records carry a classification, fifteen carry the absence member, and each of the fifteen carries the justification that explains why no classification applies to it. The fourteen that already read not_applicable were not touched - converting them away from the corpus's own designated absence token would have been the opposite of the conversion.",
+   "what_remains_open": "All fifteen absence-marked records still borrow the token `not_applicable` from the standards-mapping status enum declared in artifact-base.schema.json, so a standards-mapping disposition and an ASIL allocation read alike on the page. Moving them to a field of their own is a structural repair: requirement.schema.json declares safety_allocation with additionalProperties false and `asil` required, the requirement_applicability_validator keys on that exact path, and twenty-five records and the FSR budget figures read it. Doing that for fifteen records is a larger and riskier change than the naming debt it clears, so it is left recorded rather than performed. A naming-only version of the repair - adding an `asil_applicability` string beside the existing field and leaving `asil` untouched - was considered and rejected: it would give the corpus two fields that can disagree and no rule that says which governs.",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/schemas/requirement.schema.json:105",
+     "establishes": "The field's declared value set: QM, ASIL_A, ASIL_B, ASIL_C, ASIL_D, their lower-case spellings, and not_applicable. QM and not_applicable are both members of one enumeration, and the enumeration is an ASIL vocabulary with an absence member, not a list of absence markers."
+    },
+    {
+     "anchor": "docs/artifacts/tools/corpus.py:2119",
+     "establishes": "valid_asils = ['ASIL_A', 'ASIL_B', 'ASIL_C', 'ASIL_D', 'QM']. The validator treats QM as a classification, so a record writing QM as an absence is writing a value the tool will accept as a class."
+    },
+    {
+     "anchor": "docs/artifacts/tools/corpus.py:2189",
+     "establishes": "The requirement_applicability_validator keys on declared_asil != 'not_applicable' and fires when no asil_justification is present. This is the corpus's own statement that not_applicable is the absence marker and that it owes a reason - and it is the rule FB2-MAN-SCO-000001 was escaping by writing QM."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/project-scope.json:84",
+     "establishes": "The converted record: safety_allocation.asil now reads not_applicable, with asil_justification at the lines beside it. Its statement, acceptance criteria, standards mappings and scope are unchanged and no classification was created.",
+     "previous_anchor": "docs/artifacts/corpus/synthetic_reference/management/project-scope.json:78",
+     "previous_value": "At revision 1 of this record that line carried \"asil\": \"QM\". The line moved because an asil_justification of twenty-two lines was inserted below safety_allocation and the whole file was re-serialised; the superseded value is kept here rather than overwritten so the reader can see both.",
+     "line_range": "84-84"
+    }
+   ],
+   "records_changed": [
+    "FB2-MAN-SCO-000001 (revision 2)",
+    "FB2-REV-000008 (revision 3, digest re-derivation only)",
+    "FB2-LNK-SAF-000047, FB2-LNK-REVB-000070 through FB2-LNK-REVB-000077 (endpoint revision advanced, superseded value kept)",
+    "FB2-SAF-VOC-000001 (this record, revision 2)"
+   ],
+   "referential_integrity_impact": "Nine link endpoints advanced and one review digest re-derived, every superseded value preserved with its date, author and description, and every affected link left change-suspect with re_examined false because none was re-examined. No link endpoint, relation type or rationale moved, and no finding, disposition or scope item of FB2-REV-000008 moved."
   },
   {
    "id": "VOC-AMB-004",
@@ -2046,7 +2592,34 @@
    },
    "convention_adopted": "Read by record type: an object on a requirement, a list on a concept.",
    "why_the_convention": "A single shape would move five reactions in the two concept records or collapse nine objects in the requirements, and the concept records' own allocation argument depends on having one entry per element. The distinction between 'the reaction this requirement specifies' and 'the reactions this concept allocates' is real, so the two shapes are not an error in the records - they are an under-specified schema.",
-   "residual_ambiguity": "No schema in the corpus constrains the field by record type, so a consumer that reads fault_reaction without branching gets an object where it expected a list or the reverse."
+   "residual_ambiguity": "No schema in the corpus constrains the field by record type, so a consumer that reads fault_reaction without branching gets an object where it expected a list or the reverse.",
+   "settlement": "SETTLED_by_schema_declaration",
+   "what_was_settled": "The shape is now fixed by record type in the schema that governs each type, so a consumer no longer has to know the convention to read the field. safety_concept.schema.json already constrained the concept side: `safety_strategies.fault_reaction` is an array with minItems 1 and every entry requires reaction, triggered_by, an element_id matching ^AR-[0-9]{3}$ and reaction_time_budget_ms. requirement.schema.json now declares the requirement side as a single object whose required core - reaction, triggered_by, allocated_element_id, element_owns_reaction, allocation_basis, mode_dependence, open_limits - is byte-for-byte the core all nine requirement records already carry. Every other property in the object is optional and each is present only on the records that need it, because requiring the optional ones would have forbidden a record from recording its own budget absence.",
+   "what_was_not_changed": "No record moved a reaction and no record changed shape. That is the point of declaring the shapes rather than merging them: the requirement-side object answers 'what does this one requirement require and who owns it', the concept-side list answers 'what does this concept allocate, to which element, with what budget', and the evidence says those are two questions rather than two shapes of one answer. Collapsing the nine objects into lists would have required inventing an element_id per requirement, and on the records that set element_owns_reaction false that entry would have named the very element the concept allocates no reaction to. Widening the two concepts to objects would have deleted their allocation argument, which is the substance of both records.",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/schemas/safety_concept.schema.json:131",
+     "establishes": "The pre-existing concept-side declaration. It is why a merged object shape was never available to a concept."
+    },
+    {
+     "anchor": "docs/artifacts/schemas/requirement.schema.json:133",
+     "establishes": "The requirement-side declaration added at this pass, derived from the nine records and satisfied by all nine on the first validate run."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json:285",
+     "establishes": "The concept side as it actually stands: a list of FOUR entries, one per allocated element. Revision 1 of this record said five; that was a miscount and is corrected here."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/as_is/safety/fsr-soa-monitoring.json:97",
+     "establishes": "A requirement-side object carrying element_owns_reaction false plus reaction_held_by naming the holders - the case that makes a one-entry list actively misleading."
+    }
+   ],
+   "records_changed": [
+    "docs/artifacts/schemas/requirement.schema.json (declaration only)",
+    "docs/artifacts/corpus/synthetic_reference/safety/controlled-vocabulary.json (revision 2)"
+   ],
+   "referential_integrity_impact": "None. No record, link, digest or reference moved. The new constraint was satisfied by all eleven records carrying the key when it was first run, which is the evidence that a schema written from the corpus's own practice rejects nothing the corpus does.",
+   "what_remains_open": "The consumer half. Nothing yet refuses to read the key without branching on artefact_type, so a reader written against the concept shape will still break on a requirement. Recorded rather than built because no consumer of this corpus exists to be protected."
   },
   {
    "id": "VOC-AMB-005",
@@ -2078,7 +2651,67 @@
    },
    "convention_adopted": "Four distinct readings keyed on the field name: analysis.independence and authority_and_independence.independence mean authoring independence; accountable_role.independence means organisational independence of a role; an independent-monitor record means barrier independence; RSK-003 means reviewer independence.",
    "why_the_convention": "The four are genuinely different questions and merging them would produce a false assurance in a specific direction: an assumed barrier independence would be readable as a satisfied organisational independence. The corpus already keeps them apart on eleven field names; recording the four readings makes the separation usable rather than incidental.",
-   "residual_ambiguity": "Nothing enforces the mapping from field name to meaning. Eleven independence-keyed fields and no schema that says which meaning a given field carries, so the convention lives only in this record and in the reader's attention."
+   "residual_ambiguity": "Nothing enforces the mapping from field name to meaning. Eleven independence-keyed fields and no schema that says which meaning a given field carries, so the convention lives only in this record and in the reader's attention.",
+   "settlement": "PARTIALLY_SETTLED_distinct_concepts_named_one_defect_left_open",
+   "what_was_settled": "The fourteen field names carrying the word are now mapped to five distinct concepts rather than four, and the mapping is recorded so it is usable rather than incidental. Enumerated from the data: (1) AUTHORING INDEPENDENCE - whether the thing that described a subject may be the thing that produced it. Carried by `independence` under `.analysis` and under `.authority_and_independence`, by `authoring_independence` under `.derivation`, and by `independence_statement`. Forty-two of these carry the two-valued verdict {not_independent, independent} and four schemas already enumerate it. (2) ORGANISATIONAL INDEPENDENCE OF A ROLE - whether a named role may approve work it produced. Carried by `accountable_role.independence` on the process records, and this is the one place the bare key carries free prose instead of the verdict. (3) BARRIER INDEPENDENCE - whether a second channel is genuinely separate from the first. Carried by `independence_note` on the concepts' architectural elements and by `independence_assumption` in the technical concept's `diagnostic_coverage_assumptions`. (4) REVIEWER INDEPENDENCE - whether a second person confirmed the work. Carried by `independent_reviewer_used`, a boolean that reads false on all three review records. (5) MEASUREMENT AND ACCOUNTING SENSES - not a concept at all but a reuse of the word for counts: `independence_requirements_enumerated` and `independence_requirements_with_evidence_in_corpus` are counts on one test measure's tolerances, and `independence_absence` is a count in a summary_by_category table. The four schemas that already enumerate the verdict are hardware_configuration_baseline, hardware_verification_plan, software_interface_specification and safety_concept; the mapping below is why those four agree and where the fifth site does not.",
+   "field_name_to_concept_map": {
+    "concept_1_authoring_independence": [
+     "analysis.independence",
+     "authority_and_independence.independence",
+     "derivation.authoring_independence",
+     "authority_and_independence.independence_statement",
+     "analysis.independence_statement",
+     "diagnostic_coverage_assumptions[].independence_assumption"
+    ],
+    "concept_2_role_organisational_independence": [
+     "accountable_role.independence"
+    ],
+    "concept_3_barrier_independence": [
+     "architecture_elements[].independence_note",
+     "interference_categories[].independence_argument",
+     "coupling_categories[].independence_argument"
+    ],
+    "concept_4_reviewer_independence": [
+     "results_summary.independent_reviewer_used"
+    ],
+    "not_a_concept_counts_that_borrow_the_word": [
+     "tolerances.independence_requirements_enumerated",
+     "tolerances.independence_requirements_with_evidence_in_corpus",
+     "summary_counts.by_category.independence_absence"
+    ],
+    "schema_enumerates_the_verdict": [
+     "hardware_configuration_baseline.schema.json",
+     "hardware_verification_plan.schema.json",
+     "software_interface_specification.schema.json"
+    ],
+    "schema_leaves_it_as_prose": [
+     "process_record.schema.json - accountable_role.independence is type string, minLength 1, described as 'whether this role may approve work it produced. Required because independent is the load-bearing word in every quality process.'"
+    ]
+   },
+   "what_remains_open": "The one genuine defect the mapping exposed, left open on purpose. process_record.accountable_role.independence carries free prose on six records while the forty-two authoring-independence sites carry a two-valued verdict. Three of the six prose values state a verdict the enum can express - the supplier quality function's independence is untested, the reuse function's cannot hold for modified drivers, the quality engineer's is stated and not achieved - and all three would convert to not_independent. The other three do not convert: the change board, the configuration control board and the problem resolution board each record that the separation holds structurally and is not tested by any check. There is no member of {not_independent, independent} for that, and adding one - a value such as structurally_independent_but_untested - is a governance decision about whether this corpus may write 'independent' for a separation it has not tested. That is a policy question and not a vocabulary one. Writing 'independent' would manufacture an assurance the record itself says is untested; writing 'not_independent' would misdescribe a separation that does structurally hold; dropping the enum member and keeping the prose would leave the same key meaning two things in one corpus, which is the condition this entry exists to remove. So the enum was not touched and the three records were not rewritten.",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/schemas/process_record.schema.json:86",
+     "establishes": "accountable_role.independence is type string, minLength 1 - deliberately open, with the comment that 'independent is the load-bearing word in every quality process'. The schema author chose prose here and that choice is recorded rather than overruled."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-sup1-quality-assurance.json:19",
+     "establishes": "One of the three unconvertible records: the quality engineer's independence is 'stated and not achieved', because every review in this corpus is automated and produced by the same process that produced the artefacts. This is the reviewer's independence, and it is recorded as RSK-003."
+    },
+    {
+     "anchor": "docs/artifacts/schemas/hardware_configuration_baseline.schema.json:451",
+     "establishes": "The verdict form: enum ['not_independent', 'independent']. Four schemas constrain it and forty-two records obey it, so the corpus's default reading of the bare word is a verdict and process_record is the outlier by construction."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json:82",
+     "establishes": "Barrier independence as an ASSUMPTION: the technical concept's diagnostic_coverage_assumptions carry independence_assumption entries, and FB2-ASM-008 is named as the assumed rather than demonstrated separation. Sense (3) is an assumption in this corpus and must never be read as an analysis."
+    }
+   ],
+   "records_changed": [
+    "FB2-SAF-VOC-000001 (this record, revision 2) - no independence field was altered anywhere in the corpus"
+   ],
+   "referential_integrity_impact": "None. No record, link, digest or reference moved.",
+   "what_would_settle_it": "A governance decision on the enum, taken outside this pass, and then either a third enum member or an explicit statement that the six process records are not verdicts at all."
   },
   {
    "id": "VOC-AMB-006",
@@ -2110,7 +2743,71 @@
    },
    "convention_adopted": "Four readings keyed on the field family: threats[].residual_risk, test_measure oracle_detail.residual_risk, excluded element residual_risk_owner, and the risk register's residual_*_exposure family.",
    "why_the_convention": "None of the four value sets can be converted into any other, and a reader who reports 'residual risk is low' must say which of the four they mean. The TARA record states in its own words that acceptance of its residual risks does not exist, so no reading may be reported as an accepted risk anywhere in this corpus.",
-   "residual_ambiguity": "The project-risk grade is not even called residual risk - it is residual_exposure - so a search for the phrase finds three of the four meanings and misses the register entirely."
+   "residual_ambiguity": "The project-risk grade is not even called residual risk - it is residual_exposure - so a search for the phrase finds three of the four meanings and misses the register entirely.",
+   "settlement": "PARTIALLY_SETTLED_distinct_concepts_named_one_vocabulary_enumerated_renames_left_open",
+   "what_was_settled": "The count was wrong and the corrected enumeration is five, not four, with the bare key alone carrying four distinct value kinds across five field families. Enumerated from the data: (1) THREAT RESIDUAL EXPOSURE - a grade on a threat after its mitigations, on the three-value scale low, medium, not_rated. Carried by `threats[].residual_risk` on FB2-SAF-TAR-000001, eight entries. This is the only family where the word denotes a vocabulary, and it is now enumerated in tara.schema.json as exactly those three values, replacing an unconstrained minLength 3 that would have silently accepted a paragraph in a field whose sibling `residual_risk_justification` is where the prose belongs. `not_rated` is recorded as the absence member and not a grade. (2) FAILURE-MODE RESIDUAL RISK DISPOSITION - free prose on a FMEA failure mode, carried by `failure_modes[].residual_risk` on FB2-SAF-ANL-000001, five entries, each stating whether the residual risk is accepted, mitigated or not closed. (3) COUPLING RESIDUAL RISK DISPOSITION - free prose on a coupling category, `coupling_categories[].residual_risk` on FB2-SAF-ANL-000003, three entries. (4) INTERFERENCE RESIDUAL RISK DISPOSITION - free prose on an interference category, `interference_categories[].residual_risk` on FB2-SAF-ANL-000004, three entries. (5) ORACLE VALIDITY LIMITATION - not a risk at all: the statement of what a test measure's oracle cannot establish, carried by `oracle_detail.residual_risk` on ten test measures (FB2-VER-TMS-000016 and FB2-VER-TMS-000021 through FB2-VER-TMS-000028). Reading this one as a risk grade would be reading a validity disclaimer as an assurance.",
+   "field_family_to_concept_map": {
+    "1_threat_residual_exposure_vocabulary": [
+     "threats[].residual_risk"
+    ],
+    "2_failure_mode_disposition_prose": [
+     "failure_modes[].residual_risk"
+    ],
+    "3_coupling_category_disposition_prose": [
+     "coupling_categories[].residual_risk"
+    ],
+    "4_interference_category_disposition_prose": [
+     "interference_categories[].residual_risk"
+    ],
+    "5_oracle_validity_limitation_prose": [
+     "oracle_detail.residual_risk"
+    ],
+    "the_family_that_is_not_called_residual_risk": [
+     "risk_entries[].residual_exposure",
+     "risk_entries[].residual_probability",
+     "risk_entries[].residual_impact",
+     "risk_entries[].residual_exposure_argument",
+     "aggregate_exposure.highest_residual_exposure"
+    ],
+    "already_distinct_on_their_own_names": [
+     "boundaries.excluded_elements[].residual_risk_owner",
+     "threats[].residual_risk_acceptance",
+     "threats[].residual_risk_justification",
+     "residual_risk_statement on FB2-MAN-VDR-000001",
+     "summary.residual_risks on FB2-SAF-ANL-000004",
+     "summary.residual_risks_with_independent_mitigation on FB2-SAF-ANL-000001"
+    ],
+    "value_kinds": "One enumeration (low, medium, not_rated), three free-prose dispositions on the three safety analyses, one free-prose validity statement on the test measures, one ordinal pair (probability, impact) on the project risk register. No two of the five convert into one another."
+   },
+   "what_remains_open": "The renames. Families 2, 3 and 4 carry the same key name with the same free-prose value kind but answer different questions - one failure mode's disposition, one coupling category's, one interference category's - and family 5 shares the name while meaning something else entirely. Giving them distinct names is the honest repair and it was not performed: it rewrites fifteen records, every source anchor this record and others hold into those files, and every prose sentence in the corpus that refers to a 'residual risk' of a coupling or an interference category, and a mechanical search for the phrase would then find three of the five meanings and miss the register, exactly as it does today. That is a larger change than the naming debt clears, and unlike the two schema declarations above it would move content rather than describe it. Recorded with the map so the rename is a checklist when it is done.",
+   "evidence": [
+    {
+     "anchor": "docs/artifacts/schemas/tara.schema.json:246",
+     "establishes": "Before this pass: {\"type\": \"string\", \"minLength\": 3} - a field whose sibling residual_risk_justification has minLength 15 and is where the prose belongs, while the grade field itself would have accepted anything. Now enumerated as low, medium, not_rated, the three values all eight TARA entries actually use."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:267",
+     "establishes": "Sense (1). A grade, on the corpus's own three-value scale, beside a mitigation list and a justification. This is the only family where the word is a vocabulary, and it is the one a reader reporting 'residual risk is low' is most likely to mean without saying so."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000003-reaction-time-budget.json:165",
+     "establishes": "Sense (5), the one that is not a risk. The text states what the oracle cannot establish on its own - that a source-grounded oracle still rests on the correctness of the code that produces the value it checks. Reported as a residual risk, this would read as an assurance rather than a disclaimer."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json:175",
+     "establishes": "The family that is not called residual risk: residual_probability, residual_impact and residual_exposure on each risk entry, plus aggregate_exposure.highest_residual_exposure. A search for the phrase residual risk finds none of it."
+    },
+    {
+     "anchor": "docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json:270",
+     "establishes": "residual_risk_acceptance on the TARA record states in the record's own words that acceptance of its residual risks does not exist. So no family here may be reported as an accepted risk anywhere in this corpus, and enumerating the five does not change that."
+    }
+   ],
+   "records_changed": [
+    "docs/artifacts/schemas/tara.schema.json (declaration only)",
+    "FB2-SAF-VOC-000001 (this record, revision 2)"
+   ],
+   "referential_integrity_impact": "None. No record, link, digest or reference moved; the new enumeration was satisfied by all eight TARA threat entries when it was first run.",
+   "what_would_settle_it": "The rename, by an owner who can also update the fifteen records' prose references and the source anchors that name those fields. Until then a reader who reports 'residual risk is low' must say which of the five they mean."
   },
   {
    "id": "VOC-AMB-007",
@@ -2343,20 +3040,20 @@
  ],
  "review_policy_interaction": "This record is not a confirmation of its own content. It was authored by the same automated process that authored the records whose vocabulary it fixes, which is precisely the independence the corpus's own risk register records as absent in RSK-003. It is therefore an input to a future human review and not a substitute for one, and its own `human_approval_status` is pending. A reader who needs to know whether these conventions are right must ask a person who did not author the corpus, and this record makes no claim that such a person has.",
  "limitations": [
-  "This record cannot be a review. It was written by the same process that wrote the records it describes, so it inherits the independence limitation recorded as RSK-003 and it cannot confirm its own definitions.",
-  "Eleven terms have no entry beyond their absence: hazardous situation, automotive element, hardware fault tolerance, confirmation measure, safety mechanism, ASIL decomposition, leading safety provider, systematic failure, random failure, safety diagnostics, and the architectural sense of diversity. Their absence is measured, not argued, but this record does not supply the definitions and must not be read as doing so.",
-  "The word 'fault' occurs on 290 lines and is defined nowhere. This record names the gap in `terms_absent_from_this_corpus` as a measured gap and declines to fill it, because a definition would have to be invented or taken from the standard.",
-  "Thirty-nine identifier strings are shared between the two profiles. The convention resolves them as (profile, id) but does not renumber them, because ID-RULE-001 forbids renumbering established identifiers. The sharing therefore remains a property of the corpus after this record.",
-  "The cross-profile reuse of identifiers is invisible to the corpus's own duplicate check, which keys on (profile, id) by design. A reader who trusts the policy statement of global uniqueness over the data will look for a single record where there are two.",
-  "Several of the ambiguities are recorded rather than settled, because settling them needs a content revision to records this authoring pass does not own: the two safe-state sets on one shared identifier, the two absence markers in the asil field on fifteen records, and the fault_reaction field's two shapes.",
-  "The counts in this record are counts of LINES matching a term, not counts of records using it. A record that discusses a term in prose raises the count without depending on the term, so the dependent_records lists were built from field positions rather than from these counts and are the authoritative dependency figures.",
-  "The pinned documentation cross-check produced a negative result: neither docs/general/safety/safety.rst nor docs/software/modules/application/soa/soa.rst at commit 308028fb contains any of these terms, and the project ships no glossary. So there is no product-side definition of any of them to reconcile this corpus's usage against, and every definition here rests on the corpus alone."
+  "This record still cannot be a review. It was written by an automated authoring pass that also wrote the records it describes, it inherits the independence limitation recorded as RSK-003, and it cannot confirm its own definitions. Nothing settled at revision 2 makes it more independent; a reader should treat the two settled items with the same suspicion as the rest.",
+  "Thirty-nine identifier strings are shared between the two profiles. Revision 2 established, per identifier, that all thirty-nine pairs are different subjects and none is a duplicate - so the corpus violates ID-RULE-004 by thirty-nine and not by one - and recorded why the re-issue was not performed and what a migration must touch. The identifiers are unchanged, the sharing therefore remains a property of the corpus, and the convention that resolves them as (profile, id) remains the only available repair until that migration happens.",
+  "The cross-profile reuse of identifiers is still invisible to the corpus's own duplicate check, which keys on (profile, id) by design and so cannot see it. A reader who trusts the policy statement of global uniqueness over the data will still look for a single record where there are two. That is now documented with a per-identifier table rather than with a sentence, which makes it easier to check and no easier to satisfy.",
+  "Two of the six ambiguities dispositioned at revision 2 are PARTIALLY settled and one is OPEN. The safe state of FB2-SAF-SGO-000001 was shown to be two answers about two different subjects rather than one record contradicting itself, and the two records are left disagreeing on purpose; see VOC-AMB-002 for the two decisions that would settle it, of which the identifier migration is the real one. The independence verdict on the three process records needs a governance decision about whether this corpus may write 'independent' for a separation it has not tested, and no enum member exists for the state they describe. The residual-risk rename was not performed because it rewrites fifteen records and every prose reference to them.",
+  "The word 'fault' still has no definition from the standard and none is supplied here. What revision 2 added is a usage map: three senses, the field path that distinguishes them, and the fact that the corpus contains no fault artefact, no fault list, no fault status model and no fault identifier anywhere in its 300 records. That is a description of how this corpus uses the word and it must not be read as a definition; a real definition would have to come from the standard, which this corpus may not reproduce.",
+  "The counts in this record are counts of LINES matching a term, not counts of records using it, and they were not recomputed at revision 2. A record that discusses a term in prose raises the count without depending on the term, so the dependent_records lists were built from field positions rather than from these counts and are the authoritative dependency figures. Where revision 2 needed a count that mattered - the number of field sites carrying a given key, the number of records using a value set, the number of distinct families - it was enumerated from the records rather than carried forward from the 290-line prose figure, and the field families are stated instead of line counts.",
+  "The pinned documentation cross-check produced a negative result and still does: neither docs/general/safety/safety.rst nor docs/software/modules/application/soa/soa.rst at commit 308028fb contains any of these terms, and the project ships no glossary. Revision 2 added one further negative result, which is load-bearing for the safe-state decision: the word 'propulsion' occurs nowhere in the pinned tree at that commit, which is why the as_is safe state names two conditions and the synthetic_reference one names four. So there is no product-side definition of any term here to reconcile this corpus's usage against, and every definition rests on the corpus alone.",
+  "Two corrections were made to this record's own text at revision 2 and are named here so a reader who read revision 1 knows to distrust it on exactly these points: the `fault_reaction` list on the two safety concepts has four entries and not five, and the count of shared identifiers is thirty-nine and was verified by enumeration rather than carried forward."
  ],
  "what_this_record_does_not_assert": [
   "It does not define any term of ISO 26262. It describes how this corpus uses words, and a reader must not read any entry here as a definition from the standard.",
   "It does not establish that the conventions it adopts are correct. It records them so that a reader can disagree with a specific statement rather than with a vague usage.",
-  "It does not repair the ambiguities it names. It names them, locates both readings and states which one this corpus now reads by; the underlying records are unchanged.",
-  "It does not renumber, merge or withdraw any record, including the thirty-nine whose identifiers are shared between profiles.",
+  "It does not repair every ambiguity it names. It settled two of the six that were open at revision 1 - the ASIL vocabulary and the fault_reaction shape - and dispositioned the other four with the evidence for each: one analysis closed with the repair deliberately deferred, one shown to be a question about two subjects, one partially settled with one defect left open, one partially settled with the rename left open. Nothing was settled by asserting which reading the author preferred; where the evidence did not decide, the entry says so and names what would.",
+  "It does not renumber, merge or withdraw any record, including the thirty-nine whose identifiers are shared between profiles. It establishes that all thirty-nine are pairs of different subjects rather than duplicates and therefore that the scheme is violated, and it records the migration a repair needs - but no identifier moved and no record was retired.",
   "It does not assert an ASIL for any product. It records how the ASIL field is used and how the one ASIL derivation in this corpus was performed, including that its exposure input is unevidenced.",
   "It does not assert human approval, production authorisation, product verification credit, ISO 26262 conformity, certification, tool qualification or an ASPICE capability level. human_approval_status is pending, production_authorized is false and product_verification_credit is false, and nothing in this record is evidence of any of them.",
   "It does not assert that the corpus's safety records are complete. Several of the terms it defines exist because a record is absent, and the term list is therefore also a list of what is missing."

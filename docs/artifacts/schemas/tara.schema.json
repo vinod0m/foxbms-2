@@ -245,7 +245,12 @@
               },
               "residual_risk": {
                 "type": "string",
-                "minLength": 3
+                "enum": [
+                  "low",
+                  "medium",
+                  "not_rated"
+                ],
+                "description": "The residual exposure grade of this threat AFTER its listed mitigations. This is the corpus's own three-value threat grading scale and it is local to threats[]. The same key name appears on four other field families in this corpus with four different value kinds - free prose on a FMEA failure mode, free prose on a coupling or interference category, and a validity-limitation statement on a test measure's oracle_detail - so this enum is declared here to keep the one place where the word is a vocabulary from silently accepting prose. not_rated means the threat was not graded; it is not a grade and carries no claim that the exposure is low."
               },
               "residual_risk_justification": {
                 "type": "string",

@@ -1,6 +1,6 @@
 {
  "id": "FB2-MAN-SCO-000001",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "management",
@@ -41,13 +41,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-10-03T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "project_manager",
    "description": "Synthetic project scope"
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-03T00:00:00Z",
+   "author": "safety_engineer",
+   "description": "safety_allocation.asil converted from QM to not_applicable, and the asil_justification its fourteen peer records already carry added. This record was the last of forty carrying a value in that field that writes QM as an absence marker: its two sibling fields both read 'N/A', it carries no safety goal, and no ISO 26262 allocation reaches a project-scope statement, so the value was saying 'not applicable' while borrowing a token from the ASIL classification scale. Three pieces of the corpus's own machinery agree on the reading and none of them is an opinion added here. requirement.schema.json and safety_concept.schema.json both enumerate the field as QM, ASIL_A..ASIL_D and not_applicable, which makes QM a classification and not_applicable the absence member. The asil_assignment_validator in docs/artifacts/tools/corpus.py lists QM among valid_asils, so QM is a classification there as well. The requirement_applicability_validator fires on exactly one absence token, not_applicable, and demands an asil_justification for it - a record that writes QM instead is simply outside that validator's reach, which is how this one escaped notice. Fourteen records already converted themselves: FB2-SAF-SEC-000001..000005, FB2-SW-SIR-000001..000006, FB2-SYS-SYR-000006, FB2-SYS-SYR-000007 and FB2-SYS-SYR-000008 all write not_applicable and each carries the justification. Nothing about this record's scope, statement, acceptance criteria or standards mappings moved, no allocation was created and no classification was asserted; the value never claimed QM and it does not claim not_applicable as a classification either. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
   }
  ],
  "statement": "Develop a reference implementation of a production-intent BMS based on the foxBMS 2 platform, covering all safety-critical functions for a hypothetical 400V/100kWh EV battery pack with ASIL D cell voltage monitoring.",
@@ -75,9 +81,21 @@
  ],
  "verification_approach": "review",
  "safety_allocation": {
-  "asil": "QM",
+  "asil": "not_applicable",
   "safety_goal_ref": "N/A",
   "mitigation": "N/A"
+ },
+ "asil_justification": {
+  "classification_status": "recorded_reasoning",
+  "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this record. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product and it is not a statement that any part of that product is QM-classified.",
+  "requirement_classification": "management",
+  "reason": "This record states the scope of a development project. ISO 26262 allocates an ASIL to a requirement derived from a hazard analysis and risk assessment, and no such derivation reaches a project-scope statement: this record carries no hazardous event, no operational situation, and its safety_goal_ref is N/A. The three acceptance criteria it carries are coverage and status conditions on the project's own records, not safety obligations, so there is nothing on this record for a classification to attach to. The value in the field therefore carries the schema's own enumerated absence member rather than a class. The token QM that stood here before revision 2 would have asserted the lowest ASIL band as a positive classification of a project-scope statement, which is a claim this record cannot support and which the sibling fields 'N/A' contradict. QM is retained as a legitimate value on this field elsewhere: FB2-SAF-HAZ-000001's own determination reasoning treats QM as a member of the ASIL scale rather than as an absence, and that reading is not disturbed by this revision.",
+  "safety_goal_ref_meaning": "N/A here means no safety goal is allocated to this record. It does not mean the project's safety goal is absent from the corpus; FB2-SAF-SGO-000001 states it and every safety requirement in the synthetic_reference profile traces to it. This record is simply not one of the requirements that traces to it.",
+  "what_this_does_not_assert": [
+   "It does not assert an ASIL for any part of the reference project or of the real product.",
+   "It does not assert conformity with ISO 26262 and it is not a certification or evidence of one.",
+   "It does not assert human approval, production authorisation or verification credit: human_approval_status is pending, production_authorized is false and product_verification_credit is false."
+  ]
  },
  "assumptions": [],
  "conditions_modes": [

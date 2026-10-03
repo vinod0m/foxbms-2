@@ -1754,7 +1754,7 @@
       "source_id": "FB2-VER-TMS-000009",
       "source_revision": "1",
       "target_id": "FB2-MAN-SCO-000001",
-      "target_revision": "1",
+      "target_revision": "2",
       "relation_type": "validates",
       "profile": "synthetic_reference",
       "scenario_id": "SCN-BASELINE",
@@ -1765,7 +1765,35 @@
       "rationale": "Validation measure validates project scope",
       "provenance": "synthetic",
       "review_state": "pending",
-      "change_suspect_status": false
+      "change_suspect_status": true,
+      "provenance_repair": {
+        "session": "opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
+        "endpoint_revision_refreshes": [
+          {
+            "endpoint_role": "target",
+            "endpoint_id": "FB2-MAN-SCO-000001",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "Revision 2 of the target is the ASIL absence-marker conversion settled under FB2-SAF-VOC-000001 VOC-AMB-003: safety_allocation.asil moved from QM to not_applicable and an asil_justification was added. It is not a change to the project scope, to this validation measure, or to the relationship between them.",
+            "skipped_revisions": [
+              {
+                "revision": "2",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "safety_allocation.asil converted from QM to not_applicable, and the asil_justification added. Full description on the target record's own revision history. Nothing about the target's scope, statement or acceptance criteria moved, no classification was created or removed, and no allocation was created.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+                "change_record_id": null
+              }
+            ]
+          }
+        ],
+        "principle": "The endpoint revision recorded here names the revision of the endpoint artifact as it now stands, in this link's own profile. The superseded value is kept in previous_revision together with the date, author and description of every revision the endpoint passed through, so a reader can see exactly what content the link now names that it did not name when it was authored. No endpoint, relation type or rationale was changed, and no link was re-examined: advancing the recorded revision says what the link now points at, not that the relationship still holds. The link therefore remains change-suspect until a review that actually looked at the current revisions of both endpoints records that re-examination.",
+        "re_examined": false
+      }
     },
     {
       "link_id": "FB2-LNK-SAF-000048",
@@ -7722,9 +7750,9 @@
     {
       "link_id": "FB2-LNK-REVB-000070",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-MAN-SCO-000001",
-      "target_revision": "1",
+      "target_revision": "2",
       "relation_type": "reviewed_by",
       "profile": "synthetic_reference",
       "scenario_id": "SCN-BASELINE",
@@ -7732,13 +7760,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-MAN-SCO-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-MAN-SCO-000001 at revision 2 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded revision was advanced from 1 to 2 for the ASIL absence-marker conversion settled under FB2-SAF-VOC-000001 VOC-AMB-003; the digest refresh that carries it does not assert that the reviewing session examined revision 2, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -7756,6 +7784,26 @@
                 "author": "quality_engineer",
                 "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
                 "cause_class": "provenance_repair",
+                "change_record_id": null
+              }
+            ]
+          },
+          {
+            "endpoint_role": "target",
+            "endpoint_id": "FB2-MAN-SCO-000001",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "Target revision 2 is the ASIL absence-marker conversion settled under FB2-SAF-VOC-000001 VOC-AMB-003: safety_allocation.asil moved from QM to not_applicable and an asil_justification was added. The reviewing record moved with it, from revision 2 to 3, re-deriving only this endpoint's digest and recording the superseded digest in its own digest_corrections.",
+            "skipped_revisions": [
+              {
+                "revision": "2",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "safety_allocation.asil converted from QM to not_applicable, and the asil_justification added. Full description on the target record's own revision history and on the reviewing record's revision 3 entry. Nothing about the target's scope, statement or acceptance criteria moved, no classification was created or removed, and no allocation was created. The source endpoint of this link is now at revision 3 for the digest refresh alone.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
                 "change_record_id": null
               }
             ]
@@ -7768,7 +7816,7 @@
     {
       "link_id": "FB2-LNK-REVB-000071",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-MAN-SPL-000001",
       "target_revision": "1",
       "relation_type": "reviewed_by",
@@ -7778,13 +7826,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-MAN-SPL-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-MAN-SPL-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 for the digest refresh described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -7802,6 +7850,26 @@
                 "author": "quality_engineer",
                 "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
                 "cause_class": "provenance_repair",
+                "change_record_id": null
+              }
+            ]
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000008",
+            "previous_revision": "2",
+            "current_revision": "3",
+            "basis": "endpoint_artifact_revision_is_3",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "The reviewing record moved to revision 3 solely to re-derive one reviewed_ids digest, because its artefact FB2-MAN-SCO-000001 advanced to revision 2 under FB2-SAF-VOC-000001 VOC-AMB-003. No finding, disposition or scope item of that review moved, and this link's own target did not move. The earlier refresh on this link, from revision 1 to 2, is preserved above rather than replaced.",
+            "skipped_revisions": [
+              {
+                "revision": "3",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. The source endpoint of this link, the review record FB2-REV-000008, advanced from revision 2 to revision 3 because one artefact it enumerates moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That review re-derived one digest only - the one belonging to FB2-MAN-SCO-000001 - and recorded the superseded digest and revision in its own digest_corrections. THIS link's target was not re-examined, this link's rationale was not re-derived, and nothing about the relationship between the review and its target moved: the source revision is advanced because that is what this link now points at. No finding, disposition, scope item or checklist entry of the review is added or withdrawn, and the digest refresh carries no weight of a re-review.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
                 "change_record_id": null
               }
             ]
@@ -7814,7 +7882,7 @@
     {
       "link_id": "FB2-LNK-REVB-000072",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-SYS-HSI-000001",
       "target_revision": "1",
       "relation_type": "reviewed_by",
@@ -7824,13 +7892,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-SYS-HSI-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-SYS-HSI-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 for the digest refresh described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -7848,6 +7916,26 @@
                 "author": "quality_engineer",
                 "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
                 "cause_class": "provenance_repair",
+                "change_record_id": null
+              }
+            ]
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000008",
+            "previous_revision": "2",
+            "current_revision": "3",
+            "basis": "endpoint_artifact_revision_is_3",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "The reviewing record moved to revision 3 solely to re-derive one reviewed_ids digest, because its artefact FB2-MAN-SCO-000001 advanced to revision 2 under FB2-SAF-VOC-000001 VOC-AMB-003. No finding, disposition or scope item of that review moved, and this link's own target did not move. The earlier refresh on this link, from revision 1 to 2, is preserved above rather than replaced.",
+            "skipped_revisions": [
+              {
+                "revision": "3",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. The source endpoint of this link, the review record FB2-REV-000008, advanced from revision 2 to revision 3 because one artefact it enumerates moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That review re-derived one digest only - the one belonging to FB2-MAN-SCO-000001 - and recorded the superseded digest and revision in its own digest_corrections. THIS link's target was not re-examined, this link's rationale was not re-derived, and nothing about the relationship between the review and its target moved: the source revision is advanced because that is what this link now points at. No finding, disposition, scope item or checklist entry of the review is added or withdrawn, and the digest refresh carries no weight of a re-review.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
                 "change_record_id": null
               }
             ]
@@ -7860,7 +7948,7 @@
     {
       "link_id": "FB2-LNK-REVB-000073",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-SCN-MUT-000001",
       "target_revision": "1",
       "relation_type": "reviewed_by",
@@ -7870,13 +7958,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-SCN-MUT-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-SCN-MUT-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 for the digest refresh described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -7894,6 +7982,26 @@
                 "author": "quality_engineer",
                 "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
                 "cause_class": "provenance_repair",
+                "change_record_id": null
+              }
+            ]
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000008",
+            "previous_revision": "2",
+            "current_revision": "3",
+            "basis": "endpoint_artifact_revision_is_3",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "The reviewing record moved to revision 3 solely to re-derive one reviewed_ids digest, because its artefact FB2-MAN-SCO-000001 advanced to revision 2 under FB2-SAF-VOC-000001 VOC-AMB-003. No finding, disposition or scope item of that review moved, and this link's own target did not move. The earlier refresh on this link, from revision 1 to 2, is preserved above rather than replaced.",
+            "skipped_revisions": [
+              {
+                "revision": "3",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. The source endpoint of this link, the review record FB2-REV-000008, advanced from revision 2 to revision 3 because one artefact it enumerates moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That review re-derived one digest only - the one belonging to FB2-MAN-SCO-000001 - and recorded the superseded digest and revision in its own digest_corrections. THIS link's target was not re-examined, this link's rationale was not re-derived, and nothing about the relationship between the review and its target moved: the source revision is advanced because that is what this link now points at. No finding, disposition, scope item or checklist entry of the review is added or withdrawn, and the digest refresh carries no weight of a re-review.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
                 "change_record_id": null
               }
             ]
@@ -7906,7 +8014,7 @@
     {
       "link_id": "FB2-LNK-REVB-000074",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-SCN-MUT-000002",
       "target_revision": "1",
       "relation_type": "reviewed_by",
@@ -7916,13 +8024,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-SCN-MUT-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-SCN-MUT-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 for the digest refresh described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -7940,6 +8048,26 @@
                 "author": "quality_engineer",
                 "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
                 "cause_class": "provenance_repair",
+                "change_record_id": null
+              }
+            ]
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000008",
+            "previous_revision": "2",
+            "current_revision": "3",
+            "basis": "endpoint_artifact_revision_is_3",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "The reviewing record moved to revision 3 solely to re-derive one reviewed_ids digest, because its artefact FB2-MAN-SCO-000001 advanced to revision 2 under FB2-SAF-VOC-000001 VOC-AMB-003. No finding, disposition or scope item of that review moved, and this link's own target did not move. The earlier refresh on this link, from revision 1 to 2, is preserved above rather than replaced.",
+            "skipped_revisions": [
+              {
+                "revision": "3",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. The source endpoint of this link, the review record FB2-REV-000008, advanced from revision 2 to revision 3 because one artefact it enumerates moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That review re-derived one digest only - the one belonging to FB2-MAN-SCO-000001 - and recorded the superseded digest and revision in its own digest_corrections. THIS link's target was not re-examined, this link's rationale was not re-derived, and nothing about the relationship between the review and its target moved: the source revision is advanced because that is what this link now points at. No finding, disposition, scope item or checklist entry of the review is added or withdrawn, and the digest refresh carries no weight of a re-review.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
                 "change_record_id": null
               }
             ]
@@ -7952,7 +8080,7 @@
     {
       "link_id": "FB2-LNK-REVB-000075",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-SCN-CHG-000001",
       "target_revision": "1",
       "relation_type": "reviewed_by",
@@ -7962,13 +8090,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-SCN-CHG-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-SCN-CHG-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 for the digest refresh described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -7986,6 +8114,26 @@
                 "author": "quality_engineer",
                 "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
                 "cause_class": "provenance_repair",
+                "change_record_id": null
+              }
+            ]
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000008",
+            "previous_revision": "2",
+            "current_revision": "3",
+            "basis": "endpoint_artifact_revision_is_3",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "The reviewing record moved to revision 3 solely to re-derive one reviewed_ids digest, because its artefact FB2-MAN-SCO-000001 advanced to revision 2 under FB2-SAF-VOC-000001 VOC-AMB-003. No finding, disposition or scope item of that review moved, and this link's own target did not move. The earlier refresh on this link, from revision 1 to 2, is preserved above rather than replaced.",
+            "skipped_revisions": [
+              {
+                "revision": "3",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. The source endpoint of this link, the review record FB2-REV-000008, advanced from revision 2 to revision 3 because one artefact it enumerates moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That review re-derived one digest only - the one belonging to FB2-MAN-SCO-000001 - and recorded the superseded digest and revision in its own digest_corrections. THIS link's target was not re-examined, this link's rationale was not re-derived, and nothing about the relationship between the review and its target moved: the source revision is advanced because that is what this link now points at. No finding, disposition, scope item or checklist entry of the review is added or withdrawn, and the digest refresh carries no weight of a re-review.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
                 "change_record_id": null
               }
             ]
@@ -7998,7 +8146,7 @@
     {
       "link_id": "FB2-LNK-REVB-000076",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-SCN-CHG-000002",
       "target_revision": "1",
       "relation_type": "reviewed_by",
@@ -8008,13 +8156,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-SCN-CHG-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-SCN-CHG-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 for the digest refresh described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -8035,6 +8183,26 @@
                 "change_record_id": null
               }
             ]
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000008",
+            "previous_revision": "2",
+            "current_revision": "3",
+            "basis": "endpoint_artifact_revision_is_3",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "The reviewing record moved to revision 3 solely to re-derive one reviewed_ids digest, because its artefact FB2-MAN-SCO-000001 advanced to revision 2 under FB2-SAF-VOC-000001 VOC-AMB-003. No finding, disposition or scope item of that review moved, and this link's own target did not move. The earlier refresh on this link, from revision 1 to 2, is preserved above rather than replaced.",
+            "skipped_revisions": [
+              {
+                "revision": "3",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. The source endpoint of this link, the review record FB2-REV-000008, advanced from revision 2 to revision 3 because one artefact it enumerates moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That review re-derived one digest only - the one belonging to FB2-MAN-SCO-000001 - and recorded the superseded digest and revision in its own digest_corrections. THIS link's target was not re-examined, this link's rationale was not re-derived, and nothing about the relationship between the review and its target moved: the source revision is advanced because that is what this link now points at. No finding, disposition, scope item or checklist entry of the review is added or withdrawn, and the digest refresh carries no weight of a re-review.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+                "change_record_id": null
+              }
+            ]
           }
         ],
         "principle": "The endpoint revision recorded here names the revision of the endpoint artifact as it now stands, in this link's own profile. The superseded value is kept in previous_revision together with the date, author and description of every revision the endpoint passed through, so a reader can see exactly what content the link now names that it did not name when it was authored. No endpoint, relation type or rationale was changed, and no link was re-examined: advancing the recorded revision says what the link now points at, not that the relationship still holds. The link therefore remains change-suspect until a review that actually looked at the current revisions of both endpoints records that re-examination.",
@@ -8044,7 +8212,7 @@
     {
       "link_id": "FB2-LNK-REVB-000077",
       "source_id": "FB2-REV-000008",
-      "source_revision": "2",
+      "source_revision": "3",
       "target_id": "FB2-SCN-CHG-000003",
       "target_revision": "1",
       "relation_type": "reviewed_by",
@@ -8054,13 +8222,13 @@
       "variant_applicability": [
         "VAR-REF-001"
       ],
-      "rationale": "FB2-REV-000008 reviewed FB2-SCN-CHG-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+      "rationale": "FB2-REV-000008 reviewed FB2-SCN-CHG-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 for the digest refresh described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
       "provenance": "derived",
       "review_state": "reviewed",
       "change_suspect_status": true,
       "provenance_repair": {
-        "session": "opencode-2026-10-01-link-endpoint-revision-repair",
-        "date": "2026-10-01T00:00:00Z",
+        "session": "opencode-2026-10-01-link-endpoint-revision-repair; extended by opencode-2026-10-03-asil-absence-marker-conversion",
+        "date": "2026-10-03T00:00:00Z",
         "endpoint_revision_refreshes": [
           {
             "endpoint_role": "source",
@@ -8078,6 +8246,26 @@
                 "author": "quality_engineer",
                 "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
                 "cause_class": "provenance_repair",
+                "change_record_id": null
+              }
+            ]
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000008",
+            "previous_revision": "2",
+            "current_revision": "3",
+            "basis": "endpoint_artifact_revision_is_3",
+            "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
+            "change_record_id": null,
+            "attribution": "The reviewing record moved to revision 3 solely to re-derive one reviewed_ids digest, because its artefact FB2-MAN-SCO-000001 advanced to revision 2 under FB2-SAF-VOC-000001 VOC-AMB-003. No finding, disposition or scope item of that review moved, and this link's own target did not move. The earlier refresh on this link, from revision 1 to 2, is preserved above rather than replaced.",
+            "skipped_revisions": [
+              {
+                "revision": "3",
+                "date": "2026-10-03T00:00:00Z",
+                "author": "safety_engineer",
+                "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. The source endpoint of this link, the review record FB2-REV-000008, advanced from revision 2 to revision 3 because one artefact it enumerates moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That review re-derived one digest only - the one belonging to FB2-MAN-SCO-000001 - and recorded the superseded digest and revision in its own digest_corrections. THIS link's target was not re-examined, this link's rationale was not re-derived, and nothing about the relationship between the review and its target moved: the source revision is advanced because that is what this link now points at. No finding, disposition, scope item or checklist entry of the review is added or withdrawn, and the digest refresh carries no weight of a re-review.",
+                "cause_class": "vocabulary_conversion_recorded_in_fb2_saf_voc_000001",
                 "change_record_id": null
               }
             ]

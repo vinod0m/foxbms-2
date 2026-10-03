@@ -130,6 +130,101 @@
           },
           "additionalProperties": false
         },
+        "fault_reaction": {
+          "type": "object",
+          "description": "THE REACTION THIS REQUIREMENT SPECIFIES - one object, on a requirement. Distinct from safety_concept.schema.json, where the same key name is the list of every reaction that the concept ALLOCATES across the architectural elements, one entry per element_id. The two shapes answer different questions and are both correct in their place; before this declaration nothing in the corpus constrained either one by record type, so a consumer that read the key without branching on artifact_type got an object where it expected a list or the reverse. Declared here from the nine requirement records that carry it, so that no record moves a reaction to satisfy a schema. The required core is the same on all nine: the reaction, what triggers it, which element it is allocated to, who owns it, why the allocation is what it is, its mode dependence and its open limits. The remaining properties are optional and each is present only on the records that need it; they are not required because requiring them would forbid a record from recording its own budget absence.",
+          "required": [
+            "reaction",
+            "triggered_by",
+            "allocated_element_id",
+            "element_owns_reaction",
+            "allocation_basis",
+            "mode_dependence",
+            "open_limits"
+          ],
+          "properties": {
+            "reaction": {
+              "type": "string",
+              "minLength": 1
+            },
+            "triggered_by": {
+              "type": "string",
+              "minLength": 1
+            },
+            "allocated_element_id": {
+              "type": ["string", "null"],
+              "description": "The architectural element this reaction is allocated to. null is a recorded value, not an omission: a security requirement allocates no element, and says so here rather than leaving the field absent."
+            },
+            "element_owns_reaction": {
+              "type": "boolean",
+              "description": "Whether the allocated element itself performs the reaction. False means the reaction is held elsewhere and this requirement names the holder instead."
+            },
+            "reaction_held_by": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "allocation_basis": {
+              "type": "string",
+              "minLength": 1
+            },
+            "mode_dependence": {
+              "type": "string",
+              "minLength": 1
+            },
+            "open_limits": {
+              "type": "string",
+              "minLength": 1,
+              "description": "PROSE, not a list, on all eleven records that carry it - a field whose name reads as a collection of limits and holds one paragraph of them. Declared as the string every record actually uses rather than as the array the name suggests, so that no record is rewritten to satisfy the schema on the strength of a guess about what the author intended. Recorded in FB2-SAF-VOC-000001 as a naming defect that is left in place: renaming it would touch all eleven records and every prose reference to it, and the paragraph is the substance."
+            },
+            "diagnosis": {
+              "type": "string",
+              "minLength": 1
+            },
+            "derivation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reaction_time_budget_ms": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reaction_time_budget_basis": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reaction_time_bound": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reaction_complete_at_ms_from_fault_request": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reaction_completeness_note": {
+              "type": "string",
+              "minLength": 1
+            },
+            "budget_absence_note": {
+              "type": "string",
+              "minLength": 1
+            },
+            "unverified_leg_note": {
+              "type": "string",
+              "minLength": 1
+            },
+            "added_in_revision": {
+              "type": "string",
+              "minLength": 1
+            },
+            "profile_basis": {
+              "type": "string",
+              "description": "Which profile this record's content rests on. Present on the as_is safety requirements and used by the corpus as its de facto disambiguator for an identifier that two profiles share."
+            }
+          },
+          "additionalProperties": false
+        },
         "assumptions": {
           "type": "array",
           "items": {

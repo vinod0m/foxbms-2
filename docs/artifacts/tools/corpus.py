@@ -8351,6 +8351,161 @@ class CorpusTool:
               t_selftest_leaves_the_exports_dir_untouched)
         check("every anchor is counted in a class the provenance report prints",
               t_anchor_without_local_file_is_counted_and_reported)
+
+        # ---- The three declarations settled at the 2026-10-03 vocabulary pass.
+        # Each is a constraint the corpus already obeyed. The point of these
+        # tests is not that the constraint passes on the current corpus - it
+        # does - but that it would FAIL if the corpus were to drift back, so
+        # the two schema declarations and the one absence-marker conversion are
+        # gates rather than documentation.
+
+        def _declared_property(schema_name, prop):
+            """The declaration of `prop` in a schema, searching every allOf part."""
+            schema = load_json(self.schemas_dir / schema_name)
+            for part in schema.get("allOf", []):
+                props = part.get("properties") or {}
+                if prop in props:
+                    return props[prop]
+            return None
+
+        def _records_with_key(key):
+            """Every corpus record carrying `key` at any depth, with its type."""
+            out = []
+            index = self.load_artifact_index()
+            for (profile, aid), (_p, d) in index.items():
+                if not isinstance(d, dict):
+                    continue
+
+                def walk(node):
+                    if isinstance(node, dict):
+                        if key in node:
+                            out.append((aid, profile, d.get("artifact_type"), node[key]))
+                        for v in node.values():
+                            walk(v)
+                    elif isinstance(node, list):
+                        for v in node:
+                            walk(v)
+                walk(d)
+            return out
+
+        def t_fault_reaction_shape_is_declared_per_record_type():
+            # VOC-AMB-004. The same key name carries an array on a safety
+            # concept and an object on a requirement. Before the declaration,
+            # requirement.schema.json set additionalProperties true and said
+            # nothing, so both shapes were legal and a consumer could not know
+            # which to expect. The test asserts three things: each shape is
+            # declared in the schema that governs its own record type, the two
+            # declarations are genuinely different shapes, and every record in
+            # the live corpus matches the shape its type declares.
+            req = _declared_property("requirement.schema.json", "fault_reaction")
+            con = None
+            concept = load_json(self.schemas_dir / "safety_concept.schema.json")
+            for part in concept.get("allOf", []):
+                strat = ((part.get("properties") or {}).get("safety_strategies") or {})
+                con = (strat.get("properties") or {}).get("fault_reaction")
+                if con:
+                    break
+            if not req or not con:
+                self._probe_note = "a declaration is missing from one of the two schemas"
+                return False
+            declared = {"requirement": req.get("type"), "safety_concept": con.get("type")}
+            live = _records_with_key("fault_reaction")
+            mismatched = []
+            for aid, _profile, atype, value in live:
+                want = declared.get(atype)
+                if want is None:
+                    mismatched.append((aid, atype, "no declaration for this type"))
+                    continue
+                if isinstance(value, list) and want != "array":
+                    mismatched.append((aid, atype, f"list but declared {want}"))
+                elif isinstance(value, dict) and want != "object":
+                    mismatched.append((aid, atype, f"object but declared {want}"))
+            by_type = {}
+            for _aid, _p, atype, value in live:
+                by_type[atype] = by_type.get(atype, 0) + 1
+            self._probe_note = (f"declared {declared}; live shapes {by_type}; "
+                                f"{len(mismatched)} record(s) do not match")
+            return (declared["requirement"] == "object"
+                    and declared["safety_concept"] == "array"
+                    and len(live) >= 11
+                    and not mismatched)
+
+        def t_tara_residual_risk_is_enumerated():
+            # VOC-AMB-006. threats[].residual_risk was type string,
+            # minLength 3, sitting beside a residual_risk_justification whose
+            # own minLength is 15 - so a paragraph could land in the grade field
+            # where the justification belongs. The declaration enumerates the
+            # three values the corpus actually uses, and this test fails if the
+            # enum is removed or if any real threat leaves it.
+            decl = None
+            tara = load_json(self.schemas_dir / "tara.schema.json")
+            for part in tara.get("allOf", []):
+                threats = (part.get("properties") or {}).get("threats") or {}
+                decl = ((threats.get("items") or {}).get("properties") or {}).get("residual_risk")
+                if decl:
+                    break
+            enum = (decl or {}).get("enum")
+            if not enum:
+                self._probe_note = "threats[].residual_risk carries no enum"
+                return False
+            seen, outside = set(), []
+            index = self.load_artifact_index()
+            for (profile, _aid), (_p, d) in index.items():
+                if not isinstance(d, dict):
+                    continue
+                for th in (d.get("threats") or []):
+                    if isinstance(th, dict) and "residual_risk" in th:
+                        v = th["residual_risk"]
+                        seen.add(v)
+                        if v not in enum:
+                            outside.append((_aid, v))
+            # not_rated must stay in the enum: it is the absence member and
+            # dropping it would force a threat to be graded or to be silent.
+            self._probe_note = (f"enum {sorted(enum)}; live values {sorted(seen)}; "
+                                f"{len(outside)} outside the enum")
+            return ("not_rated" in enum and "low" in enum and "medium" in enum
+                    and seen and not outside)
+
+        def t_asil_absence_marker_is_one_token_and_owes_a_reason():
+            # VOC-AMB-003. QM is a classification on safety_allocation.asil and
+            # not_applicable is the schema's own absence member. One record,
+            # FB2-MAN-SCO-000001, wrote QM as an absence marker with 'N/A' in
+            # both sibling fields and no justification, and escaped the
+            # requirement_applicability_validator because that rule keys on
+            # not_applicable alone. The test holds the conversion in place: any
+            # record using the absence token owes a justification, and the
+            # classification token must not reappear as an absence marker.
+            index = self.load_artifact_index()
+            absence, unjustified, qm_markers = 0, [], []
+            for (profile, aid), (_p, d) in index.items():
+                if not isinstance(d, dict):
+                    continue
+                alloc = d.get("safety_allocation")
+                if not isinstance(alloc, dict):
+                    continue
+                v = alloc.get("asil")
+                if v == "not_applicable":
+                    absence += 1
+                    if not d.get("asil_justification"):
+                        unjustified.append(aid)
+                elif v == "QM":
+                    # QM is a classification. A record carrying it must have
+                    # something to classify: a goal reference that is not an
+                    # absence marker, or an explicit justification.
+                    ref = str(alloc.get("safety_goal_ref", ""))
+                    if ref.strip().upper() in ("N/A", "NA", "") and not d.get("asil_justification"):
+                        qm_markers.append(aid)
+            self._probe_note = (f"{absence} record(s) use the absence token; "
+                                f"{len(unjustified)} without a justification; "
+                                f"{len(qm_markers)} QM used as an absence marker")
+            return absence >= 14 and not unjustified and not qm_markers
+
+        check("fault_reaction is declared per record type and every record matches its own type",
+              t_fault_reaction_shape_is_declared_per_record_type)
+        check("TARA threats[].residual_risk is enumerated and every live value is a member",
+              t_tara_residual_risk_is_enumerated)
+        check("the ASIL absence token is one value and every record using it owes a reason",
+              t_asil_absence_marker_is_one_token_and_owes_a_reason)
         return all(passed for _, passed in tests)
 
 

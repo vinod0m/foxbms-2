@@ -1,6 +1,6 @@
 {
   "id": "FB2-REV-000008",
-  "revision": "2",
+  "revision": "3",
   "schema_version": "1.0.0",
   "artifact_type": "review",
   "engineering_domain": "system",
@@ -33,7 +33,7 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T00:00:00Z",
-  "updated_at": "2026-10-01T00:00:00Z",
+  "updated_at": "2026-10-03T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
@@ -46,14 +46,20 @@
       "date": "2026-10-01T00:00:00Z",
       "author": "quality_engineer",
       "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 1 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  1 of 1 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here."
+    },
+    {
+      "revision": "3",
+      "date": "2026-10-03T00:00:00Z",
+      "author": "safety_engineer",
+      "description": "Provenance repair by a separate session (opencode-2026-10-03-asil-absence-marker-conversion), not a re-review. One reviewed_ids digest was re-derived because its artefact moved: FB2-MAN-SCO-000001 went to revision 2, where safety_allocation.asil was converted from QM to not_applicable and an asil_justification was added, under FB2-SAF-VOC-000001 VOC-AMB-003. That record is now revision 3 and its digest for FB2-MAN-SCO-000001 names revision 2; the superseded digest, revision and basis are in digest_corrections, appended rather than replaced, so the earlier correction for FB2-SYS-HSI-000001 is still on the record. The findings, dispositions, scope, checklist, review_type and reviewer_identity of the original pass are untouched, and no finding is added or withdrawn: nothing in this review depended on the value of the asil field, and this session did not examine FB2-MAN-SCO-000001 at all. The digest refresh does not carry the weight of a re-review. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
     }
   ],
   "review_type": "domain",
   "reviewed_ids": [
     {
       "artifact_id": "FB2-MAN-SCO-000001",
-      "revision": "1",
-      "digest": "4fd185c4730f64b458da7dd80d179aa2d2e7eee50df1e0ea97989528c2d54568"
+      "revision": "2",
+      "digest": "9faf21954e4d56d6bbcd7bfb76ec324c99c015fb32af47e29df24b01941f6cca"
     },
     {
       "artifact_id": "FB2-MAN-SPL-000001",
@@ -159,6 +165,16 @@
       "current_artifact_revision": "1",
       "basis": "artefact_bytes_replaced_since_this_review",
       "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 1. The digest this review recorded is the sha256 of the file as committed in 2a408d57, 176fe234, 75e8de6c, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session."
+    },
+    {
+      "artifact_id": "FB2-MAN-SCO-000001",
+      "profile": "synthetic_reference",
+      "previous_digest": "4fd185c4730f64b458da7dd80d179aa2d2e7eee50df1e0ea97989528c2d54568",
+      "previous_reviewed_revision": "1",
+      "current_digest": "9faf21954e4d56d6bbcd7bfb76ec324c99c015fb32af47e29df24b01941f6cca",
+      "current_artifact_revision": "2",
+      "basis": "endpoint_artifact_advanced_revision",
+      "explanation": "The artefact was revised by a deliberate, recorded revision after this review was issued: the review recorded revision 1 and the artefact is now revision 2, which converted safety_allocation.asil from QM to not_applicable and added the asil_justification its peer records already carry. The basis is therefore a revision that says what it did and why, not bytes replaced behind the review's back, which is the distinction the earlier correction on this record draws. The revision is settled under FB2-SAF-VOC-000001 VOC-AMB-003. Re-issuing the digest asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined revision 2, and this session did not examine it either."
     }
   ]
 }
