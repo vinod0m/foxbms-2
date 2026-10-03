@@ -1,5 +1,16 @@
 # Final Acceptance Report
 
+> **Figures in this document were measured on the date in its header and are NOT
+> current.** The record population moved from 300 to 318 records on 2026-10-03
+> (the artifact index was corrected to walk `scenarios/`, which it had always
+> claimed in its docstring to do, and a duplicate revision-1 scenario tree under
+> `corpus/scenarios/` was removed), the link count is 553 not 489, the validator
+> reports 5 findings and 0 errors rather than 4 and 0, and the self-test count is
+> 91 rather than 48. Every figure below is left as measured on its stated date so
+> that the audit trail is not rewritten; read it as a dated measurement, not as a
+> current one. Live figures: `docs/artifacts/README.md`, which was re-measured.
+
+
 **Generated:** 2026-09-29
 **Baseline:** BAS-REF-001 (pinned source commit `308028fb`, v1.11.0)
 **Repository:** `/Users/vinod/Downloads/SoftwareDevLabs/foxbms-2`

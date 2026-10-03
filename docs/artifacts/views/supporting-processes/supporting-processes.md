@@ -1,6 +1,6 @@
 # Supporting processes (generated view)
 
-Generated: 2026-10-02T20:56:53Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
+Generated: 2026-10-03T11:17:01Z | Baseline: BAS-REF-001 | 320 artifacts, 569 links
 
 ## Provenance and status of this file
 
@@ -73,13 +73,15 @@ The corpus also contains review records that exercise these process families in 
 | `FB2-REV-000013` | synthetic_reference | cross_domain | safety | Review: the Part 3 item definition, both safety concepts, the SYS.1 elicitation set, the SYS.2 system require… | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-REV-000014` | synthetic_reference | cross_domain | supporting | Review: the project plan, risk register, measurement plan, improvement records, the six supporting-process re… | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-REV-000015` | synthetic_reference | domain | verification | Review: the five security verification measures, their blocked executions and the two findings raised against… | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-REV-000016` | as_is | domain | verification | Review: the four uncovered as_is execution records - timing fields against retained evidence, evidence hash f… | draft | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-REV-000017` | synthetic_reference | domain | verification | Review: the twelve uncovered synthetic_reference execution records - fabricated run windows, unretained synth… | draft | profile=`synthetic_reference` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### Review finding counts by severity
 
 | Profile | critical | high | medium | low | Total |
 |---|---|---|---|---|---|
-| as_is | 0 | 1 | 9 | 3 | 17 |
-| synthetic_reference | 0 | 7 | 15 | 4 | 32 |
+| as_is | 0 | 1 | 10 | 3 | 18 |
+| synthetic_reference | 0 | 7 | 17 | 6 | 36 |
 
 **These are automated AI-assisted review findings. They are not human review findings and none of them constitutes approval.**
 

@@ -472,12 +472,32 @@ class CorpusTool:
                 self.findings.add("critical", "schema", p.name, f"schema unparseable: {e}", "schema_file_check")
 
     def iter_corpus_artifacts(self):
-        """Yield (path, dict) for every artifact-shaped JSON under corpus/, reviews/, scenarios/."""
-        for base in (self.corpus_dir, self.artifacts_dir / "reviews"):
+        """Yield (path, dict) for every artifact-shaped JSON under corpus/, reviews/, scenarios/.
+
+        The docstring used to name three roots while the code walked two. The
+        third root, `scenarios/`, was therefore invisible to the artifact index
+        even though it is where `_execute_scenarios` and the self-tests read
+        every scenario fixture from. The two readers could not agree: the index
+        reported on whatever duplicate happened to sit under `corpus/`, while
+        the harness validated `scenarios/`.
+
+        That latent split is what let a revision-1 copy of five fixtures sit at
+        `corpus/scenarios/` next to their live revision-2 twins in `scenarios/`.
+        `corpus/scenarios/` has been removed, so the two readers now name the
+        same bytes -- but the index must still walk `scenarios/`, or deleting
+        the duplicate would have dropped the scenarios out of the corpus
+        entirely rather than relocating them. That regression is what the
+        "index sees every harness scenario" self-test below now guards.
+
+        `evaluator-only/` holds oracle manifests: answer keys, deliberately kept
+        out of the record population so a checker cannot read the answer out of
+        the index.
+        """
+        for base in (self.corpus_dir, self.artifacts_dir / "reviews", self.scenarios_dir):
             if not base.exists():
                 continue
             for p in sorted(base.rglob("*.json")):
-                if ".work" in p.parts:
+                if ".work" in p.parts or "evaluator-only" in p.parts:
                     continue
                 try:
                     yield p, load_json(p)
@@ -485,6 +505,11 @@ class CorpusTool:
                     self.findings.add("critical", "json", str(p), f"unparseable JSON: {e}", "json_unparseable")
 
     def iter_scenario_artifacts(self):
+        """Every scenario fixture the mutation/change harness executes.
+
+        A subset of `iter_corpus_artifacts`, kept as its own iterator because the
+        harness must read exactly the fixtures it is about to mutate.
+        """
         for p in sorted(self.scenarios_dir.rglob("*.json")):
             if "evaluator-only" in p.parts:
                 continue
@@ -850,7 +875,92 @@ class CorpusTool:
                 self.identity_duplicates = True
             else:
                 seen[key] = (p, d)
+        self._report_cross_profile_identifier_reuse()
         return not getattr(self, "identity_duplicates", False)
+
+    def _report_cross_profile_identifier_reuse(self):
+        """Report the corpus's violation of ID-RULE-004, which the duplicate
+        check above is structurally unable to see.
+
+        `_validate_no_duplicate_ids` keys on (profile, id), so cross-profile
+        reuse of one identifier string is invisible to it by construction: two
+        records in different profiles are not a duplicate under that key. The
+        corpus policy nonetheless states ID-RULE-004, 'IDs must be globally
+        unique across profiles', and the corpus does not satisfy it. The
+        controlled-vocabulary record FB2-SAF-VOC-000001 says of this exact gap:
+        'The corpus's own validator deliberately permits this ... so the
+        cross-profile reuse is by construction invisible to the validator.'
+
+        Thirty-nine identifier strings are each carried by two records, and
+        `origin` disagrees on every one of the thirty-nine pairs, so these are
+        not duplicate records of one subject; they are thirty-nine collisions
+        between different subjects. The measured exposure is prose: about nine
+        hundred unqualified references in the record layer, none of which
+        carries a profile, resolve by the convention FB2-SAF-VOC-000001 adopts -
+        read as the synthetic_reference copy.
+
+        This is reported as a MEDIUM finding and not as an error, deliberately.
+        Every id-keyed lookup in this tool resolves (profile, id), so no
+        machine-read path is ambiguous and nothing here can fail a run. Raising
+        it to `high` would turn a recorded, understood, convention-resolved
+        policy deviation into a red build on every invocation, which would be a
+        change of policy rather than a detection of a defect. Its purpose is to
+        make the deviation impossible to overlook: before this rule the corpus
+        claimed to satisfy a policy rule it does not satisfy, silently.
+
+        The repair - re-issuing identifiers so no two records of different
+        subjects share one - is NOT performed here, and this finding must not be
+        read as saying it was. See
+        `identifier_vocabulary.migration_decision_2026_10_03` in
+        FB2-SAF-VOC-000001 for why, including the worked counterexample: a
+        safety-timing-budget closure argument in FB2-SAF-TSC-000001 is true of
+        the synthetic_reference copy of FB2-SAF-FSR-000003 and false of the
+        as_is copy, so renaming either side would make that argument silently
+        point at the wrong record with no validator output.
+        """
+        by_id = {}
+        for p, d in self.iter_corpus_artifacts():
+            aid = d.get("id")
+            profile = d.get("profile", "unknown")
+            if not aid:
+                continue
+            by_id.setdefault(aid, {})[profile] = (p, d)
+        reused = {aid: v for aid, v in by_id.items() if len(v) > 1}
+        differing_subject = 0
+        for aid, v in sorted(reused.items()):
+            origins = {prof: (d.get("origin") or "?") for prof, (_p, d) in v.items()}
+            if len(set(origins.values())) > 1:
+                differing_subject += 1
+        self.cross_profile_identifier_reuse = {
+            "reused_identifier_strings": len(reused),
+            "pairs_with_differing_origin": differing_subject,
+            "pairs_that_are_the_same_subject": len(reused) - differing_subject,
+            "identifier_strings": sorted(reused),
+            "governing_rule": "ID-RULE-004",
+            "policy_text": "IDs must be globally unique across profiles",
+            "repaired": False,
+            "repair_declined_because": (
+                "renaming either side silently inverts the convention that an "
+                "unqualified identifier reads as the synthetic_reference copy, "
+                "which about nine hundred prose references depend on; see "
+                "FB2-SAF-VOC-000001 identifier_vocabulary."
+                "migration_decision_2026_10_03"),
+        }
+        if reused:
+            self.findings.add(
+                "medium", "identity", "ID-RULE-004",
+                f"{len(reused)} identifier string(s) are each carried by more "
+                f"than one record across profiles; {differing_subject} pair(s) "
+                f"disagree on `origin`, so they are different subjects rather "
+                f"than duplicate records. The corpus policy rule ID-RULE-004 "
+                f"('IDs must be globally unique across profiles') is therefore "
+                f"not satisfied. Reported, not an error: every id-keyed lookup in "
+                f"this tool resolves (profile, id), and the corpus's adopted "
+                f"convention reads an unqualified identifier as the "
+                f"synthetic_reference copy. The identifiers are NOT re-issued; "
+                f"see FB2-SAF-VOC-000001 "
+                f"identifier_vocabulary.migration_decision_2026_10_03.",
+                "cross_profile_identifier_reuse_vs_id_rule_004")
 
     def _validate_links(self, links, index):
         ok = True
@@ -2599,11 +2709,11 @@ class CorpusTool:
                 continue  # registry container files
             count += 1
             ok &= self._validate_artifact(p, d, schema_cache)
-        for p, d in self.iter_scenario_artifacts():
-            if "id" not in d:
-                continue
-            count += 1
-            ok &= self._validate_artifact(p, d, schema_cache)
+        # `scenarios/` is walked by iter_corpus_artifacts, so it must NOT be
+        # walked again here. It used to be walked by both, which is why this
+        # command reported "Validated 323 artifacts" while the acceptance suite
+        # counted 300 records for the same tree: the two readers disagreed about
+        # the record population. `count` is now the size of the index.
         if not quiet:
             print(f"Validated {count} artifacts")
             print("Running link validation...")
@@ -2954,6 +3064,32 @@ class CorpusTool:
         index_ids = {k[1] if isinstance(k, tuple) else k for k in index}
         agree = "consistent" if reviewed_by_ids == reviewed_ids else \
             f"registry adds {len(reviewed_by_ids - reviewed_ids)}, records add {len(reviewed_ids - reviewed_by_ids)}"
+        # Per-review attribution: does each review's own reviewed_ids set equal
+        # the set of targets its own reviewed_by links name? Computed here, not
+        # inferred from the corpus-wide comparison above.
+        from collections import defaultdict as _dd
+        rb_by_review = _dd(set)
+        for l in links:
+            if l.get("relation_type") == "reviewed_by" and l.get("target_id"):
+                rb_by_review[(l.get("profile"), l.get("source_id"))].add(l["target_id"])
+        ri_by_review = _dd(set)
+        for rp in sorted((self.artifacts_dir / "reviews" / "records").glob("*.json")):
+            rd = load_json(rp)
+            if rd.get("artifact_type") != "review":
+                continue
+            for e in rd.get("reviewed_ids", []) or []:
+                if e.get("artifact_id"):
+                    ri_by_review[(rd.get("profile"), rd.get("id"))].add(e["artifact_id"])
+        per_review_attribution_bad = []
+        for k in sorted(set(rb_by_review) | set(ri_by_review)):
+            only_links = sorted(rb_by_review.get(k, set()) - ri_by_review.get(k, set()))
+            only_ids = sorted(ri_by_review.get(k, set()) - rb_by_review.get(k, set()))
+            if only_links or only_ids:
+                per_review_attribution_bad.append({
+                    "review_id": k[1], "profile": k[0],
+                    "claimed_in_reviewed_ids_but_no_link": only_ids,
+                    "linked_but_not_claimed_in_reviewed_ids": only_links})
+        per_review_attribution_ok = not per_review_attribution_bad
         dims["automated_review_coverage"] = {"numerator": len(covered & index_ids),
                                              "denominator": len(index_ids),
                                              "detail": f"{len(covered & index_ids)}/{len(index_ids)} artifacts covered by "
@@ -2977,6 +3113,31 @@ class CorpusTool:
                                              # reviewed_by links leaves the numerator at 144
                                              # and flips this to False.
                                              "reviewed_by_agrees_with_records": reviewed_by_ids == reviewed_ids,
+                                             # Set equality corpus-wide is a WEAKER
+                                             # property than the two sources agreeing
+                                             # on WHICH review covered an artefact, and
+                                             # the detail text above reads as though
+                                             # it were the stronger one. It is not:
+                                             # an id claimed in one review's
+                                             # reviewed_ids and linked from a
+                                             # different review leaves both
+                                             # corpus-wide sets equal and this field
+                                             # True, while a reader following the
+                                             # graph reaches the wrong reviewer.
+                                             # Measured on this tree: FB2-REV-000015
+                                             # enumerates FB2-VER-EXE-000016..000020
+                                             # and FB2-VER-TMS-000016..000020 in its
+                                             # reviewed_ids, while the reviewed_by
+                                             # links for all ten run from
+                                             # FB2-REV-000013. Reported, not an
+                                             # error: which of the two records is
+                                             # right is a fact about the review
+                                             # passes that produced them, and
+                                             # settling it is not a validator's job.
+                                             "reviewed_by_attribution_agrees_per_review":
+                                                 per_review_attribution_ok,
+                                             "reviewed_by_attribution_mismatches":
+                                                 per_review_attribution_bad,
                                              "reviewed_by_only": sorted(reviewed_by_ids - reviewed_ids),
                                              "records_only": sorted(reviewed_ids - reviewed_by_ids),
                                              "review_records": n_review_records}
@@ -8195,6 +8356,81 @@ class CorpusTool:
                                 f"figure was the literal 10")
             return executed == set(SEMANTIC_RULE_IDS) and len(executed) != 10
 
+        def t_index_and_harness_resolve_the_same_scenario_bytes():
+            # The corpus held two copies of five scenario fixtures under one
+            # artifact id: a revision-1 copy under docs/artifacts/corpus/scenarios/
+            # that the artifact index resolved to, and the live copy under
+            # docs/artifacts/scenarios/ that the mutation and change-lifecycle
+            # harness executed. Nothing reported the split: the duplicate-id
+            # check only ever saw one of the two, because the index never walked
+            # the harness's root, so `validate` passed while the corpus reported
+            # on different bytes than the harness validated.
+            #
+            # This asserts the two readers agree, on the real tree, right now.
+            index = self.load_artifact_index()
+            harness = {}
+            for p, d in self.iter_scenario_artifacts():
+                aid = d.get("id")
+                if not aid:
+                    continue
+                key = (d.get("profile", "unknown"), aid)
+                if key in harness and harness[key][0].read_bytes() != p.read_bytes():
+                    self._probe_note = f"{aid}: two harness fixtures disagree"
+                    return False
+                harness[key] = (p, d)
+            if not harness:
+                self._probe_note = "no scenario fixtures found under scenarios/"
+                return False
+            missing, differ = [], []
+            for key, (hp, hd) in sorted(harness.items()):
+                if key not in index:
+                    missing.append(key[1])
+                    continue
+                ip, idd = index[key]
+                if ip.read_bytes() != hp.read_bytes():
+                    differ.append(key[1])
+                if idd.get("revision") != hd.get("revision"):
+                    differ.append(f"{key[1]} (index rev {idd.get('revision')})")
+            # The reverse direction too: no scenario record may linger in the
+            # index under some path other than the one the harness reads.
+            harness_ids = {k for k in harness}
+            extra = [aid for (prof, aid), (p, _d) in index.items()
+                     if "scenario" in str(_d.get("artifact_type", ""))
+                     and (prof, aid) not in harness_ids]
+            self._probe_note = (
+                f"{len(harness)} harness fixture(s); index missing {missing or 'none'}; "
+                f"byte/revision divergence {differ or 'none'}; "
+                f"index-only scenario records {extra or 'none'}")
+            return not missing and not differ and not extra
+
+        def t_duplicate_scenario_id_is_an_error():
+            # The gate above holds only while a duplicate cannot get in. Prove
+            # that one still fails loudly: inject a ghost fixture that reuses a
+            # live scenario's id with different bytes, confirm the duplicate-id
+            # rule fires, then restore the real tree.
+            src = sorted((self.scenarios_dir / "mutations").glob("*.json"))[0]
+            orig = json.loads(src.read_text())
+            ghost = dict(orig)
+            ghost["revision"] = str(int(orig.get("revision", "1")) + 1)
+            ghost["updated_at"] = "2026-10-03T00:00:00Z"
+            real_iter = self.iter_corpus_artifacts
+            self.findings = Findings()
+            try:
+                self.iter_corpus_artifacts = lambda: (
+                    list(real_iter()) + [(Path("ghost-scenario.json"), ghost)])
+                self._validate_no_duplicate_ids()
+                fired = [f for f in self.findings.items
+                         if f["rule"] == "identity_duplicate_within_profile"
+                         and orig["id"] in (f["artifact_id"] or "")]
+            finally:
+                self.iter_corpus_artifacts = real_iter
+                self.findings = Findings()
+            self._probe_note = ("duplicate scenario id fired "
+                                "identity_duplicate_within_profile for "
+                                f"{orig['id']}" if fired
+                                else "duplicate scenario id did NOT fire")
+            return bool(fired)
+
         def t_every_declared_semantic_rule_is_emittable():
             # The declared set must name rules the tool can actually raise, or the
             # denominator counts rules that do not exist.
@@ -8337,6 +8573,10 @@ class CorpusTool:
               t_semantic_rule_dimension_is_computed_not_declared)
         check("every declared semantic rule has an emission site in the source",
               t_every_declared_semantic_rule_is_emittable)
+        check("the index and the scenario harness resolve every scenario to the SAME bytes",
+              t_index_and_harness_resolve_the_same_scenario_bytes)
+        check("a duplicate scenario id under any root FAILS validate",
+              t_duplicate_scenario_id_is_an_error)
         check("the source_grounding floor is below the measured level and above the collapsed one",
               t_source_grounding_floor_catches_the_collapse)
         check("standards_mapping gate predicate rejects a zero numerator",
@@ -8369,22 +8609,40 @@ class CorpusTool:
             return None
 
         def _records_with_key(key):
-            """Every corpus record carrying `key` at any depth, with its type."""
+            """Every corpus record carrying `key` as its OWN declared value, with its type.
+
+            Two exclusions, both about what counts as a record declaring a value.
+
+            A mutation scenario's `patch` block is a payload describing an edit
+            to some OTHER record: `patch.new_value.fault_reaction = null` in
+            SCN-MUT-008 says "set this requirement's fault_reaction to null",
+            it is not a fault_reaction this scenario record declares. Before
+            the artifact index walked docs/artifacts/scenarios/ the mutation
+            fixtures were invisible to this walk, so the exclusion was never
+            exercised; with them indexed it is, and FB2-SCN-MUT-000008 was
+            reported as a record whose fault_reaction shape no schema declares.
+            The payload is skipped rather than the fixture changed, because the
+            null IS the defect the scenario injects.
+
+            A key whose value is null declares no shape at all and cannot be
+            classified as array or object, so it is not counted as a live
+            shape by any caller that compares against a declared type.
+            """
             out = []
             index = self.load_artifact_index()
             for (profile, aid), (_p, d) in index.items():
                 if not isinstance(d, dict):
                     continue
 
-                def walk(node):
+                def walk(node, is_payload=False):
                     if isinstance(node, dict):
-                        if key in node:
+                        if key in node and node[key] is not None and not is_payload:
                             out.append((aid, profile, d.get("artifact_type"), node[key]))
-                        for v in node.values():
-                            walk(v)
+                        for k, v in node.items():
+                            walk(v, is_payload or k == "patch")
                     elif isinstance(node, list):
                         for v in node:
-                            walk(v)
+                            walk(v, is_payload)
                 walk(d)
             return out
 

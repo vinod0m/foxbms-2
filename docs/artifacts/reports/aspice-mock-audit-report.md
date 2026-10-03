@@ -1,5 +1,16 @@
 # foxBMS 2 — ASPICE PAM 4.1 Mock Audit Report
 
+> **Figures in this document were measured on the date in its header and are NOT
+> current.** The record population moved from 300 to 318 records on 2026-10-03
+> (the artifact index was corrected to walk `scenarios/`, which it had always
+> claimed in its docstring to do, and a duplicate revision-1 scenario tree under
+> `corpus/scenarios/` was removed), the link count is 553 not 489, the validator
+> reports 5 findings and 0 errors rather than 4 and 0, and the self-test count is
+> 91 rather than 48. Every figure below is left as measured on its stated date so
+> that the audit trail is not rewritten; read it as a dated measurement, not as a
+> current one. Live figures: `docs/artifacts/README.md`, which was re-measured.
+
+
 **Audit date:** 2026-09-20 — **verdicts and counts refreshed 2026-10-01 from a live `corpus.py` run**
 **Baseline:** BAS-REF-001 — source pinned to commit `308028fb` (tag `v1.11.0`); corpus authored at `2a408d5`. The original audit also cited corpus branch `foxbms-2-synthetic-data` at `83d2381a`, which is neither of those two and is not the tree these figures come from.
 **Reference model:** Automotive SPICE PAM 4.1 (process reference: SYS.1–SYS.5, SWE.1–SWE.6, HWE.1–HWE.4, SUP, MAN, VAL, PIM, REU)

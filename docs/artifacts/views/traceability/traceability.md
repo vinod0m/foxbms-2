@@ -1,6 +1,6 @@
 # Traceability — links, chains and coverage (generated view)
 
-Generated: 2026-10-02T20:56:53Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
+Generated: 2026-10-03T11:17:01Z | Baseline: BAS-REF-001 | 320 artifacts, 569 links
 
 ## Provenance and status of this file
 
@@ -32,17 +32,17 @@ Derived from the canonical link registries. Counts are computed here, not transc
 | `allocated_to` | 9 | 37 | 46 |
 | `changes` | 0 | 16 | 16 |
 | `consumes` | 3 | 0 | 3 |
-| `depends_on` | 1 | 26 | 27 |
+| `depends_on` | 1 | 31 | 32 |
 | `implements` | 6 | 10 | 16 |
 | `mitigates` | 1 | 2 | 3 |
 | `refines` | 9 | 42 | 51 |
 | `result_of` | 5 | 28 | 33 |
-| `reviewed_by` | 78 | 151 | 229 |
+| `reviewed_by` | 82 | 163 | 245 |
 | `specified_by` | 0 | 15 | 15 |
-| `supports` | 0 | 29 | 29 |
+| `supports` | 0 | 30 | 30 |
 | `validates` | 0 | 15 | 15 |
 | `verifies` | 12 | 52 | 64 |
-| **Total** | 124 | 423 | 547 |
+| **Total** | 128 | 441 | 569 |
 
 `related_to` is forbidden in canonical registries and appears only in mutation fixtures, where it is the injected defect.
 
@@ -120,8 +120,11 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-FND-000113` | synthetic_reference | supports | `FB2-REV-FND-000026` | `FB2-SAF-TSC-000001` | reviewed | true |
 | `FB2-LNK-FND-000114` | synthetic_reference | supports | `FB2-REV-FND-000027` | `FB2-SYS-SYR-000005` | reviewed | true |
 | `FB2-LNK-FND-000115` | synthetic_reference | supports | `FB2-REV-FND-000028` | `FB2-VER-TMS-000018` | reviewed | true |
+| `FB2-LNK-GDL-000001` | synthetic_reference | depends_on | `FB2-SAF-GDL-000001` | `FB2-SAF-VOC-000001` | reviewed | true |
+| `FB2-LNK-GDL-000002` | synthetic_reference | depends_on | `FB2-SAF-GDL-000001` | `FB2-SAF-ITE-000001` | reviewed | false |
+| `FB2-LNK-GDL-000003` | synthetic_reference | supports | `FB2-SAF-GDL-000001` | `FB2-SAF-SCS-000001` | reviewed | false |
 | `FB2-LNK-HW-000001` | synthetic_reference | depends_on | `FB2-HW-HVP-000001` | `FB2-HW-HCB-000001` | pending | false |
-| `FB2-LNK-HW-000002` | synthetic_reference | depends_on | `FB2-HW-HDD-000001` | `FB2-HW-HCB-000001` | pending | false |
+| `FB2-LNK-HW-000002` | synthetic_reference | depends_on | `FB2-HW-HDD-000001` | `FB2-HW-HCB-000001` | pending | true |
 | `FB2-LNK-LIF-000099` | synthetic_reference | depends_on | `FB2-REL-RLS-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
 | `FB2-LNK-LIF-000100` | synthetic_reference | depends_on | `FB2-PRD-EOL-000001` | `FB2-SYS-SYR-000003` | reviewed | false |
 | `FB2-LNK-LIF-000101` | synthetic_reference | depends_on | `FB2-PRD-CAL-000001` | `FB2-SYS-SYR-000002` | reviewed | false |
@@ -361,6 +364,22 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-REVB-000175` | synthetic_reference | reviewed_by | `FB2-REV-000013` | `FB2-REV-FND-000027` | reviewed | true |
 | `FB2-LNK-REVB-000176` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000028` | reviewed | true |
 | `FB2-LNK-REVB-000177` | synthetic_reference | reviewed_by | `FB2-REV-000015` | `FB2-REV-FND-000029` | reviewed | true |
+| `FB2-LNK-REVB-000178` | as_is | reviewed_by | `FB2-REV-000016` | `FB2-VER-EXE-000002` | reviewed | false |
+| `FB2-LNK-REVB-000179` | as_is | reviewed_by | `FB2-REV-000016` | `FB2-VER-EXE-000003` | reviewed | false |
+| `FB2-LNK-REVB-000180` | as_is | reviewed_by | `FB2-REV-000016` | `FB2-VER-EXE-000004` | reviewed | false |
+| `FB2-LNK-REVB-000181` | as_is | reviewed_by | `FB2-REV-000016` | `FB2-VER-EXE-000005` | reviewed | false |
+| `FB2-LNK-REVB-000182` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000002` | reviewed | true |
+| `FB2-LNK-REVB-000183` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000003` | reviewed | true |
+| `FB2-LNK-REVB-000184` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000004` | reviewed | true |
+| `FB2-LNK-REVB-000185` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000005` | reviewed | true |
+| `FB2-LNK-REVB-000186` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000021` | reviewed | true |
+| `FB2-LNK-REVB-000187` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000022` | reviewed | true |
+| `FB2-LNK-REVB-000188` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000023` | reviewed | true |
+| `FB2-LNK-REVB-000189` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000024` | reviewed | true |
+| `FB2-LNK-REVB-000190` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000025` | reviewed | true |
+| `FB2-LNK-REVB-000191` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000026` | reviewed | true |
+| `FB2-LNK-REVB-000192` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000027` | reviewed | true |
+| `FB2-LNK-REVB-000193` | synthetic_reference | reviewed_by | `FB2-REV-000017` | `FB2-VER-EXE-000028` | reviewed | true |
 | `FB2-LNK-SAF-000019` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-HAZ-000001` | reviewed | true |
 | `FB2-LNK-SAF-000020` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000001` | reviewed | true |
 | `FB2-LNK-SEC-000001` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000001` | pending | true |
@@ -398,6 +417,9 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-USW-000005` | as_is | consumes | `FB2-VER-UTS-000002` | `FB2-VER-TMS-000004` | pending | false |
 | `FB2-LNK-USW-000006` | as_is | consumes | `FB2-VER-UTS-000002` | `FB2-VER-TMS-000001` | pending | false |
 | `FB2-LNK-USW-000007` | as_is | consumes | `FB2-VER-UTS-000002` | `FB2-VER-TMS-000002` | pending | false |
+| `FB2-LNK-VOC-000001` | synthetic_reference | depends_on | `FB2-SAF-VOC-000001` | `FB2-SAF-ITE-000001` | reviewed | true |
+| `FB2-LNK-VOC-000002` | synthetic_reference | depends_on | `FB2-SAF-VOC-000001` | `FB2-SAF-HAZ-000001` | reviewed | true |
+| `FB2-LNK-VOC-000003` | synthetic_reference | depends_on | `FB2-SAF-VOC-000001` | `FB2-SAF-SEC-000003` | reviewed | true |
 | `FB2-LNK-VSW-000001` | synthetic_reference | depends_on | `FB2-VER-SIP-000001` | `FB2-VER-UTS-000001` | pending | false |
 | `FB2-LNK-VSW-000002` | synthetic_reference | depends_on | `FB2-VER-SQP-000001` | `FB2-VER-UTS-000001` | pending | false |
 | `FB2-LNK-VSW-000003` | synthetic_reference | depends_on | `FB2-VER-SQP-000001` | `FB2-VER-SIP-000001` | pending | false |

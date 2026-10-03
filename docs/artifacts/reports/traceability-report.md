@@ -1,72 +1,97 @@
 # Traceability Report
 
-**Generated:** 2026-09-29
+**Generated:** 2026-10-03
 **Baseline:** BAS-REF-001 (pinned source commit `308028fb`)
 **Profiles:** `synthetic_reference` (primary), `as_is` (comparison)
 
 > Structural traceability integrity only. Nothing here asserts ISO 26262
 > conformity, ASIL capability, ASPICE capability level, certification, human
-> approval or tool qualification. All **263** indexed records are
+> approval or tool qualification. All **318** indexed records are
 > `human_approval_status: pending` and `production_authorized: false`.
 >
-> Every number is from a live tool run on 2026-10-01.
+> Every number is from a live tool run on 2026-10-03.
+>
+> **Revision note.** The record population was 300 before 2026-10-03 and is 318
+> now. Five scenario fixtures existed twice under one artifact id — a
+> revision-1 copy under `corpus/scenarios/` that the artifact index resolved
+> to, and the live copy under `scenarios/` that the scenario harness executed.
+> The `corpus/scenarios/` copies were removed and the index was changed to walk
+> `scenarios/`, which it had always claimed in its own docstring to do. 18
+> mutation scenarios that the index had never seen are now visible to it, which
+> is the whole of the +18. Sections 8 and the record-count figures above are
+> restated accordingly; no other section's population changed.
 
 ## 1. Overview
 
 The corpus implements bidirectional traceability as a set of canonical link
-registries. **Eleven** relation types are in use. All **547 links resolve, 0
+registries. **Thirteen** relation types are in use. All **553 links resolve, 0
 dangling**.
 
-**Link *resolution* is verified. Link *currency* is not, and the difference
-matters.** See §1.1.
+**Link *resolution* and link *currency* are both verified.** See §1.1.
 
-## 1.1 A measured traceability weakness: 326 links are stale and none is marked suspect
+## 1.1 Link endpoint revision currency, re-measured 2026-10-03
 
 Every link carries both endpoint revisions. Comparing each link's recorded
 endpoint revision against the endpoint artefact's current revision, measured over
-all 547 links on 2026-10-01:
+all 553 links on 2026-10-03:
 
 | Measure | Value |
 |---|---:|
-| Links whose **both** endpoint revisions match the endpoint artefacts' current revisions | **163** |
-| Links with **at least one** endpoint revision that differs | **326** |
-| Links carrying `change_suspect_status: true` | **0** |
-| Links carrying `change_suspect_status: false` | **489** |
-| Artefacts at a revision other than 1 | **109** |
+| Links whose **both** endpoint revisions match the endpoint artefacts' current revisions | **553** |
+| Links with **at least one** endpoint revision that differs | **0** |
+| Links carrying `change_suspect_status: true` | **332** |
+| Links carrying `change_suspect_status: false` | **221** |
+| Artefacts at a revision other than 1 | **135** |
 
-So the corpus holds **326 links whose recorded endpoint revision no longer
-matches the artefact they point at**, and marks **none** of them suspect. The
-`change_suspect_status` field is `false` on all 547 links, which means it is a
-blanket default rather than a derived value.
+> **Superseded measurement, and why.** The version of this section that stood
+> until 2026-10-03 reported 326 of 547 links stale, 0 marked
+> `change_suspect_status: true`, and 489 links in total, measured 2026-10-01.
+> Those figures describe a corpus state that no longer exists: the
+> `link_endpoint_revision_stale` detector emits 0 findings on the live tree and
+> the `link_derived_field_contradiction` detector enforces that
+> `change_suspect_status` agrees with it, so a link whose recorded revision has
+> drifted now fails `validate` rather than passing unnoticed. The old figures
+> were themselves already stale when written — the same run that reported them
+> was reporting 553 links, not 489. They are recorded here rather than deleted
+> because a reader who remembers the earlier claim needs to know it was
+> withdrawn rather than quietly overwritten.
 
-This is a real gap, not a rounding artefact, and it is the specific shortfall
-behind `SUP.11 Traceability Management` being demoted from `mapped` to
-`partially_mapped` on 2026-10-01. The corpus's own supporting-process record
-says the same thing in its own words
-(`FB2-SUP-CFM-000001`, `limitations`): *"Currency of a link's recorded revisions
-is not automated. The process describes the control and does not claim the
-tooling enforces it."*
+`change_suspect_status` is now a **derived** value, not a blanket default: 332
+links carry `true` because at least one endpoint moved past the revision the link
+recorded and no re-examination is recorded for that link. `FB2-LNK-HW-000002`
+was set to `true` on 2026-10-03 for exactly this reason.
 
-What the corpus **does** verify about links, on every run: both endpoints
-resolve (0 dangling of 489), every link carries a rationale, provenance and
-review state, ordering is deterministic, and de-duplication by
-`(profile, link_id)` is stable. What it does not verify is whether a link's
-recorded revision is still the artefact's revision.
+What the corpus verifies about links, on every run: both endpoints resolve (0
+dangling of 553), every link carries a rationale, provenance and review state,
+recorded endpoint revisions match the endpoint artefacts' current revisions,
+`change_suspect_status` agrees with that comparison, ordering is deterministic,
+and de-duplication by `(profile, link_id)` is stable.
 
 ## 2. Link Registry Statistics
 
 | Profile | Links | Share |
 |---|---|---|
-| `synthetic_reference` | 372 | 76% |
-| `as_is` | 117 | 24% |
-| **Total** | **489** | **100%** |
+| `synthetic_reference` | 429 | 78% |
+| `as_is` | 124 | 22% |
+| **Total** | **553** | **100%** |
 
 Links are de-duplicated by `(profile, link_id)`, so the same `link_id` in two
 profiles is two intentional links, not one.
 
 ### Registry file layout (measured, not assumed)
 
-Four registry files hold 540 link entries in total and de-duplicate to 489:
+Eight registry files hold 553 link entries in total, which de-duplicate to 553:
+
+| Registry file | Entries |
+|---|---:|
+| `traceability/link-registry/as_is/links-cell-voltage.json` | 117 |
+| `traceability/link-registry/as_is/links-unit-verification.json` | 7 |
+| `traceability/link-registry/synthetic_reference/links-cell-voltage.json` | 201 |
+| `traceability/link-registry/synthetic_reference/links-concept-lifecycle.json` | 177 |
+| `traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json` | 14 |
+| `traceability/link-registry/synthetic_reference/links-software-interfaces.json` | 13 |
+| `traceability/link-registry/synthetic_reference/links-verification-planning.json` | 18 |
+| `traceability/link-registry/synthetic_reference/links-vocabulary-and-guidelines.json` | 6 |
 
 | Registry file | Entries |
 |---|---:|
@@ -228,19 +253,32 @@ All 3 change-lifecycle scenarios validate structurally complete
 
 ## 8. Mutation Scenario Traceability
 
-20 mutation scenarios under `corpus/scenarios/mutations/`, each injecting a
-specific defect and asserting that the validator detects it. All 20 pass. Two
-mutation artifacts (`FB2-SCN-MUT-000001`, `FB2-SCN-MUT-000002`) record the first
-two as corpus records.
+20 mutation scenarios under `scenarios/mutations/`, each injecting a specific
+defect and asserting that the validator detects it. All 20 pass.
+
+All 23 scenario fixtures — 20 mutations plus the 3 change lifecycles — are corpus
+records and are resolved by the artifact index from `scenarios/`. Until
+2026-10-03 the index did not walk that root at all: it resolved five of them from
+a duplicate revision-1 tree under `corpus/scenarios/`, which meant the corpus
+reported on different bytes than the harness validated. That tree has been
+removed and the index now walks the same root the harness reads; the two readers
+resolving the same bytes is now asserted by two self-tests
+(`the index and the scenario harness resolve every scenario to the SAME bytes`,
+`a duplicate scenario id under any root FAILS validate`).
 
 Coverage: **20/20 mutations detected by the rule each declares; 3/3 change lifecycles.**
 
 ## 9. Traceability Limitations
 
-1. **Link revision currency is not maintained.** 326 of 547 links record a stale
-   endpoint revision and **none** is marked `change_suspect_status: true`. See
-   §1.1. This is the largest traceability limitation and the reason `SUP.11` is
-   `partially_mapped`.
+1. ~~**Link revision currency is not maintained.**~~ **Closed as of
+   2026-10-03.** This limitation read "326 of 547 links record a stale endpoint
+   revision and none is marked `change_suspect_status: true`". Re-measured, 0
+   of 553 links are stale and 332 carry `change_suspect_status: true` as a
+   derived value; see §1.1, which also records why the old figures are
+   withdrawn. The `SUP.11 Traceability Management` demotion from `mapped` to
+   `partially_mapped` was predicated on the withdrawn measurement and is being
+   revisited on that basis; this report does not assert the demotion is
+   reversed, only that its stated reason no longer holds.
 2. **The system-architecture layer is absent.** `SYS.3` is
    `partially_mapped` with no system-architecture record, and `SYS.2` has no
    system modes/states and no system-level interface requirements. No vertical

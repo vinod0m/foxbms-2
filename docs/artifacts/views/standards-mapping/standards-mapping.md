@@ -1,6 +1,6 @@
 # Standards mapping — ASPICE processes and ISO 26262 parts (generated view)
 
-Generated: 2026-10-02T20:56:53Z | Baseline: BAS-REF-001 | 298 artifacts, 547 links
+Generated: 2026-10-03T11:17:01Z | Baseline: BAS-REF-001 | 320 artifacts, 569 links
 
 ## Provenance and status of this file
 
@@ -81,10 +81,10 @@ Derived from `governance/coverage-plan.json` (`iso26262_coverage`).
 
 | Part | Status | Recorded rationale | Reference decision |
 |---|---|---|---|
-| `part_10_guidelines` | referenced | referenced - methodology guidance | - |
+| `part_10_guidelines` | `mapped` | - | - |
 | `part_11_semiconductors` | `not_applicable` | foxBMS is a BMS platform, not semiconductor development | APP-ISO-11 |
 | `part_12_motorcycles` | `not_applicable` | foxBMS targets automotive/industrial energy storage, not motorcycle-specific | APP-ISO-12 |
-| `part_1_vocabulary` | referenced | referenced | - |
+| `part_1_vocabulary` | `mapped` | - | - |
 | `part_2_management` | `partially_mapped` | - | - |
 | `part_3_concept` | `partially_mapped` | - | - |
 | `part_4_system` | `partially_mapped` | - | - |

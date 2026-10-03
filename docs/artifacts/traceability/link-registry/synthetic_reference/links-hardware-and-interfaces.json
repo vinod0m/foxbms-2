@@ -23,7 +23,7 @@
   {
    "link_id": "FB2-LNK-HW-000002",
    "source_id": "FB2-HW-HDD-000001",
-   "source_revision": "1",
+   "source_revision": "2",
    "target_id": "FB2-HW-HCB-000001",
    "target_revision": "1",
    "relation_type": "depends_on",
@@ -36,7 +36,35 @@
    "rationale": "The HWE.3 gap record repeats the same search result that the configuration baseline records: zero Altium source files in the working tree and in every commit, and the designs hosted on an external server. The gap record does not re-derive that from scratch, it depends on the baseline's measurement and extends it with the count of the records that inherit the limitation. If the baseline's availability finding were wrong, this record would be wrong too, so the dependency is declared rather than left implicit.",
    "provenance": "derived",
    "review_state": "pending",
-   "change_suspect_status": false
+   "change_suspect_status": true,
+   "provenance_repair": {
+    "session": "opencode-2026-10-03-duplicate-scenario-fixture-removal",
+    "date": "2026-10-03T00:00:00Z",
+    "endpoint_revision_refreshes": [
+     {
+      "endpoint_role": "source",
+      "endpoint_id": "FB2-HW-HDD-000001",
+      "previous_revision": "1",
+      "current_revision": "2",
+      "basis": "endpoint_artifact_revision_is_2",
+      "cause_class": "path_repoint_after_duplicate_fixture_removal",
+      "change_record_id": null,
+      "attribution": "The source record advanced from revision 1 to revision 2 to repoint ONE entry of its affected_records block at the surviving copy of FB2-SCN-CHG-000002, after the duplicate revision-1 scenario fixtures under docs/artifacts/corpus/scenarios/ were removed and the artifact index was changed to walk docs/artifacts/scenarios/. That revision changed a path string and its recorded reason. The dependency this link asserts -- that the gap record inherits the configuration baseline's measurement of zero Altium source files -- is untouched by it: gap_statement, expected_families, blockers, what_would_close_the_gap and not_established_by_this_record are all unchanged, and neither FB2-HW-HCB-000001 nor this link's target moved. The link is now marked change-suspect rather than assumed current, because no re-examination of this link against its source's revision 2 is recorded; this session did not re-examine it.",
+      "skipped_revisions": [
+       {
+        "revision": "2",
+        "date": "2026-10-03T00:00:00Z",
+        "author": "quality_engineer",
+        "description": "Repointed one entry of affected_records.records at the surviving copy of FB2-SCN-CHG-000002 after the duplicate revision-1 scenario fixtures under docs/artifacts/corpus/scenarios/ were removed and the artifact index was changed to walk docs/artifacts/scenarios/. The previous path and the reason are preserved on the entry as superseded_path and superseded_path_reason. The mechanical derivation this block documents was re-run and record_files is unchanged at 14: both copies of FB2-SCN-CHG-000002 carry FB2-SRC-HW-000002, so removing one copy removes no affected record. gap_statement, expected_families, blockers, what_would_close_the_gap, not_established_by_this_record and authority_and_independence are untouched.",
+        "cause_class": "path_repoint_after_duplicate_fixture_removal",
+        "change_record_id": null
+       }
+      ]
+     }
+    ],
+    "principle": "The endpoint revision recorded here names the revision of the endpoint artifact as it now stands, in this link's own profile. The superseded value is kept in previous_revision together with the date, author and description of every revision the endpoint passed through, so a reader can see exactly what content the link now names that it did not name when it was authored. No endpoint, relation type or rationale was changed, and no link was re-examined: advancing the recorded revision says what the link now points at, not that the relationship still holds. The link is therefore marked change-suspect until a review that actually looked at the current revisions of both endpoints records that re-examination.",
+    "re_examined": false
+   }
   },
   {
    "link_id": "FB2-LNK-HW-000003",

@@ -52,24 +52,24 @@ because three different populations are legitimately in play.
 | Measure | Value | Counts which population |
 |---|---|---|
 | Acceptance suite | **PASSED** — 8 stages, 10 gate lines, 0 FAIL | — |
-| Schema-validated artifact files | **286** | population **A** — `validate`: 263 corpus records with an `id` + 23 scenario records |
-| Unique `(profile, id)` records | **263** | population **B** — the tool's `load_artifact_index` |
-| Distinct artifact IDs across both profiles | **224** | population **C** — the `automated_review_coverage` denominator |
-| Traceability links | **489, 0 dangling** | de-duplicated by `(profile, link_id)` |
-| Validator findings / errors | **4 / 0** | findings are provenance observations, all `medium`/`low`, none is an error |
+| Schema-validated artifact files | **318** | population **A** — `validate`: every record carrying an `id`. `scenarios/` is walked, so this now equals population **B**; it did not before 2026-10-03. |
+| Unique `(profile, id)` records | **318** | population **B** — the tool's `load_artifact_index` |
+| Distinct artifact IDs across both profiles | **279** | population **C** — the `automated_review_coverage` denominator. 318 records carry 279 distinct ids: **39 ids appear in both profiles**. Those 39 pairs are different subjects (`origin` disagrees on every pair) and are the target of an id migration recorded in `coverage-plan.json` corrections. |
+| Traceability links | **553, 0 dangling** | de-duplicated by `(profile, link_id)` |
+| Validator findings / errors | **5 / 0** | findings are provenance observations plus one policy report, all `medium`, none is an error. The fifth is new as of 2026-10-03: `cross_profile_identifier_reuse_vs_id_rule_004` reports that 39 identifier strings are each carried by two records in different profiles, which ID-RULE-004 forbids. It is reported rather than raised to an error because every id-keyed lookup resolves `(profile, id)`; see ITEM 2 below. |
 | Finding artifacts recorded | **42** | population **B**, `artifact_type: finding` |
 | Coverage dimensions | 15 | — |
 | Mutation scenarios | **20 / 20** detected | executed, each by the rule it declares |
 | Change lifecycles | **3 / 3** content-validated | 19/19 required checks each |
-| Toolchain self-tests | **48 PASS, 0 FAIL** | — |
+| Toolchain self-tests | **91 PASS, 0 FAIL** | — |
 | Source inventory | 612/612 files, 24 modules, 22 features, 23 variants | `src/**/*.c` and `*.h` |
-| Export | **263 nodes, 489 edges**, 3 content hashes | population **B** and the link registry |
-| Review records / unique IDs covered | **15 / 144 of 224 (64%)** | population **C** denominator |
-| Target-hardware executions | **0 / 33** | population **B** execution records |
-| Human approval | **0 / 263** — all pending | population **B** |
-| Production authorization | **0 / 263** — all false | population **B** |
+| Export | **318 nodes, 553 edges**, 3 content hashes | population **B** and the link registry |
+| Review records / unique IDs covered | **15 / 144 of 279 (52%)** | population **C** denominator |
+| Target-hardware executions | **0 / 33** | 33 test measures; 44 execution records exist, none on target hardware |
+| Human approval | **0 / 318** — all pending | population **B** |
+| Production authorization | **0 / 318** — all false | population **B** |
 
-### Records by type and domain — population **B** (263 unique `(profile, id)` records)
+### Records by type and domain — population **B** (318 unique `(profile, id)` records)
 
 | By type | | By domain | | By profile | |
 |---|---|---|---|---|---|
@@ -131,9 +131,23 @@ from 6 `mapped` to **0**.
 
 | Count | Tool that produces it | What it measures | Why it differs |
 |---|---|---|---|
-| **286** | `validate` | schema-validated artefact **files** carrying an `id` | 263 corpus records + 23 scenario records. Scenarios live under `scenarios/`, not under a profile, so they are not profile-scoped and are not in the index. |
-| **263** | `load_artifact_index` | unique `(profile, id)` records | 267 corpus JSON files are walked; 263 carry an `id`; all 263 `(profile, id)` pairs are unique, so nothing collapses |
-| **224** | `automated_review_coverage` | distinct artifact **IDs** across both profiles | 263 − 224 = **39** ids exist in both `as_is` and `synthetic_reference` by design (profile isolation, not duplication). |
+| **318** | `validate` | schema-validated artefact **files** carrying an `id` | Walks `corpus/`, `reviews/` and `scenarios/`. It walked `scenarios/` separately until 2026-10-03 while the index did not, so it used to report 323 for a 300-record tree. |
+| **318** | `load_artifact_index` | unique `(profile, id)` records | Same roots, same record set: all 318 `(profile, id)` pairs are unique, so nothing collapses. The index now walks `scenarios/`, which its own docstring always claimed it did. |
+| **279** | `automated_review_coverage` | distinct artifact **IDs** across both profiles | 318 − 279 = **39** ids appear in both `as_is` and `synthetic_reference`. Profile isolation permits this; whether it should is the subject of the id migration in `coverage-plan.json` corrections. |
+
+> **The split-brain that made populations A and B disagree, and is now closed.**
+> `load_artifact_index` walked `corpus/` and `reviews/` only. Its docstring named
+> three roots including `scenarios/`, and `cmd_validate` walked all three — which
+> is why `validate` reported 323 artefacts while `check` counted 300 records for
+> the same tree. The mutation harness read `scenarios/`. Five scenario fixtures
+> existed twice under one id: a revision-1 copy under `corpus/scenarios/` that the
+> index resolved to, and the live copy under `scenarios/` that the harness
+> executed. The corpus therefore reported on different bytes than the harness
+> validated, and the duplicate-id detector could not see it because it only ever
+> saw one copy. Fixed on 2026-10-03: the duplicate tree was deleted and the index
+> now walks `scenarios/`. Two self-tests hold it —
+> `the index and the scenario harness resolve every scenario to the SAME bytes`
+> and `a duplicate scenario id under any root FAILS validate`.
 
 Nothing here is a rounding difference and none of the three is wrong. A report
 that quotes one of them without saying which is the defect this section exists
@@ -193,15 +207,17 @@ docs/artifacts/
 │   ├── tara.schema.json
 │   ├── test_measure.schema.json
 │   └── use_case.schema.json
-├── corpus/                             # 267 JSON files: 298 records + 4 registry containers
+├── corpus/                             # 238 records (72 as_is + 166 synthetic_reference) + registry containers
 │   ├── shared/
-│   ├── as_is/                          # 90 records
-│   ├── synthetic_reference/            # 173 records
-│   └── scenarios/                      # 23 records in 46 JSON files (20 mutations, 3 change lifecycles)
-├── traceability/                       # Canonical typed links — 547 links after de-duplication
+│   ├── as_is/                          # 72 records
+│   ├── synthetic_reference/            # 166 records
+│   └── (no scenarios/ subdirectory — the duplicate revision-1 tree was removed 2026-10-03;
+│                                        the 23 live scenario records live under scenarios/ below,
+│                                        and the index resolves them from there)
+├── traceability/                       # Canonical typed links — 553 links after de-duplication
 │   ├── link-registry/
-│   │   ├── as_is/                      # 117 links
-│   │   └── synthetic_reference/        # 195 links (cell-voltage) + 177 (concept-lifecycle)
+│   │   ├── as_is/                      # 124 links across 2 files
+│   │   └── synthetic_reference/        # 429 links across 6 files
 │   ├── rules/
 │   └── queries/
 ├── reviews/                            # Review records and findings
@@ -221,9 +237,9 @@ docs/artifacts/
 │   ├── traceability/traceability.md
 │   └── traceability/traceability-document.md   # the canonical traceability doc
 ├── exports/                            # Portable exports — 4 files
-│   ├── manifest.json                   # 263 nodes, 489 edges, 3 content hashes
-│   ├── nodes.jsonl                     # 263 nodes
-│   ├── edges.jsonl                     # 489 edges
+│   ├── manifest.json                   # 318 nodes, 553 edges, 3 content hashes
+│   ├── nodes.jsonl                     # 318 nodes
+│   ├── edges.jsonl                     # 553 edges
 │   └── trace-matrix.csv
 ├── evidence/
 │   ├── actual-runs/                    # TRACKED host-run evidence, sha256-verified
@@ -342,13 +358,13 @@ links; supersession/deletion/tombstones defined in schemas.
 By profile: `as_is` 117, `synthetic_reference` 372.
 By review state: reviewed 414, pending 75.
 
-> **Link currency is now maintained, and 326 links await re-examination.** Every
+> **Link currency is now maintained, and 332 links await re-examination.** Every
 > link carries both endpoint revisions. 423 of them had drifted from the current
 > revision of the artefact they name; **all 423 have been advanced to current**,
 > each with a per-link `provenance_repair` record naming the previous value, the
 > revisions skipped, and their date, author and description — so a reader can
 > see exactly what content a link now names that it did not name when authored.
-> **326 of 547 links are now marked `change_suspect_status: true`.** That flag
+> **332 of 553 links are now marked `change_suspect_status: true`.** That flag
 > means *an endpoint was advanced past the revision this link was authored
 > against, and no re-examination of the link is recorded* — it is a statement
 > about re-examination, not a claim that the link is wrong. Link *resolution* is

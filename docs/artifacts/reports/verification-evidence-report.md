@@ -1,5 +1,16 @@
 # Verification Evidence Report
 
+> **Figures in this document were measured on the date in its header and are NOT
+> current.** The record population moved from 300 to 318 records on 2026-10-03
+> (the artifact index was corrected to walk `scenarios/`, which it had always
+> claimed in its docstring to do, and a duplicate revision-1 scenario tree under
+> `corpus/scenarios/` was removed), the link count is 553 not 489, the validator
+> reports 5 findings and 0 errors rather than 4 and 0, and the self-test count is
+> 91 rather than 48. Every figure below is left as measured on its stated date so
+> that the audit trail is not rewritten; read it as a dated measurement, not as a
+> current one. Live figures: `docs/artifacts/README.md`, which was re-measured.
+
+
 **Generated:** 2026-10-01 (evidence base refreshed; headline is now the SIL run)
 **Baseline:** BAS-REF-001 — source pinned to commit `308028fb`, corpus authored at `2a408d5`
 **Primary evidence (tracked):** `docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json`

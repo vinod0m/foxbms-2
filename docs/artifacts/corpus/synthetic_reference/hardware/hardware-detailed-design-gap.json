@@ -1,6 +1,6 @@
 {
  "id": "FB2-HW-HDD-000001",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "hardware_detailed_design_gap",
  "engineering_domain": "hardware",
@@ -45,13 +45,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-10-01T00:00:00Z",
- "updated_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-03T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-10-01T00:00:00Z",
    "author": "hw_engineer",
    "description": "Recorded why HWE.3 has no backing artefact, so that the gap is a stated finding rather than an absence."
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-03T00:00:00Z",
+   "author": "quality_engineer",
+   "description": "Repointed one entry of affected_records.records at the surviving copy of FB2-SCN-CHG-000002 after the duplicate revision-1 scenario fixtures under docs/artifacts/corpus/scenarios/ were removed and the artifact index was changed to walk docs/artifacts/scenarios/. The previous path and the reason are preserved on the entry as superseded_path and superseded_path_reason. The mechanical derivation this block documents was re-run and record_files is unchanged at 14: both copies of FB2-SCN-CHG-000002 carry FB2-SRC-HW-000002, so removing one copy removes no affected record. gap_statement, expected_families, blockers, what_would_close_the_gap, not_established_by_this_record and authority_and_independence are untouched."
   }
  ],
  "gap_statement": "HWE.3 expects schematics, a PCB layout, a bill of materials and component specifications. All four are absent from this corpus, and none of them can be authored from this repository, because the design sources they would be derived from are not in it. This record is the finding that says so, with the evidence, so that a reader encountering HWE.3 in the coverage plan finds a reason rather than a silence. It deliberately contains no board-level design content: there is none here to carry, and inventing a net, a reference designator, a component, a register, an offset, a mask or a base address would be fabrication, not documentation.",
@@ -134,7 +140,9 @@
     "id": "FB2-SCN-CHG-000002",
     "artifact_type": "scenario",
     "profile": "synthetic_reference",
-    "path": "docs/artifacts/corpus/scenarios/change-lifecycles/change-002-hsi-interface.json"
+    "path": "docs/artifacts/scenarios/change-lifecycles/change-002-hsi-interface.json",
+    "superseded_path": "docs/artifacts/corpus/scenarios/change-lifecycles/change-002-hsi-interface.json",
+    "superseded_path_reason": "This record located the artefact at docs/artifacts/corpus/scenarios/, a duplicate revision-1 copy that sat at the same artifact id as the fixture the mutation and change-lifecycle harness executed under docs/artifacts/scenarios/. The corpus/ copy was removed on 2026-10-03; the artifact index now walks docs/artifacts/scenarios/, so this path names the surviving file. FB2-SCN-CHG-000002 itself advanced to revision 2 in the same operation, widening an abbreviated source-anchor reference; its content hash is not recorded by this record and no anchor here is affected."
    },
    {
     "id": "FB2-HW-TSR-000001",

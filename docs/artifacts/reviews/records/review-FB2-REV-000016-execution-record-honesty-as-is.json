@@ -1,0 +1,122 @@
+{
+ "id": "FB2-REV-000016",
+ "revision": "1",
+ "schema_version": "1.0.0",
+ "artifact_type": "review",
+ "engineering_domain": "verification",
+ "profile": "as_is",
+ "scenario_id": "SCN-BASELINE",
+ "baseline_id": "BAS-REF-001",
+ "variant_applicability": [
+  "VAR-REF-001"
+ ],
+ "title": "Review: the four uncovered as_is execution records - timing fields against retained evidence, evidence hash fidelity, identifier resolution",
+ "owner_role": "verification_engineer",
+ "origin": "derived",
+ "source_refs": [
+  "FB2-SRC-COD-000001"
+ ],
+ "assumption_refs": [],
+ "standards_mappings": [],
+ "lifecycle_status": "draft",
+ "lifecycle_status_note": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity.",
+ "automated_review_status": {
+  "schema_valid": true,
+  "links_valid": true,
+  "provenance_consistent": true,
+  "consistency_checks": true,
+  "last_run": "2026-10-03T00:00:00Z"
+ },
+ "human_approval_status": "pending",
+ "production_authorized": false,
+ "product_verification_credit": false,
+ "created_at": "2026-10-03T00:00:00Z",
+ "updated_at": "2026-10-03T00:00:00Z",
+ "revision_history": [
+  {
+   "revision": "1",
+   "date": "2026-10-03T00:00:00Z",
+   "author": "verification_engineer",
+   "description": "First issue. Covers the four as_is execution records that no review record enumerated. Reviewed for the honesty of execution_kind and outcome, the retention and hash fidelity of evidence, the internal consistency of the timing fields against the record's own evidence, and the resolution of every identifier named. One defect recorded: FB2-VER-EXE-000004 reports a zero-duration run for a derivation whose retained, hash-verified evidence file contains a 313-entry walk of the unit-test tree. Passing checks are recorded under results_summary.checks_that_passed_and_are_not_findings rather than in the findings array."
+  }
+ ],
+ "review_type": "domain",
+ "reviewed_ids": [
+  {
+   "artifact_id": "FB2-VER-EXE-000002",
+   "revision": "2",
+   "digest": "a56aefd69c9fccddda8c1e4a06457f59f98c31beab5c98122f60c4583f84d80f"
+  },
+  {
+   "artifact_id": "FB2-VER-EXE-000003",
+   "revision": "2",
+   "digest": "7c4d9367854a613f8303956e6457672ebd2a00707ca6a67533a6a2b3ab04134c"
+  },
+  {
+   "artifact_id": "FB2-VER-EXE-000004",
+   "revision": "3",
+   "digest": "ff042d978b7825e5ae6a0edd67b643186c2a92049bd183845cef4253d97bbfa9"
+  },
+  {
+   "artifact_id": "FB2-VER-EXE-000005",
+   "revision": "2",
+   "digest": "73f58a73c4ec1f8ecb454592f2361f5a35b32843aa4b5217daf0188ef43d7787"
+  }
+ ],
+ "reviewer_identity": {
+  "role": "verification_engineer",
+  "session_id": "opencode-2026-10-03-review-coverage-pass",
+  "model": "openrouter/stealth/space-bunny-alpha",
+  "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No human reviewer has read this record, and human_approval_status remains pending; production_authorized remains false and product_verification_credit remains false."
+ },
+ "checklist_version": "CHKL-EXEC-HONESTY-1.0.0",
+ "scope": "Complete review, not a sample, of the four as_is execution records no review record enumerated: FB2-VER-EXE-000002, FB2-VER-EXE-000003, FB2-VER-EXE-000004 and FB2-VER-EXE-000005. Each of these identifiers is also carried by a synthetic_reference record about a DIFFERENT subject; this record covers only the as_is record under each identifier, and the sibling record is covered by FB2-REV-000017. The twenty-eight execution records already covered by FB2-REV-000006 and FB2-REV-000007, and the twelve synthetic_reference execution records covered by FB2-REV-000017, are outside this record's scope and are explicitly not claimed to have been reviewed here. The rest of the corpus is outside this record's scope.",
+ "review_method": "Per-record reading of all four. For each: execution_kind and outcome compared against the evidence the record actually retains; every logs[].file existence-tested and its sha256 recomputed and compared against the recorded hash; every test_measure_id and evidence_refs entry resolved against the artifact index; and the timestamps block compared against the record's own limitations and against whether the record retained evidence of work. The retained evidence file of FB2-VER-EXE-000004 was opened and its contents read, not merely hashed, because the question being tested is whether the record's timing fields are consistent with the work its evidence attests.",
+ "findings": [
+  {
+   "finding_id": "FB2-REV-FND-000044",
+   "artifact_id": "FB2-VER-EXE-000004",
+   "severity": "medium",
+   "category": "consistency",
+   "description": "This record reports a zero-duration run for work that demonstrably happened. It carries execution_kind none and outcome blocked, which is correct and is not what this finding disputes: the unit test was not executed, because its include closure needs three HALCoGen-generated TI headers that this host cannot produce. But the same record retains real, hash-verified evidence of real work: docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json, whose sha256 matches the recorded output_hashes.halcogen_dependency_closure and whose logs[0].hash, and which contains a derivation over 313 unit-test source files, identifies 136 of them as having no HALCoGen dependency, and names the 33 distinct HALCoGen headers the tree requires. A process walked 313 files and wrote a file. Reporting timestamps.start == timestamps.end and duration_ms 0 alongside that evidence is internally inconsistent: the record's own output asserts work while its timing fields deny any elapsed time. The anomaly the record does record - that macOS is not a supported host platform, established by reading cli/cmd_embedded_ut/embedded_ut_impl.py - is the right anomaly and is well evidenced. The timing fields are the part that is wrong.",
+   "evidence": "FB2-VER-EXE-000004 output_hashes.halcogen_dependency_closure = sha256:df51a921954ace7f5d3f897dea1ff595cf675d6fd09629cdeda6deb65dc0f7a3; the named evidence file exists and its recomputed sha256 is identical. The file records total_tests 313, tests_with_no_halcogen_dependency 136, distinct_halcogen_headers of 33 entries. The same record's timestamps are {start: 2026-09-29T08:13:21Z, end: 2026-09-29T08:13:21Z, duration_ms: 0}. Its limitations read 'Not executed: HALCoGen-generated TI headers unavailable on this host', which is true of the test and silent on the timing fields."
+  }
+ ],
+ "dispositions": [
+  {
+   "finding_id": "FB2-REV-FND-000043",
+   "disposition": "accepted",
+   "action": "Accepted as an internal inconsistency between the record's own timing fields and its own retained evidence. The evidence is sound and must not be touched; only the timing fields are wrong. The honest fix is to record the actual elapsed time of the dependency-closure derivation, or to state that no interval was measured for it. This review did not edit the record, because writing a duration into an execution record is an authoring act and the reviewer's own measurement of a file's wall-clock time is not the run that produced it.",
+   "resolved_artifact_id": null
+  }
+ ],
+ "limitations": [
+  "This review did not modify any execution record. The defect it found is left open on the record it names, and nothing here is a remediation.",
+  "It did not read the unit-test sources, the Ceedling configuration or the HALCoGen inputs, so it takes no position on whether the blocked execution is correctly blocked on the merits. It checked only that the record's account of its own blocker is specific and that its evidence claims match the filesystem.",
+  "It did not judge whether any of the four measures is the right measure for the requirement it verifies. A wrong-but-honestly-recorded execution passes every check this review makes.",
+  "Each of these four identifiers is carried by two records, one per profile. This review resolved every reference in the as_is profile only. That limitation is structural and is recorded as a finding on FB2-REV-000017: a review record is profile-scoped, so one record cannot cover both profiles' records under a shared identifier, and the sixteen uncovered execution records therefore required two review records rather than one.",
+  "coverage is a count, not a certificate. Naming these four records in reviewed_ids asserts that they were read and checked against the checklist above, and asserts nothing about the other records no review covers."
+ ],
+ "results_summary": {
+  "artifacts_reviewed": 4,
+  "execution_kind_distribution": {
+   "actual_host_run": 3,
+   "none": 1
+  },
+  "outcome_distribution": {
+   "blocked": 1,
+   "pass": 3
+  },
+  "records_whose_test_measure_id_and_evidence_refs_all_resolve": 4,
+  "log_files_existence_and_hash_verified": 4,
+  "records_with_a_zero_duration_that_retain_real_evidence": 1,
+  "defects_recorded": 1,
+  "checks_that_passed_and_are_not_findings": {
+   "all_identifiers_resolve": "4 of 4 records. Every test_measure_id and every evidence_refs entry carrying an FB2- identifier resolves against the artifact index in the as_is profile.",
+   "log_files_existence_and_hash_verified": "4 log entries across FB2-VER-EXE-000002, -000003, -000004 and -000005: every named file exists on disk and its recomputed sha256 equals the recorded hash.",
+   "execution_kind_matches_the_evidence_held": "The three actual_host_run records each retain a hash-verified log; the one blocked record carries execution_kind none and retains evidence of a real derivation rather than of a test run, which is the honest distinction and is what finding FB2-REV-FND-000043 is about.",
+   "nothing_overstates_what_was_done": "All four carry human_approval_status pending, production_authorized false and product_verification_credit false.",
+   "why_not_findings": "A findings array whose entries are not defects cannot be counted as a defect list, so passing checks are recorded here."
+  }
+ }
+}
