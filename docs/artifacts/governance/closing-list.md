@@ -15,14 +15,27 @@ document, not from a plan. Where a figure is a constant rather than a
 measurement, it says so, because the difference matters when you go looking for
 the number to move.
 
+> **STATUS 2026-10-04 - the two things §0.1 and §0.2 described as blocked are
+> DONE.** Amendment `APPROVAL-RULE-A1` replaced the blanket prohibition with an
+> evidence requirement, and `human_approval` and `production_authorization` are
+> now measured rather than literal. §0.1 and §0.2 below are kept, marked
+> SUPERSEDED, because they record what the corpus looked like before and the
+> reason the amendment was needed; §1.6 P1/P2 and §3.1 are rewritten to the
+> rule now in force. The approval still reads 0/321, and the reason is now a
+> measurement rather than a ban: **no approval has been recorded, because
+> producing one needs a person.**
+
 ---
 
 ## 0. Read this before you start
 
-Four things about the corpus's current state will waste a day if you do not know
-them. All four are read from the code, not inferred.
+Three things about the corpus's current state will waste a day if you do not know
+them. All three are read from the code, not inferred.
 
-### 0.1 `human_approval` is a constant, not a measurement
+### 0.1 SUPERSEDED - `human_approval` used to be a constant, not a measurement
+
+> **As of 2026-10-04 this section no longer describes the code.** The literal is
+> gone. See the note at the top of this document and §0.1a.
 
 `docs/artifacts/tools/corpus.py`, in `_coverage_dimensions()`:
 
@@ -41,7 +54,48 @@ will still read `0/321`. That is not a sign the signatures failed to land. If yo
 want the figure to move, changing the dimension to a measurement is a separate,
 deliberate decision with its own review - see §1.6.
 
-### 0.2 Recording the first approval will turn `check` RED
+### 0.1a `human_approval` and `production_authorization` are now measured
+
+Both dimensions are computed from the records, by the **same predicate the
+validator enforces** - `_approval_evidence_defects`, reached through
+`_approval_dimension_counts()`:
+
+```python
+dims["human_approval"] = {
+    "numerator": ac["human_approval"]["evidenced"],
+    "denominator": total_art,
+    "detail": "0 of 321 records carry a properly evidenced human approval -- the
+               numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records
+               carry human_approval_status at its no-claim value and 0 carry the grant
+               value. This is a measured zero, not a constant and not a schema
+               limitation. ...",
+    "measured": True, "granted_claims": 0, "evidenced": 0,
+    "unevidenced_claims": 0, "no_claim_records": 321}
+```
+
+A record counts in the numerator only if its approval field carries a grant
+value **and** its `approval_evidence` block satisfies all six elements of
+`role-and-review-policy.json#/approval_evidence_contract/required_elements`. A
+bare `approved` does not count and does not validate. `production_authorization`
+uses the same computation with a **strictly higher** bar (§0.2a).
+
+**What this changes for you.** The figure will move, and it will move only when
+an approval is *properly evidenced*. If it reads 0 after you have recorded
+approvals, they are not properly evidenced - read the validate output, which
+names which of the six elements is missing. If it moves without you signing
+anything, that is §3.1 and it is the worst thing that can happen here.
+
+**The figure is still 0/321, and the reason is now the right kind of reason.**
+It is 0 because nothing is approved, not because the dimension cannot see an
+approval. The self-test *"human_approval and production_authorization are
+measured, not literals"* proves both halves: it reads 0 on the live tree AND it
+reads 1/321 on a throwaway copy carrying one properly evidenced approval. A
+literal could not pass that test.
+
+### 0.2 SUPERSEDED - recording the first approval used to turn `check` RED
+
+> **As of 2026-10-04 this section no longer describes the code.** Recording a
+> properly evidenced approval now keeps `check` green. See §0.2a.
 
 Three governance rules fire on the approval fields being anything other than the
 "nothing happened" value:
@@ -63,6 +117,66 @@ corpus-owner decision, taken in the open, with the rule change and its rationale
 in `revision_history`. **This is prerequisite P1 in §1.6 and it must be done
 before the first signature is recorded, or the person who signs gets blamed for
 breaking the build.**
+
+### 0.2a What replaced the prohibition, and what to expect instead
+
+**A ban is the wrong instrument.** A rule that fails on the value alone cannot
+distinguish a fabricated approval from a real one, because it never looks at
+one. It could only say "no", never "this one is unsigned", which left the corpus
+with two reachable states for approval - absent, and forbidden - and no way to
+record the legitimate middle.
+
+**The rule now in force** (`human_approval_rejected`, and its two siblings) is
+an **evidence requirement**. The grant value is necessary and **not sufficient**.
+An approval passes only if the record itself carries all six elements:
+
+| # | element | what the validator checks |
+| --- | --- | --- |
+| 1 | the grant value | `human_approval_status` is `approved` or `rejected`. A value alone is never enough. |
+| 2 | `approved_by` | a named **person**: at least two tokens, not a declared `role_id` or role name, no token a declared `role_id`, no token from the team vocabulary (`team`, `group`, `board`, `committee`, `reviewers`, `automation`, `system`, `tool`, `agent`, ...). |
+| 3 | `role` + `independence` | `role` is a declared `role_id`; `independence` carries `owner_role` (must equal **this record's own** `owner_role`), `satisfied: true`, an `evidence` string of ≥24 characters that is not a placeholder, and a `policy_ref` naming the policy. Then independence is **enforced**, not just asserted: the role must differ from `owner_role` **and** from the author of the last content revision. |
+| 4 | `date` | ISO-8601, grammar-checked **and** parse-checked. |
+| 5 | `review_packet` | `path` resolves to a `packet.json` on disk under `reviews/packets/` or `reviews/signed/`; `sha256` equals that file's bytes **now**; `record_sha256_at_signing` equals **the packet's own** `integrity.record_sha256`; the packet's `target.record_id` **and** `target.profile` name this record; its `integrity.record_path` is this record's file. |
+| 6 | `revision_history` | an entry whose `author` is the approving role, whose `revision` is at least the record's current revision, and whose `description` both records the approval **and cites the signed packet** by digest or name. |
+
+The finding names **which** element is unmet, numbered, so a reviewer can fix it
+in one pass instead of guessing. Example from the suite:
+
+```
+FB2-HW-TSR-000001: human_approval_status asserts a recorded human approval decision but the
+approval is NOT properly evidenced -- 3 requirement(s) unmet. An approval value alone is not an
+approval. Each unmet element is listed below; fix them all in one pass against
+docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract/required_elements:
+    [1] element 1 MISSING: human_approval_status asserts a recorded human approval decision but
+        the record carries no 'approval_evidence' block. ...
+```
+
+**`production_authorization` is strictly harder, not the same bar twice.** It
+requires the same six elements **plus**: the approving role must be one this
+corpus grants production authority to (`architect` or `safety_manager`, declared
+in the policy with its basis), and the record's `artifact_type` must be one human
+approval is required for (`safety_case`, `post_development_record`, `change`).
+On a hazard record, production authority is a category error, not a weaker
+approval.
+
+**What to expect now.** A properly evidenced approval: `check` stays green,
+`human_approval` moves by one, and validate reports no approval finding. An
+approval missing any element: `check` goes red **and the finding tells you
+which element**. That second case is the guard working. If you see red after
+signing, read the message before assuming the rule is wrong.
+
+**Two things this amendment deliberately did NOT do**, so they are not
+discovered later as surprises:
+
+* It did **not** record an approval. Producing one needs a person; see §3.1.
+* It did **not** relax `human_approval_status: "not_required"`. That value is
+  not an approval, the contract does not speak to it, and it still fails for
+  want of evidence. Relaxing it is a separate decision nobody has taken.
+* It did **not** touch the recursive authority-key scan (`production_release`,
+  `authorized_for_production` and eight siblings) or the ASIL / conformity /
+  certification claim classes. Those are unchanged, and the self-test *"a
+  production grant hidden in a nested key is still caught"* proves nesting a
+  claim inside the new `approval_evidence` block does not evade them.
 
 ### 0.3 `actual_product_evidence` cannot reach 33/33
 
@@ -205,15 +319,25 @@ Per record, one signed packet, and one line of transcription into the record:
    - `human_approval_status`: `approved` or `rejected` (the schema's value set is
      `pending | approved | rejected | not_required`, per
      `role-and-review-policy.json` `approval_semantics`);
+   - the full `approval_evidence.human_approval` block of §0.2a: `approved_by`
+     as a **person**, `organisation`, `role` as a declared `role_id`, `date` in
+     ISO-8601, `independence{owner_role, satisfied, evidence, policy_ref}`, and
+     `review_packet{path, sha256, record_sha256_at_signing}` - **both** digests,
+     so the record is traceable to the exact packet bytes and the exact record
+     bytes that were read. `make_review_packets.py --transcribe <ID>` prints
+     them already resolved; it writes nothing;
    - a `revision_history` entry naming the reviewer, their role, the date, and
-     **the packet digest they signed** - the sha256 in section 2 of the packet -
-     so the record is traceable to the exact bytes that were read;
+     **the packet digest they signed**, so element 6 of the contract is
+     satisfied and the entry is self-auditing;
    - `automated_review_status` **left alone**. It describes machine checks
      (`schema_valid`, `links_valid`, `provenance_consistent`,
      `consistency_checks`) and is not a statement about human judgement;
    - `production_authorized` and `product_verification_credit` **left `false`**.
      No signature on a corpus record authorises production or confers
-     verification credit. Changing those is §0.2's business, not a reviewer's.
+     verification credit. Changing those requires a production-authority role
+     (`architect` or `safety_manager`) and a record family human approval is
+     required for (§0.2a) - which a reviewer of an ordinary record will not
+     have. Do not touch them as part of an approval batch.
 3. **The comments**, which are the most valuable output. A `reject` with a
    reason is worth more than an `approve`.
 
@@ -251,16 +375,20 @@ Minimum for a signature to mean anything:
 
 ### 1.6 What must be decided before the first signature lands
 
-These are **P1** items. They are not review work; they are the changes that make
-review work recordable. Each needs R19 (System Architect) as owner.
+> **P1 and the first P2 were decided on 2026-10-04** by amendment
+> `APPROVAL-RULE-A1`. They are marked DONE below and kept, because they record
+> what the decision was and why. The two open P2 items and the new P3 are
+> **still open**.
 
-| id | decision | why it blocks |
-| --- | --- | --- |
-| **P1** | Amend `human_approval_rejected` so a **recorded, attributed** human approval is not a validation failure. Proposed shape: the rule fires unless the record carries a human decision block - reviewer name, role, organisation, date, decision, and the packet digest - that resolves to an archived signed packet. | Without this the first signature turns `check` RED (§0.2), and the signer is blamed for it. |
-| **P1** | Decide whether `human_approval` stays a constant `0` (§0.1) or becomes a measurement. If measured: `numerator` = records with a human decision, `denominator` = 321, and the coverage report's basis table changes from `constant` to `measured`. | Either answer is defensible. Leaving it undecided means nobody knows whether a landed signature worked. |
-| **P2** | Add the seven undeclared `owner_role` values to `role-and-review-policy.json`, or map them to declared roles (§1.2). | A signature under an undefined role is not traceable to a competence requirement. |
-| **P2** | Confirm `docs/artifacts/reviews/signed/` as the canonical archive location. **The directory now exists** with a README stating the rules, and no generator writes there; what is outstanding is the corpus owner's ratification of the location. | Otherwise a signed packet has no canonical home and a regeneration is one `rm -rf` away from destroying it. |
-| **P2** | Amend `production_authorized_rejected` and `verification_credit_rejected` - or record explicitly that they stay as they are. | They are not in scope for approval work, and a corpus owner should say so rather than leave it ambiguous. |
+| id | decision | status | why it blocks |
+| --- | --- | --- | --- |
+| **P1** | Amend `human_approval_rejected` so a **recorded, attributed** human approval is not a validation failure. | **DONE 2026-10-04** (`APPROVAL-RULE-A1`) | Without it the first signature turned `check` RED (§0.2). Done as an evidence requirement over six elements, read from `role-and-review-policy.json#/approval_evidence_contract` rather than hardcoded (§0.2a). |
+| **P1** | Decide whether `human_approval` stays a constant `0` (§0.1) or becomes a measurement. | **DONE 2026-10-04** - measured, by the validator's own predicate (§0.1a). `production_authorization` likewise, with a strictly higher bar. | Either answer is defensible; leaving it undecided meant nobody could tell whether a landed signature worked. |
+| **P2** | Add the seven undeclared `owner_role` values to `role-and-review-policy.json`, or map them to declared roles (§1.2). | **OPEN** | A signature under an undefined role is not traceable to a competence requirement. Note the new dependency: the approver's `role` must be a **declared** `role_id`, so a record whose `owner_role` is undeclared can still be approved (independence is judged against the owner role, not against the approver's), but the *reviewer's* role must exist in the policy. |
+| **P2** | Confirm `docs/artifacts/reviews/signed/` as the canonical archive location. | **RATIFIED IN PART 2026-10-04** | The validator now resolves a cited packet from `reviews/packets/` **or** `reviews/signed/`, and the packet generator tells reviewers to archive there. Still open: whether the directory is the *only* permitted home, i.e. whether a signed packet may stay in `packets/`. |
+| **P2** | Amend `production_authorized_rejected` and `verification_credit_rejected` - or record explicitly that they stay as they are. | **DONE 2026-10-04** - both amended to the same evidence requirement. `production_authorization` additionally requires the approving role to hold production authority and the record's family to be one human approval is required for (§0.2a). `verification_credit` takes the same six elements. | A corpus owner should say so rather than leave it ambiguous. |
+| **P3** | **NEW.** Decide whether `human_approval_status: "not_required"` should remain rejected. | **OPEN - deliberately unchanged** | The contract governs *approval values*; `not_required` is not one. It still fails for want of evidence, which preserves the pre-amendment verdict rather than relaxing it as a side effect. If a record legitimately needs no approval, there is currently no way to say so. |
+| **P3** | **NEW.** Ratify that recording an approval against the record's **current** revision, without bumping the revision number, is the correct convention. | **OPEN** | Measured, not assumed: bumping the revision makes every link that pins this record's revision stale and invalidates the sha256 every review record stores for it. So an approval that bumps the revision *cannot* be recorded without breaking two other controls. The convention is documented in every packet and implemented by `--transcribe`, but nobody has ratified it as policy. |
 
 ### 1.7 Recommended order
 
@@ -357,10 +485,17 @@ all observations of real source), the `scenario` fixtures (18), the
 
 Per batch, in order:
 
-1. Archive the signed packets **outside** `docs/artifacts/reviews/packets/`.
-2. Transcribe each decision into its record: `human_approval_status` plus a
-   `revision_history` entry naming the reviewer, role, date and signed packet
-   digest. **A human does this. No tool does this.**
+1. Archive the signed packets **outside** `docs/artifacts/reviews/packets/` -
+   into `docs/artifacts/reviews/signed/`, which the validator also resolves
+   from, so cite the archived copy in `review_packet.path`.
+2. Transcribe each decision into its record as a human act:
+   `human_approval_status` set to `approved` or `rejected`, an
+   `approval_evidence.human_approval` block carrying all six elements of §0.2a,
+   and a `revision_history` entry naming the reviewer, their role, the date and
+   the signed packet digest. **A human does this. No tool does this.**
+   `python3 docs/artifacts/tools/make_review_packets.py --transcribe <ID>`
+   prints the exact block with both digests already resolved; it writes nothing
+   and fills no decision.
 3. Record the batch: which records, which signatures, which rejections and why,
    and which records in the batch were not signed and why. A batch record that
    lists only approvals is a misleading batch record.
@@ -371,18 +506,20 @@ Per batch, in order:
    python3 docs/artifacts/tools/corpus.py selftest
    python3 docs/artifacts/tools/make_review_packets.py --verify
    ```
-5. **Expect `check` to be RED on the first batch** unless P1 (§1.6) is done
-   first. `human_approval_rejected` will fire on every approved record, in
-   `[7/8] no production authority, no verification credit, no human approval`. If
-   that is what you see, the signatures worked and the rule needs amending. If
-   you see it *after* amending the rule, the amendment is wrong.
-6. Expect `human_approval` to still read `0/321` unless P1's second half is done
-   (§0.1).
+5. **Expect `check` to stay GREEN, and `human_approval` to move by the number
+   you recorded** (since 2026-10-04; before that, §0.2 applied). If `check` is
+   red, read the finding: it names which of the six elements is unmet. A red
+   result on an approval you believe is complete is a defect in the approval or
+   in the rule - do not paper over it by removing the approval.
+6. Expect `human_approval` to read `N/321` where `N` is the number of properly
+   evidenced approvals. If it reads 0 while approvals are recorded, they are not
+   properly evidenced and validate will say why.
 7. Regenerate the packets. Records that changed get new digests; the generator
    refuses to overwrite the signed packets you archived elsewhere, and the
    freshly generated packets for those records carry the *new* digest. A signature
    against the old digest provably does not cover the new bytes - which is the
-   point of the digest.
+   point of the digest, and which now also means the approval fails element 5
+   until a human re-signs.
 8. `automated_review_coverage` is expected to stay at `172/282` and
    `production_authorization` at `0/321`. Neither measures human approval. If
    either moves, something wrote a value nobody signed.
@@ -536,8 +673,9 @@ needs someone who can speak to the `foxBMS2_hw` commit.
 - [x] the draft execution record skeleton, with every field the schema and the
       rules require, **and every evidence field left empty**;
 - [x] the §2.1 decision on whether synthetic measures are in scope;
-- [x] the §1.6 P1 rule amendment, so the resulting record can be recorded without
-      breaking the suite.
+- [x] the §1.6 P1 rule amendment (`APPROVAL-RULE-A1`, 2026-10-04), so the
+      resulting record can be recorded without breaking the suite - and, since
+      the same day, without breaking any other control either.
 
 **CANNOT be prepared without the hardware. Nothing in this list may be filled in
 by anyone but the person who runs the hardware:**
@@ -662,22 +800,55 @@ can no longer tell them apart from the fake.
 
 | check | where | what it does |
 | --- | --- | --- |
-| `human_approval_rejected` | `corpus.py` `_validate_artifact`, severity **high** | fails validation on any record whose `human_approval_status == "approved"` |
-| `production_authorized_rejected` | same, severity **critical** | fails on `production_authorized == true` |
-| `verification_credit_rejected` | same, severity **high** | fails on `product_verification_credit == true` |
+| `human_approval_rejected` | `corpus.py` `_approval_evidence_defects`, severity **high** | fails validation on any record whose `human_approval_status` is a grant value, **unless** the record carries all six evidence elements of §0.2a. Reports each unmet element by number. |
+| `production_authorized_rejected` | same, severity **critical** | the same six elements on `production_authorized: true`, **plus** an approving role that holds production authority and a record family human approval is required for |
+| `verification_credit_rejected` | same, severity **high** | the same six elements on `product_verification_credit: true` |
+| the digest chain | same, element 5 | a cited `review_packet.sha256` must equal the packet file's bytes **now**, and `record_sha256_at_signing` must equal **that packet's own** `integrity.record_sha256`. Not "a packet exists for this record" - the binding to one record state is what is checked. |
+| the same check via the other path | `_validate_governance_semantics` | the identical predicate, because gate `[7/8]` runs that and never `_validate_artifact`. Reported once per (rule, artefact), so the violation count is not inflated. |
 | acceptance gate | `corpus.py check` `[7/8] no production authority, no verification credit, no human approval` | counts violations across all **8** governance rules, and separately asserts the rule set is non-empty and covers the four named claim classes, so the filter cannot be emptied |
 | packet-level | `make_review_packets.py --verify`, and `corpus.py check` `[7c/8]` | a non-empty signature block in a generated packet is reported by name |
 | self-test | `corpus.py selftest` | *"every signature block in every generated packet is empty, in both formats"* - reads all 321 markdown packets **and** all 321 `packet.json` twins and asserts every one of the seven fields is empty |
 | self-test | `corpus.py selftest` | *"the generator refuses to overwrite a packet that already carries a signature"* - injects a signature, regenerates, asserts it survived |
 | independence | `corpus.py selftest` | *"the packet generator's signature fields match the ones check looks for"* - so the checker cannot be blinded by editing the generator's field labels |
+| self-test | `corpus.py selftest` | *"no record in the corpus carries an approval of any kind"* - scans all 321 records for a non-pending value in any of the three fields, and for any record carrying an `approval_evidence` block at all. This is the standing fact that the corpus holds none. |
+| self-test | `corpus.py selftest` | *"a bare approved with no evidence FAILS validate"*, *"an approved missing the signed-packet digest FAILS"*, *"an approved citing a packet digest that does not resolve FAILS"*, *"the packet digest is verified against the packet's own recorded digest"*, *"an approved recorded by the record's own author FAILS"*, *"an approved_by that is a role, a role name or a team FAILS"* - six rejection cases, each built by removing exactly one thing from an otherwise complete approval. Together they are the proof that the amendment did not weaken the ban it replaced. |
+| self-test | `corpus.py selftest` | *"a fully evidenced approval PASSES validate, and the approval dimension moves"* - the required counterweight: builds a complete approval against a **throwaway copy of the tree outside the repository**, writes it there, asserts `cmd_validate` over the whole copy still passes with zero errors and the same 5 findings as the same tree without it, asserts `human_approval` reads 1/321 there, then deletes the copy. A ban with extra steps also rejects everything; only this distinguishes the two. |
+| self-test | `corpus.py selftest` | *"the approval happy path persists nothing into the corpus"* - re-reads the real tree after the accepting case has run and asserts no record carries a grant value, no record carries an `approval_evidence` block, and no temporary tree was left under the repository root. |
+| self-test | `corpus.py selftest` | *"production authority is strictly harder to satisfy than an approval"* and *"production authority is reachable on a production-release family"* - the first asserts the same record and the same complete approval is ACCEPTED as an approval and REFUSED as production authority on two independent grounds; the second asserts the strict bar is satisfiable, so it is a bar and not a second ban. |
+| self-test | `corpus.py selftest` | *"a production grant hidden in a nested key is still caught"* - a production-authority key and a conformity claim nested inside the new `approval_evidence` object are still caught by the unchanged recursive scan. The new field is not a shadow. |
+| self-test | `corpus.py selftest` | *"one approval violation produces one finding across both detector paths"* - `cmd_validate` runs two methods that both check these fields; the count must stay 1. |
+| self-test | `corpus.py selftest` | *"no packet states the superseded prohibition"* and *"every packet states the current approval rule and the six required fields"* - all 642 packet files are read, so the instruction a reviewer holds cannot drift back to "your signature turns check red" and cannot be merely deleted. |
+| self-test | `corpus.py selftest` | *"--transcribe resolves both digests correctly and writes nothing"* - runs the command a reviewer runs, asserts both printed digests are the real ones, asserts the packet tree is byte-identical afterwards. |
 
-**The residual risk, stated honestly.** The P1 amendment in §1.6 will make
-`human_approval_rejected` stop firing on a *legitimately* attributed approval. The
-moment it does, the mechanical guard against fabrication is weakened, and what
-replaces it is the attribution requirement: reviewer name, role, organisation,
-date and signed-packet digest, resolving to an archived packet. **Design P1 so
-that a record with a non-attributed approval still fails.** If P1 is implemented
-as "allow `approved`", it has removed the guard and installed nothing.
+**The residual risk, stated honestly.** The amendment (2026-10-04) DID weaken
+one thing, and it should be named rather than defended away: before it, *any*
+approval value failed, so the mechanical guard against fabrication was total. Now
+a fully evidenced approval passes, and what guards fabrication is the attribution
+requirement rather than the ban. Six things had to be true for that to be a
+trade rather than a hole - a named person, a declared role, enforced
+independence from both the owner role and the content author, a date, a digest
+chain resolved against a packet on disk and checked against that packet's own
+recorded record digest, and a revision_history entry citing it - and each one is
+a separate way to fabricate less easily than the value alone.
+
+Three residual risks remain, and none of them is closed by this amendment:
+
+1. **A person can still forge all six.** The digest chain proves a packet exists
+   and pins which record state it was generated against; it does not prove a human
+   read anything. The only control against a determined human is that the evidence
+   is public and checkable, and that the batch record names who signed what.
+2. **`reviews/signed/` is an ordinary directory.** Nothing signs it. A signed
+   packet archived there is protected by the generator refusing to overwrite
+   signed packets in `packets/`, not by any cryptographic control over the
+   archive itself. The open P2 in §1.6 is about ratifying this location.
+3. **`human_approval_status: "not_required"` is still rejected**, which means a
+   record that legitimately needs no approval has no way to say so, and the next
+   person to hit that will be tempted to work around it. Open P3 in §1.6.
+
+What the amendment did **not** weaken, checked rather than asserted: the recursive
+authority-key scan, the ASIL/conformity/certification claim classes, the
+provenance gate, and the packet-generator rule that no code path writes a
+signature.
 
 ### 3.2 An execution record with fabricated timestamps or hashes
 

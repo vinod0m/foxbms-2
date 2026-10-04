@@ -114,8 +114,8 @@ population its denominator counts, because they differ.
 | synthetic_fixture_coverage | **173/43** | 402% (ratio, not a score) | `synthetic_reference` records against a declared target |
 | negative_scenario_validation | 20/20 | 100% | **measured**: 20 scenarios executed, 20 detected by their own declared rule |
 | export_reproducibility | 1/1 | 100% | presence of the manifest |
-| human_approval | **0/263** | **0%** | population **B** |
-| production_authorization | **0/263** | **0%** | population **B**, correctly false by policy |
+| human_approval | **0/263** | **0%** | population **B**. **Measured** since 2026-10-04, was a `{"numerator": 0}` literal. Counts records whose `human_approval_status` is a human decision **and** whose `approval_evidence` carries all six required elements. Reads 0 because nothing is approved |
+| production_authorization | **0/263** | **0%** | population **B**. **Measured** since 2026-10-04, was a `{"numerator": 0}` literal. Same computation with a **strictly higher** bar: an approving role holding production authority, and a record family human approval is required for. Reads 0 because nothing is authorised |
 | final_status | `synthetic_ready_with_limitations` | — | — |
 
 `standards_mapping` measures **whether a disposition names an artefact that
@@ -251,6 +251,10 @@ docs/artifacts/
 │   ├── render_e2e_html.py              # HTML deliverable generator
 │   ├── check_references.py
 │   ├── verify_traceability_document.py
+│   ├── make_review_packets.py         # review packet generator + `--transcribe`
+│   ├── verify_approval_evidence_independently.py
+│   │                                   # from-scratch check of the approval
+│   │                                   # amendment; imports NO tool in this repo
 │   └── repo_model.py
 ├── tests/                              # Corpus toolchain tests
 ├── reports/                            # Reports (see table below)
@@ -380,6 +384,79 @@ agree. The ID-RULE-001 reasoning is *withdrawn as reasoning* — it was never th
 bar — while the conclusion survives as a settled state rather than a deferral.
 Recorded in full at `FB2-SAF-VOC-000001`
 `identifier_vocabulary.supersession_reconciliation_2026_10_04`.
+
+---
+
+### APPROVAL-RULE-A1 — an approval needs evidence, not a ban (2026-10-04)
+
+**The problem.** Three rules — `human_approval_rejected`,
+`production_authorized_rejected`, `verification_credit_rejected` — failed
+validation on the approval field's **value alone**. A rule that fails on the
+value never inspects an approval, so it cannot tell a fabricated one from a real
+one: it could say only "no", never "this one is unsigned". The corpus therefore
+had two reachable states for approval, *absent* and *forbidden*, and no way to
+represent the legitimate middle. A reviewer who had done the work had nowhere to
+record it, and the first signature would have turned `check` red and been blamed
+for it.
+
+**The change.** An approval value is **necessary and not sufficient**. It passes
+only if the record carries, under `approval_evidence.<kind>`, all six elements
+below. The contract is machine-readable at
+`governance/role-and-review-policy.json#/approval_evidence_contract` and the
+validator **reads it from there** rather than restating it, so policy and code
+cannot drift.
+
+| # | element | what is checked |
+|---|---|---|
+| 1 | the grant value | present. Never sufficient on its own |
+| 2 | `approved_by` | a named **person**: ≥2 tokens, not a declared `role_id` or role name, no token a `role_id`, no token from the team vocabulary |
+| 3 | `role` + `independence` | `role` is a declared `role_id`; `independence{owner_role, satisfied, evidence, policy_ref}` with `owner_role` equal to **this record's own**. Independence is then **enforced**: the role must differ from `owner_role` **and** from the author of the last content revision |
+| 4 | `date` | ISO-8601, grammar- **and** parse-checked |
+| 5 | `review_packet` | `{path, sha256, record_sha256_at_signing}`. The path resolves to a `packet.json` on disk; `sha256` equals that file's bytes **now**; `record_sha256_at_signing` equals **the packet's own** `integrity.record_sha256`; the packet's `target.record_id` **and** `target.profile` name this record |
+| 6 | `revision_history` | an entry whose `author` is the approving role and whose description records the approval **and cites the packet** |
+
+Every finding names **which** element is unmet, numbered, so a reviewer can fix
+it in one pass. `production_authorization` adds two conditions on top, so its
+bar is **strictly higher**: the approving role must hold production authority
+(`architect` or `safety_manager`) and the record's family must be one human
+approval is required for (`safety_case`, `post_development_record`, `change`).
+
+**`human_approval` and `production_authorization` are now measured.** Both were
+the literal `{"numerator": 0}`, which reads 0/321 before any signature exists and
+would read 0/321 after three hundred. Both are now computed from the records by
+**the same predicate the validator enforces**, so neither can read higher than
+the gate permits. They read 0/321 because **no approval exists**, and the detail
+text says so as a measurement.
+
+**What it did NOT do.** It did **not** produce an approval: every record is still
+`pending` and this repository may not write one. It did **not** add authority to
+anyone. It did **not** relax `human_approval_status: "not_required"`. It did
+**not** touch the recursive authority-key scan, the ASIL/conformity/certification
+claim classes, gate `[7/8]`, the provenance gate, or the packet generator's rule
+that no code path writes a signature.
+
+**Honest residual risk.** Before the amendment *any* approval failed, so the
+mechanical guard was total; now a fully evidenced approval passes and the guard
+is the attribution requirement. A determined person can still forge all six
+elements — the digest chain proves a packet exists and pins which record state it
+was generated against, but it does not prove anybody read anything. Four
+residual risks are recorded rather than dropped, at
+`governance/corpus-policy.json` `review_policy.approval_rule_amendment`
+(`.residual_risks_recorded_here_not_silently_dropped`) and in
+`governance/closing-list.md` §3.1.
+
+**A reviewer can now transcribe a correct approval first time:**
+
+```bash
+python3 docs/artifacts/tools/make_review_packets.py --transcribe FB2-HW-TSR-000001 --profile as_is
+```
+
+It prints the exact `approval_evidence` block and the exact `revision_history`
+entry with **both digests already resolved**, writes nothing, and fills no
+decision. Section 8 of all 321 generated packets states the same rule.
+
+Recorded in full at `governance/corpus-policy.json`
+`review_policy.approval_rule_amendment` and `coverage-plan.json` `CORR-COV-022`.
 
 ---
 

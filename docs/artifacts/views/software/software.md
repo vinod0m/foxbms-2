@@ -1,6 +1,6 @@
 # Software — requirements, design and deviations (generated view)
 
-Generated: 2026-10-04T00:15:37Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
+Generated: 2026-10-04T03:41:34Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
 
 ## Provenance and status of this file
 

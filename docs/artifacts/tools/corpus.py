@@ -25,8 +25,10 @@ import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -228,6 +230,137 @@ GOVERNANCE_CLAIM_FIELDS = {
         "certified_by", "audited",
     }),
 }
+
+# ---------------------------------------------------------------------------
+# APPROVAL EVIDENCE -- AMENDMENT APPROVAL-RULE-A1 (2026-10-04)
+#
+# WHY THIS BLOCK EXISTS, and why the three rules it serves were the wrong
+# instrument.
+#
+# `human_approval_rejected`, `production_authorized_rejected` and
+# `verification_credit_rejected` each fired on the VALUE and nothing else: any
+# `approved`/`true` failed, however well evidenced. That is a ban, not a guard.
+# A ban cannot distinguish a fabricated approval from a real one, because it
+# never looks at one. It cannot say "this approval is unsigned", only "this
+# approval is a value". So the corpus had exactly two reachable states for
+# approval -- absent, and forbidden -- and the legitimate middle was
+# unrepresentable. A reviewer who did the work had nowhere to record it.
+#
+# WHAT REPLACES IT: an evidence requirement. The value is still not enough; it
+# is now necessary AND insufficient. An approval passes only if it carries, on
+# the record itself, all six elements named in
+# governance/role-and-review-policy.json#/approval_evidence_contract. The
+# contract lives in that file and is READ from it, so the policy and the
+# enforcing code cannot drift; the constants here are only the parts that are
+# inherently local (severity, which packet roots are searched, the team
+# vocabulary, the date grammar).
+#
+# WHAT THIS STRENGTHENS, stated plainly so it can be checked:
+#   * the grant value alone still fails, so every record that failed before
+#     still fails;
+#   * a record that previously FAILED VALIDATION can now pass, and the only way
+#     it can is by carrying a named person, a role, independence evidence
+#     against the record's own owner_role AND its current-revision author, an
+#     ISO-8601 date, a digest chain resolved against a packet that exists on
+#     disk and whose OWN recorded record digest matches, and a revision_history
+#     entry that cites that packet. Each of those is a separate way to forge
+#     less easily than the value alone;
+#   * `production_authorization` additionally requires the approving role to be
+#     one of two declared production-authority roles and the record's family to
+#     be one of the three families human approval is required for, so it is
+#     STRICTLY STRONGER than a human approval rather than the same bar under a
+#     different name;
+#   * the packet digest is checked against the packet's own recorded
+#     integrity.record_sha256, not against "a packet for this record exists".
+#     Citing a digest that belongs to a different record, a different revision,
+#     or a packet that was never on disk all fail.
+#
+# WHAT IT DOES NOT DO: it does not produce an approval. Every record in this
+# corpus is pending and stays pending. A gate that accepts a legitimately
+# evidenced approval is only meaningful if no process can manufacture the
+# evidence; the digest chain is what makes that true, and the self-tests assert
+# both directions.
+
+APPROVAL_EVIDENCE_FIELD = "approval_evidence"
+APPROVAL_POLICY_REL = "docs/artifacts/governance/role-and-review-policy.json"
+
+# Which roots a cited packet may resolve from, in the order they are searched.
+# `packets/` is where the generator writes. `signed/` is the archive the packet
+# generator's own guidance tells a reviewer to keep a signed packet in ("archive
+# the signed packet OUTSIDE docs/artifacts/reviews/packets/"), because
+# regenerating a packet overwrites it. Both are on disk under docs/artifacts/
+# reviews/, and a signed packet is precisely the one that must not be
+# overwritten. Anything outside these two roots is rejected, so an approval
+# cannot cite an arbitrary file.
+APPROVAL_PACKET_ROOTS = ("docs/artifacts/reviews/packets",
+                         "docs/artifacts/reviews/signed")
+
+# Values that name a group of people rather than one person. `approved_by` must
+# be a person: a team cannot be independent of the record's owner_role, cannot
+# be traced to a session, and cannot be the subject of an independence
+# challenge. This vocabulary is the machine form of that requirement.
+APPROVAL_TEAM_VOCABULARY = frozenset({
+    "team", "group", "board", "committee", "panel", "crew", "squad", "pool",
+    "department", "office", "staff", "reviewers", "approvers", "automation",
+    "system", "tool", "script", "agent", "bot", "ai", "model", "the", "and",
+    "unknown", "unnamed", "anonymous", "n_a", "na", "tbd", "none", "null",
+    "various", "several", "multiple", "anyone", "anybody", "somebody",
+})
+
+# ISO-8601, date or date-time with an optional UTC offset. Deliberately a
+# grammar check plus a real parse, not a "looks like a date" heuristic: a
+# recorded approval date that cannot be parsed is not a date.
+APPROVAL_DATE_RE = re.compile(
+    r"^(\d{4})-(\d{2})-(\d{2})"
+    r"(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?"
+    r"(Z|[+-]\d{2}:?\d{2})?)?$")
+
+APPROVAL_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+
+# Values that stand in for evidence without being any.
+APPROVAL_PLACEHOLDER_VALUES = frozenset({
+    "", "-", "--", "n/a", "na", "none", "null", "tbd", "tbc", "todo",
+    "placeholder", "example", "test", "dummy", "xxx", "?", "unknown",
+})
+
+# Floor on the length of the independence explanation. A single word cannot
+# state how an approver is independent of an author; neither can a placeholder
+# with padding. The floor is low enough that an honest one-liner passes.
+APPROVAL_INDEPENDENCE_MIN_CHARS = 24
+
+# The three approval kinds, and what counts as a grant for each.
+#
+# `human_approval` treats every value other than `pending`/absent as a grant,
+# because `approved` and `rejected` are both recorded human DECISIONS and both
+# need a person behind them. `not_required` is a grant by that test too, so it
+# is still rejected for want of evidence -- which preserves the current verdict
+# for that value rather than quietly relaxing it.
+#
+# The two boolean kinds grant only on the literal True, exactly as the rules
+# they replace did.
+APPROVAL_RULES = {
+    "human_approval": {
+        "record_field": "human_approval_status",
+        "rule_id": "human_approval_rejected",
+        "severity": "high",
+        "grant_label": "a recorded human approval decision",
+    },
+    "production_authorization": {
+        "record_field": "production_authorized",
+        "rule_id": "production_authorized_rejected",
+        "severity": "critical",
+        "grant_label": "a claim of production authority",
+    },
+    "verification_credit": {
+        "record_field": "product_verification_credit",
+        "rule_id": "verification_credit_rejected",
+        "severity": "high",
+        "grant_label": "a claim of product verification credit",
+    },
+}
+
+# The kind whose evidence bar is strictly higher than a human approval's.
+APPROVAL_STRICTEST_KIND = "production_authorization"
 
 # Floor for the `source_grounding` coverage dimension, as a fraction.
 #
@@ -869,21 +1002,25 @@ class CorpusTool:
                               "as_is artifact with forbidden origin=synthetic (profile contamination)",
                               "profile_contamination")
             ok = False
-        if d.get("production_authorized") is True:
-            self.findings.add("critical", "provenance", aid,
-                              "production_authorized must be false (synthetic corpus)",
-                              "production_authorized_rejected")
-            ok = False
-        if d.get("human_approval_status") == "approved":
-            self.findings.add("high", "provenance", aid,
-                              "human_approval_status must remain pending (no human approval performed)",
-                              "human_approval_rejected")
-            ok = False
-        if d.get("product_verification_credit") is True:
-            self.findings.add("high", "provenance", aid,
-                              "product_verification_credit must be false",
-                              "verification_credit_rejected")
-            ok = False
+        # Approval / authority / credit claims.
+        #
+        # WAS three blanket prohibitions: any `production_authorized is True`,
+        # any `human_approval_status == "approved"`, any
+        # `product_verification_credit is True` failed, however well evidenced.
+        # A ban cannot distinguish a fabricated approval from a real one because
+        # it never looks at one, which made a legitimate approval unrepresentable
+        # and told the reviewer holding the pen nothing except "no".
+        #
+        # NOW an evidence requirement (AMENDMENT APPROVAL-RULE-A1): the grant
+        # value is necessary and not sufficient. `_check_approval_evidence`
+        # enumerates every unmet element of the six, so the finding says WHICH.
+        # Every record that failed under the prohibition still fails unless it
+        # carries a named person, their role, independence evidence against this
+        # record's own owner_role AND its current-revision author, an ISO-8601
+        # date, a digest chain resolved against a packet on disk whose own
+        # recorded record digest matches, and a revision_history entry citing
+        # that packet.
+        ok &= self._check_approval_evidence(aid, d, path=path, category="provenance")
         # revision history must contain current revision. The rule itself lives in
         # _check_revision_consistency so that the mutation-scenario harness, which
         # does not run schema validation, exercises exactly the same logic.
@@ -1847,6 +1984,593 @@ class CorpusTool:
               f"{ev.get('evidence_file_entries', 0)} evidence_files entr(y/ies), "
               f"{ev.get('evidence_file_missing', 0)} missing")
 
+    # -----------------------------------------------------------------------
+    # APPROVAL EVIDENCE (AMENDMENT APPROVAL-RULE-A1). See APPROVAL_RULES above
+    # for why the prohibition these three rules used to be was the wrong
+    # instrument. Everything below is ONE implementation, called from every
+    # path that needs the answer, so the validator and the two coverage
+    # dimensions cannot disagree about what a properly formed approval is.
+
+    def _approval_policy(self):
+        """The approval-evidence contract, read from the governance policy.
+
+        Read from `role-and-review-policy.json#/approval_evidence_contract`
+        rather than restated here, because a policy the enforcing code does not
+        read is the defect ID-RULE-004-A1 was written to remove. The constants
+        in this module are only what is inherently local to the tool.
+
+        Returns None when the policy file is missing or carries no contract. A
+        contract that cannot be read is NOT treated as "no contract, therefore
+        no requirement": a grant whose required contract is unreadable is
+        rejected, because an evidence requirement nobody can read is not an
+        evidence requirement.
+        """
+        try:
+            p = load_json(self.governance_dir / "role-and-review-policy.json")
+        except Exception:
+            return None
+        c = p.get("approval_evidence_contract")
+        return c if isinstance(c, dict) else None
+
+    def _policy_role_ids(self):
+        """Every declared role id and role name, lower-cased.
+
+        Used to reject an `approved_by` that is a role rather than a person.
+        """
+        try:
+            p = load_json(self.governance_dir / "role-and-review-policy.json")
+        except Exception:
+            return set(), {}
+        ids, names = set(), {}
+        for r in p.get("roles", []) or []:
+            rid = r.get("role_id")
+            if isinstance(rid, str):
+                ids.add(rid.lower())
+                names[rid.lower()] = r.get("name")
+        return ids, names
+
+    @staticmethod
+    def _is_approval_grant(spec, d):
+        """True when `d` asserts the grant this rule is about."""
+        v = d.get(spec["record_field"])
+        if spec["record_field"] == "human_approval_status":
+            return v is not None and v != "pending"
+        return v is True
+
+    @staticmethod
+    def _is_iso8601(value):
+        """A real ISO-8601 date or date-time, checked by grammar AND by parse."""
+        if not isinstance(value, str):
+            return False
+        m = APPROVAL_DATE_RE.match(value.strip())
+        if not m:
+            return False
+        try:
+            datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        except ValueError:
+            return False
+        return True
+
+    def _resolve_approval_packet(self, cited_path, cited_sha):
+        """Resolve a cited review packet to the bytes actually on disk.
+
+        `cited_path` is repository-relative. It must sit under one of
+        APPROVAL_PACKET_ROOTS and name a `.json` packet twin. Returns
+        (packet_dict, resolved_root) or (None, reason) -- the reason is written
+        into the finding, because "your digest does not resolve" is useless to
+        the person holding the pen.
+        """
+        if not isinstance(cited_path, str) or not cited_path.strip():
+            return None, "review_packet.path is not a string"
+        rel = cited_path.strip().replace("\\", "/")
+        if rel.startswith("./"):
+            rel = rel[2:]
+        if not rel.endswith(".json"):
+            return None, (f"review_packet.path must name a packet.json twin (the machine-readable "
+                          f"packet a signature is checked against), not {rel!r}")
+        root_rel = None
+        for cand in APPROVAL_PACKET_ROOTS:
+            if rel == cand or rel.startswith(cand + "/"):
+                root_rel = cand
+                break
+        if root_rel is None:
+            return None, (f"review_packet.path {rel!r} is outside the review-packet tree; it must "
+                          f"sit under one of {list(APPROVAL_PACKET_ROOTS)}")
+        abs_p = self.root / rel
+        try:
+            abs_p = abs_p.resolve()
+            abs_p.relative_to(self.root.resolve())
+        except (OSError, ValueError):
+            return None, f"review_packet.path {rel!r} does not resolve inside the repository"
+        if not abs_p.is_file():
+            return None, f"review_packet.path {rel!r} does not exist on disk"
+        raw = abs_p.read_bytes()
+        actual = hashlib.sha256(raw).hexdigest()
+        if not isinstance(cited_sha, str) or not APPROVAL_SHA256_RE.match(cited_sha.strip()):
+            return None, (f"review_packet.sha256 is not a 64-character lowercase hex sha256 "
+                          f"(got {cited_sha!r}); it is the digest of {rel} as it stands on disk, "
+                          f"which is {actual}")
+        if cited_sha.strip() != actual:
+            return None, (f"review_packet.sha256 does not match {rel} as it stands on disk: "
+                          f"recorded {cited_sha.strip()}, actual {actual}. The signed packet has "
+                          f"either been regenerated or is not the packet that was signed; archive "
+                          f"the signed packet under docs/artifacts/reviews/signed/ and cite that")
+        try:
+            packet = json.loads(raw.decode("utf-8"))
+        except Exception as e:
+            return None, f"{rel} is not readable JSON ({e})"
+        if not isinstance(packet, dict):
+            return None, f"{rel} is not a JSON object"
+        return packet, root_rel
+
+    def _approval_evidence_defects(self, d, kind, path=None):
+        """Every way `d`'s `kind` grant is not properly evidenced.
+
+        Returns a list of human-readable defect strings. EMPTY means the grant
+        is properly formed and must be ACCEPTED. Non-empty means it is rejected,
+        and every element of the list is reported, so the message names what is
+        missing rather than that something is.
+
+        `path` is the record's own path, used to cross-check that the cited
+        packet was generated for THIS record and not merely for a record with a
+        similar name. When it is not a real path (an injected fixture) the
+        cross-check is skipped rather than failed, because a fixture has no file
+        to be cross-checked against.
+        """
+        spec = APPROVAL_RULES.get(kind)
+        if spec is None:
+            raise KeyError(f"unknown approval kind {kind!r}")
+        defects = []
+
+        # --- 0. is this even a grant? ---------------------------------------
+        if not self._is_approval_grant(spec, d):
+            return []
+
+        field = spec["record_field"]
+        contract = self._approval_policy()
+        if contract is None:
+            defects.append(
+                f"the required evidence contract is unreadable: {APPROVAL_POLICY_REL}"
+                f"#/approval_evidence_contract could not be read, so no grant can be accepted "
+                f"as properly evidenced")
+            return defects
+
+        # --- 1. the evidence block itself -----------------------------------
+        ev_root = d.get(APPROVAL_EVIDENCE_FIELD)
+        if ev_root is None:
+            # Short-circuited, and deliberately so: with no block at all, all six
+            # elements are unmet and the other five messages would each restate
+            # the same fact. The finding says so explicitly rather than leaving
+            # the reader to infer that "element 1" means "and therefore 2 to 6".
+            defects.append(
+                f"elements 1-6 ALL UNMET: {field} asserts {spec['grant_label']} but the record "
+                f"carries no '{APPROVAL_EVIDENCE_FIELD}' block, and that block is where all six "
+                f"required elements live. Nothing else on the record can supply them. The six are "
+                f"enumerated at {APPROVAL_POLICY_REL}"
+                f"#/approval_evidence_contract/required_elements; run "
+                f"`make_review_packets.py --transcribe <ID>` to have the block printed with both "
+                f"digests already resolved")
+            return defects
+        if not isinstance(ev_root, dict):
+            defects.append(
+                f"elements 1-6 ALL UNMET: {APPROVAL_EVIDENCE_FIELD} must be an object, got "
+                f"{type(ev_root).__name__}, so none of the six required elements can be present")
+            return defects
+        ev = ev_root.get(kind)
+        if ev is None:
+            present = sorted(k for k in ev_root if isinstance(ev_root.get(k), dict))
+            defects.append(
+                f"elements 2-6 UNMET: '{APPROVAL_EVIDENCE_FIELD}' is present but carries no "
+                f"'{kind}' entry, so only the grant value ({field}) is satisfied and nothing "
+                f"evidences it"
+                + (f"; it does carry {present}" if present else ""))
+            return defects
+        if not isinstance(ev, dict):
+            defects.append(
+                f"elements 2-6 UNMET: {APPROVAL_EVIDENCE_FIELD}.{kind} must be an object, got "
+                f"{type(ev).__name__}")
+            return defects
+
+        role_ids, role_names = self._policy_role_ids()
+        owner_role = d.get("owner_role")
+
+        # --- 2. a named person ------------------------------------------------
+        approved_by = ev.get("approved_by")
+        if not isinstance(approved_by, str) or not approved_by.strip():
+            defects.append(
+                f"element 2 MISSING: {APPROVAL_EVIDENCE_FIELD}.{kind}.approved_by is absent or "
+                f"empty. An approval must name the person who gave it")
+        else:
+            toks = [t for t in re.split(r"[\s,]+", approved_by.strip()) if t]
+            low = [t.lower().strip(".,()[]") for t in toks]
+            low_set = set(low)
+            if len(toks) < 2:
+                defects.append(
+                    f"element 2 REJECTED: approved_by {approved_by!r} is a single token. The "
+                    f"contract requires a named individual (at least a given name and a family "
+                    f"name); a lone word is a role, a team or an initial set, and none of those "
+                    f"can be traced to a person or challenged for independence")
+            if approved_by.strip().lower() in role_ids or approved_by.strip().lower() in \
+                    {str(v).lower() for v in role_names.values() if isinstance(v, str)}:
+                nm = role_names.get(approved_by.strip().lower())
+                defects.append(
+                    f"element 2 REJECTED: approved_by {approved_by!r} is a declared "
+                    f"{'role name' if nm else 'role id'} in {APPROVAL_POLICY_REL}#/roles"
+                    + (f" ({nm})" if nm else "") + ", not a person. Record the reviewer's own name")
+            bad_tokens = sorted(role_ids & low_set)
+            if bad_tokens:
+                defects.append(
+                    f"element 2 REJECTED: approved_by {approved_by!r} contains the declared role "
+                    f"id(s) {bad_tokens}; record the person's name, not their role")
+            team = sorted(APPROVAL_TEAM_VOCABULARY & low_set)
+            if team:
+                defects.append(
+                    f"element 2 REJECTED: approved_by {approved_by!r} names a group rather than a "
+                    f"person (token(s) {team}). A team cannot be independent of owner_role, "
+                    f"cannot be traced to a session, and cannot be challenged. One person signs")
+
+        # --- 3. role + independence evidence ---------------------------------
+        role = ev.get("role")
+        if not isinstance(role, str) or not role.strip():
+            defects.append(
+                f"element 3 MISSING: {APPROVAL_EVIDENCE_FIELD}.{kind}.role is absent. Record the "
+                f"approver's role_id as declared in {APPROVAL_POLICY_REL}#/roles")
+        elif role.strip() not in role_ids:
+            defects.append(
+                f"element 3 REJECTED: role {role!r} is not a role_id declared in "
+                f"{APPROVAL_POLICY_REL}#/roles; an unverifiable role cannot satisfy any "
+                f"independence requirement")
+        indep = ev.get("independence")
+        if indep is None:
+            defects.append(
+                f"element 3 MISSING: {APPROVAL_EVIDENCE_FIELD}.{kind}.independence is absent. "
+                f"The contract requires an object carrying owner_role, satisfied, evidence and "
+                f"policy_ref, so the approver's independence from this record's owner_role "
+                f"({owner_role!r}) is stated rather than assumed")
+        elif not isinstance(indep, dict):
+            defects.append(f"{APPROVAL_EVIDENCE_FIELD}.{kind}.independence must be an object, got "
+                           f"{type(indep).__name__}")
+        else:
+            claimed_owner = indep.get("owner_role")
+            if claimed_owner is None:
+                defects.append(
+                    f"element 3 MISSING: independence.owner_role is absent; it must equal this "
+                    f"record's own owner_role ({owner_role!r})")
+            elif claimed_owner != owner_role:
+                defects.append(
+                    f"element 3 REJECTED: independence.owner_role is {claimed_owner!r} but this "
+                    f"record's owner_role is {owner_role!r}. Independence is judged against the "
+                    f"record being approved, not against a role named in the approval")
+            if indep.get("satisfied") is not True:
+                defects.append(
+                    f"element 3 REJECTED: independence.satisfied is {indep.get('satisfied')!r}, "
+                    f"not true. The approver asserts their own independence; the corpus does not "
+                    f"assume it")
+            ie = indep.get("evidence")
+            if not isinstance(ie, str) or not ie.strip() \
+                    or ie.strip().lower() in APPROVAL_PLACEHOLDER_VALUES \
+                    or len(ie.strip()) < APPROVAL_INDEPENDENCE_MIN_CHARS:
+                defects.append(
+                    f"element 3 REJECTED: independence.evidence is "
+                    f"{ie.strip() if isinstance(ie, str) else ie!r}, which states nothing about "
+                    f"how this approver is independent of {owner_role!r} (minimum "
+                    f"{APPROVAL_INDEPENDENCE_MIN_CHARS} characters, not a placeholder). Say how: "
+                    f"different role, different reporting line, separate session")
+            pref = indep.get("policy_ref")
+            if not isinstance(pref, str) or APPROVAL_POLICY_REL not in pref.replace("\\", "/"):
+                defects.append(
+                    f"element 3 REJECTED: independence.policy_ref is {pref!r}; it must cite "
+                    f"{APPROVAL_POLICY_REL} so the requirement being satisfied is traceable")
+            # Independence, ENFORCED rather than asserted: the approving role may
+            # not be the record's owner_role, nor the author of the revision the
+            # approval is approving.
+            ar = str(role).strip() if isinstance(role, str) else None
+            if ar and ar == owner_role:
+                defects.append(
+                    f"element 3 REJECTED: INDEPENDENCE VIOLATION - the approving role {ar!r} IS "
+                    f"this record's owner_role. A record cannot be approved by the role that "
+                    f"owns it; see {APPROVAL_POLICY_REL}#/approval_evidence_contract"
+                    f"/independence_rule")
+            self_author = self._current_revision_author(d)
+            if ar and self_author and ar == self_author:
+                defects.append(
+                    f"element 3 REJECTED: INDEPENDENCE VIOLATION - the approving role {ar!r} is "
+                    f"the author of the content being approved (the last revision_history entry "
+                    f"that changed this record, author {self_author!r}). A record cannot be "
+                    f"approved by the author of the content under review; see "
+                    f"{APPROVAL_POLICY_REL}#/approval_evidence_contract/independence_rule. "
+                    f"An entry that records the approval itself is not counted as a content "
+                    f"change, so a well-formed approval does not disqualify its own signer")
+
+        # --- 4. an ISO-8601 date ---------------------------------------------
+        dt = ev.get("date")
+        if dt is None:
+            defects.append(
+                f"element 4 MISSING: {APPROVAL_EVIDENCE_FIELD}.{kind}.date is absent. When the "
+                f"decision was taken is part of what makes it accountable")
+        elif not self._is_iso8601(dt):
+            defects.append(
+                f"element 4 REJECTED: date {dt!r} is not an ISO-8601 date or date-time "
+                f"(YYYY-MM-DD, optionally followed by HH:MM[:SS] and Z or an offset)")
+
+        # --- 5. the signed packet, by digest chain ---------------------------
+        rp = ev.get("review_packet")
+        if rp is None:
+            defects.append(
+                f"element 5 MISSING: {APPROVAL_EVIDENCE_FIELD}.{kind}.review_packet is absent. "
+                f"The approval must cite the sha256 of the review packet the reviewer actually "
+                f"signed, as a path plus a sha256 plus record_sha256_at_signing")
+        elif not isinstance(rp, dict):
+            defects.append(f"{APPROVAL_EVIDENCE_FIELD}.{kind}.review_packet must be an object, got "
+                           f"{type(rp).__name__}")
+        else:
+            attested = rp.get("record_sha256_at_signing")
+            if not isinstance(attested, str) or not APPROVAL_SHA256_RE.match(attested.strip()):
+                defects.append(
+                    f"element 5 MISSING: review_packet.record_sha256_at_signing is absent or is "
+                    f"not a 64-character lowercase hex sha256 (got {attested!r}). It is the digest "
+                    f"of THIS record's bytes at the moment of signing, and is what ties the "
+                    f"signature to a specific revision of a specific record")
+            packet, why = self._resolve_approval_packet(rp.get("path"), rp.get("sha256"))
+            if packet is None:
+                defects.append(f"element 5 REJECTED: {why}")
+            else:
+                integrity = packet.get("integrity") if isinstance(
+                    packet.get("integrity"), dict) else {}
+                recorded = integrity.get("record_sha256")
+                # THE check the amendment asks for by name: the digest is
+                # compared against the packet's OWN recorded digest of the
+                # record, not against the bare fact that a packet exists. A
+                # packet with the right filename but no binding to this record at
+                # this revision proves nothing.
+                if isinstance(attested, str) and attested.strip() and recorded != attested.strip():
+                    defects.append(
+                        f"element 5 REJECTED: review_packet.record_sha256_at_signing "
+                        f"({attested.strip()}) is not the digest the cited packet itself records "
+                        f"for this record (integrity.record_sha256 = {recorded!r}). The approval "
+                        f"claims a review of one state of the record and cites a packet generated "
+                        f"against another")
+                tgt = packet.get("target") if isinstance(packet.get("target"), dict) else {}
+                if tgt.get("record_id") != d.get("id") \
+                        or tgt.get("profile") != d.get("profile", "unknown"):
+                    defects.append(
+                        f"element 5 REJECTED: the cited packet is not about this record: it names "
+                        f"target.record_id={tgt.get('record_id')!r} "
+                        f"target.profile={tgt.get('profile')!r}, this record is "
+                        f"{d.get('id')!r} / {d.get('profile', 'unknown')!r}. Under ID-RULE-004-A1 "
+                        f"the pair (profile, id) is the key, so both must match")
+                if path is not None:
+                    try:
+                        rec_rel = Path(str(path)).resolve().relative_to(
+                            self.root.resolve()).as_posix()
+                    except (ValueError, OSError):
+                        rec_rel = None
+                    cited_rel = integrity.get("record_path")
+                    if rec_rel and isinstance(cited_rel, str) \
+                            and cited_rel.replace("\\", "/") != rec_rel:
+                        defects.append(
+                            f"element 5 REJECTED: the cited packet was generated for record file "
+                            f"{cited_rel!r}, which is not this record's file {rec_rel!r}")
+
+        # --- 6. a revision_history entry recording the approval --------------
+        hist_ok = False
+        hist_why = None
+        rp_ref = ""
+        if isinstance(rp, dict):
+            for cand in (rp.get("sha256"), Path(str(rp.get("path") or "")).name):
+                if isinstance(cand, str) and cand.strip():
+                    rp_ref = cand.strip()
+                    break
+        entries = d.get("revision_history")
+        if not isinstance(entries, list) or not entries:
+            hist_why = (f"the record has no revision_history array, so nothing records the "
+                        f"approval; entries: {entries!r}")
+        else:
+            cur = str(d.get("revision"))
+            ar = role.strip() if isinstance(role, str) else None
+            for h in entries:
+                if not isinstance(h, dict):
+                    continue
+                why = []
+                if ar and str(h.get("author", "")).strip() != ar:
+                    why.append(f"author is {h.get('author')!r}, not the approving role {ar!r}")
+                desc = str(h.get("description", "") or "")
+                if "approv" not in desc.lower():
+                    why.append(f"description does not record an approval: {desc[:120]!r}")
+                if rp_ref and rp_ref not in desc:
+                    why.append(f"description does not reference the signed packet by digest or "
+                               f"name ({rp_ref[:24]!r}...)")
+                hrev = str(h.get("revision", ""))
+                if hrev.isdigit() and cur.isdigit() and int(hrev) < int(cur):
+                    why.append(f"revision {hrev} precedes the record's current revision {cur}, so "
+                               f"it cannot be the entry that recorded this approval")
+                if not why:
+                    hist_ok = True
+                    break
+                hist_why = "; ".join(why)
+        if not hist_ok:
+            defects.append(
+                f"element 6 MISSING: no revision_history entry records this approval"
+                + (f" (nearest candidate failed because: {hist_why})" if hist_why else "")
+                + f". Required: an entry whose author is the approving role, whose revision is at "
+                  f"least the record's current revision ({str(d.get('revision'))!r}), and whose "
+                  f"description records the approval and cites the signed packet by digest or name")
+
+        # --- the production-authority bar, which is STRICTLY HIGHER -----------
+        if kind == APPROVAL_STRICTEST_KIND:
+            defects.extend(self._production_authority_defects(d, ev, contract))
+
+        return defects
+
+    @staticmethod
+    def _is_approval_history_entry(h):
+        """True when a revision_history entry records an approval rather than a
+        content change.
+
+        An approval does not make its signer the author of the content they
+        reviewed. If independence were judged against the author of the CURRENT
+        revision, then any approval that bumped the revision would make the
+        approver the author of the revision under review, and the rule would
+        reject every well-formed approval for being well-formed. The author of
+        the content under review is the author of the last revision that CHANGED
+        the content, which is why approval-recording entries are skipped.
+        """
+        return "approv" in str((h or {}).get("description", "") or "").lower()
+
+    def _current_revision_author(self, d):
+        """The author of the last revision that changed this record's content.
+
+        This is "the record's own author" in the sense that matters for
+        independence: the person or role that wrote the content an approval is
+        approving. Entries that record the approval itself are skipped, so an
+        approval does not disqualify its own signer; the answer is the author of
+        the last content revision before it. Falls back to the last entry so a
+        history with nothing but approval entries still yields an author rather
+        than silently yielding none.
+        """
+        entries = d.get("revision_history")
+        if not isinstance(entries, list) or not entries:
+            return None
+        content = [h for h in entries
+                   if isinstance(h, dict) and not self._is_approval_history_entry(h)
+                   and isinstance(h.get("author"), str) and h["author"].strip()]
+        for h in reversed(content or [h for h in entries if isinstance(h, dict)]):
+            if isinstance(h.get("author"), str) and h["author"].strip():
+                return h["author"].strip()
+        return None
+
+    def _production_authority_defects(self, d, ev, contract):
+        """The extra conditions production authority carries and approval does not.
+
+        Not invented here. Both come from
+        `role-and-review-policy.json#/approval_evidence_contract`, which records
+        the basis for each beside the value:
+
+          * the approving role must be one the corpus grants production
+            authority to. Declared as a list rather than matched against the
+            free-text `authority` strings in roles[], because matching prose is
+            not measurement;
+          * the record must be one of the artefact families human approval is
+            required for. Production authority on a hazard record is not a
+            weaker approval, it is a category error.
+
+        `production_authorization` is therefore strictly harder to satisfy than
+        `human_approval` on the same record, not the same bar under a second
+        name.
+        """
+        out = []
+        roles_cfg = contract.get("production_authority_roles")
+        allowed = roles_cfg.get("roles") if isinstance(roles_cfg, dict) else None
+        role = ev.get("role") if isinstance(ev, dict) else None
+        if isinstance(allowed, list):
+            if not isinstance(role, str) or not role.strip():
+                out.append(
+                    f"production authority: no approving role was given, so it cannot be one of "
+                    f"the roles this corpus grants production authority to {sorted(allowed)}")
+            elif role.strip() not in allowed:
+                out.append(
+                    f"production authority: role {role.strip()!r} is not one of the "
+                    f"production-authority roles {sorted(allowed)}. A human approval may be given "
+                    f"by any independent role; production release may not. Basis recorded at "
+                    f"{APPROVAL_POLICY_REL}#/approval_evidence_contract/production_authority_roles")
+        types_cfg = contract.get("production_authorizable_artifact_types")
+        allowed_types = types_cfg.get("types") if isinstance(types_cfg, dict) else None
+        if isinstance(allowed_types, list):
+            atype = d.get("artifact_type")
+            if atype not in allowed_types:
+                out.append(
+                    f"production authority: artifact_type {atype!r} is not one of the families "
+                    f"human approval is required for {sorted(allowed_types)}. "
+                    f"review_policy.additional_fields.human_approval_required_for names "
+                    f"safety_case, production_release and change_approval; "
+                    f"post_development_record is this corpus's production_release type. "
+                    f"Production authority on a {atype!r} record is a category error, not a "
+                    f"weaker approval")
+        return out
+
+    def _approval_defect_message(self, aid, kind, defects):
+        """One finding's worth of text: which of the six elements is missing."""
+        spec = APPROVAL_RULES[kind]
+        head = (f"{aid}: {spec['record_field']} asserts {spec['grant_label']} but the approval is "
+                f"NOT properly evidenced -- {len(defects)} requirement(s) unmet. An approval value "
+                f"alone is not an approval. Each unmet element is listed below; fix them all in "
+                f"one pass against "
+                f"{APPROVAL_POLICY_REL}#/approval_evidence_contract/required_elements:")
+        body = "\n    ".join(f"[{i}] {x}" for i, x in enumerate(defects, 1))
+        return f"{head}\n    {body}"
+
+    def _add_approval_finding_once(self, severity, category, aid, description, rule):
+        """Report an approval defect at most once per (rule, artifact).
+
+        Both `_validate_artifact` and `_validate_governance_semantics` check
+        these three fields, and `cmd_validate` runs both over the same index.
+        The corpus is explicit that one violation must produce one finding or the
+        count a gate prints is inflated and a reader cannot tell a new defect from
+        a re-report. Rather than move the check to one caller and lose it in the
+        scenario harness (which never calls `_validate_artifact`), both callers
+        report and this reports only the first.
+        """
+        for f in self.findings.items:
+            if f.get("rule") == rule and f.get("artifact_id") == aid:
+                return False
+        self.findings.add(severity, category, aid, description, rule)
+        return True
+
+    def _check_approval_evidence(self, aid, d, path=None, category="provenance"):
+        """Run the evidence requirement for all three kinds and report.
+
+        Returns False if any grant on this record is improperly evidenced. Called
+        from `_validate_artifact` and from `_validate_governance_semantics` so
+        that gate [7/8] - which runs the latter on a fresh Findings and never the
+        former - can still see a fabricated approval.
+        """
+        ok = True
+        for kind in ("human_approval", "production_authorization", "verification_credit"):
+            defects = self._approval_evidence_defects(d, kind, path=path)
+            if defects:
+                ok = False
+                spec = APPROVAL_RULES[kind]
+                self._add_approval_finding_once(
+                    spec["severity"], category, aid,
+                    self._approval_defect_message(aid, kind, defects), spec["rule_id"])
+        return ok
+
+    def _approval_dimension_counts(self):
+        """Count, per kind, the records whose grant is properly evidenced.
+
+        THE SAME PREDICATE THE VALIDATOR USES. `human_approval` and
+        `production_authorization` are computed by calling
+        `_approval_evidence_defects`, not by re-implementing a looser notion of
+        "approved" here. A dimension that measured something looser than the gate
+        enforced would be the exact defect this pair of dimensions had before:
+        they were literals.
+
+        Returns a dict keyed by kind with `considered` (records carrying the
+        field's "nothing claimed" value, i.e. candidates for the grant),
+        `granted` (records carrying the grant value at all), `evidenced` (granted
+        AND passing every element) and `unevidenced` (granted minus evidenced: a
+        bare value, which the validator rejects).
+        """
+        out = {k: {"considered": 0, "granted": 0, "evidenced": 0, "unevidenced": 0,
+                   "unevidenced_ids": []}
+               for k in APPROVAL_RULES}
+        for path, d in self.iter_corpus_artifacts():
+            if not isinstance(d, dict) or not d.get("id"):
+                continue
+            for kind, spec in APPROVAL_RULES.items():
+                if self._is_approval_grant(spec, d):
+                    out[kind]["granted"] += 1
+                    if not self._approval_evidence_defects(d, kind, path=path):
+                        out[kind]["evidenced"] += 1
+                    else:
+                        out[kind]["unevidenced"] += 1
+                        if len(out[kind]["unevidenced_ids"]) < 10:
+                            out[kind]["unevidenced_ids"].append(d.get("id"))
+                elif spec["record_field"] == "human_approval_status" \
+                        or d.get(spec["record_field"]) is not None:
+                    out[kind]["considered"] += 1
+        return out
+
     def _validate_governance_semantics(self, index):
         """Governance semantics, independent of schema validation.
 
@@ -1857,15 +2581,32 @@ class CorpusTool:
         by construction. This method is the detector the gate runs.
 
         Four things are asserted on every record in the index:
-          * production_authorized is not true;
-          * product_verification_credit is not true;
-          * human_approval_status is 'pending';
+          * production_authorized carries no grant unless properly evidenced;
+          * product_verification_credit carries no grant unless properly
+            evidenced;
+          * human_approval_status is 'pending' or a properly evidenced decision;
           * no field anywhere in the record claims production authority.
 
         The fourth is a key scan, because the first three are only as good as
         the field names whoever wrote the record chose. A record may say it is
         approved under a different key and the three named checks would not see
         it.
+
+        AMENDMENT APPROVAL-RULE-A1 (2026-10-04). The first three used to be
+        blanket prohibitions: `human_approval_status != 'pending'` fired
+        whatever else the record carried. They now delegate to
+        `_check_approval_evidence`, the same predicate `_validate_artifact`
+        uses, so a properly evidenced approval passes here AND there and a bare
+        value fails here AND there.
+
+        The delegation is not optional politeness. Gate [7/8] runs THIS method
+        on a fresh Findings and never calls `_validate_artifact`. If this method
+        stopped checking the three named fields, that gate would report "0
+        violations" for a corpus full of fabricated approvals -- the gate named
+        for governance semantics would have been blind to the one class of claim
+        it exists to catch. `_add_approval_finding_once` keeps the finding count
+        at one per (rule, artefact) even though `cmd_validate` runs both
+        methods.
         """
         ok = True
         authority_keys = {
@@ -1891,31 +2632,33 @@ class CorpusTool:
             aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
             if not isinstance(d, dict):
                 continue
-            if d.get("production_authorized") is True:
-                self.findings.add(
-                    "critical", "governance", aid,
-                    "production_authorized is true; this corpus is never production authorized",
-                    "governance_authority_claim")
-                ok = False
-            if d.get("product_verification_credit") is True:
-                self.findings.add(
-                    "high", "governance", aid,
-                    "product_verification_credit is true; no record in this corpus carries "
-                    "product verification credit", "governance_authority_claim")
-                ok = False
-            if d.get("human_approval_status") is not None \
-                    and d.get("human_approval_status") != "pending":
-                # Absent is NOT a violation here: whether the field is required
-                # at all is a schema question, judged by _validate_artifact. This
-                # rule judges the VALUE. Treating a missing field as "not pending"
-                # made this detector fire on every partial fixture -- including
-                # the injected artefacts the mutation harness builds -- which
-                # would have made it a standing finding on the baseline and
-                # indistinguishable from a detection.
-                self.findings.add(
-                    "high", "governance", aid,
-                    f"human_approval_status is {d.get('human_approval_status')!r}; no human "
-                    f"approval has been performed on this corpus", "governance_authority_claim")
+            # AMENDMENT APPROVAL-RULE-A1: the three named-field checks are
+            # delegated to the evidence predicate. They previously fired
+            # `governance_authority_claim` on the bare value.
+            #
+            # The rule ids CHANGE here, deliberately and for a stated reason:
+            # BAD/APPROVED/CREDIT are now reported under
+            # production_authorized_rejected / human_approval_rejected /
+            # verification_credit_rejected, because those are the rules that
+            # describe the rule and carry the six required elements in their
+            # message. All four are members of GOVERNANCE_SEMANTIC_RULE_IDS, so
+            # the violation COUNT the gate prints is unchanged.
+            #
+            # `human_approval_status: 'not_required'` is deliberately NOT
+            # relaxed. It is not an approval value, so the contract does not
+            # speak to it, and it still fails here for want of evidence --
+            # which preserves the current verdict for that value rather than
+            # quietly changing it as a side effect of this amendment. Relaxing
+            # it is a separate decision the corpus owner has not taken.
+            #
+            # Absent is still NOT a violation: whether the field is required at
+            # all is a schema question, judged by _validate_artifact. This rule
+            # judges the VALUE. Treating a missing field as "not pending" made
+            # this detector fire on every partial fixture -- including the
+            # injected artefacts the mutation harness builds -- which would
+            # have made it a standing finding on the baseline and
+            # indistinguishable from a detection.
+            if not self._check_approval_evidence(aid, d, path=path, category="governance"):
                 ok = False
 
             def _scan(node, trail):
@@ -3525,13 +4268,102 @@ class CorpusTool:
                                           "detail": exp_detail,
                                           "reproducible": exp_ok}
 
-        # human approval (always 0 pending)
-        dims["human_approval"] = {"numerator": 0, "denominator": total_art,
-                                  "detail": "all artifacts pending human approval (none performed)"}
+        # human approval and production authorization
+        #
+        # WAS two literals:
+        #
+        #     dims["human_approval"]          = {"numerator": 0, "denominator": total_art,
+        #                                        "detail": "all artifacts pending human approval
+        #                                                  (none performed)"}
+        #     dims["production_authorization"] = {"numerator": 0, "denominator": total_art,
+        #                                        "detail": "production_authorized=false for all
+        #                                                  artifacts (by policy)"}
+        #
+        # A literal numerator measures nothing. It read 0/321 before a single
+        # signature existed and would have read 0/321 after three hundred
+        # signatures, so the figure could not distinguish "no approvals" from
+        # "the dimension is not implemented" -- and the detail strings asserted
+        # a measured fact ("none performed", "by policy") that nothing in the
+        # function had looked at. Worse, the two details described two different
+        # justifications for the same 0 as though they were two measurements.
+        #
+        # NOW COMPUTED FROM THE RECORDS, by the same predicate the validator
+        # enforces (`_approval_evidence_defects`, reached through
+        # `_approval_dimension_counts`). The numerator is the number of records
+        # whose approval field carries a grant value AND whose
+        # `approval_evidence` block satisfies all six required elements: a named
+        # individual, their declared role, independence evidence against this
+        # record's own owner_role and its current-revision author, an ISO-8601
+        # date, a review-packet digest chain resolved against a packet on disk
+        # whose own recorded record digest matches, and a revision_history entry
+        # citing that packet.
+        #
+        # Reusing the validator's predicate rather than writing a second,
+        # looser notion of "approved" here is the point. A dimension that
+        # measured something softer than the gate enforced would be the same
+        # defect as the literal, one level down.
+        #
+        # It reads 0/321 because NO APPROVAL EXISTS -- not because the schema
+        # cannot express one, and not because the dimension is a constant. That
+        # distinction is the whole point of the repair, so the detail says which
+        # of the three numbers is zero and why.
+        ac = self._approval_dimension_counts()
 
-        # production authorization (correctly 0)
-        dims["production_authorization"] = {"numerator": 0, "denominator": total_art,
-                                            "detail": "production_authorized=false for all artifacts (by policy)"}
+        def _approval_detail(kind):
+            s = ac[kind]
+            spec = APPROVAL_RULES[kind]
+            field = spec["record_field"]
+            counted = (f"Counts a record in the numerator only if {field} carries its grant "
+                       f"value AND {APPROVAL_EVIDENCE_FIELD}.{kind} carries all six required "
+                       f"elements: a named individual (not a role, not a team), their declared "
+                       f"role, independence evidence against this record's own owner_role and "
+                       f"its current-revision author, an ISO-8601 date, the sha256 of the review "
+                       f"packet they signed plus that packet's own recorded record digest, and a "
+                       f"revision_history entry recording the approval. Computed by the same "
+                       f"predicate the validator enforces, so the figure cannot read higher than "
+                       f"the gate permits. Denominator: every record carrying an id.")
+            if kind == APPROVAL_STRICTEST_KIND:
+                counted += (" STRICTLY STRICTER than a human approval: the approving role must be "
+                            "one this corpus grants production authority to, and the record's "
+                            "family must be one human approval is required for.")
+            if s["evidenced"]:
+                return (f"{s['evidenced']} of {total_art} records carry a properly evidenced "
+                        f"{kind.replace('_', ' ')}; {s['unevidenced']} record(s) claim the grant "
+                        f"with inadequate evidence and are REJECTED by the validator"
+                        + (f" ({s['unevidenced_ids'][:5]})" if s["unevidenced_ids"] else "")
+                        + f". {counted}")
+            if s["unevidenced"]:
+                return (f"0 of {total_art} records carry a properly evidenced "
+                        f"{kind.replace('_', ' ')} -- the numerator is 0 because every one of "
+                        f"the {s['unevidenced']} record(s) claiming the grant fails the evidence "
+                        f"requirement and is rejected, not because nothing was claimed. "
+                        f"{counted}")
+            return (f"0 of {total_art} records carry a properly evidenced "
+                    f"{kind.replace('_', ' ')} -- the numerator is 0 because NOTHING HAS BEEN "
+                    f"APPROVED: {s['considered']} of {total_art} records carry {field} at its "
+                    f"no-claim value and 0 carry the grant value. This is a measured zero, not a "
+                    f"constant and not a schema limitation. {counted}")
+
+        dims["human_approval"] = {
+            "numerator": ac["human_approval"]["evidenced"],
+            "denominator": total_art,
+            "detail": _approval_detail("human_approval"),
+            "measured": True,
+            "granted_claims": ac["human_approval"]["granted"],
+            "evidenced": ac["human_approval"]["evidenced"],
+            "unevidenced_claims": ac["human_approval"]["unevidenced"],
+            "no_claim_records": ac["human_approval"]["considered"],
+        }
+        dims["production_authorization"] = {
+            "numerator": ac["production_authorization"]["evidenced"],
+            "denominator": total_art,
+            "detail": _approval_detail("production_authorization"),
+            "measured": True,
+            "granted_claims": ac["production_authorization"]["granted"],
+            "evidenced": ac["production_authorization"]["evidenced"],
+            "unevidenced_claims": ac["production_authorization"]["unevidenced"],
+            "no_claim_records": ac["production_authorization"]["considered"],
+        }
 
         return dims
 
@@ -5603,11 +6435,24 @@ class CorpusTool:
                                        "every declared file; measured in this dimension rather "
                                        "than read from exports/manifest.json, which the "
                                        "acceptance suite creates moments before this runs"),
-            "human_approval": ("constant", "0 by corpus policy; every record is `pending`. The "
-                               "policy is enforced by the `human_approval_rejected` rule, not "
-                               "measured by this dimension"),
-            "production_authorization": ("constant", "0 by corpus policy; every record is `false`. "
-                                        "The policy is enforced by the "
+            "human_approval": ("measured", "records whose human_approval_status carries a human "
+                               "decision AND whose approval_evidence.human_approval carries all "
+                               "six required elements (named individual, declared role, "
+                               "independence evidence against owner_role and the "
+                               "current-revision author, ISO-8601 date, a review-packet digest "
+                               "chain resolved against a packet on disk whose own recorded record "
+                               "digest matches, and a revision_history entry citing it), over "
+                               "every record. Was the literal {\"numerator\": 0}, which read 0/321 "
+                               "before any signature existed and would have read 0/321 after "
+                               "three hundred. Computed by the same predicate the "
+                               "`human_approval_rejected` rule enforces, so the figure cannot "
+                               "exceed what the gate permits"),
+            "production_authorization": ("measured", "the same computation over "
+                                        "production_authorized, with the bar STRICTLY HIGHER: "
+                                        "the approving role must be one this corpus grants "
+                                        "production authority to and the record's family must be "
+                                        "one human approval is required for. Was the literal "
+                                        "{\"numerator\": 0}. Enforced by the "
                                         "`production_authorized_rejected` rule and by acceptance "
                                         "gate [7/8]"),
         }
@@ -6824,8 +7669,11 @@ class CorpusTool:
                      "regeneration, which would overwrite it." if signed
                      else "  (expected: every generated packet is unsigned)"))
             print("  NOT a gate: a missing, stale or signed packet never fails this suite. "
-                  "human_approval and actual_product_evidence cannot move by authoring, so "
-                  "a packet going stale is a reporting defect, not a build defect.")
+                  "Both human_approval (measured since 2026-10-04, not the literal it was) and "
+                  "actual_product_evidence cannot move by authoring alone: the first needs a "
+                  "person to sign a packet and record a properly evidenced approval, the second "
+                  "needs the product on its own hardware. So a packet going stale is a reporting "
+                  "defect, not a build defect.")
         except Exception as e:                      # pragma: no cover - defensive
             print(f"  review packet report could not run: {type(e).__name__}: {e}")
             print("  NOT a gate: a failure to report is not a failure of the corpus.")
@@ -6983,13 +7831,33 @@ class CorpusTool:
         self.findings = Findings()
 
         def check(name, fn):
+            # A failing self-test that does not say WHY is a self-test that
+            # costs a debugging session to read. Every test in this suite writes
+            # what it measured into `self._probe_note`; on failure that note is
+            # printed under the verdict. On success it is suppressed, so a
+            # passing run stays one line per test, and `SELFTEST_PROBE=1`
+            # prints it either way.
+            self._probe_note = ""
             try:
                 r = fn()
                 tests.append((name, bool(r)))
-                print(f"  {'PASS' if r else 'FAIL'} {name}")
+                note = getattr(self, "_probe_note", "")
+                if not r:
+                    print(f"  {'PASS' if r else 'FAIL'} {name}")
+                    if note:
+                        print(f"       -> {note}")
+                elif os.environ.get("SELFTEST_PROBE"):
+                    print(f"  PASS {name}")
+                    if note:
+                        print(f"       -> {note}")
+                else:
+                    print(f"  PASS {name}")
             except Exception as e:
                 tests.append((name, False))
                 print(f"  FAIL {name}: {e}")
+                note = getattr(self, "_probe_note", "")
+                if note:
+                    print(f"       -> {note}")
 
         def t_valid_schema():
             s = self.schemas["requirement.schema.json"]
@@ -8103,13 +8971,36 @@ class CorpusTool:
             idx = {("p", d["id"]): ("<m>", d) for d in (good, bad, approver, credit, sneaky)}
             self.findings = Findings()
             ok = self._validate_governance_semantics(idx)
-            found = {f["artifact_id"] for f in self.findings.items
-                     if f["rule"] == "governance_authority_claim"}
+            # AMENDMENT APPROVAL-RULE-A1 (2026-10-04): the assertion below used
+            # to filter on `rule == "governance_authority_claim"` and expect all
+            # four. Three of the four are now reported under the rules that
+            # DESCRIBE them -- production_authorized_rejected,
+            # human_approval_rejected, verification_credit_rejected -- because
+            # those are the rules whose findings carry the six required elements
+            # and name which one is missing. The fourth (SNEAKY, a grant hidden
+            # under a key the three named checks never read) is still
+            # governance_authority_claim, because the key scan is unchanged.
+            #
+            # So the filter is widened to the whole governance rule set. The test
+            # KEEPS its two load-bearing properties: exactly four violations are
+            # reported (n == 4, no duplication, no inflation) and exactly the
+            # four injected artefacts are caught. Only the attribution changed,
+            # and the attribution is asserted explicitly below so the change
+            # cannot be mistaken for the test having been loosened.
+            caught = {f["artifact_id"] for f in self.findings.items
+                      if f["rule"] in GOVERNANCE_SEMANTIC_RULE_IDS}
+            by_rule = {f["artifact_id"]: f["rule"] for f in self.findings.items
+                       if f["rule"] in GOVERNANCE_SEMANTIC_RULE_IDS}
             n = self._governance_finding_count()
             # All four injected violations are caught, including the one that
             # hides in a field the three named checks never look at.
+            self._probe_note = f"n={n}; attribution={by_rule}"
             return (not ok and n == 4
-                    and found == {"BAD", "APPROVED", "CREDIT", "SNEAKY"})
+                    and caught == {"BAD", "APPROVED", "CREDIT", "SNEAKY"}
+                    and by_rule["BAD"] == "production_authorized_rejected"
+                    and by_rule["APPROVED"] == "human_approval_rejected"
+                    and by_rule["CREDIT"] == "verification_credit_rejected"
+                    and by_rule["SNEAKY"] == "governance_authority_claim")
 
         def t_governance_gate_was_vacuous():
             # Pins WHY the repair was needed: after the change-lifecycle branch,
@@ -8124,6 +9015,637 @@ class CorpusTool:
             self._run_detectors(self.load_artifact_index(), self.load_links())
             after_detector = self._governance_finding_count()
             return empty_before == 0 and empty_after == 0 and after_detector == 0
+
+        # =====================================================================
+        # AMENDMENT APPROVAL-RULE-A1: the approval evidence requirement.
+        #
+        # Every test here is a claim about the DIRECTION of the change. The
+        # amendment replaced a prohibition with an evidence requirement, and
+        # the only way that is an improvement rather than a loosening is if the
+        # five rejecting cases below still reject AND the accepting case
+        # accepts. A test that only asserted the rejections would pass against
+        # the old ban unchanged and prove nothing.
+        #
+        # NOTHING HERE WRITES AN APPROVAL INTO THE CORPUS. The accepting case
+        # builds a properly evidenced approval against a THROWAWAY COPY of the
+        # tree outside the repository, proves validate accepts it there, and
+        # then deletes the copy. `t_no_record_in_the_corpus_carries_an_approval`
+        # pins the standing fact that the real tree holds none, so a future
+        # edit that persists one fails the suite.
+
+        APPROVAL_TARGET = ("as_is", "FB2-HW-TSR-000001")
+
+        def _real_record(profile=None, aid=None):
+            """One real record from the live tree, with its own path."""
+            profile = profile or APPROVAL_TARGET[0]
+            aid = aid or APPROVAL_TARGET[1]
+            for p, d in self.iter_corpus_artifacts():
+                if isinstance(d, dict) and d.get("id") == aid \
+                        and d.get("profile") == profile:
+                    return Path(p), d
+            return None, None
+
+        def _approval_fixture(tool, profile=None, aid=None, approver=None, role=None,
+                              drop=(), mutate=None, kind="human_approval", field=None):
+            """Build a record carrying an approval, IN MEMORY, on a temp tree.
+
+            `drop` names approval_evidence fields to leave out, so each of the
+            five rejecting cases is built by removing exactly one thing from an
+            otherwise complete approval. `mutate` is a callable applied last, for
+            the cases where the malformation is not a missing field.
+
+            The packet cited is a REAL packet read off `tool`'s tree, and its
+            digest and the attested record digest are taken from that packet, so
+            a complete fixture is complete by construction rather than by a
+            hand-typed constant that could drift from the generator.
+            """
+            path, rec = _real_record(profile, aid)
+            if rec is None:
+                return None, None, None
+            pjson = (tool.root / "docs/artifacts/reviews/packets"
+                     / rec.get("profile", "unknown") / f"{rec['id']}.json")
+            packet = load_json(pjson)
+            pkt_sha = hashlib.sha256(pjson.read_bytes()).hexdigest()
+            rec_sha = packet["integrity"]["record_sha256"]
+            owner = rec.get("owner_role")
+            d = json.loads(json.dumps(rec))
+            d["human_approval_status"] = "approved"
+            ev = {
+                "approved_by": approver or "Rowan Adeyemi",
+                "organisation": "SoftwareDevLabs",
+                "role": role or "reviewer_adversarial",
+                "date": "2026-10-04",
+                "decision": "approve",
+                "independence": {
+                    "owner_role": owner,
+                    "satisfied": True,
+                    "evidence": (f"Different role and reporting line from the record's "
+                                 f"owner_role {owner}; reviewed in a separate session with no "
+                                 f"access to the authoring context."),
+                    "policy_ref": (f"{APPROVAL_POLICY_REL}#/roles/"
+                                   f"{role or 'reviewer_adversarial'}"),
+                },
+                "review_packet": {
+                    "path": pjson.relative_to(tool.root).as_posix(),
+                    "sha256": pkt_sha,
+                    "record_sha256_at_signing": rec_sha,
+                },
+            }
+            d[APPROVAL_EVIDENCE_FIELD] = {kind: ev}
+            for k in drop:
+                if k == "review_packet":
+                    ev.pop("review_packet", None)
+                elif k == "independence":
+                    ev.pop("independence", None)
+                else:
+                    ev.pop(k, None)
+            if mutate:
+                mutate(d, ev)
+            # The approval is recorded as an entry against the record's CURRENT
+            # revision; the revision number is deliberately NOT bumped. Two
+            # reasons, both measured: bumping it makes every link that pins this
+            # record's revision stale, and it invalidates the sha256 every review
+            # record stores for it -- so an approval could never be recorded
+            # without breaking two other controls. `_check_revision_consistency`
+            # requires the current revision to appear in its own history, which
+            # appending at the current revision satisfies.
+            d["revision_history"] = list(d.get("revision_history") or []) + [{
+                "revision": d["revision"],
+                "date": "2026-10-04T00:00:00Z",
+                "author": ev.get("role") or role or "reviewer_adversarial",
+                "description": (f"Recorded human approval of revision {d['revision']} by "
+                                f"{ev.get('approved_by', '<unnamed>')} "
+                                f"({ev.get('role', '<no role>')}) against review packet "
+                                f"{ev.get('review_packet', {}).get('sha256', '<no digest>')}."),
+            }]
+            if field:
+                d[field] = True
+            return d, path, packet
+
+        def _defects_for(tool, d, path=None, kind="human_approval"):
+            return tool._approval_evidence_defects(d, kind, path=path)
+
+        def _selftest_tree_root():
+            """A throwaway copy of the tracked tree, OUTSIDE the repository.
+
+            Everything the approval test writes lands here. `spnc030g.zip` is
+            excluded because it is 181 MB of untracked source archive that no
+            validator reads, and copying it would make this test cost more than
+            the rest of the suite.
+            """
+            root2 = Path(tempfile.mkdtemp(prefix="fb2-approval-selftest-")) / "repo"
+            ign = shutil.ignore_patterns(".work", "__pycache__", ".DS_Store",
+                                         "spnc030g.zip", "*.zip")
+            for rel in ("docs", "src", "tests", "conf", "tools", "cli", "gui",
+                        "hardware", "wscript", "fox.py", "fox.sh", "pyproject.toml",
+                        "requirements.txt"):
+                s = self.root / rel
+                if s.is_dir():
+                    shutil.copytree(s, root2 / rel, ignore=ign)
+                elif s.exists():
+                    (root2 / rel).parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(s, root2 / rel)
+            return root2
+
+        def t_no_record_in_the_corpus_carries_an_approval():
+            # THE standing fact. Nothing in this repository may hold a
+            # non-pending approval value, in any of the three fields, under any
+            # profile. The amendment makes the gate accept a properly evidenced
+            # approval; it does not produce one, and this test is what stops a
+            # later "for testing" approval from being committed.
+            offenders = []
+            n = 0
+            for _p, d in self.iter_corpus_artifacts():
+                if not isinstance(d, dict) or not d.get("id"):
+                    continue
+                n += 1
+                for kind, spec in APPROVAL_RULES.items():
+                    if self._is_approval_grant(spec, d):
+                        offenders.append(f"{d.get('id')}/{d.get('profile')}: "
+                                        f"{spec['record_field']}="
+                                        f"{d.get(spec['record_field'])!r}")
+            self._probe_note = (f"{n} record(s) scanned; {len(offenders)} hold a non-pending "
+                                f"approval value" + (f": {offenders[:5]}" if offenders else ""))
+            return not offenders
+
+        def t_a_bare_approved_with_no_evidence_still_fails():
+            # Case 1. The exact record the old prohibition rejected, unchanged.
+            # If this ever passes, the amendment has become a licence to type
+            # the word "approved" into a record.
+            _p, rec = _real_record()
+            if rec is None:
+                self._probe_note = "target record not found"
+                return False
+            d = json.loads(json.dumps(rec))
+            d["human_approval_status"] = "approved"
+            self.findings = Findings()
+            defects = _defects_for(self, d)
+            ok = self._check_approval_evidence("FB2-HW-TSR-000001", d)
+            msgs = [f["description"] for f in self.findings.items
+                    if f["rule"] == "human_approval_rejected"]
+            self._probe_note = (f"{len(defects)} defect(s); rule fired {len(msgs)} time(s); "
+                                f"first: {defects[0][:110] if defects else 'none'}")
+            return (defects and not ok and len(msgs) == 1
+                    and any("elements 1-6 ALL UNMET" in x for x in defects)
+                    and any(APPROVAL_EVIDENCE_FIELD in m for m in msgs))
+
+        def t_an_approved_missing_the_packet_digest_fails():
+            # Case 2. Complete except for review_packet.sha256. The record names
+            # the packet it was reviewed against and cannot prove which bytes of
+            # that packet were signed.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                d, _path, _pk = _approval_fixture(tool, drop=("sha256",),
+                                                  mutate=lambda d, ev: ev["review_packet"]
+                                                  .pop("sha256"))
+                defects = _defects_for(tool, d)
+                self._probe_note = "; ".join(x[:150] for x in defects[:3])
+                return defects and any("element 5 REJECTED" in x and "sha256 is not a 64"
+                                       in x for x in defects)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_an_approved_citing_an_unresolvable_packet_digest_fails():
+            # Case 3. Names a real packet and a real-looking digest that is not
+            # that packet's. A digest that resolves to nothing proves nothing.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                d, _path, _pk = _approval_fixture(
+                    tool, mutate=lambda d, ev: ev["review_packet"].__setitem__(
+                        "sha256", "0" * 64))
+                defects = _defects_for(tool, d)
+                self._probe_note = "; ".join(x[:170] for x in defects[:2])
+                return defects and any("element 5 REJECTED" in x and "does not match" in x
+                                       for x in defects)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_the_packet_digest_is_checked_against_the_packets_own_record_digest():
+            # The check the amendment names explicitly. A complete approval whose
+            # attested record digest is the packet's own passes; the SAME
+            # approval with any other digest fails, even though the packet
+            # exists, is the right packet, and its own file digest matches.
+            # Without this the digest chain would be decorative.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                good, _p, _pk = _approval_fixture(tool)
+                clean = _defects_for(tool, good)
+                bad, _p2, _pk2 = _approval_fixture(
+                    tool, mutate=lambda d, ev: ev["review_packet"].__setitem__(
+                        "record_sha256_at_signing", "a" * 64))
+                defects = _defects_for(tool, bad)
+                same_packet_other_record = any(
+                    "is not the digest the cited packet itself records" in x for x in defects)
+                self._probe_note = (f"complete fixture: {len(clean)} defect(s); "
+                                    f"altered attested digest: {len(defects)} defect(s), "
+                                    f"digest-binding failure present={same_packet_other_record}")
+                return not clean and same_packet_other_record
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_an_approved_cited_packet_must_name_this_record():
+            # A packet that exists, has the right shape, and is byte-stable, but
+            # was generated for a DIFFERENT record. Under ID-RULE-004-A1 the
+            # key is (profile, id), so both halves are compared.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                other = "docs/artifacts/reviews/packets/as_is/FB2-HW-TSR-000002.json"
+                d, _p, _pk = _approval_fixture(
+                    tool, mutate=lambda d, ev: ev["review_packet"].__setitem__(
+                        "path", other))
+                # Re-point sha256 at the other packet so only the identity check
+                # can fire.
+                op = tool.root / other
+                if not op.is_file():
+                    self._probe_note = f"{other} not present in the copy"
+                    return False
+                d[APPROVAL_EVIDENCE_FIELD]["human_approval"]["review_packet"]["sha256"] = \
+                    hashlib.sha256(op.read_bytes()).hexdigest()
+                defects = _defects_for(tool, d)
+                self._probe_note = "; ".join(x[:160] for x in defects[:2])
+                return defects and any("not about this record" in x for x in defects)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_an_approved_by_the_records_own_author_fails():
+            # Case 4. Independence, enforced rather than asserted. Two separate
+            # violations are checked: the approving role being the record's
+            # owner_role, and the approving role being the author of the very
+            # revision being approved. Both must fail even though everything
+            # else about the approval is complete and the packet is real.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                owner = _real_record()[1].get("owner_role")
+                cur_author = self._current_revision_author(_real_record()[1])
+                by_owner, _p, _pk = _approval_fixture(tool, role=owner)
+                owner_defects = _defects_for(tool, by_owner)
+                by_author, _p2, _pk2 = _approval_fixture(tool, role=cur_author)
+                author_defects = _defects_for(tool, by_author)
+                owner_hit = [x for x in owner_defects if "IS this record's owner_role" in x]
+                author_hit = [x for x in author_defects
+                              if "the author of the content being approved" in x]
+                self._probe_note = (f"owner_role={owner}, current-revision author="
+                                    f"{cur_author}; owner-role approval: "
+                                    f"{len(owner_defects)} defect(s) incl. owner violation="
+                                    f"{bool(owner_hit)}; self-authored: {len(author_defects)} "
+                                    f"defect(s) incl. self-review violation={bool(author_hit)}")
+                return (owner_hit and author_hit
+                        and owner != cur_author)   # the two violations are distinct here
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_approved_by_a_role_or_a_team_instead_of_a_person_fails():
+            # Element 2 is the check that separates a person from the two things
+            # that are not one. A role id, a role NAME and a team are all
+            # rejected, and each rejection says which.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                out = {}
+                for label, who in (("role_id", "reviewer_domain"),
+                                   ("role_name", "Adversarial Reviewer"),
+                                   ("team", "Review Team"),
+                                   ("single_token", "reviewer")):
+                    d, _p, _pk = _approval_fixture(tool, approver=who)
+                    out[label] = [x for x in _defects_for(tool, d)
+                                  if "element 2" in x]
+                self._probe_note = "; ".join(f"{k}: {len(v)} element-2 defect(s)"
+                                            for k, v in out.items())
+                return all(out.values()) and all(
+                    any("not a person" in x or "names a group" in x or "single token" in x
+                        for x in v) for v in out.values())
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_a_fully_evidenced_approval_passes_validate():
+            # THE case. A ban with extra steps also rejects everything; only a
+            # gate that accepts a legitimately evidenced approval distinguishes
+            # the two. Built in a throwaway tree, written there, validated there,
+            # deleted here. Nothing is written under docs/artifacts/corpus/ in
+            # the real repository at any point.
+            #
+            # The target is chosen at run time as a record no review record
+            # stores a digest for and no reviewed_by link points at. That is not
+            # cosmetic: recording an approval changes the record's bytes, and the
+            # provenance gate checks 261 stored review digests against the files
+            # on disk, so writing the approval onto a covered record would fail
+            # validate for an unrelated and entirely correct reason. The happy
+            # path has to be demonstrated on a record whose other controls are
+            # genuinely unaffected.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                base_find = len(Findings().items)
+                tool.findings = Findings()
+                base_ok = tool.cmd_validate(quiet=True)
+                base_n = len(tool.findings.items)
+                base_err = tool.findings.error_count
+                target = _uncovered_record(tool)
+                if target is None:
+                    self._probe_note = "no uncovered record found in the copy"
+                    return False
+                target_rel, tpath = target
+                d, _rp, _pk = _approval_fixture(tool, aid=tpath.get("id"),
+                                                profile=tpath.get("profile"))
+                Path(target_rel).write_text(json.dumps(d, indent=2) + "\n", encoding="utf-8")
+
+                # 1. the record now validates, and no approval rule fires
+                tool.findings = Findings()
+                ok_rec = tool._validate_artifact(Path(target_rel), load_json(Path(target_rel)), {})
+                approval_rules = {r["rule_id"] for r in APPROVAL_RULES.values()}
+                approval_findings = [f for f in tool.findings.items
+                                     if f["rule"] in approval_rules]
+
+                # 2. the WHOLE validate run over the copy still passes, with the
+                #    approval present -- not just this record's check, and with
+                #    the same finding count as the same tree without it, which is
+                #    what proves the approval added no new problem anywhere
+                tool.findings = Findings()
+                ok_validate = tool.cmd_validate(quiet=True)
+                errs = tool.findings.error_count
+                n_find = len(tool.findings.items)
+
+                # 3. the approval dimension MOVES on the copy. This is what
+                #    proves the dimension is measured and not a literal: the
+                #    same tree reads 0/321 without the approval and 1/321 with
+                #    it.
+                with_approval = tool._coverage_dimensions()["human_approval"]
+                self._probe_note = (
+                    f"target {tpath.get('id')}/{tpath.get('profile')}; record ok={ok_rec}, "
+                    f"approval findings={len(approval_findings)}; full validate "
+                    f"baseline ok={base_ok} findings={base_n} errors={base_err} -> "
+                    f"with approval ok={ok_validate} findings={n_find} errors={errs}; "
+                    f"human_approval on the copy="
+                    f"{with_approval['numerator']}/{with_approval['denominator']}")
+                return (ok_rec and not approval_findings and ok_validate
+                        and errs == base_err == 0 and n_find == base_n
+                        and with_approval["numerator"] == 1
+                        and with_approval["denominator"] == 321)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def _uncovered_record(tool):
+            """A record on `tool`'s tree that no review digest or reviewed_by link
+            touches, so writing an approval onto it disturbs nothing else.
+
+            Returns (relative path, record dict) or None.
+            """
+            covered = set()
+            for rp in sorted((tool.artifacts_dir / "reviews" / "records").glob("*.json")):
+                try:
+                    for e in load_json(rp).get("reviewed_ids", []) or []:
+                        if e.get("artifact_id"):
+                            covered.add(e["artifact_id"])
+                except Exception:
+                    continue
+            for l in tool.load_links():
+                if l.get("relation_type") == "reviewed_by" and l.get("target_id"):
+                    covered.add(l["target_id"])
+            try:
+                tool.root = tool.root
+                cands = []
+                for p, d in tool.iter_corpus_artifacts():
+                    if not isinstance(d, dict) or not d.get("id"):
+                        continue
+                    if d["id"] in covered or d.get("artifact_type") != "requirement":
+                        continue
+                    cands.append((p, d))
+                if not cands:
+                    return None
+                cands.sort(key=lambda t: t[1]["id"])
+                p, d = cands[0]
+                rel = Path(str(p))
+                return rel, d
+            except Exception:
+                return None
+
+        def t_the_approval_fixture_is_never_persisted_into_the_corpus():
+            # Proof the happy-path test leaves nothing behind. The corpus is read
+            # again from the real tree AFTER the accepting case has run and after
+            # its temporary tree has been deleted, and must be byte-identical to
+            # the state before: no record carries an approval, and no record's
+            # bytes mention the fixture approver.
+            offenders = []
+            for _p, d in self.iter_corpus_artifacts():
+                if not isinstance(d, dict) or not d.get("id"):
+                    continue
+                for kind, spec in APPROVAL_RULES.items():
+                    if self._is_approval_grant(spec, d):
+                        offenders.append(f"{d.get('id')}:{spec['record_field']}")
+                if APPROVAL_EVIDENCE_FIELD in d:
+                    offenders.append(f"{d.get('id')}:carries {APPROVAL_EVIDENCE_FIELD}")
+            tmp = list(self.root.glob("fb2-approval-selftest-*"))
+            self._probe_note = (f"{len(offenders)} approval residue(s) in the corpus; "
+                                f"{len(tmp)} leftover temp tree(s) under the repo root"
+                                + (f": {offenders[:5]}" if offenders else ""))
+            return not offenders and not tmp
+
+        def t_production_authority_is_strictly_harder_than_a_approval():
+            # The production bar must not be the approval bar under a second
+            # name. On one record, with one complete approval, the human
+            # approval is accepted and the production claim is refused twice
+            # over: once because the approving role has no production authority,
+            # and once because the record's family is not one human approval is
+            # required for.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                ok_ev, _p, _pk = _approval_fixture(tool)
+                ok_ev[APPROVAL_EVIDENCE_FIELD]["production_authorization"] = \
+                    json.loads(json.dumps(ok_ev[APPROVAL_EVIDENCE_FIELD]["human_approval"]))
+                ok_ev["production_authorized"] = True
+                clean_human = _defects_for(tool, ok_ev, kind="human_approval")
+                prod = _defects_for(tool, ok_ev, kind="production_authorization")
+                role_hit = [x for x in prod if "production-authority roles" in x]
+                type_hit = [x for x in prod if "human approval is required for" in x]
+                # And the strict bar is satisfiable in principle: swap in a
+                # production-authority role and re-check the ROLE condition is
+                # the thing that was objecting (the family still is not).
+                self._probe_note = (f"human_approval defects={len(clean_human)}; "
+                                    f"production defects={len(prod)} "
+                                    f"(role={bool(role_hit)}, family={bool(type_hit)})")
+                return (not clean_human and role_hit and type_hit
+                        and len(prod) == 2)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_production_authority_is_reachable_on_a_production_family():
+            # The strict bar must be REACHABLE, or it is a second ban. On the one
+            # artefact family human approval is required for, with a role that
+            # holds production authority and an approver independent of the
+            # author, the production claim is accepted.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                sc = None
+                for p, d in tool.iter_corpus_artifacts():
+                    if isinstance(d, dict) and d.get("artifact_type") == "safety_case":
+                        sc = (Path(p), d)
+                        break
+                if sc is None:
+                    self._probe_note = "no safety_case record"
+                    return False
+                d, path, _pk = _approval_fixture(tool, aid=sc[1]["id"],
+                                                profile=sc[1].get("profile"),
+                                                role="safety_manager")
+                d["production_authorized"] = True
+                d[APPROVAL_EVIDENCE_FIELD]["production_authorization"] = \
+                    json.loads(json.dumps(d[APPROVAL_EVIDENCE_FIELD]["human_approval"]))
+                defects = _defects_for(tool, d, path=path,
+                                       kind="production_authorization")
+                self._probe_note = (f"{sc[1]['id']} owner_role={sc[1].get('owner_role')} "
+                                    f"current-revision author="
+                                    f"{tool._current_revision_author(sc[1])}; "
+                                    f"production defects={len(defects)}: "
+                                    + ("; ".join(x[:120] for x in defects[:3]) or "none"))
+                return not defects
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_the_approval_dimensions_are_measured_not_literals():
+            # The two dimensions were `{"numerator": 0}`. A literal cannot be
+            # distinguished from a measurement that happens to be zero, so this
+            # test pins both halves: on the live tree they read 0 because nothing
+            # is approved, AND they move when an evidenced approval is present.
+            base = {k: self._coverage_dimensions()[k]
+                    for k in ("human_approval", "production_authorization")}
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                target = _uncovered_record(tool)
+                if target is None:
+                    self._probe_note = "no uncovered record found in the copy"
+                    return False
+                target_rel, tpath = target
+                d, _p, _pk = _approval_fixture(tool, aid=tpath["id"],
+                                              profile=tpath.get("profile"))
+                Path(target_rel).write_text(json.dumps(d, indent=2) + "\n", encoding="utf-8")
+                tool.findings = Findings()
+                moved = tool._coverage_dimensions()
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+            ok_base = (base["human_approval"]["numerator"] == 0
+                       and base["production_authorization"]["numerator"] == 0
+                       and base["human_approval"]["denominator"] == 321
+                       and base["human_approval"].get("measured") is True)
+            ok_moved = (moved["human_approval"]["numerator"] == 1
+                        and moved["production_authorization"]["numerator"] == 0)
+            ok_wording = ("NOTHING HAS BEEN APPROVED" in base["human_approval"]["detail"]
+                          and "measured zero, not a constant" in base["human_approval"]["detail"]
+                          and "none performed" not in base["human_approval"]["detail"])
+            self._probe_note = (f"live {base['human_approval']['numerator']}/"
+                                f"{base['human_approval']['denominator']} -> with one approval "
+                                f"{moved['human_approval']['numerator']}/"
+                                f"{moved['human_approval']['denominator']}; wording honest="
+                                f"{ok_wording}")
+            return ok_base and ok_moved and ok_wording
+
+        def t_a_production_grant_cannot_be_smuggled_through_a_nested_key():
+            # The amendment replaced the three NAMED field checks, so it must not
+            # weaken the recursive key scan that catches the same claim under
+            # another name. `approval_evidence` is a new object on every record
+            # that carries an approval, and a production claim nested inside it is
+            # still caught by the scan: the new field is not a shadow.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                d, _p, _pk = _approval_fixture(tool)
+                # A production-authority key nested inside the new evidence block.
+                d[APPROVAL_EVIDENCE_FIELD]["production_approval"] = {
+                    "authorized_for_production": True, "granted_by": "Rowan Adeyemi"}
+                # And the same claim spelled as a conformity claim.
+                d[APPROVAL_EVIDENCE_FIELD]["conformity"] = "conformant"
+                idx = {("as_is", d["id"]): ("docs/artifacts/corpus/as_is/x.json", d)}
+                tool.findings = Findings()
+                ok = tool._validate_governance_semantics(idx)
+                rules = {f["rule"] for f in tool.findings.items}
+                self._probe_note = f"rules fired: {sorted(rules)}"
+                return (not ok and "governance_authority_claim" in rules
+                        and "conformity_claim" in rules)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_one_violation_produces_one_finding_across_both_detector_paths():
+            # cmd_validate runs _validate_artifact AND _validate_governance_semantics
+            # over the same index. If both reported, the violation count the gate
+            # prints would double and a reader could not tell a new defect from
+            # a re-report.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                d, _p, _pk = _approval_fixture(tool, drop=("date",))
+                idx = {("as_is", d["id"]): ("docs/artifacts/corpus/as_is/x.json", d)}
+                tool.findings = Findings()
+                ok1 = tool._check_approval_evidence(d["id"], d, category="provenance")
+                n1 = sum(1 for f in tool.findings.items
+                         if f["rule"] == "human_approval_rejected")
+                tool._validate_governance_semantics(idx)
+                n2 = sum(1 for f in tool.findings.items
+                         if f["rule"] == "human_approval_rejected")
+                self._probe_note = f"after _validate_artifact: {n1}; after governance pass: {n2}"
+                return (not ok1 and n1 == 1 and n2 == 1)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_the_evidence_contract_is_read_from_the_policy_not_hardcoded():
+            # The contract lives in role-and-review-policy.json and the tool
+            # reads it. A policy the enforcing code does not read is the defect
+            # ID-RULE-004-A1 was written to remove, so pin the reading.
+            c = self._approval_policy()
+            if not isinstance(c, dict):
+                self._probe_note = "no approval_evidence_contract in the policy"
+                return False
+            kinds = c.get("kinds") or {}
+            matched = [k for k, s in kinds.items()
+                       if s.get("rule_id") == APPROVAL_RULES[k]["rule_id"]
+                       and s.get("record_field") == APPROVAL_RULES[k]["record_field"]
+                       and s.get("severity") == APPROVAL_RULES[k]["severity"]]
+            elements = c.get("required_elements") or []
+            indep = c.get("independence_rule")
+            self._probe_note = (f"{len(matched)}/{len(kinds)} kind entries agree with the code; "
+                                f"{len(elements)} required elements declared; "
+                                f"independence_rule present={bool(indep)}")
+            return (len(matched) == len(kinds) == 3 and len(elements) == 6 and bool(indep)
+                    and isinstance(c.get("production_authority_roles"), dict)
+                    and isinstance(c.get("production_authorizable_artifact_types"), dict))
+
+        check("the approval evidence contract is read from the policy, not hardcoded",
+              t_the_evidence_contract_is_read_from_the_policy_not_hardcoded)
+        check("no record in the corpus carries an approval of any kind",
+              t_no_record_in_the_corpus_carries_an_approval)
+        check("a bare approved with no evidence FAILS validate",
+              t_a_bare_approved_with_no_evidence_still_fails)
+        check("an approved missing the signed-packet digest FAILS",
+              t_an_approved_missing_the_packet_digest_fails)
+        check("an approved citing a packet digest that does not resolve FAILS",
+              t_an_approved_citing_an_unresolvable_packet_digest_fails)
+        check("the packet digest is verified against the packet's own recorded digest",
+              t_the_packet_digest_is_checked_against_the_packets_own_record_digest)
+        check("an approved must cite a packet that names THIS record",
+              t_an_approved_cited_packet_must_name_this_record)
+        check("an approved recorded by the record's own author FAILS (independence violation)",
+              t_an_approved_by_the_records_own_author_fails)
+        check("an approved_by that is a role, a role name or a team FAILS",
+              t_approved_by_a_role_or_a_team_instead_of_a_person_fails)
+        check("a fully evidenced approval PASSES validate, and the approval dimension moves",
+              t_a_fully_evidenced_approval_passes_validate)
+        check("the approval happy path persists nothing into the corpus",
+              t_the_approval_fixture_is_never_persisted_into_the_corpus)
+        check("production authority is strictly harder to satisfy than an approval",
+              t_production_authority_is_strictly_harder_than_a_approval)
+        check("production authority is reachable on a production-release family",
+              t_production_authority_is_reachable_on_a_production_family)
+        check("human_approval and production_authorization are measured, not literals",
+              t_the_approval_dimensions_are_measured_not_literals)
+        check("a production grant hidden in a nested key is still caught",
+              t_a_production_grant_cannot_be_smuggled_through_a_nested_key)
+        check("one approval violation produces one finding across both detector paths",
+              t_one_violation_produces_one_finding_across_both_detector_paths)
 
         # --- trace chain ------------------------------------------------------
 
@@ -9503,6 +11025,152 @@ class CorpusTool:
               t_the_generator_refuses_to_overwrite_a_signed_packet)
         check("the packet tree covers exactly the record population, no record omitted",
               t_the_generator_covers_exactly_the_record_population)
+        def t_no_packet_states_the_superseded_prohibition():
+            # APPROVAL-RULE-A1 invalidated the sentence that told a reviewer
+            # their signature would turn `check` red. A packet is read by a
+            # person holding the pen, so a stale rule in it is worse than no
+            # rule: it is confidently wrong instruction. Every packet, in both
+            # formats, must state the CURRENT rule and must not state the
+            # superseded one.
+            if not PACKET_DIR.is_dir():
+                self._probe_note = "no packet tree"
+                return False
+            banned = [
+                "turn `corpus.py check` RED",
+                "turn corpus.py check red",
+                "fails validation on any record whose human_approval_status",
+                "no approval can be recorded",
+                "declared a constant, not computed from the records",
+                "the dimension will not move",
+            ]
+            bad = []
+            n = 0
+            for p in sorted(PACKET_DIR.rglob("*")):
+                if p.suffix not in (".md", ".json") or not p.is_file():
+                    continue
+                n += 1
+                txt = p.read_text(encoding="utf-8", errors="replace")
+                for b in banned:
+                    if b in txt:
+                        bad.append(f"{p.name}: {b!r}")
+            self._probe_note = (f"{n} packet file(s) scanned; {len(bad)} carry a superseded claim"
+                                + (f": {bad[:3]}" if bad else ""))
+            return not bad and n > 0
+
+        def t_every_packet_states_the_current_approval_rule():
+            # The positive half: each packet must actually tell the reviewer what
+            # to write. A packet that merely omits the stale sentence but never
+            # states the replacement has been emptied, not corrected, and the
+            # reviewer is left with nothing.
+            if not PACKET_DIR.is_dir():
+                self._probe_note = "no packet tree"
+                return False
+            mds = [p for p in PACKET_DIR.rglob("*.md") if p.name != "INDEX.md"]
+            if not mds:
+                return False
+            needed = ["approval_evidence", "approved_by", "independence",
+                      "record_sha256_at_signing", "revision_history",
+                      "APPROVAL-RULE-A1"]
+            missing_md = missing_js = 0
+            for md in mds:
+                txt = md.read_text(encoding="utf-8", errors="replace")
+                for tok in needed:
+                    if tok not in txt:
+                        missing_md += 1
+                jp = md.with_suffix(".json")
+                if jp.exists():
+                    jt = jp.read_text(encoding="utf-8", errors="replace")
+                    for tok in needed:
+                        if tok not in jt:
+                            missing_js += 1
+            self._probe_note = (f"{len(mds)} markdown packet(s); {missing_md} missing token(s) in "
+                                f"markdown, {missing_js} in packet.json")
+            return missing_md == 0 and missing_js == 0
+
+        def t_transcribe_resolves_both_digests_and_writes_nothing():
+            # The requirement is only fair if a reviewer can satisfy it first
+            # time. One of the two digests is the packet file's own, which the
+            # packet cannot print about itself, so `--transcribe` exists. This
+            # runs it as a subprocess (the entry point a reviewer runs) and
+            # checks that both digests it prints are the real ones and that the
+            # packet tree is byte-identical afterwards.
+            if not _generator_available() or not PACKET_DIR.is_dir():
+                self._probe_note = "generator or packet tree absent"
+                return False
+            before = {p: p.stat().st_mtime_ns for p in PACKET_DIR.rglob("*") if p.is_file()}
+            jp = PACKET_DIR / "as_is" / "FB2-HW-TSR-000001.json"
+            if not jp.is_file():
+                self._probe_note = "sample packet absent"
+                return False
+            want_pkt = hashlib.sha256(jp.read_bytes()).hexdigest()
+            want_rec = load_json(jp)["integrity"]["record_sha256"]
+            cmd = [sys.executable, str(self.root / GEN_REL),
+                   "--root", str(self.root), "--transcribe", "FB2-HW-TSR-000001",
+                   "--profile", "as_is"]
+            try:
+                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            except Exception as e:                        # pragma: no cover
+                self._probe_note = f"transcribe failed: {e}"
+                return False
+            out = proc.stdout
+            after = {p: p.stat().st_mtime_ns for p in PACKET_DIR.rglob("*") if p.is_file()}
+            ok_sha = want_pkt in out
+            ok_rec = want_rec in out
+            # It must not have invented a decision either.
+            ok_blank = "<your role_id" in out and "This command wrote nothing" in out
+            self._probe_note = (f"rc={proc.returncode}; packet digest printed={ok_sha}; record "
+                                f"digest printed={ok_rec}; placeholders left blank={ok_blank}; "
+                                f"packet files changed={sum(1 for k, v in before.items() if after.get(k) != v)}")
+            return proc.returncode == 0 and ok_sha and ok_rec and ok_blank and before == after
+
+        def t_an_independent_checker_agrees_and_finds_no_approval():
+            # The from-scratch verifier exists because a checker that shares code
+            # with the tool it checks proves only that the tool is
+            # self-consistent. `verify_approval_evidence_independently.py`
+            # imports nothing from this repository and re-derives every figure by
+            # walking the tree itself. Run it as a subprocess (the entry point a
+            # person runs) and require its verdict.
+            rel = "docs/artifacts/tools/verify_approval_evidence_independently.py"
+            script = self.root / rel
+            if not script.is_file():
+                self._probe_note = f"{rel} is absent"
+                return False
+            src = script.read_text(encoding="utf-8")
+            # The independence property is asserted here rather than trusted: the
+            # file must not import corpus.py, make_review_packets.py, or anything
+            # else from this tree.
+            banned = [ln.strip() for ln in src.splitlines()
+                      if re.match(r"^\s*(import|from)\s+", ln)
+                      and ("corpus" in ln or "make_review_packets" in ln
+                           or "repo_model" in ln)]
+            try:
+                proc = subprocess.run([sys.executable, str(script), str(self.root)],
+                                     capture_output=True, text=True, timeout=900)
+            except Exception as e:                        # pragma: no cover
+                self._probe_note = f"verifier failed to run: {e}"
+                return False
+            out = proc.stdout
+            counts = dict(re.findall(r"^\s{3}(\S[^:]*?)\s*:\s*(\S+)\s*$", out,
+                                     re.MULTILINE))
+            self._probe_note = (
+                f"imports from this repo: {len(banned)}; rc={proc.returncode}; "
+                + "; ".join(f"{k.strip()}={v}" for k, v in list(counts.items())[:6]))
+            return (proc.returncode == 0 and not banned
+                    and "VERDICT: PASS" in out
+                    and counts.get("records with a non-pending approval value") == "0"
+                    and counts.get("records carrying an 'approval_evidence' block") == "0"
+                    and counts.get("markdown signature rows filled") == "0"
+                    and counts.get("packet.json fields filled") == "0"
+                    and counts.get("record_sha256 == sha256(bytes)") == "321/321")
+
+        check("an independent checker that imports no tool agrees and finds no approval",
+              t_an_independent_checker_agrees_and_finds_no_approval)
+        check("no packet states the superseded prohibition",
+              t_no_packet_states_the_superseded_prohibition)
+        check("every packet states the current approval rule and the six required fields",
+              t_every_packet_states_the_current_approval_rule)
+        check("--transcribe resolves both digests correctly and writes nothing",
+              t_transcribe_resolves_both_digests_and_writes_nothing)
         check("the packet generator's signature fields match the ones check looks for",
               t_packet_generator_signature_labels_match_the_ones_check_reads)
         return all(passed for _, passed in tests)

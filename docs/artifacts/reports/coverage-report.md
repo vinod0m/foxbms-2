@@ -11,6 +11,17 @@
 > conformity**, no ASIL capability, no IEC 61508 conformity, no certification,
 > no tool qualification and no ASPICE capability level. All 298 indexed records
 > are `human_approval_status: pending` and `production_authorized: false`.
+>
+> **2026-10-04 — rows 14 and 15 reconciled; the other rows are still as of the
+> 2026-10-01 run and are labelled as such.** `human_approval` and
+> `production_authorization` were `{"numerator": 0}` literals classified as
+> `constant`, and their status column read "pending by policy" as though the
+> figure were measured. Both are now **computed from the records** by the same
+> predicate the validator enforces, so their zero is a measurement. The ratios
+> in the table are the 2026-10-01 denominators and are left as they were rather
+> than re-baselined in a report whose header names its run date; the live
+> figures are `python3 docs/artifacts/tools/corpus.py coverage`, which reads
+> `human_approval 0/321` and `production_authorization 0/321`.
 
 ## 1. The 15 Coverage Dimensions
 
@@ -33,8 +44,23 @@ population its denominator counts, because they are not the same population.**
 | 11 | negative_scenario_validation | 20 mutations | 20/20 | 100% | complete (measured: 20 scenarios executed, 20 detected by their own declared rule) | 20 declared mutations |
 | 12 | final_status | — | `synthetic_ready_with_limitations` | — | recorded | — |
 | 13 | export_reproducibility | manifest | 1/1 | 100% | complete | presence |
-| 14 | human_approval | — | **0/263** | 0% | **pending by policy** | population **B** |
-| 15 | production_authorization | — | **0/263** | 0% | **false by policy** | population **B** |
+| 14 | human_approval | — | **0/263** | 0% | **measured zero — nothing approved** (see note above) | population **B** |
+| 15 | production_authorization | — | **0/263** | 0% | **measured zero — nothing authorised** (see note above) | population **B** |
+
+Rows 14 and 15 count a record in the numerator only if its approval field
+carries a grant value **and** its `approval_evidence` block satisfies all six
+required elements of
+`governance/role-and-review-policy.json#/approval_evidence_contract`: a named
+individual, their declared role, independence evidence against this record's own
+`owner_role` and its current-revision author, an ISO-8601 date, a review-packet
+digest chain resolved against a packet on disk whose own recorded record digest
+matches, and a `revision_history` entry citing that packet. A bare `approved`
+does not count and does not validate. `production_authorization` additionally
+requires the approving role to hold production authority and the record's family
+to be one human approval is required for, so its bar is **strictly higher**.
+Both read 0 because **no approval exists**, not because the dimension is a
+constant or because the schema cannot express one. The detail text the tool
+prints says exactly that.
 
 `source_grounding` detail, verbatim from the tool: *99/263 - artifacts with
 source_refs (130 anchors available)*. The 164 records without `source_refs` are
@@ -57,12 +83,15 @@ live figures are `coverage-report.json` and the `coverage` command's own output,
 and every figure above was taken from a run on 2026-10-01. The version this
 report replaces carried figures from before the corpus expanded and several were
 stale; they were corrected here rather than left to be discovered. Second, five
-dimensions here are presence checks or declared constants rather than
-measurements — `scope_accounting` and `export_reproducibility` (presence),
-`semantic_consistency_checks` (a declared count of check categories) and
-`human_approval` / `production_authorization` (policy constants enforced by other
-rules and by gate `[7/8]`). The generated traceability document labels each one;
-none keys off an acceptance gate.
+dimensions here are presence checks or declared counts rather than
+measurements — `scope_accounting` and `export_reproducibility` (presence) and
+`semantic_consistency_checks` (a declared count of check categories).
+`human_approval` and `production_authorization` **were** in that group and are
+not any more: since 2026-10-04 they are computed from the records by the
+validator's own predicate, and a self-test proves they move from 0/321 to 1/321
+when a properly evidenced approval is present on a throwaway copy of the tree.
+The generated traceability document labels each remaining one; none keys off an
+acceptance gate.
 
 ## 2. Population Counts — and Why There Are Three of Them
 
@@ -426,13 +455,18 @@ happened to be in memory, which was only the validate pass when the caller ran
 one. A bare `corpus.py coverage` therefore reported `0 dangling` without having
 checked a link. It now re-runs link validation for its own figure.
 
-Five further dimensions are presence checks or declared constants rather than
+Four further dimensions are presence checks or declared counts rather than
 measurements, and are labelled as such in the generated traceability document
 (`docs/artifacts/views/traceability/traceability-document.md`):
 `scope_accounting` and `export_reproducibility` (presence),
-`semantic_consistency_checks` (declared count), `human_approval` and
-`production_authorization` (policy constants, enforced elsewhere by the
-`human_approval_rejected` and `production_authorized_rejected` rules and by gate
-`[7/8]`), and `standards_mapping`, which measures whether a disposition names a
-resolving artefact rather than whether any mapping is satisfied — see §3.1. None
-of them keys off a gate, and none is changed here.
+`semantic_consistency_checks` (declared count), and `standards_mapping`, which
+measures whether a disposition names a resolving artefact rather than whether any
+mapping is satisfied — see §3.1. None of them keys off a gate, and none is
+changed here.
+
+`human_approval` and `production_authorization` were listed in this paragraph as
+policy constants. **That is no longer true** (2026-10-04): both are measured from
+the records, by `_approval_dimension_counts()` calling the validator's own
+`_approval_evidence_defects`, and their zeros are measurements. The rules
+`human_approval_rejected` and `production_authorized_rejected` remain - they are
+what *enforces* the six required elements - and gate `[7/8]` still counts them.

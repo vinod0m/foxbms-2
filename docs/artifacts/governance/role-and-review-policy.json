@@ -104,5 +104,54 @@
     "synthetic_decision_label": "synthetic_decision with fictional role identities",
     "production_authorized": false,
     "product_verification_credit": false
+  },
+  "approval_evidence_contract": {
+    "amendment_id": "APPROVAL-RULE-A1",
+    "date": "2026-10-04",
+    "author": "safety_engineer",
+    "supersedes": "The blanket prohibition in corpus.py rules human_approval_rejected, production_authorized_rejected and verification_credit_rejected, under which an approval value failed validation however it was formed. This block is the replacement. corpus.py reads it; it is not a copy of a constant held in the tool.",
+    "record_field": "approval_evidence",
+    "kinds": {
+      "human_approval": {
+        "record_field": "human_approval_status",
+        "grant_is": "any value other than \"pending\" or absent; that is a recorded human decision",
+        "severity": "high",
+        "rule_id": "human_approval_rejected"
+      },
+      "production_authorization": {
+        "record_field": "production_authorized",
+        "grant_is": "true",
+        "severity": "critical",
+        "rule_id": "production_authorized_rejected"
+      },
+      "verification_credit": {
+        "record_field": "product_verification_credit",
+        "grant_is": "true",
+        "severity": "high",
+        "rule_id": "verification_credit_rejected"
+      }
+    },
+    "required_elements": [
+      "1. the approval field itself set to its grant value",
+      "2. approval_evidence.<kind>.approved_by - a named individual, not a role and not a team: at least two whitespace-separated tokens, not equal to any role_id or role name declared in this file's roles[] (case-insensitive), no token equal to a role_id, and no token from the team vocabulary (team, group, board, committee, panel, crew, squad, pool, department, office, the, staff, reviewers, approvers, automation, system, tool, script, agent, bot)",
+      "3. approval_evidence.<kind>.role - a role_id declared in this file's roles[] - together with approval_evidence.<kind>.independence, an object carrying owner_role (must equal the record's own owner_role), satisfied (true), evidence (a non-empty explanation of how independence holds, not a placeholder), and policy_ref (must name this file and the role_id)",
+      "4. approval_evidence.<kind>.date - ISO-8601, a date or a date-time",
+      "5. approval_evidence.<kind>.review_packet - an object carrying path (a packet.json under docs/artifacts/reviews/packets/ or the signed-packet archive at docs/artifacts/reviews/signed/, relative to the repository root, and present on disk), sha256 (the sha256 of that file's bytes as they are on disk now), and record_sha256_at_signing (must equal the packet's own integrity.record_sha256). The packet must also name this record in target.record_id and target.profile, and its integrity.record_path must resolve to this record's own file.",
+      "6. a revision_history entry whose author is the approving role, whose revision is at least the record's current revision, and whose description both records the approval and references the signed packet by digest or by path"
+    ],
+    "independence_rule": "The approving role must differ from the record's owner_role AND from the author of the last revision_history entry that CHANGED the record's content. An entry whose description records the approval is not a content change and is skipped when the author is determined, so an approval does not disqualify its own signer by bumping the revision. A record cannot be approved by the person or role that wrote the content being approved.",
+    "production_authority_roles": {
+      "roles": ["architect", "safety_manager"],
+      "basis": "Declared here rather than inferred from the free-text authority strings in roles[], because matching prose is not measurement. architect is declared 'full authority over corpus artifacts' and carries 'final evaluation'; safety_manager is declared to 'approve safety case'. No other role in roles[] is given authority to release the corpus to production."
+    },
+    "production_authorizable_artifact_types": {
+      "types": ["safety_case", "post_development_record", "change"],
+      "basis": "review_policy.additional_fields.human_approval_required_for names safety_case, production_release and change_approval as the three things human approval is required for. post_development_record is this corpus's artifact_type for a production_release record. Production authority is therefore expressible only on those three families; on any other family the grant fails even with complete evidence, because the record is not one human approval is required for."
+    },
+    "unchanged_by_this_amendment": [
+      "human_approval_status 'not_required' is still rejected. It is not an approval value, so this contract does not speak to it, and the pre-existing governance_authority_claim test that treats every non-pending value as a claim continues to fire on it. Relaxing it is a separate decision the corpus owner has not taken.",
+      "The recursive authority_keys scan (production_release, authorized_for_production and eight siblings) and the four GOVERNANCE_CLAIM_FIELDS claim classes (ASIL determination, conformity, certification) are untouched. This amendment changes only what a properly evidenced approval is ALLOWED to say; it adds no new authority.",
+      "No record in this corpus carries an approval. The contract describes how one would be recorded. It does not record one."
+    ]
   }
 }

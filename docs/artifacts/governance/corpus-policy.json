@@ -8,14 +8,28 @@
     "as_is": {
       "description": "Faithful reconstruction of what the pinned foxBMS sources demonstrate. Records observed behavior, existing artifacts/tests, justified inferences, evidence gaps, contradictions, and proposed changes. Does not rewrite inconvenient facts or assert undocumented original stakeholder intent. Back-inferred requirements labeled as reconstructed behavior descriptions, not historical approved specifications.",
       "provenance_rules": {
-        "allowed_origins": ["source_observed", "derived"],
-        "forbidden_origins": ["synthetic"],
-        "derived_requires": ["premises", "reasoning_summary", "source_refs"],
+        "allowed_origins": [
+          "source_observed",
+          "derived"
+        ],
+        "forbidden_origins": [
+          "synthetic"
+        ],
+        "derived_requires": [
+          "premises",
+          "reasoning_summary",
+          "source_refs"
+        ],
         "evidence_gaps": "explicitly_recorded_as_gaps",
         "contradictions": "preserved_as_gaps"
       },
       "approval_semantics": {
-        "human_approval_status_values": ["pending", "approved", "rejected", "not_required"],
+        "human_approval_status_values": [
+          "pending",
+          "approved",
+          "rejected",
+          "not_required"
+        ],
         "human_approval_status_default": "pending",
         "synthetic_decision_label_format": "synthetic_decision:{fictional_role}:{decision_id}",
         "synthetic_decision_label_example": "synthetic_decision:safety_manager:SYNTH-SAF-APP-001",
@@ -27,14 +41,23 @@
     "synthetic_reference": {
       "description": "Complete, coherent hypothetical automotive BMS development project grounded in foxBMS. Defines fictional item, vehicle context, operating assumptions, selected hardware/software baseline, stakeholders, responsibilities, lifecycle, and parameter set. Reuses source-grounded behavior where justified. Fills missing engineering content with labeled synthetic requirements, analyses, design additions, process records, and test fixtures.",
       "provenance_rules": {
-        "allowed_origins": ["source_observed", "derived", "synthetic"],
+        "allowed_origins": [
+          "source_observed",
+          "derived",
+          "synthetic"
+        ],
         "source_observed": "Directly from foxBMS sources with durable anchors",
         "derived": "Logical inference from source_observed premises with reasoning",
         "synthetic": "Explicitly created to fill gaps, labeled with rationale and validity conditions",
         "field_level_provenance": "required_for_important_facts_numerical_values_conclusions"
       },
       "approval_semantics": {
-        "human_approval_status_values": ["pending", "approved", "rejected", "not_required"],
+        "human_approval_status_values": [
+          "pending",
+          "approved",
+          "rejected",
+          "not_required"
+        ],
         "human_approval_status_default": "pending",
         "synthetic_decision_label_format": "synthetic_decision:{fictional_role}:{decision_id}",
         "synthetic_decision_label_example": "synthetic_decision:project_manager:SYNTH-MAN-APP-001",
@@ -141,13 +164,19 @@
         "type": "implements",
         "direction": "implementation element -> design/requirement",
         "domain": "implementation",
-        "range": ["design", "requirement"]
+        "range": [
+          "design",
+          "requirement"
+        ]
       },
       {
         "type": "verifies",
         "direction": "verification measure -> requirement/design",
         "domain": "test_measure",
-        "range": ["requirement", "design"]
+        "range": [
+          "requirement",
+          "design"
+        ]
       },
       {
         "type": "validates",
@@ -172,12 +201,19 @@
         "type": "mitigates",
         "direction": "safety mechanism -> fault/hazard/failure mode",
         "domain": "safety_mechanism",
-        "range": ["fault", "hazard", "failure_mode"]
+        "range": [
+          "fault",
+          "hazard",
+          "failure_mode"
+        ]
       },
       {
         "type": "specified_by",
         "direction": "interface/element -> authoritative specification",
-        "domain": ["interface", "element"],
+        "domain": [
+          "interface",
+          "element"
+        ],
         "range": "specification"
       },
       {
@@ -202,7 +238,10 @@
         "type": "constrained_by",
         "direction": "artifact -> parameter/assumption/constraint",
         "domain": "artifact",
-        "range": ["parameter", "assumption"]
+        "range": [
+          "parameter",
+          "assumption"
+        ]
       },
       {
         "type": "reviewed_by",
@@ -247,11 +286,22 @@
   },
   "evidence_classification": {
     "execution_kind": {
-      "enum": ["none", "actual_host_run", "actual_simulation_run", "synthetic_fixture"],
+      "enum": [
+        "none",
+        "actual_host_run",
+        "actual_simulation_run",
+        "synthetic_fixture"
+      ],
       "description": "Orthogonal to outcome. Planning is not execution. Fabricated simulation-looking numbers are synthetic_fixture."
     },
     "outcome": {
-      "enum": ["pass", "fail", "inconclusive", "not_run", "blocked"],
+      "enum": [
+        "pass",
+        "fail",
+        "inconclusive",
+        "not_run",
+        "blocked"
+      ],
       "description": "Actual test results or synthetic fixture expectations"
     },
     "rules": [
@@ -271,7 +321,42 @@
     "safety_critical_additional": "separated_challenge_pass",
     "batch_review_rules": "Only when all covered IDs/digests and findings enumerated",
     "no_universal_review_from_sample": true,
-    "ai_review_limitations": "AI reviews are automated reviews. Distinct agent sessions are not organizational independence or human confirmation measures. Real human approval remains pending."
+    "ai_review_limitations": "AI reviews are automated reviews. Distinct agent sessions are not organizational independence or human confirmation measures. Real human approval remains pending.",
+    "approval_evidence_contract_ref": "docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract",
+    "approval_rule_amendment": {
+      "amendment_id": "APPROVAL-RULE-A1",
+      "date": "2026-10-04",
+      "author": "safety_engineer",
+      "previous_text": "In docs/artifacts/tools/corpus.py _validate_artifact, three rules failed validation on the VALUE alone, with no further test of any kind: 'production_authorized must be false (synthetic corpus)' (production_authorized_rejected, critical); 'human_approval_status must remain pending (no human approval performed)' (human_approval_rejected, high); 'product_verification_credit must be false' (verification_credit_rejected, high). _validate_governance_semantics independently reported the same three fields as governance_authority_claim, so acceptance gate [7/8] failed on them too. The two coverage dimensions human_approval and production_authorization were the literal {\"numerator\": 0} in _coverage_dimensions, with the detail strings 'all artifacts pending human approval (none performed)' and 'production_authorized=false for all artifacts (by policy)', and the coverage report's basis table classified both as 'constant'.",
+      "previous_meaning": "An approval value was forbidden unconditionally. The rule could not distinguish a fabricated approval from a legitimate one because it never inspected one; it could say only 'no', never 'this one is unsigned'. The corpus therefore had exactly two reachable states for approval - absent and forbidden - and no way to represent the legitimate middle. A reviewer who had done the work had nowhere to record it, and the first signature would have turned the acceptance suite red and been blamed for it. Separately, the two coverage dimensions measured nothing: a literal numerator reads 0/321 before any signature exists and would read 0/321 after three hundred, so the figure could not distinguish 'no approvals' from 'the dimension is not implemented', while its detail strings asserted a measured fact that nothing in the function had looked at.",
+      "new_rule": "An approval value is NECESSARY AND NOT SUFFICIENT. Each of the three rules now fires unless the record itself carries, under approval_evidence.<kind>, all six elements enumerated at docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract/required_elements: (1) the grant value; (2) approved_by, a named individual rather than a role or a team; (3) role, a role_id declared in that same policy, plus an independence object carrying owner_role equal to the record's own owner_role, satisfied true, a non-placeholder evidence string and a policy_ref, with independence ENFORCED - the approving role must differ from owner_role and from the author of the last revision_history entry that changed the record's content; (4) an ISO-8601 date, grammar- and parse-checked; (5) review_packet carrying path, sha256 and record_sha256_at_signing, where the path resolves to a packet.json on disk under docs/artifacts/reviews/packets/ or docs/artifacts/reviews/signed/, the sha256 equals that file's bytes as they stand now, record_sha256_at_signing equals the cited packet's OWN integrity.record_sha256, and the packet's target.record_id and target.profile both name this record; (6) a revision_history entry whose author is the approving role, whose revision is at least the record's current revision, and whose description records the approval and cites the signed packet. Each finding names which element is unmet. production_authorization additionally requires the approving role to be one the corpus grants production authority to and the record's artefact family to be one human approval is required for, so its bar is strictly higher rather than the same bar twice. The two coverage dimensions are now computed from the records by the same predicate the validator enforces.",
+      "new_meaning": "The corpus may now record a human approval, and `corpus.py check` stays green when it does - but only a properly evidenced one. The guard against fabrication is no longer the absence of the value; it is a digest chain that binds a signature to a named person, a declared role, an enforced independence relation, a date, one specific packet file and one specific state of one specific record. An approval that is real but unevidenced fails; an approval that is evidenced but not real still requires a person to have lied, and the evidence of that is public. The coverage dimensions read 0 because nothing is approved, and they now say so as a measurement rather than as a convention.",
+      "supersedes": "The blanket prohibition in corpus.py for the three rules human_approval_rejected, production_authorized_rejected and verification_credit_rejected, i.e. each rule's failure on the value alone, in its entirety; and the same three fields' unconditional failure in _validate_governance_semantics as governance_authority_claim. It supersedes nothing else. In particular it does NOT supersede the recursive authority_keys scan (production_release, production_approval, safety_approval, authorized_for_production, approved_for_production, release_approved, production_sign_off, production_authority, production_release_approved), the four GOVERNANCE_CLAIM_FIELDS claim classes (ASIL determination, conformity, certification), acceptance gate [7/8], the provenance gate, or the packet generator's rule that no code path writes a signature. All are unchanged.",
+      "rationale": [
+        "The instrument was wrong, not merely strict. A rule that fails on the value alone cannot examine an approval, so it cannot tell a fabricated one from a real one. It made the legitimate state unrepresentable and, in doing so, taught a reviewer that the corpus had no way to accept their work.",
+        "A ban has the further defect that it cannot degrade gracefully. There were only two states, so the corpus could not record partial progress: a reviewer who had reviewed 40 records had nowhere to put that fact.",
+        "Replacing the value test with an evidence requirement does not merely move the line; it makes each of the six elements a separate, independently sufficient obstacle to fabrication. A script that writes 'approved' still fails at element 1. One that copies a plausible block still fails at element 5 unless a real packet exists whose own recorded record digest is the digest attested. One that has a real packet still fails at element 3 unless the approver is independent of both the owner role and the content author.",
+        "The six-element check was read from role-and-review-policy.json rather than restated in the tool, following the pattern ID-RULE-004-A1 set the day before: a policy the enforcing code does not read is a policy that can drift, and this corpus has already corrected one such drift by amending the policy to match the code.",
+        "The production-authority bar is strictly higher because the existing code already treats production authority as a different claim from approval: it reports it at critical rather than high severity, it excludes production_authorized from its own authority_keys scan precisely because the named check owns it, and role-and-review-policy.json already separates roles with release authority (architect, safety_manager) from roles that merely review. Reusing that distinction is stricter than inventing a bar, and inventing one would have been a governance decision nobody took.",
+        "Both dimensions are computed by the validator's own predicate. Writing a second, looser notion of 'approved' inside _coverage_dimensions would have produced a figure that could read higher than the gate permits, which is the same class of defect as the literal: a number that cannot be wrong.",
+        "The amendment was proved in both directions before it was accepted: six rejection cases assert that everything the prohibition caught is still caught, and one acceptance case asserts that a properly evidenced approval really does pass. The acceptance case runs entirely against a throwaway copy of the tree outside the repository and asserts afterwards that nothing was persisted. A rule change that only asserted the rejections would have passed against the old ban unchanged and proved nothing."
+      ],
+      "what_this_does_not_do": [
+        "IT DOES NOT PRODUCE AN APPROVAL. No record in this corpus carries one, before or after this amendment. Making the gate accept a legitimately evidenced approval is what makes the guard meaningful; producing such an approval needs a person, and the self-test 'no record in the corpus carries an approval of any kind' fails the suite if one ever appears.",
+        "IT DOES NOT ADD ANY AUTHORITY TO ANYONE. The corpus still asserts no ASIL determination, no ISO 26262 conformity, no certification, no production authorisation and no product verification credit. Every record keeps production_authorized false and product_verification_credit false.",
+        "IT DOES NOT RELAX human_approval_status 'not_required'. That value is not an approval, the contract does not speak to it, and it continues to fail for want of evidence - preserving the pre-amendment verdict rather than changing it as a side effect. Recorded as an open P3 in closing-list.md \u00a71.6.",
+        "IT DOES NOT WEAKEN ANY OTHER CONTROL. The recursive authority-key scan, the four claim classes, acceptance gate [7/8], the provenance gate, the packet verifier and the generator's no-written-signature rule are all untouched, and self-tests assert each of the ones that could plausibly have been affected.",
+        "IT IS NOT A ROUTE TO CLOSING A COVERAGE DIMENSION BY AUTHORING. The human_approval numerator can only move by a properly evidenced approval, which requires a signed packet, which requires a person who read the record."
+      ],
+      "residual_risks_recorded_here_not_silently_dropped": [
+        "A DETERMINED HUMAN CAN STILL FORGE ALL SIX ELEMENTS. The digest chain proves a packet exists and pins the record state it was generated against. It does not prove anybody read anything. What is left is that the evidence is public, checkable and attributable, and that the batch record must name who signed what.",
+        "reviews/signed/ IS AN ORDINARY DIRECTORY. No control signs it. A signed packet there is protected by the generator's refusal to overwrite a signed packet in packets/ and by the validator's refusal to accept a digest that no longer matches, not by any cryptographic control over the archive. Whether signed/ is the only permitted home is an open P2.",
+        "IF A RECORD LEGITIMATELY CHANGES AFTER BEING APPROVED, THE APPROVAL STOPS VALIDATING. That is intended - the signature covered specific bytes - but it means an approval is not durable across a content change, and a reviewer must be told so. Every regenerated packet says so.",
+        "AN APPROVAL THAT BUMPS THE REVISION NUMBER CANNOT BE RECORDED WITHOUT BREAKING OTHER CONTROLS. Measured, not assumed: bumping it makes every link pinning that record's revision stale and invalidates the sha256 every review record stores for it. The contract therefore records the approval against the CURRENT revision. This convention is implemented and documented but NOT ratified as policy - open P3 in closing-list.md \u00a71.6."
+      ],
+      "detection_consequence": "The three rule ids are unchanged, so every scenario, gate and report that counts them keeps counting the same quantity. What changes is their meaning and their message: each now enumerates the unmet elements instead of asserting that a value is forbidden. Three findings move rule attribution - a bare production_authorized, human_approval_status or product_verification_credit grant is now reported under production_authorized_rejected / human_approval_rejected / verification_credit_rejected rather than governance_authority_claim - and all three ids are members of GOVERNANCE_SEMANTIC_RULE_IDS, so the violation COUNT printed by gate [7/8] is unchanged. One finding is reported per (rule, artefact) even though cmd_validate runs both _validate_artifact and _validate_governance_semantics over the same index, so the count cannot be inflated by the delegation.",
+      "scope_and_limits": "This amendment changes the corpus tool's approval rules, the two approval coverage dimensions, the review packet generator's instructions to reviewers, and the governance text in closing-list.md and role-and-review-policy.json. It renames no artefact, revises no artefact's engineering content, writes no approval value into any record, asserts no ISO 26262 conformity, no certification, no tool qualification, no ASPICE capability level, no production authorisation and no product verification credit, and closes no coverage dimension. Every record touched keeps human_approval_status 'pending', production_authorized false and product_verification_credit false, exactly as ID-RULE-004-A1 required of itself."
+    }
   },
   "change_management": {
     "clean_reference_separate_from_mutations": true,
@@ -290,7 +375,12 @@
     "dependent_review_evidence_invalidated": true
   },
   "export_contract": {
-    "formats": ["JSONL nodes and edges", "CSV inventory and trace matrices", "Markdown work products", "baseline/content manifests"],
+    "formats": [
+      "JSONL nodes and edges",
+      "CSV inventory and trace matrices",
+      "Markdown work products",
+      "baseline/content manifests"
+    ],
     "interchange": "Neutral formats as stable interchange. ReqIF, SPDX/CycloneDX, ALM-specific only with correct validation.",
     "import_contract_documented": true,
     "schema_versioning": "All exports include schema version, profile/scenario boundaries, provenance, link semantics, approval/evidence semantics"

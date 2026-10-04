@@ -1091,8 +1091,29 @@
  },
  "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
  "signature_block": {
-  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
-  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "_contract": {
+   "digest_note": "The digests below are already filled in. Copy them; do not type them. Run `make_review_packets.py --transcribe FB2-SAF-ITE-000001` to have them printed as a pasteable block.",
+   "evidence_key": "human_approval",
+   "evidence_record_field": "approval_evidence",
+   "grant_is": "any value other than \"pending\" or absent",
+   "policy_ref": "docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract",
+   "record_field": "human_approval_status",
+   "required_elements": [
+    "1. human_approval_status carries the grant value",
+    "2. approved_by - a named individual, not a role and not a team",
+    "3. role - a role_id declared in role-and-review-policy.json#/roles - plus independence{owner_role, satisfied, evidence, policy_ref}; the approving role must differ from owner_role AND from the author of the last content revision",
+    "4. date - ISO-8601, checked by grammar and by parse",
+    "5. review_packet{path, sha256, record_sha256_at_signing}; path must resolve to a packet.json on disk under docs/artifacts/reviews/packets/ or docs/artifacts/reviews/signed/; sha256 must equal that file's bytes now; record_sha256_at_signing must equal this packet's integrity.record_sha256; target.record_id and target.profile must both name this record",
+    "6. a revision_history entry whose author is the approving role and whose description records the approval and cites the signed packet"
+   ],
+   "rule_id": "human_approval_rejected",
+   "severity": "high"
+  },
+  "_packet_sha256": null,
+  "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
+  "_record_sha256_at_signing": "eeb85ae7d1fc2a34b8f73579a86ad6a7392e0b61e1401ba0be22f44b7603e331",
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus an approval_evidence.human_approval block plus a revision_history entry naming the reviewer and citing this packet, and archive the signed packet under docs/artifacts/reviews/signed/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
   "date": "",
   "decision": "",
@@ -1102,7 +1123,7 @@
   "role": "",
   "signature": ""
  },
- "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus ACCEPTS a properly evidenced approval rather than banning the value outright, so this rule now has to carry the evidence contract in full: see signature_block._contract.",
  "target": {
   "artifact_type": "item_definition",
   "engineering_domain": "safety",

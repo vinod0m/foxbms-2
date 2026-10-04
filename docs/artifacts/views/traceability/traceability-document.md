@@ -1,6 +1,6 @@
 # Traceability — the corpus traceability document (generated)
 
-Generated: 2026-10-04T00:15:44Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
+Generated: 2026-10-04T03:41:39Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
 
 ## Provenance and status of this file
 
@@ -193,8 +193,8 @@ Recomputed by the same function `corpus.py coverage` prints, at render time. Not
 | `negative_scenario_validation` | 20/20 | **measured** | 20/20 mutations passed (executed and detected by their own declared rule); 3/3 change lifecycles — mutation scenarios that PASS when executed: the rule each declares is implemented, is silent on the unmutated corpus, and produces a finding the baseline did not contain |
 | `final_status` | `synthetic_ready_with_limitations` | — | recorded status |
 | `export_reproducibility` | 1/1 | **measured** | 3 exported file(s) hashed identically across two independent exports into separate temporary directories; measured here, not read from docs/artifacts… — 1 if exporting the corpus into two separate temporary directories yields identical content hashes for every declared file; measured in this dimension rather than read from exports/manifest.json, which the acceptance suite creates moments before this runs |
-| `human_approval` | 0/321 | **constant** | all artifacts pending human approval (none performed) — 0 by corpus policy; every record is `pending`. The policy is enforced by the `human_approval_rejected` rule, not measured by this dimension |
-| `production_authorization` | 0/321 | **constant** | production_authorized=false for all artifacts (by policy) — 0 by corpus policy; every record is `false`. The policy is enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
+| `human_approval` | 0/321 | **measured** | 0 of 321 records carry a properly evidenced human approval -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carry human_ap… — records whose human_approval_status carries a human decision AND whose approval_evidence.human_approval carries all six required elements (named individual, declared role, independence evidence against owner_role and the current-revision author, ISO-8601 date, a review-packet digest chain resolved against a packet on disk whose own recorded record digest matches, and a revision_history entry citing it), over every record. Was the literal {"numerator": 0}, which read 0/321 before any signature existed and would have read 0/321 after three hundred. Computed by the same predicate the `human_approval_rejected` rule enforces, so the figure cannot exceed what the gate permits |
+| `production_authorization` | 0/321 | **measured** | 0 of 321 records carry a properly evidenced production authorization -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carr… — the same computation over production_authorized, with the bar STRICTLY HIGHER: the approving role must be one this corpus grants production authority to and the record's family must be one human approval is required for. Was the literal {"numerator": 0}. Enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
 
 
 ## Negative-scenario validation

@@ -36,24 +36,49 @@ directory is the separation that makes the guard unnecessary in the common path.
 ## What gets recorded in the record itself
 
 A signed packet is evidence, not the record. The decision is transcribed into the
-record as a human act:
+record as a human act. The machine-readable contract is
+`docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract`
+and the validator implements it exactly; section 8 of every packet restates it
+for the reviewer.
 
-- `human_approval_status`: `approved`, `rejected`, or `not_required`;
-- a `revision_history` entry naming the reviewer, their role, the date, and the
-  **packet digest they signed** - the sha256 in section 2 of the packet - so the
-  record is traceable to the exact bytes that were read;
+- `human_approval_status`: `approved` or `rejected` (both are recorded human
+  decisions and both need a person behind them);
+- an `approval_evidence.human_approval` block carrying all six required
+  elements:
+  1. the grant value;
+  2. `approved_by` - a named **person**, not a role and not a team;
+  3. `role` - a `role_id` declared in `role-and-review-policy.json` - plus
+     `independence{owner_role, satisfied, evidence, policy_ref}`, where
+     `owner_role` must equal **this record's own** `owner_role`. Independence is
+     then enforced rather than asserted: the approving role must differ from
+     `owner_role` **and** from the author of the last content revision;
+  4. `date` in ISO-8601;
+  5. `review_packet{path, sha256, record_sha256_at_signing}` - `path` may cite a
+     packet here or in `reviews/packets/`, `sha256` must equal that file's bytes
+     as they stand now, and `record_sha256_at_signing` must equal **that
+     packet's own** `integrity.record_sha256`;
+  6. a `revision_history` entry naming the reviewer, their role, the date, and
+     **the packet digest they signed**, so the record is traceable to the exact
+     bytes that were read;
 - `automated_review_status` unchanged: it describes machine checks, not human
   judgement;
 - `production_authorized` and `product_verification_credit` unchanged at `false`.
   No signature on a corpus record authorises production or confers verification
-  credit.
+  credit. Granting production authority additionally requires an approving role
+  that holds it (`architect` or `safety_manager`) and a record family human
+  approval is required for (`safety_case`, `post_development_record`, `change`).
 
-Recording the first approval currently fails validation, by design: the
-`human_approval_rejected` rule fires on any record whose `human_approval_status`
-is `approved`, and the acceptance suite gates on it. That amendment is
-prerequisite P1 in `docs/artifacts/governance/closing-list.md` §1.6 and must be
-made deliberately, by the corpus owner, **before** the first signature is
-recorded - otherwise the person who signs is blamed for turning the build red.
+`python3 docs/artifacts/tools/make_review_packets.py --transcribe <ID>` prints
+the exact block with both digests already resolved, writing nothing and filling
+no decision. Use it rather than typing 64 hex characters.
+
+**Recording the first approval no longer fails validation.** As of 2026-10-04,
+amendment `APPROVAL-RULE-A1` replaced the blanket prohibition with the evidence
+requirement above, so a properly evidenced approval is accepted and the
+acceptance suite stays green. What the amendment did **not** do is produce one:
+every record in this corpus is still `pending`, and writing an approval value
+needs a person. If a finding arrives naming an unmet element, fix that element -
+do not remove the approval.
 
 ## Rules for this directory
 

@@ -869,18 +869,61 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 
 _1 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._
 
-## 8. What your signature changes
+## 8. What your signature changes, and exactly what to write
 
-Filling in section 9 is the only thing that changes `human_approval_status` on this record. It is currently `pending`. No automated process may fill it: the corpus runs a rule, `human_approval_rejected`, that fails validation on any record whose `human_approval_status` is `approved`. That rule exists so that no tool can manufacture the state - it is a guard, not an oversight.
+Filling in section 9 is the only thing that changes `human_approval_status` on this record. It is currently `pending`. No automated process may fill it, and none can.
 
-**Two consequences you should know before you sign, both read from the code rather than assumed:**
+### 8.1 The rule that will read your signature
 
-1. **The coverage dimension `human_approval` will not move.** In `corpus.py _coverage_dimensions()` the dimension is a literal `{"numerator": 0}` with the detail string "all artifacts pending human approval (none performed)". It is declared a constant, not computed from the records. So after your signature is recorded the figure still reads 0/321, and that is not a sign the signature did not land. (The same is true of `production_authorization`.)
-2. **Recording the first real approval will turn `corpus.py check` RED.** Because `human_approval_rejected` fires on `approved`, and `production_authorized_rejected` and `verification_credit_rejected` fire on their counterparts, the corpus is currently built so that no approval can be recorded without failing validation. That is the safe default for a corpus with no approvals, and it is the wrong default for a corpus that has just acquired one. Amending those rules is a deliberate, reviewed change owned by the corpus owner, not something a reviewer does quietly in the same commit as a signature.
+As of **2026-10-04** this is an EVIDENCE requirement, not a prohibition. The corpus used to run a rule that failed validation on any record whose `human_approval_status` was `approved`, however well evidenced - a ban, which cannot tell a fabricated approval from a real one because it never looks at one. That ban was replaced (amendment `APPROVAL-RULE-A1`, recorded at `docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract`). **Recording the first real approval no longer turns `corpus.py check` red.** What it does instead is make the tool check six things, and fail if any one is missing.
 
-`docs/artifacts/governance/closing-list.md` states both points as prerequisites for the first batch, and says who decides. Read it before recording anything.
+**A properly formed approval must carry, on the record itself, all six of these:**
 
-**How a completed signature is recorded.** Keep your signed packet, then have the decision transcribed into the record as a human act: `human_approval_status` set to `approved` or `rejected` by you, a `revision_history` entry naming you, your role, the date and the packet digest you signed, and `automated_review_status` left alone - it describes machine checks, not your judgement. Archive the signed packet OUTSIDE `docs/artifacts/reviews/packets/`: regenerating a packet overwrites it, and the generator refuses to overwrite a packet that already carries a signature rather than destroy it.
+| # | element | what the validator actually checks |
+| --- | --- | --- |
+| 1 | the grant value | `human_approval_status` is `"approved"` (or `"rejected"` - both are recorded human decisions and both need a person behind them). A value on its own is necessary and **not sufficient**. |
+| 2 | `approved_by` | a named individual, not a role and not a team. Rejected if it is a single token, if it equals a declared `role_id` or role name, if any token is a declared `role_id`, or if any token is in the team vocabulary (team, group, board, committee, panel, crew, squad, staff, department, automation, system, tool, agent, ...). |
+| 3 | `role` + `independence` | `role` must be a `role_id` declared in `role-and-review-policy.json#/roles`. `independence` must be an object carrying `owner_role` (**must equal this record's own `owner_role`, which is `'verification_engineer'`**), `satisfied: true`, an `evidence` string of at least 24 characters that is not a placeholder, and a `policy_ref` naming `role-and-review-policy.json`. Then independence is ENFORCED, not just asserted: your role must differ from `verification_engineer` **and** from the author of the last `revision_history` entry that changed this record's content. |
+| 4 | `date` | ISO-8601, `YYYY-MM-DD` optionally followed by `THH:MM[:SS]` and `Z` or an offset. Checked by grammar AND by parse. |
+| 5 | `review_packet` | an object carrying `path`, `sha256` and `record_sha256_at_signing`. See 8.2 - this is the part reviewers get wrong. |
+| 6 | `revision_history` | an entry whose `author` is your approving role, whose `revision` is at least this record's current revision, and whose `description` both records the approval **and cites the signed packet by digest or by name**. |
+
+### 8.2 The packet digest, which is the part that is easy to get wrong
+
+Three digests are involved and they are not interchangeable:
+
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `1ba855756317e28151fe2a6af14b85bf0eb718c88336c2eee8da34099153e424`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `sha256` is the digest of **this packet file's own bytes**, which the packet cannot print about itself. Do not type it by hand. Either run `shasum -a 256 <packet.json>` or, much better, let the generator print the whole block:
+
+```
+python3 docs/artifacts/tools/make_review_packets.py --transcribe FB2-VER-UTS-000002
+```
+
+  That command writes nothing and fills no decision. It resolves both digests against the files on disk and prints the exact `approval_evidence` block and the exact `revision_history` entry to append, with your name, role, organisation and date left for you to supply.
+
+What the validator does with them, so you can check your work:
+
+1. `path` must be a `.json` packet twin under `docs/artifacts/reviews/packets/` or under the signed-packet archive `docs/artifacts/reviews/signed/`, and it must exist on disk. Anything else is rejected.
+2. `sha256` must equal that file's bytes **as they stand on disk now**. If the packet has been regenerated since you signed, the digest no longer matches and the approval is rejected - which is correct, because the record state you reviewed has changed.
+3. `record_sha256_at_signing` must equal **the packet's own** `integrity.record_sha256`. This is the binding that matters: citing a packet that exists, is the right shape and is byte-stable proves nothing unless its recorded record digest is the one you attested to. A digest belonging to a different record, a different revision, or a packet that was never on disk all fail here.
+4. The cited packet must name THIS record in `target.record_id` **and** `target.profile` (the pair is the key under ID-RULE-004-A1), and its `integrity.record_path` must be this record's own file.
+
+### 8.3 What happens to the numbers, read from the code
+
+1. **The coverage dimension `human_approval` now moves.** It used to be a literal `{"numerator": 0}` with the detail string "all artifacts pending human approval (none performed)" - a constant that measured nothing and would have read 0/321 after three hundred signatures. Since 2026-10-04 it is COMPUTED from the records, by the same predicate the validator enforces, so it reads 0/321 today and will read 1/321 the moment one properly evidenced approval is recorded. `production_authorization` is the same, with a STRICTLY higher bar: the approving role must be one the corpus grants production authority to (`architect` or `safety_manager`), and the record's family must be one human approval is required for (`safety_case`, `post_development_record`, `change`).
+2. **Recording a properly formed approval keeps `corpus.py check` green.** The finding you would get for a bare `approved` names every unmet element, so if you get one, read it rather than guessing: it tells you which of the six is missing.
+3. **Two controls the signature does not touch.** `automated_review_status` describes machine checks, not your judgement - leave it alone. And the recursive key scan for authority claims (`production_release`, `authorized_for_production` and eight siblings, plus the ASIL/conformity/certification claim classes) is unchanged: nesting a production claim inside the new `approval_evidence` block is still caught.
+
+### 8.4 How to record it, in order
+
+1. Fill section 9 and archive the signed packet **outside** `docs/artifacts/reviews/packets/` - into `docs/artifacts/reviews/signed/` - because regenerating a packet overwrites it, and the generator refuses to overwrite a packet that already carries a signature rather than destroy it. Cite the archived copy in `review_packet.path`; both locations resolve.
+2. Run `--transcribe FB2-VER-UTS-000002` and paste the block it prints.
+3. Add the `revision_history` entry it prints. Record the approval against the record's CURRENT revision; bumping the revision number makes every link that pins this record's revision stale and invalidates the sha256 every review record stores for it.
+4. Run `python3 docs/artifacts/tools/corpus.py validate` and read the result. Zero approval findings means the approval is properly evidenced.
+
+**Still not yours to do:** writing the approval value into the record. The gate now *accepts* a legitimately evidenced approval, which is what makes the guard meaningful, but *producing* one needs a person. No tool in this repository may do it, and the self-test `no record in the corpus carries an approval of any kind` fails the suite if one ever appears.
+
+`docs/artifacts/governance/closing-list.md` states what is still outstanding and who owns it. Read it before recording anything.
 
 ## 9. Signature
 
@@ -896,7 +939,7 @@ Filling in section 9 is the only thing that changes `human_approval_status` on t
 | Comments | |
 | Signature | |
 
-_Date in ISO 8601. Decision is exactly one of: approve, approve-with-comments, reject. Reviewer must be independent of this record's `owner_role`; see `docs/artifacts/governance/role-and-review-policy.json` for the independence requirements per role._
+_Date in ISO 8601. Decision is exactly one of: approve, approve-with-comments, reject. Your role must be independent of this record's `owner_role` (`verification_engineer`) and of the author of the content you are reviewing; see `docs/artifacts/governance/role-and-review-policy.json` for the independence requirement per role. Section 8 says exactly which fields the validator reads and what it checks against each._
 
 ---
 

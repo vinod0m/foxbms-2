@@ -1,6 +1,6 @@
 {
  "change_lifecycles": 3,
- "generated_at": "2026-10-04T02:03:34Z",
+ "generated_at": "2026-10-04T03:52:08Z",
  "mutation_total_required": 20,
  "mutations_present": 20,
  "results": [
@@ -1079,15 +1079,8 @@
     {
      "artifact_id": "FB2-SAF-SGO-000001",
      "category": "governance",
-     "description": "production_authorized is true; this corpus is never production authorized",
-     "rule": "governance_authority_claim",
-     "severity": "critical"
-    },
-    {
-     "artifact_id": "FB2-SAF-SGO-000001",
-     "category": "governance",
-     "description": "production_authorized is true; this corpus is never production authorized",
-     "rule": "governance_authority_claim",
+     "description": "FB2-SAF-SGO-000001: production_authorized asserts a claim of production authority but the approval is NOT properly evidenced -- 1 requirement(s) unmet. An approval value alone is not an approval. Each unmet element is listed below; fix them all in one pass against docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract/required_elements:\n    [1] elements 1-6 ALL UNMET: production_authorized asserts a claim of production authority but the record carries no 'approval_evidence' block, and that block is where all six required elements live. Nothing else on the record can supply them. The six are enumerated at docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract/required_elements; run `make_review_packets.py --transcribe <ID>` to have the block printed with both digests already resolved",
+     "rule": "production_authorized_rejected",
      "severity": "critical"
     },
     {
