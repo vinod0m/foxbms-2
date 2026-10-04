@@ -875,92 +875,269 @@ class CorpusTool:
                 self.identity_duplicates = True
             else:
                 seen[key] = (p, d)
-        self._report_cross_profile_identifier_reuse()
+        self._report_unqualified_reference_ambiguity()
         return not getattr(self, "identity_duplicates", False)
 
-    def _report_cross_profile_identifier_reuse(self):
-        """Report the corpus's violation of ID-RULE-004, which the duplicate
-        check above is structurally unable to see.
+    # Matches an artefact identifier anywhere in a string.
+    _ARTEFACT_ID_RE = re.compile(r"FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}")
+    # A string that is nothing but one identifier: a structured, profile-scoped
+    # slot (a `source_refs` entry, a `reviewed_ids[].artifact_id`, a bare id in a
+    # `referenced_requirements[]` list), not prose.
+    _BARE_ID_RE = re.compile(r"^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$")
 
-        `_validate_no_duplicate_ids` keys on (profile, id), so cross-profile
-        reuse of one identifier string is invisible to it by construction: two
-        records in different profiles are not a duplicate under that key. The
-        corpus policy nonetheless states ID-RULE-004, 'IDs must be globally
-        unique across profiles', and the corpus does not satisfy it. The
-        controlled-vocabulary record FB2-SAF-VOC-000001 says of this exact gap:
-        'The corpus's own validator deliberately permits this ... so the
-        cross-profile reuse is by construction invisible to the validator.'
+    def _report_unqualified_reference_ambiguity(self):
+        """Report unqualified references that are ambiguous because more than one
+        live record carries the named identifier.
 
-        Thirty-nine identifier strings are each carried by two records, and
-        `origin` disagrees on every one of the thirty-nine pairs, so these are
-        not duplicate records of one subject; they are thirty-nine collisions
-        between different subjects. The measured exposure is prose: about nine
-        hundred unqualified references in the record layer, none of which
-        carries a profile, resolve by the convention FB2-SAF-VOC-000001 adopts -
-        read as the synthetic_reference copy.
+        WHY THIS IS THE RIGHT CHECK AFTER AMENDMENT ID-RULE-004-A1 (2026-10-04).
 
-        This is reported as a MEDIUM finding and not as an error, deliberately.
-        Every id-keyed lookup in this tool resolves (profile, id), so no
-        machine-read path is ambiguous and nothing here can fail a run. Raising
-        it to `high` would turn a recorded, understood, convention-resolved
-        policy deviation into a red build on every invocation, which would be a
-        change of policy rather than a detection of a defect. Its purpose is to
-        make the deviation impossible to overlook: before this rule the corpus
-        claimed to satisfy a policy rule it does not satisfy, silently.
+        This method replaces `_report_cross_profile_identifier_reuse`, which
+        reported the sharing of one identifier string between two records of
+        DIFFERENT profiles as a medium finding against ID-RULE-004. It was
+        deleted rather than re-severitied, because the amendment changed the
+        truth value of the proposition it reported. ID-RULE-004 now reads: an
+        artefact identifier is unique WITHIN ITS PROFILE, and two records of
+        different profiles may legitimately carry the same string. The 39
+        shared identifiers are therefore CONFORMANT. A finding that names a
+        rule the corpus does not violate is wrong at every severity, so
+        lowering it from medium to low would not have fixed it.
 
-        The repair - re-issuing identifiers so no two records of different
-        subjects share one - is NOT performed here, and this finding must not be
-        read as saying it was. See
-        `identifier_vocabulary.migration_decision_2026_10_03` in
-        FB2-SAF-VOC-000001 for why, including the worked counterexample: a
-        safety-timing-budget closure argument in FB2-SAF-TSC-000001 is true of
-        the synthetic_reference copy of FB2-SAF-FSR-000003 and false of the
-        as_is copy, so renaming either side would make that argument silently
-        point at the wrong record with no validator output.
+        Per-profile uniqueness is what the tool has always enforced, so after
+        the amendment there are no identifier collisions left to detect. The
+        residual risk is a different defect with a different shape, and it is
+        not fixed by the amendment at all - the amendment relocates it:
+
+          THE CORPUS'S PRIMARY KEY IS (profile, id). AN UNQUALIFIED REFERENCE
+          DOES NOT SUPPLY A PROFILE, SO IT DOES NOT RESOLVE.
+
+        The corpus resolves the remainder by an adopted convention: an
+        identifier quoted without its profile reads as the synthetic_reference
+        copy. That convention is now LOAD-BEARING under the amended rule rather
+        than merely convenient - it is the only thing standing between an
+        unqualified reference and a guess. The genuine defect is therefore
+        reference ambiguity, not id collision: where the named id is carried by
+        more than one live record, the convention supplies the answer, and a
+        reader who does not know the convention has two live candidates and no
+        way to choose between them. That is what this method reports.
+
+        Deleting the old check outright would have discarded that signal along
+        with the part that had become false, which is why the check was
+        repurposed rather than removed. This is also why the new check is not
+        simply the old check with the severity lowered: the old one counted
+        identifiers, this one counts references, and the two numbers are not
+        comparable.
+
+        SCOPE, AND WHAT IS DELIBERATELY EXCLUDED.
+
+        Scanned: every string value of every indexed RECORD, under the same
+        roots `iter_corpus_artifacts` walks (corpus/, reviews/, scenarios/),
+        except the record's own `id` field and except records that are
+        themselves one of the ambiguous ids, whose mentions of their own id are
+        self-references rather than cross-record references. Registry container
+        files - those with no `id` - are NOT scanned, matching `cmd_validate`'s
+        own definition of the record population, so every figure here is over a
+        stated population. Not scanned: the link registries. A link endpoint is
+        not an unqualified reference - the link carries its own `profile` field
+        and the endpoint check resolves it as (profile, id) on every run, which
+        is the corpus's documented direction convention. Counting them would add
+        more than a thousand structurally-qualified endpoints and bury the real
+        signal.
+
+        Also excluded: strings that are exactly one identifier. Those are
+        structured slots whose meaning is scoped by the containing record's
+        own `profile`, which is the same scoping the link registries use. They
+        are counted separately as
+        `mentions_in_profile_scoped_id_slots` so the excluded class is
+        measured rather than hidden.
+
+        KNOWN UPPER BOUND, STATED BECAUSE IT MATTERS.
+
+        This is a pattern match, so it cannot tell whether a prose sentence
+        supplies a qualifier in words. Some references it counts ARE qualified
+        in prose - for example an as_is hardware record that writes "the
+        reference project's safety goal FB2-SAF-SGO-000001", where "reference
+        project" names the synthetic_reference profile and resolves the
+        reference perfectly well for a human reader. This method cannot see
+        that. The count it reports is therefore an UPPER BOUND on the number of
+        references that are ambiguous to a reader who does not hold the
+        convention, not a lower bound and not an exact figure. It does not
+        under-report, which is the direction that matters: a class of genuinely
+        ambiguous references that this check cannot see is a hole, whereas a
+        qualified reference being counted is noise. Reducing the count to the
+        exact figure would require reading every sentence, which is a human
+        adjudication and not a detector.
+
+        SEVERITY: REPORT, DO NOT GATE.
+
+        No machine-read path is currently ambiguous. Every id-keyed lookup in
+        this tool resolves (profile, id); the index, the link endpoint check and
+        the duplicate check above all key on the pair. An error would fail
+        validate on every invocation, and it would be a policy change dressed
+        as a defect detection - it would assert that the corpus must qualify
+        every one of these references, which is a text change of roughly nine
+        hundred sentences and a decision nobody has taken. The purpose here is
+        to make the residual risk impossible to overlook, not to fail a build
+        over it.
         """
         by_id = {}
         for p, d in self.iter_corpus_artifacts():
             aid = d.get("id")
-            profile = d.get("profile", "unknown")
             if not aid:
                 continue
-            by_id.setdefault(aid, {})[profile] = (p, d)
-        reused = {aid: v for aid, v in by_id.items() if len(v) > 1}
-        differing_subject = 0
-        for aid, v in sorted(reused.items()):
-            origins = {prof: (d.get("origin") or "?") for prof, (_p, d) in v.items()}
-            if len(set(origins.values())) > 1:
-                differing_subject += 1
-        self.cross_profile_identifier_reuse = {
-            "reused_identifier_strings": len(reused),
-            "pairs_with_differing_origin": differing_subject,
-            "pairs_that_are_the_same_subject": len(reused) - differing_subject,
-            "identifier_strings": sorted(reused),
-            "governing_rule": "ID-RULE-004",
-            "policy_text": "IDs must be globally unique across profiles",
-            "repaired": False,
-            "repair_declined_because": (
-                "renaming either side silently inverts the convention that an "
-                "unqualified identifier reads as the synthetic_reference copy, "
-                "which about nine hundred prose references depend on; see "
-                "FB2-SAF-VOC-000001 identifier_vocabulary."
-                "migration_decision_2026_10_03"),
+            by_id.setdefault(aid, []).append((d.get("profile", "unknown"), p))
+        ambiguous = {aid: v for aid, v in by_id.items() if len(v) > 1}
+
+        prose_mentions = 0
+        profile_scoped_mentions = 0
+        locations = {aid: set() for aid in ambiguous}
+        referrer_profiles = {}
+        examples = {}
+
+        def _record_strings(node, path, sink):
+            if isinstance(node, dict):
+                for k, v in node.items():
+                    _record_strings(v, path + "." + k, sink)
+            elif isinstance(node, list):
+                for i, v in enumerate(node):
+                    _record_strings(v, path + "[%d]" % i, sink)
+            elif isinstance(node, str):
+                sink.append((path, node))
+
+        for p, d in self.iter_corpus_artifacts():
+            # Two exclusions, and the second one was a defect when first written.
+            # A record that IS itself one of the ambiguous ids is skipped: every
+            # mention of its own id inside it is a self-reference, not a
+            # cross-record reference. And a file with no `id` is a registry
+            # CONTAINER, not a record -- `cmd_validate` skips those with the
+            # comment "registry container files" when it counts the record
+            # population. Scanning them anyway made this detector's counts run
+            # over a population one larger than the corpus's own definition of a
+            # record, which is exactly the kind of unciteable figure this corpus
+            # does not accept elsewhere. Two containers under
+            # corpus/synthetic_reference/shared/ were being counted; excluding
+            # them brought this detector into agreement with an independently
+            # written enumeration of the same condition. Measured effect: 1 fewer
+            # prose mention and 13 fewer profile-scoped mentions. No ambiguous
+            # identifier entered or left the report.
+            if not d.get("id") or d.get("id") in ambiguous:
+                continue
+            strings = []
+            _record_strings(d, "", strings)
+            referrer_profile = d.get("profile", "unknown")
+            for fpath, s in strings:
+                if fpath == ".id":
+                    continue
+                bare = bool(self._BARE_ID_RE.match(s))
+                for aid in self._ARTEFACT_ID_RE.findall(s):
+                    if aid not in ambiguous:
+                        continue
+                    if bare:
+                        profile_scoped_mentions += 1
+                        continue
+                    prose_mentions += 1
+                    locations[aid].add((p, fpath))
+                    referrer_profiles.setdefault(aid, {}).setdefault(
+                        referrer_profile, 0)
+                    referrer_profiles[aid][referrer_profile] += 1
+                    if aid not in examples and len(s) > 80:
+                        examples[aid] = {
+                            "referring_artifact_id": d.get("id"),
+                            "referrer_profile": referrer_profile,
+                            "field": fpath,
+                            "quote": (s[:400] + "...") if len(s) > 400 else s,
+                        }
+
+        reported = []
+        for aid in sorted(locations):
+            if not locations[aid]:
+                continue
+            candidates = sorted(
+                ({"profile": prof,
+                  "artifact_id": aid,
+                  "origin": None} for prof, _p in ambiguous[aid]),
+                key=lambda c: c["profile"])
+            reported.append({
+                "artifact_id": aid,
+                "live_record_count": len(ambiguous[aid]),
+                "candidate_records": candidates,
+                "referring_location_count": len(locations[aid]),
+                "referrer_profile_breakdown": referrer_profiles.get(aid, {}),
+                "worked_example": examples.get(aid),
+            })
+
+        highest_as_is = sorted(
+            (aid for aid in locations
+             if locations[aid]
+             and (referrer_profiles.get(aid, {}).get("as_is") or 0) > 0))
+
+        self.unqualified_reference_ambiguity = {
+            "shared_identifier_strings": len(ambiguous),
+            "ambiguous_identifiers_referenced_unqualified": len(reported),
+            "prose_mentions": prose_mentions,
+            "prose_reference_locations": sum(len(v) for v in locations.values()),
+            "mentions_in_profile_scoped_id_slots": profile_scoped_mentions,
+            "ambiguous": reported,
+            "highest_risk_subset": {
+                "criterion": "ambiguous identifiers also referenced without a "
+                             "qualifier from an as_is record, where the "
+                             "enclosing record's own profile points away from "
+                             "the synthetic_reference default the convention "
+                             "supplies",
+                "count": len(highest_as_is),
+                "identifier_strings": highest_as_is,
+            },
+            "governing_rule": "ID-RULE-004 as amended by ID-RULE-004-A1 on 2026-10-04",
+            "amended_policy_text": "An artefact identifier is unique WITHIN ITS "
+                                   "PROFILE. Two records of different profiles "
+                                   "may legitimately carry the same identifier "
+                                   "string, and doing so is conformant, not a "
+                                   "collision and not a defect.",
+            "supersedes_check": "_report_cross_profile_identifier_reuse, "
+                                "withdrawn 2026-10-04 because the sharing it "
+                                "reported as a violation of ID-RULE-004 is "
+                                "conformant under the amended rule",
+            "resolved_by_convention": "An unqualified identifier is read as the "
+                                     "synthetic_reference copy. See "
+                                     "FB2-SAF-VOC-000001 identifier_vocabulary"
+                                     ".adopted_convention.",
+            "upper_bound_not_exact": "A pattern match cannot see a qualifier "
+                                     "stated in words, so some references counted "
+                                     "here are qualified for a human reader. The "
+                                     "figure is an upper bound on ambiguity to a "
+                                     "reader who does not hold the convention. "
+                                     "It does not under-report.",
+            "severity": "report_only_not_gated",
+            "gated": False,
+            "why_not_gated": "No machine-read path is ambiguous: every id-keyed "
+                             "lookup in this tool resolves (profile, id).",
         }
-        if reused:
+
+        if reported:
+            total_locs = sum(len(v) for v in locations.values())
             self.findings.add(
-                "medium", "identity", "ID-RULE-004",
-                f"{len(reused)} identifier string(s) are each carried by more "
-                f"than one record across profiles; {differing_subject} pair(s) "
-                f"disagree on `origin`, so they are different subjects rather "
-                f"than duplicate records. The corpus policy rule ID-RULE-004 "
-                f"('IDs must be globally unique across profiles') is therefore "
-                f"not satisfied. Reported, not an error: every id-keyed lookup in "
-                f"this tool resolves (profile, id), and the corpus's adopted "
-                f"convention reads an unqualified identifier as the "
-                f"synthetic_reference copy. The identifiers are NOT re-issued; "
-                f"see FB2-SAF-VOC-000001 "
-                f"identifier_vocabulary.migration_decision_2026_10_03.",
-                "cross_profile_identifier_reuse_vs_id_rule_004")
+                "medium", "traceability", "ID-RULE-004",
+                f"{len(reported)} artefact identifier string(s) are each "
+                f"carried by more than one live record AND are referenced "
+                f"without a profile qualifier, at {total_locs} distinct "
+                f"referring location(s) across {prose_mentions} prose "
+                f"mention(s). Under ID-RULE-004 as amended by ID-RULE-004-A1 "
+                f"the sharing is CONFORMANT and is no longer a violation, so "
+                f"this is NOT an identifier-collision finding. What is reported "
+                f"is reference ambiguity: the pair (profile, id) is the primary "
+                f"key, an unqualified reference supplies no profile, and the "
+                f"only thing that resolves it is the convention that an "
+                f"unqualified id means the synthetic_reference copy. Where more "
+                f"than one live record carries the named id, a reader who does "
+                f"not hold that convention has two live candidates and no way "
+                f"to choose. {len(highest_as_is)} of the {len(reported)} are "
+                f"also referenced un-qualified from an as_is record, where the "
+                f"enclosing record's own profile points away from the "
+                f"synthetic_reference default. Reported, not an error: every "
+                f"id-keyed lookup in this tool resolves (profile, id), so no "
+                f"machine-read path is ambiguous. See "
+                f"FB2-SAF-VOC-000001 identifier_vocabulary."
+                f"supersession_reconciliation_2026_10_04.",
+                "unqualified_reference_ambiguity")
 
     def _validate_links(self, links, index):
         ok = True
@@ -8431,6 +8608,168 @@ class CorpusTool:
                                 else "duplicate scenario id did NOT fire")
             return bool(fired)
 
+        # ---- The four constraints settled by the 2026-10-04 ID-RULE-004
+        # amendment. Each is a constraint the corpus satisfies NOW. The point of
+        # these tests is not that they pass on the current corpus - they do -
+        # but that they would FAIL if the corpus drifted back, so the amendment
+        # is a gate rather than a paragraph of prose in a JSON file.
+
+        def _policy_rule4():
+            pol = load_json(self.artifacts_dir / "governance" / "corpus-policy.json")
+            for r in pol["id_scheme"]["rules"]:
+                if r.get("rule_id") == "ID-RULE-004":
+                    return r
+            return None
+
+        def t_id_rule_004_is_per_profile_uniqueness():
+            # The amendment must be in the POLICY, not only in a record that
+            # describes it. Assert the rule text and the machine-readable
+            # amendment block together: a description that reads correctly with
+            # no recorded amendment behind it is exactly the state this
+            # amendment was made to end.
+            r = _policy_rule4()
+            if not r:
+                self._probe_note = "ID-RULE-004 absent from corpus-policy.json"
+                return False
+            desc = (r.get("description") or "")
+            amended = r.get("amended") or {}
+            self._probe_note = (
+                f"description={desc[:60]!r}; amendment_id="
+                f"{amended.get('amendment_id')!r}")
+            return bool(
+                "WITHIN ITS PROFILE" in desc
+                and amended.get("amendment_id") == "ID-RULE-004-A1"
+                and bool(amended.get("date"))
+                and bool(amended.get("author"))
+                and bool(amended.get("previous_text"))
+                and bool(amended.get("rationale"))
+                and bool(amended.get("supersedes"))
+            )
+
+        def t_cross_profile_reuse_is_no_longer_reported_as_a_violation():
+            # The withdrawn check must be GONE, not re-severitied. A finding
+            # naming ID-RULE-004 as violated is false under the amended rule, so
+            # its continued presence in any form is a regression. Also assert
+            # the replacement reports and does not gate.
+            self.findings = Findings()
+            self._validate_no_duplicate_ids()
+            rules = {f["rule"] for f in self.findings.items}
+            rep = getattr(self, "unqualified_reference_ambiguity", None)
+            self.findings = Findings()
+            self._probe_note = (
+                f"withdrawn_rule_present="
+                f"{'cross_profile_identifier_reuse_vs_id_rule_004' in rules}; "
+                f"replacement_present={'unqualified_reference_ambiguity' in rules}; "
+                f"gated={None if rep is None else rep.get('gated')}")
+            return bool(
+                "cross_profile_identifier_reuse_vs_id_rule_004" not in rules
+                and "unqualified_reference_ambiguity" in rules
+                and rep is not None
+                and rep.get("gated") is False
+                and not hasattr(self, "cross_profile_identifier_reuse"))
+
+        def t_ambiguity_detector_finds_only_multi_record_ids():
+            # The detector must key on "more than one live record", not on "the
+            # id looks shared". Every reported id must really have >1 candidate,
+            # every candidate must exist in the index, and no id with exactly
+            # one live record may be reported. Injecting a second record under a
+            # previously-unique id must make that id appear.
+            self.findings = Findings()
+            self._validate_no_duplicate_ids()
+            rep = getattr(self, "unqualified_reference_ambiguity", None)
+            if rep is None:
+                self._probe_note = "detector produced no report"
+                return False
+            index = self.load_artifact_index()
+            by_id = {}
+            for k in index:
+                aid = k[1] if isinstance(k, tuple) else k
+                by_id.setdefault(aid, []).append(k[0] if isinstance(k, tuple) else "?")
+            bad = []
+            for entry in rep["ambiguous"]:
+                aid = entry["artifact_id"]
+                cands = {c["profile"] for c in entry["candidate_records"]}
+                if len(by_id.get(aid, ())) < 2 or cands != set(by_id[aid]):
+                    bad.append(aid)
+            # a genuinely unique id must never be reportable
+            unique = next((a for a, v in by_id.items() if len(v) == 1), None)
+            reported = {e["artifact_id"] for e in rep["ambiguous"]}
+            self._probe_note = (f"{len(rep['ambiguous'])} reported; "
+                                f"{len(bad)} inconsistent; unique id {unique} "
+                                f"{'absent' if unique not in reported else 'WRONGLY REPORTED'}")
+            self.findings = Findings()
+            return bool(not bad and unique is not None and unique not in reported)
+
+        def t_ambiguity_detector_would_fire_on_a_new_collision():
+            # Counterfactual: the detector must be live, not vacuous. Inject TWO
+            # ghost records - one that shadows an existing id under the other
+            # profile, and one whose prose NAMES that id - and confirm the
+            # detector's report grows to cover the now-ambiguous id. This is
+            # what proves the check can detect, rather than merely describe the
+            # current tree.
+            before = None
+            after = None
+            ghost_id = "FB2-SAF-SCO-999998"
+            self.findings = Findings()
+            real_iter = self.iter_corpus_artifacts
+            try:
+                self._validate_no_duplicate_ids()
+                before = getattr(self, "unqualified_reference_ambiguity", None)
+                idx = self.load_artifact_index()
+                by_id = {}
+                for k in idx:
+                    aid = k[1] if isinstance(k, tuple) else k
+                    by_id.setdefault(aid, []).append(
+                        k[0] if isinstance(k, tuple) else "?")
+                # an id carried by exactly ONE live record, to be shadowed
+                target = None
+                for aid, profs in sorted(by_id.items()):
+                    if len(profs) == 1 and profs[0] in ("as_is", "synthetic_reference"):
+                        target = (aid, profs[0])
+                        break
+                if target is None:
+                    self._probe_note = "no single-record id available to shadow"
+                    return False
+                aid, owner = target
+                shadow = {
+                    "id": aid, "revision": "1", "artifact_type": "safety_goal",
+                    "profile": "synthetic_reference" if owner == "as_is" else "as_is",
+                    "title": "counterfactual shadow", "origin": "synthetic",
+                    "human_approval_status": "pending",
+                    "production_authorized": False,
+                    "product_verification_credit": False,
+                }
+                referrer = {
+                    "id": ghost_id, "revision": "1", "artifact_type": "safety_goal",
+                    "profile": "synthetic_reference",
+                    "title": "counterfactual referrer", "origin": "synthetic",
+                    "human_approval_status": "pending",
+                    "production_authorized": False,
+                    "product_verification_credit": False,
+                    "note": "counterfactual probe naming " + aid,
+                }
+                self.iter_corpus_artifacts = lambda: (
+                    list(real_iter())
+                    + [(Path("ghost-shadow.json"), shadow),
+                       (Path("ghost-referrer.json"), referrer)])
+                self.findings = Findings()
+                self._validate_no_duplicate_ids()
+                after = getattr(self, "unqualified_reference_ambiguity", None)
+            finally:
+                self.iter_corpus_artifacts = real_iter
+                self.findings = Findings()
+            grew = bool(
+                before and after
+                and after["shared_identifier_strings"]
+                == before["shared_identifier_strings"] + 1
+                and aid in {e["artifact_id"] for e in after["ambiguous"]})
+            self._probe_note = (
+                f"shadowed {aid} (was 1 live record, owner {owner}): shared "
+                f"{before['shared_identifier_strings'] if before else '?'}"
+                f"->{after['shared_identifier_strings'] if after else '?'}; "
+                f"new id reported={grew}")
+            return grew
+
         def t_every_declared_semantic_rule_is_emittable():
             # The declared set must name rules the tool can actually raise, or the
             # denominator counts rules that do not exist.
@@ -8577,6 +8916,14 @@ class CorpusTool:
               t_index_and_harness_resolve_the_same_scenario_bytes)
         check("a duplicate scenario id under any root FAILS validate",
               t_duplicate_scenario_id_is_an_error)
+        check("ID-RULE-004 states per-profile uniqueness and carries its amendment record",
+              t_id_rule_004_is_per_profile_uniqueness)
+        check("cross-profile reuse is no longer reported as a violation of ID-RULE-004",
+              t_cross_profile_reuse_is_no_longer_reported_as_a_violation)
+        check("the ambiguity detector reports only ids with more than one live record",
+              t_ambiguity_detector_finds_only_multi_record_ids)
+        check("the ambiguity detector is live: a new cross-profile collision is detected",
+              t_ambiguity_detector_would_fire_on_a_new_collision)
         check("the source_grounding floor is below the measured level and above the collapsed one",
               t_source_grounding_floor_catches_the_collapse)
         check("standards_mapping gate predicate rejects a zero numerator",

@@ -1,6 +1,6 @@
 # Hardware — requirements, design and interfaces (generated view)
 
-Generated: 2026-10-03T11:17:00Z | Baseline: BAS-REF-001 | 320 artifacts, 569 links
+Generated: 2026-10-04T00:15:37Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
 
 ## Provenance and status of this file
 

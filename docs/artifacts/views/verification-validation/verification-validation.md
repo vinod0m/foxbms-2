@@ -1,6 +1,6 @@
 # Verification and validation — measures, executions, evidence (generated view)
 
-Generated: 2026-10-03T11:17:01Z | Baseline: BAS-REF-001 | 320 artifacts, 569 links
+Generated: 2026-10-04T00:15:37Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
 
 ## Provenance and status of this file
 

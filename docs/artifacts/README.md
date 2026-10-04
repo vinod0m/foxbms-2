@@ -52,22 +52,22 @@ because three different populations are legitimately in play.
 | Measure | Value | Counts which population |
 |---|---|---|
 | Acceptance suite | **PASSED** — 8 stages, 10 gate lines, 0 FAIL | — |
-| Schema-validated artifact files | **318** | population **A** — `validate`: every record carrying an `id`. `scenarios/` is walked, so this now equals population **B**; it did not before 2026-10-03. |
-| Unique `(profile, id)` records | **318** | population **B** — the tool's `load_artifact_index` |
-| Distinct artifact IDs across both profiles | **279** | population **C** — the `automated_review_coverage` denominator. 318 records carry 279 distinct ids: **39 ids appear in both profiles**. Those 39 pairs are different subjects (`origin` disagrees on every pair) and are the target of an id migration recorded in `coverage-plan.json` corrections. |
-| Traceability links | **553, 0 dangling** | de-duplicated by `(profile, link_id)` |
-| Validator findings / errors | **5 / 0** | findings are provenance observations plus one policy report, all `medium`, none is an error. The fifth is new as of 2026-10-03: `cross_profile_identifier_reuse_vs_id_rule_004` reports that 39 identifier strings are each carried by two records in different profiles, which ID-RULE-004 forbids. It is reported rather than raised to an error because every id-keyed lookup resolves `(profile, id)`; see ITEM 2 below. |
+| Schema-validated artifact files | **321** | population **A** — `validate`: every record carrying an `id`. `scenarios/` is walked, so this now equals population **B**; it did not before 2026-10-03. |
+| Unique `(profile, id)` records | **321** | population **B** — the tool's `load_artifact_index` |
+| Distinct artifact IDs across both profiles | **282** | population **C** — the `automated_review_coverage` denominator. 321 records carry 282 distinct ids: **39 ids appear in both profiles**. Those 39 pairs are different subjects (`origin` disagrees on every pair). Since amendment **ID-RULE-004-A1** (2026-10-04) an identifier is unique **within its profile**, so all 39 are **conformant**: no rename is required or permitted. See ITEM 2 below. |
+| Traceability links | **585, 0 dangling** | de-duplicated by `(profile, link_id)` |
+| Validator findings / errors | **5 / 0** | findings are provenance observations plus one ambiguity report, all `medium`, none is an error. `unqualified_reference_ambiguity` is the fifth: it reports artefact identifiers that are each carried by more than one live record **and** are referenced in prose without a profile qualifier. It is **not** an identifier-collision finding — under ID-RULE-004 as amended on 2026-10-04 the sharing is conformant. It is reported rather than raised to an error because every id-keyed lookup resolves `(profile, id)`, so no machine-read path is ambiguous; see ITEM 2 below. |
 | Finding artifacts recorded | **42** | population **B**, `artifact_type: finding` |
 | Coverage dimensions | 15 | — |
 | Mutation scenarios | **20 / 20** detected | executed, each by the rule it declares |
 | Change lifecycles | **3 / 3** content-validated | 19/19 required checks each |
-| Toolchain self-tests | **91 PASS, 0 FAIL** | — |
+| Toolchain self-tests | **95 PASS, 0 FAIL** | — |
 | Source inventory | 612/612 files, 24 modules, 22 features, 23 variants | `src/**/*.c` and `*.h` |
-| Export | **318 nodes, 553 edges**, 3 content hashes | population **B** and the link registry |
-| Review records / unique IDs covered | **15 / 144 of 279 (52%)** | population **C** denominator |
+| Export | **321 nodes, 585 edges**, 3 content hashes | population **B** and the link registry |
+| Review records / unique IDs covered | **18 / 172 of 282 (61%)** | population **C** denominator. `reviewed_by_attribution_agrees_per_review` is **true**: every review's `reviewed_ids` set equals the set its own `reviewed_by` links name. |
 | Target-hardware executions | **0 / 33** | 33 test measures; 44 execution records exist, none on target hardware |
-| Human approval | **0 / 318** — all pending | population **B** |
-| Production authorization | **0 / 318** — all false | population **B** |
+| Human approval | **0 / 321** — all pending | population **B** |
+| Production authorization | **0 / 321** — all false | population **B** |
 
 ### Records by type and domain — population **B** (318 unique `(profile, id)` records)
 
@@ -332,6 +332,54 @@ FB2-<DOMAIN>-<TYPE>-<NNNNNN>
 
 **Rules:** never renumber established IDs; exact revisions on baseline-controlled
 links; supersession/deletion/tombstones defined in schemas.
+
+### ID-RULE-004 — uniqueness is per profile (amended 2026-10-04)
+
+**ID-RULE-004-A1.** An artefact identifier is unique **WITHIN ITS PROFILE**. Two
+records of different profiles may legitimately carry the same identifier string,
+and doing so is **conformant, not a collision and not a defect**.
+
+| | |
+|---|---|
+| **Supersedes** | the corpus-wide-uniqueness reading of ID-RULE-004 as previously written ("IDs must be globally unique across profiles"), in its entirety |
+| **Does not supersede** | ID-RULE-001, ID-RULE-002, ID-RULE-003 — all unchanged |
+| **ID-RULE-003 invoked?** | **No.** No supersession, deletion or migration is performed, so that instrument is not the one in play |
+| **The 39 shared ids** | **No rename is required, and none is permitted.** They are conformant. No string is carried by two records of the *same* profile — that is the condition the duplicate check reports as an error, and it has never fired |
+| **Why this route** | Route (b) of the two `FB2-SAF-VOC-000001` put forward. The tool has always enforced per-profile uniqueness, so the corpus was previously in permanent declared non-conformance with its own policy. Route (a) — migrating under ID-RULE-003 — was measured and declined: renaming would make ~900 unqualified prose references *confidently wrong* with no validator able to detect it |
+
+**The corpus's primary key is `(profile, id)`.** An unqualified reference does
+not supply a profile, so it does not resolve. The corpus resolves the remainder
+by an adopted convention — *an unqualified id reads as the `synthetic_reference`
+copy* — which is now **load-bearing** under this rule.
+
+**The residual risk, which the amendment relocates rather than removes:** where
+the named id is carried by more than one live record, the convention supplies the
+answer and a reader who does not hold it has two live candidates and no way to
+choose. `corpus.py` reports exactly this, under rule
+`unqualified_reference_ambiguity`: 39 shared strings, **34** referenced
+unqualified, **610** prose mentions across **527** referring locations, plus 785
+mentions in profile-scoped id slots (excluded by design, counted separately). All
+four figures are over **records**; every one was independently reproduced by a
+from-scratch enumeration that does not import `corpus.py`.
+**23** of the 34 are also referenced unqualified from an `as_is` record, where the
+enclosing record's own profile points away from the `synthetic_reference` default.
+
+That figure is an **upper bound, not an exact count**: a pattern match cannot see
+a qualifier stated in words, so some counted references are qualified for a human
+reader. It does not under-report — a qualified reference being counted is noise,
+whereas a missed ambiguous reference would be a hole. Severity is **report-only,
+not gated**: every id-keyed lookup resolves `(profile, id)`, so no machine-read
+path is ambiguous.
+
+**Reconciliation.** `FB2-SAF-VOC-000001` said "Do not renumber … so a rename is
+not available as a repair" (citing ID-RULE-001) while `CORR-COV-021` treated
+ID-RULE-003 as the sanctioned instrument. Both asserted the corpus was
+non-conformant; they disagreed about whether a repair existed, and neither was
+subordinate to the policy. **The amended rule now governs**, and the two documents
+agree. The ID-RULE-001 reasoning is *withdrawn as reasoning* — it was never the
+bar — while the conclusion survives as a settled state rather than a deferral.
+Recorded in full at `FB2-SAF-VOC-000001`
+`identifier_vocabulary.supersession_reconciliation_2026_10_04`.
 
 ---
 
@@ -724,6 +772,11 @@ agent handover.
 | **`render_e2e_html.py --check` fails on 14 records** | medium | **open, tool-side.** Every `artifact_type: implementation` record (10 `as_is`, 4 `synthetic_reference`) has no owning section in the renderer, so its integrity check exits 1 with `UNMAPPED artifact type … has no owning section`. The HTML deliverable itself is regenerated, tracked (the path-specific negation in `docs/artifacts/.gitignore` works: `git check-ignore` returns 1) and passes `--audit-guard` with no affirmative conformity claim. The fix is an owning section in `render_e2e_html.py`, which is outside the write boundary of this workstream. |
 | **326 of 547 links carry a stale endpoint revision and none is marked suspect** | medium | **open.** `SUP.11` demoted to `partially_mapped` for it. |
 | **53 of the 245 green tests in the SIL host run assert nothing** | high | **recorded** — `FB2-REV-FND-000042`, against the SIL run rather than hidden by it |
+| **`FB2-SW-IFS-000007` records the `FAS_DisableInterrupts` implementation at `fassert.h:112`, which is a doc-comment line; the pragma is at 116 and the declaration at 117** | medium | **open, not repaired.** `FB2-REV-FND-000193`, raised 2026-10-04. 1 wrong structured line reference out of 61 across the 16 interface specifications; the other 60 are exact. Four prose references in the same record carry the same wrong line. Repairing it is the record owner's edit, not a reviewer's. |
+| **Same record asserts the pragma is both "on the line above" the declaration at 117 and "at L112"** | low | **open.** `FB2-REV-FND-000194`. An absolute and a relative claim for one construct, the absolute one wrong; correcting the number alone does not resolve the contradiction. |
+| **`FB2-SW-IFS-000007` grounds its assembler-boundary claim in a doc comment naming a path that does not exist at the pinned commit** | low | **open, referred.** `FB2-REV-FND-000195`. The comment names `src\os\freertos\portable\ccs\arm_cortex-r5\portasm.asm`; the real file at `308028fb` is `src/os/freertos/freertos/portable/ccs/…` (extra `freertos` segment), and the routine *is* locatable there at line 313. The record makes no false statement, so there is nothing to correct — what is missing is the recorded discrepancy. |
+| **`FB2-SW-IFS-000011` names the shared id `FB2-SW-DSN-000002` without a profile qualifier** | low | **accepted, conformant.** `FB2-REV-FND-000196`. Not a violation under the amended rule; the only one of the 16 that exhibits reference ambiguity. Reported by `unqualified_reference_ambiguity`, not gated. |
+| **10 `reviewed_by` links attributed to the wrong review** | medium | **closed 2026-10-04.** `reviewed_by_attribution_agrees_per_review` was **false**: 10 links ran from `FB2-REV-000013`, which does not claim those artefacts, while `FB2-REV-000015` claimed them in `reviewed_ids`. The corpus-wide union was equal, so the weaker field never saw it. Source endpoints corrected, previous source and rationale preserved on each link. Now **true**. |
 | `feature-inventory.json` `summary.total_features` says 20, holds 22 | low | accepted, reported; the tool counts records and reports 22 |
 | FSRs carry no `fault_reaction` field | medium | findings open; schema change needed |
 | Security requirements have no verification link in either direction | high | `FB2-REV-FND-000041`, open; the measures now exist but the executions are blocked |

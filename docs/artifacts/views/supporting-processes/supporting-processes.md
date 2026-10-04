@@ -1,6 +1,6 @@
 # Supporting processes (generated view)
 
-Generated: 2026-10-03T11:17:01Z | Baseline: BAS-REF-001 | 320 artifacts, 569 links
+Generated: 2026-10-04T00:15:37Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
 
 ## Provenance and status of this file
 
@@ -75,13 +75,14 @@ The corpus also contains review records that exercise these process families in 
 | `FB2-REV-000015` | synthetic_reference | domain | verification | Review: the five security verification measures, their blocked executions and the two findings raised against… | draft | profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-REV-000016` | as_is | domain | verification | Review: the four uncovered as_is execution records - timing fields against retained evidence, evidence hash f… | draft | profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 | `FB2-REV-000017` | synthetic_reference | domain | verification | Review: the twelve uncovered synthetic_reference execution records - fabricated run windows, unretained synth… | draft | profile=`synthetic_reference` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
+| `FB2-REV-000018` | synthetic_reference | domain | software | Review: the sixteen software interface specifications, their source fidelity at the pinned commit and the hon… | draft | profile=`synthetic_reference` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false` |
 
 ### Review finding counts by severity
 
 | Profile | critical | high | medium | low | Total |
 |---|---|---|---|---|---|
 | as_is | 0 | 1 | 10 | 3 | 18 |
-| synthetic_reference | 0 | 7 | 17 | 6 | 36 |
+| synthetic_reference | 0 | 7 | 18 | 9 | 40 |
 
 **These are automated AI-assisted review findings. They are not human review findings and none of them constitutes approval.**
 

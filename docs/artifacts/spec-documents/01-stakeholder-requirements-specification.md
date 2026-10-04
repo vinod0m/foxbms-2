@@ -9,7 +9,7 @@
 | Baseline | BAS-REF-001 (commit `308028fb`, tag `v1.11.0`) |
 | Profiles | `as_is` (source-grounded) + `synthetic_reference` (hypothetical) |
 | Corpus status | `synthetic_ready_with_limitations` |
-| Generated | 2026-10-03T11:20:05Z |
+| Generated | 2026-10-04T00:17:01Z |
 
 ## Scope
 
@@ -383,4 +383,4 @@ Every stakeholder need above carries `is_a_real_elicitation: false`. No workshop
 
 ---
 
-*Generated: 2026-10-03T11:20:05Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
+*Generated: 2026-10-04T00:17:01Z — auto-generated from the machine-verifiable corpus. Regenerate with `python3 docs/artifacts/tools/render_spec_documents.py`.*
