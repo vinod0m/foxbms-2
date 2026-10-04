@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "review",
+  "id": "FB2-REV-000019",
+  "profile": "as_is",
+  "title": "Review: the uncovered implementation group, as_is profile (10 of 14 records, 81 code locations, 84 behaviours re-derived)",
+  "created_at": "2026-10-04T00:00:00Z",
+  "updated_at": "2026-10-04T00:00:00Z",
+  "owner_role": "verification_engineer",
+  "origin": "derived",
+  "revision": "1",
+  "revision_history": [
+    {
+      "revision": "1",
+      "date": "2026-10-04T00:00:00Z",
+      "author": "verification_engineer",
+      "description": "Initial revision. Reviews the previously uncovered implementation records in the as_is profile only, split by profile from its sibling review because four of the identifiers are carried by two records each and a profile-scoped review cannot cover both copies under one id. Records real findings including one location whose stated verification did not hold; changes no implementation record and revises no engineering content. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
+    }
+  ],
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Reviewed and deliberately NOT resolved. The three findings are dispositions for the implementation owner, not edits made here: this review's write scope is review records and links, and amending a code_location in an implementation record would change that record's content digest and invalidate every review digest that covers it.",
+  "scenario_id": "SCN-BASELINE",
+  "baseline_id": "BAS-REF-001",
+  "engineering_domain": "verification",
+  "review_type": "adversarial",
+  "checklist_version": "CHKL-IMPL-PROV-1.0.0",
+  "scope": "TARGETED SCOPE, AND THE TARGETING IS THE FINDING. The scope is the UNCOVERED IMPLEMENTATION GROUP and nothing else: every implementation record in the corpus that automated_review_coverage did not already cover. That is 10 identifiers in as_is and 4 identifiers in synthetic_reference, over 14 (profile, id) records. PROFILE-SCOPED, DELIBERATELY: under ID-RULE-004-A1 the pair (profile, id) is the key, and four identifiers (FB2-SW-IMP-000001, -000002, -000003, -000004) are carried by two records each. A review record carries one profile, so a single review cannot name both copies of one identifier without either duplicating an id into a profile it does not belong to, or asserting that one copy's content speaks for the other. Per FB2-REV-FND-000046 a profile-scoped review cannot cover both profiles' records under a shared id, so this group is split into two review records, one per profile. Coverage of the OTHER 96 uncovered identifiers (35 finding, 18 scenario, 18 review and the remaining implementation-related records, plus one-off families) is NOT claimed here and is named in limitations.",
+  "reviewer_identity": {
+    "role": "verification_engineer",
+    "session_id": "opencode-2026-10-04-item4-implementation-group-review",
+    "model": "openrouter/stealth/space-bunny-alpha",
+    "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. This is an AUTOMATED REVIEW: it is NOT organizational independence, NOT human confirmation and NOT a qualified-checker result. No human reviewer, no independent party and no separate agent session participated. Consistent with corpus-policy.json#/review_policy/ai_review_limitations, a distinct agent session would not have been independence either."
+  },
+  "reviewed_ids": [
+    {
+      "artifact_id": "FB2-SW-IMP-000001",
+      "revision": "1",
+      "digest": "02b5498fabd1fdf5ff7b74cb5d67b47da3395006a3a34cca5e550ac972f19885"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000009",
+      "revision": "1",
+      "digest": "cde4684e8aff353a7fb6919344a267fbd28d655bbe7a198af2812e797887e345"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000010",
+      "revision": "1",
+      "digest": "093c3d2046cb31c67573bdc331e20d59449aeab8cd90fddcc840cf309d50a1bb"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000004",
+      "revision": "1",
+      "digest": "c568252c49bba445b2acf320f2474df19696924e627b3a7b43d31dd3d94700cc"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000003",
+      "revision": "1",
+      "digest": "4ea7727998b7937d90388e2187813feb386aa54c79bd55657fd7bd90be667293"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000006",
+      "revision": "1",
+      "digest": "2b30b02c674bbe3ddc220975970a108a91c19eb6e9f56072690deef7264874fa"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000005",
+      "revision": "1",
+      "digest": "d367163054e709553c69a83b655f424a03fc47f6f63744332ca20db1cb3ab05c"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000007",
+      "revision": "1",
+      "digest": "39e543687018de283c1ae494f0cfefdf3dcaf5e2bf2fc5cda0c32b141e0ea3d6"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000002",
+      "revision": "1",
+      "digest": "a64ecfd63c8d7deef03e6cfbe6d3196d99a6b0557c7744db8fbb500b741860a6"
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000008",
+      "revision": "1",
+      "digest": "03ff488a43bfba7cf07d0ffe518771b513f241daef06341dc7e69b7799e1792d"
+    }
+  ],
+  "review_method": "The records were READ, not sampled, and the two claims that are machine-checkable were re-derived rather than accepted. (1) Every one of the 81 code_locations across the 14 records was checked against the PINNED source with 'git show 308028fb:<path>': file existence, the recorded content_hash recomputed from that pinned blob, the recorded line_range for in-bounds-ness, and whether the recorded symbol occurs inside that range. (2) Every absence claim the four synthetic records make was re-tested by searching the named file at the pinned commit for the tokens they say return nothing. (3) Every one of the 84 behaviours was resolved by hand to a file and a line range at the pinned commit, because no automated control in the suite verifies behaviour evidence. (4) The configuration claim FB2-SAF-FSR-000002 (as_is) rests on was checked against src/app/engine/config/diag_cfg.c at the pin. (5) requirement_gap_reason's intended meaning was established by reading how the records that carry it use it, BEFORE reporting anything about the seven that do not.",
+  "findings": [
+    {
+      "finding_id": "FB2-REV-FND-000171",
+      "artifact_id": "FB2-SW-IMP-000006",
+      "severity": "low",
+      "category": "provenance",
+      "description": "Two fields on the as_is EMAC driver record over-claim, and both concern its fifth code_location. The location itself is NOT a defect and this review says so first: evidence_status.limitations[0] already discloses that EMAC_InitializeHardware's range 234-239 is 'the destination-address match configuration inside that function's body', that it duplicates the range anchor FB2-SRC-COD-000078 records, and that the anchor's own spelling 'EMAC_Initialize' names no symbol that exists in emac.c. That disclosure is accurate and I confirmed it against the pinned file. What is NOT accurate is everything around it. (1) code_locations[4] carries symbol_role 'definition' while the record's own limitation says the range is a block INSIDE the function body; the definition is at line 217 and is already listed as code_locations[0]. The field states something the same record contradicts one screen away. (2) evidence_status.method states 'Each named symbol was confirmed to occur inside its recorded line_range at the pin'. For this one location that check FAILS - EMAC_InitializeHardware does not occur anywhere in lines 234-239 - and the method sentence is not qualified by the limitation that follows it, so the method and the limitation disagree about whether the check was done. (3) The location is marked verified_against_pinned_source: true, which is true of three of the four checks the flag stands for (file exists, content_hash correct, range in bounds - all three independently re-derived and all three hold) and false of the fourth. A reader who audits provenance by reading the method and then trusting the flag would be told a check passed that the method, run, would have failed. NOT CLAIMED: no engineering content is wrong, no symbol is attributed to the wrong file, no hash is wrong, no anchor is wrong, and no safety-relevant statement depends on any of it. Two defects, both in the provenance bookkeeping of one record, and both of the 'reads stronger than it is' kind rather than the 'is false' kind.",
+      "evidence": "src/app/driver/emac/emac.c read with 'git show 308028fb13d046ba29b98886895c2e17937b1437:src/app/driver/emac/emac.c'. Line 217 is 'extern EMAC_RETURN_TYPE_e EMAC_InitializeHardware(uint8_t const *pEmacAddress) {'; lines 234-239 are the MAC-address configuration block inside it and contain no occurrence of the symbol. The record's code_locations[4] is {path: src/app/driver/emac/emac.c, symbol: EMAC_InitializeHardware, line_range: 234-239, symbol_role: definition, verified_against_pinned_source: true}. Independently recomputed: the file's sha256 at the pin equals the recorded content_hash and the file is 699 lines, so three of the four checks hold; the symbol-in-range check does not. The record's own evidence_status.limitations[0] discloses the range and the anchor duplication; the symbol_role field and the method sentence are not reconciled with it. Across the whole group, 80 of the other 81 code_locations do satisfy the symbol-in-range check. This review changed nothing."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000172",
+      "artifact_id": "FB2-SW-IMP-000001",
+      "severity": "medium",
+      "category": "provenance",
+      "description": "Behaviour evidence across this whole group is not self-attributing and is not covered by any automated control. All 14 implementation records and all 84 of their behaviours cite an evidence_symbol and an evidence_line_range and NO FILE. A behaviour is therefore not resolvable from its own record: 'I2C_ReadDma at 445-460' does not say which file, and I2C_ReadDma appears in the record's own code_locations only with the range 415-508, so the two numbers disagree about what is being cited. 17 of the 84 cite a range that is a strict sub-range of, or unrelated to, any code_location in the same record, which is the ordinary case for a behaviour pointing at a block inside a function the record locates as a whole. THE CONSEQUENCE, and it is a coverage-of-control gap rather than a claim that the pointers are wrong: the suite's provenance checker verifies source anchors and code_locations and does not read behaviours[] at all, so the behaviour layer of every implementation record is UNVERIFIED provenance by machine. This review resolved all 84 by hand against the pinned commit, and 84 of 84 resolved to code that matches the behaviour's description - so the pointers are accurate as far as this review could determine. That is a statement about this review's work, not a property the corpus asserts. Worked instance of the ambiguity: FB2-IMP-PUBLISH on the as_is AFE record names DATA_WRITE_DATA at line 653; the record's natural home for that symbol is src/app/driver/afe/ltc/api/ltc_afe.c, which is 162 lines and contains no DATA_WRITE_DATA at all, while the real location is src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:653. A reader who assumed the wrong file would conclude the pointer was wrong.",
+      "evidence": "Parsed the behaviours array of all 14 records named in reviewed_ids. Key set of every behaviour is exactly {behaviour_id, description, evidence_line_range, evidence_symbol, kind} - no file, path or anchor field. Counted 84 behaviours; 17 cite a range that is not equal to any code_locations line_range in the same record. Resolved each by hand against 'git show 308028fb:<path>' over the six files the AFE record names: i2c.c 445-460 is the OS_EnterTaskCritical / FSYS_RaisePrivilege / dmaRAMREG PCP IDADDR-ITCOUNT block that I2C-IMP-DMA-RECV describes; i2c.c 427-432 is the I2C_BUSBUSY gate and MDR clear that I2C-IMP-BUS-IDLE-GATE describes; can.c 682-691 is the OS_SendToBackOfQueueFromIsr plus the DIAG_ID_CAN_RX_QUEUE_FULL OK/NOT_OK pair that CAN-IMP-QUEUE-FULL-DIAG describes; ltc_6813-1.c:653 is 'DATA_WRITE_DATA(ltc_state->ltcData.cellVoltage);' which is what AFE-IMP-PUBLISH describes. The corpus's own provenance tally does not include this layer: it reports source anchors and code_locations and states no behaviour count. This review changed nothing."
+    },
+    {
+      "finding_id": "FB2-REV-FND-000173",
+      "artifact_id": "FB2-SW-IMP-000001",
+      "severity": "low",
+      "category": "provenance",
+      "description": "verified_against_pinned_source is a single boolean standing in for four separate checks, and at least one location in this group would fail one of them. Its four constituents are: the file exists at the pinned commit; the recorded content_hash equals that pinned blob's sha256; the line_range lies within the file; and the symbol occurs inside the range. On this group, measured: 81 of 81 files exist, 81 of 81 content_hashes are correct, 81 of 81 ranges are in bounds, and 80 of 81 symbols occur in their range. The one failure is FB2-REV-FND-000171. So the flag is not wrong often, but it cannot be read as 'all four checks passed', and the record whose own method claims the fourth check is the one that carries the exception. THIS IS A NAMING AND GRANULARITY DEFECT, NOT A PROVENANCE FAILURE: nothing here says a location is wrong; it says the summary field is coarser than the method that produces it, so a reader who trusts the flag alone inherits a claim the corpus has not earned.",
+      "evidence": "Re-derived all four constituents for all 81 code_locations across the 14 records using 'git show 308028fb' plus recomputed sha256 per blob. Counts are reported in the description. The field is present and true on 81 of 81 locations. This review changed nothing."
+    }
+  ],
+  "dispositions": [
+    {
+      "finding_id": "FB2-REV-FND-000171",
+      "disposition": "accepted",
+      "action": "Accepted. Three small reconciliations, all on one record and none of them touching engineering content: (1) change code_locations[4].symbol_role from 'definition' to whatever is true of lines 234-239 - a configuration block inside the function - or drop the location, since anchor FB2-SRC-COD-000078 already records the range; (2) qualify evidence_status.method's 'each named symbol was confirmed to occur inside its recorded line_range' so it does not assert a check that this location fails and the following limitation already contradicts; (3) make verified_against_pinned_source mean one thing - either split it into the four checks it stands for or rename it so it does not read as a summary of all four (see FB2-REV-FND-000173). Referred to the implementation and traceability owners. This review changed nothing: any edit to an implementation record changes its content digest and invalidates every stored review digest that covers it, so the repair is a revision with re-derived digests and belongs to the owner.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000172",
+      "disposition": "accepted",
+      "action": "Accepted. Either every behaviour gains a file or anchor reference, or the schema declares that behaviour evidence is resolved against the record's code_locations and a machine check resolves it. Today it is neither: no control in the suite reads behaviours[], so this layer of provenance is asserted by the record and verified only by a human reading it. Referred to the implementation and traceability owners. Adding a file field to 84 behaviours across 14 records is an authoring and digest-re-derivation cost, which is why it is not done inside a review.",
+      "resolved_artifact_id": null
+    },
+    {
+      "finding_id": "FB2-REV-FND-000173",
+      "disposition": "accepted",
+      "action": "Accepted. The honest options are to split the flag into the four checks it stands for, or to rename it so it does not read as a summary of all four. FB2-REV-FND-000171 is the instance that shows the difference is not academic. Referred to the traceability owner; the flag is written by the authoring pass, not by the checker, so this is a tooling and vocabulary decision rather than a validator change.",
+      "resolved_artifact_id": null
+    }
+  ],
+  "results_summary": {
+    "records_reviewed": 10,
+    "code_locations_reverified": 55,
+    "behaviours_resolved_by_hand": 59,
+    "absence_claims_retested": 0,
+    "findings": 3,
+    "findings_raised_then_withdrawn": 1,
+    "records_edited": 0,
+    "records_revised": 0,
+    "statement": "Coverage went up by the number of identifiers this review names and by nothing else. The findings do not close on their own: no implementation record was edited, so no engineering content, no source anchor and no code_location changed, and every stored review digest over these records still verifies.",
+    "findings_corrected_after_a_second_read": 1,
+    "findings_corrected_note": "FB2-REV-FND-000171 was first written at medium severity and asserted that the duplicate location was UNDISCLOSED and cited by no behaviour. A second read of the same record found evidence_status.limitations[0] already discloses the range and the anchor duplication. The finding was REWRITTEN, not dropped and not softened into nothing: what survives is that symbol_role 'definition' contradicts the record's own limitation, that evidence_status.method's symbol-in-range sentence is not qualified by that limitation and is false for this location, and that verified_against_pinned_source is therefore true of three of its four constituents. Severity moved medium to low because the location is disclosed rather than hidden. Recorded here because a review that over-claims is the same defect as a review that under-claims, and because a reader comparing this record with the corpus's own disclosure should be able to see that the discrepancy was found and corrected rather than never noticed."
+  },
+  "limitations": [
+    "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. This is an AUTOMATED REVIEW: it is NOT organizational independence, NOT human confirmation and NOT a qualified-checker result. No human reviewer, no independent party and no separate agent session participated. Consistent with corpus-policy.json#/review_policy/ai_review_limitations, a distinct agent session would not have been independence either.",
+    "Automated review in one session. Not organizational independence, not human confirmation, not a qualified-checker result.",
+    "human_approval_status is 'pending' for every record covered. No human reviewer signed any of them, and this review is not a signature.",
+    "No record covered carries production authority or product verification credit.",
+    "PARTIAL SCOPE, AND THE PART NOT COVERED IS THE LARGER PART. This review covers the uncovered implementation group in one profile only. The uncovered population is 110 identifiers and the largest groups in it are NOT implementation: 35 finding records, 18 scenario records and 18 review records. Those were NOT reached. A finding record is itself review output, so reviewing them is a meta-review and is arguably higher-value than reviewing implementation records; it was not done here because reading 35 records of roughly 12.7 kB each was not affordable in this pass, and a review that certifies without reading would be worse than no review. The group chosen was the largest one that could be read in full AND that the profile-split requirement actually bites on. That is a statement about budget, not a judgement that the unreviewed groups are in better shape.",
+    "No implementation record was edited, revised or re-hashed by this review. The three findings are dispositions for the owner; every stored review digest over the reviewed records still verifies.",
+    "Behaviour evidence was resolved by hand by this review. That does not make it machine-verified: the next authoring pass can change a behaviour's line range and no automated control will notice.",
+    "Nothing here constitutes a verification result. No module was executed, no timing, coverage or throughput measurement of any implementation record exists in this corpus, and no target hardware was used, powered or commanded.",
+    "This review asserts no ISO 26262 conformity, no certification, no tool qualification, no ASPICE capability level, no ASIL determination for the real product, no human approval, no production authorisation and no product verification credit."
+  ],
+  "variant_applicability": [
+    "VAR-REF-001"
+  ],
+  "assumption_refs": [],
+  "standards_mappings": [],
+  "source_refs": [],
+  "automated_review_status": {
+    "schema_valid": true,
+    "links_valid": true,
+    "provenance_consistent": true,
+    "consistency_checks": true,
+    "last_run": "2026-10-04T00:00:00Z"
+  },
+  "human_approval_status": "pending",
+  "production_authorized": false,
+  "product_verification_credit": false
+}

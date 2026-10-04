@@ -4,7 +4,11 @@
 # --------------------
 # `docs/artifacts/tools/corpus.py` exits with status 2 and the single line
 #
-#     ERROR: jsonschema library required (pip install jsonschema)
+#     ERROR: jsonschema library required
+#
+# (the preflight now prints several lines after that first line rather than a
+# parenthetical command that does not work on a macOS-managed Python; see
+# PREFLIGHT-DEP-A1 in corpus.py and docs/artifacts/tools/bootstrap.sh)
 #
 # if `jsonschema` cannot be imported, and `make_review_packets.py` reports its
 # schema checks as "validator unavailable" rather than failing. Neither
@@ -45,14 +49,59 @@
 #
 # INSTALL
 # -------
-#   python3 -m pip install --user -r docs/artifacts/tools/requirements.txt
+# THE REPRODUCIBLE COMMAND, for the interpreter running the corpus:
 #
-# `--user` rather than a virtualenv because the corpus tooling is documented and
-# invoked as `python3 docs/artifacts/tools/corpus.py ...` against the SYSTEM
-# interpreter. If you use a virtualenv instead, install it there and invoke that
-# interpreter; nothing in the tooling hardcodes `python3` except the self-test
-# that shells out to the packet generator, and that uses `sys.executable`, so it
-# follows whatever interpreter is running the suite.
+#   python3 -m pip install -r docs/artifacts/tools/requirements.txt
+#
+# On a macOS- or Debian-managed Python (PEP 668) that refuses with
+# `error: externally-managed-environment`. The supported way past it is:
+#
+#   python3 -m pip install --user --break-system-packages -r docs/artifacts/tools/requirements.txt
+#
+# ...or, better, install nothing into the system interpreter at all:
+#
+#   docs/artifacts/tools/bootstrap.sh
+#
+# which creates a virtualenv OUTSIDE this repository (default
+# ~/.cache/foxbms-corpus-venv, override with FOXBMS_CORPUS_VENV), installs these
+# pins into it, and prints the command to run the suite with it. It creates
+# nothing inside the tree and refuses to run if FOXBMS_CORPUS_VENV resolves
+# inside it.
+#
+# Use `python3 -m pip`, never bare `pip3` or `pip`: a bare `pip` may belong to a
+# different interpreter than the one running the corpus, and installing into the
+# wrong site-packages is a failure that looks like success.
+#
+# WHY A VIRTUALENV IS OFFERED ALONGSIDE `--user`, and not instead of it
+# -------------------------------------------------------------------
+# `--user --break-system-packages` works and is printed by the preflight,
+# because an operator who wants to install into their own user site-packages
+# should be able to. But it mutates a shared interpreter that other projects
+# also import, and `--break-system-packages` is a flag whose name is a warning.
+# The virtualenv contains exactly the distributions declared here, cannot be
+# broken by an upgrade elsewhere, and is removed with `rm -rf` on one directory
+# in a cache.
+#
+# PINNING IS NOT INSTALLING - and that is why this recurred
+# -------------------------------------------------------
+# The pin below is a statement in a file. Whether an interpreter has the
+# distribution is a fact on that interpreter's disk. Nothing reconciles the two,
+# and a pin that has been sitting in the repository for months satisfies the
+# reader while the suite is un-runnable. Measured, not hypothesised: this
+# dependency went missing three times, with a DIFFERENT failure mode each time -
+# once silently, with `corpus.py` exiting 0 having validated nothing; once as a
+# `pip3 install --user` refusal with `externally-managed-environment`; and once
+# as a failure whose message named a command that does not work on that
+# interpreter. A version range cannot fix any of those. Run bootstrap.sh on a
+# fresh checkout or after a restart, and confirm with the import below, before
+# reading anything into the corpus's status.
+#
+# `--user` rather than a virtualenv by default because the corpus tooling is
+# documented and invoked as `python3 docs/artifacts/tools/corpus.py ...` against
+# the SYSTEM interpreter. If you use a virtualenv instead, install it there and
+# invoke that interpreter; nothing in the tooling hardcodes `python3` except the
+# self-test that shells out to the packet generator, and that uses
+# `sys.executable`, so it follows whatever interpreter is running the suite.
 #
 # Verify with:
 #

@@ -13,7 +13,17 @@
   "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
  },
  "already_checked": {
-  "links_touching_record": [],
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVA-000006",
+    "rationale": "FB2-REV-000019 reviewed FB2-SW-IMP-000006 at revision 1 in the as_is profile and enumerates it in reviewed_ids with the sha256 of the artifact's bytes at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The link exists because the coverage dimension takes the UNION of reviewed_ids and reviewed_by links and gate [3/8] asserts the two sources name the same set; a review record that named records without links would leave that assertion false.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-execution-records.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000019",
+    "target_id": "FB2-SW-IMP-000006"
+   }
+  ],
   "machine_verified": [
    {
     "check": "schema validity",
@@ -36,20 +46,69 @@
     "result": "4/4 fully checked with no contradiction"
    },
    {
-    "check": "peer review coverage",
-    "method": "reviewed_ids and reviewed_by lookup",
-    "result": "UNEXAMINED: no review record in this corpus covers it"
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
    }
   ],
   "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
   "peer_review": {
-   "covered": false,
+   "covered": true,
    "digest_mismatch": 0,
-   "digest_ok": 0,
+   "digest_ok": 1,
    "digest_placeholder": 0,
-   "disputed": [],
-   "findings_about": [],
-   "reviews": []
+   "disputed": [
+    {
+     "category": "provenance",
+     "description": "Two fields on the as_is EMAC driver record over-claim, and both concern its fifth code_location. The location itself is NOT a defect and this review says so first: evidence_status.limitations[0] already discloses that EMAC_InitializeHardware's range 234-239 is 'the destination-address match configuration inside that function's body', that it duplicates the range anchor FB2-SRC-COD-000078 records,\u2026",
+     "finding_id": "FB2-REV-FND-000171",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json"
+    },
+    {
+     "category": "provenance",
+     "description": "Two fields on the as_is EMAC driver record over-claim, and both concern its fifth code_location. The location itself is NOT a defect and this review says so first: evidence_status.limitations[0] already discloses that EMAC_InitializeHardware's range 234-239 is 'the destination-address match configuration inside that function's body', that it duplicates the range anchor FB2-SRC-COD-000078 records,\u2026",
+     "finding_id": "FB2-REV-FND-000171",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-synthetic.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "provenance",
+     "description": "Two fields on the as_is EMAC driver record over-claim, and both concern its fifth code_location. The location itself is NOT a defect and this review says so first: evidence_status.limitations[0] already discloses that EMAC_InitializeHardware's range 234-239 is 'the destination-address match configuration inside that function's body', that it duplicates the range anchor FB2-SRC-COD-000078 records,\u2026",
+     "finding_id": "FB2-REV-FND-000171",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json"
+    },
+    {
+     "category": "provenance",
+     "description": "Two fields on the as_is EMAC driver record over-claim, and both concern its fifth code_location. The location itself is NOT a defect and this review says so first: evidence_status.limitations[0] already discloses that EMAC_InitializeHardware's range 234-239 is 'the destination-address match configuration inside that function's body', that it duplicates the range anchor FB2-SRC-COD-000078 records,\u2026",
+     "finding_id": "FB2-REV-FND-000171",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-synthetic.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IMPL-PROV-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000019",
+     "review_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json",
+     "review_type": "adversarial",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "verification_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-implementation-group-as-is.json",
+      "reviewed_by link FB2-LNK-REVA-000006 in docs/artifacts/traceability/link-registry/as_is/links-execution-records.json"
+     ]
+    }
+   ]
   },
   "state_legend": {
    "machine-verified": "settled by a detector; see machine_verified above",
@@ -230,18 +289,18 @@
    "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
   },
   {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "2 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
    "group": "provenance honesty",
    "priority": 20,
    "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
    "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
    "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
-  },
-  {
-   "group": "review coverage",
-   "priority": 30,
-   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
-   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
-   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
   },
   {
    "group": "standards mapping",

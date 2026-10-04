@@ -762,6 +762,47 @@ under GNU gcc on Linux. **No result was adjusted to make a test pass.**
 
 ## How to Run Checks
 
+### Before anything else — `jsonschema` (P-a)
+
+This corpus **will not run** without `jsonschema`, and it refuses to run rather
+than reporting a pass it did not earn. The dependency has gone missing three
+times, with a different failure mode each time (once *silently*, with
+`corpus.py` exiting 0 having validated nothing), and the cause was never the
+corpus: **`jsonschema>=4.18` being pinned in `requirements.txt` does not install
+it.** A pin is a statement in a file; what an interpreter holds is a fact on
+that interpreter's disk. Nothing reconciles the two, which is why the same
+failure kept returning.
+
+On a fresh checkout, or on a machine that has just been restarted, run this
+first:
+
+```bash
+docs/artifacts/tools/bootstrap.sh
+```
+
+It creates a virtualenv **outside** the repository (default
+`~/.cache/foxbms-corpus-venv`, override with `FOXBMS_CORPUS_VENV`), installs the
+pinned requirements, and prints the command to run the suite with it. It creates
+nothing inside the tree and refuses to run if `FOXBMS_CORPUS_VENV` resolves
+inside it.
+
+If you would rather install into an existing interpreter:
+
+```bash
+# PEP 668 managed Python (macOS/Debian) refuses without the flag:
+python3 -m pip install --user --break-system-packages -r docs/artifacts/tools/requirements.txt
+
+# then confirm by IMPORTING, not by trusting pip's output:
+python3 -c "import jsonschema, referencing; print(jsonschema.__version__)"
+```
+
+If `jsonschema` is absent, `corpus.py` prints a preflight naming the missing
+distribution, the interpreter actually running, the requirement file, both
+install commands and the `bootstrap.sh` route — and still exits 2. That is
+deliberate. See `governance/closing-list.md` §4 P-a.
+
+### The commands
+
 ```bash
 # Full acceptance suite (8 stages) — expect: Acceptance suite: PASSED
 python3 docs/artifacts/tools/corpus.py check

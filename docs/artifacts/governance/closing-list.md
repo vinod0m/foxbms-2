@@ -191,6 +191,13 @@ discovered later as surprises:
 * It did **not** relax `human_approval_status: "not_required"`. That value is
   not an approval, the contract does not speak to it, and it still fails for
   want of evidence. Relaxing it is a separate decision nobody has taken.
+  **UPDATE 2026-10-04: that decision has now been taken**, by `APPROVAL-NOTREQ-A1`,
+  and this bullet describes the state *at the time of that amendment* rather than
+  the current one. `not_required` is now **LEGITIMATE**, permitted only on a record
+  family that genuinely does not require human approval, rejected on each of the
+  three families that does, and never counted toward the `human_approval` numerator.
+  The bullet above is left standing rather than rewritten because an amendment that
+  is edited in place cannot be audited. See §1.6 P3 and §0.2g.
 * It did **not** touch the recursive authority-key scan (`production_release`,
   `authorized_for_production` and eight siblings) or the ASIL / conformity /
   certification claim classes. Those are unchanged, and the self-test *"a
@@ -361,6 +368,135 @@ The limit is recorded in four places so it cannot be quietly dropped:
 `docs/artifacts/tools/verify_approval_ledger_independently.py`. A self-test reads
 the code and the documentation and asserts the wording is still there - because an
 anchor that reads as stronger than it is would be worse than no anchor.
+
+### 0.2f The second signature, and what it does *not* buy
+
+A single signature means a single forger. Every layer above binds **one**
+signature, so every layer above is satisfied by one person acting alone — which
+is why §0.2e's residual is stated as *irreducible* rather than *merely
+expensive*. That has now been changed on the cost side, and the change is
+recorded in full at
+`role-and-review-policy.json#/approval_countersignature_contract`
+(amendment `APPROVAL-COUNT-A1`) and, as element 7, enforced in
+`corpus.py::_countersignature_defects`.
+
+**The rule.** An approval now requires **two** signatures: the approver and an
+**independent countersigner**. The countersigner must be a different person; must
+hold a `role_id` declared in `role-and-review-policy.json#/roles`; must not be the
+record's `owner_role`, must not be the author of **any** content revision at or
+below the revision being approved, must not hold the approver's role, and must
+not be a role the policy excludes for that record's `owner_role`. Both signatures
+carry the **full six-element evidence** and the **same packet digest**, and both
+live in **one** ledger entry — so the hash chain binds them together, and
+dropping the countersignature breaks the chain from that entry onward.
+
+**The per-`owner_role` part** is declared in the policy
+(`countersigner_excluded_roles_by_owner_role`) and read by the code, not inferred
+by it. Eight `owner_role` values on disk are not in `roles[]` at all
+(`change_manager`, `configuration_manager`, `cybersecurity_engineer`,
+`data_quality_engineer`, `integration_engineer`, `quality_engineer`,
+`sys_engineer`, `verification_lead`), so for those records the per-`owner_role`
+clause has an empty exclusion set. That is recorded as a **declared gap** rather
+than closed by inventing role definitions — see open item P2 in §1.6. Clauses 1–4
+and the different-person rule still bind in full for every record.
+
+**What this buys, stated exactly.** One forger acting alone is no longer enough.
+A forgery now requires **two** people to both be named, both hold roles
+independent of the record's `owner_role` and of every content author, both attest
+the same packet digest, and both appear in one entry whose chain stays intact.
+
+**What it does not buy, stated as plainly as the above.** **Two colluding
+parties are still enough**, and they may collude trivially: one person writes two
+names, in two role-shaped forms of a fiction, and every machine check in this
+repository passes. The name comparison is token-set based, so `Ada Lovelace` and
+`A. Lovelace` are correctly rejected as one person — but a second *invented* name
+in a different shape is indistinguishable from a second real person, and **nothing
+here can tell those apart**. And **no number of signatures fixes it**: a third
+needs three colluding parties, a fourth four, and the residual does not approach
+zero with arity.
+
+**THE LIMIT IS THAT ATTESTATION IS NOT PROOF OF COMPREHENSION.** A signature says
+a person asserts. It does not say a person understood, and no digest, chain,
+anchor, role declaration, exclusion map or second name converts an assertion into
+an understanding. This limit is **irreducible**: it is not a gap a later amendment
+could close, it is the nature of the instrument.
+
+**`forge_resistance` — the full layer-by-layer accounting.** What each layer
+actually establishes, and what each leaves open, is enumerated at
+**`docs/artifacts/governance/approval-ledger.md` § `forge_resistance`**. Six
+layers, each with an explicit "does not establish", plus a summary of what the
+stack as a whole detects, what it prevents (**nothing**), what it costs a forger,
+and what it cannot do. Referenced from here so that a reader deciding how much
+weight an approval can bear is never more than one link from the accounting.
+
+**No text in this repository describes any layer — including the two independent
+signatures — as making an approval unforgeable.** Four self-tests assert the two
+headline rejections, and a fifth asserts the rule is not over-strict (a properly
+countersigned approval on a record a review record already covers must be
+accepted, and must not stale that review digest). A sixth measures, over all 321
+records, that at least two independent signing parties remain available for every
+one — because a two-party rule that made approval impossible for some record type
+would be a functional regression disguised as a control. Worst case measured: **6
+eligible countersigner roles** remain after excluding the owner role, every
+content author, the approver's role and the policy's per-`owner_role`
+exclusions.
+
+### 0.2g `not_required` — decided, and it is not a loophole
+
+Full reasoning at
+`role-and-review-policy.json#/human_approval_not_required_decision`; measured
+effect at `coverage-plan.json` `CORR-COV-024`; the decision itself in
+`corpus-policy.json#/review_policy/human_approval_not_required_amendment`.
+
+**Decided: LEGITIMATE.** `human_approval_status: "not_required"` is permitted, on
+exactly one condition — the record's artefact type must be one that genuinely
+does **not** require human approval — and it **never counts toward the
+`human_approval` numerator**.
+
+Why it was legitimate rather than left rejected:
+
+- The policy already scoped it and the data model did not represent it.
+  `review_policy.additional_fields/human_approval_required_for` is a **positive
+  list** of three families, so the scoping could be enforced *negatively* (a bare
+  `approved` fails) and never recorded *positively*.
+- It was already a member of the enum in `schemas/artifact-base.schema.json` and
+  of `approval_semantics.human_approval_status_values`. The schema permitted it
+  and the validator rejected it, so `pending` was the only value that was both
+  schema-valid and validator-valid — an inconsistency in the corpus, not a policy.
+- Two genuinely different states were indistinguishable. A record on a family
+  with no sign-off gate, and a record waiting for an approval that will never
+  come, both read `pending`.
+
+Why it is not a loophole:
+
+- The boundary is the policy's own positive list, **read** rather than restated,
+  from the same block that already governs production authority. On each of the
+  three required families — `safety_case`, `post_development_record`, `change` —
+  the value is **rejected at high severity** by `human_approval_not_required_misdeclared`,
+  reached by *both* validation paths so gate `[7/8]` cannot be blind to it.
+- Two contradictions are rejected as well: a `not_required` record carrying an
+  `approval_evidence.human_approval` block, and one carrying an
+  `approval_ledger_ref` resolving to a `human_approval` ledger entry.
+- It cannot move a measured number. It is excluded from the grant test, so it never
+  enters `granted`, `evidenced` or `evidenced_now`; the denominator is unchanged at
+  every record carrying an id; and the count is reported *inside* the dimension —
+  in the detail text and as `not_required_records` / `not_required_misdeclared` —
+  so relabelling moves a number that is on the record rather than one that is
+  quietly absent.
+- **It is not a review exemption.** `automated_review_coverage` counts such a
+  record exactly like any other, so a `not_required` record that receives no
+  review is a visible gap, not an excused one. This is the hazard worth naming:
+  `not_required` is easy to misread as "no review needed", and it records the
+  absence of a **sign-off gate**, not the absence of review.
+
+**Residual, stated rather than left implicit.** The obvious abuse — relabelling a
+pending record to dodge a future approval — is rejected on exactly the records
+where an approval could ever be owed. The failure mode that survives is the
+opposite and quieter one: **a record that needed a gate and says `pending` forever
+is indistinguishable from one that is simply not due yet, and no rule here detects
+that.** And the value is unexercised by the live tree: **0 of 321** records carry
+it, so the self-tests are the only evidence the rule works, and they are tests of
+the rule rather than of any approval.
 
 ### 0.3 `actual_product_evidence` cannot reach 33/33
 
@@ -584,9 +720,10 @@ Minimum for a signature to mean anything:
 > **Every item that can be decided by amendment has now been decided.** P1 and the
 > first two P2 items were decided on 2026-10-04 by `APPROVAL-RULE-A1`; the P3
 > revision-convention item and the P2 archive item were decided the same day by
-> `APPROVAL-LEDGER-A1`. They are kept, marked DONE, because they record what was
-> decided and why. **Two P2 items and one P3 remain OPEN**, and one limit is
-> permanently open by nature.
+> `APPROVAL-LEDGER-A1`; the `not_required` P3 was decided on 2026-10-04 by
+> `APPROVAL-NOTREQ-A1`. They are kept, marked DONE, because they record what was
+> decided and why. **One P2 remains OPEN**, and one limit is permanently open by
+> nature.
 
 | id | decision | status | why it blocks |
 | --- | --- | --- | --- |
@@ -594,11 +731,11 @@ Minimum for a signature to mean anything:
 | **P1** | Decide whether `human_approval` stays a constant `0` (§0.1) or becomes a measurement. | **DONE 2026-10-04** - measured, by the validator's own predicate (§0.1a). `production_authorization` likewise, with a strictly higher bar. | Either answer is defensible; leaving it undecided meant nobody could tell whether a landed signature worked. |
 | **P2** | Ratify that recording an approval against the record's **current** revision, without bumping it, is the correct convention. | **RESOLVED DIFFERENTLY 2026-10-04** (`APPROVAL-LEDGER-A1`, §0.2b) | The convention was a workaround for an unsatisfiable requirement, so ratifying it would have ratified the workaround. Instead the approval moved out of `revision_history` into an append-only ledger and the record keeps only a reference; recording one now costs nothing anywhere else, so there is no convention left to ratify. Proven by self-test, not asserted. |
 | **P2** | Confirm `docs/artifacts/reviews/signed/` as the canonical archive location. | **DECIDED 2026-10-04** (`APPROVAL-LEDGER-A1`, §0.2c) | The open half - whether it is the *only* permitted home - is now decided: yes, and it is **enforced**. A `packets/` citation fails with a message naming the archive. Self-tested. |
-| **P2** | Add the seven undeclared `owner_role` values to `role-and-review-policy.json`, or map them to declared roles (§1.2). | **OPEN** | A signature under an undefined role is not traceable to a competence requirement. The approver's `role` must be a **declared** `role_id`, so a record whose `owner_role` is undeclared can still be approved (independence is judged against the owner role, not against the approver's), but the *reviewer's* role must exist in the policy. This is now the **highest-value open item**, because it is the one thing standing between this corpus and its first signature. |
+| **P2** | Add the **eight** undeclared `owner_role` values to `role-and-review-policy.json`, or map them to declared roles (§1.2). | **OPEN — now the highest-value open item, with a second consequence** | A signature under an undefined role is not traceable to a competence requirement. The approver's `role` must be a **declared** `role_id`, so a record whose `owner_role` is undeclared can still be approved (independence is judged against the owner role, not against the approver's), but the *reviewer's* role must exist in the policy. **Measured correction: this row previously said "seven". The measured figure is EIGHT** — `change_manager`, `configuration_manager`, `cybersecurity_engineer`, `data_quality_engineer`, `integration_engineer`, `quality_engineer`, `sys_engineer`, `verification_lead`. The eighth was not re-asserted against the tree by the pass that recorded it, so the count stood. Since `APPROVAL-COUNT-A1` the same eight also have **no entry** in the countersigner's per-`owner_role` exclusion map, so a countersignature on a record they own is checked **strictly less** than on a record owned by a declared role. That is declared in the policy's `unmapped_owner_role_policy` rather than closed by inventing role definitions. |
 | **P2** | Amend `production_authorized_rejected` and `verification_credit_rejected` - or record explicitly that they stay as they are. | **DONE 2026-10-04** (`APPROVAL-RULE-A1`) - both amended to the same evidence requirement. `production_authorization` additionally requires the approving role to hold production authority and the record's family to be one human approval is required for, and since `APPROVAL-LEDGER-A1` its own ledger entry. `verification_credit` takes the same six elements. | A corpus owner should say so rather than leave it ambiguous. |
-| **P3** | Decide whether `human_approval_status: "not_required"` should remain rejected. | **OPEN - deliberately unchanged** | The contract governs *approval values*; `not_required` is not one. It still fails for want of evidence, which preserves the pre-amendment verdict rather than relaxing it as a side effect. If a record legitimately needs no approval, there is currently no way to say so. |
+| **P3** | Decide whether `human_approval_status: "not_required"` should remain rejected. | **DECIDED 2026-10-04** (`APPROVAL-NOTREQ-A1`) - it is **LEGITIMATE**, permitted only where the record's family genuinely does not require approval, and never counted toward the `human_approval` numerator. | It sat open through two amendments, which is a governance question carried without being answered rather than a conservative one. **The decision, on the merits:** `review_policy.additional_fields/human_approval_required_for` is a **positive list** of three families, so the scoping the policy declares could be enforced negatively and never recorded positively — the corpus could reject a bare `approved` but had no way to record that a family has no gate. Meanwhile `not_required` was **already** in the schema enum and **already** listed in `approval_semantics.human_approval_status_values`, so the schema permitted it and the validator rejected it, and `pending` was the only value that was both schema-valid and validator-valid. Two genuinely different states were indistinguishable: a record with no gate, and a record waiting for an approval that will never come. **It is not a bypass:** the value is permitted only on the *complement* of the very list that says where approval is required, and on those three families it is **REJECTED** at high severity by `human_approval_not_required_misdeclared`, reached by both validation paths so gate `[7/8]` cannot be blind to it. Two contradictions are rejected too — a `not_required` record carrying an `approval_evidence.human_approval` block, and one carrying a `approval_ledger_ref` resolving to a `human_approval` entry. **It cannot move a measured number:** it is excluded from the grant test, the denominator is unchanged, and the count is reported inside the `human_approval` dimension as `not_required_records` / `not_required_misdeclared` so relabelling is visible rather than silent. **It is NOT a review exemption:** `automated_review_coverage` counts such a record like any other. Measured: **0 of 321** records carry it, and 0 carry it on a required family. Full reasoning at `role-and-review-policy.json#/human_approval_not_required_decision`; measured effect at `coverage-plan.json` `CORR-COV-024`. |
 | **P3** | Ratify the approval-recording convention. | **CLOSED, NOT BY RATIFICATION** | See the P3 row above; superseded by the ledger amendment. |
-| **RISK 1** | Make an approval unforgeable. | **NOT POSSIBLE. REDUCED ONLY, AND NOT CLAIMED AS FIXED.** | A determined person can forge all six elements, archive a packet, cite a real commit and maintain the chain correctly. Three controls raise the **cost** and make forgery **detectable** (hash chain, git anchor, archive rule). Neither is prevention. The limit is **irreducible** and is recorded in four places (§0.2e). Do not describe any of it as making approval unforgeable. |
+| **RISK 1** | Make an approval unforgeable. | **NOT POSSIBLE. RAISED COST, CHANGED SHAPE; NOT CLAIMED AS FIXED.** | One forger acting alone is no longer enough since `APPROVAL-COUNT-A1`: a forgery now needs two named people in mutually independent roles, over the same packet digest, in one chain-bound entry. **Two colluding parties are still enough**, trivially, and no number of signatures fixes it. The limit is **irreducible**: attestation is not proof of comprehension. Accounted for layer by layer at `approval-ledger.md#forge_resistance` (§0.2f). Do not describe any of it as making approval unforgeable. |
 
 **The one thing left to do, and it is not engineering.** Every item above is
 either decided or explicitly open. What remains is a person reading a record and
@@ -1104,9 +1241,21 @@ Four residual risks remain, and none of them is closed by either amendment:
 2. **`human_approval_status: "not_required"` is still rejected**, which means a
    record that legitimately needs no approval has no way to say so, and the next
    person to hit that will be tempted to work around it. Open P3 in §1.6.
-3. **The seven undeclared `owner_role` values** (§1.2) mean the reviewer's role
+   **RESOLVED 2026-10-04 by `APPROVAL-NOTREQ-A1`** — `not_required` is now
+   legitimate and permitted on any family outside the policy's positive list, so
+   a record that legitimately needs no approval can say so. The residual that
+   survives the resolution is narrower and worth stating: **a record that needed a
+   gate and says `pending` forever is indistinguishable from one that is simply
+   not due yet, and no rule in this corpus detects that.** The opposite mistake —
+   a record that needed a gate and claims `not_required` — *is* detected, by
+   `human_approval_not_required_misdeclared`.
+3. **The eight undeclared `owner_role` values** (§1.2) mean the reviewer's role
    must still be added to the policy or mapped before their signature is
-   traceable. Open P2 in §1.6.
+   traceable. Open P2 in §1.6. **Since `APPROVAL-COUNT-A1` the same eight also have
+   no entry in the countersigner's per-`owner_role` exclusion map**, so a
+   countersignature on a record they own is checked strictly less than on a record
+   owned by a declared role. Declared in the policy's `unmapped_owner_role_policy`;
+   not closed by inventing role definitions.
 4. **A review digest no longer pins a record's approval state**, because approval
    metadata is excluded from the content digest. Flipping `production_authorized`
    is therefore not caught by `review_digest_mismatch` - it is caught by four other
@@ -1204,24 +1353,53 @@ restart that prompted this work silently removed both.**
 
 ### P-a: `jsonschema` in the system `python3`
 
-`corpus.py` exits **2** with a single line if `jsonschema` cannot be imported:
+`corpus.py` exits **2** if `jsonschema` cannot be imported. It has always done
+so — failing closed is correct, and nothing below changes that — but the text it
+printed used to be one line:
 
 ```
 ERROR: jsonschema library required (pip install jsonschema)
 ```
 
-`make_review_packets.py` degrades differently and worse: it reports schema checks
-as *"validator unavailable"* in section 5.1 of every packet and carries on.
+**That message told an operator nothing actionable.** It named a package and a
+command, and `pip install jsonschema` is *not* a command that succeeds on a
+macOS-managed Python. It did not name the requirement file, did not name the
+interpreter that wanted the package, did not say why a `--user` install might
+refuse, and offered no route that works.
+
+`make_review_packets.py` degrades differently: it reports schema checks as
+*"validator unavailable"* in section 5.1 of every packet and carries on.
 
 **Why this matters more than a missing package.** Neither tool is installed by
-anything: there is no `requirements.txt`, no `pyproject.toml`, no CI step. The
+anything: there is no `pyproject.toml`, no CI step, no packaging manifest. The
 corpus tooling is a set of scripts run directly against the system interpreter.
-On a machine without `jsonschema`, `corpus.py check` **does not run at all** -
+On a machine without `jsonschema`, `corpus.py check` **does not run at all** —
 and a reader who has not read the source concludes the corpus is unverified
 rather than un-runnable. Those are very different situations and the difference
 is invisible from outside.
 
-Now declared, in `docs/artifacts/tools/requirements.txt`:
+**This recurred three times, and pinning is why it could.** The dependency went
+missing on three separate occasions and the failure mode was *different each
+time*:
+
+| # | What happened | Why the previous fix did not help |
+|---|---|---|
+| 1 | `corpus.py` exited **0** having validated nothing | There was no failure to read. A reader saw success. |
+| 2 | `pip3 install --user jsonschema` refused: `error: externally-managed-environment` | The bare command in the old message names neither `--user` nor `--break-system-packages`. |
+| 3 | `pip3 install --user --break-system-packages jsonschema` worked — but the failure message on the *next* machine still read `ERROR: jsonschema library required (pip install jsonschema)` | The message was fixed per-environment rather than per-cause. |
+
+**`jsonschema>=4.18` being pinned does not install it.** A version range in
+`requirements.txt` is a *statement in a file*; whether an interpreter holds the
+distribution is a *fact on that interpreter's disk*. Nothing reconciles the two.
+A pin that has been in the repository for months satisfies the reader while the
+suite is un-runnable, and it will do so again on the next fresh checkout or the
+next restart. This is stated here rather than left implicit because it is the
+actual cause of the recurrence, and a cause that is not written down gets
+re-diagnosed from scratch every time.
+
+**Three fixes, in the order to try them.**
+
+The pinned requirements are declared in `docs/artifacts/tools/requirements.txt`:
 
 ```
 jsonschema>=4.18
@@ -1235,11 +1413,59 @@ back to a **registry-less validator** without it - which silently drops
 cross-file `$ref` resolution and would under-report schema violations without
 saying so.
 
+**(1) Preferred — `bootstrap.sh`, which touches nothing in this repository.**
+
 ```bash
-python3 -m pip install --user -r docs/artifacts/tools/requirements.txt
+docs/artifacts/tools/bootstrap.sh
+```
+
+It creates a virtualenv **outside** the tree (default
+`~/.cache/foxbms-corpus-venv`, override with `FOXBMS_CORPUS_VENV`), installs the
+pinned requirements into it, verifies by *import* rather than by reading pip's
+output, and prints the command to run the suite with it. Inside a virtualenv
+there is no PEP 668 marker to override and no system `site-packages` to shadow,
+so a plain `pip install -r` is both sufficient and safe.
+
+It **creates nothing inside the repository** — no `.venv`, no marker file, no
+`__pycache__` — and it **refuses to run** if `FOXBMS_CORPUS_VENV` resolves inside
+the tree. That check is made on the *resolved* path, not on the string typed,
+because the two disagree in exactly the cases that matter: `venv`, `./venv` and
+`${PWD}/venv` are one directory, and a symlink can name a directory outside the
+tree while pointing into it.
+
+**(2) Install into this interpreter.**
+
+```bash
+python3 -m pip install -r docs/artifacts/tools/requirements.txt
+```
+
+Use `python3 -m pip`, never bare `pip3` or `pip`: a bare `pip` may belong to a
+different interpreter than the one running the corpus, and installing into the
+wrong `site-packages` is a failure that *looks* like success — the import still
+fails here after pip reports no error.
+
+**(3) On a macOS- or Debian-managed Python (PEP 668).**
+
+The command above refuses with `error: externally-managed-environment`. That
+refusal is the OS protecting a system interpreter, and it is correct. Either use
+`bootstrap.sh`, or pass the flag whose name is a warning:
+
+```bash
+python3 -m pip install --user --break-system-packages -r docs/artifacts/tools/requirements.txt
+```
+
+**Confirm before believing anything else about this corpus's status.**
+
+```bash
 python3 -c "import jsonschema, referencing; print(jsonschema.__version__)"
 python3 docs/artifacts/tools/corpus.py check
 ```
+
+`corpus.py` now prints this preflight itself, naming the missing distribution,
+the interpreter actually running, the requirement file, both install commands and
+the virtualenv route, and still exits 2. It is still a hard failure: failing
+closed is correct, and a corpus that cannot validate must not report that it
+validated.
 
 Resolved in the environment the 321 packets were generated in: `jsonschema`
 4.25.1, `referencing` 0.35.1, CPython 3.9.6.

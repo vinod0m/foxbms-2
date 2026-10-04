@@ -200,6 +200,12 @@ SEMANTIC_RULE_IDS = frozenset({
 # semantics are a governance claim; the gate counts findings from all of them.
 # Self-test `the governance rule set is non-empty and covers the four named
 # claim classes` pins the membership.
+# The `not_required` value and the rule that catches its misuse. Declared
+# here rather than beside APPROVAL_RULES because GOVERNANCE_SEMANTIC_RULE_IDS,
+# below, needs the rule id and is itself defined above the approval rules.
+HUMAN_APPROVAL_NOT_REQUIRED = "not_required"
+NOT_REQUIRED_RULE_ID = "human_approval_not_required_misdeclared"
+
 GOVERNANCE_SEMANTIC_RULE_IDS = frozenset({
     "governance_authority_claim",
     "production_authorization_governance_checker",
@@ -209,6 +215,11 @@ GOVERNANCE_SEMANTIC_RULE_IDS = frozenset({
     "asil_determination_claim",
     "conformity_claim",
     "certification_claim",
+    # APPROVAL-NOTREQ-A1. A MISDECLARED `not_required` is a claim about the
+    # approval regime, which is what this gate is for, so it is counted here.
+    # Its addition moves the printed count from 8 rule id(s) to 9; that delta is
+    # a new detection capability, not a change in what any existing rule catches.
+    NOT_REQUIRED_RULE_ID,
 })
 
 # Fields whose presence with a granted value is a governance claim. Keyed by the
@@ -286,6 +297,41 @@ APPROVAL_EVIDENCE_FIELD = "approval_evidence"
 APPROVAL_POLICY_REL = "docs/artifacts/governance/role-and-review-policy.json"
 
 # ---------------------------------------------------------------------------
+# AMENDMENT APPROVAL-COUNT-A1: an approval requires TWO signatures.
+#
+# Element 7. The record carries the countersigner's own six-element evidence
+# under this field, and the ledger entry carries the same object, so the hash
+# chain binds both signatures together rather than binding two chains.
+#
+# WHY, stated as what each existing layer actually proves rather than as a claim
+# about forgery in general. The six-element contract, the chain and the git
+# anchor all detect tampering with the RECORD. Every one of them binds a single
+# signature, and a single binding is satisfied by a single forger: one person
+# could write all six elements, archive a real packet, cite a real commit and
+# maintain the chain correctly, and nothing here would distinguish that from an
+# approval a competent independent reviewer genuinely gave. That limit is
+# irreducible for any single signature. What a second, INDEPENDENT signature
+# changes is the shape of the forgery: it now takes two people who are
+# independent of each other and of the content, both choosing to lie.
+#
+# WHAT IT IS NOT. It is not prevention. Two colluding parties are still enough,
+# and they may collude trivially - one person writes two names in two
+# role-shaped forms and every machine check here passes. And no number of
+# signatures fixes it: a third needs three colluding parties, the limit does not
+# move toward zero, and the reason is not the count. The reason is that
+# ATTESTATION IS NOT PROOF OF COMPREHENSION. A signature says a person asserts;
+# it does not say a person understood, and no digest, chain, anchor, role
+# declaration or second name converts an assertion into an understanding.
+#
+# The full statement is at role-and-review-policy.json
+# #/approval_countersignature_contract and in docs/artifacts/governance/
+# approval-ledger.md. Do not describe any layer as making approval unforgeable.
+
+APPROVAL_COUNTERSIGNATURE_FIELD = "countersignature"
+APPROVAL_COUNTERSIGNATURE_CONTRACT_REF = APPROVAL_POLICY_REL + \
+    "#/approval_countersignature_contract"
+
+# ---------------------------------------------------------------------------
 # AMENDMENT APPROVAL-LEDGER-A1: approvals are EVENTS, not content.
 #
 # The six-element contract (APPROVAL-RULE-A1) put element 6 in revision_history,
@@ -345,11 +391,14 @@ LEDGER_GIT_COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 
 # Every field an entry must carry, from
 # role-and-review-policy.json#/approval_ledger_contract/ledger/required_entry_fields.
+# APPROVAL-COUNT-A1 ADDS `countersignature`: an entry now binds TWO signatures,
+# and both live in the one entry so the chain covers them together.
 LEDGER_REQUIRED_FIELDS = (
     "ledger_id", "record_id", "profile", "kind",
     "approved_record_sha256", "approved_content_revision",
     "approved_by", "role", "independence", "date",
     "signed_packet", "packet_first_commit", "previous_entry_sha256",
+    APPROVAL_COUNTERSIGNATURE_FIELD,
 )
 
 # Fields whose value must be a 64-hex digest. Checked on every entry so a
@@ -417,20 +466,84 @@ APPROVAL_RULES = {
         "rule_id": "human_approval_rejected",
         "severity": "high",
         "grant_label": "a recorded human approval decision",
+        # APPROVAL-NOTREQ-A1. `not_required` is NOT a grant. It records the
+        # ABSENCE of an approval gate, and no person made any decision, so the
+        # six-element contract has nothing to evidence. Before this amendment it
+        # was treated as a grant by the "any value but pending" test and was
+        # therefore rejected for want of evidence - which was the right verdict
+        # reached for the wrong reason, and left the value unrepresentable.
+        "non_grant_values": ("not_required",),
     },
     "production_authorization": {
         "record_field": "production_authorized",
         "rule_id": "production_authorized_rejected",
         "severity": "critical",
         "grant_label": "a claim of production authority",
+        "non_grant_values": (),
     },
     "verification_credit": {
         "record_field": "product_verification_credit",
         "rule_id": "verification_credit_rejected",
         "severity": "high",
         "grant_label": "a claim of product verification credit",
+        "non_grant_values": (),
     },
 }
+
+# ---------------------------------------------------------------------------
+# AMENDMENT APPROVAL-NOTREQ-A1: `human_approval_status: "not_required"` is a
+# LEGITIMATE value, and it was being rejected for want of evidence of a decision
+# that was never made.
+#
+# THE DECISION, on the merits.
+#
+# `not_required` is already a member of the enum in
+# schemas/artifact-base.schema.json and is already listed in
+# role-and-review-policy.json#/approval_semantics/human_approval_status_values.
+# The schema permitted it and the validator rejected it, which is an
+# inconsistency in the corpus rather than a policy choice: on the current tree
+# no schema-valid value of that field is simultaneously validator-valid except
+# `pending`.
+#
+# It is legitimate, for a reason the corpus already declares:
+# `review_policy.additional_fields/human_approval_required_for` is a POSITIVE
+# LIST - safety_case, production_release, change_approval. Human approval is
+# required for those and, by the plain reading of a positive list, for nothing
+# else. The corpus can enforce the list negatively (a bare `approved` fails) but
+# could not record the complement, so the policy's own scoping had no
+# representation in the data. A record whose family has no approval gate was
+# indistinguishable from a record waiting for an approval that will never come:
+# both read `pending`. That is the defect.
+#
+# IT IS NOT A BYPASS, and the reason it is not is the whole point. The value is
+# permitted ONLY where the record's artefact type genuinely does not require
+# approval, judged against the same list that governs production authority
+# (`approval_evidence_contract/production_authorizable_artifact_types`, which
+# already records the mapping from the policy's names to this corpus's
+# artefact_type values and the basis for it). On one of the three required
+# families it is REJECTED, by a new rule. So the relaxation is confined to the
+# complement of the very list that says where approval is required, and the
+# evasion a reader should worry about - relabel a pending record as
+# not_required to dodge a future approval - is closed on exactly the records
+# where an approval could ever be owed.
+#
+# WHAT IT MUST NOT DO, and does not: it must NOT count toward the `human_approval`
+# numerator. That numerator means "records carrying a properly evidenced approval
+# describing the bytes now on disk". A record with no approval gate contributes
+# nothing to it, so `_is_approval_grant` now excludes the value and the numerator
+# cannot read higher because of it. The denominator is unchanged at every record
+# carrying an id, so a record cannot be removed from the measurement by being
+# relabelled; and the coverage output reports the count of `not_required`
+# records separately, so relabelling is visible rather than silent.
+#
+# THE HAZARD, stated rather than managed away: `not_required` is easy to
+# misread as "no review needed". It is not. Every record in this corpus is
+# reviewable and most are reviewed; what `not_required` records is that there is
+# no SIGN-OFF GATE on that family. The review mechanism is separate and
+# unchanged: `reviewed_by` links and review records. The policy block says so in
+# terms, and a self-test asserts a `not_required` record carrying no review is
+# still reported by the review-coverage machinery rather than being excused.
+
 
 # The kind whose evidence bar is strictly higher than a human approval's.
 APPROVAL_STRICTEST_KIND = "production_authorization"
@@ -548,6 +661,23 @@ ASIL_FROM_SE = {
     "S2": {"E1": "QM", "E2": "QM", "E3": "ASIL_A", "E4": "ASIL_B"},
     "S3": {"E1": "QM", "E2": "ASIL_A", "E3": "ASIL_C", "E4": "ASIL_D"},
 }
+
+
+def _ratio_all_agree(ratio):
+    """True when a "n/n" coverage string reports every item agreeing.
+
+    Deliberately not a comparison against a literal. Several self-tests assert
+    that an INDEPENDENT checker agrees with the corpus, and each of those
+    assertions was originally written as `== "321/321"` - a hard-coded record
+    population inside a test whose subject is whether a measurement is honest. It
+    passed, and then failed the moment a review record was added, for a reason
+    that had nothing to do with the checker. The property under test is that the
+    numerator equals the denominator; that is what this asserts.
+    """
+    if not isinstance(ratio, str):
+        return False
+    m = re.match(r"^(\d+)/(\d+)$", ratio.strip())
+    return bool(m) and m.group(1) == m.group(2)
 
 
 def utcnow():
@@ -2204,6 +2334,13 @@ class CorpusTool:
         are inherited from the amendment that wrote them rather than restated
         (which is what made them drift once already).
 
+        APPROVAL-COUNT-A1 adds a THIRD block, `approval_countersignature_contract`,
+        merged the same way. It is not marked `effective` because it does not
+        supersede either of the other two - it is purely additional - but it is
+        merged unconditionally, and its absence makes element 7 UNVERIFIABLE
+        rather than absent, so a policy file that lost the block cannot quietly
+        turn a two-party requirement back into a one-party one.
+
         The superseded block is kept in the file rather than edited in place,
         because an amendment that is rewritten cannot be audited.
 
@@ -2224,6 +2361,14 @@ class CorpusTool:
             merged.update(led)
             if led.get("amendment_id"):
                 ids.append(str(led["amendment_id"]))
+        csc = p.get("approval_countersignature_contract")
+        if isinstance(csc, dict):
+            # Merged under its own name so the element-7 predicate reads
+            # contract["countersignature_contract"] rather than colliding with
+            # a key the evidence contract might one day use.
+            merged["countersignature_contract"] = csc
+            if csc.get("amendment_id"):
+                ids.append(str(csc["amendment_id"]))
         return (merged, "+".join(ids)) if merged else (None, None)
 
     # -----------------------------------------------------------------------
@@ -2399,7 +2544,12 @@ class CorpusTool:
               "malformed": len(led["malformed"]), "chain_ok": True,
               "chain_break_at": None, "chain_break_reason": None,
               "anchored": 0, "anchor_unverified": 0, "duplicate_ids": 0,
-              "unresolved_records": 0, "incomplete": 0}
+              "unresolved_records": 0, "incomplete": 0,
+              # APPROVAL-COUNT-A1. All zero on a ledger with no entries, which
+              # is a measured zero over an empty population and not a constant.
+              "not_countersigned": 0, "same_person_both_signatures": 0,
+              "same_role_both_signatures": 0, "divergent_packet_digests": 0,
+              "countersigner_is_content_author": 0}
         if index is None:
             try:
                 index = self.load_artifact_index()
@@ -2466,7 +2616,8 @@ class CorpusTool:
                     seen_ids[e["ledger_id"]] = e.get("_line")
             # -- the record it names -------------------------------------------
             key = (e.get("profile"), e.get("record_id"))
-            if key not in index:
+            rec = index.get(key)
+            if rec is None:
                 st["unresolved_records"] += 1
                 self.findings.add(
                     "high", "governance", lid,
@@ -2474,6 +2625,100 @@ class CorpusTool:
                     f"which does not resolve to any artifact. (profile, id) is the primary key "
                     f"under ID-RULE-004-A1",
                     "approval_ledger_record_unresolved")
+            # -- APPROVAL-COUNT-A1: the second signature, at the LEDGER --------
+            #
+            # Checked here as well as on the record, and for a reason that is not
+            # redundancy. The record-side check (element 7) can only see an
+            # approval that asserts a grant; the ledger is walked whether or not
+            # any record references the entry. So a countsigned ENTRY with no
+            # record referencing it - an orphan written in anticipation, or one
+            # whose reference was deleted - is invisible to element 7 and is
+            # caught here. Both sides bind the same object; an entry whose
+            # countersignature disagrees with the record's is a second defect.
+            if APPROVAL_COUNTERSIGNATURE_FIELD not in e or \
+                    not isinstance(e.get(APPROVAL_COUNTERSIGNATURE_FIELD), dict):
+                st["not_countersigned"] += 1
+                present = APPROVAL_COUNTERSIGNATURE_FIELD in e
+                self.findings.add(
+                    "high", "governance", lid,
+                    f"approval ledger entry {lid} is NOT PROPERLY COUNTERSIGNED. It carries "
+                    f"one signature and an approval requires two: the entry "
+                    f"{'has' if present else 'has no'} "
+                    f"{APPROVAL_COUNTERSIGNATURE_FIELD!r} object, where an independent "
+                    f"countersigner's own six-element evidence must live. Under the "
+                    f"single-signature contract every clause bound one signature, so a "
+                    f"determined person acting ALONE could satisfy the whole contract; this "
+                    f"entry is exactly that shape. The countersignature must carry a named "
+                    f"individual who is not the approver, a declared role that satisfies every "
+                    f"independence clause for this record's owner_role, an ISO-8601 date, and a "
+                    f"review_packet whose record_sha256_at_signing EQUALS the approver's. "
+                    f"Required fields at {APPROVAL_COUNTERSIGNATURE_CONTRACT_REF}"
+                    f"/required_fields; independence clauses at "
+                    f"{APPROVAL_COUNTERSIGNATURE_CONTRACT_REF}"
+                    f"/countersigner_independence_rule",
+                    "approval_ledger_entry_not_countersigned")
+            else:
+                cs = e[APPROVAL_COUNTERSIGNATURE_FIELD]
+                ap_who = e.get("approved_by")
+                cs_who = cs.get("approved_by")
+                a_tok, c_tok = self._name_tokens(ap_who), self._name_tokens(cs_who)
+                if a_tok and c_tok and (a_tok & c_tok):
+                    st["same_person_both_signatures"] += 1
+                    self.findings.add(
+                        "high", "governance", lid,
+                        f"approval ledger entry {lid} is NOT TWO PARTIES. Its countersigner "
+                        f"{cs_who!r} shares token(s) {sorted(a_tok & c_tok)} with its approver "
+                        f"{ap_who!r}, so the second signature is the first one wearing a "
+                        f"different name. Compared on normalised token sets, so 'Ada Lovelace', "
+                        f"'A. Lovelace' and 'lovelace, ada' are recognised as one person. THIS "
+                        f"CHECK CANNOT TELL A SECOND REAL PERSON FROM A SECOND INVENTED NAME IN "
+                        f"A DIFFERENT SHAPE, and nothing in this repository can; that is part of "
+                        f"the irreducible residual recorded at "
+                        f"{APPROVAL_COUNTERSIGNATURE_CONTRACT_REF}"
+                        f"/residual_limit_that_this_does_not_reduce",
+                        "approval_ledger_entry_countersigner_is_approver")
+                if isinstance(cs.get("role"), str) and isinstance(e.get("role"), str) \
+                        and cs["role"].strip() == e["role"].strip():
+                    st["same_role_both_signatures"] += 1
+                    self.findings.add(
+                        "high", "governance", lid,
+                        f"approval ledger entry {lid} is signed twice by the SAME role "
+                        f"{cs['role']!r}. Two signatures must come from two roles, not from one "
+                        f"role signed twice",
+                        "approval_ledger_entry_countersigner_role_matches_approver")
+                cs_rp = cs.get("review_packet")
+                ap_rp = e.get("signed_packet")
+                cs_d = cs_rp.get("record_sha256_at_signing") if isinstance(cs_rp, dict) else None
+                ap_d = ap_rp.get("record_sha256_at_signing") if isinstance(ap_rp, dict) else None
+                if isinstance(cs_d, str) and isinstance(ap_d, str) \
+                        and cs_d.strip() != ap_d.strip():
+                    st["divergent_packet_digests"] += 1
+                    self.findings.add(
+                        "high", "governance", lid,
+                        f"approval ledger entry {lid} has its two signatures over DIFFERENT "
+                        f"bytes: the countersigner attested {cs_d.strip()} and the approver "
+                        f"attested {ap_d.strip()}. A countersignature must be over the same "
+                        f"revision of the same record; two digests mean two separate reviews "
+                        f"filed in one entry",
+                        "approval_ledger_entry_countersignature_digest_divergent")
+                # And the authorship test, which needs the record.
+                if rec is not None:
+                    rd = rec[1] if isinstance(rec, tuple) else rec
+                    if isinstance(rd, dict) and isinstance(cs.get("role"), str):
+                        authors = self._content_authors(rd)
+                        if cs["role"].strip() in authors:
+                            st["countersigner_is_content_author"] += 1
+                            self.findings.add(
+                                "high", "governance", lid,
+                                f"approval ledger entry {lid} is countersigned by "
+                                f"{cs.get('approved_by')!r} under role {cs['role']!r}, and that "
+                                f"role authored CONTENT in {key[1]!r} at or below the revision "
+                                f"being approved (content author(s): {sorted(authors)}). A "
+                                f"countersigner must come from somewhere that did not help "
+                                f"write the thing; this is independence clause 3 at "
+                                f"{APPROVAL_COUNTERSIGNATURE_CONTRACT_REF}"
+                                f"/countersigner_independence_rule",
+                                "approval_ledger_entry_countersigner_authored_content")
             # -- the chain, first break only -------------------------------------
             claimed = e.get("previous_entry_sha256")
             if i == 0:
@@ -2768,10 +3013,17 @@ class CorpusTool:
 
     @staticmethod
     def _is_approval_grant(spec, d):
-        """True when `d` asserts the grant this rule is about."""
+        """True when `d` asserts the grant this rule is about.
+
+        APPROVAL-NOTREQ-A1: `not_required` is excluded for any kind that
+        declares it a non-grant value. The exclusion is read from the spec
+        rather than special-cased here, so a kind that grows its own set of
+        non-grant values does not need this method to change.
+        """
         v = d.get(spec["record_field"])
         if spec["record_field"] == "human_approval_status":
-            return v is not None and v != "pending"
+            non = set(spec.get("non_grant_values") or ())
+            return v is not None and v != "pending" and v not in non
         return v is True
 
     @staticmethod
@@ -3166,7 +3418,367 @@ class CorpusTool:
         if kind == APPROVAL_STRICTEST_KIND:
             defects.extend(self._production_authority_defects(d, ev, contract))
 
+        # --- 7. the SECOND, INDEPENDENT signature (APPROVAL-COUNT-A1) -------
+        #
+        # Added last and unconditionally for every kind, because it is not a
+        # stricter version of what the approver must show: it is a second
+        # party. Every clause of it is read from
+        # role-and-review-policy.json#/approval_countersignature_contract rather
+        # than restated here, so the policy and the enforcing code cannot drift
+        # apart - the same discipline APPROVAL-RULE-A1 set.
+        defects.extend(self._countersignature_defects(d, kind, ev, contract, path=path))
+
         return defects
+
+    # --- APPROVAL-COUNT-A1: the second signature ----------------------------
+    #
+    # Every clause is a separate defect string, so a rejection names WHICH
+    # clause failed rather than reporting that the countersignature was
+    # unacceptable. A single "bad countersignature" message would leave an
+    # operator with five possible repairs and no way to tell which one is
+    # needed.
+    #
+    # Name comparison is TOKEN-SET based and normalised, so "Ada Lovelace",
+    # "A. Lovelace" and "lovelace, ada" are one person and are rejected. That is
+    # a real improvement on a string compare and it is NOT identity: a second
+    # false name in a different shape passes. That limit is the residual, and it
+    # is why the contract is two INDEPENDENT signatures rather than two
+    # signatures.
+    @staticmethod
+    def _name_tokens(name):
+        if not isinstance(name, str):
+            return frozenset()
+        return frozenset(t for t in re.split(r"[\s,]+", name.strip().lower()) if t)
+
+    def _countersignature_defects(self, d, kind, ev, contract, path=None):
+        """Every way this record's approval is not properly COUNTERSIGNED.
+
+        Empty means properly countersigned and the approval may be ACCEPTED.
+        Non-empty means rejected, and every unmet clause is listed.
+
+        `ev` is the approver's evidence object, needed for two comparisons: the
+        countersigner must differ from the approver as a PERSON and as a ROLE,
+        and must attest the SAME packet digest the approver did.
+        """
+        # The countersignature lives INSIDE the approver's own evidence object,
+        # i.e. approval_evidence.<kind>.countersignature, not at the record's top
+        # level. A record may legitimately carry two kinds of approval - a human
+        # approval AND a production grant are different claims with different
+        # bars - and a top-level field would leave it ambiguous which claim the
+        # second signature was over. Nested, each kind carries its own pair.
+        cs = ev.get(APPROVAL_COUNTERSIGNATURE_FIELD) if isinstance(ev, dict) else None
+        spec_c = (contract or {}).get("countersignature_contract") \
+            if isinstance(contract, dict) else None
+        if spec_c is None:
+            # The contract is unreadable, so the clause cannot be applied and
+            # the approval cannot be accepted as properly evidenced. Same
+            # posture as element 1's unreadable-contract branch: refuse rather
+            # than skip a requirement because its text could not be read.
+            return [f"element 7 UNVERIFIABLE: the countersignature contract is "
+                    f"unreadable ({APPROVAL_POLICY_REL}"
+                    f"#/approval_countersignature_contract could not be read), so whether this "
+                    f"approval carries a properly independent second signature cannot be "
+                    f"determined. An approval whose second signature cannot be checked is not "
+                    f"an approval this corpus can accept"]
+
+        # --- 7.1 the object exists at all ------------------------------------
+        if cs is None:
+            return [
+                f"element 7 MISSING: this approval carries ONE signature and an approval now "
+                f"requires TWO. {APPROVAL_EVIDENCE_FIELD}.{kind} carries no "
+                f"{APPROVAL_COUNTERSIGNATURE_FIELD!r} object, so no second party has attested "
+                f"the same packet digest. Under the single-signature contract every clause "
+                f"bound one signature, which meant a determined person acting ALONE could "
+                f"satisfy the whole contract. Element 7 exists to make that impossible: the "
+                f"countersignature must carry the full six-element evidence in its own right - "
+                f"a named individual, a declared role, independence against this record's "
+                f"owner_role ({d.get('owner_role')!r}), an ISO-8601 date, and a review_packet "
+                f"whose record_sha256_at_signing EQUALS the approver's. The required fields are "
+                f"enumerated at {APPROVAL_POLICY_REL}"
+                f"#/approval_countersignature_contract/required_fields and the independence "
+                f"clauses at .../countersigner_independence_rule"
+            ]
+        if not isinstance(cs, dict):
+            return [f"element 7 REJECTED: {APPROVAL_COUNTERSIGNATURE_FIELD} must be an object "
+                    f"carrying the countersigner's own evidence, got "
+                    f"{type(cs).__name__}"]
+        defects = []
+
+        role_ids, role_names = self._policy_role_ids()
+        owner_role = d.get("owner_role")
+
+        # --- 7.2 a named individual, and a DIFFERENT one ----------------------
+        ap_who = ev.get("approved_by") if isinstance(ev, dict) else None
+        cs_who = cs.get("approved_by")
+        if not isinstance(cs_who, str) or not cs_who.strip():
+            defects.append(
+                f"element 7.2 MISSING: {APPROVAL_COUNTERSIGNATURE_FIELD}.approved_by is absent "
+                f"or empty. A countersignature must name the person who gave it")
+        else:
+            toks = [t for t in re.split(r"[\s,]+", cs_who.strip()) if t]
+            low = [t.lower().strip(".,()[]") for t in toks]
+            low_set = set(low)
+            if len(toks) < 2:
+                defects.append(
+                    f"element 7.2 REJECTED: countersigner {cs_who!r} is a single token. On the "
+                    f"same grounds as the approver: a lone word is a role, a team or an initial "
+                    f"set, and none of those can be traced to a person or challenged")
+            if cs_who.strip().lower() in role_ids or cs_who.strip().lower() in \
+                    {str(v).lower() for v in role_names.values() if isinstance(v, str)}:
+                defects.append(
+                    f"element 7.2 REJECTED: countersigner {cs_who!r} is a declared role name, "
+                    f"not a person")
+            bad = sorted(role_ids & low_set)
+            if bad:
+                defects.append(
+                    f"element 7.2 REJECTED: countersigner {cs_who!r} contains the declared role "
+                    f"id(s) {bad}; record the person's name, not their role")
+            team = sorted(APPROVAL_TEAM_VOCABULARY & low_set)
+            if team:
+                defects.append(
+                    f"element 7.2 REJECTED: countersigner {cs_who!r} names a group rather than a "
+                    f"person (token(s) {team}). A second signature from a group is not a second "
+                    f"party")
+            # THE different-person clause. Token sets, not strings, so that a
+            # re-ordered, re-punctuated or abbreviated form of the approver's
+            # own name is recognised as the approver rather than as a new person.
+            a_tok, c_tok = self._name_tokens(ap_who), self._name_tokens(cs_who)
+            if a_tok and c_tok and (a_tok & c_tok):
+                shared = sorted(a_tok & c_tok)
+                defects.append(
+                    f"element 7.2 REJECTED: NOT A SECOND PARTY - the countersigner "
+                    f"{cs_who!r} shares token(s) {shared} with the approver {ap_who!r}. "
+                    f"Compared on normalised token sets, so 'Ada Lovelace', 'A. Lovelace' and "
+                    f"'lovelace, ada' are recognised as one person and rejected. NOTE WHAT THIS "
+                    f"DOES NOT DO: it cannot tell a second real person from a second invented "
+                    f"name in a different shape, and nothing in this repository can. That is "
+                    f"why the contract requires two INDEPENDENT signatures and not two "
+                    f"signatures; see {APPROVAL_POLICY_REL}"
+                    f"#/approval_countersignature_contract/residual_limit_that_this_does_not_reduce")
+
+        # --- 7.3 role + the FIVE independence clauses -------------------------
+        cr = cs.get("role")
+        if not isinstance(cr, str) or not cr.strip():
+            defects.append(
+                f"element 7.3 MISSING: {APPROVAL_COUNTERSIGNATURE_FIELD}.role is absent. Record "
+                f"the countersigner's role_id as declared in {APPROVAL_POLICY_REL}#/roles")
+            cr = None
+        elif cr.strip() not in role_ids:
+            defects.append(
+                f"element 7.3 REJECTED: countersigner role {cr!r} is not a role_id declared in "
+                f"{APPROVAL_POLICY_REL}#/roles; an unverifiable role cannot satisfy any "
+                f"independence requirement")
+        ci = cs.get("independence")
+        if ci is None:
+            defects.append(
+                f"element 7.3 MISSING: {APPROVAL_COUNTERSIGNATURE_FIELD}.independence is "
+                f"absent. The countersigner asserts their own independence from this record's "
+                f"owner_role ({owner_role!r}); the corpus does not assume it")
+        elif not isinstance(ci, dict):
+            defects.append(f"{APPROVAL_COUNTERSIGNATURE_FIELD}.independence must be an object, "
+                           f"got {type(ci).__name__}")
+        else:
+            if ci.get("owner_role") is None:
+                defects.append(
+                    f"element 7.3 MISSING: countersignature.independence.owner_role is absent; "
+                    f"it must equal this record's own owner_role ({owner_role!r})")
+            elif ci.get("owner_role") != owner_role:
+                defects.append(
+                    f"element 7.3 REJECTED: countersignature.independence.owner_role is "
+                    f"{ci.get('owner_role')!r} but this record's owner_role is {owner_role!r}. "
+                    f"The countersigner's independence is judged against the record being "
+                    f"approved, not against a role named in the countersignature")
+            if ci.get("satisfied") is not True:
+                defects.append(
+                    f"element 7.3 REJECTED: countersignature.independence.satisfied is "
+                    f"{ci.get('satisfied')!r}, not true")
+            cie = ci.get("evidence")
+            if not isinstance(cie, str) or not cie.strip() \
+                    or cie.strip().lower() in APPROVAL_PLACEHOLDER_VALUES \
+                    or len(cie.strip()) < APPROVAL_INDEPENDENCE_MIN_CHARS:
+                defects.append(
+                    f"element 7.3 REJECTED: countersignature.independence.evidence is "
+                    f"{cie.strip() if isinstance(cie, str) else cie!r}, which states nothing "
+                    f"about how this countersigner is independent of {owner_role!r} (minimum "
+                    f"{APPROVAL_INDEPENDENCE_MIN_CHARS} characters, not a placeholder)")
+            cpref = ci.get("policy_ref")
+            if not isinstance(cpref, str) \
+                    or "role-and-review-policy.json" not in cpref.replace("\\", "/"):
+                defects.append(
+                    f"element 7.3 REJECTED: countersignature.independence.policy_ref is "
+                    f"{cpref!r}; it must cite {APPROVAL_POLICY_REL} so the requirement being "
+                    f"satisfied is traceable")
+
+        # Clauses (1)-(5), each checked so the message can name which failed.
+        if cr is not None and isinstance(cr, str) and cr.strip():
+            cs_role = cr.strip()
+            # (2) not the record's owner_role
+            if cs_role == owner_role:
+                defects.append(
+                    f"element 7.3 REJECTED: INDEPENDENCE CLAUSE 2 - the countersigner's role "
+                    f"{cs_role!r} IS this record's owner_role. A record cannot be countersigned "
+                    f"by the role that owns it")
+            # (3) not the author of ANY content revision, not merely the last one
+            authors = self._content_authors(d)
+            if cs_role in authors:
+                defects.append(
+                    f"element 7.3 REJECTED: INDEPENDENCE CLAUSE 3 - the countersigner's role "
+                    f"{cs_role!r} authored content in this record at the revision being "
+                    f"approved. Content author(s) at or below the approved revision: "
+                    f"{sorted(authors)} (authored by any of {len(authors)} distinct "
+                    f"{'role' if len(authors) == 1 else 'roles'}). A countersigner is held to a "
+                    f"STRONGER authorship test than an approver: an approver is excluded from "
+                    f"the LAST content revision only, a countersigner from every one of them, "
+                    f"because the whole purpose of the second signature is that it comes from "
+                    f"somewhere that did not help write the thing")
+            # (4) not the approver's own role
+            ap_role = ev.get("role") if isinstance(ev, dict) else None
+            if isinstance(ap_role, str) and ap_role.strip() and cs_role == ap_role.strip():
+                defects.append(
+                    f"element 7.3 REJECTED: INDEPENDENCE CLAUSE 4 - the countersigner's role "
+                    f"{cs_role!r} is the APPROVER's role as well. Two signatures must come from "
+                    f"two roles, not from one role signed twice under two names")
+            # (5) the per-owner_role exclusion map, READ FROM THE POLICY
+            excluded_map = spec_c.get("countersigner_excluded_roles_by_owner_role")
+            excluded = []
+            if isinstance(excluded_map, dict):
+                raw_ex = excluded_map.get(owner_role)
+                if isinstance(raw_ex, list):
+                    excluded = [str(x) for x in raw_ex]
+                elif raw_ex is not None:
+                    defects.append(
+                        f"element 7.3 REJECTED: {APPROVAL_POLICY_REL}"
+                        f"#/approval_countersignature_contract/countersigner_excluded_roles_by_"
+                        f"owner_role[{owner_role!r}] is {type(raw_ex).__name__}, not a list, so "
+                        f"clause 5 cannot be applied")
+            if cs_role in excluded:
+                defects.append(
+                    f"element 7.3 REJECTED: INDEPENDENCE CLAUSE 5 - for a record owned by "
+                    f"{owner_role!r} the policy excludes role(s) {excluded} from countersigning. "
+                    f"Those roles form a pair that checks the other's work, so each is the "
+                    f"other's first reviewer rather than an independent second party. Basis at "
+                    f"{APPROVAL_POLICY_REL}#/approval_countersignature_contract/"
+                    f"countersigner_excluded_roles_basis")
+            elif owner_role is not None and isinstance(excluded_map, dict) \
+                    and owner_role not in excluded_map:
+                # NOT a defect, and recorded so a reader is not left guessing
+                # whether clause 5 was silently skipped. Surfaced through
+                # _probe_note and the coverage detail rather than as a finding,
+                # because refusing every countersignature on a record whose
+                # owner_role is undeclared would make the mechanism unusable for
+                # 124 of the 321 records.
+                self._countersignature_unmapped_owner_roles = getattr(
+                    self, "_countersignature_unmapped_owner_roles", set())
+                self._countersignature_unmapped_owner_roles.add(str(owner_role))
+
+        # --- 7.4 an ISO-8601 date -------------------------------------------
+        cdt = cs.get("date")
+        if cdt is None:
+            defects.append(
+                f"element 7.4 MISSING: {APPROVAL_COUNTERSIGNATURE_FIELD}.date is absent. When "
+                f"the second party attested is part of what makes it accountable")
+        elif not self._is_iso8601(cdt):
+            defects.append(
+                f"element 7.4 REJECTED: countersignature date {cdt!r} is not an ISO-8601 date or "
+                f"date-time (YYYY-MM-DD, optionally followed by HH:MM[:SS] and Z or an offset)")
+
+        # --- 7.5 the SAME packet digest ---------------------------------------
+        crp = cs.get("review_packet")
+        if crp is None:
+            defects.append(
+                f"element 7.5 MISSING: {APPROVAL_COUNTERSIGNATURE_FIELD}.review_packet is "
+                f"absent. The countersignature must attest the sha256 of the packet both parties "
+                f"signed, and that digest must EQUAL the approver's "
+                f"review_packet.record_sha256_at_signing")
+        elif not isinstance(crp, dict):
+            defects.append(f"{APPROVAL_COUNTERSIGNATURE_FIELD}.review_packet must be an object, "
+                           f"got {type(crp).__name__}")
+        else:
+            cs_attested = crp.get("record_sha256_at_signing")
+            if not isinstance(cs_attested, str) \
+                    or not APPROVAL_SHA256_RE.match(cs_attested.strip()):
+                defects.append(
+                    f"element 7.5 MISSING: countersignature.review_packet."
+                    f"record_sha256_at_signing is absent or is not a 64-character lowercase hex "
+                    f"sha256 (got {cs_attested!r})")
+            # THE SAME-DIGEST clause. Not the same path: two people may have
+            # each been handed their own copy, and insisting on one path would
+            # be an archive rule, not an independence rule. The same DIGEST is
+            # what makes it a countersignature rather than a second review of
+            # something else.
+            ap_rp = ev.get("review_packet") if isinstance(ev, dict) else None
+            ap_attested = ap_rp.get("record_sha256_at_signing") if isinstance(ap_rp, dict) else None
+            if isinstance(cs_attested, str) and isinstance(ap_attested, str) \
+                    and cs_attested.strip() != ap_attested.strip():
+                defects.append(
+                    f"element 7.5 REJECTED: the countersigner attested "
+                    f"record_sha256_at_signing {cs_attested.strip()} but the approver attested "
+                    f"{ap_attested.strip()}. A countersignature must be over the SAME bytes of "
+                    f"the SAME revision. Two different digests mean two different things were "
+                    f"signed, and a signature over a different revision is not a second party to "
+                    f"the first one - it is a separate review that happened to be filed in the "
+                    f"same place")
+            packet, why = self._resolve_approval_packet(crp.get("path"), crp.get("sha256"))
+            if packet is None:
+                defects.append(f"element 7.5 REJECTED: {why}")
+            else:
+                integrity = packet.get("integrity") if isinstance(
+                    packet.get("integrity"), dict) else {}
+                recorded = integrity.get("record_sha256")
+                if isinstance(cs_attested, str) and cs_attested.strip() \
+                        and recorded != cs_attested.strip():
+                    defects.append(
+                        f"element 7.5 REJECTED: countersignature.review_packet."
+                        f"record_sha256_at_signing ({cs_attested.strip()}) is not the digest the "
+                        f"cited packet itself records for this record (integrity.record_sha256 = "
+                        f"{recorded!r})")
+                tgt = packet.get("target") if isinstance(packet.get("target"), dict) else {}
+                if tgt.get("record_id") != d.get("id") \
+                        or tgt.get("profile") != d.get("profile", "unknown"):
+                    defects.append(
+                        f"element 7.5 REJECTED: the countersigner cited a packet that is not "
+                        f"about this record: it names target.record_id={tgt.get('record_id')!r} "
+                        f"target.profile={tgt.get('profile')!r}, this record is "
+                        f"{d.get('id')!r} / {d.get('profile', 'unknown')!r}. Both signatures must "
+                        f"be over the same (profile, id) pair")
+                if path is not None:
+                    try:
+                        rec_rel = Path(str(path)).resolve().relative_to(
+                            self.root.resolve()).as_posix()
+                    except (ValueError, OSError):
+                        rec_rel = None
+                    cited_rel = integrity.get("record_path")
+                    if rec_rel and isinstance(cited_rel, str) \
+                            and cited_rel.replace("\\", "/") != rec_rel:
+                        defects.append(
+                            f"element 7.5 REJECTED: the countersigner cited a packet generated "
+                            f"for record file {cited_rel!r}, which is not this record's file "
+                            f"{rec_rel!r}")
+
+        return defects
+
+    def _content_authors(self, d):
+        """Every role_id that authored CONTENT in this record, at or below the
+        revision being approved.
+
+        Distinct from `_current_revision_author`, which returns only the LAST
+        content author and is the right test for an approver. A countersigner is
+        held to the stronger test - membership of the whole set - because the
+        entire purpose of the second signature is that it comes from somewhere
+        that did not help write the thing. Thirty-six records here carry two or
+        three content authors, so the two tests genuinely differ.
+        """
+        entries = d.get("revision_history")
+        if not isinstance(entries, list):
+            return set()
+        out = set()
+        for h in entries:
+            if not isinstance(h, dict) or self._is_approval_history_entry(h):
+                continue
+            a = h.get("author")
+            if isinstance(a, str) and a.strip():
+                out.add(a.strip())
+        return out
 
     @staticmethod
     def _is_approval_history_entry(h):
@@ -3204,6 +3816,92 @@ class CorpusTool:
             if isinstance(h.get("author"), str) and h["author"].strip():
                 return h["author"].strip()
         return None
+
+    def _approval_required_types(self):
+        """The artefact families this corpus requires human approval for.
+
+        Read from the policy rather than restated, and taken from
+        `approval_evidence_contract/production_authorizable_artifact_types`
+        because that block already records the mapping from
+        `review_policy.additional_fields.human_approval_required_for`'s names
+        (`safety_case`, `production_release`, `change_approval`) onto this
+        corpus's `artifact_type` values (`safety_case`, `post_development_record`,
+        `change`) together with the basis for the mapping. Inventing a second
+        list here would be exactly the drift CORR-COV-021 identified: a mapping
+        enforced by code and stated in prose, with nothing keeping them equal.
+
+        Returns (set_or_None, the_contract_or_None) so the caller can report a
+        missing policy rather than silently permitting everything.
+        """
+        contract = self._approval_policy()
+        if not isinstance(contract, dict):
+            return None, None
+        cfg = contract.get("production_authorizable_artifact_types")
+        types = cfg.get("types") if isinstance(cfg, dict) else None
+        return (set(types) if isinstance(types, list) else None), contract
+
+    def _not_required_defects(self, d):
+        """Defects in `d`'s claim that no approval is required.
+
+        Only ever non-empty for a record whose `human_approval_status` is
+        `not_required`; every other record returns an empty list immediately, so
+        this costs nothing on the 321 records that carry `pending`.
+
+        Three defects, each a way the relaxation could become a bypass:
+
+          1. the record's family IS one human approval is required for - the
+             direct case, and the one the new rule exists for;
+          2. the record carries an `approval_evidence.human_approval` block,
+             which asserts an approval exists while the record asserts none is
+             required;
+          3. the record carries an `approval_ledger_ref` resolving to a
+             human_approval ledger entry, which is the same contradiction
+             recorded in the ledger rather than on the record.
+        """
+        if d.get("human_approval_status") != HUMAN_APPROVAL_NOT_REQUIRED:
+            return []
+        out = []
+        atype = d.get("artifact_type")
+        required, contract = self._approval_required_types()
+        if required is None:
+            out.append(
+                f"{APPROVAL_POLICY_REL}"
+                f"#/approval_evidence_contract/production_authorizable_artifact_types/types could "
+                f"not be read, so it cannot be established that {atype!r} does not require human "
+                f"approval. 'not_required' is refused rather than permitted when the "
+                f"requirement list is unreadable: an evidence requirement nobody can read is not "
+                f"an evidence requirement, and the same posture element 1 and element 7 take")
+        elif atype in required:
+            out.append(
+                f"MISDECLARED: this record's human_approval_status is "
+                f"{HUMAN_APPROVAL_NOT_REQUIRED!r}, but artefact_type {atype!r} IS one of the "
+                f"families human approval is required for {sorted(required)}. "
+                f"review_policy.additional_fields.human_approval_required_for names "
+                f"safety_case, production_release and change_approval; "
+                f"post_development_record is this corpus's production_release type. "
+                f"'not_required' is permitted ONLY on a family outside that list; on one inside "
+                f"it, the value is not a declaration that no gate exists, it is an attempt to "
+                f"declare that one does not. Use 'pending' and record a properly evidenced "
+                f"approval when it exists, or leave it pending until it does")
+        ev_root = d.get(APPROVAL_EVIDENCE_FIELD)
+        if isinstance(ev_root, dict) and isinstance(ev_root.get("human_approval"), dict):
+            out.append(
+                f"CONTRADICTORY: human_approval_status is {HUMAN_APPROVAL_NOT_REQUIRED!r} - no "
+                f"approval is required - yet the record carries a non-empty "
+                f"{APPROVAL_EVIDENCE_FIELD}.human_approval block, which is where an approval is "
+                f"evidenced. One of the two statements is wrong and the corpus cannot tell which, "
+                f"so both are reported")
+        ref = d.get(APPROVAL_LEDGER_REF_FIELD)
+        if ref is not None:
+            resolved = _ledger_ref_for_kind(ref, "human_approval")
+            if resolved is not None:
+                out.append(
+                    f"CONTRADICTORY: human_approval_status is {HUMAN_APPROVAL_NOT_REQUIRED!r}, "
+                    f"yet the record carries an approval_ledger_ref resolving to a human_approval "
+                    f"ledger entry ({resolved.get('ledger_id')!r}). An entry in "
+                    f"{APPROVAL_LEDGER_REL} records that an approval happened; a record that "
+                    f"declares no approval is required cannot also have one")
+        return out
 
     def _production_authority_defects(self, d, ev, contract):
         """The extra conditions production authority carries and approval does not.
@@ -3299,6 +3997,34 @@ class CorpusTool:
                 self._add_approval_finding_once(
                     spec["severity"], category, aid,
                     self._approval_defect_message(aid, kind, defects), spec["rule_id"])
+        # APPROVAL-NOTREQ-A1. The `not_required` misuse check lives HERE rather
+        # than only in `_validate_governance_semantics`, so it is reached by
+        # _validate_artifact and by the governance gate alike - the same parity
+        # the evidence contract needed, and for the same reason: gate [7/8] runs
+        # the governance path on a fresh Findings and never calls
+        # _validate_artifact, so a check placed only in the latter would be
+        # invisible to the gate that exists to catch claims of authority.
+        #
+        # Its own rule id, not human_approval_rejected: that rule's message
+        # enumerates unmet evidence ELEMENTS, and `not_required` is not a grant
+        # and so has no elements. Attributing this to human_approval_rejected
+        # would be a finding naming a rule the corpus does not violate in the way
+        # the rule describes.
+        nr = self._not_required_defects(d)
+        if nr:
+            ok = False
+            self._add_approval_finding_once(
+                "high", category, aid,
+                (f"{aid}: human_approval_status asserts that no human approval is required, and "
+                 f"that assertion is not properly made -- {len(nr)} defect(s). An approval value "
+                 f"alone is not an approval, and NEITHER is the absence of one: "
+                 f"{HUMAN_APPROVAL_NOT_REQUIRED!r} records that a family has no sign-off gate, and "
+                 f"the corpus only accepts that claim where the policy's own positive list says "
+                 f"approval is not required. It never counts toward the human_approval numerator. "
+                 f"Decision and reasoning at {APPROVAL_POLICY_REL}"
+                 f"#/human_approval_not_required_decision:\n    "
+                 + "\n    ".join(f"[{i}] {x}" for i, x in enumerate(nr, 1))),
+                NOT_REQUIRED_RULE_ID)
         return ok
 
     def _approval_dimension_counts(self):
@@ -3324,6 +4050,16 @@ class CorpusTool:
                    "evidenced_now": 0, "evidenced_stale": 0, "stale_ids": [],
                    "unevidenced_ids": []}
                for k in APPROVAL_RULES}
+        # APPROVAL-NOTREQ-A1. Counted separately so that relabelling a record as
+        # `not_required` is VISIBLE rather than silent. If the value merely made
+        # records stop being counted, a corpus could quietly shrink its own
+        # approval surface by relabelling; because the denominator is every
+        # record with an id and this count is reported beside it, relabelling
+        # moves a number that is on the record rather than one that is not.
+        out["human_approval"]["not_required"] = 0
+        out["human_approval"]["not_required_ids"] = []
+        out["human_approval"]["not_required_misdeclared"] = 0
+        out["human_approval"]["not_required_misdeclared_ids"] = []
         try:
             index = self.load_artifact_index()
         except Exception:
@@ -3332,6 +4068,23 @@ class CorpusTool:
             if not isinstance(d, dict) or not d.get("id"):
                 continue
             for kind, spec in APPROVAL_RULES.items():
+                if kind == "human_approval" \
+                        and d.get("human_approval_status") == HUMAN_APPROVAL_NOT_REQUIRED:
+                    # Counted, never granted. A record that declares no approval
+                    # gate contributes nothing to the numerator and is not
+                    # `considered` either - `considered` means "a candidate for
+                    # the grant", and this is explicitly not one.
+                    if self._not_required_defects(d):
+                        out[kind]["not_required_misdeclared"] += 1
+                        if len(out[kind]["not_required_misdeclared_ids"]) < 10:
+                            out[kind]["not_required_misdeclared_ids"].append(
+                                f"{d.get('id')}/{d.get('artifact_type')}")
+                    else:
+                        out[kind]["not_required"] += 1
+                        if len(out[kind]["not_required_ids"]) < 10:
+                            out[kind]["not_required_ids"].append(
+                                f"{d.get('id')}/{d.get('artifact_type')}")
+                    continue
                 if self._is_approval_grant(spec, d):
                     out[kind]["granted"] += 1
                     if not self._approval_evidence_defects(d, kind, path=path):
@@ -5164,6 +5917,23 @@ class CorpusTool:
                        f"approval_staleness, and is not counted here. Computed by the same "
                        f"predicate the validator enforces, so the figure cannot read higher than "
                        f"the gate permits. Denominator: every record carrying an id.")
+            if kind == "human_approval":
+                # APPROVAL-NOTREQ-A1, stated in the measurement rather than in a
+                # policy file nobody reads alongside it.
+                counted += (
+                    f" 'not_required' IS NOT A GRANT AND IS NOT COUNTED HERE: it declares that "
+                    f"the record's family has no sign-off gate, no person decided anything, and "
+                    f"there is no approval to evidence. Current value {s.get('not_required', 0)} "
+                    f"of {total_art} record(s) carry it and "
+                    f"{s.get('not_required_misdeclared', 0)} carry it on a family human approval "
+                    f"IS required for, which is rejected by "
+                    f"{NOT_REQUIRED_RULE_ID}. It is reported here so relabelling a record is "
+                    f"visible rather than silent; the denominator is unchanged, so relabelling "
+                    f"cannot remove a record from the measurement. NOTE IT IS NOT A REVIEW "
+                    f"EXEMPTION: 'not_required' says no SIGN-OFF GATE exists for the family, "
+                    f"and every record remains reviewable and most are reviewed through "
+                    f"reviewed_by links and review records. Decision and reasoning at "
+                    f"{APPROVAL_POLICY_REL}#/human_approval_not_required_decision")
             if kind == APPROVAL_STRICTEST_KIND:
                 counted += (" STRICTLY STRICTER than a human approval: the approving role must be "
                             "one this corpus grants production authority to, and the record's "
@@ -5202,6 +5972,14 @@ class CorpusTool:
             "stale_approvals": ac["human_approval"]["evidenced_stale"],
             "unevidenced_claims": ac["human_approval"]["unevidenced"],
             "no_claim_records": ac["human_approval"]["considered"],
+            # APPROVAL-NOTREQ-A1. Machine-readable, so a gate does not have to
+            # read them out of the detail prose. Both counts are 0 on the tree
+            # this corpus ships, because every record carries `pending` - a
+            # measured zero, and the point of reporting them is that the first
+            # non-zero one is visible.
+            "not_required_records": ac["human_approval"].get("not_required", 0),
+            "not_required_misdeclared": ac["human_approval"].get(
+                "not_required_misdeclared", 0),
         }
         dims["production_authorization"] = {
             "numerator": ac["production_authorization"]["evidenced_now"],
@@ -8368,11 +9146,30 @@ class CorpusTool:
         print(f"    approval_staleness        : {len(stale)}/{led['entries']} stale (an approval "
               f"whose approved content digest no longer matches the record). STALE IS NOT INVALID: "
               f"reported and counted, never a validation failure.")
+        # APPROVAL-COUNT-A1. Reported on every run rather than only on failure,
+        # because the fact that an approval needs TWO parties is the kind of
+        # thing a reader should not have to go looking for - and because a zero
+        # here over an empty ledger is a measurement, not a constant.
+        print(f"    two-party signature        : {led['entries'] - led['not_countersigned']}"
+              f"/{led['entries']} entries carry BOTH an approver and an independent countersigner "
+              f"in the one entry, so the chain binds them together. "
+              f"{led['not_countersigned']} not countersigned; "
+              f"{led['same_person_both_signatures']} signed twice by one person (token-set "
+              f"comparison - it cannot tell a second real person from a second invented name in "
+              f"a different shape); {led['same_role_both_signatures']} signed twice by one role; "
+              f"{led['divergent_packet_digests']} with the two signatures over different bytes; "
+              f"{led['countersigner_is_content_author']} countersigned by a role that authored "
+              f"the content. An approval now requires two parties; one is not enough.")
         print(f"    residual limit, restated   : the chain proves existence, ordering and integrity; "
               f"the git anchor proves when and in what state the packet was committed. NEITHER "
-              f"proves a human read anything, and NONE OF THIS MAKES AN APPROVAL UNFORGEABLE - a "
-              f"determined person can forge all six elements. That limit is irreducible. See "
-              f"{APPROVAL_LEDGER_DOC_REL}")
+              f"proves a human read anything, and NONE OF THIS MAKES AN APPROVAL UNFORGEABLE. "
+              f"TWO SIGNATURES CHANGE THE COST AND THE SHAPE OF FORGERY, NOT ITS POSSIBILITY: one "
+              f"forger acting alone is no longer enough, but two colluding parties are, and they "
+              f"may collude trivially by one person writing two names in two role-shaped forms. "
+              f"NO NUMBER OF SIGNATURES FIXES IT - the limit does not move toward zero with arity, "
+              f"because the binding is not how many people signed but whether any of them read "
+              f"anything. The limit is that ATTESTATION IS NOT PROOF OF COMPREHENSION. That limit "
+              f"is irreducible. See {APPROVAL_LEDGER_DOC_REL}")
         # EVERY rule id in GOVERNANCE_SEMANTIC_RULE_IDS counts, not the two this
         # gate used to name.
         #
@@ -9980,7 +10777,9 @@ class CorpusTool:
                               drop=(), mutate=None, kind="human_approval", field=None,
                               ledger_entry_mutate=None, write=True, ledger_kind=None,
                               ledger_seq="000001", ref_shape="single",
-                              ledger_prev=None, ref_mutate=None):
+                              ledger_prev=None, ref_mutate=None,
+                              countersigner=None, countersigner_role=None,
+                              cs_mutate=None, cs_drop=None, ledger_cs_mutate=None):
             """Build a record carrying a LEDGER-RECORDED approval, on a temp tree.
 
             `drop` names approval_evidence fields to leave out, so each rejecting
@@ -10061,6 +10860,48 @@ class CorpusTool:
                     "record_sha256_at_signing": rec_sha,
                 },
             }
+            # APPROVAL-COUNT-A1. The countersigner's own six-element evidence,
+            # nested inside the approver's. It is built WELL-FORMED by default so
+            # that every pre-existing fixture and rejection case keeps testing
+            # what it was written to test rather than failing element 7 first;
+            # each rejection case then breaks exactly one clause of this.
+            #
+            # The countersigner role is chosen so it satisfies every clause
+            # against the TARGET record: a declared role_id, not the record's
+            # owner_role, not a content author of it, not the approver's role,
+            # and not excluded for that owner_role by the policy map. That
+            # selection is done by asking the tool, not by hard-coding a role,
+            # so the fixture cannot silently become invalid when the policy map
+            # changes - a hard-coded role would make these tests pass or fail for
+            # reasons unrelated to what they are about.
+            cs_role = countersigner_role or _pick_countersigner_role(tool, d, ev["role"])
+            ev[APPROVAL_COUNTERSIGNATURE_FIELD] = {
+                "approved_by": countersigner or "Ingrid Halvorsen",
+                "organisation": "SoftwareDevLabs",
+                "role": cs_role,
+                "date": "2026-10-04",
+                "decision": "approve",
+                "independence": {
+                    "owner_role": owner,
+                    "satisfied": True,
+                    "evidence": (f"Second party, separate session and reporting line from the "
+                                 f"approver and from the record's owner_role {owner}; took no "
+                                 f"part in authoring or reviewing this record before this pass."),
+                    "policy_ref": f"{APPROVAL_COUNTERSIGNATURE_CONTRACT_REF}/roles/{cs_role}",
+                },
+                # THE SAME DIGEST. A countersignature is over the same bytes of
+                # the same revision; a different digest would be a second,
+                # unrelated review filed in the same entry.
+                "review_packet": {
+                    "path": pjson.relative_to(tool.root).as_posix(),
+                    "sha256": pkt_sha,
+                    "record_sha256_at_signing": rec_sha,
+                },
+            }
+            for k in (cs_drop or ()):
+                ev[APPROVAL_COUNTERSIGNATURE_FIELD].pop(k, None)
+            if cs_mutate:
+                cs_mutate(ev, ev[APPROVAL_COUNTERSIGNATURE_FIELD])
             d[APPROVAL_EVIDENCE_FIELD] = {kind: ev}
             for k in drop:
                 if k == "review_packet":
@@ -10098,6 +10939,16 @@ class CorpusTool:
                 "previous_entry_sha256": (ledger_prev if ledger_prev is not None
                                           else LEDGER_GENESIS_SHA256),
             }
+            # APPROVAL-COUNT-A1: the SAME entry carries the countersignature, so
+            # the hash chain binds both signatures together rather than binding
+            # two chains. A one-line append, not a second entry - two entries
+            # would let a forger drop the countersignature and keep the chain
+            # valid, which is precisely the property this amendment exists to
+            # remove.
+            entry[APPROVAL_COUNTERSIGNATURE_FIELD] = json.loads(
+                json.dumps(ev.get(APPROVAL_COUNTERSIGNATURE_FIELD) or {}))
+            if ledger_cs_mutate:
+                ledger_cs_mutate(entry, entry[APPROVAL_COUNTERSIGNATURE_FIELD])
             if ledger_entry_mutate:
                 ledger_entry_mutate(entry)
             led_p = tool.root / APPROVAL_LEDGER_REL
@@ -10129,6 +10980,46 @@ class CorpusTool:
             if write and path is not None:
                 _write_record_like(tool, path, d)
             return d, path, packet
+
+        def _eligible_countersigner_roles(tool, d, approver_role=None):
+            """Every declared role that may countersign `d`, in policy order.
+
+            Asked of the tool rather than computed in the test, so a fixture
+            cannot silently become invalid when the policy map changes: a
+            hard-coded role would make these tests pass or fail for reasons
+            unrelated to what they are about. The clauses applied are the same
+            ones `_countersignature_defects` enforces, read from the same place.
+            """
+            role_ids, _names = tool._policy_role_ids()
+            pol = load_json(tool.root / "docs/artifacts/governance"
+                                   / "role-and-review-policy.json")
+            csc = pol.get("approval_countersignature_contract") or {}
+            excl_map = csc.get("countersigner_excluded_roles_by_owner_role") or {}
+            owner = d.get("owner_role")
+            excluded = set(str(x) for x in (excl_map.get(owner) or [])
+                           if isinstance(excl_map.get(owner), list))
+            authors = tool._content_authors(d)
+            out = []
+            for rid in sorted(role_ids):
+                if rid == owner or rid in authors or rid in excluded:
+                    continue
+                if approver_role and rid == str(approver_role).strip():
+                    continue
+                out.append(rid)
+            return out
+
+        def _pick_countersigner_role(tool, d, approver_role=None):
+            elig = _eligible_countersigner_roles(tool, d, approver_role)
+            if not elig:
+                return None
+            # Prefer a role whose declared name does not collide with the
+            # approver's NAME tokens, so the different-person clause is
+            # satisfiable by construction.
+            ap_tok = tool._name_tokens(approver_role)
+            for r in elig:
+                if not (ap_tok & tool._name_tokens(r)):
+                    return r
+            return elig[0]
 
         def _defects_for(tool, d, path=None, kind="human_approval"):
             return tool._approval_evidence_defects(d, kind, path=path)
@@ -10397,17 +11288,31 @@ class CorpusTool:
                 #    same tree reads 0/321 without the approval and 1/321 with
                 #    it.
                 with_approval = tool._coverage_dimensions()["human_approval"]
+                # The denominator is compared against the COPY's own indexed
+                # record count, never against a literal. A literal here would
+                # have made this test fail the moment a review record was added,
+                # for a reason that has nothing to do with what the test is
+                # about - and that is the same defect the test exists to catch
+                # in the dimension itself, so hard-coding it here would have been
+                # ironic as well as wrong.
+                # The RECORD population - one entry per (profile, id) key -
+                # which is what this dimension's denominator counts. NOT the
+                # unique identifier count: 39 identifier strings are carried by
+                # two records each (ID-RULE-004-A1), so the unique-id count is
+                # 39 lower and using it here would compare the wrong quantity.
+                pop = len(tool.load_artifact_index())
                 self._probe_note = (
                     f"target {tpath.get('id')}/{tpath.get('profile')}; record ok={ok_rec}, "
                     f"approval findings={len(approval_findings)}; full validate "
                     f"baseline ok={base_ok} findings={base_n} errors={base_err} -> "
                     f"with approval ok={ok_validate} findings={n_find} errors={errs}; "
                     f"human_approval on the copy="
-                    f"{with_approval['numerator']}/{with_approval['denominator']}")
+                    f"{with_approval['numerator']}/{with_approval['denominator']} "
+                    f"(indexed record population {pop})")
                 return (ok_rec and not approval_findings and ok_validate
                         and errs == base_err == 0 and n_find == base_n
                         and with_approval["numerator"] == 1
-                        and with_approval["denominator"] == 321)
+                        and with_approval["denominator"] == pop)
             finally:
                 shutil.rmtree(root2.parent, ignore_errors=True)
 
@@ -10570,9 +11475,14 @@ class CorpusTool:
                 moved = tool._coverage_dimensions()
             finally:
                 shutil.rmtree(root2.parent, ignore_errors=True)
+            # Against the LIVE tree's own indexed population, read here rather
+            # than written in. Same reason as the happy-path test above: a
+            # literal record count in an assertion about a MEASURED dimension
+            # is the defect being guarded against, reintroduced one level up.
+            live_pop = len(self.load_artifact_index())
             ok_base = (base["human_approval"]["numerator"] == 0
                        and base["production_authorization"]["numerator"] == 0
-                       and base["human_approval"]["denominator"] == 321
+                       and base["human_approval"]["denominator"] == live_pop
                        and base["human_approval"].get("measured") is True)
             ok_moved = (moved["human_approval"]["numerator"] == 1
                         and moved["production_authorization"]["numerator"] == 0)
@@ -11220,6 +12130,610 @@ class CorpusTool:
                         and names_element_6)
             finally:
                 shutil.rmtree(root2.parent, ignore_errors=True)
+
+        # ===================================================================
+        # APPROVAL-COUNT-A1: the second signature.
+        #
+        # Four rejections and one acceptance. The rejections come first because
+        # a rule change that only asserted acceptance would pass against no rule
+        # at all; the acceptance comes last because a second-signature rule that
+        # cannot be satisfied is not a stronger control, it is a dead one. Both
+        # directions are required before this amendment is worth anything.
+        #
+        # Every case writes to a throwaway copy OUTSIDE the repository and
+        # deletes it in a finally. Nothing here may touch the real tree, and
+        # `the two-signature fixtures persist nothing` re-reads the real tree
+        # afterwards to prove it.
+        # ===================================================================
+
+        def _countersign_case(build, note_outcome):
+            """Run one rejection case on a throwaway tree. Shared plumbing.
+
+            Returns (passed, note). `build` receives (tool, d) after the fixture
+            is complete, and mutates the countersignature to break exactly one
+            clause.
+            """
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                d, rel, _pk = _approval_fixture(tool, cs_mutate=build, write=True)
+                defects = _defects_for(tool, d, path=rel)
+                tool.findings = Findings()
+                ok = tool._check_approval_evidence(d["id"], d, path=rel,
+                                                    category="provenance")
+                return (not ok and bool(defects), note_outcome(defects))
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_an_approval_with_no_countersignature_FAILS():
+            # THE headline rejection. An approval carrying ONE signature is the
+            # exact shape that a determined person acting alone could produce
+            # before this amendment, so it must be the case this amendment
+            # rejects. The message is asserted verbatim because it is the only
+            # place an operator is told what to DO about it.
+            def build(ev, cs):
+                ev.pop(APPROVAL_COUNTERSIGNATURE_FIELD, None)
+            expect = ("element 7 MISSING: this approval carries ONE signature and an "
+                      "approval now requires TWO.")
+
+            def note(defects):
+                joined = "\n".join(defects)
+                return (f"{len(defects)} defect(s); first: "
+                        f"{(defects[0] if defects else '<none>')[:220]}")
+            passed, note_text = _countersign_case(build, note)
+            # And the verbatim check, separately, so a rewording cannot silently
+            # stop asserting it.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                d, rel, _pk = _approval_fixture(
+                    tool, cs_mutate=lambda ev, cs: ev.pop(
+                        APPROVAL_COUNTERSIGNATURE_FIELD, None), write=True)
+                defects = _defects_for(tool, d, path=rel)
+                verbatim = any(x.startswith(expect) for x in defects)
+                names_two = any("requires TWO" in x for x in defects)
+                names_policy = any("approval_countersignature_contract" in x for x in defects)
+                self._probe_note = (f"{len(defects)} defect(s); headline message verbatim="
+                                    f"{verbatim}; says 'requires TWO'={names_two}; cites the "
+                                    f"contract={names_policy}")
+                return passed and verbatim and names_two and names_policy
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_a_countersigner_who_authored_the_content_FAILS():
+            # THE second headline rejection, and the one that makes the second
+            # signature worth having. A countersignature by whoever wrote the
+            # thing is not a second party; it is the author agreeing with
+            # itself. Checked against EVERY content author, not just the last:
+            # that is the strictly stronger test, and 36 records here carry two
+            # or three content authors so the two tests genuinely differ.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                # Pick a target that actually HAS content authors, so the case
+                # cannot pass vacuously on a record with none.
+                target = None
+                for prof, aid in (("as_is", "FB2-SAF-FSR-000001"),
+                                  ("synthetic_reference", "FB2-SAF-TSC-000001"),
+                                  ("as_is", "FB2-HW-TSR-000001")):
+                    _p, rec = _real_record(prof, aid, tool=tool)
+                    if rec and tool._content_authors(rec):
+                        target = (prof, aid)
+                        break
+                if target is None:
+                    self._probe_note = "no target record carries content authors"
+                    return False
+                authors = tool._content_authors(rec)
+                d, rel, _pk = _approval_fixture(
+                    tool, profile=target[0], aid=target[1],
+                    countersigner_role=sorted(authors)[0],
+                    cs_mutate=lambda ev, cs: cs["independence"].update(
+                        {"satisfied": True}), write=True)
+                defects = _defects_for(tool, d, path=rel)
+                clause3 = [x for x in defects if "INDEPENDENCE CLAUSE 3" in x]
+                verbatim = any(x.startswith(
+                    "element 7.3 REJECTED: INDEPENDENCE CLAUSE 3 - the countersigner's role")
+                    for x in defects)
+                self._probe_note = (
+                    f"target {target[1]}/{target[0]} owner_role={d.get('owner_role')!r}; "
+                    f"content author(s) {sorted(authors)}; countersigner role "
+                    f"{sorted(authors)[0]!r}; {len(defects)} defect(s), clause 3 named="
+                    f"{bool(clause3)}, verbatim={verbatim}")
+                return bool(clause3) and verbatim
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_the_second_signature_cannot_be_the_first_one():
+            # Three single-clause rejections that would each defeat the point of
+            # the amendment on their own: the same PERSON twice, the same ROLE
+            # twice, and two signatures over DIFFERENT bytes (which is not a
+            # countersignature but a second unrelated review filed alongside).
+            cases = {
+                "same person": (
+                    lambda ev, cs: cs.update({"approved_by": ev["approved_by"]}),
+                    "element 7.2 REJECTED: NOT A SECOND PARTY"),
+                "same person, different shape": (
+                    # The token-set comparison, which a string compare would miss.
+                    lambda ev, cs: cs.update(
+                        {"approved_by": "A. " + ev["approved_by"].split()[-1]}),
+                    "element 7.2 REJECTED: NOT A SECOND PARTY"),
+                "same role": (
+                    lambda ev, cs: cs.update({"role": ev["role"]}),
+                    "element 7.3 REJECTED: INDEPENDENCE CLAUSE 4"),
+                "different bytes": (
+                    lambda ev, cs: cs["review_packet"].update(
+                        {"record_sha256_at_signing": "c" * 64}),
+                    "element 7.5 REJECTED: the countersigner attested"),
+            }
+            results = {}
+            for label, (build, expect) in cases.items():
+                root2 = _selftest_tree_root()
+                try:
+                    tool = CorpusTool(root=root2)
+                    d, rel, _pk = _approval_fixture(tool, cs_mutate=build, write=True)
+                    defects = _defects_for(tool, d, path=rel)
+                    results[label] = (bool(defects),
+                                      any(expect in x for x in defects))
+                finally:
+                    shutil.rmtree(root2.parent, ignore_errors=True)
+            bad = [f"{k} (defects={v[0]}, expected message={v[1]})"
+                   for k, v in results.items() if not (v[0] and v[1])]
+            self._probe_note = (f"{len(results)} case(s): "
+                                + ", ".join(f"{k}={'ok' if v[0] and v[1] else 'MISS'}"
+                                           for k, v in results.items()))
+            return not bad
+
+        def t_the_countersigner_role_is_checked_against_the_owner_roles_exclusions():
+            # Independence clause 5, the per-owner_role part, read from the
+            # policy. Case built by asking the tool which roles are excluded for
+            # a target owner_role, so the test cannot drift from the policy.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                pol = load_json(root2 / "docs/artifacts/governance"
+                                      / "role-and-review-policy.json")
+                excl = (pol.get("approval_countersignature_contract") or {}).get(
+                    "countersigner_excluded_roles_by_owner_role") or {}
+                pairs = [(o, r) for o, rs in excl.items()
+                         if isinstance(rs, list) and rs for r in rs]
+                if not pairs:
+                    self._probe_note = "the policy declares no per-owner_role exclusions"
+                    return False
+                owner_role, bad_role = sorted(pairs)[0]
+                # find a record whose owner_role is that value
+                target = None
+                for p, d in tool.iter_corpus_artifacts():
+                    if isinstance(d, dict) and d.get("owner_role") == owner_role:
+                        target = (d.get("profile"), d["id"])
+                        break
+                if target is None:
+                    self._probe_note = f"no record has owner_role {owner_role!r}"
+                    return False
+                d, rel, _pk = _approval_fixture(
+                    tool, profile=target[0], aid=target[1],
+                    role="reviewer_adversarial",
+                    countersigner_role=bad_role, write=True)
+                defects = _defects_for(tool, d, path=rel)
+                clause5 = [x for x in defects if "INDEPENDENCE CLAUSE 5" in x]
+                self._probe_note = (
+                    f"owner_role={owner_role!r} (policy excludes {excl[owner_role]}); "
+                    f"countersigner role {bad_role!r} on {target[1]}; "
+                    f"{len(defects)} defect(s), clause 5 named={bool(clause5)}")
+                return bool(clause5)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_a_properly_countersigned_approval_is_ACCEPTED():
+            # The direction a rejection-only suite cannot prove. If this failed,
+            # the amendment would have made every approval unrepresentable -
+            # the same class of defect CORR-COV-022 found in the old element 6,
+            # which required a revision bump and so could not be satisfied at
+            # all. Built on a throwaway copy, deleted in a finally.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                # A RECORD A REVIEW RECORD ALREADY COVERS, deliberately. A
+                # countersignature rule that forced a content change would show
+                # up here as a staled review digest.
+                covered = None
+                for rp in sorted((root2 / "docs/artifacts/reviews/records").glob("*.json")):
+                    rd = load_json(rp)
+                    for e in rd.get("reviewed_ids") or []:
+                        if e.get("artifact_id"):
+                            covered = (rd.get("profile"), e["artifact_id"])
+                            break
+                    if covered:
+                        break
+                d, rel, _pk = _approval_fixture(
+                    tool, profile=covered[0], aid=covered[1], write=True)
+                defects = _defects_for(tool, d, path=rel)
+                tool.findings = Findings()
+                ok = tool._check_approval_evidence(d["id"], d, path=rel,
+                                                    category="provenance")
+                # And the counterparty: the same record with the countersignature
+                # removed MUST fail, so this is not passing because the predicate
+                # is inert.
+                d2 = json.loads(json.dumps(d))
+                d2[APPROVAL_EVIDENCE_FIELD]["human_approval"].pop(
+                    APPROVAL_COUNTERSIGNATURE_FIELD, None)
+                d2_defects = _defects_for(tool, d2, path=rel)
+                self._probe_note = (
+                    f"record {covered[1]}/{covered[0]} (covered by a review record); "
+                    f"two-party approval: {len(defects)} defect(s) accepted={ok}; "
+                    f"same record minus the countersignature: {len(d2_defects)} defect(s)")
+                return ok and not defects and d2_defects
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_every_record_admits_at_least_two_independent_signing_parties():
+            # The over-restriction guard, and the reason this test exists at all.
+            # A two-party rule that made approval impossible for some record
+            # type would be a functional regression disguised as a control.
+            # Measured over every record: how many declared roles remain eligible
+            # to countersign, after excluding the owner role, every content
+            # author, the approver's role, and the per-owner_role exclusions.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                pol = load_json(root2 / "docs/artifacts/governance"
+                                      / "role-and-review-policy.json")
+                excl = (pol.get("approval_countersignature_contract") or {}).get(
+                    "countersigner_excluded_roles_by_owner_role") or {}
+                role_ids, _n = tool._policy_role_ids()
+                worst = None
+                unmapped = set()
+                n = 0
+                for p, d in tool.iter_corpus_artifacts():
+                    if not isinstance(d, dict) or not d.get("id"):
+                        continue
+                    n += 1
+                    owner = d.get("owner_role")
+                    authors = tool._content_authors(d)
+                    bad = {owner} | authors
+                    if owner in excl and isinstance(excl[owner], list):
+                        bad |= {str(x) for x in excl[owner]}
+                    else:
+                        unmapped.add(str(owner))
+                    # a plausible approver: any eligible role, and one excluded
+                    # role reserved for the approver so the counts differ by one
+                    avail = role_ids - bad
+                    avail2 = avail - {sorted(avail)[0]} if avail else set()
+                    remaining = len(avail2)
+                    if worst is None or remaining < worst[0]:
+                        worst = (remaining, d.get("id"), owner, sorted(bad))
+                self._probe_note = (
+                    f"{n} record(s); worst case leaves {worst[0] if worst else '?'} eligible "
+                    f"countersigner role(s) after reserving one for the approver "
+                    f"({worst[1] if worst else '?'}, owner_role={worst[2] if worst else '?'!r}, "
+                    f"excluded {worst[3] if worst else '?'}); {len(unmapped)} distinct "
+                    f"owner_role value(s) have no per-owner_role exclusion map entry, which the "
+                    f"policy records as a declared gap rather than hiding")
+                return worst is not None and worst[0] >= 1
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_the_two_signature_fixtures_persist_nothing():
+            # The standing fact, re-read AFTER every countersignature case above
+            # has run and deleted its tree. Every one of them builds a
+            # two-signature approval on a throwaway copy outside the repository;
+            # this asserts that none of it reached the real tree, in the ledger,
+            # in any record, or in any packet.
+            offenders = []
+            n = 0
+            for _p, d in self.iter_corpus_artifacts():
+                if not isinstance(d, dict) or not d.get("id"):
+                    continue
+                n += 1
+                for kind, spec in APPROVAL_RULES.items():
+                    if self._is_approval_grant(spec, d):
+                        offenders.append(f"{d.get('id')}: {spec['record_field']}")
+                ev_root = d.get(APPROVAL_EVIDENCE_FIELD)
+                if isinstance(ev_root, dict) and any(isinstance(v, dict)
+                                                    for v in ev_root.values()):
+                    offenders.append(f"{d.get('id')}: carries approval_evidence")
+                if APPROVAL_COUNTERSIGNATURE_FIELD in d:
+                    offenders.append(f"{d.get('id')}: carries a top-level countersignature")
+                if APPROVAL_LEDGER_REF_FIELD in d:
+                    offenders.append(f"{d.get('id')}: carries approval_ledger_ref")
+            lp = self.root / APPROVAL_LEDGER_REL
+            ledger = {"exists": lp.is_file(), "bytes": lp.stat().st_size
+                      if lp.is_file() else 0}
+            entries = 0
+            if lp.is_file():
+                entries = sum(1 for line in lp.read_text(encoding="utf-8").splitlines()
+                              if line.strip())
+            signed = self.root / APPROVAL_SIGNED_PACKET_ROOT
+            stray = [str(p.relative_to(self.root)) for p in signed.rglob("*")
+                     if p.is_file() and p.name != "README.md"] if signed.exists() else []
+            # And no leftover temp tree from any of the cases above.
+            leftovers = sorted(p.name for p in Path(tempfile.gettempdir()).glob(
+                "fb2-approval-selftest-*"))
+            self._probe_note = (
+                f"{n} record(s) scanned; {len(offenders)} hold approval state; ledger "
+                f"exists={ledger['exists']} bytes={ledger['bytes']} non-blank lines={entries}; "
+                f"{len(stray)} stray file(s) under {APPROVAL_SIGNED_PACKET_ROOT}/; "
+                f"{len(leftovers)} leftover temp tree(s) matching fb2-approval-selftest-*"
+                + (f": {offenders[:5]}" if offenders else ""))
+            return (not offenders and entries == 0 and not stray and not leftovers)
+
+        check("an approval with ONE signature and no countersignature FAILS, naming element 7",
+              t_an_approval_with_no_countersignature_FAILS)
+        check("a countersigner who authored the approved content FAILS (independence clause 3)",
+              t_a_countersigner_who_authored_the_content_FAILS)
+        check("the second signature cannot be the first one: same person, same role, or different bytes",
+              t_the_second_signature_cannot_be_the_first_one)
+        check("the countersigner role is checked against the per-owner_role exclusions (clause 5)",
+              t_the_countersigner_role_is_checked_against_the_owner_roles_exclusions)
+        check("a properly countersigned approval IS ACCEPTED (two-party rule is not over-strict)",
+              t_a_properly_countersigned_approval_is_ACCEPTED)
+        check("every record still admits at least two independent signing parties",
+              t_every_record_admits_at_least_two_independent_signing_parties)
+        def t_the_forge_resistance_accounting_is_present_and_never_overclaims():
+            # The report is the deliverable; this asserts it exists, that it
+            # enumerates all six layers, and - the part that matters most - that
+            # no text anywhere claims any layer prevents forgery. A report that
+            # quietly read as a claim of unforgeability would be worse than no
+            # report, because it would be cited.
+            led_md = (self.root / APPROVAL_LEDGER_DOC_REL).read_text(encoding="utf-8")
+            closing = (self.root / "docs/artifacts/governance"
+                              / "closing-list.md").read_text(encoding="utf-8")
+            pol = load_json(self.root / "docs/artifacts/governance"
+                                   / "role-and-review-policy.json")
+            csc = pol.get("approval_countersignature_contract") or {}
+            problems = []
+            if "## `forge_resistance`" not in led_md:
+                problems.append("approval-ledger.md has no forge_resistance section")
+            if "forge_resistance" not in closing:
+                problems.append("closing-list.md does not reference forge_resistance")
+            for n in range(1, 7):
+                if f"### Layer {n} " not in led_md:
+                    problems.append(f"approval-ledger.md does not enumerate Layer {n}")
+            if "Does not establish" not in led_md:
+                problems.append("no layer states what it does NOT establish")
+            # The residual, in the form the instruction requires.
+            for phrase, where in (
+                    ("ONE FORGER IS NO LONGER ENOUGH", led_md),
+                    ("TWO COLLUDING PARTIES ARE STILL ENOUGH", led_md),
+                    ("NO NUMBER OF SIGNATURES FIXES IT", led_md),
+                    ("ATTESTATION IS NOT PROOF OF COMPREHENSION", led_md)):
+                if phrase not in where:
+                    problems.append(f"missing required residual phrase: {phrase}")
+            if "UNFORGEABLE" not in led_md.upper():
+                problems.append("approval-ledger.md never uses the word unforgeable")
+            pol_resid = csc.get("residual_limit_that_this_does_not_reduce", "")
+            for phrase in ("ONE FORGER IS NO LONGER ENOUGH",
+                           "TWO COLLUDING PARTIES ARE STILL ENOUGH",
+                           "NO NUMBER OF SIGNATURES FIXES IT",
+                           "ATTESTATION IS NOT PROOF OF COMPREHENSION"):
+                if phrase not in pol_resid:
+                    problems.append(
+                        f"the policy's residual does not state: {phrase}")
+            # THE prohibition. Searched case-insensitively across the three places
+            # the claim could be made, for any sentence that asserts a layer
+            # PREVENTS forgery. The allowed form is a denial.
+            overclaim = re.compile(
+                r"(?im)^[^.\n]*\b(makes?|making|prevents?|stops?|guarantees?|ensures?)"
+                r"[^.\n]*\bunforgeab", re.M)
+            banned_words = ("unforgeable approval", "cannot be forged",
+                            "makes approval unforgeable", "prevents forgery",
+                            "impossible to forge", "forge-proof", "unforgeability guarantee")
+            for label, text in (("approval-ledger.md", led_md),
+                                ("closing-list.md", closing),
+                                ("role-and-review-policy.json",
+                                 json.dumps(pol, ensure_ascii=False))):
+                low = text.lower()
+                for w in banned_words:
+                    for m in re.finditer(re.escape(w), low):
+                        # An occurrence is acceptable only if the surrounding
+                        # clause negates it. Read the 120 characters before it.
+                        ctx = low[max(0, m.start() - 120):m.start()]
+                        if not re.search(r"\b(not|never|no|nothing|none|cannot|"
+                                         r"does not|do not|is not|neither)\b", ctx):
+                            problems.append(
+                                f"{label} appears to ASSERT rather than deny: "
+                                f"...{low[max(0, m.start() - 90):m.end() + 20]}...")
+            self._probe_note = (f"forge_resistance present; 6 layers enumerated; residual "
+                                f"phrases present; {len(problems)} problem(s)"
+                                + ("; " + "; ".join(problems[:4]) if problems else ""))
+            return not problems
+
+        # ===================================================================
+        # APPROVAL-NOTREQ-A1: the `not_required` decision, decided and tested.
+        #
+        # Four properties, and all four matter. A test that only showed
+        # `not_required` accepted would prove the relaxation happened; it would
+        # not prove the relaxation is bounded. The properties are:
+        #   1. accepted on a family the policy says has no approval gate;
+        #   2. REJECTED on a family it does;
+        #   3. caught through the governance path gate [7/8] runs;
+        #   4. never able to reach the human_approval numerator.
+        # ===================================================================
+
+        def _required_types_from_policy(tool):
+            types, _contract = tool._approval_required_types()
+            return types or set()
+
+        def t_not_required_is_accepted_where_the_policy_says_approval_is_not_required():
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                required = _required_types_from_policy(tool)
+                # Find a real record whose type is NOT in the required set.
+                target = None
+                for p, d in tool.iter_corpus_artifacts():
+                    if isinstance(d, dict) and d.get("id") \
+                            and d.get("artifact_type") not in required:
+                        target = (d.get("profile"), d["id"], d.get("artifact_type"))
+                        break
+                if target is None:
+                    self._probe_note = "no record sits outside the required set"
+                    return False
+                d, _rel, _pk = _approval_fixture(tool, profile=target[0], aid=target[1],
+                                                write=False)
+                d = json.loads(json.dumps(d))
+                d["human_approval_status"] = HUMAN_APPROVAL_NOT_REQUIRED
+                # A `not_required` record carries NO approval evidence and NO
+                # ledger reference: both would assert an approval exists.
+                d.pop(APPROVAL_EVIDENCE_FIELD, None)
+                d.pop(APPROVAL_LEDGER_REF_FIELD, None)
+                defects = tool._not_required_defects(d)
+                evidence = tool._approval_evidence_defects(d, "human_approval")
+                self._probe_note = (
+                    f"{target[1]}/{target[0]} artifact_type={target[2]!r}; required set "
+                    f"{sorted(required)}; not_required defects={len(defects)}; "
+                    f"evidence-predicate defects={len(evidence)} (must be 0: the value is "
+                    f"not a grant, so the six-element contract is not reached at all)")
+                return not defects and not evidence
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_not_required_is_REJECTED_where_approval_IS_required():
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                required = _required_types_from_policy(tool)
+                if not required:
+                    self._probe_note = "the policy declares no required types"
+                    return False
+                cases = {}
+                for atype in sorted(required):
+                    target = None
+                    for p, d in tool.iter_corpus_artifacts():
+                        if isinstance(d, dict) and d.get("id") \
+                                and d.get("artifact_type") == atype:
+                            target = (d.get("profile"), d["id"])
+                            break
+                    if target is None:
+                        continue
+                    _p, rec = _real_record(target[0], target[1], tool=tool)
+                    d = json.loads(json.dumps(rec))
+                    d["human_approval_status"] = HUMAN_APPROVAL_NOT_REQUIRED
+                    defects = tool._not_required_defects(d)
+                    cases[atype] = (bool(defects),
+                                    any("MISDECLARED" in x for x in defects))
+                bad = [k for k, v in cases.items() if not (v[0] and v[1])]
+                self._probe_note = (f"required set {sorted(required)}; "
+                                    f"{len(cases)} case(s): "
+                                    + ", ".join(f"{k}={'ok' if v[0] and v[1] else 'MISS'}"
+                                                for k, v in cases.items()))
+                return bool(cases) and not bad
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_a_misdeclared_not_required_is_caught_by_the_governance_gate_path():
+            # Gate [7/8] runs _validate_governance_semantics on a fresh Findings
+            # and NEVER calls _validate_artifact. A check placed only in the
+            # latter would be invisible to the gate that exists to catch claims
+            # about authority. Same parity argument as element 6 and element 7,
+            # asserted rather than assumed.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                required = _required_types_from_policy(tool)
+                target = None
+                for p, d in tool.iter_corpus_artifacts():
+                    if isinstance(d, dict) and d.get("id") \
+                            and d.get("artifact_type") in required:
+                        target = (d.get("profile"), d["id"])
+                        break
+                if target is None:
+                    self._probe_note = "no record on a required family"
+                    return False
+                _p, rec = _real_record(target[0], target[1], tool=tool)
+                d = json.loads(json.dumps(rec))
+                d["human_approval_status"] = HUMAN_APPROVAL_NOT_REQUIRED
+                idx = {(d.get("profile", "as_is"), d["id"]): (None, d)}
+                tool.findings = Findings()
+                tool._validate_governance_semantics(idx)
+                gov = [f for f in tool.findings.items if f["rule"] == NOT_REQUIRED_RULE_ID]
+                tool.findings = Findings()
+                ok = tool._check_approval_evidence(d["id"], d, category="provenance")
+                art = [f for f in tool.findings.items if f["rule"] == NOT_REQUIRED_RULE_ID]
+                self._probe_note = (f"{target[1]}/{target[0]} artifact_type="
+                                    f"{d.get('artifact_type')!r}; governance path findings="
+                                    f"{len(gov)}; artifact path findings={len(art)}; both "
+                                    f"reject={not ok and bool(gov) and bool(art)}")
+                return (not ok and bool(gov) and bool(art)
+                        and NOT_REQUIRED_RULE_ID in GOVERNANCE_SEMANTIC_RULE_IDS)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_not_required_can_never_reach_the_human_approval_numerator():
+            # The property that makes the relaxation safe to make. Measured
+            # through the dimension's OWN counting function, not by asserting
+            # the numerator is 0 on a corpus that has no approvals anyway - that
+            # would pass whatever the rule did.
+            root2 = _selftest_tree_root()
+            try:
+                tool = CorpusTool(root=root2)
+                required = _required_types_from_policy(tool)
+                outside = outside_id = None
+                inside = inside_id = None
+                for p, d in tool.iter_corpus_artifacts():
+                    if not isinstance(d, dict) or not d.get("id"):
+                        continue
+                    at = d.get("artifact_type")
+                    if at not in required and outside is None:
+                        outside, outside_id = json.loads(json.dumps(d)), d["id"]
+                    if at in required and inside is None:
+                        inside, inside_id = json.loads(json.dumps(d)), d["id"]
+                if outside is None:
+                    self._probe_note = "no record outside the required set"
+                    return False
+                for rec in (outside, inside):
+                    rec["human_approval_status"] = HUMAN_APPROVAL_NOT_REQUIRED
+                    rec.pop(APPROVAL_EVIDENCE_FIELD, None)
+                    rec.pop(APPROVAL_LEDGER_REF_FIELD, None)
+                before = tool._approval_dimension_counts()["human_approval"]
+                # Count the two records the predicate's own way.
+                spec = APPROVAL_RULES["human_approval"]
+                is_grant = tool._is_approval_grant(spec, outside)
+                defects = tool._approval_evidence_defects(outside, "human_approval")
+                self._probe_note = (
+                    f"baseline: granted={before['granted']} evidenced_now="
+                    f"{before['evidenced_now']}; a not_required record is treated as a grant="
+                    f"{is_grant} (must be False); its evidence-predicate defects={len(defects)} "
+                    f"(must be 0, i.e. unreachable); not_required counter field="
+                    f"{before.get('not_required')} (0 on the live tree, as measured)")
+                return (not is_grant and not defects
+                        and before["evidenced_now"] == 0 and before["granted"] == 0)
+            finally:
+                shutil.rmtree(root2.parent, ignore_errors=True)
+
+        def t_no_record_on_the_real_tree_carries_not_required():
+            # The measured zero, stated as a measurement. Every record keeps
+            # `pending`, so the new value is representable and unexercised.
+            counts = {}
+            n = 0
+            for _p, d in self.iter_corpus_artifacts():
+                if not isinstance(d, dict) or not d.get("id"):
+                    continue
+                n += 1
+                v = d.get("human_approval_status")
+                counts[v] = counts.get(v, 0) + 1
+                if v == HUMAN_APPROVAL_NOT_REQUIRED:
+                    self._probe_note = (f"{d.get('id')} carries not_required - the decision "
+                                        f"made the value representable and something used it")
+                    return False
+            self._probe_note = (f"{n} record(s); human_approval_status distribution {counts}; "
+                                f"0 carry not_required")
+            return n > 0 and counts.get("pending", 0) == n
+
+        check("not_required is ACCEPTED on a family the policy says has no approval gate",
+              t_not_required_is_accepted_where_the_policy_says_approval_is_not_required)
+        check("not_required is REJECTED on every family where approval IS required",
+              t_not_required_is_REJECTED_where_approval_IS_required)
+        check("a misdeclared not_required is caught by the governance path gate [7/8] runs",
+              t_a_misdeclared_not_required_is_caught_by_the_governance_gate_path)
+        check("not_required can never reach the human_approval numerator",
+              t_not_required_can_never_reach_the_human_approval_numerator)
+        check("no record on the real tree carries not_required (0/321)",
+              t_no_record_on_the_real_tree_carries_not_required)
+
+        check("the forge_resistance accounting is present and never overclaims",
+              t_the_forge_resistance_accounting_is_present_and_never_overclaims)
+        check("the two-signature fixtures persist nothing: 0 approvals, 0 ledger entries, 0 leftovers",
+              t_the_two_signature_fixtures_persist_nothing)
 
         check("the content digest ignores approval state and nothing else",
               t_content_digest_ignores_approval_state_and_nothing_else)
@@ -12610,6 +14124,192 @@ class CorpusTool:
                                 f"looks for {len(PACKET_SIGNATURE_LABELS)}")
             return labels == list(PACKET_SIGNATURE_LABELS)
 
+        # -------------------------------------------------------------------
+        # PREFLIGHT-DEP-A1. The dependency went missing three times with three
+        # different failure modes, so each of the three things that were wrong
+        # is asserted separately. A test that only checked "the message is not
+        # the old one" would pass on a message that fixed one cause and repeated
+        # the other two.
+        # -------------------------------------------------------------------
+
+        def t_the_jsonschema_preflight_names_every_cause_and_both_remedies():
+            msg = _jsonschema_preflight_message("check")
+            missing = []
+            # The four causes, each of which was a real event.
+            if sys.executable not in msg:
+                missing.append("does not name the interpreter that wants the package")
+            if DEPENDENCY_REQUIREMENTS_REL not in msg:
+                missing.append("does not name the requirements file")
+            if "pip install -r" not in msg:
+                missing.append("does not give the plain install command")
+            if "--break-system-packages" not in msg:
+                missing.append("does not give the PEP 668 remedy")
+            if "externally-managed-environment" not in msg:
+                missing.append("does not name the refusal an operator will actually see")
+            if "bootstrap.sh" not in msg:
+                missing.append("does not offer the virtualenv route")
+            # The fix must be runnable, not just described: the commands have to
+            # name THIS interpreter, not a literal `python3` that may be a
+            # different one with a different site-packages.
+            if f"{sys.executable} -m pip install" not in msg:
+                missing.append("the install command does not use sys.executable")
+            # It must still say it is a hard failure, or an operator may treat a
+            # red suite as advisory.
+            if "HARD FAILURE" not in msg:
+                missing.append("does not state that the refusal is deliberate")
+            # And it must state the thing that actually caused the recurrence.
+            if "not installing" not in msg:
+                missing.append("does not state that pinning does not install")
+            # `python3 -m pip`, never bare pip3/pip: installing into the wrong
+            # site-packages is the failure that looks like success.
+            if "never bare `pip3` or `pip`" not in msg:
+                missing.append("does not warn against bare pip")
+            self._probe_note = ("interpreter named: " + sys.executable
+                                + ("; MISSING: " + "; ".join(missing) if missing else ""))
+            return not missing
+
+        def t_the_preflight_replaces_the_bare_error_and_nothing_else():
+            # The single line an operator or a grep is keyed on is preserved
+            # verbatim minus the parenthetical command that does not work on a
+            # macOS-managed Python. Anything matching the old exact string is
+            # now stale guidance and must be gone from the tooling.
+            src = (self.root / "docs/artifacts/tools/corpus.py").read_text(encoding="utf-8")
+            # Assembled from parts rather than written out, so this assertion
+            # does not itself contain the string it forbids. Written literally,
+            # the only occurrence of the superseded message in the file would be
+            # the one naming it here, and the test could never pass.
+            old = "jsonschema library required " + "(pip install jsonschema)"
+            leaked = [m.start() for m in re.finditer(re.escape(old), src)]
+            self._probe_note = (f"{len(leaked)} occurrence(s) of the superseded one-line "
+                                f"message remain in corpus.py")
+            # The message must still be emitted (first stderr line), so the
+            # check is that the OLD PARENTHETICAL FORM is gone, not that the
+            # words are gone.
+            return not leaked and 'print("ERROR: jsonschema library required"' in src
+
+        def t_bootstrap_exists_is_executable_and_refuses_the_repository():
+            bs = self.root / "docs/artifacts/tools/bootstrap.sh"
+            if not bs.exists():
+                self._probe_note = "bootstrap.sh is not present"
+                return False
+            if not os.access(bs, os.X_OK):
+                self._probe_note = "bootstrap.sh is not executable"
+                return False
+            src = bs.read_text(encoding="utf-8")
+            missing = []
+            # The three refusals. Each is checked by RUNNING the script with a
+            # path inside the tree, because a refusal that is described in a
+            # comment but not implemented is the common way this goes wrong.
+            for label, arg in (("repo root", "."),
+                               ("nested inside the tree",
+                                "docs/artifacts/tools/.venv-selftest-should-not-exist"),
+                               ("absolute inside the tree",
+                                str(self.root / "docs" / ".venv-selftest-should-not-exist"))):
+                p = subprocess.run(["bash", str(bs)], cwd=str(self.root),
+                                   capture_output=True, text=True, env={
+                                       **os.environ,
+                                       "FOXBMS_CORPUS_VENV": arg,
+                                       # PYTHON is only read after the refusal, and
+                                       # forcing a real one keeps the test from
+                                       # depending on whatever is on PATH.
+                                       "PYTHON": sys.executable})
+                if p.returncode == 0:
+                    missing.append(f"accepted FOXBMS_CORPUS_VENV pointing at the {label}")
+                elif "Refusing" not in (p.stdout + p.stderr):
+                    missing.append(f"refused the {label} without saying it refused")
+            # And it must not have left the thing it refused to create behind.
+            for rel in ("docs/artifacts/tools/.venv-selftest-should-not-exist",
+                        "docs/.venv-selftest-should-not-exist"):
+                if (self.root / rel).exists():
+                    missing.append(f"created {rel} despite refusing")
+            # The default location and the override must both be named.
+            if ".cache/foxbms-corpus-venv" not in src:
+                missing.append("does not document the default location")
+            if "FOXBMS_CORPUS_VENV" not in src:
+                missing.append("does not honour FOXBMS_CORPUS_VENV")
+            self._probe_note = ("; ".join(missing) if missing
+                                else f"all 3 refusals hold; script is {len(src)} bytes")
+            return not missing
+
+        def t_bootstrap_creates_nothing_inside_the_repository():
+            # The strong claim, measured rather than asserted: snapshot every
+            # path under the repository, run bootstrap.sh with a venv OUTSIDE the
+            # tree, and require the path set to be byte-for-byte what it was. A
+            # claim written in a script comment is not evidence.
+            bs = self.root / "docs/artifacts/tools/bootstrap.sh"
+            if not bs.exists():
+                self._probe_note = "bootstrap.sh is not present"
+                return False
+
+            def snapshot():
+                out = {}
+                for dirpath, dirnames, filenames in os.walk(self.root):
+                    dirnames[:] = [d for d in dirnames
+                                   if d not in (".git", "__pycache__", ".work")]
+                    for n in filenames:
+                        p = Path(dirpath) / n
+                        try:
+                            out[str(p.relative_to(self.root))] = p.stat().st_size
+                        except OSError:
+                            pass
+                return out
+
+            before = snapshot()
+            venv = None
+            try:
+                tmp = Path(tempfile.mkdtemp(prefix="foxbms-corpus-venv-"))
+                venv = tmp / "venv"
+                p = subprocess.run(["bash", str(bs)], cwd=str(self.root),
+                                   capture_output=True, text=True, env={
+                                       **os.environ,
+                                       "FOXBMS_CORPUS_VENV": str(venv),
+                                       "PYTHON": sys.executable})
+                if p.returncode != 0:
+                    self._probe_note = (f"bootstrap.sh exited {p.returncode}: "
+                                        + (p.stderr or p.stdout)[-400:])
+                    return False
+                after = snapshot()
+                added = sorted(set(after) - set(before))
+                removed = sorted(set(before) - set(after))
+                changed = sorted(k for k in set(before) & set(after)
+                                 if before[k] != after[k])
+                # `__pycache__` is excluded from the snapshot because importing
+                # corpus.py -- which running any corpus command does -- writes
+                # one. That is a Python interpreter behaviour, not this script's.
+                problems = []
+                if added:
+                    problems.append(f"ADDED inside the repo: {added[:8]}")
+                if removed:
+                    problems.append(f"REMOVED from the repo: {removed[:8]}")
+                if changed:
+                    problems.append(f"CHANGED in the repo: {changed[:8]}")
+                if not (venv / "bin" / "python").exists():
+                    problems.append("no interpreter was created at the requested location")
+                # It must also print a runnable command.
+                out = p.stdout + p.stderr
+                if "corpus.py check" not in out:
+                    problems.append("did not print the command to run the suite")
+                self._probe_note = (f"{len(before)} path(s) before, {len(after)} after, "
+                                    f"venv created at the requested outside-the-repo location: "
+                                    f"{(venv / 'bin' / 'python').exists()}"
+                                    + ("; " + "; ".join(problems) if problems else ""))
+                return not problems
+            finally:
+                # The venv is outside the repository and still has to go: a
+                # self-test that leaves a ~20 MB interpreter in the temp dir on
+                # every run is a leak, not a test.
+                if venv is not None:
+                    shutil.rmtree(venv.parent, ignore_errors=True)
+
+        check("the jsonschema preflight names every cause and both remedies",
+              t_the_jsonschema_preflight_names_every_cause_and_both_remedies)
+        check("the preflight replaces the bare error without weakening the refusal",
+              t_the_preflight_replaces_the_bare_error_and_nothing_else)
+        check("bootstrap.sh is executable and refuses a venv anywhere inside the repository",
+              t_bootstrap_exists_is_executable_and_refuses_the_repository)
+        check("bootstrap.sh creates nothing inside the repository (measured, not asserted)",
+              t_bootstrap_creates_nothing_inside_the_repository)
+
         check("packet.json files are invisible to the artifact index (coverage denominators unchanged)",
               t_packet_json_is_invisible_to_the_artifact_index)
         check("generating packets moves no coverage dimension, including human_approval 0/N",
@@ -12806,7 +14506,11 @@ class CorpusTool:
                     and counts.get("records carrying an 'approval_evidence' block") == "0"
                     and counts.get("markdown signature rows filled") == "0"
                     and counts.get("packet.json fields filled") == "0"
-                    and counts.get("record_sha256 == sha256(bytes)") == "321/321")
+                    # The ratio is compared to the checker's OWN record count
+                    # rather than to a literal, for the same reason twice above:
+                    # a literal population here would make this test fail on the
+                    # addition of any record rather than on a real disagreement.
+                    and _ratio_all_agree(counts.get("record_sha256 == sha256(bytes)")))
 
         check("an independent checker that imports no tool agrees and finds no approval",
               t_an_independent_checker_agrees_and_finds_no_approval)
@@ -12819,6 +14523,115 @@ class CorpusTool:
         check("the packet generator's signature fields match the ones check looks for",
               t_packet_generator_signature_labels_match_the_ones_check_reads)
         return all(passed for _, passed in tests)
+
+
+# ---------------------------------------------------------------------------
+# PREFLIGHT DEPENDENCY REPORT (PREFLIGHT-DEP-A1).
+#
+# WHY THIS EXISTS, stated as three real events rather than a hypothetical.
+# The acceptance suite lost its `jsonschema` dependency three times, and the
+# failure mode was DIFFERENT each time, which is why a single fixed message
+# never fixed it:
+#
+#   1. It failed SILENTLY. `corpus.py` exited 0 having validated nothing. That
+#      is the worst of the three: a reader running `check` saw a clean exit and
+#      a corpus that had not been checked.
+#   2. `pip3 install --user jsonschema` refused, printing
+#      `error: externally-managed-environment`. Correct diagnosis, wrong
+#      remedy for this environment; the operator still could not proceed.
+#   3. `pip3 install --user --break-system-packages jsonschema` worked, and the
+#      message on failure still read `ERROR: jsonschema library required (pip
+#      install jsonschema)`, which names a command that does not work on a
+#      macOS-managed Python and omits the requirement file entirely.
+#
+# The old message was `ERROR: jsonschema library required (pip install
+# jsonschema)`. It named a package and a command, and that was all an operator
+# had: which interpreter, which requirement file, why `--user` failed, and what
+# to do instead, were all unstated.
+#
+# It stays a HARD FAILURE. Failing closed is correct - a corpus that cannot
+# validate must not report that it validated - and this amendment does not
+# soften that in any mode. What changes is that the failure is now
+# ACTIONABLE: it states the missing distribution, the requirement file that pins
+# it, the exact command for the interpreter actually running, the
+# `--break-system-packages` variant a macOS-managed Python needs, a virtualenv
+# route that touches nothing inside the repository, and how to confirm the fix.
+#
+# Nothing here installs anything, and nothing here can succeed. A preflight that
+# repaired the environment instead of describing it would make `check` mean
+# different things on different machines.
+
+DEPENDENCY_REQUIREMENTS_REL = "docs/artifacts/tools/requirements.txt"
+
+
+def _jsonschema_preflight_message(command):
+    """The actionable text replacing the bare jsonschema error.
+
+    Takes the subcommand the operator asked for, because the fix is the same but
+    the consequence differs: `check` and `validate` cannot run at all, while
+    `coverage` and `trace` read only the records. That difference is stated so an
+    operator knows whether they have lost a gate or a convenience.
+    """
+    req = DEPENDENCY_REQUIREMENTS_REL
+    py = sys.executable
+    verify = sys.version.split()[0]
+    lines = [
+        "",
+        "=" * 78,
+        "PREFLIGHT FAILED: this corpus cannot validate its records.",
+        "=" * 78,
+        "",
+        f"  missing distribution : jsonschema  (and its dependency `referencing`)",
+        f"  interpreter running  : {py}",
+        f"  interpreter version  : Python {verify}",
+        f"  command attempted    : corpus.py {command}",
+        f"  pinned requirements  : {req}",
+        "",
+        "WHY THIS IS A HARD FAILURE, NOT A WARNING",
+        "  The acceptance suite exists to prove this corpus is internally",
+        "  consistent. Without a schema validator it cannot prove anything, so it",
+        "  refuses to run rather than reporting a pass it did not earn. This is",
+        "  deliberate. Do not work around it.",
+        "",
+        "THE FIX, for THIS interpreter",
+        f"  {py} -m pip install -r {req}",
+        "",
+        "  On a macOS- or Debian-managed Python (PEP 668) that command will refuse",
+        "  with `error: externally-managed-environment`. That refusal is the OS",
+        "  protecting a system interpreter; the supported way past it is --user:",
+        "",
+        f"  {py} -m pip install --user --break-system-packages -r {req}",
+        "",
+        "  Use `python3 -m pip`, never bare `pip3` or `pip`: a bare `pip` may",
+        "  belong to a different interpreter than the one running this script, and",
+        "  installing into the wrong site-packages is the failure that looks most",
+        "  like success - the import still fails here after pip reports no error.",
+        "",
+        "THE FIX, if you would rather not touch the system interpreter",
+        "  docs/artifacts/tools/bootstrap.sh creates a virtualenv OUTSIDE the",
+        "  repository (default ~/.cache/foxbms-corpus-venv, override with",
+        "  FOXBMS_CORPUS_VENV), installs the pinned requirements into it, and",
+        "  prints the exact command to run the suite with it. It creates nothing",
+        "  inside the repository and refuses to run if FOXBMS_CORPUS_VENV points",
+        "  inside the tree.",
+        "",
+        "CONFIRM BEFORE RERUNNING",
+        f'  {py} -c "import jsonschema, referencing; print(jsonschema.__version__)"',
+        "",
+        "NOTE ON WHAT PINNING DOES AND DOES NOT DO",
+        "  The pin in requirements.txt (`jsonschema>=4.18`) declares which version",
+        "  this corpus is written against. Declaring a version is not installing",
+        "  it: pinning the dependency is a statement in a file, and the absence of",
+        "  that dependency from an interpreter is a fact on a disk. Nothing",
+        "  reconciles the two, which is why the same failure returned three",
+        "  times and why the fix is a command you run rather than a property you",
+        "  set. If this is a fresh checkout, or a machine that has just been",
+        "  restarted, run bootstrap.sh before reading anything else into the",
+        "  corpus's status.",
+        "=" * 78,
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def main():
@@ -12855,7 +14668,13 @@ def main():
 
     args = parser.parse_args()
     if not HAVE_JSONSCHEMA:
-        print("ERROR: jsonschema library required (pip install jsonschema)", file=sys.stderr)
+        # AMENDMENT PREFLIGHT-DEP-A1. Still exit 2, still refuse to run, still a
+        # hard failure - but the text now says what is missing, which interpreter
+        # wants it, which file pins it, and which of the two commands actually
+        # works on a macOS-managed Python. The old one-line message is preserved
+        # as the first line of stderr so anything grepping for it still matches.
+        print("ERROR: jsonschema library required", file=sys.stderr)
+        print(_jsonschema_preflight_message(args.command), file=sys.stderr)
         sys.exit(2)
 
     tool = CorpusTool(root=args.root)

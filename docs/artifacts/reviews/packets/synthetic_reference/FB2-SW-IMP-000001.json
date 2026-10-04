@@ -40,6 +40,15 @@
     "review_state": "pending",
     "source_id": "FB2-SW-IMP-000001",
     "target_id": "FB2-SW-DSN-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVC-000001",
+    "rationale": "FB2-REV-000020 reviewed FB2-SW-IMP-000001 at revision 1 in the synthetic_reference profile and enumerates it in reviewed_ids with the sha256 of the artifact's bytes at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The link exists because the coverage dimension takes the UNION of reviewed_ids and reviewed_by links and gate [3/8] asserts the two sources name the same set; a review record that named records without links would leave that assertion false.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000020",
+    "target_id": "FB2-SW-IMP-000001"
    }
   ],
   "machine_verified": [
@@ -64,20 +73,101 @@
     "result": "4/4 fully checked with no contradiction"
    },
    {
-    "check": "peer review coverage",
-    "method": "reviewed_ids and reviewed_by lookup",
-    "result": "UNEXAMINED: no review record in this corpus covers it"
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
    }
   ],
   "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
   "peer_review": {
-   "covered": false,
+   "covered": true,
    "digest_mismatch": 0,
-   "digest_ok": 0,
+   "digest_ok": 1,
    "digest_placeholder": 0,
-   "disputed": [],
-   "findings_about": [],
-   "reviews": []
+   "disputed": [
+    {
+     "category": "provenance",
+     "description": "Behaviour evidence across this whole group is not self-attributing and is not covered by any automated control. All 14 implementation records and all 84 of their behaviours cite an evidence_symbol and an evidence_line_range and NO FILE. A behaviour is therefore not resolvable from its own record: 'I2C_ReadDma at 445-460' does not say which file, and I2C_ReadDma appears in the record's own code_lo\u2026",
+     "finding_id": "FB2-REV-FND-000172",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json"
+    },
+    {
+     "category": "provenance",
+     "description": "verified_against_pinned_source is a single boolean standing in for four separate checks, and at least one location in this group would fail one of them. Its four constituents are: the file exists at the pinned commit; the recorded content_hash equals that pinned blob's sha256; the line_range lies within the file; and the symbol occurs inside the range. On this group, measured: 81 of 81 files exis\u2026",
+     "finding_id": "FB2-REV-FND-000173",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json"
+    },
+    {
+     "category": "provenance",
+     "description": "Behaviour evidence across this whole group is not self-attributing and is not covered by any automated control. All 14 implementation records and all 84 of their behaviours cite an evidence_symbol and an evidence_line_range and NO FILE. A behaviour is therefore not resolvable from its own record: 'I2C_ReadDma at 445-460' does not say which file, and I2C_ReadDma appears in the record's own code_lo\u2026",
+     "finding_id": "FB2-REV-FND-000172",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-synthetic.json"
+    },
+    {
+     "category": "provenance",
+     "description": "verified_against_pinned_source is a single boolean standing in for four separate checks, and at least one location in this group would fail one of them. Its four constituents are: the file exists at the pinned commit; the recorded content_hash equals that pinned blob's sha256; the line_range lies within the file; and the symbol occurs inside the range. On this group, measured: 81 of 81 files exis\u2026",
+     "finding_id": "FB2-REV-FND-000173",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-synthetic.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "provenance",
+     "description": "Behaviour evidence across this whole group is not self-attributing and is not covered by any automated control. All 14 implementation records and all 84 of their behaviours cite an evidence_symbol and an evidence_line_range and NO FILE. A behaviour is therefore not resolvable from its own record: 'I2C_ReadDma at 445-460' does not say which file, and I2C_ReadDma appears in the record's own code_lo\u2026",
+     "finding_id": "FB2-REV-FND-000172",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json"
+    },
+    {
+     "category": "provenance",
+     "description": "verified_against_pinned_source is a single boolean standing in for four separate checks, and at least one location in this group would fail one of them. Its four constituents are: the file exists at the pinned commit; the recorded content_hash equals that pinned blob's sha256; the line_range lies within the file; and the symbol occurs inside the range. On this group, measured: 81 of 81 files exis\u2026",
+     "finding_id": "FB2-REV-FND-000173",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json"
+    },
+    {
+     "category": "provenance",
+     "description": "Behaviour evidence across this whole group is not self-attributing and is not covered by any automated control. All 14 implementation records and all 84 of their behaviours cite an evidence_symbol and an evidence_line_range and NO FILE. A behaviour is therefore not resolvable from its own record: 'I2C_ReadDma at 445-460' does not say which file, and I2C_ReadDma appears in the record's own code_lo\u2026",
+     "finding_id": "FB2-REV-FND-000172",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-synthetic.json"
+    },
+    {
+     "category": "provenance",
+     "description": "verified_against_pinned_source is a single boolean standing in for four separate checks, and at least one location in this group would fail one of them. Its four constituents are: the file exists at the pinned commit; the recorded content_hash equals that pinned blob's sha256; the line_range lies within the file; and the symbol occurs inside the range. On this group, measured: 81 of 81 files exis\u2026",
+     "finding_id": "FB2-REV-FND-000173",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-implementation-group-synthetic.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IMPL-PROV-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000020",
+     "review_path": "docs/artifacts/reviews/records/review-implementation-group-synthetic.json",
+     "review_type": "adversarial",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "verification_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-implementation-group-synthetic.json",
+      "reviewed_by link FB2-LNK-REVC-000001 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
   },
   "state_legend": {
    "machine-verified": "settled by a detector; see machine_verified above",
@@ -274,18 +364,18 @@
    "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
   },
   {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "4 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
    "group": "provenance honesty",
    "priority": 20,
    "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
    "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
    "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
-  },
-  {
-   "group": "review coverage",
-   "priority": 30,
-   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
-   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
-   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
   },
   {
    "group": "standards mapping",

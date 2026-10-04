@@ -1,19 +1,21 @@
 {
  "additional_questions_derived_not_shown": {
-  "count": 1,
-  "questions": [
-   {
-    "group": "lifecycle status",
-    "priority": 50,
-    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
-    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
-    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
-   }
-  ],
+  "count": 0,
+  "questions": [],
   "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
  },
  "already_checked": {
-  "links_touching_record": [],
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVA-000004",
+    "rationale": "FB2-REV-000019 reviewed FB2-SW-IMP-000004 at revision 1 in the as_is profile and enumerates it in reviewed_ids with the sha256 of the artifact's bytes at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The link exists because the coverage dimension takes the UNION of reviewed_ids and reviewed_by links and gate [3/8] asserts the two sources name the same set; a review record that named records without links would leave that assertion false.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-execution-records.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000019",
+    "target_id": "FB2-SW-IMP-000004"
+   }
+  ],
   "machine_verified": [
    {
     "check": "schema validity",
@@ -36,20 +38,35 @@
     "result": "3/3 fully checked with no contradiction"
    },
    {
-    "check": "peer review coverage",
-    "method": "reviewed_ids and reviewed_by lookup",
-    "result": "UNEXAMINED: no review record in this corpus covers it"
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
    }
   ],
   "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
   "peer_review": {
-   "covered": false,
+   "covered": true,
    "digest_mismatch": 0,
-   "digest_ok": 0,
+   "digest_ok": 1,
    "digest_placeholder": 0,
    "disputed": [],
    "findings_about": [],
-   "reviews": []
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IMPL-PROV-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000019",
+     "review_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json",
+     "review_type": "adversarial",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "verification_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-implementation-group-as-is.json",
+      "reviewed_by link FB2-LNK-REVA-000004 in docs/artifacts/traceability/link-registry/as_is/links-execution-records.json"
+     ]
+    }
+   ]
   },
   "state_legend": {
    "machine-verified": "settled by a detector; see machine_verified above",
@@ -213,18 +230,18 @@
    "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
   },
   {
-   "group": "review coverage",
-   "priority": 30,
-   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
-   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
-   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
-  },
-  {
    "group": "standards mapping",
    "priority": 40,
    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
   }
  ],
  "questions_shown_count": 4,
