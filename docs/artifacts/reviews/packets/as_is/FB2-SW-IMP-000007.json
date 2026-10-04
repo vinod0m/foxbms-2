@@ -1,0 +1,449 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against implementation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (2)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "2/2 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol prose_not_checkable (re-derived at packet generation time) The registry's own note on this hash: \"Two different contents are in play and both are recorded. location.pinned_commit_content_hash (913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826) a\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000044, which records anchor class `repository_file`; path `src/app/driver/rtc/rtc.c`; line_range `70-653`; content_hash `b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826`; symbol `module level (whole rtc.c module body, Disable at line 70 / matching Enable at line 653)`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Two different contents are in play and both are recorded. location.pinned_commit_content_hash (913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826) a\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000045, which records anchor class `repository_file`; path `src/app/driver/rtc/rtc.c`; line_range `77-84`; content_hash `b98277c20023349b6d78c6360503ba2c7145f22816acd35bc0e0d6f929f7f826`; symbol `rtc_i2cWriteBuffer`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000044 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000044."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000045 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000045."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000044 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000044."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000045 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[1]` names FB2-SRC-COD-000045."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 (this record is a code location, not a verification record) with status `partially_mapped` on the grounds: States where the RTC driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C08-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 (design-to-code traceability) with status `gap` on the grounds: There is no software design artefact for the RTC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 12733,
+  "record_path": "docs/artifacts/corpus/as_is/software/implementation-rtc-driver.json",
+  "record_sha256": "39e543687018de283c1ae494f0cfefdf3dcaf5e2bf2fc5cda0c32b141e0ea3d6",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "39e543687018de283c1ae494f0cfefdf3dcaf5e2bf2fc5cda0c32b141e0ea3d6"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Anchors referenced, all pre-existing: FB2-SRC-COD-000044 covers the rtc.c module body and FB2-SRC-COD-000045 the two module-scope I2C buffers, and they are the same two anchors deviations FB2-SW-DEV-000014 and -000015 reference. No new anchor was created."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SW-IMP-000007.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Implementation: RTC driver - periodic trigger, device initialisation, CAN time message consumption and periodic adjustment against the system timer (rtc.c)\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  },
+  {
+   "group": "unverifiable provenance",
+   "priority": 25,
+   "question": "1 of this record's source anchors cannot be checked against this repository. Does the claim still hold, on evidence outside the corpus?",
+   "what_in_this_packet_bears_on_it": "The anchors' entries in the claims section.",
+   "why_this_needs_a_human": "The corpus declines to make a statement it cannot support. Whether the claim is nonetheless true is a human question."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anchor_refs": [
+   "FB2-SRC-COD-000044",
+   "FB2-SRC-COD-000045"
+  ],
+  "artifact_type": "implementation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behaviours": [
+   {
+    "behaviour_id": "RTC-IMP-PERIODIC",
+    "description": "Periodic entry point: initialises the device, consumes a CAN-supplied time, and runs the low-voltage check and the time adjustment at their own configured intervals measured against the OS tick.",
+    "evidence_line_range": "420-445",
+    "evidence_symbol": "RTC_Trigger",
+    "kind": "timekeeping"
+   },
+   {
+    "behaviour_id": "RTC-IMP-DEV-INIT",
+    "description": "Brings up the real-time clock device over the shared I2C interface, configuring the prescaler and control register through the module's write buffer.",
+    "evidence_line_range": "447-590",
+    "evidence_symbol": "RTC_Initialize",
+    "kind": "startup"
+   },
+   {
+    "behaviour_id": "RTC-IMP-CAN-TIME",
+    "description": "Consumes a time-of-day message received over CAN and applies it to the device when one is present.",
+    "evidence_line_range": "241-250",
+    "evidence_symbol": "RTC_SetOverCanMessage",
+    "kind": "timekeeping"
+   },
+   {
+    "behaviour_id": "RTC-IMP-RECONCILE",
+    "description": "Compares the device's time against the system timer and re-initialises the system time from the device once the two differ by more than the configured maximum difference.",
+    "evidence_line_range": "252-276",
+    "evidence_symbol": "RTC_AdjustTime",
+    "kind": "timekeeping"
+   },
+   {
+    "behaviour_id": "RTC-IMP-LOW-VOLT",
+    "description": "Reads the device's battery-low voltage alert flag and reports it, which is the RTC's own supply monitoring rather than a pack measurement.",
+    "evidence_line_range": "278-310",
+    "evidence_symbol": "RTC_CheckBatteryLowVoltageAlert",
+    "kind": "validation"
+   },
+   {
+    "behaviour_id": "RTC-IMP-I2C-BUFFERS",
+    "description": "The two module-scope transfer buffers shared by every I2C access this driver makes; their sharing is what deviation FB2-SW-DEV-000014 records.",
+    "evidence_line_range": "80-82",
+    "evidence_symbol": "rtc_i2cWriteBuffer",
+    "kind": "transfer"
+   }
+  ],
+  "code_locations": [
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "line_range": "420-445",
+    "path": "src/app/driver/rtc/rtc.c",
+    "repository": "foxbms-2",
+    "symbol": "RTC_Trigger",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "line_range": "447-590",
+    "path": "src/app/driver/rtc/rtc.c",
+    "repository": "foxbms-2",
+    "symbol": "RTC_Initialize",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "line_range": "241-250",
+    "path": "src/app/driver/rtc/rtc.c",
+    "repository": "foxbms-2",
+    "symbol": "RTC_SetOverCanMessage",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "line_range": "252-276",
+    "path": "src/app/driver/rtc/rtc.c",
+    "repository": "foxbms-2",
+    "symbol": "RTC_AdjustTime",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "line_range": "278-310",
+    "path": "src/app/driver/rtc/rtc.c",
+    "repository": "foxbms-2",
+    "symbol": "RTC_CheckBatteryLowVoltageAlert",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:913f8a46ba7e4237e46cbb77a01a6a926aa399719726c0e12bf542738e778010",
+    "line_range": "80-82",
+    "path": "src/app/driver/rtc/rtc.c",
+    "repository": "foxbms-2",
+    "symbol": "rtc_i2cWriteBuffer",
+    "symbol_role": "translation_unit_body",
+    "verified_against_pinned_source": true
+   }
+  ],
+  "concurrency_and_isr_context": [
+   {
+    "context": "task",
+    "entry_points": [
+     "RTC_Trigger",
+     "RTC_SetSystemTimeRtcFormat",
+     "RTC_IncrementSystemTime"
+    ],
+    "shared_state": "The module-scope I2C buffers rtc_i2cWriteBuffer and rtc_i2cReadBuffer, and the module's own time state. The buffers are shared by every transfer the driver makes, which is safe only while all callers are in one task; the record states that this is a single-context module rather than asserting a protection the code does not visibly implement."
+   }
+  ],
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "software",
+  "evidence_status": {
+   "limitations": [
+    "IMPORTANT: rtc.c differs between the pinned commit and the current working tree. The working-tree file has 14 lines added inside RTC_AdjustTime relative to the pin, so every line_range in this record is a PINNED-commit range and will not match the checked-out file line-for-line. The content_hash recorded is the pinned blob's, deliberately, because the record's commit field says 308028fb and a hash of different bytes under that commit label would be a false statement. A reader diffing these ranges against the working tree will find RTC_AdjustTime spanning 252-289 rather than 252-276; the added lines are a replacement of an abs() call on a time_t difference with a signed two-sided comparison.",
+    "The source-registry anchors FB2-SRC-COD-000044 and -000045 record the same pinned hash this record does, so the provenance validator's reported mismatch on those two anchors is a worktree-drift report and not a disagreement about what was read.",
+    "Behaviour was verified by reading the code. No real-time clock device was present, no time source was synchronised, and no drift measurement exists in this corpus.",
+    "The RTC register addresses, bit masks and the two module-scope buffer sizes are device-specific values whose authoritative definition is the device header; they are named but their values are not restated here, so this record cannot become a second unverifiable copy of the device's register map."
+   ],
+   "locations_verified": true,
+   "method": "rtc.c was read at the pinned commit with 'git show 308028fb:src/app/driver/rtc/rtc.c'; the content_hash recorded is that pinned blob's sha256, which is the value anchors FB2-SRC-COD-000044 and -000045 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The function spans were determined from the pinned content directly."
+  },
+  "guard": {
+   "confers_no_production_authority": true,
+   "confers_no_verification_credit": true,
+   "human_approval_required": true,
+   "is_implementation_evidence": false,
+   "is_verification_result": false,
+   "statement": "This record says where the RTC driver code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met, and no time source, clock drift or synchronisation behaviour was measured. It confers no production authority, no verification credit and no human approval."
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IMP-000007",
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "implements": {
+   "design_artifact_id": null,
+   "design_gap_reason": "The as_is profile contains no software design artefact for the RTC driver. Its three design records cover the AFE driver, the SOA module and the contactor driver, and deviations FB2-SW-DEV-000014 and -000015 each record rtc.c as gap_no_design_artifact_in_profile. Attaching this module to an existing design would assert timekeeping design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13.",
+   "design_level": null,
+   "relationship": "No design artefact in the as_is profile describes the RTC driver, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source: RTC_Trigger (rtc.c:420-445) is the periodic entry point. It calls RTC_Initialize, and only if that returns STD_OK does it proceed: it then calls RTC_SetOverCanMessage to consume a time received over CAN, and it gates two periodic activities on elapsed OS ticks measured against RTC_TIME_BETWEEN_BATTERY_LOW_FLAG_CHECK_min and RTC_TIME_BETWEEN_RTC_TIMER_ADJUSTMENT_min, each scaled by RTC_FACTOR_MIN_TO_MS. RTC_Initialize (447-590) brings up the device over the shared I2C interface, which is where the two module-scope buffers rtc_i2cWriteBuffer and rtc_i2cReadBuffer (80-82) that anchor FB2-SRC-COD-000045 records come in; deviation FB2-SW-DEV-000015 records the sharing of those buffers. RTC_AdjustTime (252-276) compares the device's time against the system timer and re-initialises the system time from the device when they differ by more than RTC_MAX_DIFFERENCE_BETWEEN_TIMER_AND_IC_s. RTC_CheckBatteryLowVoltageAlert (278-310) reads the device's voltage-alert flag. So the driver provides device access, periodic scheduling against the OS tick, and reconciliation of an external time source against the internal one."
+  },
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000044 covers the rtc.c module body and FB2-SRC-COD-000045 the two module-scope I2C buffers, and they are the same two anchors deviations FB2-SW-DEV-000014 and -000015 reference. No new anchor was created.",
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the RTC driver. The as_is requirement set is the three cell-voltage, contactor and SOA records, and none of them states anything about real-time clock behaviour, time synchronisation or the low-voltage alert this module implements. realises_requirements is empty rather than populated with a requirement this code does not serve.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "First issue. Authored to cover a module the as_is corpus anchors through two deviations (FB2-SW-DEV-000014 and FB2-SW-DEV-000015) and for which it holds no design artefact at all.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000044",
+   "FB2-SRC-COD-000045"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "States where the RTC driver code is. Makes no claim that it was verified and asserts no ASIL classification.",
+    "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "There is no software design artefact for the RTC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design.",
+    "reference": "SWE.4 (design-to-code traceability)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "gap"
+   }
+  ],
+  "title": "Implementation: RTC driver - periodic trigger, device initialisation, CAN time message consumption and periodic adjustment against the system timer (rtc.c)",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SW-IMP-000007"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SW-IMP-000007",
+  "revision": "1"
+ }
+}

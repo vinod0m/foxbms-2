@@ -1,0 +1,244 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against scenario.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_ids[0]` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-FND-MUT-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.expected_finding.finding_id` names FB2-FND-MUT-000003."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 3239,
+  "record_path": "docs/artifacts/scenarios/mutations/mutation-003-stale-revision.json",
+  "record_sha256": "3ce629480bd9a9216d0d2c355a293e493a78f718f6920862841ea1fafb2afd35",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "7b02ac15e819d9d1c7343afef7457223ce573f263d483ad0133f0bdb12fe4257"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": false,
+    "last_run": "2026-09-10T00:00:00Z",
+    "links_valid": false,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SCN-MUT-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the traceability_engineer for this safety record, do you agree that \"Mutation: Stale Revision Reference\" is a correct and complete statement of the link graph, schemas, exports, metrics and deterministic tooling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "affected_ids": [
+   "FB2-SAF-FSR-000001"
+  ],
+  "artifact_type": "scenario",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": false,
+   "last_run": "2026-09-10T00:00:00Z",
+   "links_valid": false,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "baseline_ref": "BAS-REF-001",
+  "created_at": "2026-09-10T00:00:00Z",
+  "engineering_domain": "safety",
+  "expected_detector": "revision_consistency_checker",
+  "expected_finding": {
+   "category": "consistency",
+   "description": "revision 99 not found in revision_history",
+   "finding_id": "FB2-FND-MUT-000003",
+   "severity": "medium"
+  },
+  "expected_remediation": "Update artifact revision to current value; re-run revision consistency check",
+  "human_approval_status": "pending",
+  "id": "FB2-SCN-MUT-000003",
+  "impact_paths": [
+   "Traceability links referencing FB2-SAF-FSR-000001 revision 1 now point to stale revision",
+   "Impact analysis for this artifact will use stale data"
+  ],
+  "lifecycle_status": "baselined",
+  "oracle_manifest_ref": "SCN-MUT-003/oracle-manifest.json",
+  "origin": "synthetic",
+  "owner_role": "traceability_engineer",
+  "patch": {
+   "affected_links": [],
+   "description": "Change artifact revision to stale value that doesn't match current revision",
+   "new_value": {
+    "revision": "99"
+   },
+   "operation": "modify"
+  },
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "traceability_engineer",
+    "date": "2026-09-10T00:00:00Z",
+    "description": "Mutation scenario: stale revision reference",
+    "revision": "1"
+   },
+   {
+    "author": "traceability_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Reconciled the expectation with the rule this scenario declares. declared detector 'Revision consistency checker (stale revision)' -> rule id 'revision_consistency_checker'; expected category verification -> consistency; expected description de-duplicated: it had been copy-pasted from SCN-MUT-020 and did not describe this scenario's defect. Severity and category are the rule's values and are authoritative; the rule was not changed to fit this fixture. severity unchanged. The category was verification only because the expectation had been copy-pasted from another scenario; the rule emits consistency, and a current revision that does not appear in the record's own revision history is a consistency defect, not a statement about verification. The rule is authoritative.The scenario's injected defect, its affected artifacts and its declared detector rule are unchanged. This expectation had never been checked: the scenario harness matched any finding of the right severity on the right artifact id, so a standing finding on the same artifact satisfied it. Remediation of finding FB2-REV-FND-000032.",
+    "revision": "2"
+   }
+  ],
+  "scenario_id": "SCN-MUT-003",
+  "scenario_type": "mutation",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [],
+  "title": "Mutation: Stale Revision Reference",
+  "trigger": "Corpus validation check on revision consistency",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "scenario",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "traceability_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SCN-MUT-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SCN-MUT-000003",
+  "revision": "2"
+ }
+}

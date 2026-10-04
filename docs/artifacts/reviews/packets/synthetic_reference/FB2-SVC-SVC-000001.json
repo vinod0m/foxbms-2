@@ -1,0 +1,610 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-LIF-000103",
+    "rationale": "The service instructions are the executable form of the commissioning requirement's intent, and the validation measure against that requirement's use case checks the same thing from the other end.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-SVC-SVC-000001",
+    "target_id": "FB2-SYS-SYR-000008"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000151",
+    "rationale": "FB2-REV-000014 reviewed FB2-SVC-SVC-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-SVC-SVC-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against post_development_record.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "finding_verification",
+     "description": "The service instruction's post-service check exercises only the main reaction path, so an item whose main path is defective would pass it.",
+     "finding_id": "FB2-REV-FND-000010",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "finding_verification",
+     "description": "The service instruction's post-service check exercises only the main reaction path, so an item whose main path is defective would pass it.",
+     "finding_id": "FB2-REV-FND-000010",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000151 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C01-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 VAL.1 with status `mapped` on the grounds: Intended-use validation requires the documented procedure the user actually performs to be the one that was validated."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C02-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 7, Clause 9 (maintenance and repair, calibration and return to service) with status `mapped` on the grounds: The service activities this record identifies."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 17651,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/service/installation-operation-and-service-instructions.json",
+  "record_sha256": "98d1494101c4292c6b208baf4d313b2ff86070904dc35e3c91dbc0cd01ce9262",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "b58b079bea8ada3e19b5e157506689d479d1d54c11bf764175b446a1b97475ae"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic. No technician exists, no vehicle exists and no equipment exists. Every procedure below describes work that has not been done.",
+    "The safety warnings are engineering statements about the hypothetical item's failure behaviour. They have not been reviewed by a person who has performed the work, which is the review that matters for a service instruction.",
+    "The record is held at draft rather than baselined for the reason above. A baselined service instruction in a corpus like this one is an invitation.",
+    "SVC-05's fault injection exercises one reaction path on the service interface. It does not exercise the independent hardware path, so an item whose main path is defective could pass this check. The end-of-line plan requires the independent path to be exercised separately; this procedure does not.",
+    "The technician named in 'who_may_perform_it' is a fictional role identity. No training record exists for it, and the corpus contains no competence records at all.",
+    "Nothing in this procedure is derived from an existing manufacturer document. The real foxBMS project publishes developer documentation, not a service instruction, and no part of this record is presented as one."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to draft, not baselined. A service instruction is the one lifecycle record a real organisation could execute, and this one is explicitly not that: no procedure it describes exists in approved form and no technician exists to execute it."
+  },
+  {
+   "field": "scope",
+   "value": {
+    "in_scope": [
+     "Commissioning a new item",
+     "Scheduled and unscheduled service actions",
+     "Component replacement and the recalibration it requires",
+     "Reading the item's record before acting on it",
+     "Return to service after any action"
+    ],
+    "out_of_scope": [
+     "Pack-level work and pack-level safety, which the pack integrator owns",
+     "Cell-level work of any kind",
+     "Any action on a pack that a qualified technician should not perform alone, which this procedure does not authorise at all",
+     "Instructions for a vehicle owner, which would be a separate document written for a non-technical reader"
+    ]
+   }
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SVC-SVC-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this service record, do you agree that \"Installation, operation and service instructions for the hypothetical 400 V BMS\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Pre-action log capture",
+    "measure": "Service events where the log was captured before any overwriting action",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Parameter restoration source",
+    "measure": "Restored parameter values resolved from the calibration specification",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Post-service safe-state reaction",
+    "measure": "Post-service checks reaching the safe state within the interval",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Step order adherence",
+    "measure": "Procedures performed without a skipped step",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Unauthorised performer rate",
+    "measure": "Service actions performed by a role not marked as permitted for that procedure",
+    "threshold": "0",
+    "unit": "actions"
+   }
+  ],
+  "artifact_type": "post_development_record",
+  "assumption_refs": [
+   "FB2-ASM-006"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "calendar_note": "Every date in this record is synthetic and belongs to the hypothetical Project Northcell. No organisation, plant, vehicle, technician or recycler named here exists.",
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "service",
+  "evidence_state": {
+   "any_step_executed": false,
+   "executed_steps": [],
+   "reason": "No production line, vehicle, charging site, workshop, fleet or recycling facility exists anywhere in this corpus. Master-prompt clause 2.5 forbids energising hardware and connecting to vehicles, so no step below can be performed by any means available here. The record documents the procedure and records that it has not been run."
+  },
+  "fictional_project": true,
+  "human_approval_status": "pending",
+  "id": "FB2-SVC-SVC-000001",
+  "interactions_with_other_lifecycle_areas": [
+   {
+    "consequence_if_the_interaction_is_broken": "A service action is performed against a configuration the technician did not know was fitted, and the action may be inapplicable to it.",
+    "direction": "this_area_requires_from_other",
+    "interaction": "The technician reads the configuration identification to determine what is fitted",
+    "other_area": "Release and configuration identification"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "A replaced component runs on a stale table and the item reports values it has not measured.",
+    "direction": "this_area_requires_from_other",
+    "interaction": "SVC-02 and SVC-04 restore parameters from the calibration specification this area produces",
+    "other_area": "Calibration and programming"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "The log is overwritten before it is read and the field signal for that vehicle is lost permanently.",
+    "direction": "mutual",
+    "interaction": "The technician captures the event log before acting",
+    "other_area": "Field monitoring and incident handling"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "A pack is retired without the record that would say whether it should have been retired earlier.",
+    "direction": "this_area_provides_to_other",
+    "interaction": "The event log and the configuration identification inform the end-of-life decision",
+    "other_area": "Decommissioning and recycling"
+   }
+  ],
+  "lifecycle_area": "installation_operation_and_service",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to draft, not baselined. A service instruction is the one lifecycle record a real organisation could execute, and this one is explicitly not that: no procedure it describes exists in approved form and no technician exists to execute it.",
+  "limitations": [
+   "Synthetic. No technician exists, no vehicle exists and no equipment exists. Every procedure below describes work that has not been done.",
+   "The safety warnings are engineering statements about the hypothetical item's failure behaviour. They have not been reviewed by a person who has performed the work, which is the review that matters for a service instruction.",
+   "The record is held at draft rather than baselined for the reason above. A baselined service instruction in a corpus like this one is an invitation.",
+   "SVC-05's fault injection exercises one reaction path on the service interface. It does not exercise the independent hardware path, so an item whose main path is defective could pass this check. The end-of-line plan requires the independent path to be exercised separately; this procedure does not.",
+   "The technician named in 'who_may_perform_it' is a fictional role identity. No training record exists for it, and the corpus contains no competence records at all.",
+   "Nothing in this procedure is derived from an existing manufacturer document. The real foxBMS project publishes developer documentation, not a service instruction, and no part of this record is presented as one."
+  ],
+  "operational_authorisation_statement": "This record is a fictional engineering artefact. It is NOT an authorised service instruction, it authorises no work on any real equipment, and no technician has performed any procedure in it. It is held at lifecycle_status draft rather than baselined precisely because a service instruction is the record most likely to be acted on. production_authorized is false.",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "post_development_id": "FB2-SVC-SVC-000001",
+  "procedures": [
+   {
+    "acceptance_condition": "The identification is read and recorded, and the log is captured before anything that could overwrite it",
+    "action": "Before any work: confirm the item's configuration identification and retrieve the non-volatile event log",
+    "decision_point": "Whether work may proceed without a readable identification, which this procedure forbids",
+    "record_produced": "Service initiation record",
+    "step": 1,
+    "synthetic_decision": "synthetic_decision:project_manager:SYNTH-SVC-STEP-001"
+   },
+   {
+    "acceptance_condition": "Isolation is confirmed by the vehicle, not by this item; the item may only observe it and may not be asked to provide it",
+    "action": "Confirm the vehicle is in the state the procedure requires, with the high-voltage system isolated by the vehicle's own means",
+    "record_produced": "Isolation record",
+    "step": 2
+   },
+   {
+    "acceptance_condition": "Every step in the selected procedure was performed in the given order",
+    "action": "Perform the action in the order given for the procedure selected, without skipping a step",
+    "decision_point": "Whether a step that cannot be performed may be skipped, which this procedure forbids",
+    "record_produced": "Action record",
+    "step": 3,
+    "synthetic_decision": "synthetic_decision:safety_engineer:SYNTH-SVC-STEP-003"
+   },
+   {
+    "acceptance_condition": "Every affected parameter resolves to its canonical parameter id and value, and the item passes the post-service check",
+    "action": "After any component replacement, restore the affected parameter values from the calibration specification rather than from memory or from another item",
+    "decision_point": "Whether an item may be returned to service with a parameter restored from an unverified source, which this procedure forbids",
+    "record_produced": "Parameter restoration record",
+    "step": 4,
+    "synthetic_decision": "synthetic_decision:sw_engineer:SYNTH-SVC-STEP-004"
+   },
+   {
+    "acceptance_condition": "The safe state is reached within the fault-tolerant time interval and the identification resolves to exactly one configuration",
+    "action": "Perform the post-service check: confirm the item reaches and confirms the safe state on a fault injection, and confirm the configuration identification still resolves",
+    "record_produced": "Post-service record",
+    "step": 5
+   },
+   {
+    "acceptance_condition": "No item returns to service with an incomplete post-service record",
+    "action": "Return the item to service only with the post-service record complete and the event log archived",
+    "decision_point": "Whether a return to service may proceed with a degraded post-service check, which this procedure forbids",
+    "record_produced": "Return to service record",
+    "step": 6,
+    "synthetic_decision": "synthetic_decision:project_manager:SYNTH-SVC-STEP-006"
+   }
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "purpose": "State what may and may not be done to the item by whom, in what order, and with what safety warning. The safety property this record protects is not the item's; it is the technician's, because a procedure that can be misperformed on a 400 volt pack injures the person following it.",
+  "records_produced": [
+   {
+    "identification_rule": "Vehicle identification and configuration identification",
+    "kind": "record",
+    "record": "Service initiation record",
+    "retention": "permanent, per service event"
+   },
+   {
+    "identification_rule": "Vehicle identification, configuration identification and read date",
+    "kind": "data",
+    "record": "Event log archive",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Replaced component plus each restored parameter id and value",
+    "kind": "record",
+    "record": "Parameter restoration record",
+    "retention": "permanent, per replacement"
+   },
+   {
+    "identification_rule": "Post-service check result and the configuration identification",
+    "kind": "record",
+    "record": "Post-service record",
+    "retention": "permanent, per service event"
+   },
+   {
+    "identification_rule": "Authorising role and the date",
+    "kind": "record",
+    "record": "Return to service record",
+    "retention": "permanent, per service event"
+   }
+  ],
+  "responsible_roles": [
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: project_manager (documentation owner, fictional)",
+    "responsibility": "Owns this record and its revision",
+    "role": "project_manager"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: service_technician (executing technician, fictional)",
+    "responsibility": "May perform the procedures below and only those marked as within their training",
+    "role": "service_technician"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: safety_engineer (safety warning approver, fictional)",
+    "responsibility": "Approves the safety warnings and their wording",
+    "role": "safety_engineer"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: sw_engineer (software action owner, fictional)",
+    "responsibility": "Owns the reprogramming and the parameter restoration after replacement",
+    "role": "sw_engineer"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Installation, operation and service instructions. Authored because the lifecycle-continuation view reported service and maintenance as a gap with zero records. Held at draft because the procedure it describes would be executable and this record is not authorised.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope": {
+   "in_scope": [
+    "Commissioning a new item",
+    "Scheduled and unscheduled service actions",
+    "Component replacement and the recalibration it requires",
+    "Reading the item's record before acting on it",
+    "Return to service after any action"
+   ],
+   "out_of_scope": [
+    "Pack-level work and pack-level safety, which the pack integrator owns",
+    "Cell-level work of any kind",
+    "Any action on a pack that a qualified technician should not perform alone, which this procedure does not authorise at all",
+    "Instructions for a vehicle owner, which would be a separate document written for a non-technical reader"
+   ]
+  },
+  "service_procedures": [
+   {
+    "post_service_check": "SVC-05",
+    "procedure_id": "SVC-01",
+    "procedure_name": "Commission a new item",
+    "safety_warning": "A new item with unconnected sense leads will report those inputs as out of range if commissioning is asserted incorrectly. Do not attempt to command the contactors closed at any point in this procedure. If the item does not behave as described, stop and escalate rather than continuing.",
+    "steps": [
+     "Confirm the item is not fitted in a pack or is fitted with all cables disconnected",
+     "Connect the service supply and confirm the supply indication",
+     "Connect the sense leads one module at a time, confirming the cell count after each",
+     "Assert commissioning and confirm that contactor actuation is inhibited",
+     "Read the configuration identification and confirm it resolves to the configuration this item should carry",
+     "Release commissioning, remove the service tool and confirm the item is inert"
+    ],
+    "tools_required": [
+     "Service supply with current limiting",
+     "Service diagnostic tool",
+     "Cell-count verification sheet"
+    ],
+    "who_may_perform_it": "A commissioning technician trained on this procedure. In this corpus that role is fictional and no training exists."
+   },
+   {
+    "post_service_check": "SVC-05",
+    "procedure_id": "SVC-02",
+    "procedure_name": "Replace a monitoring slave",
+    "safety_warning": "A replaced slave runs on the previous slave's calibration table until it is recalibrated. Do not return the vehicle to service between replacement and recalibration: in that interval the item reports cell values it has not measured.",
+    "steps": [
+     "Capture the event log before disconnecting anything",
+     "Isolate the high-voltage system by the vehicle's own means and confirm it",
+     "Disconnect the slave and replace it",
+     "Recalibrate the affected sensor tables against a reference measurement",
+     "Verify the cell count and the values against the pack's build record",
+     "Perform the post-service check"
+    ],
+    "tools_required": [
+     "Reference measurement equipment",
+     "Service diagnostic tool",
+     "Event log capture tool"
+    ],
+    "who_may_perform_it": "A service technician trained on this procedure"
+   },
+   {
+    "post_service_check": "SVC-05",
+    "procedure_id": "SVC-03",
+    "procedure_name": "Read and clear a latched fault",
+    "safety_warning": "Clearing a latched fault without removing its cause returns the vehicle to service with the condition intact. The item will latch again, but the vehicle may have been driven in between.",
+    "steps": [
+     "Capture the event log",
+     "Record every active diagnosis entry and its severity before clearing any",
+     "Determine whether the condition that raised the entry is still present",
+     "Clear the entry only if the condition is absent",
+     "Perform the post-service check"
+    ],
+    "tools_required": [
+     "Service diagnostic tool",
+     "Event log capture tool"
+    ],
+    "who_may_perform_it": "A service technician trained on this procedure"
+   },
+   {
+    "post_service_check": "SVC-05",
+    "procedure_id": "SVC-04",
+    "procedure_name": "Reprogram the application",
+    "safety_warning": "Reprogramming without restoring the parameter values leaves the item on whatever values were previously in memory, which may belong to a different pack. Read the parameter values back and compare them against the specification before returning to service.",
+    "steps": [
+     "Capture the event log and record the current configuration identification",
+     "Confirm the replacement image is the released build and not a development image",
+     "Reprogram and verify by readback",
+     "Restore every parameter value from the calibration specification",
+     "Perform the post-service check and confirm the configuration identification still resolves"
+    ],
+    "tools_required": [
+     "Commissioning tool with the released identity",
+     "Event log capture tool"
+    ],
+    "who_may_perform_it": "A service technician trained on this procedure and authorised for reprogramming"
+   },
+   {
+    "post_service_check": "None; this procedure is the post-service check",
+    "procedure_id": "SVC-05",
+    "procedure_name": "Post-service check",
+    "safety_warning": "The fault injection is performed through the service interface and the vehicle must be stationary with the high-voltage system isolated. Do not perform this check with the vehicle in motion or with the pack energised.",
+    "steps": [
+     "Confirm the item's state and that no safety-severity entry is active other than the one being worked",
+     "Inject a fault through the service interface and confirm the item reaches and confirms the safe state within the fault-tolerant time interval",
+     "Confirm the configuration identification resolves to exactly one released configuration",
+     "Record the result"
+    ],
+    "tools_required": [
+     "Service diagnostic tool"
+    ],
+    "who_may_perform_it": "Any technician who has completed one of SVC-01 to SVC-04"
+   }
+  ],
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Intended-use validation requires the documented procedure the user actually performs to be the one that was validated.",
+    "reference": "VAL.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The service activities this record identifies.",
+    "reference": "Part 7, Clause 9 (maintenance and repair, calibration and return to service)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Installation, operation and service instructions for the hypothetical 400 V BMS",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "post_development_record",
+  "engineering_domain": "service",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SVC-SVC-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SVC-SVC-000001",
+  "revision": "1"
+ }
+}

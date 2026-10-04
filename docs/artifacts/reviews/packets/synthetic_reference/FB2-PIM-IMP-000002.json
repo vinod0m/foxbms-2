@@ -1,0 +1,408 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000140",
+    "rationale": "FB2-REV-000014 reviewed FB2-PIM-IMP-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-PIM-IMP-000002"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against process_improvement.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "finding_completeness",
+     "description": "One of the three improvement records has a negative result: its metric moved by zero and its verdict is insufficient_evidence. It is recorded deliberately so the improvement set is not a set of successes.",
+     "finding_id": "FB2-REV-FND-000009",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "finding_completeness",
+     "description": "One of the three improvement records has a negative result: its metric moved by zero and its verdict is insufficient_evidence. It is recorded deliberately so the improvement set is not a set of successes.",
+     "finding_id": "FB2-REV-FND-000009",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000140 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CFM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.process_being_improved.process_record_ref` names FB2-SUP-CFM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CFM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.changes_made[0].affected_process_records[0]` names FB2-SUP-CFM-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 PIM.3 with status `mapped` on the grounds: Process improvement: proposal, implementation and effectiveness evaluation recorded separately."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C04-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 MAN.6 with status `mapped` on the grounds: The metrics these improvements act on."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.1 with status `mapped` on the grounds: Quality assurance: the finding stream that prompted two of the three improvements."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 7105,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/supporting/process-improvement-002-acknowledgement-capture.json",
+  "record_sha256": "62641f9082a3a0c87aded677e9eca3e87c6f6cdb47cc77e328ca2ac5088ad773",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "dfedfa154ed3d74b3d2577509ecd6107477fbf12766c8356b92ae8cff7844273"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic improvement. The negative result is the honest one and the record exists partly so that a corpus of improvements is not a corpus of successes.",
+    "Verdict insufficient_evidence is not a failure of the change; it is a statement that no evidence exists either way. The record says which of the two a reader should not assume.",
+    "No human approved or evaluated this improvement."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-PIM-IMP-000002.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this supporting record, do you agree that \"Improvement 002: a communication record that cannot be marked done until an acknowledgement is captured\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "process_improvement",
+  "assumption_refs": [
+   "FB2-ASM-011"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_evidence": [
+   {
+    "observation": "Communications recorded as performed with no acknowledgement captured",
+    "synthetic": true,
+    "unit": "communications",
+    "value": 1,
+    "where_it_came_from": "FB2-MAN-PLN-000001, meeting MTG-003, recorded as acknowledgement_recorded = false with a note that the first measurement review was held and no acknowledgement captured"
+   },
+   {
+    "observation": "Communication records carrying an acknowledgement reference",
+    "synthetic": true,
+    "unit": "communications",
+    "value": 0,
+    "where_it_came_from": "Read of the communication arrays in the supporting-process records at the plan's start date"
+   }
+  ],
+  "baseline_id": "BAS-REF-001",
+  "calendar_note": "Every date in this record is synthetic. They describe the hypothetical Project Northcell as its own artefact says that programme does not exist. No date here is a real commitment, a real gate date or a real review date.",
+  "changes_made": [
+   {
+    "adoption_evidence": "FB2-SUP-CFM-000001's acceptance criteria require the capture, and its performed instance records the capture as not obtained.",
+    "affected_process_records": [
+     "FB2-SUP-CFM-000001"
+    ],
+    "change": "Add an explicit acknowledgement capture step to the communication procedure, requiring a record reference and forbidding a bare boolean",
+    "change_date": "2026-09-29",
+    "change_type": "process_definition_change",
+    "changed_by_role": "project_manager"
+   }
+  ],
+  "counter_evidence": [
+   "The metric moved by zero. A hypothesis that has produced no measurable effect cannot be called effective, whatever the process definition now says.",
+   "The improvement is recorded by the role whose own communication lacks the acknowledgement (MTG-003 in FB2-MAN-PLN-000001), which makes it a self-assessment with no independence."
+  ],
+  "created_at": "2026-09-29T00:00:00Z",
+  "effectiveness_evaluation": {
+   "after_value": 0,
+   "arithmetic": "Before: 0 acknowledgement records. After: 0. 0 - 0 = 0. There is NO improvement. The change was made to the process definition and the corpus was then searched for acknowledgement references and none was found, because no communication has been sent to anybody: the participants are fictional and no meeting has occurred.",
+   "before_value": 0,
+   "confirmation_by_second_role": "reviewer_adversarial (fictional role identity), who agreed with the insufficient_evidence verdict and noted that this record's value is that it is the one improvement in this set with a negative result.",
+   "evaluated_by_role": "project_manager",
+   "evaluation_date": "2026-09-29",
+   "metric_id": "MET-06",
+   "observation_ids_used": [
+    "OBS-06"
+   ],
+   "unit": "acknowledgement records held",
+   "verdict": "insufficient_evidence",
+   "verdict_argument": "The change is defined and the corpus was searched for the thing it was meant to produce, and the thing is not there. There is no evidence either way about whether the change works, because the only possible demonstration requires a communication that cannot happen in this corpus. Recording an improvement here would be claiming a result from a change that has never had the opportunity to act."
+  },
+  "engineering_domain": "supporting",
+  "fictional_project": true,
+  "human_approval_status": "pending",
+  "hypothesis": {
+   "falsification_condition": "If a communication is still recorded as performed and complete with acknowledgement_recorded = true and no acknowledgement record, the hypothesis is false.",
+   "metric_id": "MET-06",
+   "predicted_effect": "The count of communications marked performed with acknowledgement_recorded = false will be reported rather than disclosed in a note, and every performed communication will carry an acknowledgement reference or an explicit statement that none was captured.",
+   "statement": "Making the acknowledgement capture an explicit, separately recorded step with its own record reference will cause a communication to be reported as incomplete rather than as done when nobody acknowledged it."
+  },
+  "id": "FB2-PIM-IMP-000002",
+  "improvement_id": "FB2-PIM-IMP-000002",
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record.",
+  "limitations": [
+   "Synthetic improvement. The negative result is the honest one and the record exists partly so that a corpus of improvements is not a corpus of successes.",
+   "Verdict insufficient_evidence is not a failure of the change; it is a statement that no evidence exists either way. The record says which of the two a reader should not assume.",
+   "No human approved or evaluated this improvement."
+  ],
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "process_being_improved": {
+   "process_id": "SUP.8",
+   "process_name": "Configuration management",
+   "process_record_ref": "FB2-SUP-CFM-000001",
+   "why_this_process": "The communication step is how an agreed revision reaches the roles affected by it. A communication recorded as sent with nobody acknowledging it is a distribution list, not an agreement."
+  },
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Effectiveness evaluation of the acknowledgement capture step.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "stage": "effectiveness_evaluation",
+  "standards": [
+   {
+    "rationale": "Process improvement: proposal, implementation and effectiveness evaluation recorded separately.",
+    "reference": "PIM.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The metrics these improvements act on.",
+    "reference": "MAN.6",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Quality assurance: the finding stream that prompted two of the three improvements.",
+    "reference": "SUP.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Process improvement: proposal, implementation and effectiveness evaluation recorded separately.",
+    "reference": "PIM.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The metrics these improvements act on.",
+    "reference": "MAN.6",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Quality assurance: the finding stream that prompted two of the three improvements.",
+    "reference": "SUP.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Improvement 002: a communication record that cannot be marked done until an acknowledgement is captured",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "process_improvement",
+  "engineering_domain": "supporting",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-PIM-IMP-000002"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-PIM-IMP-000002",
+  "revision": "1"
+ }
+}

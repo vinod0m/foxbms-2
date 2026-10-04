@@ -1,0 +1,436 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SYR-000126",
+    "rationale": "This measure is the source-grounded verification of FB2-SYS-SYR-000004's mode-dependent reaction criterion: it establishes from the pinned source that the applicable temperature tier set is selected by the sign of the string current and that the admissibility of an initialisation request is selected by the current state. The link asserts coverage of that criterion only; the requirement's mode-publication criterion is not covered.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "verifies",
+    "review_state": "pending",
+    "source_id": "FB2-VER-TMS-000026",
+    "target_id": "FB2-SYS-SYR-000004"
+   },
+   {
+    "link_id": "FB2-LNK-EXE-000126",
+    "rationale": "FB2-VER-EXE-000026 is the execution record for FB2-VER-TMS-000026. It carries execution_kind 'none' and outcome 'blocked' with the specific unblock condition that applies to that measure, so the link asserts that an execution record exists and honestly reports that nothing was run. It is not evidence that the measure passed.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "result_of",
+    "review_state": "pending",
+    "source_id": "FB2-VER-EXE-000026",
+    "target_id": "FB2-VER-TMS-000026"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against test_measure.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (1)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "1/1 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000005, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `271-351`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckCurrent`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_requirements[0]` names FB2-SYS-SYR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_designs[0]` names FB2-SW-DSN-000002."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SYS.4 (system integration testing) and SYS.5 (system verification) with status `partially_mapped` on the grounds: This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C06-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 9 (system verification) with status `partially_mapped` on the grounds: Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+  },
+  {
+   "claim_class": "verification_oracle",
+   "claim_id": "C07-oracle",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the criterion would actually FAIL if the property it names were violated. A criterion that cannot fail is the defect this corpus's own FB2-REV-FND-000042 is about.",
+   "machine_state": "count only; whether a criterion is decidable is not machine-checkable",
+   "statement": "This measure declares 0 acceptance criterion/criteria and method `not stated`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 9556,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000004-mode-dependent-reaction.json",
+  "record_sha256": "5223aa802f688fb8d2cbbfab4a7c9fb3223b9744bde3d17595b921a08f5fe502",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "eef1f97fa27de13b8aed72bede61dd6b156b4a406ca90845d5451cab764f5701"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "This measure checks that reaction selection depends on direction and on state. It does not check the requirement's mode-publication criterion, which needs a vehicle-control-unit interface this corpus does not have.",
+    "The identification of current direction with the requirement's notion of mode is an interpretation stated in the record, not a finding.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+    "This is a synthetic measure for the hypothetical reference project."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-TMS-000026.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Test: the limit applied, and the reaction reached, depend on the mode or direction in which the condition occurs\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "oracle strength",
+   "priority": 5,
+   "question": "This measure declares 0 acceptance criterion/criteria. For each, would the criterion actually FAIL if the property it names were violated?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria in section 3.",
+   "why_this_needs_a_human": "A test that cannot fail is indistinguishable from a passing test. This corpus measured 53 such files in its own suite and recorded it as FB2-REV-FND-000042."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "test_measure",
+  "assumption_refs": [
+   "FB2-ASM-006"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "cleanup": "Reset the state machine to the uninitialised state, restore the stubbed diagnosis handler, and confirm the limit configuration is unchanged.",
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "conf/unit/app_project_posix.yml",
+   "hardware": "POSIX host (Linux) running the unit-test build, with the SOA module and the application's state machine linked and the diagnosis handler stubbed to record entries",
+   "software": "foxBMS 2 application firmware built with the unit-test configuration",
+   "tools": [
+    "GCC",
+    "CMock",
+    "Unity"
+   ]
+  },
+  "expected_outcomes": [
+   {
+    "expected_value": "true",
+    "signal": "distinct_reaction_sets_by_direction",
+    "tolerance": "exact",
+    "unit": "bool"
+   },
+   {
+    "expected_value": "true",
+    "signal": "initialisation_accepted_in_uninitialised_state",
+    "tolerance": "exact",
+    "unit": "bool"
+   },
+   {
+    "expected_value": "true",
+    "signal": "initialisation_refused_after_initialisation",
+    "tolerance": "exact",
+    "unit": "bool"
+   },
+   {
+    "expected_value": "true",
+    "signal": "refusal_reason_attributable_to_state",
+    "tolerance": "exact",
+    "unit": "bool"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-TMS-000026",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "This measure checks that reaction selection depends on direction and on state. It does not check the requirement's mode-publication criterion, which needs a vehicle-control-unit interface this corpus does not have.",
+   "The identification of current direction with the requirement's notion of mode is an interpretation stated in the record, not a finding.",
+   "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+   "This is a synthetic measure for the hypothetical reference project."
+  ],
+  "objective": "Confirm that FB2-SYS-SYR-000004's core claim is falsifiable against the pinned source: that the limit applied and the reaction reached are selected by the mode or direction rather than fixed. Two independent mechanisms in the source select on mode or direction. SOA_CheckTemperatures chooses between a discharge tier set and a charge tier set from the sign of the string current, so the same temperature passes or fails depending on direction. The application's state machine selects the contactor reaction from the item's own state and from the requests allowed in that state, and BMS_CheckStateRequest refuses an initialisation request outside the uninitialised state. Both are read from the pinned source and both can be falsified without running the item.",
+  "oracle_basis": "source_grounded",
+  "oracle_detail": {
+   "kind": "source_grounded",
+   "oracle_kind": "source_grounded",
+   "residual_risk": "Two mechanisms are checked that are not the one the requirement names. The requirement asks for reaction selected by mode; the source selects temperature limits by current direction and initialisation requests by state. Whether current direction is the reference project's notion of mode is an interpretation, and this record states the interpretation rather than hiding it.",
+   "what_it_still_does_not_prove": "It does not prove the reference project's reaction set per mode is the right set, that no mode is missing, or that the published mode reaches the vehicle control unit within the publication period the requirement also demands. The publication half of FB2-SYS-SYR-000004 is verified by a different mechanism and is not claimed here.",
+   "what_the_oracle_is_not": "It is not a measured reference: neither branch was exercised by a run in this authoring pass. It is not an analytical model: no timing or magnitude arithmetic is involved. It is not a synthetic assumption: the branching is in the source.",
+   "why_this_oracle": "The oracle is the branching the pinned source performs. The temperature path contains an explicit test of the current's sign that selects between two threshold sets, and the request path contains an explicit test of the current state that returns one of several distinct refusal values. Both are properties of code that exists, readable at the pinned commit, and falsifiable by changing one condition in either."
+  },
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "preconditions": [
+   "The reference project's limit configuration is loaded.",
+   "The application's state machine is initialised in the uninitialised state."
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "referenced_designs": [
+   "FB2-SW-DSN-000002"
+  ],
+  "referenced_requirements": [
+   "FB2-SYS-SYR-000004"
+  ],
+  "regression_selection": "Re-run on every change to the temperature tier selection, to the request admissibility rules, to the application's state enumeration, or on any addition of a mode. Also re-run whenever a mode is added, because this measure can only check the modes the code actually branches on and a new mode is exactly the case it would miss.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "Authored because FB2-SYS-SYR-000004 had no verification, and because its verification approach is declared analysis rather than test, so the measure that suits it is one that reads branching out of the source and exercises it only where exercising is possible.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000005"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met.",
+    "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct.",
+    "reference": "Part 4, Clause 9 (system verification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "steps": [
+   {
+    "action": "Inject the chosen cell temperature with a positive string current and record the entries raised.",
+    "expected": "The entries raised are the charge-direction temperature entries.",
+    "step": 1
+   },
+   {
+    "action": "Inject the identical temperature with a negative string current.",
+    "expected": "The entries raised are the discharge-direction temperature entries, which differ from step 1 for at least one tier.",
+    "step": 2
+   },
+   {
+    "action": "Issue an initialisation request in the uninitialised state and record the returned result.",
+    "expected": "The request is accepted.",
+    "step": 3
+   },
+   {
+    "action": "Issue the identical request after initialisation and record the returned result.",
+    "expected": "The request is refused with a reason specific to the state it was issued in.",
+    "step": 4
+   },
+   {
+    "action": "Record which state the refusal reason came from.",
+    "expected": "The refusal is attributable to the state rather than to a fixed policy.",
+    "step": 5
+   }
+  ],
+  "stimuli": [
+   {
+    "signal": "String current sign",
+    "timing": "one cycle per direction",
+    "value": "positive and negative, in separate cycles"
+   },
+   {
+    "signal": "Cell temperature",
+    "timing": "held across both cycles",
+    "value": "a value that is inside the charge tier set and outside the discharge tier set"
+   },
+   {
+    "signal": "State request",
+    "timing": "once per state",
+    "value": "an initialisation request issued once in the uninitialised state and once after initialisation"
+   }
+  ],
+  "test_type": "integration",
+  "timing": {
+   "max_execution_time_ms": 90000,
+   "setup_time_ms": 30000,
+   "teardown_time_ms": 15000
+  },
+  "title": "Test: the limit applied, and the reaction reached, depend on the mode or direction in which the condition occurs",
+  "tolerances": {
+   "distinct_reaction_sets_by_direction": "exact",
+   "initialisation_accepted_in_uninitialised_state": "exact",
+   "initialisation_refused_after_initialisation": "exact",
+   "refusal_reason_attributable_to_state": "exact"
+  },
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-TMS-000026"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-TMS-000026",
+  "revision": "1"
+ }
+}

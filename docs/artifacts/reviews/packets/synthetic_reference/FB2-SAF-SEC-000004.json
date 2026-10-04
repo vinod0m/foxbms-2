@@ -1,0 +1,590 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SEC-000004",
+    "rationale": "Threat analysis FB2-SAF-TAR-000001 derives security requirement FB2-SAF-SEC-000004 from its threat and mitigation set; the requirement carries the mitigations forward and the TARA carries the evidence they rest on.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "supports",
+    "review_state": "pending",
+    "source_id": "FB2-SAF-TAR-000001",
+    "target_id": "FB2-SAF-SEC-000004"
+   },
+   {
+    "link_id": "FB2-LNK-SEC-000010",
+    "rationale": "Serial-link framing, integrity and control-byte demotion protect the safety goal's assurance argument against a link that carries measurement data into the master.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "supports",
+    "review_state": "pending",
+    "source_id": "FB2-SAF-SEC-000004",
+    "target_id": "FB2-SAF-SGO-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000016",
+    "rationale": "FB2-REV-000009 reviewed FB2-SAF-SEC-000004 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000009",
+    "target_id": "FB2-SAF-SEC-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000028",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-SEC-000004 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-SEC-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000058",
+    "rationale": "FB2-REV-000012 reviewed FB2-SAF-SEC-000004 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000012",
+    "target_id": "FB2-SAF-SEC-000004"
+   },
+   {
+    "link_id": "FB2-LNK-CPT-000014",
+    "rationale": "Architectural element AR-003 of the technical safety concept is realised by FB2-SAF-SEC-000004. The element's role and the record's statement were read against each other.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-TSC-000001",
+    "target_id": "FB2-SAF-SEC-000004"
+   },
+   {
+    "link_id": "FB2-LNK-ELC-000060",
+    "rationale": "FB2-SAF-SEC-000004 is the lower-level requirement allocated to the system requirement FB2-SYS-SYR-000008. The two statements and acceptance criteria were read against each other before the link was made, so the system requirement is covered indirectly through its allocation rather than directly by a measure of its own.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-SEC-000004",
+    "target_id": "FB2-SYS-SYR-000008"
+   },
+   {
+    "link_id": "FB2-LNK-SEC-000084",
+    "rationale": "The measure verifies FB2-SAF-SEC-000004 against that requirement's own acceptance criteria, with its oracle basis declared in its oracle_detail field. The link's direction is measure to requirement, which is the corpus's convention and the only direction under which the requirement can be seen as covered.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "verifies",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000019",
+    "target_id": "FB2-SAF-SEC-000004"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against requirement.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (5)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "5/5 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (3 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "3 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 3,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-CHALLENGE-SAFETY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000009",
+     "review_path": "docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+     "review_type": "challenge",
+     "reviewed_revision": "4",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000016 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-CYBERSEC-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000003",
+     "review_path": "docs/artifacts/reviews/records/review-cybersecurity-work-products.json",
+     "review_type": "domain",
+     "reviewed_revision": "4",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-cybersecurity-work-products.json",
+      "reviewed_by link FB2-LNK-REVB-000028 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000012",
+     "review_path": "docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+     "review_type": "meta",
+     "reviewed_revision": "4",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000058 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000067, which records anchor class `repository_file`; path `src/app/driver/uart/uart.c`; line_range `144-164`; content_hash `0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e`; symbol `UART_Initialize`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000068, which records anchor class `repository_file`; path `src/app/driver/uart/uart.c`; line_range `244-263`; content_hash `0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e`; symbol `UART_RxInterrupt`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000069, which records anchor class `repository_file`; path `src/app/driver/uart/uart.c`; line_range `223-242`; content_hash `0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e`; symbol `UART_HandleFlowControl`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000070, which records anchor class `repository_file`; path `src/app/driver/uart/uart.h`; line_range `68-69`; content_hash `0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc`; symbol `UART_XOFF`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Two different contents are in play and both are recorded. location.pinned_commit_content_hash (b083dae4fc190a06beced4efe584672ea565e0478a2ddeea1dbd8f02b32e10f2) is the sha256 of this file as committed in 308028fb13d046ba29b98886895c2e17937b1437, and it was verified against that commit. location.working_file_hash and content_hash (84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52) a\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000071, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.c`; line_range `330-338`; content_hash `84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52`; symbol `FTSK_RunUserCodeUart`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[0]` names FB2-SAF-SEC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[1]` names FB2-SAF-SEC-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.safety_allocation.safety_goal_ref` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000067 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000067."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000068 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000068."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000069 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000069."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000070 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000070."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000071 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000071."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TAR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derived_from` names FB2-SAF-TAR-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C15-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `unverified` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_SAE_21434_2021 Clause 15.4 (mitigation concept); external interface protection per Clause 8.5 with status `unverified` on the grounds: Named for traceability of intent only. No ISO/SAE 21434 work product exists and no conformance is claimed."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C16-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 7 (technical safety requirements, freedom from interference) with status `partially_mapped` on the grounds: The interference path through an unframed serial link is identified; the corresponding safety analysis is not part of this corpus."
+  },
+  {
+   "claim_class": "classification",
+   "claim_id": "C17-asil",
+   "evidence_in_packet": "The record verbatim in section 3, including the whole asil_allocation_scope block.",
+   "judgement_needed": "Whether presenting this classification this way is acceptable. On an as_is record a reader can take an ASIL value as a statement about the real product, and no machine can tell whether that misreading has happened.",
+   "machine_state": "NO `asil_allocation_scope` block, so the classification is presented unqualified. On an `as_is` profile record that is a reconstruction presented as a determination, and is exactly what an independent audit already raised against this corpus.",
+   "statement": "This record carries safety_allocation.asil = `not_applicable` and a safety_goal_ref of `FB2-SAF-SGO-000001`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 20507,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/safety/sec-serial-link-framing-integrity-control-byte.json",
+  "record_sha256": "e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "e2a833dcde690009d2df14f781d204ed5afa8be11c86a2b32297fdb1a18c6b1b"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SAF-SEC-000004.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the cybersecurity_engineer for this safety record, do you agree that \"The BMS master software shall accept a serial (SCI/UART, RS485) frame only after an explicit length field has been validated against the received byte count and an integrity field\u2026\" is a correct and complete statement of cybersecurity requirements, attack surface, authentication and integrity verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "requirement quality",
+   "priority": 8,
+   "question": "Are the acceptance criteria complete and decidable - could a verifier say with certainty whether this requirement is met?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria and verification_approach in the record.",
+   "why_this_needs_a_human": "An undecidable requirement cannot be verified, and the corpus cannot tell an undecidable requirement from a merely terse one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Unframed byte acceptance",
+    "measure": "Bytes on the receive line that reach the application layer without passing frame-length and integrity validation, over a 24 h injection campaign",
+    "threshold": "0",
+    "unit": "bytes"
+   },
+   {
+    "criterion": "Control-byte injection",
+    "measure": "Transitions of the transmit-enabled state caused by a 0x13 or 0x11 byte outside an authenticated frame",
+    "threshold": "0",
+    "unit": "transitions"
+   },
+   {
+    "criterion": "Length mismatch rejection",
+    "measure": "Frames whose declared length differs from the received byte count and which are passed onward",
+    "threshold": "0",
+    "unit": "frames"
+   },
+   {
+    "criterion": "Forged-frame rejection",
+    "measure": "Frames with a valid structure and a modified payload that are accepted",
+    "threshold": "0",
+    "unit": "frames"
+   },
+   {
+    "criterion": "Receive overflow diagnosability",
+    "measure": "Diagnosis entries raised per detected receive-queue overflow",
+    "threshold": "1",
+    "unit": "entry per overflow event"
+   },
+   {
+    "criterion": "Genuine-frame false-rejection rate",
+    "measure": "Genuine frames rejected over a 24 h campaign at nominal bus load whose observed genuine-frame population is at least 3 x 10^6 frames. Pass is 0 rejections observed over that population, which is a one-sided 95 percent upper confidence bound of 1 x 10^-6 on the rate by the rule of three (3/n <= 1e-6 for n >= 3e6). The integrity value used on this interface shall be at least 22 bits, which is the width for which a per-frame false rejection probability of 2^-w stays below the rate this criterion bounds over that population.",
+    "threshold": "1 per 10^6 genuine frames",
+    "unit": "rejections per 10^6 genuine frames"
+   }
+  ],
+  "artifact_type": "requirement",
+  "asil_justification": {
+   "added_in_revision": "3",
+   "classification_status": "recorded_reasoning",
+   "reason": "This requirement is classified 'security' and it specifies framing integrity and the control byte of a serial link. ISO 26262 does not allocate an ASIL to a security requirement, so not_applicable is the schema's own enumerated value for that case. The trace to the safety goal records that a link carrying measurement data is an interference vector for the requirements derived from that goal. That is an argument for the link's importance, not an ASIL allocation.",
+   "requirement_classification": "security",
+   "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this requirement. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product and not evidence about the framing integrity of any real serial link.",
+   "what_this_does_not_assert": [
+    "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. Nothing in this field was audited to produce it.",
+    "It does not assert human approval. human_approval_status on this record is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
+    "It does not establish that any ASIL was correctly assigned to any safety requirement in this corpus. It explains only why this requirement is not itself an ASIL-allocated item.",
+    "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose.",
+    "It does not assert an ASPICE capability level for anything."
+   ]
+  },
+  "assumption_refs": [
+   "FB2-ASM-011"
+  ],
+  "assumptions": [
+   "FB2-ASM-011"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "classification": "security",
+  "conditions_modes": [
+   "NORMAL",
+   "CHARGING",
+   "DISCHARGE",
+   "PRECHARGE",
+   "DEGRADED",
+   "COMMISSIONING"
+  ],
+  "created_at": "2026-09-29T00:00:00Z",
+  "derived_from": "FB2-SAF-TAR-000001",
+  "engineering_domain": "safety",
+  "fault_reaction": {
+   "added_in_revision": "4",
+   "allocated_element_id": null,
+   "allocation_basis": "NO ELEMENT ALLOCATES A FAULT REACTION FOR THE SECURITY CHAIN. FB2-SAF-FSC-000001.safety_strategies.fault_reaction lists four reactions and allocates them to AR-002, AR-004, AR-005 and AR-006; FB2-SAF-TSC-000001.fault_reaction lists the same four. None of them is a reaction to a detected security attack, and FB2-SAF-TSC-000001.safety_strategies.fault_detection lists five detection mechanisms, none of which is a communication-integrity or authentication check. The security chain therefore has no element-level reaction budget anywhere in this corpus. That is a real gap and it is recorded as one rather than closed by inventing an allocation. The reaction this field states is the one this requirement's own statement mandates and the one its own acceptance criteria decide; who carries it technically, and within what time, is not derivable from any record that exists.",
+   "budget_absence_note": "No reaction_time_budget_ms is stated, and that is deliberate rather than an omission. The safety goal FB2-SAF-SGO-000001.timing_budget.allocation has ten entries, none of which is a cybersecurity leg, and neither safety concept allocates one to the security chain, so there is no interval in this corpus against which a security reaction time could be checked. The decidable bounds that DO exist are stated in reaction_time_bound, transcribed from this record's own acceptance criteria. Inventing a millisecond figure here would create a number with nothing to verify it against, which is the failure mode finding FB2-REV-FND-000025 was raised about.",
+   "derivation": "Transcribed, not invented. reaction, triggered_by, diagnosis, reaction_time_bound and mode_dependence are each quoted or paraphrased from text this record already carried at revision 3: its own statement, its own acceptance_criteria and its own conditions_modes. The numeric bound in reaction_time_bound is a threshold this record's own acceptance criteria already stated; where the record states no such bound, this field says so rather than supplying one. No acceptance criterion, ASIL value, verification approach, verification_status, statement or rationale was altered by adding this field.",
+   "diagnosis": "One diagnosis entry per detected receive-queue overflow. Transcribed from this record's own acceptance criterion 'Receive overflow diagnosability / Diagnosis entries raised per detected receive-queue overflow / 1 / entry per overflow event'. Note what is NOT here: this record states no diagnosability criterion for a length mismatch, a forged frame or a control-byte injection, so for those three the reaction's observability is unstated by the record itself and is not invented in this field.",
+   "element_owns_reaction": false,
+   "mode_dependence": "Mode-independent, for the same structural reason as FB2-SAF-SEC-000003: the frames on this link are the measurement and control traffic the safety chain acts on, and the statement attaches no mode qualifier to either the framing rule or the control-byte rule. In COMMISSIONING in particular a 0x13/0x11 on the line is exactly the kind of byte a commissioning tool emits as ordinary data, which is why the reaction depends on authentication rather than on the byte's value.",
+   "open_limits": "The control is absent from the real foxBMS 2 source: real_source_control_status on this record is 'absent'. The verification leg is a plan, not an outcome: verification_status is not_verified, and the false-rejection criterion depends on an observed genuine-frame population of at least 3 x 10^6 frames that no campaign in this corpus has produced. The reaction has no element-level allocation in either safety concept and no reaction-time budget, because FB2-SAF-SGO-000001.timing_budget has no cybersecurity leg. Three specific gaps are named rather than glossed: no latency bound exists for the rejection; no diagnosability obligation exists for three of the four detection conditions; and the integrity scheme's key lifecycle is not specified by any record in this corpus.",
+   "reaction": "Do not pass the frame to the application layer, and raise a diagnosis entry on a detected receive overflow. This is the requirement's own sentence: the master software 'shall pass only authenticated frames to the application layer'. The companion half of the reaction is the control-byte rule - XOFF and XON are treated 'as ordinary payload unless they arrive inside a frame that has already been authenticated' - so a bare 0x13 or 0x11 on the line produces no transmit-enable transition. Rejecting before the application layer is the substance: an unframed or unauthenticated byte must not reach the code that interprets it.",
+   "reaction_time_bound": "None. This record states no reaction-time acceptance criterion, so none is invented here. Its decidability criteria - 'Unframed byte acceptance / 0 bytes', 'Control-byte injection / 0 transitions', 'Length mismatch rejection / 0 frames', 'Forged-frame rejection / 0 frames' - bound the reaction's correctness over a 24 h injection campaign and not its latency. The absence of a latency bound is a real gap in this record and is named in open_limits.",
+   "triggered_by": "A declared frame length that does not match the received byte count; an integrity field that does not verify on an otherwise well-formed frame; a receive-queue overflow; or an XOFF/XON byte arriving outside an authenticated frame.",
+   "unverified_leg_note": "The verification leg is absent in the real source and the record says so: real_source_control_status is 'absent'. This block therefore describes what the requirement specifies, not what the foxBMS 2 product does. No measurement, no timing analysis and no injection campaign exists in this corpus for any part of it."
+  },
+  "feasibility_dependencies": [
+   "FB2-SAF-SEC-000001",
+   "FB2-SAF-SEC-000003"
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SAF-SEC-000004",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "cybersecurity_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "rationale": "The serial receive path in the real source has no framing, no length field, no integrity field and no authorisation, and it treats two arbitrary byte values as privileged commands: any 0x13 on the line suppresses the master's transmission, and any 0x11 restores it, with no authentication and no diagnosis. A single byte placed on the line is therefore sufficient to alter the master's behaviour on that link, which is a control-injection condition even though the current consequence is limited. Framing and authentication are required together because an integrity field on an unframed stream can be forged or misaligned by the peer, and the control-byte clause is required because a value that acts as a command must not be reachable outside an authenticated frame (TARA threat THR-006, TARA mitigation MIT-005).",
+  "real_source_control_status": "absent",
+  "real_source_control_status_note": "The control this requirement specifies is NOT present in the real foxBMS 2 source at commit 308028fb.",
+  "real_source_presence": "Control ABSENT. src/app/driver/uart/uart.c:163 arms a single-byte interrupt-driven receive into one static byte (declared at :108). In the receive interrupt at :244-263, the values 0x13 and 0x11 (defined at src/app/driver/uart/uart.h:68-69) are consumed at :247-250 to gate transmission, and every other byte is forwarded to a queue at :254 with the enqueue return value discarded, so overflow is silent and no diagnosis entry is raised. No framing, length validation, integrity field or authorisation exists anywhere on this path. A further absence is recorded honestly and constrains the impact rating: the application consumer of this queue is a stub \u2014 FTSK_RunUserCodeUart in src/app/task/config/ftask_cfg.c:330-338 contains only UART_HandleFlowControl() and OS_NotifyTake() and never calls UART_Read \u2014 so no application data path from the serial receive queue to the database was found, and the evidenced impact is confined to transmit suppression and silent overflow. This requirement MUST be re-derived if the hypothetical project connects a protocol to this queue. Anchors FB2-SRC-COD-000067, FB2-SRC-COD-000068, FB2-SRC-COD-000069, FB2-SRC-COD-000070, FB2-SRC-COD-000071.",
+  "revision": "4",
+  "revision_history": [
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "First issue. Forward-engineered security requirement 'serial-link-framing-integrity-control-byte' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001.",
+    "revision": "1"
+   },
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Replaced the absolute '0 genuine frames rejected over 24 h' acceptance criterion with a bounded rate, a stated population the bound is demonstrated over, and a minimum integrity value width that makes the bound achievable. Remediation of finding FB2-REV-FND-000028. The old criterion was unsatisfiable and non-discriminating at the same time: a keyed integrity value of width w rejects a genuine frame with probability 2^-w, so over a 24 h campaign the expected number of genuine rejections is n * 2^-w, non-zero for any practical w; meanwhile an implementation that rejected every frame would satisfy the criterion vacuously, and would also satisfy the other criteria in this record vacuously. The new criterion is 0 rejections observed over a genuine-frame population of at least 3 x 10^6 in a 24 h campaign, which by the rule of three (0 failures in n trials gives a one-sided 95 percent upper bound of 3/n) is a bound of 1 x 10^-6 on the rate; and it requires the integrity value on the interface to be at least 22 bits, which is the width for which 2^-w stays below that rate over that population. The three statements are mutually consistent, so the criterion is now achievable by a correct implementation of adequate width and is not satisfied by an always-rejecting one (~100 percent) or by a 16-bit one (~1.5e-5 per frame). The criterion is therefore STRICTER in discriminating power than the zero it replaces, and it is also a harder engineering obligation, because it constrains the width of the integrity value where the zero constrained nothing. The absolute zeros that remain in this record are the ones that are decidable by the check existing - injected frames accepted, replayed frames accepted, length-mismatch frames reaching the callback, control-byte transitions - and those are over countable events on a channel where no collision is involved, so they are unchanged and were deliberately not relaxed. The verification measure FB2-VER-TMS-000018 and its execution record were regenerated against the new criterion in the same revision set. No ASIL value, safety_goal_ref, statement clause or verification approach was changed.",
+    "revision": "2"
+   },
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Added the asil_justification that the requirement applicability validator requires and did not find: this record marks safety_allocation.asil as not_applicable, which requirement.schema.json enumerates as the value for a requirement to which no ASIL determination applies, and the rule requires a recorded reason for that marking. The reason had been present only inside safety_allocation.mitigation and safety_allocation.safety_goal_ref, which are required on every requirement whatever its marking and are therefore populated identically on the ASIL_D records; they cannot serve as a justification specific to this marking. The new field states the reason on its own, names what the safety_goal_ref trace does and does not carry, and records the open items where the marking depends on something not yet established. The asil value, the statement, the mitigation, the safety_goal_ref and the revision-relevant content of the record are unchanged. Remediation of the requirement applicability validator finding raised by finding FB2-REV-FND-000032. Nothing in this field asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false.",
+    "revision": "3"
+   },
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "Added the fault_reaction block that the safety-requirement completeness validator (MUT-008, safety_requirement_completeness_checker) requires and did not find. That rule used to carry an id filter '-FSR-' in id which made it structurally incapable of reporting this record, while its sibling verification_traceability_checker selected the same population - requirement plus engineering_domain equals safety - with no id filter at all. The filter has been removed from the rule, which widened its scope and weakened nothing; see finding FB2-REV-FND-000039. The block authored here is transcribed from this record's own statement, acceptance_criteria and conditions_modes, and records three absences honestly rather than filling them: neither safety concept allocates a fault reaction to any element for the security chain (element_owns_reaction is therefore false), the safety goal's timing budget has no cybersecurity leg so no reaction-time budget is stated, and the control's real-source status and unverified verification leg are carried through. No acceptance criterion, ASIL value, statement, rationale, verification approach or verification status was changed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human has approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "4"
+   }
+  ],
+  "safety_allocation": {
+   "asil": "not_applicable",
+   "mitigation": "Security mitigation for the serial communication path. asil is recorded as not_applicable because this is a security requirement; the trace to the safety goal records that a link carrying measurement data is an interference vector for the requirements derived from that goal, not an ASIL allocation.",
+   "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000067",
+   "FB2-SRC-COD-000068",
+   "FB2-SRC-COD-000069",
+   "FB2-SRC-COD-000070",
+   "FB2-SRC-COD-000071"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists and no conformance is claimed.",
+    "reference": "Clause 15.4 (mitigation concept); external interface protection per Clause 8.5",
+    "standard_id": "ISO_SAE_21434_2021",
+    "status": "unverified"
+   },
+   {
+    "rationale": "The interference path through an unframed serial link is identified; the corresponding safety analysis is not part of this corpus.",
+    "reference": "Part 4, Clause 7 (technical safety requirements, freedom from interference)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "statement": "The BMS master software shall accept a serial (SCI/UART, RS485) frame only after an explicit length field has been validated against the received byte count and an integrity field has been verified, shall pass only authenticated frames to the application layer, and shall treat the XOFF and XON byte values as ordinary payload unless they arrive inside a frame that has already been authenticated.",
+  "title": "SEC-000004: Framing, integrity and authorisation on the serial link, and demotion of the XOFF/XON control bytes",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_approach": "test",
+  "verification_status": "not_verified"
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "requirement",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "cybersecurity_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SAF-SEC-000004"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SAF-SEC-000004",
+  "revision": "4"
+ }
+}

@@ -1,0 +1,476 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against implementation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (4)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "4/4 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000067, which records anchor class `repository_file`; path `src/app/driver/uart/uart.c`; line_range `144-164`; content_hash `0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e`; symbol `UART_Initialize`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000068, which records anchor class `repository_file`; path `src/app/driver/uart/uart.c`; line_range `244-263`; content_hash `0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e`; symbol `UART_RxInterrupt`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000069, which records anchor class `repository_file`; path `src/app/driver/uart/uart.c`; line_range `223-242`; content_hash `0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e`; symbol `UART_HandleFlowControl`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000070, which records anchor class `repository_file`; path `src/app/driver/uart/uart.h`; line_range `68-69`; content_hash `0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc`; symbol `UART_XOFF`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000067 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000067."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000068 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000068."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000069 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000069."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000070 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000070."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000067 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000067."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000068 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[1]` names FB2-SRC-COD-000068."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000069 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[2]` names FB2-SRC-COD-000069."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000070 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[3]` names FB2-SRC-COD-000070."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C13-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 (this record is a code location, not a verification record) with status `partially_mapped` on the grounds: States where the UART driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C14-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 (design-to-code traceability) with status `gap` on the grounds: There is no software design artefact for the UART driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 11293,
+  "record_path": "docs/artifacts/corpus/as_is/software/implementation-uart-driver.json",
+  "record_sha256": "03ff488a43bfba7cf07d0ffe518771b513f241daef06341dc7e69b7799e1792d",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "03ff488a43bfba7cf07d0ffe518771b513f241daef06341dc7e69b7799e1792d"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Anchors referenced, all pre-existing: FB2-SRC-COD-000067, -000068 and -000069 name UART_Initialize, UART_RxInterrupt and UART_HandleFlowControl in uart.c, and FB2-SRC-COD-000070 names the UART_XOFF flow-control constant in uart.h. No new anchor was created."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SW-IMP-000008.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Implementation: SCI/UART driver - initialisation, receive interrupt, queued read and XON/XOFF software flow control (uart.c)\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anchor_refs": [
+   "FB2-SRC-COD-000067",
+   "FB2-SRC-COD-000068",
+   "FB2-SRC-COD-000069",
+   "FB2-SRC-COD-000070"
+  ],
+  "artifact_type": "implementation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behaviours": [
+   {
+    "behaviour_id": "UART-IMP-INIT",
+    "description": "Configures the SCI peripheral and registers the receive interrupt that feeds the driver.",
+    "evidence_line_range": "144-164",
+    "evidence_symbol": "UART_Initialize",
+    "kind": "startup"
+   },
+   {
+    "behaviour_id": "UART-IMP-RX-IS",
+    "description": "Receive interrupt: treats XON and XOFF as flow-control state changes and every other byte as data to enqueue and to notify the task for.",
+    "evidence_line_range": "244-263",
+    "evidence_symbol": "UART_RxInterrupt",
+    "kind": "interrupt_dispatch"
+   },
+   {
+    "behaviour_id": "UART-IMP-FLOW-CTRL",
+    "description": "Drives software flow control from the receive queue's depth, sending XOFF at the upper cutoff and XON at the lower cutoff, under the transmit semaphore.",
+    "evidence_line_range": "223-242",
+    "evidence_symbol": "UART_HandleFlowControl",
+    "kind": "flow_control"
+   },
+   {
+    "behaviour_id": "UART-IMP-QUEUED-READ",
+    "description": "Drains received bytes from the queue into a caller buffer, so the task layer never reads the peripheral register directly.",
+    "evidence_line_range": "196-221",
+    "evidence_symbol": "UART_Read",
+    "kind": "transfer"
+   }
+  ],
+  "code_locations": [
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+    "line_range": "144-164",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_Initialize",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+    "line_range": "244-263",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_RxInterrupt",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+    "line_range": "223-242",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_HandleFlowControl",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e",
+    "line_range": "196-221",
+    "path": "src/app/driver/uart/uart.c",
+    "repository": "foxbms-2",
+    "symbol": "UART_Read",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:0561c78742738e700f896e66748b4585eacfcacd73f5886b3de9e4956062cdbc",
+    "line_range": "68-69",
+    "path": "src/app/driver/uart/uart.h",
+    "repository": "foxbms-2",
+    "symbol": "UART_XOFF",
+    "symbol_role": "macro_definition",
+    "verified_against_pinned_source": true
+   }
+  ],
+  "concurrency_and_isr_context": [
+   {
+    "context": "interrupt",
+    "entry_points": [
+     "UART_RxInterrupt"
+    ],
+    "shared_state": "ftsk_uartRxQueue, which the interrupt fills through OS_SendToBackOfQueueFromIsr and UART_Read drains in task context, plus the module-scope flags uart_softwareFlowControlReceiving and uart_softwareFlowControlSending, which the interrupt sets and UART_HandleFlowControl reads."
+   },
+   {
+    "context": "task",
+    "entry_points": [
+     "UART_Read",
+     "UART_HandleFlowControl",
+     "UART_Printf"
+    ],
+    "shared_state": "The same receive queue, and uart_txSemaphore, which UART_HandleFlowControl takes and gives around each flow-control character it sends."
+   }
+  ],
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "software",
+  "evidence_status": {
+   "limitations": [
+    "uart.h was additionally read at the pin to confirm the flow-control constant's range and to compute its hash; lines 68-69 are the UART_XOFF and UART_XON definitions that anchor FB2-SRC-COD-000070 records.",
+    "Behaviour was verified by reading the code. No byte was transmitted or received, no flow-control threshold was exercised, and no timing measurement of this driver exists in this corpus.",
+    "uart.c is unmodified between the pin and the working tree, so the same ranges and hash hold for the checked-out file."
+   ],
+   "locations_verified": true,
+   "method": "uart.c was read at the pinned commit with 'git show 308028fb:src/app/driver/uart/uart.c'; the content_hash recorded for it is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000067, -000068 and -000069 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The four function spans were cross-read against 'graft skeleton src/app/driver/uart/uart.c', which reports UART_Initialize at L144-L164, UART_RxInterrupt at L244-L263, UART_HandleFlowControl at L223-L242 and UART_Read at L196-L221 independently of this authoring pass."
+  },
+  "guard": {
+   "confers_no_production_authority": true,
+   "confers_no_verification_credit": true,
+   "human_approval_required": true,
+   "is_implementation_evidence": false,
+   "is_verification_result": false,
+   "statement": "This record says where the UART driver code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met: in particular nothing here establishes that the service link is authenticated or that any byte received on it is authorised, which is what the security requirements would have to demand of it. It confers no production authority, no verification credit and no human approval."
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IMP-000008",
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "implements": {
+   "design_artifact_id": null,
+   "design_gap_reason": "The as_is profile contains no software design artefact for the UART driver. Its three design records cover the AFE driver, the SOA module and the contactor driver, none of which describes a console or service serial link. Attaching this module to an existing design would assert UART design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13.",
+   "design_level": null,
+   "relationship": "No design artefact in the as_is profile describes the UART driver, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source: UART_Initialize (uart.c:144-164) configures the SCI peripheral and registers the receive interrupt. UART_RxInterrupt (244-263) distinguishes the two flow-control characters from ordinary data - if the byte just received equals UART_XOFF or UART_XON it updates the software sending state, otherwise, and only once the task queues exist, it posts the byte onto ftsk_uartRxQueue and notifies the UART task with a yield-if-needed request. UART_HandleFlowControl (223-242) is the transmitter's half: it takes the transmit semaphore, and when the number of stored receive-queue messages reaches UART_UPPER_CUTOFF_MESSAGE_COUNT it sends the XOFF character and marks the receiving side as paused, and when the count falls to UART_LOWER_CUTOFF_MESSAGE_COUNT it sends XON and resumes - so the flow control is a software, queue-depth-driven XON/XOFF scheme rather than a hardware one. UART_Read (196-221) pulls bytes out of that queue for the task. So the driver provides an interrupt-driven queued byte stream with in-band software flow control."
+  },
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000067, -000068 and -000069 name UART_Initialize, UART_RxInterrupt and UART_HandleFlowControl in uart.c, and FB2-SRC-COD-000070 names the UART_XOFF flow-control constant in uart.h. No new anchor was created.",
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the UART driver. The as_is requirement set is the three cell-voltage, contactor and SOA records, none of which states anything about a service or commissioning serial interface, and the requirements that do concern service-link behaviour are synthetic_reference security and system records that an as_is record may not claim. realises_requirements is empty rather than populated with a requirement this code does not serve.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "First issue. Authored because no artefact of type implementation existed and the as_is corpus anchors the UART driver through three source anchors (FB2-SRC-COD-000067, -000068, -000069) plus the flow-control constant header anchor FB2-SRC-COD-000070, with no design artefact covering it.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000067",
+   "FB2-SRC-COD-000068",
+   "FB2-SRC-COD-000069",
+   "FB2-SRC-COD-000070"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "States where the UART driver code is. Makes no claim that it was verified and asserts no ASIL classification.",
+    "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "There is no software design artefact for the UART driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design.",
+    "reference": "SWE.4 (design-to-code traceability)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "gap"
+   }
+  ],
+  "title": "Implementation: SCI/UART driver - initialisation, receive interrupt, queued read and XON/XOFF software flow control (uart.c)",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SW-IMP-000008"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SW-IMP-000008",
+  "revision": "1"
+ }
+}

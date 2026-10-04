@@ -1,0 +1,810 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-IFS-000007",
+    "rationale": "The CAN implementation record maps the transport to named symbols in the pinned source. FB2-SW-IFS-000004 adds what that mapping cannot carry: that the identifier argument is deliberately not range-checked, that a full transmit mailbox causes the queue pump to discard the frame in a branch whose body is empty, and that interrupts are masked around the message-box search. It refines the implementation record because the implementation record is the coarser statement of what this boundary does.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IFS-000004",
+    "target_id": "FB2-SW-IMP-000004"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000023",
+    "rationale": "FB2-SW-SIR-000003 is the software interface requirement set for the communication and data exchange boundary and is specified by FB2-SW-IFS-000004 (CAN transport) and FB2-SW-IFS-000005 (database engine). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000003",
+    "target_id": "FB2-SW-IFS-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000197",
+    "rationale": "Reviewed by FB2-REV-000018, a profile-scoped domain review of all sixteen software_interface_specification records in this profile. The review read the record and checked every source citation it makes against the pinned foxBMS commit 308028fb by reading the blob rather than the working tree: 81 of 81 declared source_refs resolve, 61 of 61 element declaration lines and 60 of 61 element implementation lines carry the claimed symbol, and 572 of 572 in-record 'path Lnn[-Lmm]' prose ranges resolve in bounds. This endpoint's element lines were among those checked. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000018",
+    "target_id": "FB2-SW-IFS-000004"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against software_interface_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (8)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "8/8 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IFS-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000018",
+     "review_path": "docs/artifacts/reviews/records/review-software-interface-specifications.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-software-interface-specifications.json",
+      "reviewed_by link FB2-LNK-REVB-000197 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000103, which records anchor class `repository_file`; path `src/app/driver/can/can.h`; line_range `95-101`; content_hash `067fe6ef41b5d184ee170749b72e2325d30c59302c13406a806e7fe5c3079c2c`; symbol `CAN_DataSend`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000104, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `931-977`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_DataSend`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000037, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `279-562`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_ConfigureRxMailboxesForExtendedIdentifiers`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000065, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `643-692`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_RxInterrupt`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000066, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `1015-1031`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_ReadRxBuffer`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C06-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"This file differs between the named commit 308028fb and the working tree that the offline provenance check hashes, so the recorded content_hash is the hash of the file on disk and NOT the hash of the 308028fb blob. This is the convention the rest of this registry already follows (FB2-SRC-COD-000044, FB2-SRC-COD-000045 and FB2-SRC-COD-000071 all name files with this same property and record their \u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000095, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.c`; line_range `246-256`; content_hash `84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52`; symbol `FTSK_RunUserCodeCyclic1ms`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C07-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000096, which records anchor class `repository_file`; path `src/app/application/config/battery_system_cfg.h`; line_range `109`; content_hash `3a38542f4da1986bc1944cd7ce6eabbc38a044255c9273f8273e46f2940670b1`; symbol `BS_NR_OF_STRINGS`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C08-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000097, which records anchor class `repository_file`; path `src/app/main/include/fstd_types.h`; line_range `81-85`; content_hash `ea1f74619aa95bff27a9b1f5c7a5f57c3d0f661d96970f46afda23ed455e9378`; symbol `STD_RETURN_TYPE_e`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000103 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000103."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000104 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000104."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000037 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000037."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000065 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000065."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000066 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000066."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000095 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[5]` names FB2-SRC-COD-000095."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000096 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[6]` names FB2-SRC-COD-000096."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000097 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[7]` names FB2-SRC-COD-000097."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C17-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 (software architectural design - interface specification) with status `partially_mapped` on the grounds: Specifies the CAN transmit and control boundary with the real signatures, four precondition assertions, the mailbox-exhaustion return contract, the interrupt masking that realises the re-entrancy rule, and the one parameter the source explicitly declines to range-check."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C18-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Supplies an interface specification for the CAN transport that the design records' signal tables did not."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C19-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Named as the specification the software interface requirements for the communication boundary are derived from."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 25676,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-can-transport.json",
+  "record_sha256": "163bdc400b705ef0a91328b248acd3c65a751b179f0bcae0a125cf4d75cbb1e6",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "163bdc400b705ef0a91328b248acd3c65a751b179f0bcae0a125cf4d75cbb1e6"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IFS-000004.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Interface Specification: the CAN transport driver\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis": {
+   "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+   "direction": "source_to_specification",
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "method": "source_analysis_at_pinned_commit",
+   "tools_used": [
+    "git show 308028fb:<path>",
+    "graft skeleton <file>"
+   ],
+   "what_this_record_is_not": [
+    "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+    "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+    "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+    "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+   ]
+  },
+  "artifact_type": "software_interface_specification",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "consuming_modules": [
+   {
+    "calls": [
+     "CAN_MainFunction",
+     "CAN_ReadRxBuffer"
+    ],
+    "consumption_evidence": "CAN_MainFunction() at src/app/task/config/ftask_cfg.c L266 in the 10 ms cyclic task, and CAN_ReadRxBuffer() at src/app/task/config/ftask_cfg.c L255 in the 1 ms cyclic task.",
+    "name": "10 ms cyclic task",
+    "source_path": "src/app/task/config/ftask_cfg.c"
+   },
+   {
+    "calls": [
+     "CAN_DataSend"
+    ],
+    "consumption_evidence": "CAN_SendMessagesFromQueue calls CAN_DataSend(message.canNode, message.id, message.idType, message.data) at src/app/driver/can/can.c L997 and branches on the result at L998.",
+    "name": "CAN transmit queue pump inside the driver",
+    "source_path": "src/app/driver/can/can.c"
+   },
+   {
+    "calls": [
+     "CAN_EnablePeriodic"
+    ],
+    "consumption_evidence": "CAN_EnablePeriodic(true) at src/app/engine/sys/sys.c L452.",
+    "name": "SYS state machine",
+    "source_path": "src/app/engine/sys/sys.c"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "elements": [
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Interrupts are disabled around the message-box test and update: portDISABLE_INTERRUPTS() at src/app/driver/can/can.c L946 and the matching portENABLE_INTERRUPTS() at L970 and again at L974, one per loop iteration. The comment at L970 says 'Re-enable interrupts if empty mailbox found' and the one at L974 says 'Re-enable interrupts if all mailboxes are full'.",
+     "protection_mechanism": "Interrupt masking around the mailbox search and update, released on every loop iteration.",
+     "reentrancy": "guarded_by_critical_section"
+    },
+    "consuming_module": "CAN transmit callbacks and the CAN transmit queue pump",
+    "declaration": "extern STD_RETURN_TYPE_e CAN_DataSend(CAN_NODE_s *pNode, uint32_t id, CAN_IDENTIFIER_TYPE_e idType, uint8 *pData);",
+    "declaration_line": 101,
+    "declaration_path": "src/app/driver/can/can.h",
+    "element_id": "IFSE-000301",
+    "error_paths": [
+     {
+      "condition": "pNode is NULL or is neither CAN_NODE_1 nor CAN_NODE_2.",
+      "evidence": "src/app/driver/can/can.c L932 and L936",
+      "observed_behaviour": "A precondition assertion trips before the loop.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "idType is neither of the two defined identifier widths.",
+      "evidence": "src/app/driver/can/can.c L934",
+      "observed_behaviour": "A precondition assertion trips before the loop.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "pData is NULL.",
+      "evidence": "src/app/driver/can/can.c L935",
+      "observed_behaviour": "A precondition assertion trips before the loop.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "id holds a value too wide for the selected identifier length.",
+      "evidence": "src/app/driver/can/can.c L933 records that the parameter accepts the whole range, and L953-L966 shift the value without masking.",
+      "observed_behaviour": "No check is performed. The value is shifted into IF2ARB and the excess bits are lost or corrupt a neighbouring field; the source records this as a deliberate non-assert.",
+      "signalled_as": "not signalled"
+     },
+     {
+      "condition": "All CAN_NR_OF_TX_MESSAGE_BOX transmit message boxes are already pending.",
+      "evidence": "src/app/driver/can/can.c L945 loop bound, L947 mailbox test, L975 and L976 return",
+      "observed_behaviour": "The loop runs to completion, the frame is not sent, and STD_NOT_OK is returned.",
+      "signalled_as": "STD_NOT_OK"
+     }
+    ],
+    "implementation_line": 931,
+    "implementation_path": "src/app/driver/can/can.c",
+    "not_specified_by_source": [
+     "The interface does not state the maximum payload length. It takes a bare uint8 * and passes it to canTransmit, so the frame length is whatever the caller wrote into it and this interface does not check it. The receive path declares CAN_DEFAULT_DLC, so a reader could wrongly assume a matching bound here.",
+     "The interface does not state which mailbox a frame was placed in, so a caller cannot correlate a transmit mailbox interrupt with the frame it sent.",
+     "The interface does not state whether a frame handed to it is still valid after the call returns. The pointer is read during the call and not retained here, but nothing says so.",
+     "The identifier value is not range-checked at all, by explicit decision recorded in the source. A requirement that the interface shall reject an out-of-range identifier is not satisfiable against this implementation."
+    ],
+    "parameters": [
+     {
+      "c_type": "CAN_NODE_s *",
+      "direction": "in",
+      "meaning": "Which of the controller's two CAN nodes the frame goes on.",
+      "name": "pNode",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "Two assertions: FAS_ASSERT(pNode != NULL_PTR) at src/app/driver/can/can.c L932 and FAS_ASSERT((pNode == CAN_NODE_1) || (pNode == CAN_NODE_2)) at L936.",
+      "unit": "node selector (pointer to a configured node)",
+      "valid_range": "Either CAN_NODE_1 or CAN_NODE_2, and non-null."
+     },
+     {
+      "c_type": "uint32_t",
+      "direction": "in",
+      "meaning": "The CAN identifier to put in the frame.",
+      "name": "id",
+      "nullable": false,
+      "range_enforcement": "not_enforced",
+      "range_evidence": "The source records this as a deliberate omission with an AXIVION suppression comment directly above the body: 'id: parameter accepts whole range', at src/app/driver/can/can.c L933.",
+      "unit": "identifier value (dimensionless)",
+      "valid_range": "The source states no bound and explicitly declines to assert one. The frame length of the identifier is bounded by the controller, not by this function: an 11-bit identifier is written into bits [28:18] of IF2ARB and a 29-bit identifier into bits [28:0], so the caller must supply a value that fits the width it selected through idType."
+     },
+     {
+      "c_type": "CAN_IDENTIFIER_TYPE_e",
+      "direction": "in",
+      "meaning": "Whether the frame carries an 11-bit standard identifier or a 29-bit extended one.",
+      "name": "idType",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT((idType == CAN_STANDARD_IDENTIFIER_11_BIT) || (idType == CAN_EXTENDED_IDENTIFIER_29_BIT)) at src/app/driver/can/can.c L934.",
+      "unit": "identifier width enumerator",
+      "valid_range": "Either CAN_STANDARD_IDENTIFIER_11_BIT or CAN_EXTENDED_IDENTIFIER_29_BIT."
+     },
+     {
+      "c_type": "uint8 *",
+      "direction": "in",
+      "meaning": "The payload to transmit.",
+      "name": "pData",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pData != NULL_PTR) at src/app/driver/can/can.c L935.",
+      "unit": "8 data bytes",
+      "valid_range": "Non-null."
+     }
+    ],
+    "providing_module": "CAN driver",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "No third value. The single negative condition is mailbox exhaustion, and the return value does not distinguish a full mailbox from a frame the controller refused.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85. The success assignment is at src/app/driver/can/can.c L968 and the initial value at L938 is returned at L976.",
+     "values": {
+      "STD_NOT_OK": "Every one of the CAN_NR_OF_TX_MESSAGE_BOX transmit message boxes was already pending.",
+      "STD_OK": "A free transmit message box was found and canTransmit was called with the frame."
+     }
+    },
+    "symbol": "CAN_DataSend",
+    "timing": {
+     "evidence": "Reached on the 10 ms cycle through the queue pump: CAN_SendMessagesFromQueue calls CAN_DataSend at src/app/driver/can/can.c L997, and CAN_MainFunction, which is called from FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L266, is the periodic transmit path. FTSK_TASK_CYCLIC_10MS_CYCLE_TIME is 10u at src/app/task/config/ftask_cfg.h L112.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "STD_OK is assigned only inside the message-box loop after canTransmit, at src/app/driver/can/can.c L968; the value initialised at L938 is returned unchanged at L976 when the loop finds no free box.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value STD_RETURN_TYPE_e."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from the 10 ms cyclic task at src/app/task/config/ftask_cfg.c L266, whose priority is FTSK_TASK_CYCLIC_10MS_PRIORITY = OS_PRIORITY_HIGH at src/app/task/config/ftask_cfg.h L106. The CAN interrupt handlers are separate entry points in the same file and do not reach this one.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "10 ms cyclic task",
+    "declaration": "extern void CAN_MainFunction(void);",
+    "declaration_line": 112,
+    "declaration_path": "src/app/driver/can/can.h",
+    "element_id": "IFSE-000302",
+    "error_paths": [
+     {
+      "condition": "Periodic transmit is disabled.",
+      "evidence": "src/app/driver/can/can.c L1010 tests can_state.periodicEnable against true",
+      "observed_behaviour": "Only the timing check runs; CAN_PeriodicTransmit is not called.",
+      "signalled_as": "nothing"
+     }
+    ],
+    "implementation_line": 1008,
+    "implementation_path": "src/app/driver/can/can.c",
+    "not_specified_by_source": [
+     "The interface does not state that periodic transmit is gated on a separate enabling call. A caller that never calls CAN_EnablePeriodic gets timing checks only, with no indication that periodic frames are suppressed, because the gate is a static read of internal state.",
+     "The interface states no relationship between the 10 ms call period and the configured period of any individual message. Those periods are configuration validated elsewhere by TEST_CAN_ValidateConfiguredTxMessagePeriod, not by this interface.",
+     "The interface returns nothing, so a caller cannot tell whether the timing check found a problem.",
+     "The interface does not say what it does when it is called at a period other than 10 ms. The 10 ms figure is imposed by the task, not by this interface."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "CAN driver",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value; the function reports nothing.",
+     "evidence": "Declared void at src/app/driver/can/can.h L112.",
+     "values": {}
+    },
+    "symbol": "CAN_MainFunction",
+    "timing": {
+     "evidence": "Called from FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L266; FTSK_TASK_CYCLIC_10MS_CYCLE_TIME is 10u at src/app/task/config/ftask_cfg.h L112.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "Declared void at src/app/driver/can/can.h L112; the body at src/app/driver/can/can.c L1008-L1013 calls CAN_CheckCanTiming and, conditionally, CAN_PeriodicTransmit.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "None returned. It advances internal timing and optionally transmits."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from src/app/engine/sys/sys.c L452, which runs in the state-machine trigger, not in an interrupt context.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "SYS state machine",
+    "declaration": "extern void CAN_EnablePeriodic(bool command);",
+    "declaration_line": 136,
+    "declaration_path": "src/app/driver/can/can.h",
+    "element_id": "IFSE-000303",
+    "error_paths": [
+     {
+      "condition": "Any condition.",
+      "evidence": "src/app/driver/can/can.c L1033-L1039",
+      "observed_behaviour": "No error path exists; the function writes the flag and returns.",
+      "signalled_as": "nothing"
+     }
+    ],
+    "implementation_line": 1033,
+    "implementation_path": "src/app/driver/can/can.c",
+    "not_specified_by_source": [
+     "The interface does not state the initial value of the flag. A reader cannot tell from the header whether periodic transmission starts enabled or disabled.",
+     "The interface does not state when the change takes effect relative to the next CAN_MainFunction call, so the ordering requirement between this element and the periodic task is undocumented.",
+     "The interface provides no read-back, so a caller that sets the flag cannot confirm it took effect. The set of CAN_IsCurrentSensorPresent-style readers covers the sensor-presence flags but not this one.",
+     "The interface does not say what periodic transmission means: which frames, at which periods. Those are configuration, not interface."
+    ],
+    "parameters": [
+     {
+      "c_type": "bool",
+      "direction": "in",
+      "meaning": "Whether periodic CAN transmission is enabled.",
+      "name": "command",
+      "nullable": false,
+      "range_enforcement": "not_enforced",
+      "range_evidence": "The declaration's parameter type is bool at src/app/driver/can/can.h L136.",
+      "unit": "boolean",
+      "valid_range": "true or false; the parameter is a bool, so no other value is representable."
+     }
+    ],
+    "providing_module": "CAN driver",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value, and the absence of a return matters here: the call sets a latch that CAN_MainFunction reads later, and the interface gives the caller no way to read the latch back or to confirm the change.",
+     "evidence": "Declared void at src/app/driver/can/can.h L136; the body writes can_state.periodicEnable at src/app/driver/can/can.c L1035 and L1037.",
+     "values": {}
+    },
+    "symbol": "CAN_EnablePeriodic",
+    "timing": {
+     "evidence": "Called once from the system state machine at src/app/engine/sys/sys.c L452 as CAN_EnablePeriodic(true), not on a period.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "Declared void at src/app/driver/can/can.h L136.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "None returned. The element writes one internal flag."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from application code in src/app/application; no interrupt context reaches it in the source. The write side and the read side are not shown to be mutually excluded.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS state machine and application code",
+    "declaration": "extern bool CAN_IsCurrentSensorPresent(uint8_t stringNumber);",
+    "declaration_line": 142,
+    "declaration_path": "src/app/driver/can/can.h",
+    "element_id": "IFSE-000304",
+    "error_paths": [
+     {
+      "condition": "stringNumber is at or above BS_NR_OF_STRINGS.",
+      "evidence": "src/app/driver/can/can.c L1042",
+      "observed_behaviour": "A precondition assertion trips before the read.",
+      "signalled_as": "precondition assertion"
+     }
+    ],
+    "implementation_line": 1041,
+    "implementation_path": "src/app/driver/can/can.c",
+    "not_specified_by_source": [
+     "The interface does not state how currentSensorPresent is set, by which message, or on what evidence. The setter in the same file is a test hook, TEST_CAN_SetCurrentSensorPresent, so the production path that establishes presence is not identified by this interface.",
+     "The interface cannot distinguish 'no sensor' from 'sensor not yet detected', because both are false. A requirement that the interface shall report absence reliably is not satisfiable against this implementation without a further statement about detection timing.",
+     "The interface does not state a staleness bound on the value it returns, so a caller cannot tell a fresh reading from a stale flag."
+    ],
+    "parameters": [
+     {
+      "c_type": "uint8_t",
+      "direction": "in",
+      "meaning": "The string whose current-sensor presence is asked for.",
+      "name": "stringNumber",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(stringNumber < BS_NR_OF_STRINGS) at src/app/driver/can/can.c L1042. BS_NR_OF_STRINGS is (1u) at src/app/application/config/battery_system_cfg.h L109.",
+      "unit": "string index (dimensionless)",
+      "valid_range": "0 <= stringNumber < BS_NR_OF_STRINGS"
+     }
+    ],
+    "providing_module": "CAN driver",
+    "return_contract": {
+     "c_type": "bool",
+     "default_on_no_information": "The default is not distinguished from an observed absence: the array is a static boolean and its zero value is indistinguishable from a sensor that was never found.",
+     "evidence": "Declared with a doxygen comment at src/app/driver/can/can.h L136-L142; the body returns can_state.currentSensorPresent[stringNumber] at src/app/driver/can/can.c L1043.",
+     "values": {
+      "false": "The driver has not recorded one, which is also the value before any sensor has been seen.",
+      "true": "The driver has recorded that a current sensor is present on that string."
+     }
+    },
+    "symbol": "CAN_IsCurrentSensorPresent",
+    "timing": {
+     "evidence": "Read on demand by application code rather than periodically. The flag it returns is written by the transmit configuration, so its freshness is not tied to any period this interface states.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The element returns bool, so the caller can read the recorded state.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value bool."
+    }
+   }
+  ],
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IFS-000004",
+  "interface_class": "communication",
+  "interface_id": "IFS-CAN-TRAN-000004",
+  "interface_level_gaps": [
+   {
+    "consequence": "The transmit path has no back-pressure signal to its caller. A frame queued for retransmission is dropped without a diagnosis event, a return value or a log, so a communication requirement about guaranteed delivery cannot be traced to this interface.",
+    "evidence": "At src/app/driver/can/can.c L997-L1003, CAN_DataSend returning STD_NOT_OK causes the message to be re-queued with a zero timeout, and if that re-queue fails the branch body is empty apart from the comment 'Queue is full.'.",
+    "gap": "A queued frame is silently discarded when the retransmit queue is full."
+   },
+   {
+    "consequence": "An identifier wider than the selected frame length is not rejected and not reported; it is shifted into the controller register and the excess bits are lost. The interface's own error contract therefore has a hole that the source documents rather than closes.",
+    "evidence": "src/app/driver/can/can.c L933 records 'id: parameter accepts whole range' with an AXIVION suppression, and L953-L966 shift id into IF2ARB with no mask.",
+    "gap": "The identifier value is not range-checked, by explicit decision."
+   },
+   {
+    "consequence": "The receive side registers callbacks by node, identifier and identifier width and dispatches in CAN_ReadRxBuffer, while the transmit side takes the same triple. Nothing in the interface states that the two must agree, and there is no shared registration record that both sides read, so a mismatch between a transmitted and an expected identifier is a runtime dispatch failure rather than a configuration error.",
+    "evidence": "Transmit takes pNode, id and idType at src/app/driver/can/can.h L101; receive dispatch matches canNode, id and idType against the configured table in src/app/driver/can/can.c L1019-L1027.",
+    "gap": "The transmit interface and the receive dispatch are two unrelated halves with no shared contract."
+   },
+   {
+    "consequence": "No requirement about CAN behaviour can be traced into this interface. The bit rate is configuration and the identifier allocation is spread across the transmit callback files, neither of which this interface names.",
+    "evidence": "The header declares only function prototypes and the constant CAN_NR_OF_TX_MESSAGE_BOX (32u) at src/app/driver/can/can.h L72.",
+    "gap": "The interface never states the arbitration or bus-level contract: no bit rate, no identifier allocation, no maximum frame rate."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "providing_module": {
+   "name": "CAN driver",
+   "role": "Transmits and receives CAN frames for the vehicle network, dispatches received frames to registered callbacks, and runs periodic transmission. It wraps the controller HAL rather than the bus.",
+   "source_paths": [
+    "src/app/driver/can/can.h",
+    "src/app/driver/can/can.c"
+   ]
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Four elements of the CAN transport: the transmit call, the 10 ms main function, the periodic-transmit latch and the current-sensor presence read. Two findings are recorded from the source: the identifier value is explicitly not range-checked, by a decision the source documents, and a full transmit mailbox causes the queued-message pump to drop the frame in a branch whose body is empty apart from a comment.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000103",
+   "FB2-SRC-COD-000104",
+   "FB2-SRC-COD-000037",
+   "FB2-SRC-COD-000065",
+   "FB2-SRC-COD-000066",
+   "FB2-SRC-COD-000095",
+   "FB2-SRC-COD-000096",
+   "FB2-SRC-COD-000097"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Specifies the CAN transmit and control boundary with the real signatures, four precondition assertions, the mailbox-exhaustion return contract, the interrupt masking that realises the re-entrancy rule, and the one parameter the source explicitly declines to range-check.",
+    "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies an interface specification for the CAN transport that the design records' signal tables did not.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Named as the specification the software interface requirements for the communication boundary are derived from.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Interface Specification: the CAN transport driver",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_status": {
+   "analysed_against_running_code": false,
+   "conformance_tested": false,
+   "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IFS-000004"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IFS-000004",
+  "revision": "1"
+ }
+}

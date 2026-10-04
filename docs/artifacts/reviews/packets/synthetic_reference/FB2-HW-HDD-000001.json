@@ -1,0 +1,591 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-HW-000002",
+    "rationale": "The HWE.3 gap record repeats the same search result that the configuration baseline records: zero Altium source files in the working tree and in every commit, and the designs hosted on an external server. The gap record does not re-derive that from scratch, it depends on the baseline's measurement and extends it with the count of the records that inherit the limitation. If the baseline's availability finding were wrong, this record would be wrong too, so the dependency is declared rather than left implicit.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-HW-HDD-000001",
+    "target_id": "FB2-HW-HCB-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (3)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "0/3 fully checked; see claims"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "anchor resolves in the registry but claims nothing checkable in this repository: names a file in a separate repository, so nothing here can check it; the anchor records content_hash as the literal 'unresolved' rather than claiming a digest The registry's own note on this hash: \"This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.extern\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-HW-000001, which records anchor class `external_repository_file`; external_file `docs/hardware/master/ti-tms570lc4357-vx.x.x/Schematics/foxBMS_Master.SchDoc` (repository `foxBMS2_hw`, not present in this tree); content_hash `unresolved`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "anchor resolves in the registry but claims nothing checkable in this repository: names a file in a separate repository, so nothing here can check it; the anchor records content_hash as the literal 'unresolved' rather than claiming a digest The registry's own note on this hash: \"This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.extern\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-HW-000002, which records anchor class `external_repository_file`; external_file `docs/hardware/slaves/12-ltc-ltc6811-1-vx.x.x/Schematics/foxBMS_Slave.SchDoc` (repository `foxBMS2_hw`, not present in this tree); content_hash `unresolved`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "anchor resolves in the registry but claims nothing checkable in this repository: names a file in a separate repository, so nothing here can check it; the anchor records content_hash as the literal 'unresolved' rather than claiming a digest The registry's own note on this hash: \"This anchor names an Altium design file that lives in the separate foxBMS2_hw repository. It is present neither in the working tree of foxbms-2 nor in any commit of it (checked with git log --all -- '*.SchDoc' and a filesystem search), so no content hash can be measured here and none is claimed: content_hash and location.file_hash both read 'unresolved'. The path is recorded under location.extern\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-HW-000003, which records anchor class `external_repository_file`; external_file `docs/hardware/interfaces/ltc-ltc6820-vx.x.x/Schematics/LTC6820_Interface.SchDoc` (repository `foxBMS2_hw`, not present in this tree); content_hash `unresolved`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-HW-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-HW-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-HW-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-HW-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-HW-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-HW-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[0].id` names FB2-HW-TSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[1].id` names FB2-HW-TSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[2].id` names FB2-HW-TSR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-CHG-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[3].id` names FB2-SCN-CHG-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[4].id` names FB2-HW-TSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[5].id` names FB2-HW-TSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[6].id` names FB2-HW-TSR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[7].id` names FB2-MAN-CHG-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[8].id` names FB2-MAN-CHG-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-ANL-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[9].id` names FB2-SAF-ANL-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-ITE-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[10].id` names FB2-SAF-ITE-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TSC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[11].id` names FB2-SAF-TSC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-HSI-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[12].id` names FB2-SYS-HSI-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-CHG-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_records.records[13].id` names FB2-SCN-CHG-000002."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C21-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 5, Clause 8 (hardware detailed design) with status `gap` on the grounds: The Part 5 detailed-design artefacts - schematics, PCB layout, bill of materials, component specifications - are absent and cannot be authored from this repository. This record states why; it does not supply any of them."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C22-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 HWE.3 with status `gap` on the grounds: HWE.3 remains a gap. This record is a recorded finding about that gap, not a discharge of it: it contains no board-level design content, and naming the process here makes the gap legible rather than smaller."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 13530,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/hardware/hardware-detailed-design-gap.json",
+  "record_sha256": "77e249327bbff6e4f54c8f622ae3089e9afc8780637c77d2633697eb4d02f293",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "139f2654b11b215b62edb145465836765769c520127bee71139e546836d3d0df"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-HW-HDD-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the hw_engineer for this hardware record, do you agree that \"HWE.3 Hardware Detailed Design: recorded unavailability and its consequence\" is a correct and complete statement of hardware requirements, architecture, detailed design, hardware safety analysis?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "unverifiable provenance",
+   "priority": 25,
+   "question": "3 of this record's source anchors cannot be checked against this repository. Does the claim still hold, on evidence outside the corpus?",
+   "what_in_this_packet_bears_on_it": "The anchors' entries in the claims section.",
+   "why_this_needs_a_human": "The corpus declines to make a statement it cannot support. Whether the claim is nonetheless true is a human question."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "affected_records": {
+   "by_artifact_type": {
+    "change": 2,
+    "design": 1,
+    "item_definition": 1,
+    "requirement": 6,
+    "safety_analysis": 1,
+    "safety_concept": 1,
+    "scenario": 2
+   },
+   "derivation": "Re-derived mechanically at authoring time, not asserted: every tracked JSON file under docs/artifacts/corpus/, docs/artifacts/reviews/ and docs/artifacts/scenarios/ whose text contains one of the three anchor identifiers FB2-SRC-HW-000001, FB2-SRC-HW-000002 or FB2-SRC-HW-000003, excluding source-registry.json itself and excluding FB2-HW-HCB-000001, which cites hardware/README.md and not these anchors.",
+   "record_files": 14,
+   "records": [
+    {
+     "artifact_type": "requirement",
+     "id": "FB2-HW-TSR-000001",
+     "path": "docs/artifacts/corpus/as_is/hardware/tsr-afe-cell-voltage.json",
+     "profile": "as_is"
+    },
+    {
+     "artifact_type": "requirement",
+     "id": "FB2-HW-TSR-000002",
+     "path": "docs/artifacts/corpus/as_is/hardware/tsr-afe-communication.json",
+     "profile": "as_is"
+    },
+    {
+     "artifact_type": "requirement",
+     "id": "FB2-HW-TSR-000003",
+     "path": "docs/artifacts/corpus/as_is/hardware/tsr-contactor-driver.json",
+     "profile": "as_is"
+    },
+    {
+     "artifact_type": "scenario",
+     "id": "FB2-SCN-CHG-000002",
+     "path": "docs/artifacts/scenarios/change-lifecycles/change-002-hsi-interface.json",
+     "profile": "synthetic_reference",
+     "superseded_path": "docs/artifacts/corpus/scenarios/change-lifecycles/change-002-hsi-interface.json",
+     "superseded_path_reason": "This record located the artefact at docs/artifacts/corpus/scenarios/, a duplicate revision-1 copy that sat at the same artifact id as the fixture the mutation and change-lifecycle harness executed under docs/artifacts/scenarios/. The corpus/ copy was removed on 2026-10-03; the artifact index now walks docs/artifacts/scenarios/, so this path names the surviving file. FB2-SCN-CHG-000002 itself advanced to revision 2 in the same operation, widening an abbreviated source-anchor reference; its content hash is not recorded by this record and no anchor here is affected."
+    },
+    {
+     "artifact_type": "requirement",
+     "id": "FB2-HW-TSR-000001",
+     "path": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-afe-cell-voltage.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "requirement",
+     "id": "FB2-HW-TSR-000002",
+     "path": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-afe-communication.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "requirement",
+     "id": "FB2-HW-TSR-000003",
+     "path": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-contactor-driver.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "change",
+     "id": "FB2-MAN-CHG-000001",
+     "path": "docs/artifacts/corpus/synthetic_reference/management/change-001-cell-voltage-max-limit.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "change",
+     "id": "FB2-MAN-CHG-000002",
+     "path": "docs/artifacts/corpus/synthetic_reference/management/change-002-afe-communication-interface.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "safety_analysis",
+     "id": "FB2-SAF-ANL-000003",
+     "path": "docs/artifacts/corpus/synthetic_reference/safety/analyses/dependent-failure-analysis.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "item_definition",
+     "id": "FB2-SAF-ITE-000001",
+     "path": "docs/artifacts/corpus/synthetic_reference/safety/item-definition-cell-voltage-bms.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "safety_concept",
+     "id": "FB2-SAF-TSC-000001",
+     "path": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "design",
+     "id": "FB2-SYS-HSI-000001",
+     "path": "docs/artifacts/corpus/synthetic_reference/system/hsi-cell-voltage.json",
+     "profile": "synthetic_reference"
+    },
+    {
+     "artifact_type": "scenario",
+     "id": "FB2-SCN-CHG-000002",
+     "path": "docs/artifacts/scenarios/change-lifecycles/change-002-hsi-interface.json",
+     "profile": "synthetic_reference"
+    }
+   ],
+   "statement": "14 tracked record files in this corpus name one of the three unverifiable Altium anchors. Each of them rests, for its hardware provenance, on a design file this repository cannot show, and each of them already carries that limitation itself. The count is stated so the size of the inherited limitation is visible; it is not a count of defects, because none of these records is wrong about its own limitation."
+  },
+  "artifact_type": "hardware_detailed_design_gap",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent that re-ran the searches itself rather than taking the finding on trust. That makes the finding reproducible, not independent: no hardware engineer confirmed it, no design source was consulted because none could be, and no board was inspected."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "blockers": [
+   {
+    "blocker": "No Altium design source in this repository, at any commit of any branch",
+    "consequence": "Nothing downstream of a schematic can be derived here: no net, no reference designator, no component placement, no BOM line.",
+    "evidence": "git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md. git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns no output. git ls-tree -r --name-only 308028fb -- docs/hardware/ returns 166 tracked files, of which 93 are CSV tables and 26 are draw.io sources, and none of them is an Altium file."
+   },
+   {
+    "blocker": "The designs are hosted outside this repository",
+    "consequence": "The board inventory in FB2-HW-HCB-000001 is a configuration baseline, not a design baseline. It says which board and which version; it cannot say what is on the board.",
+    "evidence": "The release index hardware/README.md points every board at a per-release zip archive on https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release. docs/hardware/design-resources.rst states that the design packages for the masters, interfaces and slaves are available from the project repository."
+   },
+   {
+    "blocker": "The format is proprietary CAD and out of reach for an offline corpus even if fetched",
+    "consequence": "Obtaining the archives would not make the design verifiable by this corpus. The unblock is a tool, not only a download, and recording it as only a download would understate what is missing.",
+    "evidence": "docs/hardware/design-resources.rst names Altium Designer as the tool required to open the schematic and layout files."
+   },
+   {
+    "blocker": "The three existing hardware anchors cannot be verified, and were already recorded as such",
+    "consequence": "No new evidence can be produced for those anchors from here, and any record depending on them inherits an unverifiable provenance.",
+    "evidence": "FB2-SRC-HW-000001, FB2-SRC-HW-000002 and FB2-SRC-HW-000003 each carry content_hash 'unresolved' and location.file_hash 'unresolved', with hash_status 'external_design_file_unverifiable_from_this_repository' and a hash_note recording the same search this record repeats. Their external_file values name .SchDoc paths in a separate repository."
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "engineering_domain": "hardware",
+  "expected_families": [
+   {
+    "basis": "The schematic sources are Altium .SchDoc files hosted in a separate repository. No .SchDoc file exists in the foxbms-2 working tree or in any commit of any branch.",
+    "family": "Schematics",
+    "status": "absent"
+   },
+   {
+    "basis": "The layout sources are Altium .PcbDoc files hosted externally. No .PcbDoc file exists in the foxbms-2 working tree or in any commit of any branch.",
+    "family": "PCB Layout",
+    "status": "absent"
+   },
+   {
+    "basis": "No bill of materials file is tracked in this repository for any board at any version. docs/hardware/design-resources.rst lists a BOM in Excel format as part of the assembly files inside the external design package, which is where this corpus's BOM would have to come from.",
+    "family": "BOM",
+    "status": "absent"
+   },
+   {
+    "basis": "No component specification for any board is tracked here. The device data sheets that would carry component limits are not in this repository and are not vendor-neutral substitutes for them.",
+    "family": "Component Specifications",
+    "status": "absent"
+   }
+  ],
+  "gap_statement": "HWE.3 expects schematics, a PCB layout, a bill of materials and component specifications. All four are absent from this corpus, and none of them can be authored from this repository, because the design sources they would be derived from are not in it. This record is the finding that says so, with the evidence, so that a reader encountering HWE.3 in the coverage plan finds a reason rather than a silence. It deliberately contains no board-level design content: there is none here to carry, and inventing a net, a reference designator, a component, a register, an offset, a mask or a base address would be fabrication, not documentation.",
+  "human_approval_status": "pending",
+  "id": "FB2-HW-HDD-000001",
+  "lifecycle_status": "draft",
+  "not_established_by_this_record": [
+   "No schematic, layout, net, reference designator, component, register, offset, mask or base address.",
+   "No bill of materials, not even a partial or an inferred one.",
+   "No component specification and no device data sheet content.",
+   "No discharge of HWE.3. The process remains a gap and this record says so in its own standards mapping, with status gap.",
+   "No claim that the corpus's existing hardware records are wrong. They already carry the limitation; this record makes the population visible.",
+   "No human approval, no independence, no certification, no ASPICE capability level."
+  ],
+  "origin": "derived",
+  "owner_role": "hw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "hw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Recorded why HWE.3 has no backing artefact, so that the gap is a stated finding rather than an absence.",
+    "revision": "1"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-10-03T00:00:00Z",
+    "description": "Repointed one entry of affected_records.records at the surviving copy of FB2-SCN-CHG-000002 after the duplicate revision-1 scenario fixtures under docs/artifacts/corpus/scenarios/ were removed and the artifact index was changed to walk docs/artifacts/scenarios/. The previous path and the reason are preserved on the entry as superseded_path and superseded_path_reason. The mechanical derivation this block documents was re-run and record_files is unchanged at 14: both copies of FB2-SCN-CHG-000002 carry FB2-SRC-HW-000002, so removing one copy removes no affected record. gap_statement, expected_families, blockers, what_would_close_the_gap, not_established_by_this_record and authority_and_independence are untouched.",
+    "revision": "2"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-HW-000001",
+   "FB2-SRC-HW-000002",
+   "FB2-SRC-HW-000003"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "The Part 5 detailed-design artefacts - schematics, PCB layout, bill of materials, component specifications - are absent and cannot be authored from this repository. This record states why; it does not supply any of them.",
+    "reference": "Part 5, Clause 8 (hardware detailed design)",
+    "standard_id": "ISO_26262_2018",
+    "status": "gap"
+   },
+   {
+    "rationale": "HWE.3 remains a gap. This record is a recorded finding about that gap, not a discharge of it: it contains no board-level design content, and naming the process here makes the gap legible rather than smaller.",
+    "reference": "HWE.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "gap"
+   }
+  ],
+  "title": "HWE.3 Hardware Detailed Design: recorded unavailability and its consequence",
+  "updated_at": "2026-10-03T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "what_would_close_the_gap": [
+   {
+    "then": "Schematics, layout and BOM become derivable and HWE.3 can be authored as content rather than as a finding.",
+    "unblock": "The Altium design sources for the boards under consideration are placed under version control that this corpus can read, or exported to a documented neutral format."
+   },
+   {
+    "then": "The exported or committed sources become machine-checkable rather than merely present, and a BOM can be re-derived and compared.",
+    "unblock": "A tool able to read the format is available to the corpus."
+   },
+   {
+    "then": "Component specifications become derivable; without them the component family stays absent even if the design sources arrive.",
+    "unblock": "Component data sheets for the parts actually placed are available under terms that permit their use."
+   },
+   {
+    "note": "This record does not estimate how long that takes, does not schedule it, and does not treat the gap as expected to close soon. It is blocked, not late."
+   }
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "hardware_detailed_design_gap",
+  "engineering_domain": "hardware",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "hw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-HW-HDD-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-HW-HDD-000001",
+  "revision": "2"
+ }
+}

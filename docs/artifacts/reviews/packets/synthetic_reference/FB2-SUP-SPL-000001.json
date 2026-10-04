@@ -1,0 +1,429 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000145",
+    "rationale": "FB2-REV-000014 reviewed FB2-SUP-SPL-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-SUP-SPL-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against process_record.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000145 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.depends_on_records[0]` names FB2-SAF-SEC-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.depends_on_records[1]` names FB2-HW-TSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CFM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.controlled_by_records[0]` names FB2-SUP-CFM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-MSM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.process_performance_measurement.measurement_plan_ref` names FB2-MAN-MSM-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 ACQ.4 with status `mapped` on the grounds: Supplier monitoring: monitoring of purchased parts and services."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 9553,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-acq4-supplier-monitoring.json",
+  "record_sha256": "d6514b07ef4133dc8d0e13d43bcf137724c967df3b67757e5f6f1ff812bc6625",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "4ef3b8e678b7549c3d517be78b484f0306c189bb0bb8ce0932f79ceef3eba2b9"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic process record. The suppliers named are fictional and do not exist.",
+    "No supplier is under contract and no supplier has been contacted. A monitoring process with no contractual hook cannot be executed against a supplier who is not obliged to respond, and this record does not pretend the process is effective in that condition. That is risk RSK-005 in FB2-MAN-RSK-000001.",
+    "No advisory source was consulted for any component. The instance is therefore a specification review and not a vulnerability review, and it says so.",
+    "One of four components was not reviewed in the one cycle that has run."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SUP-SPL-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the quality_engineer for this supporting record, do you agree that \"ACQ.4 Supplier monitoring: populated process record for Project Northcell\" is a correct and complete statement of verification and quality process records and their evidence?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Every component on a safety-relevant path has a named owner and a monitoring interval",
+    "evidence_of_conformance": "Four components are named with a monitoring interval. The inventory is complete for the components the corpus's own requirements depend on.",
+    "how_conformance_is_checked": "Confirm each entry in the trace list names a supplier and an interval."
+   },
+   {
+    "criterion": "Every monitoring cycle records a determination, including 'no applicable notice found'",
+    "evidence_of_conformance": "One cycle record exists and covers three of four components. The fourth, the current sensor, was not covered and the record says which and why.",
+    "how_conformance_is_checked": "Confirm the cycle record contains a determination for every reviewed component."
+   },
+   {
+    "criterion": "No component version is recorded without evidence",
+    "evidence_of_conformance": "The instance records that the item's own third-party component inventory deliberately records no vulnerability status for any component, because no advisory source was consulted. That is the criterion being met: absence of a status is recorded as absence of a check, not as a negative answer.",
+    "how_conformance_is_checked": "Confirm every version field is either sourced or explicitly null with a reason."
+   }
+  ],
+  "accountable_role": {
+   "independence": "The supplier quality function may not accept a supplier's own assessment of a component that is on a safety path. In this corpus no supplier has submitted anything, so the independence is untested.",
+   "role": "quality_engineer"
+  },
+  "artifact_type": "process_record",
+  "aspice_process_id": "ACQ.4",
+  "assumption_refs": [
+   "FB2-ASM-008"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "created_at": "2026-09-29T00:00:00Z",
+  "definition": "Supplier monitoring here is a defined process with a named owner and one recorded instance, and nothing more. It does not include a component inventory that has been checked against an advisory source, because no advisory source was consulted and this corpus has no authority to consult one. The record says so rather than describing a monitoring activity that did not occur.",
+  "engineering_domain": "supporting",
+  "fictional_organisation": {
+   "is_a_real_organisation": false,
+   "name": "Halden Cell Systems (fictional) supplier quality function (fictional); suppliers: 'Northvale Semiconductor BV (fictional)' for the analogue front end, 'Kestrel Power Devices (fictional)' for the safe base controller, 'Ardenne Metrology (fictional)' for the current sensor"
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SUP-SPL-000001",
+  "inputs": [
+   {
+    "controlled_by": "This process record's traceability block",
+    "input": "The list of components on safety-relevant paths",
+    "kind": "data"
+   },
+   {
+    "controlled_by": "No supplier is under contract; see the limitation",
+    "input": "Supplier notifications and published change notices",
+    "kind": "external_input"
+   },
+   {
+    "controlled_by": "This process record's revision history",
+    "input": "The recorded instance of a monitoring review",
+    "kind": "record"
+   }
+  ],
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "Synthetic process record. The suppliers named are fictional and do not exist.",
+   "No supplier is under contract and no supplier has been contacted. A monitoring process with no contractual hook cannot be executed against a supplier who is not obliged to respond, and this record does not pretend the process is effective in that condition. That is risk RSK-005 in FB2-MAN-RSK-000001.",
+   "No advisory source was consulted for any component. The instance is therefore a specification review and not a vulnerability review, and it says so.",
+   "One of four components was not reviewed in the one cycle that has run."
+  ],
+  "origin": "synthetic",
+  "outputs": [
+   {
+    "kind": "record",
+    "output": "A monitoring review record per cycle",
+    "retention": "permanent"
+   },
+   {
+    "kind": "decision",
+    "output": "A recorded determination per component reviewed, including a determination that no applicable notice was found",
+    "retention": "permanent"
+   },
+   {
+    "kind": "decision",
+    "output": "An escalation to change control when a component change affects a safety requirement",
+    "retention": "permanent"
+   }
+  ],
+  "owner_role": "quality_engineer",
+  "performed_instances": [
+   {
+    "conformance_against_acceptance_criteria": "partially_conforming",
+    "decision_or_outcome": "The analogue front end was determined to be consistent with the accuracy and error-detection figures FB2-HW-TSR-000001 depends on, on the basis of its documented specification rather than of any measurement. The safe base controller was determined to be consistent with the watchdog independence that FB2-ASM-007 assumes. The current sensor was not reviewed and is recorded as outstanding. No advisory source was consulted for any component, and the record states that absence of an advisory means the question was not asked.",
+    "inputs_used": [
+     "FB2-HW-TSR-000001 rev 1",
+     "FB2-HW-TSR-000002 rev 1",
+     "FB2-HW-TSR-000003 rev 1",
+     "FB2-HW-TSR-000004 rev 1"
+    ],
+    "instance_date": "2026-09-29",
+    "instance_description": "First supplier monitoring review cycle. Reviewed the analogue front end and the safe base controller against the changes the components' documented behaviour could imply for the item's requirements. The current sensor was not reviewed.",
+    "instance_id": "INST-005",
+    "non_conformances_found": [
+     "Criterion 2 is not met: one component of four was not reviewed. The instance records the omission rather than completing the row with an assumed result.",
+     "No determination in this instance rests on an advisory check, because none was possible. Every determination rests on a supplier's own documented specification, which is the weakest evidence available and is not independent of the supplier."
+    ],
+    "outputs_produced": [
+     "The monitoring review record for this cycle"
+    ],
+    "participants": [
+     {
+      "is_a_real_person": false,
+      "named_as": "role identity: quality_engineer (reviewer, fictional)",
+      "role": "quality_engineer"
+     },
+     {
+      "is_a_real_person": false,
+      "named_as": "role identity: hw_engineer (technical assessment of the front end, fictional)",
+      "role": "hw_engineer"
+     },
+     {
+      "is_a_real_person": false,
+      "named_as": "role identity: safety_engineer (assessment of the effect on FB2-SAF-TSC-000001, fictional)",
+      "role": "safety_engineer"
+     }
+    ],
+    "synthetic_decision": "synthetic_decision:quality_engineer:SYNTH-SUP-ACQ4-INST-005"
+   }
+  ],
+  "process_name": "Supplier monitoring",
+  "process_performance_measurement": {
+   "how_measured": "Count instances judged conforming against the process's own acceptance criteria, over the number of instances. 'partially_conforming' counts as not conforming.",
+   "measurement_plan_ref": "FB2-MAN-MSM-000001",
+   "metric_id": "MET-06",
+   "metric_name": "Supporting-process instance conformance",
+   "unit": "percent"
+  },
+  "process_record_id": "FB2-SUP-SPL-000001",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "purpose": "Monitor the components and services the item depends on for changes that affect the item's safety argument, and record the result of each check.",
+  "review_and_communication": [
+   {
+    "acknowledgement_recorded": true,
+    "attendee_roles": [
+     "quality_engineer",
+     "hw_engineer",
+     "safety_engineer",
+     "project_manager"
+    ],
+    "communicated_artifact_revisions": [
+     "FB2-SUP-SPL-000001 rev 1",
+     "The monitoring review record for cycle 1"
+    ],
+    "communication_id": "COM-006",
+    "date": "2026-09-29"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Supporting-process record authored because the generated view reported ACQ.4 as a coverage gap: no record whose engineering_domain is 'supporting' named the process. This record populates it - definition, inputs, outputs, accountable role, acceptance criteria, at least one performed instance with fictional participants and a synthetic decision, and the communication records showing how agreed revisions reach affected roles.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Supplier monitoring: monitoring of purchased parts and services.",
+    "reference": "ACQ.4",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "ACQ.4 Supplier monitoring: populated process record for Project Northcell",
+  "traceability": {
+   "controlled_by_records": [
+    "FB2-SUP-CFM-000001"
+   ],
+   "depends_on_records": [
+    "FB2-SAF-SEC-000005",
+    "FB2-HW-TSR-000001"
+   ],
+   "produces_records": [
+    "FB2-SUP-SPL-000001"
+   ]
+  },
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "process_record",
+  "engineering_domain": "supporting",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "quality_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SUP-SPL-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SUP-SPL-000001",
+  "revision": "1"
+ }
+}

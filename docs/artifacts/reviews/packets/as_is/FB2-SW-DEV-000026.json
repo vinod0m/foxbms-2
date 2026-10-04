@@ -1,0 +1,383 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000042",
+    "rationale": "FB2-REV-000002 reviewed FB2-SW-DEV-000026 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000002",
+    "target_id": "FB2-SW-DEV-000026"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against deviation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (1)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "1/1 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-DEVIATION-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000002",
+     "review_path": "docs/artifacts/reviews/records/review-deviation-evidence.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-deviation-evidence.json",
+      "reviewed_by link FB2-LNK-REVB-000042 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000056, which records anchor class `repository_file`; path `src/bootloader/main/include/general.h`; line_range `68-76`; content_hash `48ec856195fe668621be6d80f26cdb4d1633fc0ee3fd4dcef05fbce42a3757ca`; symbol `FAS_STATIC_ASSERT`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000056 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000056."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `unverified` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to MISRA_C_2012 Rule/directive 10.4 as written in the source annotation; normative rule text is proprietary and is not reproduced or verified by this corpus. with status `unverified` on the grounds: The rule number is reproduced exactly as written in the in-source Axivion annotation at commit 308028fb. The severity classification and the normative wording of the rule are proprietary and are deliberately not asserted here."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C04-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 Software Verification (static analysis evidence and justified deviance) with status `partially_mapped` on the grounds: The record is the in-source static-analysis deviance evidence for one rule set, which is part of what SWE.4 expects a project to hold. It is only partial: the repository holds no deviance log, no approval trail, no tool criticality entry for the analysing tool, and no re-analysis trigger register, so the surrounding SWE.4 evidence a qualified project would need is not evidenced at this commit."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6 Clause 8 / Part 11 Clause 8 (coding guidelines and their justified deviations) with status `partially_mapped` on the grounds: The project states a MUST for MISRA C:2012 compatibility (docs/developer-manual/software/software-programming-language.rst:22), so these suppressions are deviations from a stated coding-guideline expectation. No ISO 26262 safety classification is claimed for any of them, and no argument is made here that the residual risk of any deviation is acceptable."
+  },
+  {
+   "claim_class": "source_observation",
+   "claim_id": "C06-dev",
+   "evidence_in_packet": "The record verbatim in section 3, including evidence_quote.",
+   "judgement_needed": "Whether what this deviation asserts about the source is a fair reading of it. A deviation is an observation, so a wrong observation is a wrong record.",
+   "machine_state": "file exists; symbol ABSENT",
+   "statement": "This deviation records an observation in src/bootloader/main/include/general.h at symbol `module level (FAS_STATIC_ASSERT datatype invariants)` lines 68-76."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 10966,
+  "record_path": "docs/artifacts/corpus/as_is/software/deviation-bootloader-general-static-assert-datatype-invariants.json",
+  "record_sha256": "5bb1165a63077bd262d759c845e8cd1143cede8ed0a1818961833218583c5b74",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "91ada995fb05deade22ed920e8e4781483a9f72f4e0842936c12f8be1b5b8833"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft' rather than 'reviewed': the record was mined mechanically from source and no human review of the deviation has taken place. human_approval_status is 'pending' for the same reason. automated_review_status below refers to the corpus automation gates only and is not a statement about the engineering validity of the deviation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SW-DEV-000026.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Deviation: MisraC2012-10.4 for the bootloader FAS_STATIC_ASSERT block asserting the predefined bool / STD_RETURN_TYPE_e values\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "observation accuracy",
+   "priority": 8,
+   "question": "Is what this deviation asserts about the named source a fair reading of that source?",
+   "what_in_this_packet_bears_on_it": "affected_file/symbol/lines and evidence_quote in section 3.",
+   "why_this_needs_a_human": "A deviation is an observation. A wrong observation is a wrong record, and the evidence_quote is the only thing standing behind it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "affected_file": "src/bootloader/main/include/general.h",
+  "affected_lines": "68-76",
+  "affected_symbol": "module level (FAS_STATIC_ASSERT datatype invariants)",
+  "artifact_type": "deviation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "corpus_scope": {
+   "hit_count": 43,
+   "query": "graft grep \"AXIVION Disable Style MisraC2012\" -i (repo root)",
+   "scope_note": "This set is 26 deviation records, one per (file, symbol) group, and covers all 43 'AXIVION Disable Style MisraC2012*' annotation lines found under src/ at commit 308028fb. Those 43 annotation lines fall in 20 files, and every one of the 43 is represented in the affected_lines of a record. 26 records cover 43 annotation lines over 26 distinct (file, symbol) groups because, where one symbol carries more than one MisraC2012 rule, the additional Disable lines appear as further entries in the same record's deviations array instead of as separate records. Axivion annotations outside this query are not mined by this set, and their absence must not be read as 'no deviation': 'AXIVION Routine Generic-MissingParameterAssert', 'AXIVION Next Codeline Style MisraC2012*', 'AXIVION Next Codeline Generic-LocalInclude', 'AXIVION Next Codeline CodingStyle-Naming.*', 'AXIVION Next Codeline IISB-LiteralSuffixesCheck', 'AXIVION Next Codeline Generic-NoEllipsis', 'AXIVION Next Codeline Generic-ForbiddenFunctions', 'AXIVION Routine FaultDetection-DivisionByZero', and the 'AXIVION Routine MisraC2012Directive-4.1' / 'AXIVION Routine MisraC2012-2.7' annotations. Non-MISRA families that share one of the 43 mined annotation lines ARE recorded, per record, in tool_reference.co_located_non_misra_checks and in the corresponding deviations entry (for example Generic-NoUnsafeMacro, CertC-PRE01, Generic-NoEmptyLoops, Generic-DoxygenCommentInHeader, Generic-NoMagicNumbers, IISB-LiteralSuffixesCheck); out-of-query suppression sites on the same symbol are likewise listed in the record's deviations array with a note, so that each record's rule exposure is complete for the symbol it names."
+  },
+  "created_at": "2026-09-29T00:00:00Z",
+  "design_traceability": {
+   "coverage_note": "No as_is design artifact covers the bootloader. Recorded as a coverage gap.",
+   "coverage_status": "gap_no_design_artifact_in_profile",
+   "design_artifact_id": null
+  },
+  "deviation_rationale": "These assertions have to check the actual values of the enums and defines.",
+  "deviation_type": "static_assert_on_predefined_macro_values",
+  "deviations": [
+   {
+    "affected_lines": "68-76",
+    "deviation_rationale": "These assertions have to check the actual values of the enums and defines.",
+    "deviation_type": "static_assert_on_predefined_macro_values",
+    "rule_category": "rule",
+    "rule_reference": "10.4",
+    "suppression_form": "disable_enable_block"
+   }
+  ],
+  "engineering_domain": "software",
+  "evidence_quote": "/* assert that the basic datatypes in fstd_types.h are intact */\n/* AXIVION Disable Style MisraC2012-10.4: These assertions have to check the actual values of the enums and defines. */\nFAS_STATIC_ASSERT(false == 0, \"false seems to have been modified.\");\nFAS_STATIC_ASSERT(true != false, \"true seems to have been modified.\");\nFAS_STATIC_ASSERT(true == 1, \"true seems to have been modified.\");\n\nFAS_STATIC_ASSERT(STD_OK == 0, \"STD_OK seems to have been modified.\");\nFAS_STATIC_ASSERT(STD_OK != STD_NOT_OK, \"STD_OK or STD_NOT_OK seem to have been modified.\");\nFAS_STATIC_ASSERT(STD_NOT_OK == 1, \"STD_NOT_OK seems to have been modified.\");\n/* AXIVION Enable Style MisraC2012-10.4: */",
+  "guideline_id": "MisraC2012",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-DEV-000026",
+  "impact_notes": [
+   {
+    "aspect": "runtime_behavior",
+    "note": "None at run time; FAS_STATIC_ASSERT is compile-time."
+   },
+   {
+    "aspect": "verification_coverage",
+    "note": "The invariant is asserted separately in each build target, so a divergence between the two copies would not be caught by a single shared header."
+   },
+   {
+    "aspect": "portability",
+    "note": "STD_OK == 0 and STD_NOT_OK == 1 are ABI-relevant assumptions relied on by bootloader serialisation of return values."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed': the record was mined mechanically from source and no human review of the deviation has taken place. human_approval_status is 'pending' for the same reason. automated_review_status below refers to the corpus automation gates only and is not a statement about the engineering validity of the deviation.",
+  "normative_verification": {
+   "conformance_claimed": false,
+   "rule_severity_asserted": false,
+   "rule_text_reproduced": false,
+   "status": "rule_reference_unverified_against_proprietary_source"
+  },
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "project_process_evidence": [
+   {
+    "document_path": "docs/developer-manual/software/software-programming-language.rst",
+    "line": "22",
+    "what_it_states": "Project-level MUST: 'Code contributed to this project **MUST** be compatible with MISRA C:2012 which is described in :cite:`MISRA-C:2012`.' This is the only occurrence of 'MISRA' in the whole pinned docs/ tree and is the statement every suppression in this record set is a deviation from."
+   },
+   {
+    "document_path": "docs/developer-manual/style-guide/guidelines_c.rst",
+    "line": "540-545",
+    "what_it_states": "C:015 defines the project's only documented in-source deviation annotation syntax: 'If no assertion can be made for the parameter ... the parameter **MUST** be marked like this at the start of the function context: /* AXIVION Routine Generic-MissingParameterAssert: *ENTITY_NAME*: *RATIONALE* */.' The written guideline therefore mandates the '<ENTITY>: <RATIONALE>' annotation shape for one Axivion check family only; the MisraC2012 style-check family follows the same shape in practice but is not covered by any C:001..C:033 rule."
+   },
+   {
+    "document_path": "docs/developer-manual/style-guide/guidelines_overview_c.csv",
+    "line": "1-34",
+    "what_it_states": "The project's own C coding guideline is a 33-rule set (C:001..C:033) with an 'Automated Check' column. Only C:002, C:004, C:005, C:006 and C:029 are marked 'Yes'; no rule in the set corresponds to a MisraC2012 style check, so the guideline set does not govern the rules these suppressions waive."
+   },
+   {
+    "document_path": "docs/developer-manual/software/criticality-mapping-of-third-party-tools.csv",
+    "line": "1-11",
+    "what_it_states": "The third-party tool criticality table classifies git, TI ARM CGT, gcc, vs-code, waf, sphinx, ceedling and a custom HIL runner. No static-analysis tool (Axivion, cppcheck or equivalent) is classified, so no tool criticality or qualification basis for the tool that produced these suppressions is recorded in the repository."
+   }
+  ],
+  "reanalysis_justification": "Same re-analysis triggers as the application copy: a change to the representation of bool or STD_RETURN_TYPE_e, a unit-test configuration that redefines them, or a new invariant added to the block. Because the block is duplicated per build target, both copies must be re-analysed when fstd_types.h changes.",
+  "review_disposition": "recorded_inline_no_governance_evidence",
+  "review_disposition_note": "The identical assertion block and identical suppression exist in the application copy of general.h (FB2-SW-DEV-000019), so the invariant is duplicated per build target. Governance evidence search at the pinned baseline: no deviance log, deviation log, suppression register, waiver file or review record for the MisraC2012 style checks exists anywhere in the repository (searched for *deviance*, *deviation*, *misra*, *axivion* file names and for 'AXIVION' across docs/). docs/tools/static-analysis/ and conf/spa/ do not exist at this commit. The rationale text below is therefore the only recorded justification.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Mined from the in-source Axivion MISRA C:2012 style-check suppression at commit 308028fb. Rationale text is verbatim from the source comment.",
+    "revision": "1"
+   }
+  ],
+  "rule_category": "rule",
+  "rule_reference": "10.4",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000056"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "The rule number is reproduced exactly as written in the in-source Axivion annotation at commit 308028fb. The severity classification and the normative wording of the rule are proprietary and are deliberately not asserted here.",
+    "reference": "Rule/directive 10.4 as written in the source annotation; normative rule text is proprietary and is not reproduced or verified by this corpus.",
+    "standard_id": "MISRA_C_2012",
+    "status": "unverified"
+   },
+   {
+    "rationale": "The record is the in-source static-analysis deviance evidence for one rule set, which is part of what SWE.4 expects a project to hold. It is only partial: the repository holds no deviance log, no approval trail, no tool criticality entry for the analysing tool, and no re-analysis trigger register, so the surrounding SWE.4 evidence a qualified project would need is not evidenced at this commit.",
+    "reference": "SWE.4 Software Verification (static analysis evidence and justified deviance)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "The project states a MUST for MISRA C:2012 compatibility (docs/developer-manual/software/software-programming-language.rst:22), so these suppressions are deviations from a stated coding-guideline expectation. No ISO 26262 safety classification is claimed for any of them, and no argument is made here that the residual risk of any deviation is acceptable.",
+    "reference": "Part 6 Clause 8 / Part 11 Clause 8 (coding guidelines and their justified deviations)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "suppression_form": "disable_enable_block",
+  "suppression_scope": "block",
+  "title": "Deviation: MisraC2012-10.4 for the bootloader FAS_STATIC_ASSERT block asserting the predefined bool / STD_RETURN_TYPE_e values",
+  "tool_reference": {
+   "annotation": "MisraC2012-10.4",
+   "check_family": "Style MisraC2012",
+   "tool": "Axivion"
+  },
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "deviation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SW-DEV-000026"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SW-DEV-000026",
+  "revision": "1"
+ }
+}

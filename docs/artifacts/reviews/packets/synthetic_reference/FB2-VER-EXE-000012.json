@@ -1,0 +1,332 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-EXE-000090",
+    "rationale": "The execution record is the outcome of the named measure at the named revision. Both are blocked and neither claims a pass.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "result_of",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-EXE-000012",
+    "target_id": "FB2-VER-TMS-000012"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000123",
+    "rationale": "FB2-REV-000013 reviewed FB2-VER-EXE-000012 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000013",
+    "target_id": "FB2-VER-EXE-000012"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against execution.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000013",
+     "review_path": "docs/artifacts/reviews/records/review-concept-system-validation.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-concept-system-validation.json",
+      "reviewed_by link FB2-LNK-REVB-000123 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.test_measure_id` names FB2-VER-TMS-000012."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.evidence_refs[0]` names FB2-VER-TMS-000012."
+  },
+  {
+   "claim_class": "execution_classification",
+   "claim_id": "C03-exec",
+   "evidence_in_packet": "The record verbatim in section 3. The test measure it names has its own packet.",
+   "judgement_needed": "Whether this outcome is a legitimate basis for the verification claim its test measure makes. A green run on a host is not evidence about the MCU, and only the domain owner can say whether the measure's acceptance criteria are met at all.",
+   "machine_state": "`actual_target_hardware_run` is the only kind that counts as product-hardware evidence. `actual_host_run`/`actual_simulation_run` are real executions of the product's code on developer infrastructure. `none` means no run was performed. This record's kind is `none`.",
+   "statement": "This record declares execution_kind `none`, outcome `blocked`, aggregate_outcome `None`, on hardware `none - no vehicle, pack, charger or bench harness exists in this corpus`, for test measure `FB2-VER-TMS-000012`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000012."
+  },
+  {
+   "claim_class": "execution_metadata",
+   "claim_id": "C05-time",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the recorded interval is the real duration of the run. Duration is not verifiable from a file's contents.",
+   "machine_state": "start and end present",
+   "statement": "`timestamps` = {\"duration_ms\": 0, \"end\": \"2026-09-29T00:00:00Z\", \"start\": \"2026-09-29T00:00:00Z\"}"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 3430,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/execution-validation-charging.json",
+  "record_sha256": "8973dd2b91a4d519cd287e292d9c9eb6e0b2e388a8baa56c849d12cadf8c3fbf",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "cd1f9e69a295455b0ccd1986c4e8d5d8a8abff94a415b8d091f4c7104fa6dbd1"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "No run occurred. duration_ms is 0 because no process started; it is not a measurement.",
+    "No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.",
+    "This record carries no product verification credit."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "notes",
+   "value": "Recorded so that the validation planning is visible as unexecuted rather than absent. A fabricated pass here would be the single most damaging record this corpus could contain."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-EXE-000012.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Execution: FB2-VER-TMS-000012 (blocked - no validation environment)\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "execution classification",
+   "priority": 5,
+   "question": "This is `none`, on `none - no vehicle, pack, charger or bench harness exists in this corpus`. Given that, does the outcome support the verification claim its test measure (FB2-VER-TMS-000012) makes?",
+   "what_in_this_packet_bears_on_it": "section 3: the environment block. The test measure has its own packet.",
+   "why_this_needs_a_human": "Whether a given kind of run is sufficient evidence for a given acceptance criterion is a domain judgement. A host run can be perfectly good evidence for driver logic and no evidence at all for register timing."
+  },
+  {
+   "group": "gap honesty",
+   "priority": 15,
+   "question": "This record records that no run happened. Is the stated blocker the real one, and is the gap still open today?",
+   "what_in_this_packet_bears_on_it": "notes and limitations in section 3.",
+   "why_this_needs_a_human": "Blockers move. A record that says 'blocked' for a reason that has since been removed understates the corpus's real gaps."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anomalies": [],
+  "artifact_type": "execution",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "blocked_reason": "the validation rig does not exist in this corpus: there is no pack, no charger and no logging harness, and a real charging cycle would energise hardware, which master-prompt clause 2.5 forbids.",
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "not applicable",
+   "hardware": "none - no vehicle, pack, charger or bench harness exists in this corpus",
+   "software": "not applicable",
+   "tool_versions": {
+    "none": "0.0.0"
+   },
+   "tools": []
+  },
+  "evidence_refs": [
+   "FB2-VER-TMS-000012"
+  ],
+  "execution_kind": "none",
+  "human_approval_status": "pending",
+  "id": "FB2-VER-EXE-000012",
+  "input_hashes": {},
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "No run occurred. duration_ms is 0 because no process started; it is not a measurement.",
+   "No output hash is recorded because no output exists. An empty output_hashes map on a blocked execution is the correct state and must not be filled with a placeholder.",
+   "This record carries no product verification credit."
+  ],
+  "logs": [],
+  "notes": "Recorded so that the validation planning is visible as unexecuted rather than absent. A fabricated pass here would be the single most damaging record this corpus could contain.",
+  "origin": "synthetic",
+  "outcome": "blocked",
+  "output_hashes": {},
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Honest blocked-execution record for FB2-VER-TMS-000012. the validation rig does not exist in this corpus: there is no pack, no charger and no logging harness, and a real charging cycle would energise hardware, which master-prompt clause 2.5 forbids.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [],
+  "test_measure_id": "FB2-VER-TMS-000012",
+  "test_measure_revision": "1",
+  "timestamps": {
+   "duration_ms": 0,
+   "end": "2026-09-29T00:00:00Z",
+   "start": "2026-09-29T00:00:00Z"
+  },
+  "title": "Execution: FB2-VER-TMS-000012 (blocked - no validation environment)",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "what_would_unblock_it": [
+   "A vehicle or pack-level bench harness with the item fitted and energised.",
+   "A charger or load able to reproduce the scripted operational scenario.",
+   "Acceptance criteria agreed with the named stakeholder class rather than proposed by the engineering team.",
+   "A named human acceptance authority. This corpus has none; every stakeholder need in it carries is_a_real_elicitation = false."
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-EXE-000012"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-EXE-000012",
+  "revision": "1"
+ }
+}

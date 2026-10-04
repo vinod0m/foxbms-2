@@ -1,0 +1,955 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SWE3-000002",
+    "rationale": "The existing link FB2-LNK-SAF-000012 already records that FB2-SW-IMP-000002 is the code location carrying FB2-SW-DSN-000002. This link records the second design endpoint the same implementation realises: FB2-SW-DSN-000005, the detailed design of the same SOA element, whose internal units are SOA_CheckVoltages, SOA_CheckTemperatures, SOA_CheckCurrent, SOA_CheckSlaveTemperatures and the four limit providers in soa_cfg.c. The implementation record's own source_refs already name FB2-SRC-COD-000004, -000005 and -000006, which pin SOA_CheckVoltages, SOA_CheckCurrent and SOA_CheckTemperatures respectively, so the detailed design and the implementation rest on the same anchors rather than on a fresh claim. Direction is implementation -> design per master prompt section 13, matching FB2-LNK-SAF-000012.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IMP-000002",
+    "target_id": "FB2-SW-DSN-000005"
+   },
+   {
+    "link_id": "FB2-LNK-SWE3-000005",
+    "rationale": "FB2-SW-DSN-000005 refines FB2-SW-DSN-000002: the source side is the lower-level detailed specification and the target side is the parent architecture record. DSN-000002 allocates the SOA element and states its diagnosis interfaces at architecture level; DSN-000005 specifies the internals - the split between the evaluator in soa.c and the limit providers in soa_cfg.c, the three-tier MOL/RSL/MSL nesting, the validity-bit gating, and the fact that SOA_CheckSlaveTemperatures has an empty body. One correction of fact belongs on this link rather than on the records: DSN-000002 already carries design_level=detailed_design while its own standards_mappings name SWE.2 with the rationale \"Software architectural design\", so its level token and its process reference disagree. DSN-000005 is the record that carries the ISO 26262-6 clause 8.4 content and the SWE.3 reference; the disagreement on DSN-000002 is recorded here because that record is not edited by this change, as editing it would invalidate nine review digests that record its current content.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DSN-000005",
+    "target_id": "FB2-SW-DSN-000002"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000012",
+    "rationale": "The specification records that the SOA detailed design is verified by nothing. test_soa.c asserts three NULL-pointer traps and its routine output-verification step is the literal text TODO, so the design's behaviour model, its nine limit providers and its failure response are all uncovered. A link that records non-coverage is still the correct traceability edge, and this is the corpus's clearest example of one.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "verifies",
+    "review_state": "pending",
+    "source_id": "FB2-VER-UTS-000001",
+    "target_id": "FB2-SW-DSN-000005"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against design.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (5)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "5/5 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000004, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `81-146`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckVoltages`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000005, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `271-351`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckCurrent`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000006, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `148-269`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckTemperatures`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the additive DIAG_EVENT_NOT_EVALUATED branch was added to DIAG_Handler. It is a distinct else-if appended after RESET; it holds state, writes no entry, invokes no callback, and cannot reach the OK, NOT_OK or RESET clearing paths. Proven by two mutation probes that routed it into RESET and into NOT_OK: each changed a test outcome.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000009, which records anchor class `repository_file`; path `src/app/engine/diag/diag.c`; line_range `341-475`; content_hash `06bae9dfd5935d777e81c5892fa31e72c78af6daaff66c8679ca86862f64a8fb`; symbol `DIAG_Handler`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000010, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_voltage.c`; line_range `72-194`; content_hash `7d99a10c434ce61182f441920fb659da41f17324e7b4a045d5d263d5748b7c72`; symbol `DIAG_ErrorOvervoltage`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000010 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000010."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C11-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8.4 - software detailed design and unit design with status `mapped` on the grounds: This record carries the clause 8.4 content for the SOA monitoring element: the responsibilities of the evaluator and of the limit providers as separate internal units, the interface contracts with direction, unit, range, validity and error signalling read from the real signatures and the real diagnosis return handling, the tiered comparison structure read from the actual nesting, the numeric constraints the configuration macros impose, the failure response read from the real FAS_ASSERT and return-value paths, and the mapping to implementation. Two characteristics the source does not specify - any debounce, and any reaction inside this module - are recorded in declared_gaps rather than filled in."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C12-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.3 with status `mapped` on the grounds: SWE.3 Software Detailed Design and Unit Construction. The backing family this record supplies is the Detailed Design family. The other two families SWE.3 expects - Source Code and Unit Test Specifications - are not supplied by this record and are named as such in the SWE.3 disposition in docs/artifacts/governance/coverage-plan.json."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 43658,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/design-soa-detailed.json",
+  "record_sha256": "840fdad55bd6050f42ea2260438a3fc57554b7687578ffd6ede2a2c0d9bf5587",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "05a78660b375de2117106ecd2b96789b06db73a87a5fa834ce00dd0d21f97a97"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Every path, symbol and line range in this record was checked against the tree at commit 308028fb with git show, not against the working tree. The three evaluator citations were cross-checked against source anchors FB2-SRC-COD-000004, FB2-SRC-COD-000005 and FB2-SRC-COD-000006, which pin SOA_CheckVoltages, SOA_CheckCurrent and SOA_CheckTemperatures respectively to that commit. SOA_CheckSlaveTemperatures is mapped with status not_in_source because the record maps the behaviour the source does not have, not because the symbol is absent. This record does not assert ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status is pending, production_authorized is false and product_verification_credit is false."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-DSN-000005.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Detailed Design: SOA monitoring - tiered limit evaluation, limit-provider split, validity gating and the unimplemented slave-temperature entry point\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "design",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behavior_model": {
+   "states": [
+    "string voltage evaluated",
+    "string temperature evaluated against the discharge limit set",
+    "string temperature evaluated against the charge limit set",
+    "string current valid and evaluated",
+    "string current invalid and skipped",
+    "pack current valid and evaluated",
+    "pack current invalid and skipped",
+    "current direction unresolved at rest and exempt from all current limits",
+    "slave temperature not evaluated"
+   ],
+   "transitions": [
+    {
+     "action": "raise DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MOL; then, if the value also reaches BC_VOLTAGE_MAX_RSL_mV, raise the RSL entry; then, if it also reaches BC_VOLTAGE_MAX_MSL_mV, raise the MSL entry",
+     "from": "string voltage evaluated",
+     "guard": "the comparison is inclusive on the violation side",
+     "to": "string voltage evaluated",
+     "trigger": "maximumCellVoltage_mV >= BC_VOLTAGE_MAX_MOL_mV"
+    },
+    {
+     "action": "clear the MSL entry, and on the same nesting clear the RSL entry if the value is below RSL, and the MOL entry if it is below MOL - the inverse nesting of the raising branch",
+     "from": "string voltage evaluated",
+     "guard": "the clearing comparisons are strict, so a value exactly at MSL is neither raised nor cleared",
+     "to": "string voltage evaluated",
+     "trigger": "maximumCellVoltage_mV < BC_VOLTAGE_MAX_MSL_mV"
+    },
+    {
+     "action": "raise the under-voltage MOL entry, then RSL, then MSL; the MSL call's return value is captured into retvalUndervoltageMSL",
+     "from": "string voltage evaluated",
+     "guard": "the comparison is inclusive on the violation side",
+     "to": "string voltage evaluated",
+     "trigger": "minimumCellVoltage_mV <= BC_VOLTAGE_MIN_MOL_mV"
+    },
+    {
+     "action": "raise DIAG_ID_DEEP_DISCHARGE_DETECTED",
+     "from": "string voltage evaluated",
+     "guard": "both the voltage threshold and the diagnosis subsystem's acceptance are required; in the pinned configuration BC_VOLTAGE_DEEP_DISCHARGE_mV is defined as BC_VOLTAGE_MIN_MSL_mV, so this branch is only reachable after the under-voltage MSL entry has been raised",
+     "to": "string voltage evaluated",
+     "trigger": "minimumCellVoltage_mV <= BC_VOLTAGE_DEEP_DISCHARGE_mV and retvalUndervoltageMSL == DIAG_HANDLER_RETURN_ERR_OCCURRED"
+    },
+    {
+     "action": "evaluate the same twelve temperature comparisons against BC_TEMPERATURE_MAX/MIN_CHARGE_* instead of BC_TEMPERATURE_MAX/MIN_DISCHARGE_*",
+     "from": "string temperature evaluated against the discharge limit set",
+     "guard": "the flow-direction comparison is a plain equality test, so anything other than BMS_DISCHARGING selects the charge set - including BMS_AT_REST and BMS_RELAXATION",
+     "to": "string temperature evaluated against the charge limit set",
+     "trigger": "BMS_GetCurrentFlowDirection(stringCurrent_mA[s]) != BMS_DISCHARGING"
+    },
+    {
+     "action": "raise the charge or discharge over-current entry for the string or the cell, selected by the flow direction; when the direction is neither, all four per-string entries are cleared with the source comment that no current is flowing so everything is okay",
+     "from": "string current valid and evaluated",
+     "guard": "the providers themselves return false when the flow direction is neither charging nor discharging",
+     "to": "string current valid and evaluated",
+     "trigger": "SOA_IsStringCurrentLimitViolated or SOA_IsCellCurrentLimitViolated returns true"
+    },
+    {
+     "action": "clear DIAG_ID_CURRENT_ON_OPEN_STRING; otherwise raise it",
+     "from": "string current valid and evaluated",
+     "guard": "the predicate itself returns false when the direction is at rest, so this entry is only exercised while current is flowing",
+     "to": "string current valid and evaluated",
+     "trigger": "SOA_IsCurrentOnOpenString(currentDirection, s) == false"
+    },
+    {
+     "action": "no diagnosis entry is raised or cleared for the skipped string; the pack block is then evaluated on its own validity bit",
+     "from": "string current invalid and skipped",
+     "guard": "invalidStringCurrent[s] != 0 for this string only; other strings in the same pass are unaffected",
+     "to": "pack current valid and evaluated",
+     "trigger": "end of the string loop"
+    },
+    {
+     "action": "nothing - the function body is a single TODO comment, so no slave-temperature limit is evaluated and no entry is raised",
+     "from": "any state",
+     "guard": "none; the call is unconditional",
+     "to": "slave temperature not evaluated",
+     "trigger": "BMS_Trigger calls SOA_CheckSlaveTemperatures after the three populated evaluators"
+    }
+   ],
+   "type": "combination"
+  },
+  "budget_basis": "cpu_time_ms is the 10 ms evaluation period imposed by the caller, not a measured execution time; it bounds how often the module may run, not what it costs when it runs, and the source states no execution figure for it. memory_bytes and stack_bytes are zero because the module holds no static data and allocates nothing: the only storage it touches is the caller's tables, reached through pointers, and the only locals are loop indices, two temporaries and one captured diagnosis return. This is a read of the source, not a measurement, and the source contains no measurement of this module's footprint.",
+  "budgets": {
+   "cpu_time_ms": 10,
+   "memory_bytes": 0,
+   "stack_bytes": 0
+  },
+  "constraints": [
+   "Evaluation period: all four entry points are called from BMS_Trigger at lines 913 to 916, and BMS_Trigger is called at the end of FTSK_RunUserCodeCyclic10ms. The SOA evaluation therefore runs at 10 ms in the pinned configuration (src/app/application/bms/bms.c:898-1691 and 913-916, src/app/task/config/ftask_cfg.c:258-282 and 280).",
+   "Loop bound: every evaluator iterates s from 0 to BS_NR_OF_STRINGS, which is 1 in the pinned configuration. The arrays indexed by s are declared with the same macro, so the loop cannot exceed the array (src/app/application/soa/soa.c:85 and 154 and 275, src/app/application/config/battery_system_cfg.h:109).",
+   "Comparison granularity: an entry is raised or cleared only when the value is on the far side of a named threshold, so the module's resolution is the spacing between MSL, RSL and MOL. In the pinned configuration that spacing is 80 mV between MOL and RSL and 50 mV between RSL and MSL on the over-voltage side, and 30 mV and 50 mV respectively on the under-voltage side.",
+   "Direction quantisation: a current whose magnitude is below BS_REST_CURRENT_mA, which is 200 mA, is reported as at rest and is therefore exempt from every current limit and from the current-on-open-string check. This is a resolution limit on the direction determination, not a filter on the current.",
+   "Sign convention dependency: the mapping from a signed current to a direction is inverted by BS_POSITIVE_DISCHARGE_CURRENT, so the meaning of a positive stringCurrent_mA is a configuration decision and the limit sets applied follow from it (src/app/application/bms/bms.c:1697-1719, src/app/application/config/battery_system_cfg.h:92).",
+   "Cell-current limit derivation: SOA_IsCellCurrentLimitViolated compares against BS_NR_OF_PARALLEL_CELLS_PER_CELL_BLOCK multiplied by the per-cell MSL macro rather than against a configured pack-level current, so changing the parallelism silently changes the cell limit while leaving the per-cell macro unchanged. With the pinned value of 1 the derivation is the identity.",
+   "Contactors crossed: SOA_IsCurrentOnOpenString reaches into the BMS layer for BMS_IsStringClosed and BMS_IsStringPrecharging, so the SOA evaluation is not a function of its arguments alone and its result depends on contactor state that the contactor driver updates on the same 10 ms pass (src/app/application/config/soa_cfg.c:116-129).",
+   "Ordering: the three populated evaluators run in the fixed order voltages, temperatures, current, and each raises or clears entries rather than accumulating, so within one pass a later evaluator cannot change an entry raised by an earlier one.",
+   "No debouncing in this module: every conclusion is published on the evaluation that reaches it. Any persistence across evaluations is a property of the diagnosis subsystem, not of the SOA module."
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "decisions": [
+   {
+    "alternatives": [
+     "Evaluate each limit tier independently",
+     "Nest the tiers so that one comparison selects the tier"
+    ],
+    "decision_id": "DEC-SOA-DDD-001",
+    "rationale": "Read from the source: each raising branch tests MOL outermost and MSL innermost, and each threshold gets its own DIAG_Handler call, so a value beyond MSL produces three entries in one pass rather than one. The design consequence the source does not state is that the number of entries a single value raises is data-dependent, which makes the diagnosis channel count per pass proportional to severity.",
+    "selected": "Nested tiers, with a mirrored clearing branch"
+   },
+   {
+    "alternatives": [
+     "Use one temperature limit set regardless of direction",
+     "Select the limit set from the measured current direction"
+    ],
+    "decision_id": "DEC-SOA-DDD-002",
+    "rationale": "Read from the source: the temperature evaluator branches on BMS_GetCurrentFlowDirection and applies the discharge or charge macros accordingly, and the configuration provides separate macro families for both directions. The source gives no rationale comment; the engineering reason is visible in the configuration, which defines a tighter charge ceiling (450 ddegC) than the discharge one (550 ddegC).",
+    "selected": "Direction-dependent limit set, resolved once per string"
+   },
+   {
+    "alternatives": [
+     "Compare the current against the limits unconditionally",
+     "Exempt a battery at rest from every current limit"
+    ],
+    "decision_id": "DEC-SOA-DDD-003",
+    "rationale": "The source states the reason in a comment on each provider: only check if battery is not at rest, no overcurrent possible if battery is resting. This is the one decision in the module whose rationale the source records rather than merely implements.",
+    "selected": "Exempt at rest, implemented in all three limit providers and inside the current-on-open-string predicate"
+   },
+   {
+    "alternatives": [
+     "Return an error code for an invalid current reading",
+     "Skip the block and leave the existing entries untouched"
+    ],
+    "decision_id": "DEC-SOA-DDD-004",
+    "rationale": "Read from the source structure: the validity test wraps the whole block and there is no else arm. The consequence, which the source does not state, is that a stale entry raised before the reading became invalid is neither confirmed nor withdrawn while the reading is invalid.",
+    "selected": "Skip silently"
+   }
+  ],
+  "declared_gaps": [
+   {
+    "searched": "src/app/application/soa/soa.c at 308028fb in full; the only callee outside the module is DIAG_Handler",
+    "statement": "The module's entire output is a DIAG_Handler call. It contains no contactor request, no derating, no current limitation and no state change. What happens after an entry is raised is determined by the diagnosis subsystem and by the BMS state machine, both outside this element, and neither is traced here. This is a scoping statement about the element, not an omission of a design activity, and it is recorded so that no reader infers a reaction path from this record.",
+    "topic": "Any reaction to a violated limit inside the monitoring element"
+   },
+   {
+    "searched": "src/app/application/soa/soa.c at 308028fb for any counter, timer or previous-value state; the function contains no static or file-scope state",
+    "statement": "The evaluator applies no debounce, no persistence counter and no hysteresis of its own. Every pass recomputes from the current values and either raises or clears. Whether a raised entry survives a single non-violating sample is therefore not determined by this module; the answer depends on the diagnosis subsystem's configuration, which is outside the element and is not asserted here.",
+    "topic": "Debounce, persistence or hysteresis on any limit"
+   },
+   {
+    "searched": "src/app/application/soa/soa.c and src/app/application/config/soa_cfg.c at 308028fb",
+    "statement": "The source states no execution-time figure and no footprint figure for this module. The cpu_time_ms of 10 in this record is the caller's period, not an execution cost, and memory_bytes and stack_bytes are zero because the module holds no static state and allocates nothing - that is a read of the source, not a measurement.",
+    "topic": "Execution time and memory footprint"
+   },
+   {
+    "searched": "src/app/application/soa/soa.c at 308028fb, lines 353-354, and the declarations in src/app/application/soa/soa.h",
+    "statement": "The function is declared in the header, is called unconditionally by BMS_Trigger after the three populated evaluators, and its body is a single TODO to be implemented comment. The source does not state which limits it was intended to evaluate, nor whether the cell temperature evaluator is meant to supersede it. This record states the omission and does not attribute an intent to it.",
+    "topic": "Why SOA_CheckSlaveTemperatures exists but is empty"
+   },
+   {
+    "searched": "src/app/application/soa/soa.c at 308028fb for the signatures of the three populated entry points",
+    "statement": "The populated temperature evaluator takes a DATA_BLOCK_MIN_MAX_s, which carries the per-string minimum and maximum only. Any slave-specific temperature, which would be per sensor and per module, appears in no structure that this module receives. The data path a slave-temperature evaluation would need is therefore not present in the element as pinned, and this record does not propose one.",
+    "topic": "Which cell temperature structure the slave-temperature check was meant to consume"
+   },
+   {
+    "searched": "src/app/application/bms/bms.c at 308028fb lines 909-916 for the call ordering relative to the refresh calls",
+    "statement": "The evaluators apply no freshness check to their inputs. They are called after BMS_GetMeasurementValues and BMS_UpdateBatterySystemState within the same BMS_Trigger pass, so ordering supplies the freshness, and nothing in the module would detect a violation of that ordering. The dependency is real and is not checked.",
+    "topic": "Behaviour when the measurement tables have not yet been refreshed"
+   }
+  ],
+  "decomposition": [
+   {
+    "child_id": "src/app/application/soa/soa.c",
+    "internal_unit": "SOA_CheckVoltages",
+    "relationship": "contains",
+    "source_file": "src/app/application/soa/soa.c",
+    "unit_role": "Voltage evaluator. Iterates the string index and applies the six voltage comparisons by nesting, so a single value can raise one, two or three entries in the same pass.",
+    "visibility": "extern"
+   },
+   {
+    "child_id": "src/app/application/soa/soa.c",
+    "internal_unit": "SOA_CheckTemperatures",
+    "relationship": "contains",
+    "source_file": "src/app/application/soa/soa.c",
+    "unit_role": "Temperature evaluator. Two-phase: the flow direction is resolved once per string from the string current, then the same twelve comparisons are applied against either the charge or the discharge limit set, twice - once for the maximum and once for the minimum.",
+    "visibility": "extern"
+   },
+   {
+    "child_id": "src/app/application/soa/soa.c",
+    "internal_unit": "SOA_CheckCurrent",
+    "relationship": "contains",
+    "source_file": "src/app/application/soa/soa.c",
+    "unit_role": "Current evaluator. The only entry point that consults a validity bitmask before doing anything; also the only one that emits DIAG_SYSTEM rather than DIAG_STRING impact, for the pack-current checks.",
+    "visibility": "extern"
+   },
+   {
+    "child_id": "src/app/application/soa/soa.c",
+    "internal_unit": "SOA_CheckSlaveTemperatures",
+    "relationship": "contains",
+    "source_file": "src/app/application/soa/soa.c",
+    "unit_role": "Slave-temperature entry point. Declared in the header, called unconditionally by BMS_Trigger, and its body is a single comment reading TODO to be implemented. It performs no check and returns no value.",
+    "visibility": "extern"
+   },
+   {
+    "child_id": "src/app/application/config/soa_cfg.c",
+    "internal_unit": "SOA_IsStringCurrentLimitViolated, SOA_IsCellCurrentLimitViolated, SOA_IsPackCurrentLimitViolated",
+    "relationship": "delegates_to",
+    "source_file": "src/app/application/config/soa_cfg.c",
+    "unit_role": "Limit providers. Three predicates that take the absolute current and the flow direction and return a boolean. All three return false without comparing when the flow direction is neither charging nor discharging, so a resting battery cannot raise an over-current entry.",
+    "visibility": "extern"
+   },
+   {
+    "child_id": "src/app/application/config/soa_cfg.c",
+    "internal_unit": "SOA_IsCurrentOnOpenString",
+    "relationship": "delegates_to",
+    "source_file": "src/app/application/config/soa_cfg.c",
+    "unit_role": "Cross-module predicate. Combines the flow direction with the contactor state, asking the BMS layer twice whether the string is closed and whether it is precharging, and reports a violation only when neither holds.",
+    "visibility": "extern"
+   },
+   {
+    "child_id": "src/app/application/bms/bms.c",
+    "internal_unit": "BMS_GetCurrentFlowDirection",
+    "relationship": "uses",
+    "source_file": "src/app/application/bms/bms.c",
+    "unit_role": "Flow-direction quantiser used by both the temperature and the current evaluators. Returns BMS_CHARGING, BMS_DISCHARGING, BMS_AT_REST or BMS_RELAXATION depending on which side of the configured rest threshold the signed current falls and on the sign convention BS_POSITIVE_DISCHARGE_CURRENT.",
+    "visibility": "extern"
+   },
+   {
+    "child_id": "src/app/application/soa/soa.c",
+    "internal_unit": "DIAG_Handler",
+    "relationship": "uses",
+    "source_file": "src/app/application/soa/soa.c",
+    "unit_role": "Outbound error and event sink. Every conclusion this module reaches is expressed as a DIAG_ID_e with a DIAG_EVENT_e and an impact level; the module has no other output. The deep-discharge entry is the one place where the returned DIAG_RETURNTYPE_e is itself consumed.",
+    "visibility": "extern"
+   }
+  ],
+  "derived_findings": [
+   {
+    "evidence": "src/app/application/soa/soa.c:277, the `if (pTablePackValues->invalidStringCurrent[s] == 0u)` branch with no else arm, and 328 for the equivalent pack branch",
+    "finding": "A diagnosis entry raised before a current reading becomes invalid is left standing for as long as the reading stays invalid. The validity branch wraps the entire string block with no else arm, so neither raising nor clearing happens in that pass, and nothing in the module bounds how long that can last."
+   },
+   {
+    "evidence": "src/app/application/soa/soa.c:83 for the initialisation of retvalUndervoltageMSL and 125-129 for the guarded deep-discharge call; the enumeration is at src/app/engine/diag/diag.h:67-78",
+    "finding": "The deep-discharge diagnosis depends on the diagnosis subsystem, not only on the voltage. DIAG_ID_DEEP_DISCHARGE_DETECTED is raised only when the under-voltage MSL call returns DIAG_HANDLER_RETURN_ERR_OCCURRED, so a subsystem that is not ready or that rejects the entry suppresses deep-discharge detection while the voltage is genuinely below the deep-discharge threshold."
+   },
+   {
+    "evidence": "src/app/application/config/battery_cell_cfg.h:175 defining BC_VOLTAGE_DEEP_DISCHARGE_mV as BC_VOLTAGE_MIN_MSL_mV, against src/app/application/soa/soa.c:114 and 125-129",
+    "finding": "The under-voltage thresholds have a dead branch in the pinned configuration. BC_VOLTAGE_DEEP_DISCHARGE_mV is defined as BC_VOLTAGE_MIN_MSL_mV, and the deep-discharge test is inclusive (<=) on the same value as the under-voltage MSL test that must have fired first, so the branch is reachable exactly when the MSL entry has been raised and the subsystem accepted it. The nested thresholds make the two tests coincide."
+   },
+   {
+    "evidence": "src/app/application/config/soa_cfg.c:98-114 against src/app/application/config/battery_system_cfg.h:140 and 198",
+    "finding": "The cell-current limit is derived rather than configured. SOA_IsCellCurrentLimitViolated compares the absolute string current against BS_NR_OF_PARALLEL_CELLS_PER_CELL_BLOCK multiplied by the per-cell MSL macro, while the string limit uses a separately configured BS_MAXIMUM_STRING_CURRENT_mA. In the pinned configuration both reduce to comparable magnitudes, but they are configured independently and would diverge if either the parallelism or the string limit changed."
+   }
+  ],
+  "design_level": "detailed_design",
+  "design_scope_note": "FB2-SW-DSN-000002 records the SOA element at architecture level. Note that this record's own predecessor carries design_level=detailed_design while its standards_mappings name SWE.2 and its rationale reads \"Software architectural design\"; the level token and the process reference on that record disagree, and this record is the one that carries the clause 8.4 content and the SWE.3 reference. The two are different levels of the same element. The link FB2-SW-DSN-000005 refines FB2-SW-DSN-000002 records that relationship in the registry.",
+  "engineering_domain": "software",
+  "failure_response": [
+   {
+    "detection": "FAS_ASSERT on the pointer at the top of each entry point",
+    "failure_mode": "Null structure pointer passed to any evaluator",
+    "reaction": "The assertion traps. There is no return code and no skip path; the 10 ms pass stops at that call.",
+    "recovery": "None in the source; a trap is terminal for the caller."
+   },
+   {
+    "detection": "FAS_ASSERT(stringNumber < BS_NR_OF_STRINGS) at the top of that provider",
+    "failure_mode": "String index at or beyond BS_NR_OF_STRINGS reaches SOA_IsCurrentOnOpenString",
+    "reaction": "The assertion traps. The evaluator's own loop cannot produce such an index, so the only way to reach this is a caller outside the module.",
+    "recovery": "None in the source."
+   },
+   {
+    "detection": "The invalidStringCurrent and invalidPackCurrent bits read from the pack-values structure",
+    "failure_mode": "String or pack current is invalid",
+    "reaction": "The corresponding block is skipped. No entry is raised, so an invalid current cannot raise a fault; and no entry is cleared, so an entry raised by an earlier valid pass persists indefinitely while the reading stays invalid.",
+    "recovery": "Recovery is by the current becoming valid again and the next evaluation restoring the correct state. The source contains no staleness bound and no alternative diagnosis for a persistently invalid current inside this module."
+   },
+   {
+    "detection": "DIAG_Handler returns one of DIAG_HANDLER_RETURN_NOT_READY, DIAG_HANDLER_INVALID_TYPE, DIAG_HANDLER_RETURN_WRONG_ID or DIAG_HANDLER_RETURN_UNKNOWN",
+    "failure_mode": "Diagnosis subsystem refuses an entry",
+    "reaction": "Ignored, with one exception. Every call except the under-voltage MSL call discards the return. The under-voltage MSL call's return is compared against DIAG_HANDLER_RETURN_ERR_OCCURRED, so a refusal there suppresses DIAG_ID_DEEP_DISCHARGE_DETECTED rather than producing a spurious one.",
+    "recovery": "None in the source. The consequence to note is that a refused entry is indistinguishable from a handled one throughout the rest of the module."
+   },
+   {
+    "detection": "Not detected. The module casts the absolute current to uint32_t without checking, and applies no range check to voltage or temperature at all.",
+    "failure_mode": "A measured value lies outside the representable range of its element type",
+    "reaction": "None. The comparison proceeds on the cast value.",
+    "recovery": "None in the source. Recorded because the cast is the point at which a defect upstream would be transformed rather than reported."
+   },
+   {
+    "detection": "Not detected. SOA_CheckSlaveTemperatures has an empty body.",
+    "failure_mode": "A slave temperature exceeds its limit",
+    "reaction": "None. No slave-temperature limit is evaluated at any point.",
+    "recovery": "None in the source; the function carries a TODO comment and the module's other temperature evaluator considers only the cell temperature structure."
+   },
+   {
+    "detection": "The module's only action is to raise a diagnosis entry; it contains no contactor, no derating and no shutdown logic",
+    "failure_mode": "A limit is violated but no action follows inside the module",
+    "reaction": "None inside the module. The reaction to a raised entry is whatever the diagnosis subsystem and the BMS state machine are separately configured to perform, neither of which is in this module.",
+    "recovery": "Outside the scope of this element. The absence is stated because a detailed design of a monitoring element must make clear that the reaction path is not part of it."
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SW-DSN-000005",
+  "implementation_mapping": [
+   {
+    "line_range": "81-146",
+    "source_file": "src/app/application/soa/soa.c",
+    "status": "implemented",
+    "symbol": "SOA_CheckVoltages"
+   },
+   {
+    "line_range": "148-269",
+    "source_file": "src/app/application/soa/soa.c",
+    "status": "implemented",
+    "symbol": "SOA_CheckTemperatures"
+   },
+   {
+    "line_range": "271-351",
+    "source_file": "src/app/application/soa/soa.c",
+    "status": "implemented",
+    "symbol": "SOA_CheckCurrent"
+   },
+   {
+    "line_range": "353-354",
+    "source_file": "src/app/application/soa/soa.c",
+    "status": "not_in_source",
+    "symbol": "SOA_CheckSlaveTemperatures"
+   },
+   {
+    "line_range": "79",
+    "source_file": "src/app/application/soa/soa.h",
+    "status": "implemented",
+    "symbol": "SOA_CheckVoltages"
+   },
+   {
+    "line_range": "76-85",
+    "source_file": "src/app/application/config/soa_cfg.c",
+    "status": "implemented",
+    "symbol": "SOA_IsPackCurrentLimitViolated"
+   },
+   {
+    "line_range": "87-96",
+    "source_file": "src/app/application/config/soa_cfg.c",
+    "status": "implemented",
+    "symbol": "SOA_IsStringCurrentLimitViolated"
+   },
+   {
+    "line_range": "98-114",
+    "source_file": "src/app/application/config/soa_cfg.c",
+    "status": "implemented",
+    "symbol": "SOA_IsCellCurrentLimitViolated"
+   },
+   {
+    "line_range": "116-129",
+    "source_file": "src/app/application/config/soa_cfg.c",
+    "status": "implemented",
+    "symbol": "SOA_IsCurrentOnOpenString"
+   },
+   {
+    "line_range": "125-129",
+    "source_file": "src/app/application/soa/soa.c",
+    "status": "implemented",
+    "symbol": "DIAG_Handler"
+   },
+   {
+    "line_range": "898-1691",
+    "source_file": "src/app/application/bms/bms.c",
+    "status": "implemented",
+    "symbol": "BMS_Trigger"
+   },
+   {
+    "line_range": "1697-1719",
+    "source_file": "src/app/application/bms/bms.c",
+    "status": "implemented",
+    "symbol": "BMS_GetCurrentFlowDirection"
+   },
+   {
+    "line_range": "258-282",
+    "source_file": "src/app/task/config/ftask_cfg.c",
+    "status": "implemented",
+    "symbol": "FTSK_RunUserCodeCyclic10ms"
+   },
+   {
+    "line_range": "70",
+    "source_file": "src/app/engine/diag/diag.h",
+    "status": "implemented",
+    "symbol": "DIAG_HANDLER_RETURN_ERR_OCCURRED"
+   },
+   {
+    "line_range": "121",
+    "source_file": "src/app/engine/diag/diag.h",
+    "status": "implemented",
+    "symbol": "extern DIAG_RETURNTYPE_e DIAG_Handler"
+   },
+   {
+    "line_range": "212",
+    "source_file": "src/app/engine/config/database_cfg.h",
+    "status": "implemented",
+    "symbol": "invalidStringCurrent"
+   },
+   {
+    "line_range": "201",
+    "source_file": "src/app/engine/config/database_cfg.h",
+    "status": "implemented",
+    "symbol": "invalidPackCurrent"
+   },
+   {
+    "line_range": "109",
+    "source_file": "src/app/application/config/battery_system_cfg.h",
+    "status": "implemented",
+    "symbol": "BS_NR_OF_STRINGS"
+   },
+   {
+    "line_range": "243",
+    "source_file": "src/app/application/config/battery_system_cfg.h",
+    "status": "implemented",
+    "symbol": "BS_REST_CURRENT_mA"
+   },
+   {
+    "line_range": "198",
+    "source_file": "src/app/application/config/battery_system_cfg.h",
+    "status": "implemented",
+    "symbol": "BS_MAXIMUM_STRING_CURRENT_mA"
+   },
+   {
+    "line_range": "206",
+    "source_file": "src/app/application/config/battery_system_cfg.h",
+    "status": "implemented",
+    "symbol": "BS_MAXIMUM_PACK_CURRENT_mA"
+   },
+   {
+    "line_range": "140",
+    "source_file": "src/app/application/config/battery_system_cfg.h",
+    "status": "implemented",
+    "symbol": "BS_NR_OF_PARALLEL_CELLS_PER_CELL_BLOCK"
+   },
+   {
+    "line_range": "92",
+    "source_file": "src/app/application/config/battery_system_cfg.h",
+    "status": "implemented",
+    "symbol": "BS_POSITIVE_DISCHARGE_CURRENT"
+   },
+   {
+    "line_range": "141",
+    "source_file": "src/app/application/config/battery_cell_cfg.h",
+    "status": "implemented",
+    "symbol": "BC_VOLTAGE_MAX_MOL_mV"
+   },
+   {
+    "line_range": "175",
+    "source_file": "src/app/application/config/battery_cell_cfg.h",
+    "status": "implemented",
+    "symbol": "BC_VOLTAGE_DEEP_DISCHARGE_mV"
+   },
+   {
+    "line_range": "79",
+    "source_file": "src/app/application/config/battery_cell_cfg.h",
+    "status": "implemented",
+    "symbol": "BC_TEMPERATURE_MAX_DISCHARGE_MSL_ddegC"
+   },
+   {
+    "line_range": "126",
+    "source_file": "src/app/application/config/battery_cell_cfg.h",
+    "status": "implemented",
+    "symbol": "BC_TEMPERATURE_MIN_CHARGE_MOL_ddegC"
+   },
+   {
+    "line_range": "202",
+    "source_file": "src/app/application/config/battery_cell_cfg.h",
+    "status": "implemented",
+    "symbol": "BC_CURRENT_MAX_CHARGE_MSL_mA"
+   }
+  ],
+  "interfaces": [
+   {
+    "call_contract": "The caller is BMS_Trigger, which passes the module's own file-scope tables bms_tableMinMax and bms_tablePackValues after BMS_GetMeasurementValues and BMS_UpdateBatterySystemState have refreshed them, and passes them unconditionally on every trigger where the state machine is not uninitialised.",
+    "direction": "input",
+    "error_signalling": "No error return in the signature; both functions return void. A null pointer traps on the FAS_ASSERT rather than returning.",
+    "interface_id": "SOA_INPUT_MIN_MAX",
+    "signals": [
+     {
+      "name": "minimumCellVoltage_mV, maximumCellVoltage_mV",
+      "range": "not bounded by this module. The declared element type is int16_t, so the representable range is -32768..32767 mV, and the evaluator applies no further check of its own.",
+      "source_symbol": "SOA_CheckVoltages",
+      "source_value_basis": "the comparison thresholds are named macros with the values listed below; the input itself is not bounded in source",
+      "type": "int16_t",
+      "unit": "mV",
+      "validity": "FAS_ASSERT(pMinimumMaximumCellVoltages != NULL_PTR) is the only precondition. The evaluator does not test whether the values are fresh or plausible; it compares whatever the caller left in the structure."
+     },
+     {
+      "name": "minimumTemperature_ddegC, maximumTemperature_ddegC",
+      "range": "not bounded by this module; the declared element type is int16_t. The thresholds the evaluator compares against span -200 to 550 in the pinned configuration.",
+      "source_symbol": "SOA_CheckTemperatures",
+      "source_value_basis": "the comparison thresholds are named macros; the input itself is not bounded in source",
+      "type": "int16_t",
+      "unit": "0.1 degC",
+      "validity": "Two FAS_ASSERT calls, one on the temperature structure pointer and one on the current structure pointer. No validity bit is consulted for temperatures at all, so a temperature from an invalid sensor is compared and acted on exactly like a valid one."
+     }
+    ]
+   },
+   {
+    "call_contract": "FAS_ASSERT(pTablePackValues != NULL_PTR).",
+    "direction": "input",
+    "error_signalling": "No error return. An invalid current is signalled by skipping, not by an error code, which means an out-of-range current produces silence rather than a fault indication.",
+    "interface_id": "SOA_INPUT_PACK_VALUES",
+    "signals": [
+     {
+      "name": "invalidStringCurrent",
+      "range": "0 or 1; the header comment states 0 means valid and 1 means invalid",
+      "source_symbol": "SOA_CheckCurrent",
+      "source_value_basis": "declared element type and documented polarity in src/app/engine/config/database_cfg.h:212; the branch is `if (pTablePackValues->invalidStringCurrent[s] == 0u)`",
+      "type": "uint8_t[BS_NR_OF_STRINGS]",
+      "unit": "dimensionless",
+      "validity": "Tested before any comparison. When the entry for the string is non-zero the whole string block is skipped, so no string diagnosis entry is raised or cleared in that pass - the previous state of those entries is simply not updated."
+     },
+     {
+      "name": "invalidPackCurrent",
+      "range": "0 or 1; the header comment states 0 means valid, 1 means invalid",
+      "source_symbol": "SOA_CheckCurrent",
+      "source_value_basis": "declared element type and documented polarity in src/app/engine/config/database_cfg.h:201; the branch is `if (pTablePackValues->invalidPackCurrent == 0u)`",
+      "type": "uint8_t",
+      "unit": "dimensionless",
+      "validity": "Tested before the pack block. When non-zero the pack-current block is skipped entirely, including the DIAG_SYSTEM entries, so those entries retain whatever state the previous valid pass left them in."
+     },
+     {
+      "name": "stringCurrent_mA",
+      "range": "not bounded by this module. It is passed to abs() and the result is cast to uint32_t before the limit comparison.",
+      "source_symbol": "SOA_CheckCurrent",
+      "source_value_basis": "not stated in source; the widening is a literal cast in the evaluator",
+      "type": "int32_t",
+      "unit": "mA",
+      "validity": "The cast to uint32_t after abs() is what makes the comparison unsigned, so the limit helpers receive a value that cannot be negative. The source performs no check that the signed value was within the representable range of the target type before the cast."
+     }
+    ]
+   },
+   {
+    "call_contract": "All four providers return bool and take value parameters only. SOA_IsCurrentOnOpenString additionally reaches into the BMS layer through BMS_IsStringClosed and BMS_IsStringPrecharging, so the limit provider is not a pure function of its arguments - its result depends on live contactor state.",
+    "direction": "output",
+    "error_signalling": "bool return, which is the verdict itself and not an error indication. There is no way to distinguish \"limit not violated\" from \"provider could not decide\"; a provider returns false in both cases.",
+    "interface_id": "SOA_LIMIT_PROVIDER",
+    "signals": [
+     {
+      "name": "current_mA",
+      "range": "0 .. 2147483647 mA as the largest value a correctly behaving abs() of an int32_t can produce; the cell-current provider multiplies a named per-cell limit by BS_NR_OF_PARALLEL_CELLS_PER_CELL_BLOCK, which is 1 in the pinned configuration, so the effective cell limit equals the per-cell macro.",
+      "source_symbol": "SOA_IsStringCurrentLimitViolated",
+      "source_value_basis": "named configuration macros BS_MAXIMUM_STRING_CURRENT_mA (2400u) and BS_MAXIMUM_PACK_CURRENT_mA (2400u * BS_NR_OF_STRINGS) and BC_CURRENT_MAX_CHARGE_MSL_mA / BC_CURRENT_MAX_DISCHARGE_MSL_mA (180000u each)",
+      "type": "uint32_t",
+      "unit": "mA",
+      "validity": "The providers assert nothing about the magnitude. They compare with a strict greater-than, so a value exactly equal to the limit is not a violation."
+     },
+     {
+      "name": "currentDirection",
+      "range": "BMS_CHARGING or BMS_DISCHARGING admits a comparison; BMS_AT_REST or BMS_RELAXATION short-circuits to false in every provider",
+      "source_symbol": "SOA_IsPackCurrentLimitViolated",
+      "source_value_basis": "the source comments on all three providers state that no overcurrent is possible if the battery is resting",
+      "type": "BMS_CURRENT_FLOW_STATE_e",
+      "unit": "dimensionless",
+      "validity": "This is the module's validity gate for current and it is a design decision, not an accident: a current too small to establish a direction is exempt from every over-current limit because no overcurrent is physically possible at rest."
+     },
+     {
+      "name": "stringNumber",
+      "range": "asserted stringNumber < BS_NR_OF_STRINGS",
+      "source_symbol": "SOA_IsCurrentOnOpenString",
+      "source_value_basis": "named configuration macro BS_NR_OF_STRINGS, asserted rather than compared against a literal",
+      "type": "uint8_t",
+      "unit": "dimensionless",
+      "validity": "FAS_ASSERT(stringNumber < BS_NR_OF_STRINGS) at the top of SOA_IsCurrentOnOpenString. The caller supplies the loop index of a loop already bounded by BS_NR_OF_STRINGS, so the assertion holds by construction at the call site in SOA_CheckCurrent."
+     }
+    ]
+   },
+   {
+    "call_contract": "The module holds no diagnosis state of its own; it is a pure producer of events. Whether an event becomes a stored fault, a debounced fault or a counter increment is entirely the diagnosis subsystem's business.",
+    "direction": "output",
+    "error_signalling": "The enumeration itself is the error channel: DIAG_HANDLER_RETURN_NOT_READY, DIAG_HANDLER_INVALID_TYPE and DIAG_HANDLER_RETURN_WRONG_ID all report that the diagnosis subsystem could not accept the entry. This module ignores every return value except the under-voltage MSL one, so a not-ready or misconfigured diagnosis subsystem produces no error indication inside the SOA module.",
+    "interface_id": "SOA_DIAG_OUTPUT",
+    "signals": [
+     {
+      "name": "DIAG_RETURNTYPE_e returned by DIAG_Handler",
+      "range": "DIAG_HANDLER_RETURN_OK, DIAG_HANDLER_RETURN_ERR_OCCURRED, DIAG_HANDLER_RETURN_WARNING_OCCURRED, DIAG_HANDLER_RETURN_WRONG_ID, DIAG_HANDLER_RETURN_UNKNOWN, DIAG_HANDLER_INVALID_TYPE, DIAG_HANDLER_INVALID_DATA, DIAG_HANDLER_INVALID_ERR_IMPACT, DIAG_HANDLER_RETURN_NOT_READY",
+      "source_symbol": "DIAG_Handler",
+      "source_value_basis": "closed enumeration in src/app/engine/diag/diag.h:67-78",
+      "type": "DIAG_RETURNTYPE_e",
+      "unit": "dimensionless",
+      "validity": "Consumed by this module in exactly one place. SOA_CheckVoltages stores the under-voltage MSL call in a local initialised to DIAG_HANDLER_RETURN_ERR_OCCURRED, overwrites it with the call's return, and raises DIAG_ID_DEEP_DISCHARGE_DETECTED only when the return equals DIAG_HANDLER_RETURN_ERR_OCCURRED."
+     },
+     {
+      "name": "impact level",
+      "range": "DIAG_STRING with the string index for every per-string entry; DIAG_SYSTEM with index 0 for the two pack-current entries",
+      "source_symbol": "SOA_CheckCurrent",
+      "source_value_basis": "literal constants at the call sites in src/app/application/soa/soa.c",
+      "type": "DIAG_IMPACT_LEVEL_e",
+      "unit": "dimensionless",
+      "validity": "The impact level is chosen per call site and is not derived. A reader must know that DIAG_ID_PACK_OVERCURRENT_CHARGE_MSL and DIAG_ID_PACK_OVERCURRENT_DISCHARGE_MSL are the only two entries this module raises at system level."
+     }
+    ]
+   }
+  ],
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "provenance_note": "Every path, symbol and line range in this record was checked against the tree at commit 308028fb with git show, not against the working tree. The three evaluator citations were cross-checked against source anchors FB2-SRC-COD-000004, FB2-SRC-COD-000005 and FB2-SRC-COD-000006, which pin SOA_CheckVoltages, SOA_CheckCurrent and SOA_CheckTemperatures respectively to that commit. SOA_CheckSlaveTemperatures is mapped with status not_in_source because the record maps the behaviour the source does not have, not because the symbol is absent. This record does not assert ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status is pending, production_authorized is false and product_verification_credit is false.",
+  "responsibilities": [
+   "Compare the per-string minimum and maximum cell voltage against three ordered over-voltage limits and three ordered under-voltage limits, raising or clearing one diagnosis entry per limit actually crossed (src/app/application/soa/soa.c:81-146)",
+   "Select the over-temperature and under-temperature limit set from the measured current direction, so that charging and discharging are evaluated against different thresholds, and raise or clear one diagnosis entry per limit crossed (src/app/application/soa/soa.c:148-269)",
+   "Gate the current evaluation on the per-string and pack validity bits before comparing against string, cell and pack current limits, and additionally test for current flowing on a string whose contactors report open (src/app/application/soa/soa.c:271-351)",
+   "Supply the numeric current limits and the current-on-open-string predicate to the evaluator, keeping the thresholds out of the evaluation code (src/app/application/config/soa_cfg.c:76-129)",
+   "Quantise a signed current to a three-valued flow direction so that a current below the rest threshold is neither charge nor discharge and is therefore exempt from every over-current limit (src/app/application/bms/bms.c:1697-1719)"
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "First issue. Detailed design derived by reading src/app/application/soa/soa.c and src/app/application/config/soa_cfg.c at commit 308028fb: the evaluator/provider split, the three-tier MOL/RSL/MSL nesting, the DIAG_RETURNTYPE_e dependence of the deep-discharge path, the current validity gate and the current-direction quantisation, and the fact that SOA_CheckSlaveTemperatures is an empty stub.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000004",
+   "FB2-SRC-COD-000005",
+   "FB2-SRC-COD-000006",
+   "FB2-SRC-COD-000009",
+   "FB2-SRC-COD-000010"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "This record carries the clause 8.4 content for the SOA monitoring element: the responsibilities of the evaluator and of the limit providers as separate internal units, the interface contracts with direction, unit, range, validity and error signalling read from the real signatures and the real diagnosis return handling, the tiered comparison structure read from the actual nesting, the numeric constraints the configuration macros impose, the failure response read from the real FAS_ASSERT and return-value paths, and the mapping to implementation. Two characteristics the source does not specify - any debounce, and any reaction inside this module - are recorded in declared_gaps rather than filled in.",
+    "reference": "Part 6, Clause 8.4 - software detailed design and unit design",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "SWE.3 Software Detailed Design and Unit Construction. The backing family this record supplies is the Detailed Design family. The other two families SWE.3 expects - Source Code and Unit Test Specifications - are not supplied by this record and are named as such in the SWE.3 disposition in docs/artifacts/governance/coverage-plan.json.",
+    "reference": "SWE.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Detailed Design: SOA monitoring - tiered limit evaluation, limit-provider split, validity gating and the unimplemented slave-temperature entry point",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "design",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-DSN-000005"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-DSN-000005",
+  "revision": "1"
+ }
+}

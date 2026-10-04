@@ -1,0 +1,525 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000013",
+    "rationale": "Implementation element FB2-SW-IMP-000003 is the code location in which the reference project's FB2-SW-DSN-000003 actuation-request and auxiliary-feedback responsibilities are carried, with the sequencing realised in the application layer's BMS_Trigger rather than in the driver the design names, and with the design's FRAM cycle counter declared as an explicit not_in_source proposal. The link runs from the implementation to the design per master prompt section 13.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-IMP-000003",
+    "target_id": "FB2-SW-DSN-000003"
+   },
+   {
+    "link_id": "FB2-LNK-IMP-000106",
+    "rationale": "FB2-SW-IMP-000003 realises the actuation and feedback-confirmation clauses of the reference project's FB2-SW-SWR-000003, with the sequencing realised one layer above in BMS_Trigger, and declares the design's cycle counter a not_in_source proposal. The requirement's 5 ms emergency-open clause is not established by this link and the configured waits the source applies are longer.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IMP-000003",
+    "target_id": "FB2-SW-SWR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-SWE3-000003",
+    "rationale": "The existing link FB2-LNK-SAF-000013 already records that FB2-SW-IMP-000003 is the code location carrying FB2-SW-DSN-000003. This link records the second design endpoint the same implementation realises: FB2-SW-DSN-000006, the detailed design of the same contactor element, whose internal units are CONT_OpenContactor, CONT_CloseContactor, CONT_GetFeedbackOfAllContactors, CONT_CheckFeedback and CONT_InitializationCheckOfContactorRegistry. The implementation record's own source_refs already name FB2-SRC-COD-000008, which pins CONT_CheckFeedback to lines 125-163 of contactor.c at the pinned commit, so the detailed design and the implementation share the same anchor. Direction is implementation -> design per master prompt section 13, matching FB2-LNK-SAF-000013.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IMP-000003",
+    "target_id": "FB2-SW-DSN-000006"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against implementation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (3)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "3/3 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000008, which records anchor class `repository_file`; path `src/app/driver/contactor/contactor.c`; line_range `125-163`; content_hash `71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83`; symbol `CONT_CheckFeedback`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000013, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_contactor.c`; line_range `73-125`; content_hash `a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775`; symbol `DIAG_StringContactorFeedback`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000027, which records anchor class `repository_file`; path `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`; line_range `160-182`; content_hash `159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec`; symbol `FS8x_WD_Refresh`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000008."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000027."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.implements.design_artifact_id` names FB2-SW-DSN-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.realises_requirements[0].requirement_id` names FB2-SW-SWR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000008."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[1]` names FB2-SRC-COD-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[2]` names FB2-SRC-COD-000027."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C12-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 (this record is a code location, not a verification record) with status `partially_mapped` on the grounds: States where the code for the hypothetical reference project's contactor path is. Makes no claim that it was verified and asserts no ASIL classification for the real product."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C13-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 (design-to-code traceability) with status `partially_mapped` on the grounds: Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 15728,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/implementation-contactor-driver.json",
+  "record_sha256": "ff79e524d0a3e7ead9860c2e435d78fadd82351f24c07195eabb94e15bf2464f",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "ff79e524d0a3e7ead9860c2e435d78fadd82351f24c07195eabb94e15bf2464f"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "This record shares its anchor set with the as_is record of the same id, because both profiles describe the same real source. No new anchor was created. bms.c is listed as a code location because the design's state-machine responsibility is realised there rather than in the driver the design names, and naming the real location is the point of an implementation record; it is not claimed to be covered by any anchor, and no anchor for it was added."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IMP-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Implementation (reference project): Contactor actuation request and auxiliary feedback monitoring, plus a proposed non-volatile contactor cycle counter that the pinned source does\u2026\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anchor_refs": [
+   "FB2-SRC-COD-000008",
+   "FB2-SRC-COD-000013",
+   "FB2-SRC-COD-000027"
+  ],
+  "artifact_type": "implementation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behaviours": [
+   {
+    "behaviour_id": "CONT-IMP-REQUEST",
+    "description": "Records the requested contactor state and forwards it to the SPS channel that drives that contactor, keyed on the (string, contactor type) pair.",
+    "evidence_line_range": "165-182",
+    "evidence_symbol": "CONT_OpenContactor",
+    "kind": "state_transition"
+   },
+   {
+    "behaviour_id": "CONT-IMP-FEEDBACK-READ",
+    "description": "Reads each contactor's feedback from the source its configuration selects: current sense, normally-open port-expander input, normally-closed port-expander input, or the set state itself when no feedback is configured.",
+    "evidence_line_range": "86-106",
+    "evidence_symbol": "CONT_GetFeedbackOfAllContactors",
+    "kind": "arbitration"
+   },
+   {
+    "behaviour_id": "CONT-IMP-FEEDBACK-COMPARE",
+    "description": "Compares requested against actual state per contactor and raises the string-plus, string-minus or precharge feedback diagnosis entry with an OK or NOT_OK event.",
+    "evidence_line_range": "125-163",
+    "evidence_symbol": "CONT_CheckFeedback",
+    "kind": "validation"
+   },
+   {
+    "behaviour_id": "CONT-IMP-FEEDBACK-FLAG",
+    "description": "Turns the raised feedback diagnosis event into the per-string feedback error flags the application reads.",
+    "evidence_line_range": "73-100",
+    "evidence_symbol": "DIAG_StringContactorFeedback",
+    "kind": "diagnostic_raise"
+   },
+   {
+    "behaviour_id": "CONT-IMP-SEQUENCE",
+    "description": "The application-layer state machine that performs the design's contactor sequencing, including the precharge-first ordering and the one-at-a-time string opening, with the configured waits between steps.",
+    "evidence_line_range": "898-1691",
+    "evidence_symbol": "BMS_Trigger",
+    "kind": "state_transition"
+   }
+  ],
+  "code_locations": [
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+    "line_range": "125-163",
+    "path": "src/app/driver/contactor/contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "CONT_CheckFeedback",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+    "line_range": "165-182",
+    "path": "src/app/driver/contactor/contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "CONT_OpenContactor",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+    "line_range": "184-201",
+    "path": "src/app/driver/contactor/contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "CONT_CloseContactor",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+    "line_range": "86-106",
+    "path": "src/app/driver/contactor/contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "CONT_GetFeedbackOfAllContactors",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:c0e2f1d4dd83f059b91c11dd91543ef052d515eb7a247fa26be7b53897523286",
+    "line_range": "898-1691",
+    "path": "src/app/application/bms/bms.c",
+    "repository": "foxbms-2",
+    "symbol": "BMS_Trigger",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
+    "line_range": "73-100",
+    "path": "src/app/engine/diag/cbs/diag_cbs_contactor.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_StringContactorFeedback",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   }
+  ],
+  "concurrency_and_isr_context": [
+   {
+    "context": "task",
+    "entry_points": [
+     "CONT_CheckFeedback",
+     "CONT_OpenContactor",
+     "CONT_CloseContactor"
+    ],
+    "shared_state": "cont_contactorStates, the static registry array written by the open and close requests and read by the feedback read, the feedback comparison and the state query. All of them are called from BMS_Trigger on the same task cycle, so the module needs no critical section of its own. The proposed cycle counter would add a second piece of persistent module state written on every actuation and read by nothing in this corpus."
+   }
+  ],
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "software",
+  "evidence_status": {
+   "limitations": [
+    "The proposed_location entry names a symbol that DOES NOT EXIST in the pinned source and is not a source anchor. It is a proposal for the hypothetical project and is recorded here precisely so that it cannot be mistaken for a verified location or for an implemented counter.",
+    "The absence of any cycle counter in contactor.c was established by reading the file at the pinned commit and searching it for fram and cycle, which return no occurrence. It is an absence claim about this module and is stated as such.",
+    "Behaviour was verified by reading the code. No contactor was actuated, no feedback was read and no timing measurement of this path exists in this corpus.",
+    "contactor.c, bms.c and diag_cbs_contactor.c are unmodified between the pin and the working tree, so the same ranges and hashes hold for the checked-out files."
+   ],
+   "locations_verified": true,
+   "method": "Every code_location was read at the pinned commit with 'git show 308028fb:path'; each content_hash is that pinned blob's sha256. For contactor.c and diag_cbs_contactor.c the hash equals the value the corresponding pre-existing source-registry anchor already carries; for bms.c there is no anchor and the hash was computed at the pin for this record. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The contactor.c spans were cross-read against 'graft skeleton src/app/driver/contactor/contactor.c'."
+  },
+  "guard": {
+   "confers_no_production_authority": true,
+   "confers_no_verification_credit": true,
+   "human_approval_required": true,
+   "is_implementation_evidence": false,
+   "is_verification_result": false,
+   "statement": "This record describes the hypothetical reference project's contactor implementation against the real pinned source and declares, as a proposal, the cycle counter its design requires and the source does not contain. It is not evidence that FB2-SW-SWR-000003 is met in either profile: the requirement's 5 ms emergency-open figure and its stated state machine are not established by anything listed here, and the configured waits the source actually applies are longer than that figure. It confers no production authority, no verification credit and no human approval, and it asserts nothing about the real foxBMS product's safety classification."
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IMP-000003",
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source_partial",
+  "implements": {
+   "design_artifact_id": "FB2-SW-DSN-000003",
+   "design_level": "detailed_design",
+   "partial_coverage": [
+    "The design's 'Cycle count persisted to FRAM' is not realised and is declared in proposed_location as not_in_source.",
+    "The design's state machine is not in the driver. contactor.c contains no state machine, no state variable and no transition; its functions are stateless request and query operations. The sequencing is in BMS_Trigger, which the design record does not name.",
+    "The design's 'Emergency open: < 5 ms from fault request' is not established: CONT_OpenContactor carries no timing constant, and the configured waits the sequencing layer applies are 50 ms, 10 ms, 1 ms and 1000 ms, which are longer than 5 ms and are not reconciled with it anywhere in this corpus.",
+    "The design's 'Precharge timeout: configurable (default 5 s)' and 'Voltage threshold: configurable (default 95% pack voltage)' are not present in this module; the only timeout constant present is BMS_STRING_OPEN_TIMEOUT of 1000 ms in the application layer.",
+    "The design's 'Feedback debounce: 10 ms' is not in this module. CONT_CheckFeedback raises a diagnosis event on every call and any debouncing is the DIAG layer's occurrence counter.",
+    "The design's weld and stuck-open detection is realised only for contactors whose configuration names a real feedback source. CONT_GetFeedbackOfAllContactors substitutes the set state for the feedback where feedbackPinType is CONT_HAS_NO_FEEDBACK, so for such a contactor the comparison is tautological and cannot raise a feedback error. The reference project's design states weld and stuck-open detection without that qualification.",
+    "The design's implementation_mapping asserts CONTACTOR_StateMachine, CONTACTOR_CheckFeedback, SBC_FS8X_SetContactor and DIAG_CBS_Contactor; none of those four names occurs anywhere in the repository. That mapping is not repaired here and the disagreement is recorded rather than propagated."
+   ],
+   "relationship": "This is where the reference project's FB2-SW-DSN-000003 two lowest-level responsibilities are realised, and its sequencing responsibility is realised one layer above. The mechanism is the real one, read from the pinned source and verified there: CONT_OpenContactor (contactor.c:165-182) and CONT_CloseContactor (184-201) locate the (string, type) pair in the static cont_contactorStates array, set currentSet, and forward the request to the SPS channel; CONT_GetFeedbackOfAllContactors (86-106) reads each contactor's feedback from the source its configuration names - current sense, a normally-open or normally-closed port-expander input, or the set state itself where no feedback is configured - and CONT_CheckFeedback (125-163) compares requested against actual per contactor and raises the matching feedback diagnosis entry, which DIAG_StringContactorFeedback (diag_cbs_contactor.c:73-100) turns into the per-string feedback error flags. The design's OPEN -> PRECHARGE -> CLOSE -> HOLD sequencing is realised in the application layer rather than in this driver: BMS_Trigger (bms.c:898-1691) is where the precharge and string-opening substates live, and the waits it applies are the configured BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE of 50 ms, BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR of 10 ms, BMS_FSM_SHORTTIME of 1 ms and BMS_STRING_OPEN_TIMEOUT of 1000 ms. The reference project reuses the actuation and feedback code and adds the cycle counter the design requires and the source lacks."
+  },
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "proposed_location": [
+   {
+    "proposed_path": "src/app/driver/contactor/contactor.c",
+    "proposed_symbol": "CONT_IncrementContactorCycleCounter",
+    "why_not_in_source": "The reference project's design FB2-SW-DSN-000003 lists 'Count contactor cycles (FRAM persistence)' as one of its responsibilities and its interfaces include a cycle_count signal with a 0-4G unit. The pinned contactor.c contains no occurrence of the string fram and no occurrence of the string cycle: the module holds only the static cont_contactorStates array of current-set and feedback values, and CONT_OpenContactor and CONT_CloseContactor update currentSet and forward the request without counting anything. The proposed symbol is therefore a new element the reference project would have to add, together with the non-volatile backing store the design's persistence constraint implies; neither exists in the product and neither is presented as if it did."
+   }
+  ],
+  "provenance_note": "This record shares its anchor set with the as_is record of the same id, because both profiles describe the same real source. No new anchor was created. bms.c is listed as a code location because the design's state-machine responsibility is realised there rather than in the driver the design names, and naming the real location is the point of an implementation record; it is not claimed to be covered by any anchor, and no anchor for it was added.",
+  "realises_requirements": [
+   {
+    "figure_provenance": "mixed_read_and_modelled",
+    "how_realised": "The actuation-request and feedback-comparison halves of the requirement's statement are present and reused; the sequencing is realised in the application layer rather than in this driver; the contactor cycle counter the design calls for is not in the source and is declared as a proposal. The reference project's realisation of this requirement is therefore incomplete at revision 1 in the same two respects the as_is record names.",
+    "requirement_id": "FB2-SW-SWR-000003"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "First issue. The reference project's design FB2-SW-DSN-000003 lists 'Count contactor cycles (FRAM persistence)' among its responsibilities. The pinned contactor.c contains no occurrence of fram or of cycle at all, so that element is declared here as an explicit not_in_source proposal rather than being reported as implemented.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000008",
+   "FB2-SRC-COD-000013",
+   "FB2-SRC-COD-000027"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "States where the code for the hypothetical reference project's contactor path is. Makes no claim that it was verified and asserts no ASIL classification for the real product.",
+    "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures.",
+    "reference": "SWE.4 (design-to-code traceability)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Implementation (reference project): Contactor actuation request and auxiliary feedback monitoring, plus a proposed non-volatile contactor cycle counter that the pinned source does not contain",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IMP-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IMP-000003",
+  "revision": "1"
+ }
+}

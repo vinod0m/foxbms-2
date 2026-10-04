@@ -1,0 +1,299 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000071",
+    "rationale": "FB2-REV-000008 reviewed FB2-MAN-SPL-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 and then to 4 for the digest refreshes described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000008",
+    "target_id": "FB2-MAN-SPL-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against design.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-SCOPE-DESIGN-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000008",
+     "review_path": "docs/artifacts/reviews/records/review-scope-planning-scenarios.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "system_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-scope-planning-scenarios.json",
+      "reviewed_by link FB2-LNK-REVB-000071 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C01-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6 with status `mapped` on the grounds: Safety plan"
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C02-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 MAN.3, MAN.5 with status `mapped` on the grounds: Project and risk management"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 2607,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/management/safety-plan.json",
+  "record_sha256": "d3a677c7a416ad5951663e7fc011edc59cc78ce768219d267fde2051277c5e83",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "143200f6abc0d7806e40f0ce7a147df556e86493f27e75a051927860f27a537a"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-MAN-SPL-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the safety_manager for this management record, do you agree that \"Safety Plan: foxBMS 2 Reference BMS\" is a correct and complete statement of safety management, safety culture, escalation?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "design",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behavior_model": {},
+  "budgets": {},
+  "constraints": [
+   "ISO 26262:2018 compliance for ASIL D functions",
+   "ASPICE PAM 4.1 process compliance",
+   "Independent confirmation for ASIL D (not achieved in synthetic)",
+   "Tool confidence classification for all tools"
+  ],
+  "created_at": "2026-09-08T00:00:00Z",
+  "decisions": [
+   {
+    "alternatives": [
+     "Full ASIL D",
+     "ASIL B with independent monitor"
+    ],
+    "decision_id": "DEC-SAF-001",
+    "rationale": "Addresses timing budget violation in main path",
+    "selected": "ASIL D with independent HW monitor (ASIL B)"
+   },
+   {
+    "alternatives": [
+     "Internal confirmation",
+     "External assessor"
+    ],
+    "decision_id": "DEC-SAF-002",
+    "rationale": "Corpus is synthetic; real assessment not applicable",
+    "selected": "Synthetic AI-assisted review (human pending)"
+   }
+  ],
+  "decomposition": [],
+  "design_level": "architecture",
+  "engineering_domain": "management",
+  "failure_response": [],
+  "human_approval_status": "pending",
+  "id": "FB2-MAN-SPL-000001",
+  "implementation_mapping": [],
+  "interfaces": [],
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "safety_manager",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "responsibilities": [
+   "Define safety activities and milestones",
+   "Assign safety roles and responsibilities",
+   "Define safety analysis methods and tools",
+   "Plan verification and validation activities",
+   "Define confirmation measures and independence",
+   "Plan safety-oriented configuration management",
+   "Define safety culture and escalation arrangements"
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "safety_manager",
+    "date": "2026-09-08T00:00:00Z",
+    "description": "Synthetic safety plan",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Safety plan",
+    "reference": "Part 2, Clause 6",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Project and risk management",
+    "reference": "MAN.3, MAN.5",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Safety Plan: foxBMS 2 Reference BMS",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "design",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "safety_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-MAN-SPL-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-MAN-SPL-000001",
+  "revision": "1"
+ }
+}

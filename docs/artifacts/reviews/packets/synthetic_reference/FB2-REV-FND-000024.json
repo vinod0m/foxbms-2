@@ -1,0 +1,328 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-FND-000112",
+    "rationale": "The finding is an input to the named record: The finding records a contradiction between FB2-SAF-FSR-000003 and the safety goal; the technical concept is where the two figures are set side by side. The finding itself is not resolved by the existence of that record and says so.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "supports",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-FND-000024",
+    "target_id": "FB2-SAF-TSC-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000172",
+    "rationale": "FB2-REV-000013 reviewed FB2-REV-FND-000024 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000013",
+    "target_id": "FB2-REV-FND-000024"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000013",
+     "review_path": "docs/artifacts/reviews/records/review-concept-system-validation.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-concept-system-validation.json",
+      "reviewed_by link FB2-LNK-REVB-000172 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.subject_artifact_id` names FB2-SAF-FSR-000003."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C02-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.9 with status `mapped` on the grounds: Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6.4 (monitoring and measurement) with status `mapped` on the grounds: The obligation to record rather than to conceal."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C04-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by None; method \"docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.\"; 1/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `high`, category `consistency`, disposition `resolved`. Its resolution text names a corpus id: True."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 9992,
+  "record_path": "docs/artifacts/reviews/findings/finding-000024-saf-fsr-000003.json",
+  "record_sha256": "b6bac8e2cf50fe99c85540d43f5c16f382cdeabd0023dc3a1758db9201ff9788",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "331372cee108066ded9b11da8aab15598937c39dbcbebe2ca918e1f0b4fa9cf4"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-FND-000024.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the quality_engineer for this safety record, do you agree that \"Finding FB2-REV-FND-000024: the contactor reaction requirement contradicts itself: a 30 ms acceptance threshold against a 35 ms chain in its own rationale and 40 ms in the safety \u2026\" is a correct and complete statement of verification and quality process records and their evidence?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `resolved`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "closure",
+   "priority": 12,
+   "question": "Does the named fix actually close the condition, on the current tree?",
+   "what_in_this_packet_bears_on_it": "resolution text; the named record id or rule.",
+   "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "consistency",
+  "created_at": "2026-09-29T00:00:00Z",
+  "disposition": "resolved",
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "safety",
+  "evidence": "Three figures in the corpus disagree about the same reaction. FB2-SAF-FSR-000003 states: acceptance criterion 'Contactor open latency, Time from FAULT request to contactor feedback open, 30 ms'; rationale '30 ms mechanical opening + 5 ms feedback = 35 ms within FTTI budget'; and the safety goal's timing_budget.allocation gives contactor_command 5 + contactor_mechanical 30 + feedback_verification 5 = 40 ms after the fault request. The requirement's own threshold is therefore 10 ms tighter than its own arithmetic and 5 ms tighter than the budget it is spending from. FB2-SAF-FSR-000003 also states a 5 ms coil de-energise criterion, which is consistent with the 5 ms contactor_command allocation, so the requirement is internally coherent on the command and incoherent on the completion.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000024",
+  "impact": "A requirement whose threshold is tighter than its own mechanism's budget will fail, and when it fails the failure will look like a defect in the contactor driver rather than a defect in the requirement, so the engineering effort goes to the wrong place. It also makes the safety goal's 100 ms interval unverifiable at the end of the chain: the existing acceptance criteria, taken together, claim a reaction that is faster than the sum of the recorded parts. Any verification measure written against FB2-SAF-FSR-000003 inherits an unachievable threshold.",
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "reviewed: the subject record(s) named by this finding were corrected at source in a separate, controlled remediation pass, each with its revision incremented and a revision_history entry appended, and the correction was verified by re-running the corpus validator, the toolchain self-tests and the acceptance suite. 'reviewed' records that the correction and its dependents have been through a review pass. It does NOT mean approved: no human has confirmed this finding or any record it names, human_approval_status remains pending, no tool is claimed to be qualified, no certification is claimed and no ASPICE capability level is claimed. The disposition stays 'accepted' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is recorded in the resolution and revision history.",
+  "origin": "synthetic",
+  "owner_role": "quality_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "resolution": "RESOLVED, and the vocabulary member is corrected from 'accepted' to 'resolved'. Re-verified on 2026-09-30T00:00:00Z: FB2-SAF-FSR-000003's acceptance criteria now carry 'Contactor open latency / Time from FAULT request to contactor feedback open (auxiliary contacts confirm open) / 40 ms', plus a separate 'Contactor mechanically open latency' criterion at 35 ms and a 'Coil de-energise to mechanically open' criterion at 30 ms that asks for FB2-PRM-000005's value under its own label.\n\nThe reasoning this record used still holds and is the reason the fix is not a loose number: 30 ms is the mechanical opening time alone, 35 ms is command-plus-actuation and was wrong where it appeared because it omitted the 5 ms coil-command segment the same requirement budgets separately, and 40 ms is the figure for the quantity the criterion actually names. The threshold was made HARDER to claim compliance with, not easier, and the real foxBMS source was consulted first and cannot settle the number - CONT_OpenContactor carries no timing constant - so FB2-PRM-000005 is the authority and it was not edited. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "CLOSED",
+   "condition_still_holds": false,
+   "date": "2026-09-30T00:00:00Z",
+   "disposition_before": "accepted",
+   "evidence": "the asserted condition is a 30 ms 'Time from FAULT request to contactor feedback open' against a 35 ms rationale and a 40 ms budget. Measured: the criterion 'Contactor open latency' now carries threshold '40'; the mechanical-only point is now a separate criterion at '30' ms and the 30 ms mechanical figure is asked for under its own label (['Coil de-energise to mechanically open']). The record is at revision 3.",
+   "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+   "revision_before": "2"
+  },
+  "revision": "3",
+  "revision_history": [
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Finding raised while authoring the ISO 26262 Part 3 concept and post-development lifecycle work of this pass. The subject record is a pre-existing canonical record and was NOT edited: recording the contradiction is the required action and correcting the record is a controlled change that this pass does not make.",
+    "revision": "1"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Reconciled the three contactor-reaction figures to the chain points they each measure: FB2-SAF-FSR-000003 revision 1 -> 2 (40 ms to feedback open, 35 ms to mechanically open, 30 ms mechanical), and regenerated the dependents FB2-HW-TSR-000003, FB2-SAF-SGO-000001, FB2-SAF-TSC-000001 and FB2-SAF-FSC-000001. Consulted the real source via graft before deciding; the source carries no timing constant, so the parameter registry is the authority. The 50 ms vs 100 ms weld-detection disagreement between the two records was left undecided and is reported.",
+    "revision": "2"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED 2026-09-30T00:00:00Z against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: CLOSED. Disposition migrated from 'accepted' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "3"
+   }
+  ],
+  "root_cause": "The requirement was written with a round 30 ms target derived from the mechanical opening time alone (FB2-ASM-006 states 30 ms worst case), and the command and feedback segments were added to the rationale and to the safety goal's budget without the threshold being recomputed. The 30 ms figure is a plausible-looking round number that survived because nothing reconciled the three places it appears.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "high",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit.",
+    "reference": "SUP.9",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The obligation to record rather than to conceal.",
+    "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "subject_artifact_id": "FB2-SAF-FSR-000003",
+  "title": "Finding FB2-REV-FND-000024: the contactor reaction requirement contradicts itself: a 30 ms acceptance threshold against a 35 ms chain in its own rationale and 40 ms in the safety goal's budget",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "synthetic",
+  "owner_role": "quality_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-FND-000024"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-FND-000024",
+  "revision": "3"
+ }
+}

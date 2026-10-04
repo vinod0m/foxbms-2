@@ -1,0 +1,516 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-IMP-000107",
+    "rationale": "FB2-SW-IMP-000004 is the implementation element the reference project relies on for FB2-SYS-SYR-000007: the periodic BMS-state frame is the publication mechanism for the item's own mode. The link asserts partial realisation only - the requirement's limit-publication and diagnosable-refusal criteria have no code path in the pinned source and the refusal is declared as a not_in_source proposal on the implementation record.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IMP-000004",
+    "target_id": "FB2-SYS-SYR-000007"
+   },
+   {
+    "link_id": "FB2-LNK-IFS-000007",
+    "rationale": "The CAN implementation record maps the transport to named symbols in the pinned source. FB2-SW-IFS-000004 adds what that mapping cannot carry: that the identifier argument is deliberately not range-checked, that a full transmit mailbox causes the queue pump to discard the frame in a branch whose body is empty, and that interrupts are masked around the message-box search. It refines the implementation record because the implementation record is the coarser statement of what this boundary does.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IFS-000004",
+    "target_id": "FB2-SW-IMP-000004"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against implementation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (3)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "3/3 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000037, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `279-562`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_ConfigureRxMailboxesForExtendedIdentifiers`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000065, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `643-692`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_RxInterrupt`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000066, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `1015-1031`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_ReadRxBuffer`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000037 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000037."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000065 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000065."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000066 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000066."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000007 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.realises_requirements[0].requirement_id` names FB2-SYS-SYR-000007."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000037 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000037."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000065 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[1]` names FB2-SRC-COD-000065."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000066 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[2]` names FB2-SRC-COD-000066."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C11-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 (this record is a code location, not a verification record) with status `partially_mapped` on the grounds: States where the code for the reference project's communication path is. Makes no claim that it was verified and asserts no ASIL classification for the real product."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C12-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 (design-to-code traceability) with status `gap` on the grounds: There is no software design artefact for the CAN transport in either profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 15676,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/implementation-can-transport.json",
+  "record_sha256": "e778fdd6b21d27664c18463bf178c1ff2fd5dada5e4883ddec6c9d6f7f5276fa",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "e778fdd6b21d27664c18463bf178c1ff2fd5dada5e4883ddec6c9d6f7f5276fa"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "The three anchors referenced are the same pre-existing anchors the as_is CAN record uses, because both profiles describe the same real source. The two BMS-state callback locations have no anchor and none was created; they are named in this record's code_locations with their own pinned content hashes so that they remain independently verifiable without extending the shared anchor set."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IMP-000004.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Implementation (reference project): CAN transport and the periodic BMS-state frame the reference project relies on for state publication, with a proposed request-refusal publicati\u2026\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anchor_refs": [
+   "FB2-SRC-COD-000037",
+   "FB2-SRC-COD-000065",
+   "FB2-SRC-COD-000066"
+  ],
+  "artifact_type": "implementation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behaviours": [
+   {
+    "behaviour_id": "CAN-IMP-MAILBOX-CFG",
+    "description": "Programs the peripheral's receive mailboxes for extended identifiers from literal constants copied from the vendor HAL configuration, the origin of the in-source MISRA deviation recorded against this function.",
+    "evidence_line_range": "272-565",
+    "evidence_symbol": "CAN_ConfigureRxMailboxesForExtendedIdentifiers",
+    "kind": "startup"
+   },
+   {
+    "behaviour_id": "CAN-IMP-RX-IS",
+    "description": "Receive interrupt: reads a frame, accepts it only when no data was lost and the queues exist, derives the identifier width from the mailbox number, and enqueues it.",
+    "evidence_line_range": "643-692",
+    "evidence_symbol": "CAN_RxInterrupt",
+    "kind": "interrupt_dispatch"
+   },
+   {
+    "behaviour_id": "CAN-IMP-QUEUE-FULL-DIAG",
+    "description": "Reports the receive queue's full condition as a diagnosis entry on both the accepted and the refused outcome, so a dropped frame is distinguishable from a delivered one.",
+    "evidence_line_range": "682-691",
+    "evidence_symbol": "CAN_RxInterrupt",
+    "kind": "diagnostic_raise"
+   },
+   {
+    "behaviour_id": "CAN-IMP-RX-DISPATCH",
+    "description": "Drains the receive queue in task context and invokes the callback registered for each frame's node, identifier and identifier width.",
+    "evidence_line_range": "1015-1031",
+    "evidence_symbol": "CAN_ReadRxBuffer",
+    "kind": "arbitration"
+   },
+   {
+    "behaviour_id": "CAN-IMP-TX-PERIODIC",
+    "description": "Empties the transmit queue and services the configured periodic messages when periodic transmission is enabled.",
+    "evidence_line_range": "694-744",
+    "evidence_symbol": "CAN_PeriodicTransmit",
+    "kind": "transfer"
+   },
+   {
+    "behaviour_id": "CAN-IMP-STATE-FRAME",
+    "description": "Builds and transmits the periodic BMS-state frame from the item's own state, including its substate and a system-monitoring timing check. This is the publication mechanism the reference project's state-publication requirement relies on, and it carries no refusal information.",
+    "evidence_line_range": "427-454",
+    "evidence_symbol": "CANTX_BmsState",
+    "kind": "publication"
+   }
+  ],
+  "code_locations": [
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+    "line_range": "272-565",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_ConfigureRxMailboxesForExtendedIdentifiers",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+    "line_range": "643-692",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_RxInterrupt",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+    "line_range": "1015-1031",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_ReadRxBuffer",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6",
+    "line_range": "694-744",
+    "path": "src/app/driver/can/can.c",
+    "repository": "foxbms-2",
+    "symbol": "CAN_PeriodicTransmit",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:eab52a9393c9bb73ec22e1b8bc63edf6f77373f9022eba7aac1065b09334e86a",
+    "line_range": "187-424",
+    "path": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_bms-state.c",
+    "repository": "foxbms-2",
+    "symbol": "CANTX_BuildBmsStateMessage",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:eab52a9393c9bb73ec22e1b8bc63edf6f77373f9022eba7aac1065b09334e86a",
+    "line_range": "427-454",
+    "path": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_bms-state.c",
+    "repository": "foxbms-2",
+    "symbol": "CANTX_BmsState",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   }
+  ],
+  "concurrency_and_isr_context": [
+   {
+    "context": "interrupt",
+    "entry_points": [
+     "CAN_RxInterrupt",
+     "CAN_TxInterrupt"
+    ],
+    "shared_state": "ftsk_canRxQueue, which the interrupt fills through the FromIsr queue API and CAN_ReadRxBuffer drains through the non-Isr one."
+   },
+   {
+    "context": "task",
+    "entry_points": [
+     "CAN_MainFunction",
+     "CAN_ReadRxBuffer",
+     "CANTX_BmsState"
+    ],
+    "shared_state": "The same receive queue, and the transmit path the periodic frame uses. CANTX_BuildBmsStateMessage reads the item's state through accessor calls rather than through shared storage."
+   }
+  ],
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "software",
+  "evidence_status": {
+   "limitations": [
+    "The proposed_location entry names a symbol that DOES NOT EXIST in the pinned source and is not a source anchor. It is a proposal for the hypothetical project and is recorded here precisely so that it cannot be mistaken for a verified location or for an implemented refusal path.",
+    "The absence of a refusal field in the BMS-state frame was established by reading the file at the pinned commit and searching it for refus, which returns no occurrence. It is an absence claim about this file and is stated as such.",
+    "The mailbox numbers, register masks and identifier shift constants inside CAN_ConfigureRxMailboxesForExtendedIdentifiers are deliberately not reproduced here, because their authoritative definition is the external vendor configuration file this corpus cannot read; restating them would create an unverifiable second copy of a register map.",
+    "Behaviour was verified by reading the code. No CAN frame was sent or received and no timing measurement exists in this corpus.",
+    "All five files are unmodified between the pin and the working tree, so the same ranges and hashes hold for the checked-out files."
+   ],
+   "locations_verified": true,
+   "method": "Every code_location was read at the pinned commit with 'git show 308028fb:path'; each content_hash is that pinned blob's sha256. For the four can.c locations the hash equals the value the corresponding pre-existing source-registry anchor already carries; for the two locations in the BMS-state callback file no anchor exists and the hash was computed at the pin for this record. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The can.c spans were cross-read against 'graft skeleton src/app/driver/can/can.c' and the callback spans against 'graft skeleton src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_bms-state.c'."
+  },
+  "guard": {
+   "confers_no_production_authority": true,
+   "confers_no_verification_credit": true,
+   "human_approval_required": true,
+   "is_implementation_evidence": false,
+   "is_verification_result": false,
+   "statement": "This record describes the communication element the hypothetical reference project would reuse, and declares, as a proposal, the refusal publication its own state-publication requirement needs and the pinned source does not contain. It is not evidence that FB2-SYS-SYR-000007 is met: two of that requirement's four acceptance criteria have no code path here, and no frame was sent or received to establish anything. It confers no production authority, no verification credit and no human approval, and it asserts nothing about the real foxBMS product's safety classification."
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IMP-000004",
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source_partial",
+  "implements": {
+   "design_artifact_id": null,
+   "design_gap_reason": "Neither profile contains a software design artefact for the CAN transport. Both profiles' three software design records cover the AFE driver, the SOA module and the contactor driver, none of which describes CAN transport or the vehicle-facing interface. The as_is profile records the same gap in deviation FB2-SW-DEV-000007. Attaching this module to an existing design would assert communication design coverage neither profile has, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13.",
+   "design_level": null,
+   "relationship": "No software design artefact in either profile describes the CAN transport, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source and verified there: CAN_ConfigureRxMailboxesForExtendedIdentifiers (can.c:272-565) programs the peripheral's extended-identifier receive mailboxes from the vendor configuration constants whose provenance the file's own comment records as the TI HALCoGen HL_can.c of 11-Dec-2018; CAN_RxInterrupt (643-692) reads a frame, accepts it only when no data was lost and the queues exist, derives the identifier width from the mailbox number, and enqueues it while reporting the queue-full condition as a diagnosis entry on both outcomes; CAN_ReadRxBuffer (1015-1031) drains that queue and dispatches to the registered callback for the matching node, identifier and width; CAN_PeriodicTransmit (694-744) empties the transmit queue and services the periodic frames. The frame the reference project relies on for state publication is CANTX_BmsState (can_cbs_tx_f_bms-state.c:427-454), which builds the payload in CANTX_BuildBmsStateMessage (187-424) from the item's own state, including the substate read through BMS_GetSubstate at line 202 and a system-monitoring timing check through CANTX_AnySysMonTimingIssueDetected at 171-185. So the element provides transport, buffering, dispatch and the periodic state frame, and does not provide the refusal publication its consumer requirement needs."
+  },
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "proposed_location": [
+   {
+    "proposed_path": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_bms-state.c",
+    "proposed_symbol": "CANTX_PublishRefusedStateRequest",
+    "why_not_in_source": "The reference project's system requirement FB2-SYS-SYR-000007 requires the item to act on a state request from the vehicle control unit only when the request is consistent with its own safety evaluation, and to refuse the request and publish the refusal with its reason where it is not. Its acceptance criteria make refusal diagnosability 100% of refusals. The pinned BMS-state transmit frame contains no refusal field and no refusal reason: a search of the file for refus returns no occurrence, and the frame is built by CANTX_BuildBmsStateMessage from the item's own state only. The application's request check BMS_CheckStateRequest (bms.c:347-366) does return BMS_ILLEGAL_REQUEST or BMS_ALREADY_INITIALIZED for a request it will not accept, but nothing publishes that return value to the vehicle control unit, so the requirement's diagnosable-refusal criterion has no code path in the product. The proposed symbol is a new element the reference project would have to add; it does not exist in the product and is not presented as if it did."
+   }
+  ],
+  "provenance_note": "The three anchors referenced are the same pre-existing anchors the as_is CAN record uses, because both profiles describe the same real source. The two BMS-state callback locations have no anchor and none was created; they are named in this record's code_locations with their own pinned content hashes so that they remain independently verifiable without extending the shared anchor set.",
+  "realises_requirements": [
+   {
+    "figure_provenance": "modelled_not_in_source",
+    "how_realised": "Partially. The publication half is realised: CANTX_BmsState builds and transmits a periodic frame carrying the item's own state, which is the mechanism by which mode is published. The limit-publication half is not realised by this element - charge and discharge limits are carried by different frames in the same callback directory - and the refusal half is not realised at all and is declared in proposed_location as not_in_source. The reference project's realisation of this requirement is therefore incomplete at revision 1 on two of its four acceptance criteria.",
+    "requirement_id": "FB2-SYS-SYR-000007"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "First issue. The reference project's system requirements FB2-SYS-SYR-000007 and -000008 need a communication element to exist in the graph for the chain from the designs to code to be traversable, and the pinned source's CAN transport and BMS-state frame are the code the reference project would reuse for them. Authored with the refusal path that SYR-000007 requires and the source does not have, declared as a proposal.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000037",
+   "FB2-SRC-COD-000065",
+   "FB2-SRC-COD-000066"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "States where the code for the reference project's communication path is. Makes no claim that it was verified and asserts no ASIL classification for the real product.",
+    "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "There is no software design artefact for the CAN transport in either profile. The gap is declared rather than closed by attaching this module to an unrelated design.",
+    "reference": "SWE.4 (design-to-code traceability)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "gap"
+   }
+  ],
+  "title": "Implementation (reference project): CAN transport and the periodic BMS-state frame the reference project relies on for state publication, with a proposed request-refusal publication the pinned source does not contain",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IMP-000004"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IMP-000004",
+  "revision": "1"
+ }
+}

@@ -1,0 +1,459 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000001",
+    "rationale": "Safety goal directly mitigates cell voltage hazard",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "mitigates",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-SGO-000001",
+    "target_id": "FB2-SAF-HAZ-000001"
+   },
+   {
+    "link_id": "FB2-LNK-CHG-000002",
+    "rationale": "The hazard record expresses its degraded state in terms of the derating level, and this change rebuilds the warning/derating/shutdown ladder that defines it. The hazardous event itself does not move; the degraded-state boundary does.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "changes",
+    "review_state": "pending",
+    "source_id": "FB2-MAN-CHG-000001",
+    "target_id": "FB2-SAF-HAZ-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000001",
+    "rationale": "FB2-REV-000009 reviewed FB2-SAF-HAZ-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000009",
+    "target_id": "FB2-SAF-HAZ-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000049",
+    "rationale": "FB2-REV-000012 reviewed FB2-SAF-HAZ-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000012",
+    "target_id": "FB2-SAF-HAZ-000001"
+   },
+   {
+    "link_id": "FB2-LNK-CPT-000001",
+    "rationale": "Pre-existing link retained; re-declared here so the concept chain is navigable from the new records. The endpoint revisions are unchanged.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "mitigates",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-SGO-000001",
+    "target_id": "FB2-SAF-HAZ-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VOC-000002",
+    "rationale": "The hazard, hazardous event, malfunctioning behaviour and operational situation entries are defined from this record, because it is the corpus's only populated hazard artefact and because the two profiles' copies of it differ, which is the reading the hazardous event entry records. The recorded source revision was advanced from 1 to 2 for the disambiguation pass; the advance says what this link now points at and is not a statement that this relationship was re-examined or that anything about FB2-SAF-HAZ-000001 moved.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-vocabulary-and-guidelines.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-VOC-000001",
+    "target_id": "FB2-SAF-HAZ-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against artifact-base.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (3)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "2/3 fully checked; see claims"
+   },
+   {
+    "check": "peer review coverage (2 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "2 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 2,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "process",
+     "description": "Structural gap in the review framework, discovered while attempting this very meta review: review.schema.json constrains reviewed_ids[].artifact_id and findings[].artifact_id to a three-segment pattern, but review artifact ids have only two segments. The consequence is that no review record can legally list another review record as a reviewed artifact or as the subject of a finding, so review-rec\u2026",
+     "finding_id": "FB2-REV-FND-000184",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-meta-review-prior-review.json"
+    },
+    {
+     "category": "process",
+     "description": "The corpus's automated_review_coverage dimension cannot observe review records other than one. corpus.py computes the numerator by loading a single hardcoded file, docs/artifacts/reviews/records/review-vertical-slice.json, and reading only its reviewed_ids. Every other review record in docs/artifacts/reviews/records/ is indexed as an artifact, so it enlarges the DENOMINATOR while contributing not\u2026",
+     "finding_id": "FB2-REV-FND-000185",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-meta-review-prior-review.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "process",
+     "description": "Structural gap in the review framework, discovered while attempting this very meta review: review.schema.json constrains reviewed_ids[].artifact_id and findings[].artifact_id to a three-segment pattern, but review artifact ids have only two segments. The consequence is that no review record can legally list another review record as a reviewed artifact or as the subject of a finding, so review-rec\u2026",
+     "finding_id": "FB2-REV-FND-000184",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-meta-review-prior-review.json"
+    },
+    {
+     "category": "process",
+     "description": "The corpus's automated_review_coverage dimension cannot observe review records other than one. corpus.py computes the numerator by loading a single hardcoded file, docs/artifacts/reviews/records/review-vertical-slice.json, and reading only its reviewed_ids. Every other review record in docs/artifacts/reviews/records/ is indexed as an artifact, so it enlarges the DENOMINATOR while contributing not\u2026",
+     "finding_id": "FB2-REV-FND-000185",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-meta-review-prior-review.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-CHALLENGE-SAFETY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000009",
+     "review_path": "docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+     "review_type": "challenge",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000001 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000012",
+     "review_path": "docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+     "review_type": "meta",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000049 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000001, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `124`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_StartMeasurement`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000004, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `81-146`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckVoltages`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "anchor resolves in the registry but claims nothing checkable in this repository: names a fetched URL, not a file in this tree; its content_hash pins one retrieval and cannot be re-checked here The registry's own note on this hash: \"sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"sw-structure\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact.\"",
+   "statement": "This record cites anchor FB2-SRC-DOC-000001, which records anchor class `fetched_url`; url_or_path `https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/structure/software-structure.html`; content_hash `b5e4ee840abf40970f60ed7f6f428b80d84728ce74773e570547b8be6c5f5d91`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-DOC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-DOC-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 3, Clause 6 with status `mapped` on the grounds: Hazard analysis for E/E system"
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C08-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 6 with status `mapped` on the grounds: System-level hazard analysis"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 3819,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json",
+  "record_sha256": "779a56395692b0f20811c9d1e06e82816da94f1e8b3a2315140c9dfeed3ae6f3",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "ea8b1a27eb1f3cc3315b59db5b65c82174dd7728b92fd663904f29bd93904666"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes. Origin remains synthetic, which already declared this content modelled rather than observed."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SAF-HAZ-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the safety_engineer for this safety record, do you agree that \"Cell Overvoltage / Undervoltage Hazard\" is a correct and complete statement of hazard analysis, safety goals, FSR/TSR allocation, safety analyses, the safety case?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "2 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "unverifiable provenance",
+   "priority": 25,
+   "question": "1 of this record's source anchors cannot be checked against this repository. Does the claim still hold, on evidence outside the corpus?",
+   "what_in_this_packet_bears_on_it": "The anchors' entries in the claims section.",
+   "why_this_needs_a_human": "The corpus declines to make a statement it cannot support. Whether the claim is nonetheless true is a human question."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "hazard",
+  "assumption_refs": [
+   "FB2-ASM-001",
+   "FB2-ASM-002",
+   "FB2-ASM-003"
+  ],
+  "assumptions": [
+   "Vehicle provides independent HW monitoring (e.g., redundant voltage monitor ASIL B)",
+   "Charger respects BMS charge current limits",
+   "Contactor opening is irreversible without service tool",
+   "FRAM retains fault data across power cycles"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "created_at": "2026-09-08T00:00:00Z",
+  "degraded_states": [
+   "Reduced charge current to 0.1C (derating)",
+   "Balancing disabled for affected cell group",
+   "Reduced discharge current to 0.5C",
+   "Enhanced monitoring: 1 Hz acquisition for affected cells"
+  ],
+  "engineering_domain": "safety",
+  "hazardous_events": [
+   {
+    "asil": "ASIL_D",
+    "controllability": "C3",
+    "description": "Cell overvoltage during charging leading to thermal runaway",
+    "exposure": "E4",
+    "id": "HE-01",
+    "operational_situation": "CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45\u00b0C",
+    "rationale": "Thermal runaway can cause fire/explosion with fatal injuries; continuous exposure during charging; driver cannot detect or control individual cell overvoltage",
+    "severity": "S3"
+   },
+   {
+    "asil": "ASIL_B",
+    "controllability": "C2",
+    "description": "Cell undervoltage during discharge leading to copper shunts and potential thermal event on subsequent recharge",
+    "exposure": "E3",
+    "id": "HE-02",
+    "operational_situation": "NORMAL mode, deep discharge (<2.0V/cell), high load, low temperature",
+    "rationale": "Cell damage creates latent failure; moderate exposure during deep discharge; vehicle may provide warning but driver may ignore",
+    "severity": "S2"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SAF-HAZ-000001",
+  "lifecycle_status": "baselined",
+  "malfunctioning_behavior": "AFE reports incorrect cell voltage (stuck-at, drift, communication error) OR SOA fails to detect limit violation OR contactor fails to open on violation OR BMS fails to request contactor opening",
+  "origin": "synthetic",
+  "owner_role": "safety_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes. Origin remains synthetic, which already declared this content modelled rather than observed.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "safety_engineer",
+    "date": "2026-09-08T00:00:00Z",
+    "description": "Synthetic hazard analysis for hypothetical automotive BMS project",
+    "revision": "1"
+   }
+  ],
+  "safe_states": [
+   "All HV contactors open (HV bus isolated from pack)",
+   "Charging permanently disabled until service",
+   "Fault logged to FRAM with timestamp and cell index",
+   "Vehicle propulsion disabled (torque request = 0)"
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000001",
+   "FB2-SRC-COD-000004",
+   "FB2-SRC-DOC-000001"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Hazard analysis for E/E system",
+    "reference": "Part 3, Clause 6",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "System-level hazard analysis",
+    "reference": "Part 4, Clause 6",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Cell Overvoltage / Undervoltage Hazard",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "hazard",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "safety_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SAF-HAZ-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SAF-HAZ-000001",
+  "revision": "1"
+ }
+}

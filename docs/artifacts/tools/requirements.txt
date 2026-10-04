@@ -1,0 +1,67 @@
+# Python dependencies for the foxBMS 2 ASPICE corpus tooling
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# `docs/artifacts/tools/corpus.py` exits with status 2 and the single line
+#
+#     ERROR: jsonschema library required (pip install jsonschema)
+#
+# if `jsonschema` cannot be imported, and `make_review_packets.py` reports its
+# schema checks as "validator unavailable" rather than failing. Neither
+# dependency was declared anywhere in this repository until now, and neither is
+# declared by any packaging manifest, because there is no packaging manifest:
+# the corpus tooling is a set of scripts run directly with the system `python3`.
+#
+# The consequence is that the acceptance suite does not degrade, it DISAPPEARS.
+# On a machine without `jsonschema`, `corpus.py check` never runs at all, and a
+# reader who has not read the source would reasonably conclude the corpus is
+# unverified rather than un-runnable. That is the wrong conclusion, and it is the
+# reason this file is pinned rather than left as a note in a README.
+#
+# WHAT IS NEEDED, AND WHERE IT IS USED
+# ------------------------------------
+#   jsonschema   corpus.py          - `validate` and `check` validate every one
+#                                     of the 321 records against its schema in
+#                                     docs/artifacts/schemas/*.schema.json.
+#   jsonschema   make_review_packets.py - section 5.1 of every review packet
+#                                     reports whether the record is schema-valid,
+#                                     re-derived independently of corpus.py.
+#   referencing  both              - a transitive dependency of jsonschema, but
+#                                     the corpus schemas use relative `$ref`
+#                                     (`./artifact-base.schema.json`), which
+#                                     jsonschema resolves only through a
+#                                     `referencing.Registry`. Both corpus.py and
+#                                     make_review_packets.py import it explicitly
+#                                     and both fall back to a registry-less
+#                                     validator without it, which silently drops
+#                                     cross-file $ref resolution. It is pinned
+#                                     here so that fallback is not reached by
+#                                     accident.
+#
+# `referencing` was resolved at 0.35.1 in the environment these packets were
+# generated in; jsonschema 4.25.1. The jsonschema floor below is the version
+# from which `referencing` is a declared dependency, and is deliberately loose:
+# the corpus uses no jsonschema feature newer than Draft 2020-12 validation.
+#
+# INSTALL
+# -------
+#   python3 -m pip install --user -r docs/artifacts/tools/requirements.txt
+#
+# `--user` rather than a virtualenv because the corpus tooling is documented and
+# invoked as `python3 docs/artifacts/tools/corpus.py ...` against the SYSTEM
+# interpreter. If you use a virtualenv instead, install it there and invoke that
+# interpreter; nothing in the tooling hardcodes `python3` except the self-test
+# that shells out to the packet generator, and that uses `sys.executable`, so it
+# follows whatever interpreter is running the suite.
+#
+# Verify with:
+#
+#   python3 -c "import jsonschema, referencing; print(jsonschema.__version__)"
+#   python3 docs/artifacts/tools/corpus.py check
+#
+# A second, unrelated prerequisite - `git-lfs` - is required for the clean
+# checkout proof and is NOT installable from this file. See
+# docs/artifacts/governance/closing-list.md, "Prerequisites".
+
+jsonschema>=4.18
+referencing>=0.30

@@ -1,0 +1,450 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SYR-000121",
+    "rationale": "This measure is the source-grounded part of FB2-SYS-SYR-000001's verification: it decides the requirement's integrity-before-use and data-age criteria against the mechanism the pinned source defines, namely the per-LTC packet error code comparison and the database header timestamp. The link asserts those two criteria only; the requirement's acquisition-rate criterion is deliberately not covered here and is covered by FB2-VER-TMS-000022 under a different oracle kind.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "verifies",
+    "review_state": "pending",
+    "source_id": "FB2-VER-TMS-000021",
+    "target_id": "FB2-SYS-SYR-000001"
+   },
+   {
+    "link_id": "FB2-LNK-EXE-000121",
+    "rationale": "FB2-VER-EXE-000021 is the execution record for FB2-VER-TMS-000021. It carries execution_kind 'none' and outcome 'blocked' with the specific unblock condition that applies to that measure, so the link asserts that an execution record exists and honestly reports that nothing was run. It is not evidence that the measure passed.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "result_of",
+    "review_state": "pending",
+    "source_id": "FB2-VER-EXE-000021",
+    "target_id": "FB2-VER-TMS-000021"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against test_measure.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (2)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "2/2 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000001, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `124`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_StartMeasurement`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000034, which records anchor class `repository_file`; path `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`; line_range `112-117`; content_hash `f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a`; symbol `ltc_RxPecBuffer`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000034 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000034."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_requirements[0]` names FB2-SYS-SYR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_designs[0]` names FB2-SW-DSN-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SYS.4 (system integration testing) and SYS.5 (system verification) with status `partially_mapped` on the grounds: This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C08-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 9 (system verification) with status `partially_mapped` on the grounds: Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+  },
+  {
+   "claim_class": "verification_oracle",
+   "claim_id": "C09-oracle",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the criterion would actually FAIL if the property it names were violated. A criterion that cannot fail is the defect this corpus's own FB2-REV-FND-000042 is about.",
+   "machine_state": "count only; whether a criterion is decidable is not machine-checkable",
+   "statement": "This measure declares 0 acceptance criterion/criteria and method `not stated`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 10381,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000001-integrity-and-data-age.json",
+  "record_sha256": "7c639cc511554db9b57a9e42e3160cc3cae39c1ee005cfaf109368e6a0ea6743",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "37de0f982acf81591d9dc8da52e5df212353b1e9fc8a8177aa0567111c2178f0"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "The integrity and age criteria are verified structurally against the source; the acquisition-rate criterion of the same requirement is not verified by this measure and is not silently counted as verified.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+    "The corrupted-frame injection requires a controllable SPI stub, which the unit-test build provides for the driver but which this corpus has not run; the measure states the capability it depends on rather than assuming it.",
+    "This is a synthetic measure. It establishes nothing about the real foxBMS product and no ASIL is claimed for it."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-TMS-000021.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Test: every transferred cell-voltage value is integrity-checked before any decision consumes it, and every published value carries a usable age\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "oracle strength",
+   "priority": 5,
+   "question": "This measure declares 0 acceptance criterion/criteria. For each, would the criterion actually FAIL if the property it names were violated?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria in section 3.",
+   "why_this_needs_a_human": "A test that cannot fail is indistinguishable from a passing test. This corpus measured 53 such files in its own suite and recorded it as FB2-REV-FND-000042."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "test_measure",
+  "assumption_refs": [
+   "FB2-ASM-001",
+   "FB2-ASM-004"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "cleanup": "Restore the stubbed SPI interface, re-run one uncorrupted cycle to confirm the driver is back in its nominal state, and drop the injected frames.",
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "conf/unit/app_project_posix.yml with FOXBMS_AFE_DRIVER_LTC=1u, which is the configuration the repository's own unit-test build selects",
+   "hardware": "POSIX host (Linux) running the unit-test build, with the AFE driver and the database linked and the SPI interface stubbed",
+   "software": "foxBMS 2 application firmware built with the unit-test configuration",
+   "tools": [
+    "GCC",
+    "CMock",
+    "Unity"
+   ]
+  },
+  "expected_outcomes": [
+   {
+    "expected_value": "100",
+    "signal": "cycles_with_integrity_decided_before_use",
+    "tolerance": "exact",
+    "unit": "cycles"
+   },
+   {
+    "expected_value": "0",
+    "signal": "corrupted_frames_consumed_unchallenged",
+    "tolerance": "exact",
+    "unit": "frames"
+   },
+   {
+    "expected_value": "100",
+    "signal": "published_blocks_with_readable_age",
+    "tolerance": "exact",
+    "unit": "blocks"
+   },
+   {
+    "expected_value": "true",
+    "signal": "age_monotonic_across_cycles",
+    "tolerance": "exact",
+    "unit": "bool"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-TMS-000021",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "The integrity and age criteria are verified structurally against the source; the acquisition-rate criterion of the same requirement is not verified by this measure and is not silently counted as verified.",
+   "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+   "The corrupted-frame injection requires a controllable SPI stub, which the unit-test build provides for the driver but which this corpus has not run; the measure states the capability it depends on rather than assuming it.",
+   "This is a synthetic measure. It establishes nothing about the real foxBMS product and no ASIL is claimed for it."
+  ],
+  "objective": "Confirm two of FB2-SYS-SYR-000001's four acceptance criteria against the pinned source's own mechanism: that the integrity of every transferred value is decided before any decision uses it, and that each published value carries an age that can be read. The integrity criterion is judged against LTC_CheckPec's per-LTC comparison and the fact that a PEC mismatch marks the cell-voltage entry invalid before the parsed values reach the database; the age criterion is judged against the database header timestamp that every write path stamps. The acquisition-rate criterion is deliberately NOT verified here: its figure is a modelled parameter and is covered by a separate measure with a different oracle.",
+  "oracle_basis": "source_grounded",
+  "oracle_detail": {
+   "kind": "source_grounded",
+   "oracle_kind": "source_grounded",
+   "residual_risk": "A source-grounded oracle rests on the code doing what this pass read it to do. If the invalid flag were cleared downstream before a decision reads the block, this oracle would still pass.",
+   "what_it_still_does_not_prove": "It does not prove the corrupted frame is rejected at the AFE rather than merely marked, and it does not prove any downstream decision in the reference project actually consults the invalid flag rather than the raw value. It says nothing about the acquisition rate, which is the fourth acceptance criterion and is covered elsewhere.",
+   "what_the_oracle_is_not": "It is not a measured reference: no block header was read from a running system in this authoring pass, so the property is asserted from the code and not yet observed. It is not an analytical model: no arithmetic model of the integrity path was computed. It is not a synthetic assumption: the property asserted is a property of the code that exists, not an assumption about this programme.",
+   "why_this_oracle": "The oracle is the mechanism the pinned source itself defines, read from the code rather than from the item's output. 'A transferred value whose recomputed packet error code differs from the received one is marked invalid, and an invalid value is not consumed by a decision' is what LTC_CheckPec (ltc_6813-1.c:3838-3878) and the invalidCellVoltage flag it sets at line 641 do. 'A published block carries an age' is what DATA_CopyData (database.c:164-196) does when it copies previousTimestamp and sets timestamp from OS_GetTickCount on every write. Both properties are therefore falsifiable against the source without running the item, which is what makes them usable as oracles at all."
+  },
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "preconditions": [
+   "The reference project's AFE driver is initialised and a measurement cycle has completed at least once.",
+   "The database is initialised so that a write stamps the block header.",
+   "The AFE plausibility entry is available for the range check."
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "referenced_designs": [
+   "FB2-SW-DSN-000001"
+  ],
+  "referenced_requirements": [
+   "FB2-SYS-SYR-000001"
+  ],
+  "regression_selection": "Re-run on every change to LTC_CheckPec, to the invalidCellVoltage handling, to the database write path or to the header timestamp update. Also re-run whenever a new decision path is added that reads the cell-voltage block, because this oracle says nothing about how that path uses the invalid flag.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "Authored because FB2-SYS-SYR-000001 had no verifies link in either direction, so the corpus's own audit reported it as an unverified system requirement. The measure separates the two of the requirement's four criteria that the pinned source can be falsified against from the acquisition-rate criterion, which cannot, and declares the oracle kind of each.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000001",
+   "FB2-SRC-COD-000034"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met.",
+    "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct.",
+    "reference": "Part 4, Clause 9 (system verification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "steps": [
+   {
+    "action": "Run 100 measurement cycles with uncorrupted frames and record the PEC validity flag and the header timestamp for each published block.",
+    "expected": "Every cycle reports PEC valid and every published block carries a non-zero header timestamp.",
+    "step": 1
+   },
+   {
+    "action": "Run 100 measurement cycles in which exactly one LTC's PEC is corrupted, and record the PEC validity flag, the per-cell invalid flag and the value a supervisory decision reads.",
+    "expected": "The corrupted LTC's PEC validity flag is false, its per-cell invalid flag is true, and no decision reads a value for that cell that is not marked invalid.",
+    "step": 2
+   },
+   {
+    "action": "Suppress the database write for one cycle and read the header timestamp again.",
+    "expected": "The header timestamp does not advance for the suppressed cycle, so the age of the last published value is observable rather than inferred.",
+    "step": 3
+   },
+   {
+    "action": "Compare the age implied by the header timestamp against the number of measurement cycles elapsed.",
+    "expected": "The age increases monotonically and by one acquisition period per elapsed cycle.",
+    "step": 4
+   }
+  ],
+  "stimuli": [
+   {
+    "signal": "AFE SPI response frame with a deliberately corrupted PEC byte",
+    "timing": "one injection per measurement cycle, for 100 consecutive cycles",
+    "value": "one frame per corrupted cell group, PEC recomputed so that exactly one LTC in the frame mismatches"
+   },
+   {
+    "signal": "Database write observation",
+    "timing": "on every write",
+    "value": "read of the cell-voltage block header after every write"
+   },
+   {
+    "signal": "Decision-path observation",
+    "timing": "on every cycle",
+    "value": "the value a supervisory decision reads for the affected cell"
+   }
+  ],
+  "test_type": "integration",
+  "timing": {
+   "max_execution_time_ms": 120000,
+   "setup_time_ms": 60000,
+   "teardown_time_ms": 30000
+  },
+  "title": "Test: every transferred cell-voltage value is integrity-checked before any decision consumes it, and every published value carries a usable age",
+  "tolerances": {
+   "age_monotonic_across_cycles": "exact",
+   "corrupted_frames_consumed_unchallenged": "exact",
+   "cycles_with_integrity_decided_before_use": "exact",
+   "published_blocks_with_readable_age": "exact"
+  },
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-TMS-000021"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-TMS-000021",
+  "revision": "1"
+ }
+}

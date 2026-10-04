@@ -1,0 +1,1361 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-LIF-000105",
+    "rationale": "The project plan schedules the system-requirements package that produced this requirement; the plan's work-breakdown entry names it as a deliverable.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-MAN-PLN-000001",
+    "target_id": "FB2-SYS-SYR-000001"
+   },
+   {
+    "link_id": "FB2-LNK-LIF-000108",
+    "rationale": "Configuration management baselines the records the project plan's gates release.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-SUP-CFM-000001",
+    "target_id": "FB2-MAN-PLN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000136",
+    "rationale": "FB2-REV-000014 reviewed FB2-MAN-PLN-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-MAN-PLN-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against project_plan.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000136 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-ITE-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[0].deliverable_records[0]` names FB2-SAF-ITE-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-HAZ-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[0].deliverable_records[1]` names FB2-SAF-HAZ-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[0].deliverable_records[2]` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[0].deliverable_records[3]` names FB2-SAF-FSC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[1].deliverable_records[0]` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[1].deliverable_records[1]` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[1].deliverable_records[2]` names FB2-SAF-FSR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[1].deliverable_records[3]` names FB2-SAF-FSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TSC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[1].deliverable_records[4]` names FB2-SAF-TSC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-NED-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[0]` names FB2-SYS-NED-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-NED-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[1]` names FB2-SYS-NED-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-NED-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[2]` names FB2-SYS-NED-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-NED-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[3]` names FB2-SYS-NED-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-NED-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[4]` names FB2-SYS-NED-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-UC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[5]` names FB2-SYS-UC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-UC-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[6]` names FB2-SYS-UC-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-UC-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[7]` names FB2-SYS-UC-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-UC-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[8]` names FB2-SYS-UC-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[9]` names FB2-SYS-SYR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[10]` names FB2-SYS-SYR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C21-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[11]` names FB2-SYS-SYR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C22-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[12]` names FB2-SYS-SYR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C23-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[13]` names FB2-SYS-SYR-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C24-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[14]` names FB2-SYS-SYR-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C25-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000007 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[15]` names FB2-SYS-SYR-000007."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C26-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[2].deliverable_records[16]` names FB2-SYS-SYR-000008."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C27-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[3].deliverable_records[0]` names FB2-HW-TSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C28-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[3].deliverable_records[1]` names FB2-HW-TSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C29-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[3].deliverable_records[2]` names FB2-HW-TSR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C30-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[3].deliverable_records[3]` names FB2-HW-TSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C31-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[3].deliverable_records[4]` names FB2-SW-SWR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C32-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[3].deliverable_records[5]` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C33-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[3].deliverable_records[6]` names FB2-SW-SWR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C34-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[0]` names FB2-VER-TMS-000012."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C35-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[1]` names FB2-VER-TMS-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C36-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000014 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[2]` names FB2-VER-TMS-000014."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C37-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000015 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[3]` names FB2-VER-TMS-000015."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C38-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000016 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[4]` names FB2-VER-TMS-000016."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C39-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000017 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[5]` names FB2-VER-TMS-000017."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C40-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000018 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[6]` names FB2-VER-TMS-000018."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C41-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000019 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[7]` names FB2-VER-TMS-000019."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C42-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000020 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[4].deliverable_records[8]` names FB2-VER-TMS-000020."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C43-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-QAP-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[5].deliverable_records[0]` names FB2-SUP-QAP-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C44-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CFM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[5].deliverable_records[1]` names FB2-SUP-CFM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C45-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-PRB-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[5].deliverable_records[2]` names FB2-SUP-PRB-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C46-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CHC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[5].deliverable_records[3]` names FB2-SUP-CHC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C47-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-SPL-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[5].deliverable_records[4]` names FB2-SUP-SPL-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C48-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-RUS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[5].deliverable_records[5]` names FB2-SUP-RUS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C49-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REL-RLS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[6].deliverable_records[0]` names FB2-REL-RLS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C50-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-PRD-EOL-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[6].deliverable_records[1]` names FB2-PRD-EOL-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C51-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-PRD-CAL-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[6].deliverable_records[2]` names FB2-PRD-CAL-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C52-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-OPS-MON-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[6].deliverable_records[3]` names FB2-OPS-MON-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C53-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SVC-SVC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[6].deliverable_records[4]` names FB2-SVC-SVC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C54-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-DEC-DCM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[6].deliverable_records[5]` names FB2-DEC-DCM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C55-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-MSM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[7].deliverable_records[0]` names FB2-MAN-MSM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C56-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-RSK-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[7].deliverable_records[1]` names FB2-MAN-RSK-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C57-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-PIM-IMP-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[7].deliverable_records[2]` names FB2-PIM-IMP-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C58-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-PIM-IMP-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.work_breakdown[7].deliverable_records[3]` names FB2-PIM-IMP-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C59-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-PIM-IMP-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.work_breakdown[7].deliverable_records[4]` names FB2-PIM-IMP-000003."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C60-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 MAN.3 with status `mapped` on the grounds: Project management: project plan, schedule, resources, milestones and progress reporting."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C61-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SYS.1, SYS.3, SWE.1 with status `mapped` on the grounds: The engineering phases this plan schedules."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C62-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6.4 (project management) with status `mapped` on the grounds: Safety project management is a subset of this plan; the safety-specific activities themselves are in FB2-MAN-SPL-000001."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 24465,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/management/project-plan.json",
+  "record_sha256": "4ef684490cc9652711e46aa5729568861ddd30934eb1f095b8a4bd68b53eaf3a",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "1dfe75295aaa62d4a8ac062b9775948afe39e53cce93ae0e5c3a12ae8560d325"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic. This plan schedules a hypothetical programme. No organisation, person, supplier or vehicle named here exists.",
+    "The effort estimates are order-of-magnitude figures produced by the author, not bottom-up estimates from a team that exists. They are recorded so that the schedule has denominators, not because they mean anything.",
+    "The progress records are authored, not collected. There is no project to report on, so these are synthetic observations with the same shape a real report would have.",
+    "The competence records this plan's resource table refers to do not exist. Naming a competence record that is absent is how a competence-management gap hides, so the resource table says 'not created' rather than leaving the field blank.",
+    "Four of the six gates carry an explicit note that the corpus does not currently meet their exit criteria. A plan whose gates all pass is a plan whose gates mean nothing.",
+    "The schedule does not account for the fact that the corpus's largest engineering gap was the absence of the work this plan schedules. It assumes the plan starts from a state in which concept-level work is partly done, which it is."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-MAN-PLN-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this management record, do you agree that \"Project plan for Project Northcell: lifecycle model, work breakdown, schedule, gates, resources and progress\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "project_plan",
+  "assumption_refs": [
+   "FB2-ASM-001",
+   "FB2-ASM-011"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "calendar_note": "Every date in this record is synthetic. They describe the hypothetical Project Northcell as its own artefact says that programme does not exist. No date here is a real commitment, a real gate date or a real review date.",
+  "communication_plan": [
+   {
+    "acknowledgement_note": "Acknowledgement is recorded as a synthetic boolean. No person acknowledged anything; the corpus has no participants.",
+    "acknowledgement_recorded": true,
+    "artifact_revision_communicated": [
+     "FB2-SAF-FSC-000001 rev 1",
+     "FB2-SAF-TSC-000001 rev 1",
+     "FB2-SYS-SYR-000001 rev 1 .. FB2-SYS-SYR-000008 rev 1"
+    ],
+    "attendee_roles": [
+     "project_manager",
+     "safety_engineer",
+     "system_engineer",
+     "hw_engineer",
+     "sw_engineer",
+     "verification_engineer",
+     "quality_engineer"
+    ],
+    "cadence": "weekly",
+    "meeting_id": "MTG-001",
+    "purpose": "Status, blockers and decision requests"
+   },
+   {
+    "acknowledgement_recorded": true,
+    "artifact_revision_communicated": [
+     "Every record moved to a new revision in the period"
+    ],
+    "attendee_roles": [
+     "architect",
+     "traceability_engineer",
+     "quality_engineer",
+     "project_manager"
+    ],
+    "cadence": "at every baseline and at every change to a baselined record",
+    "meeting_id": "MTG-002",
+    "purpose": "Configuration control board: which revisions are baselined and which links are affected"
+   },
+   {
+    "acknowledgement_note": "Recorded false deliberately. The first measurement review was held and no acknowledgement was captured, which is why the measurement plan's collection rule names an explicit capture step: the process had one and it was not followed.",
+    "acknowledgement_recorded": false,
+    "artifact_revision_communicated": [
+     "FB2-MAN-MSM-000001 rev 1",
+     "FB2-MAN-RSK-000001 rev 1"
+    ],
+    "attendee_roles": [
+     "project_manager",
+     "quality_engineer"
+    ],
+    "cadence": "monthly",
+    "meeting_id": "MTG-003",
+    "purpose": "Measurement and risk review against the measurement plan"
+   }
+  ],
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "management",
+  "fictional_project": true,
+  "human_approval_status": "pending",
+  "id": "FB2-MAN-PLN-000001",
+  "lifecycle_model": {
+   "model": "Sequential-with-overlapping-verification, six phases",
+   "phase_definition": [
+    {
+     "entry_criteria": [
+      "Project scope baselined",
+      "Item definition agreed"
+     ],
+     "exit_criteria": [
+      "Hazard analysis complete with a safety goal per hazard",
+      "Functional safety concept baselined",
+      "Every hazard traced to a safety goal or an explicit not-applicable decision"
+     ],
+     "phase_id": "PH-01",
+     "phase_name": "Concept and safety"
+    },
+    {
+     "entry_criteria": [
+      "Functional safety concept baselined"
+     ],
+     "exit_criteria": [
+      "Stakeholder needs and use cases baselined",
+      "System requirements baselined and allocated to hardware and software",
+      "Interface authority baselined"
+     ],
+     "phase_id": "PH-02",
+     "phase_name": "System definition"
+    },
+    {
+     "entry_criteria": [
+      "System requirements baselined"
+     ],
+     "exit_criteria": [
+      "Technical safety requirements baselined per allocated element",
+      "Detailed design baselined per software unit",
+      "Software freedom-from-interference argument recorded"
+     ],
+     "phase_id": "PH-03",
+     "phase_name": "Hardware and software definition"
+    },
+    {
+     "entry_criteria": [
+      "Design baselined",
+      "Verification planning baselined"
+     ],
+     "exit_criteria": [
+      "Every requirement has a measure and an execution record",
+      "Every executed measure has an honest execution_kind and outcome",
+      "No unresolved critical or high corpus finding"
+     ],
+     "phase_id": "PH-04",
+     "phase_name": "Integration and verification"
+    },
+    {
+     "entry_criteria": [
+      "Integration complete"
+     ],
+     "exit_criteria": [
+      "Every applicable stakeholder need validated against an operational scenario",
+      "Validation acceptance criteria agreed with the stakeholder class, not proposed by engineering"
+     ],
+     "phase_id": "PH-05",
+     "phase_name": "Intended-use validation"
+    },
+    {
+     "entry_criteria": [
+      "Validation complete",
+      "Safety case reviewed"
+     ],
+     "exit_criteria": [
+      "Release configuration identified and recorded",
+      "Production and end-of-line test plan baselined",
+      "Calibration specification baselined",
+      "Installation, operation and service instructions baselined",
+      "Decommissioning assumptions recorded"
+     ],
+     "phase_id": "PH-06",
+     "phase_name": "Release and post-development preparation"
+    }
+   ]
+  },
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "Synthetic. This plan schedules a hypothetical programme. No organisation, person, supplier or vehicle named here exists.",
+   "The effort estimates are order-of-magnitude figures produced by the author, not bottom-up estimates from a team that exists. They are recorded so that the schedule has denominators, not because they mean anything.",
+   "The progress records are authored, not collected. There is no project to report on, so these are synthetic observations with the same shape a real report would have.",
+   "The competence records this plan's resource table refers to do not exist. Naming a competence record that is absent is how a competence-management gap hides, so the resource table says 'not created' rather than leaving the field blank.",
+   "Four of the six gates carry an explicit note that the corpus does not currently meet their exit criteria. A plan whose gates all pass is a plan whose gates mean nothing.",
+   "The schedule does not account for the fact that the corpus's largest engineering gap was the absence of the work this plan schedules. It assumes the plan starts from a state in which concept-level work is partly done, which it is."
+  ],
+  "milestones_and_gates": [
+   {
+    "decision_status": "Planned. Not taken. No human has attended this gate.",
+    "entry_criteria": [
+     "Item definition baselined",
+     "Hazard analysis reviewed",
+     "Functional safety concept reviewed"
+    ],
+    "exit_criteria": [
+     "Every hazard has a safety goal or a recorded non-applicability decision",
+     "Every safety goal has an allocation statement naming architectural elements",
+     "No unresolved high finding against a concept record"
+    ],
+    "exit_decision_owner_role": "safety_manager",
+    "gate_type": "concept_freeze",
+    "milestone_id": "MS-01",
+    "name": "Concept freeze",
+    "planned_date": "2026-04-24",
+    "synthetic_decision": "synthetic_decision:safety_manager:SYNTH-MAN-GATE-001"
+   },
+   {
+    "decision_status": "Planned. Not taken.",
+    "entry_criteria": [
+     "System requirements authored and reviewed",
+     "Allocation to hardware and software complete"
+    ],
+    "exit_criteria": [
+     "Every stakeholder need refined into at least one system requirement",
+     "Every system requirement allocated to at least one technical requirement",
+     "Every requirement carries measurable acceptance criteria"
+    ],
+    "exit_decision_owner_role": "system_engineer",
+    "gate_type": "requirement_baseline",
+    "milestone_id": "MS-02",
+    "name": "Requirement baseline",
+    "planned_date": "2026-11-06",
+    "synthetic_decision": "synthetic_decision:system_engineer:SYNTH-MAN-GATE-002"
+   },
+   {
+    "decision_status": "Planned. Not taken. Note that as of this record the corpus does not meet this gate's second exit criterion: two of the technical safety concept's coverage claims are synthetic assumptions with no evidence record at all.",
+    "entry_criteria": [
+     "Technical safety concept baselined",
+     "Detailed design baselined for every in-scope unit"
+    ],
+    "exit_criteria": [
+     "The technical safety concept's timing budget closes inside the FTTI",
+     "Every diagnostic coverage claim has a named evidence source",
+     "Freedom-from-interference argument recorded for every allocated element"
+    ],
+    "exit_decision_owner_role": "architect",
+    "gate_type": "design_freeze",
+    "milestone_id": "MS-03",
+    "name": "Design freeze",
+    "planned_date": "2027-02-26",
+    "synthetic_decision": "synthetic_decision:architect:SYNTH-MAN-GATE-003"
+   },
+   {
+    "decision_status": "Planned. Not taken. As of this record the corpus does not meet the first exit criterion for the security requirements: the measures exist now, but their execution environments do not.",
+    "entry_criteria": [
+     "Verification planning baselined",
+     "Every measure has an execution environment named"
+    ],
+    "exit_criteria": [
+     "Every requirement has a measure with a declared oracle basis",
+     "No measure's expected outcome is a copy of implementation output",
+     "Every blocked execution has a stated reason and an unblock condition"
+    ],
+    "exit_decision_owner_role": "verification_engineer",
+    "gate_type": "verification_readiness",
+    "milestone_id": "MS-04",
+    "name": "Verification readiness",
+    "planned_date": "2027-06-18",
+    "synthetic_decision": "synthetic_decision:verification_engineer:SYNTH-MAN-GATE-004"
+   },
+   {
+    "decision_status": "Planned. Not taken.",
+    "entry_criteria": [
+     "Validation complete",
+     "Post-development lifecycle records baselined"
+    ],
+    "exit_criteria": [
+     "Release configuration identified and recorded",
+     "Every changed requirement re-verified against the selected measures",
+     "No unresolved critical or high finding against any release record"
+    ],
+    "exit_decision_owner_role": "project_manager",
+    "gate_type": "release_readiness",
+    "milestone_id": "MS-05",
+    "name": "Release readiness",
+    "planned_date": "2027-10-15",
+    "synthetic_decision": "synthetic_decision:project_manager:SYNTH-MAN-GATE-005"
+   },
+   {
+    "decision_status": "Planned. Not taken. The corpus has no independent confirmation reviewer: every review record in it is an automated AI review, which master-prompt clause 2.9 says is not organisational independence.",
+    "entry_criteria": [
+     "All earlier gates passed",
+     "All evidence records collected"
+    ],
+    "exit_criteria": [
+     "Every claim in the safety case has at least one evidence record and no open defeater",
+     "Every unresolved concern is recorded as a concern rather than closed",
+     "Confirmation review performed by a party independent of the authors"
+    ],
+    "exit_decision_owner_role": "safety_manager",
+    "gate_type": "safety_case_review",
+    "milestone_id": "MS-06",
+    "name": "Safety case review",
+    "planned_date": "2027-10-15",
+    "synthetic_decision": "synthetic_decision:safety_manager:SYNTH-MAN-GATE-006"
+   }
+  ],
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "plan_basis": "Derived from the work the corpus' existing records imply: a hazard analysis and safety goal that exist, four functional safety requirements with four hardware and three software requirements beneath them, a system-level chain that had no system requirements until this authoring pass, and no post-development work at all. The plan is sized for the gap between that state and a coherent lifecycle, not for a greenfield programme.",
+  "plan_id": "FB2-MAN-PLN-000001",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "progress_records": [
+   {
+    "escalated": true,
+    "forecast_finish": "2026-04-24",
+    "narrative": "Two weeks behind on the hazard analysis. The cause is not technical: the safety manager who was to review the severity and controllability reasoning was unavailable for eleven days and there is no second person qualified to do it. The plan named a single point of failure and the risk register's RSK-002 predicted exactly this.",
+    "planned_finish": "2026-04-24",
+    "report_date": "2026-03-06",
+    "reported_by_role": "project_manager",
+    "reporting_wbs": "WBS-001",
+    "schedule_variance_days": 0,
+    "status": "behind"
+   },
+   {
+    "escalated": false,
+    "forecast_finish": "2026-03-20",
+    "narrative": "Supporting process definition is the package actually behind. It was given 20 days of float and has consumed 55. The float was real: the package had no predecessor and was therefore expected to finish early. The variance is absorbed, not recovered, and this is stated rather than hidden in a re-baselined date.",
+    "planned_finish": "2026-02-13",
+    "report_date": "2026-03-06",
+    "reported_by_role": "project_manager",
+    "reporting_wbs": "WBS-006",
+    "schedule_variance_days": 35,
+    "status": "behind"
+   },
+   {
+    "escalated": true,
+    "forecast_finish": "2026-05-22",
+    "narrative": "Still behind after the reviewer returned. Recorded as behind rather than complete because the functional safety concept was baselined with two unresolved contradictions against the safety goal's timing budget, and a concept cannot be baselined while its own arithmetic does not close.",
+    "planned_finish": "2026-04-24",
+    "report_date": "2026-05-08",
+    "reported_by_role": "project_manager",
+    "reporting_wbs": "WBS-001",
+    "schedule_variance_days": 28,
+    "status": "behind"
+   },
+   {
+    "escalated": false,
+    "forecast_finish": "2026-08-14",
+    "narrative": "Stakeholder needs and system requirements on plan. The package recovered because WBS-006 finished late and released the system engineer, which is the opposite of what the float was for. Recorded because it is the kind of dependency that a plan which treats packages independently would miss.",
+    "planned_finish": "2026-08-14",
+    "report_date": "2026-08-14",
+    "reported_by_role": "project_manager",
+    "reporting_wbs": "WBS-003",
+    "schedule_variance_days": 0,
+    "status": "on_track"
+   },
+   {
+    "escalated": true,
+    "forecast_finish": "2027-01-15",
+    "narrative": "Verification is the package driving the forecast. Not because the measures are hard to write but because none of the nine new measures can be executed: there is no security harness, no injection node and no vehicle. The plan assumed the harnesses would be built by the verification package and it does not fund them. This is a planning omission and the risk register's RSK-004 names it.",
+    "planned_finish": "2026-11-06",
+    "report_date": "2026-11-06",
+    "reported_by_role": "project_manager",
+    "reporting_wbs": "WBS-005",
+    "schedule_variance_days": 70,
+    "status": "at_risk"
+   }
+  ],
+  "resource_plan": [
+   {
+    "allocation_percent": 60,
+    "competence_record_ref": "not created; competence records are named here and do not exist as artifacts",
+    "named_as": "role identity: safety_engineer (fictional)",
+    "role": "safety_engineer",
+    "single_point_of_failure": true
+   },
+   {
+    "allocation_percent": 70,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: system_engineer (fictional)",
+    "role": "system_engineer",
+    "single_point_of_failure": true
+   },
+   {
+    "allocation_percent": 50,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: hw_engineer (fictional)",
+    "role": "hw_engineer",
+    "single_point_of_failure": false
+   },
+   {
+    "allocation_percent": 80,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: sw_engineer (fictional)",
+    "role": "sw_engineer",
+    "single_point_of_failure": false
+   },
+   {
+    "allocation_percent": 70,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: verification_engineer (fictional)",
+    "role": "verification_engineer",
+    "single_point_of_failure": true
+   },
+   {
+    "allocation_percent": 40,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: cybersecurity_engineer (fictional)",
+    "role": "cybersecurity_engineer",
+    "single_point_of_failure": true
+   },
+   {
+    "allocation_percent": 50,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: quality_engineer (fictional)",
+    "role": "quality_engineer",
+    "single_point_of_failure": false
+   },
+   {
+    "allocation_percent": 60,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: project_manager (fictional)",
+    "role": "project_manager",
+    "single_point_of_failure": true
+   },
+   {
+    "allocation_percent": 30,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: safety_manager (fictional)",
+    "role": "safety_manager",
+    "single_point_of_failure": true
+   },
+   {
+    "allocation_percent": 20,
+    "competence_record_ref": "not created",
+    "named_as": "role identity: reviewer_adversarial, independent of every authoring role above (fictional)",
+    "role": "reviewer_adversarial",
+    "single_point_of_failure": false
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Project plan authored because MAN.3 was recorded as a coverage gap: the management domain held a project scope statement and change records, and neither is a plan. A scope statement declares a boundary; this record carries the schedule, the gates, the resource assignment and the actual-against-planned progress reporting that MAN.3 expects.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schedule": {
+   "critical_path_wbs": [
+    "WBS-001",
+    "WBS-003",
+    "WBS-004",
+    "WBS-005",
+    "WBS-007"
+   ],
+   "float_days_by_work_package": {
+    "WBS-001": 0,
+    "WBS-002": 8,
+    "WBS-003": 0,
+    "WBS-004": 0,
+    "WBS-005": 0,
+    "WBS-006": 20,
+    "WBS-007": 0,
+    "WBS-008": 20
+   },
+   "planned_finish": "2027-10-15",
+   "planned_start": "2026-01-12"
+  },
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Project management: project plan, schedule, resources, milestones and progress reporting.",
+    "reference": "MAN.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The engineering phases this plan schedules.",
+    "reference": "SYS.1, SYS.3, SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Safety project management is a subset of this plan; the safety-specific activities themselves are in FB2-MAN-SPL-000001.",
+    "reference": "Part 2, Clause 6.4 (project management)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Project plan for Project Northcell: lifecycle model, work breakdown, schedule, gates, resources and progress",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "work_breakdown": [
+   {
+    "accountable_role": "safety_engineer",
+    "deliverable_records": [
+     "FB2-SAF-ITE-000001",
+     "FB2-SAF-HAZ-000001",
+     "FB2-SAF-SGO-000001",
+     "FB2-SAF-FSC-000001"
+    ],
+    "depends_on": [],
+    "effort_person_days_estimate": 95,
+    "estimate_basis": "Three domain experts part-time over one quarter plus a concept-review pass. An estimate, not a bottom-up derivation.",
+    "supporting_roles": [
+     "system_engineer"
+    ],
+    "wbs_id": "WBS-001",
+    "work_package": "Concept phase: item definition, hazard analysis, safety goal, functional safety concept"
+   },
+   {
+    "accountable_role": "safety_engineer",
+    "deliverable_records": [
+     "FB2-SAF-FSR-000001",
+     "FB2-SAF-FSR-000002",
+     "FB2-SAF-FSR-000003",
+     "FB2-SAF-FSR-000004",
+     "FB2-SAF-TSC-000001"
+    ],
+    "depends_on": [
+     "WBS-001"
+    ],
+    "effort_person_days_estimate": 70,
+    "estimate_basis": "Follows the concept. Four requirements plus the technical concept.",
+    "supporting_roles": [
+     "hw_engineer",
+     "sw_engineer"
+    ],
+    "wbs_id": "WBS-002",
+    "work_package": "Functional safety requirements and technical safety concept"
+   },
+   {
+    "accountable_role": "system_engineer",
+    "deliverable_records": [
+     "FB2-SYS-NED-000001",
+     "FB2-SYS-NED-000002",
+     "FB2-SYS-NED-000003",
+     "FB2-SYS-NED-000004",
+     "FB2-SYS-NED-000005",
+     "FB2-SYS-UC-000001",
+     "FB2-SYS-UC-000002",
+     "FB2-SYS-UC-000003",
+     "FB2-SYS-UC-000004",
+     "FB2-SYS-SYR-000001",
+     "FB2-SYS-SYR-000002",
+     "FB2-SYS-SYR-000003",
+     "FB2-SYS-SYR-000004",
+     "FB2-SYS-SYR-000005",
+     "FB2-SYS-SYR-000006",
+     "FB2-SYS-SYR-000007",
+     "FB2-SYS-SYR-000008"
+    ],
+    "depends_on": [
+     "WBS-001"
+    ],
+    "effort_person_days_estimate": 110,
+    "estimate_basis": "The largest single package. Eighteen records across two levels, and the elicitation that a real programme would have to do with people.",
+    "supporting_roles": [
+     "safety_engineer"
+    ],
+    "wbs_id": "WBS-003",
+    "work_package": "Stakeholder elicitation, use cases and system requirements"
+   },
+   {
+    "accountable_role": "hw_engineer",
+    "deliverable_records": [
+     "FB2-HW-TSR-000001",
+     "FB2-HW-TSR-000002",
+     "FB2-HW-TSR-000003",
+     "FB2-HW-TSR-000004",
+     "FB2-SW-SWR-000001",
+     "FB2-SW-SWR-000002",
+     "FB2-SW-SWR-000003"
+    ],
+    "depends_on": [
+     "WBS-003"
+    ],
+    "effort_person_days_estimate": 130,
+    "estimate_basis": "Seven technical requirements. The corpus already held these; the estimate covers the re-baselining against the system requirements, not their first authoring.",
+    "supporting_roles": [
+     "sw_engineer"
+    ],
+    "wbs_id": "WBS-004",
+    "work_package": "Hardware and software requirements and detailed design"
+   },
+   {
+    "accountable_role": "verification_engineer",
+    "deliverable_records": [
+     "FB2-VER-TMS-000012",
+     "FB2-VER-TMS-000013",
+     "FB2-VER-TMS-000014",
+     "FB2-VER-TMS-000015",
+     "FB2-VER-TMS-000016",
+     "FB2-VER-TMS-000017",
+     "FB2-VER-TMS-000018",
+     "FB2-VER-TMS-000019",
+     "FB2-VER-TMS-000020"
+    ],
+    "depends_on": [
+     "WBS-004"
+    ],
+    "effort_person_days_estimate": 120,
+    "estimate_basis": "Nine measures, none of which this corpus could execute; the estimate assumes the harnesses exist, which they do not.",
+    "supporting_roles": [
+     "safety_engineer",
+     "sw_engineer",
+     "hw_engineer"
+    ],
+    "wbs_id": "WBS-005",
+    "work_package": "Verification planning and execution across concept, system, hardware and software"
+   },
+   {
+    "accountable_role": "quality_engineer",
+    "deliverable_records": [
+     "FB2-SUP-QAP-000001",
+     "FB2-SUP-CFM-000001",
+     "FB2-SUP-PRB-000001",
+     "FB2-SUP-CHC-000001",
+     "FB2-SUP-SPL-000001",
+     "FB2-SUP-RUS-000001"
+    ],
+    "depends_on": [],
+    "effort_person_days_estimate": 45,
+    "estimate_basis": "Definition plus one recorded instance each. A real programme would need far more instances; one is the minimum that distinguishes a process record from a policy.",
+    "supporting_roles": [
+     "project_manager",
+     "traceability_engineer"
+    ],
+    "wbs_id": "WBS-006",
+    "work_package": "Supporting process definition and instantiation: quality, configuration, problem resolution, change control, supplier monitoring, reuse"
+   },
+   {
+    "accountable_role": "project_manager",
+    "deliverable_records": [
+     "FB2-REL-RLS-000001",
+     "FB2-PRD-EOL-000001",
+     "FB2-PRD-CAL-000001",
+     "FB2-OPS-MON-000001",
+     "FB2-SVC-SVC-000001",
+     "FB2-DEC-DCM-000001"
+    ],
+    "depends_on": [
+     "WBS-005"
+    ],
+    "effort_person_days_estimate": 85,
+    "estimate_basis": "Six lifecycle areas, each documented to the level at which the corpus can state what it does not know.",
+    "supporting_roles": [
+     "quality_engineer",
+     "hw_engineer"
+    ],
+    "wbs_id": "WBS-007",
+    "work_package": "Post-development lifecycle: release identification, production and end-of-line test, calibration, field monitoring, service, decommissioning"
+   },
+   {
+    "accountable_role": "project_manager",
+    "deliverable_records": [
+     "FB2-MAN-MSM-000001",
+     "FB2-MAN-RSK-000001",
+     "FB2-PIM-IMP-000001",
+     "FB2-PIM-IMP-000002",
+     "FB2-PIM-IMP-000003"
+    ],
+    "depends_on": [
+     "WBS-006"
+    ],
+    "effort_person_days_estimate": 40,
+    "estimate_basis": "Continuous rather than a package; the estimate covers the setup pass and the first improvement cycle.",
+    "supporting_roles": [
+     "quality_engineer"
+    ],
+    "wbs_id": "WBS-008",
+    "work_package": "Measurement, risk management and process improvement"
+   }
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "project_plan",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-MAN-PLN-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-MAN-PLN-000001",
+  "revision": "1"
+ }
+}

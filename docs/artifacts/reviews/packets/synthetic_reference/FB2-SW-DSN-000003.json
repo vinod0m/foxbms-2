@@ -1,0 +1,566 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000013",
+    "rationale": "Implementation element FB2-SW-IMP-000003 is the code location in which the reference project's FB2-SW-DSN-000003 actuation-request and auxiliary-feedback responsibilities are carried, with the sequencing realised in the application layer's BMS_Trigger rather than in the driver the design names, and with the design's FRAM cycle counter declared as an explicit not_in_source proposal. The link runs from the implementation to the design per master prompt section 13.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-IMP-000003",
+    "target_id": "FB2-SW-DSN-000003"
+   },
+   {
+    "link_id": "FB2-LNK-ALW-000103",
+    "rationale": "FB2-SW-SWR-000003 is allocated to the reference project's FB2-SW-DSN-000003 as the software requirement whose implementation that design details. The design additionally claims sequencing and cycle counting the requirement does not state and the source does not realise; that difference is recorded on the implementation record rather than hidden by this link.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "allocated_to",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SWR-000003",
+    "target_id": "FB2-SW-DSN-000003"
+   },
+   {
+    "link_id": "FB2-LNK-SWE3-000006",
+    "rationale": "FB2-SW-DSN-000006 refines FB2-SW-DSN-000003: the source side is the lower-level detailed specification and the target side is the parent architecture record. DSN-000003 allocates the contactor element and states its command and feedback interfaces at architecture level; DSN-000006 specifies the internals - the registry data model, the four-way feedback source dispatch, the linear lookup and its STD_NOT_OK contract, the precharge gate, the unconditional open-all safe-state sweep, and the TODO recording that contactor-type uniqueness per string is not checked. As with the SOA element, DSN-000003 carries design_level=detailed_design while its own standards_mappings name SWE.2 with the rationale \"Software architectural design\"; DSN-000006 is the record that carries the clause 8.4 content and the SWE.3 reference, and DSN-000003 is not edited by this change so its nine recorded review digests stay valid.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DSN-000006",
+    "target_id": "FB2-SW-DSN-000003"
+   },
+   {
+    "link_id": "FB2-LNK-IFS-000006",
+    "rationale": "The contactor design record's interfaces field is a signal table naming the command and feedback signals. FB2-SW-IFS-000003 replaces it with the four declared elements, the two precondition assertions on every actuation request, the two-value return contract and the finding that the negative value is ambiguous between a registry miss and a completed request. It refines FB2-SW-DSN-000003 and sits alongside FB2-SW-DSN-000006, whose detailed design names the registry data model and the four-way feedback dispatch and still states no interface contract.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IFS-000003",
+    "target_id": "FB2-SW-DSN-000003"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against design.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (1)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "1/1 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000008, which records anchor class `repository_file`; path `src/app/driver/contactor/contactor.c`; line_range `125-163`; content_hash `71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83`; symbol `CONT_CheckFeedback`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000008."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 with status `mapped` on the grounds: Software architectural design"
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C04-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `mapped` on the grounds: Software architectural design"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 7834,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/design-contactor.json",
+  "record_sha256": "fb07c1b57fbde0b99d2659facd2094911a7135270357cab3a6652fe9816e848d",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "0328514096ad516d88f25cdf96b5caa41115beff13b2dc11efef7bb5810aa759"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes; anchor FB2-SRC-COD-000007 was deleted outright because contactor.c contains no contactor state machine. Origin remains synthetic, which already declared this content modelled rather than observed."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-DSN-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Design: Contactor State Machine\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "design",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behavior_model": {
+   "states": [
+    "OPEN",
+    "PRECHARGE",
+    "PRECHARGE_WAIT",
+    "CLOSE",
+    "HOLD",
+    "FAULT_OPEN",
+    "WELD_DETECTED",
+    "STUCK_OPEN"
+   ],
+   "transitions": [
+    {
+     "action": "close_precharge, start_timer",
+     "from": "OPEN",
+     "guard": "interlock_closed",
+     "to": "PRECHARGE",
+     "trigger": "request_precharge"
+    },
+    {
+     "action": "monitor_voltage",
+     "from": "PRECHARGE",
+     "guard": "feedback_confirmed",
+     "to": "PRECHARGE_WAIT",
+     "trigger": "precharge_contactor_closed"
+    },
+    {
+     "action": "close_main, open_precharge",
+     "from": "PRECHARGE_WAIT",
+     "guard": "v_precharge > v_threshold",
+     "to": "CLOSE",
+     "trigger": "voltage_threshold_reached"
+    },
+    {
+     "action": "enable_monitoring",
+     "from": "CLOSE",
+     "guard": "feedback_confirmed",
+     "to": "HOLD",
+     "trigger": "main_contactor_closed"
+    },
+    {
+     "action": "open_all, report_fault",
+     "from": "HOLD",
+     "guard": "always",
+     "to": "FAULT_OPEN",
+     "trigger": "fault_request"
+    },
+    {
+     "action": "open_all",
+     "from": "HOLD",
+     "guard": "always",
+     "to": "OPEN",
+     "trigger": "request_open"
+    },
+    {
+     "action": "open_all, report_fault",
+     "from": "*",
+     "guard": "always",
+     "to": "FAULT_OPEN",
+     "trigger": "fault_request"
+    },
+    {
+     "action": "report_weld",
+     "from": "HOLD",
+     "guard": "feedback_closed when commanded open",
+     "to": "WELD_DETECTED",
+     "trigger": "feedback_mismatch"
+    },
+    {
+     "action": "report_stuck_open",
+     "from": "HOLD",
+     "guard": "feedback_open when commanded closed",
+     "to": "STUCK_OPEN",
+     "trigger": "feedback_mismatch"
+    }
+   ],
+   "type": "state_machine"
+  },
+  "budgets": {
+   "cpu_time_ms": 1,
+   "memory_bytes": 2048,
+   "stack_bytes": 512
+  },
+  "constraints": [
+   "Precharge timeout: configurable (default 5 s)",
+   "Voltage threshold: configurable (default 95% pack voltage)",
+   "Feedback debounce: 10 ms",
+   "Cycle count persisted to FRAM",
+   "Emergency open: < 5 ms from fault request"
+  ],
+  "created_at": "2026-09-08T00:00:00Z",
+  "decisions": [
+   {
+    "alternatives": [
+     "Single contactor",
+     "Dual contactor (series)",
+     "Dual contactor (parallel)"
+    ],
+    "decision_id": "DEC-CONT-001",
+    "rationale": "Redundant isolation, single-point fault tolerance",
+    "selected": "Dual contactor (series, plus/minus)"
+   },
+   {
+    "alternatives": [
+     "Passive precharge",
+     "Active precharge (current limited)"
+    ],
+    "decision_id": "DEC-CONT-002",
+    "rationale": "Simpler, proven, no active components in precharge path",
+    "selected": "Passive precharge (resistor)"
+   }
+  ],
+  "decomposition": [],
+  "design_level": "detailed_design",
+  "engineering_domain": "software",
+  "failure_response": [
+   {
+    "detection": "Feedback closed when commanded open",
+    "failure_mode": "Weld detected",
+    "reaction": "FAULT_OPEN, report to DIAG",
+    "recovery": "Manual intervention required"
+   },
+   {
+    "detection": "Feedback open when commanded closed",
+    "failure_mode": "Stuck open",
+    "reaction": "FAULT_OPEN, retry once",
+    "recovery": "Retry on next request"
+   },
+   {
+    "detection": "Timer expired",
+    "failure_mode": "Precharge timeout",
+    "reaction": "OPEN, report timeout",
+    "recovery": "Retry on next request"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SW-DSN-000003",
+  "implementation_mapping": [
+   {
+    "source_file": "src/app/driver/contactor/contactor.c",
+    "status": "implemented",
+    "symbol": "CONTACTOR_StateMachine"
+   },
+   {
+    "source_file": "src/app/driver/contactor/contactor.c",
+    "status": "implemented",
+    "symbol": "CONTACTOR_CheckFeedback"
+   },
+   {
+    "source_file": "src/app/driver/sbc/fs8x_driver/sbc_fs8x.c",
+    "status": "implemented",
+    "symbol": "SBC_FS8X_SetContactor"
+   },
+   {
+    "source_file": "src/app/engine/diag/cbs/diag_cbs_contactor.c",
+    "status": "implemented",
+    "symbol": "DIAG_CBS_Contactor"
+   }
+  ],
+  "interfaces": [
+   {
+    "direction": "input",
+    "interface_id": "CONTACTOR_SYS_IN",
+    "signals": [
+     {
+      "name": "state_request",
+      "range": "OPEN/PRECHARGE/CLOSE/HOLD",
+      "rate": "event",
+      "type": "CONTACTOR_REQUEST_e",
+      "unit": "enum"
+     },
+     {
+      "name": "fault_request",
+      "range": "0/1",
+      "rate": "event",
+      "type": "bool",
+      "unit": "bool"
+     },
+     {
+      "name": "config",
+      "range": "config",
+      "rate": "static",
+      "type": "CONTACTOR_CFG_s",
+      "unit": "struct"
+     }
+    ]
+   },
+   {
+    "direction": "output",
+    "interface_id": "CONTACTOR_SBC_OUT",
+    "signals": [
+     {
+      "name": "coil_command",
+      "range": "0-0xFF",
+      "rate": "event",
+      "type": "uint8_t",
+      "unit": "bitmask"
+     },
+     {
+      "name": "precharge_command",
+      "range": "0/1",
+      "rate": "event",
+      "type": "bool",
+      "unit": "bool"
+     }
+    ]
+   },
+   {
+    "direction": "input",
+    "interface_id": "CONTACTOR_FEEDBACK_IN",
+    "signals": [
+     {
+      "name": "feedback_main_plus",
+      "range": "0/1",
+      "rate": "100 Hz",
+      "type": "bool",
+      "unit": "bool"
+     },
+     {
+      "name": "feedback_main_minus",
+      "range": "0/1",
+      "rate": "100 Hz",
+      "type": "bool",
+      "unit": "bool"
+     },
+     {
+      "name": "feedback_precharge",
+      "range": "0/1",
+      "rate": "100 Hz",
+      "type": "bool",
+      "unit": "bool"
+     }
+    ]
+   },
+   {
+    "direction": "output",
+    "interface_id": "CONTACTOR_DIAG_OUT",
+    "signals": [
+     {
+      "name": "weld_detected",
+      "range": "0/1",
+      "rate": "event",
+      "type": "bool",
+      "unit": "bool"
+     },
+     {
+      "name": "stuck_open_detected",
+      "range": "0/1",
+      "rate": "event",
+      "type": "bool",
+      "unit": "bool"
+     },
+     {
+      "name": "cycle_count",
+      "range": "0-4G",
+      "rate": "event",
+      "type": "uint32_t",
+      "unit": "cycles"
+     }
+    ]
+   }
+  ],
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes; anchor FB2-SRC-COD-000007 was deleted outright because contactor.c contains no contactor state machine. Origin remains synthetic, which already declared this content modelled rather than observed.",
+  "responsibilities": [
+   "Execute contactor state machine (OPEN -> PRECHARGE -> CLOSE -> HOLD)",
+   "Monitor precharge voltage and timeout",
+   "Drive contactor coils via SBC (FS85xx)",
+   "Monitor auxiliary feedback contacts",
+   "Detect weld/stuck-open conditions",
+   "Count contactor cycles (FRAM persistence)",
+   "Emergency open on FAULT request"
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-09-08T00:00:00Z",
+    "description": "Synthetic contactor state machine with emergency open <5ms",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000008"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Software architectural design",
+    "reference": "Part 6, Clause 8",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Software architectural design",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Design: Contactor State Machine",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "design",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-DSN-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-DSN-000003",
+  "revision": "1"
+ }
+}

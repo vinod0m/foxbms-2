@@ -383,6 +383,56 @@ def sha256_file(path):
     return h.hexdigest()
 
 
+# The labels of the seven fields of a generated packet's signature block, in the
+# order the generator writes them. Declared here rather than imported from
+# make_review_packets.py so the check that reports on the packets is not
+# executed by the code that writes them; the self-test
+# `the packet generator's signature fields match the ones check looks for`
+# compares the two lists and fails if they drift apart.
+PACKET_SIGNATURE_LABELS = (
+    "Reviewer name",
+    "Organisation",
+    "Role (must be independent of this record's author role)",
+    "Date (YYYY-MM-DD)",
+    "Decision (`approve` / `approve-with-comments` / `reject`)",
+    "Comments",
+    "Signature",
+)
+
+
+def _packet_signature_filled(md_path):
+    """True if any field of a packet's signature block carries a value.
+
+    Returns False for a block that is present and empty, False for a packet with
+    no signature block at all, and False for an unreadable file. It never raises:
+    this is a report, and a report that crashes the suite on a malformed
+    document would be a worse defect than the one it reports.
+
+    The row is matched anchored on BOTH pipes. Splitting the row on '|'
+    instead yields ' |' for the empty cell `| Reviewer name | |`, whose strip()
+    is '|' - a non-empty string, so every unsigned packet would read as signed.
+    That is not hypothetical: it is what the first version of this function did,
+    and it is the reason the match is written this way.
+    """
+    try:
+        text = Path(md_path).read_text(encoding="utf-8")
+    except Exception:
+        return False
+    marker = "## 9. Signature"
+    if marker not in text:
+        return False
+    tail = text.split(marker, 1)[1]
+    for label in PACKET_SIGNATURE_LABELS:
+        pat = re.compile(r"^\|\s*" + re.escape(label) + r"\s*\|(.*)\|\s*$")
+        for line in tail.splitlines():
+            m = pat.match(line)
+            if m:
+                if m.group(1).strip():
+                    return True
+                break
+    return False
+
+
 class Findings:
     """Accumulates validation findings.
 
@@ -6650,6 +6700,27 @@ class CorpusTool:
         ok &= self._gate("external reference check (check_references.py) reports no unresolved references",
                          ext_ok, ext_detail)
 
+        # Review packets: reported, NEVER gated.
+        #
+        # The packets under docs/artifacts/reviews/packets/ are review MATERIAL,
+        # not corpus records. They carry no top-level id/profile/artifact_type, so
+        # iter_corpus_artifacts walks them, finds no record, and every coverage
+        # figure above is computed over exactly the 321 records it was computed
+        # over before this line existed. That is the property this line exists to
+        # keep visible.
+        #
+        # It is deliberately NOT a gate. A gate would mean the acceptance suite
+        # is red because somebody has not reviewed 321 records yet, which is a
+        # true statement about the corpus and not a defect in it - the same
+        # reasoning that keeps human_approval, actual_product_evidence and
+        # automated_review_coverage's ratio out of the gate set. What the packets
+        # CAN get wrong silently is going stale: a packet whose embedded digest
+        # no longer matches the record is a packet that describes bytes nobody
+        # will ever sign. That is reported here every run so it cannot rot in
+        # silence, and it is left non-fatal so a stale review document can never
+        # be the reason a build is red.
+        self._report_review_packets(ok)
+
         print("\n[8/8] final status")
         # The status used to be ASSIGNED, then compared to itself:
         #     dims["final_status"] = FINAL_STATUS
@@ -6676,6 +6747,88 @@ class CorpusTool:
                 print(f"  - {a}")
         print(f"\nAcceptance suite: {'PASSED' if ok else 'FAILED'}")
         return ok
+
+    def _report_review_packets(self, suite_ok):
+        """Report the state of the review packets. Never gates; never raises.
+
+        Deliberately self-contained rather than importing
+        docs/artifacts/tools/make_review_packets.py. A check that runs by
+        importing the thing it is checking can be made to pass by editing the
+        thing it is checking, and a report whose subject can edit the reporter
+        has no independence at all. The three facts reported here - how many
+        packets exist, whether each one's embedded digest still matches the
+        record, and whether any signature block has been filled - are five lines
+        of sha256 and file reading, so they are restated rather than delegated.
+
+        The packet tree is ABSENT on a clean `git archive HEAD` checkout until
+        the packets are committed, and that absence is reported as absence, not
+        as a failure. Any exception is reported as a problem with the report.
+        """
+        packets_dir = self.artifacts_dir / "reviews" / "packets"
+        print("\n[7c/8] review packets (reported, not gating)")
+        if not packets_dir.is_dir():
+            print(f"  no packet tree at {packets_dir.relative_to(self.root)}: 0 packet(s). "
+                  "Nothing to verify. This is the expected state on a checkout that "
+                  "predates the packets; generate them with "
+                  "`python3 docs/artifacts/tools/make_review_packets.py`")
+            return
+        try:
+            mds = sorted(p for p in packets_dir.rglob("*.md") if p.name != "INDEX.md")
+            stale, unreadable, signed, no_twin = [], [], [], []
+            for md in mds:
+                jp = md.with_suffix(".json")
+                if not jp.exists():
+                    no_twin.append(md)
+                    continue
+                try:
+                    meta = load_json(jp)
+                except Exception as e:
+                    unreadable.append((md, f"packet.json unparseable: {e}"))
+                    continue
+                integ = meta.get("integrity") or {}
+                rel = integ.get("record_path")
+                recorded = integ.get("record_sha256")
+                target = (meta.get("target") or {}).get("record_id")
+                if not rel or not recorded:
+                    unreadable.append((md, "packet.json names no record path or digest"))
+                    continue
+                rp = self.root / rel
+                if not rp.exists():
+                    unreadable.append((md, f"the record it describes is gone: {rel}"))
+                    continue
+                actual = sha256_file(rp)
+                if actual != recorded:
+                    stale.append((target, rel, recorded, actual))
+                if _packet_signature_filled(md):
+                    signed.append(target)
+            print(f"  packet count            : {len(mds)}")
+            print(f"  digest matches record   : {len(mds) - len(stale) - len(unreadable)}/{len(mds)}")
+            print(f"  STALE packets           : {len(stale)}"
+                  + ("  <- a packet no longer describes the record it names; regenerate with "
+                     "make_review_packets.py" if stale else ""))
+            for target, rel, recorded, actual in stale[:10]:
+                print(f"      STALE {target}  {rel}")
+                print(f"           packet {recorded[:16]}...  record {str(actual)[:16]}...")
+            if no_twin:
+                print(f"  packets with no packet.json : {len(no_twin)}")
+                for md in no_twin[:5]:
+                    print(f"      {md.relative_to(self.root)}")
+            if unreadable:
+                print(f"  packets that could not be verified : {len(unreadable)}")
+                for md, why in unreadable[:5]:
+                    print(f"      {md.relative_to(self.root)}: {why}")
+            print(f"  signature blocks filled : {len(signed)}"
+                  + (f"  <- {signed[:8]}{' ...' if len(signed) > 8 else ''}"
+                     " A filled block means a human signed. Signed packets are archived "
+                     "OUTSIDE this tree; if a filled one is here, move it before the next "
+                     "regeneration, which would overwrite it." if signed
+                     else "  (expected: every generated packet is unsigned)"))
+            print("  NOT a gate: a missing, stale or signed packet never fails this suite. "
+                  "human_approval and actual_product_evidence cannot move by authoring, so "
+                  "a packet going stale is a reporting defect, not a build defect.")
+        except Exception as e:                      # pragma: no cover - defensive
+            print(f"  review packet report could not run: {type(e).__name__}: {e}")
+            print("  NOT a gate: a failure to report is not a failure of the corpus.")
 
     def _chain_gate(self, ch):
         """Does the §13 chain gate agree with the verdict the tool just printed?
@@ -9111,6 +9264,247 @@ class CorpusTool:
               t_tara_residual_risk_is_enumerated)
         check("the ASIL absence token is one value and every record using it owes a reason",
               t_asil_absence_marker_is_one_token_and_owes_a_reason)
+
+        # ---- The review packets. Five invariants, each of which fails if the
+        # packet work is undone, and none of which can be satisfied by editing the
+        # generator alone: three of them read the packets back off disk and one
+        # runs the generator as a subprocess so the bytes that ship are the bytes
+        # that were checked.
+
+        PACKET_DIR = self.artifacts_dir / "reviews" / "packets"
+        GEN_REL = "docs/artifacts/tools/make_review_packets.py"
+        GENERATED_PACKETS = "__generated_for_testing__"
+
+        def _generator_available():
+            return (self.root / GEN_REL).exists()
+
+        def _run_generator(out_dir_name, *extra, quiet=True):
+            """Run the generator in a SUBPROCESS against a throwaway output dir.
+
+            A subprocess, not an import, so the check exercises the same entry
+            point a reviewer runs and cannot be satisfied by a module-level
+            side effect the test itself triggered.
+
+            `quiet=False` for the run whose stdout is being inspected: the
+            generator reports a skipped signed packet on stdout, and a test that
+            asked for --quiet and then asserted on stdout would fail for its own
+            suppression rather than for anything about the generator.
+            """
+            out = self.root / "docs" / "artifacts" / "reviews" / out_dir_name
+            cmd = [sys.executable, str(self.root / GEN_REL),
+                   "--root", str(self.root), "--out", str(out)]
+            if quiet:
+                cmd.append("--quiet")
+            try:
+                proc = subprocess.run(cmd + list(extra),
+                                     capture_output=True, text=True, timeout=600)
+                return proc.returncode, proc.stdout, proc.stderr, out
+            except Exception as e:                    # pragma: no cover - env dependent
+                return -1, "", str(e), out
+
+        def _packet_files(out):
+            if not out.is_dir():
+                return []
+            return sorted(p for p in out.rglob("*.md") if p.name != "INDEX.md")
+
+        def t_packet_json_is_invisible_to_the_artifact_index():
+            # THE invariant. docs/artifacts/reviews/ is one of the three roots
+            # iter_corpus_artifacts() walks, so anything record-shaped written
+            # under docs/artifacts/reviews/packets/ enters the index and moves
+            # coverage DENOMINATORS. The packets exist to serve human_approval,
+            # which is 0/321; if generating them changed that denominator, the
+            # act of preparing the review material would have moved the number it
+            # is preparing to move. Each packet.json is therefore asserted to
+            # carry no top-level `id`, `profile`, `artifact_type` or
+            # `source_refs`, and the packet count is asserted to equal the record
+            # count.
+            if not PACKET_DIR.is_dir():
+                self._probe_note = "no packet tree; run make_review_packets.py first"
+                return False
+            bad = []
+            n = 0
+            for jp in sorted(PACKET_DIR.rglob("*.json")):
+                if jp.name == "INDEX.md":
+                    continue
+                d = load_json(jp)
+                n += 1
+                for k in ("id", "profile", "artifact_type", "source_refs",
+                          "human_approval_status", "production_authorized",
+                          "product_verification_credit", "execution_kind", "outcome"):
+                    if k in d:
+                        bad.append(f"{jp.name} carries a top-level {k!r}")
+            index = self.load_artifact_index()
+            n_mds = len([p for p in PACKET_DIR.rglob("*.md") if p.name != "INDEX.md"])
+            self._probe_note = (f"{n} packet.json, {n_mds} packet.md, {len(index)} records "
+                                f"in the index; {len(bad)} record-shaped packet(s)")
+            return (not bad and n == len(index) and n_mds == len(index))
+
+        def t_generating_packets_changes_no_coverage_number():
+            # The second invariant, measured rather than asserted: run the
+            # generator into a throwaway directory OUTSIDE the packet tree and
+            # compare every coverage dimension against the baseline. The throwaway
+            # directory is still under docs/artifacts/reviews/, so it is still
+            # walked by iter_corpus_artifacts -- which is the point: this proves
+            # the invisibility holds for freshly generated packets, not only for
+            # the ones checked in.
+            if not _generator_available():
+                self._probe_note = "make_review_packets.py is not present"
+                return False
+            before = {k: (v["numerator"], v["denominator"]) if isinstance(v, dict) else v
+                      for k, v in self._coverage_dimensions().items()}
+            rc, _o, err, out = _run_generator(GENERATED_PACKETS)
+            try:
+                if rc != 0:
+                    self._probe_note = f"generator exited {rc}: {err[:200]}"
+                    return False
+                n = len(_packet_files(out))
+                if n != before.get("source_grounding", (0, 0))[1]:
+                    self._probe_note = (f"generator produced {n} packets but the corpus has "
+                                        f"{before.get('source_grounding', (0, 0))[1]} records")
+                    return False
+                after = {k: (v["numerator"], v["denominator"]) if isinstance(v, dict) else v
+                         for k, v in self._coverage_dimensions().items()}
+            finally:
+                if out.is_dir():
+                    for p in sorted(out.rglob("*"), reverse=True):
+                        p.rmdir() if p.is_dir() else p.unlink()
+                    out.rmdir()
+            moved = [k for k in before if before[k] != after.get(k)]
+            self._probe_note = (f"{len(before)} dimension(s) compared; moved: "
+                                f"{moved if moved else 'none'}; human_approval "
+                                f"{after.get('human_approval')}, actual_product_evidence "
+                                f"{after.get('actual_product_evidence')}")
+            return not moved and after.get("human_approval") == (0, before["human_approval"][1]) \
+                and after.get("actual_product_evidence")[0] == 0
+
+        def t_every_signature_block_in_every_packet_is_empty():
+            # The rule this whole toolchain exists to hold. Read every generated
+            # packet off disk in BOTH formats - the markdown table and the
+            # packet.json twin - and assert that no field carries a value. A
+            # single non-empty decision anywhere means something wrote a verdict,
+            # which is the one thing no automated process may do.
+            if not PACKET_DIR.is_dir():
+                self._probe_note = "no packet tree"
+                return False
+            mds = [p for p in PACKET_DIR.rglob("*.md") if p.name != "INDEX.md"]
+            if not mds:
+                return False
+            md_filled = [p for p in mds if _packet_signature_filled(p)]
+            js_bad, js_missing = [], []
+            for md in mds:
+                jp = md.with_suffix(".json")
+                if not jp.exists():
+                    js_missing.append(md.name)
+                    continue
+                sb = load_json(jp).get("signature_block") or {}
+                if sb.get("filled") is not False:
+                    js_bad.append(f"{jp.name}: filled={sb.get('filled')!r}")
+                for k in ("reviewer_name", "organisation", "role", "date",
+                          "decision", "comments", "signature"):
+                    if sb.get(k):
+                        js_bad.append(f"{jp.name}: {k}={sb[k]!r}")
+            self._probe_note = (f"{len(mds)} markdown packet(s), {len(md_filled)} with a filled "
+                                f"block; {len(js_bad)} non-empty field(s) in packet.json; "
+                                f"{len(js_missing)} without a twin")
+            return not md_filled and not js_bad and not js_missing
+
+        def t_the_generator_refuses_to_overwrite_a_signed_packet():
+            # The signature-destruction hazard, tested rather than asserted. A
+            # packet is generated, a signature is simulated into it, the generator
+            # is run again against the same output, and the signature must still
+            # be there. Without this a routine regeneration destroys every
+            # approval the corpus has ever collected, silently.
+            if not _generator_available():
+                self._probe_note = "make_review_packets.py is not present"
+                return False
+            rc, _o, err, out = _run_generator(GENERATED_PACKETS, "--only-type", "hazard")
+            try:
+                mds = _packet_files(out)
+                if rc != 0 or not mds:
+                    self._probe_note = f"generator produced nothing to test (rc={rc}) {err[:160]}"
+                    return False
+                target = mds[0]
+                text = target.read_text(encoding="utf-8")
+                label = re.escape("Reviewer name")
+                patched, n = re.subn(r"^(\|\s*" + label + r"\s*\|)\s*(\|\s*)$",
+                                     r"\1 SELF-TEST SIGNATURE \2", text,
+                                     count=1, flags=re.M)
+                if n != 1:
+                    self._probe_note = f"could not inject a signature into {target.name}"
+                    return False
+                target.write_text(patched, encoding="utf-8")
+                if not _packet_signature_filled(target):
+                    self._probe_note = "the injected signature is not detected by the reader"
+                    return False
+                rc2, out2, _e2, _o2 = _run_generator(GENERATED_PACKETS, "--only-type",
+                                                     "hazard", quiet=False)
+                survived = "SELF-TEST SIGNATURE" in target.read_text(encoding="utf-8")
+                skipped = "SKIP" in out2
+                self._probe_note = (f"regeneration rc={rc2}, signature survived={survived}, "
+                                    f"skip reported={skipped}")
+                return rc2 == 0 and survived and skipped
+            finally:
+                if out.is_dir():
+                    for p in sorted(out.rglob("*"), reverse=True):
+                        p.rmdir() if p.is_dir() else p.unlink()
+                    out.rmdir()
+
+        def t_the_generator_covers_exactly_the_record_population():
+            # A packet tree that silently omits records would present an
+            # apparently complete review material while leaving the hardest
+            # records without a packet. The packet count must equal the index
+            # size, and every indexed (profile, id) must have a packet.
+            if not PACKET_DIR.is_dir() or not _generator_available():
+                self._probe_note = "packet tree or generator absent"
+                return False
+            index = self.load_artifact_index()
+            have = set()
+            for jp in sorted(PACKET_DIR.rglob("*.json")):
+                if jp.name == "INDEX.md":
+                    continue
+                t = (load_json(jp).get("target") or {})
+                if t.get("record_id") and t.get("profile"):
+                    have.add((t["profile"], t["record_id"]))
+            missing = sorted(set(index) - have)
+            extra = sorted(have - set(index))
+            self._probe_note = (f"{len(have)} packet(s) for {len(index)} record(s); "
+                                f"{len(missing)} record(s) without a packet, "
+                                f"{len(extra)} packet(s) without a record")
+            return not missing and not extra and len(have) == len(index)
+
+        def t_packet_generator_signature_labels_match_the_ones_check_reads():
+            # corpus.py reads the signature block with its own compiled labels
+            # rather than importing the generator's. That independence is only
+            # worth anything if the two agree, so this test reads the generator's
+            # SIGNATURE_FIELDS source and compares. If they drift, every packet
+            # would silently read as unsigned - the exact failure the independence
+            # was meant to prevent, arriving by the other door.
+            src_path = self.root / GEN_REL
+            if not src_path.exists():
+                self._probe_note = "make_review_packets.py is not present"
+                return False
+            src = src_path.read_text(encoding="utf-8")
+            m = re.search(r"SIGNATURE_FIELDS\s*=\s*\((.*?)\n\)", src, re.S)
+            if not m:
+                self._probe_note = "SIGNATURE_FIELDS not found in the generator source"
+                return False
+            labels = re.findall(r'\(\s*"[a-z_]+"\s*,\s*"((?:[^"\\]|\\.)*)"\s*\)', m.group(1))
+            self._probe_note = (f"generator declares {len(labels)} signature field(s); check "
+                                f"looks for {len(PACKET_SIGNATURE_LABELS)}")
+            return labels == list(PACKET_SIGNATURE_LABELS)
+
+        check("packet.json files are invisible to the artifact index (coverage denominators unchanged)",
+              t_packet_json_is_invisible_to_the_artifact_index)
+        check("generating packets moves no coverage dimension, including human_approval 0/N",
+              t_generating_packets_changes_no_coverage_number)
+        check("every signature block in every generated packet is empty, in both formats",
+              t_every_signature_block_in_every_packet_is_empty)
+        check("the generator refuses to overwrite a packet that already carries a signature",
+              t_the_generator_refuses_to_overwrite_a_signed_packet)
+        check("the packet tree covers exactly the record population, no record omitted",
+              t_the_generator_covers_exactly_the_record_population)
+        check("the packet generator's signature fields match the ones check looks for",
+              t_packet_generator_signature_labels_match_the_ones_check_reads)
         return all(passed for _, passed in tests)
 
 

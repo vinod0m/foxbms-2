@@ -1,0 +1,647 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000011",
+    "rationale": "Implementation element FB2-SW-IMP-000001 is the code location in which FB2-SW-DSN-000001's acquisition, PEC-validation and publication responsibilities are carried: the pinned source's LTC_Trigger sequencer, its LTC_StartVoltageMeasurement command selection, its LTC_CheckPec per-LTC integrity gate and its LTC_SaveRxToVoltageBuffer reassembly into the published database block. The link runs from the implementation to the design because that is the direction master prompt section 13 declares for implements (implementation element -> design/requirement).",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-IMP-000001",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SW-000001",
+    "rationale": "Static-analysis deviation record for FB2-SW-DEV-000002 (src/app/driver/afe/adi/common/ades183x/adi_ades183x.c) mined from the in-source Axivion MisraC2012 style-check suppression. Linked to the AFE driver architecture because that design element owns 'PEC calculation and validation' and 'SPI/DMA communication with LTC AFEs' and this suppression is the PEC buffer placement that those responsibilities depend on. Coverage is PARTIAL: the design element is titled 'AFE Driver Architecture (LTC Family)' and its implementation_mapping lists only src/app/driver/afe/ltc/*, so the ADI ADES183x driver is a sibling AFE driver the as_is design does not actually cover. Relation meaning: the deviation record refines the design element with an evidence-backed, code-level documented exception. The record is NOT a verification of the design element - it performs no test, produces no result and provides no coverage of any requirement. It documents an implementation exception observed in the code that implements the design element, so an auditor can see that the design element's implementation carries a recorded, justified deviation from the project's stated MISRA C:2012 compatibility requirement. The link asserts the existence of the recorded deviation only; it does NOT assert MISRA conformance, tool qualification, or a completed ISO 26262 or ASPICE assessment.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DEV-000002",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SW-000002",
+    "rationale": "Static-analysis deviation record for FB2-SW-DEV-000003 (src/app/driver/afe/ltc/6806/ltc_6806.c) mined from the in-source Axivion MisraC2012 style-check suppression. Within the ownership of FB2-SW-DSN-000001: that design element declares the responsibility 'PEC calculation and validation' and 'SPI/DMA communication with LTC AFEs', and ltc_6806.c is an LTC-family AFE driver. The design's implementation_mapping does not name ltc_6806.c explicitly (it names ltc_afe.c, ltc_afe_dma.c, ltc_pec.c and 6813-1/ltc_6813-1.c), so the mapping is at family level rather than file level. Relation meaning: the deviation record refines the design element with an evidence-backed, code-level documented exception. The record is NOT a verification of the design element - it performs no test, produces no result and provides no coverage of any requirement. It documents an implementation exception observed in the code that implements the design element, so an auditor can see that the design element's implementation carries a recorded, justified deviation from the project's stated MISRA C:2012 compatibility requirement. The link asserts the existence of the recorded deviation only; it does NOT assert MISRA conformance, tool qualification, or a completed ISO 26262 or ASPICE assessment.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DEV-000003",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SW-000003",
+    "rationale": "Static-analysis deviation record for FB2-SW-DEV-000004 (src/app/driver/afe/ltc/6813-1/ltc_6813-1.c) mined from the in-source Axivion MisraC2012 style-check suppression. Directly within the ownership of FB2-SW-DSN-000001: its implementation_mapping explicitly lists source_file 'src/app/driver/afe/ltc/6813-1/ltc_6813-1.c' (symbol LTC_6813_ReadVoltages, status implemented), so this file is the strongest design-to-code binding available in the as_is profile. Relation meaning: the deviation record refines the design element with an evidence-backed, code-level documented exception. The record is NOT a verification of the design element - it performs no test, produces no result and provides no coverage of any requirement. It documents an implementation exception observed in the code that implements the design element, so an auditor can see that the design element's implementation carries a recorded, justified deviation from the project's stated MISRA C:2012 compatibility requirement. The link asserts the existence of the recorded deviation only; it does NOT assert MISRA conformance, tool qualification, or a completed ISO 26262 or ASPICE assessment.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DEV-000004",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SW-000004",
+    "rationale": "Static-analysis deviation record for FB2-SW-DEV-000005 (src/app/driver/afe/maxim/common/mxm_41b_register_map.h) mined from the in-source Axivion MisraC2012 style-check suppression. Linked to the AFE driver architecture as the AFE register-map layer that the design's AFE command sequencing depends on. Coverage is PARTIAL: the design is scoped to the LTC family and does not name any Maxim/MAXIM41B source file. Relation meaning: the deviation record refines the design element with an evidence-backed, code-level documented exception. The record is NOT a verification of the design element - it performs no test, produces no result and provides no coverage of any requirement. It documents an implementation exception observed in the code that implements the design element, so an auditor can see that the design element's implementation carries a recorded, justified deviation from the project's stated MISRA C:2012 compatibility requirement. The link asserts the existence of the recorded deviation only; it does NOT assert MISRA conformance, tool qualification, or a completed ISO 26262 or ASPICE assessment.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DEV-000005",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SW-000005",
+    "rationale": "Static-analysis deviation record for FB2-SW-DEV-000006 (src/app/driver/afe/maxim/common/mxm_bit_extract.h) mined from the in-source Axivion MisraC2012 style-check suppression. Linked to the AFE driver architecture as the shared AFE bit-extraction helper. Coverage is PARTIAL: the design is scoped to the LTC family; the Maxim AFE bit-extraction header is not in its implementation_mapping. Relation meaning: the deviation record refines the design element with an evidence-backed, code-level documented exception. The record is NOT a verification of the design element - it performs no test, produces no result and provides no coverage of any requirement. It documents an implementation exception observed in the code that implements the design element, so an auditor can see that the design element's implementation carries a recorded, justified deviation from the project's stated MISRA C:2012 compatibility requirement. The link asserts the existence of the recorded deviation only; it does NOT assert MISRA conformance, tool qualification, or a completed ISO 26262 or ASPICE assessment.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DEV-000006",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SW-000006",
+    "rationale": "Static-analysis deviation record for FB2-SW-DEV-000016 (src/app/driver/spi/spi_cfg-helper.h) mined from the in-source Axivion MisraC2012 style-check suppression. Directly within the ownership of FB2-SW-DSN-000001: the design element exposes the AFE_SPI interface (interface_id AFE_SPI, bidirectional, spi_tx/spi_rx) and these defines are the per-slave hardware chip-select masks that drive the CSn lines of that interface. The design's constraints record 'SPI clock <= 1 MHz (LTC6811 spec)' and its decision DEC-AFE-002 splits voltage and temperature reads, both of which depend on the CSn values these masks produce. Relation meaning: the deviation record refines the design element with an evidence-backed, code-level documented exception. The record is NOT a verification of the design element - it performs no test, produces no result and provides no coverage of any requirement. It documents an implementation exception observed in the code that implements the design element, so an auditor can see that the design element's implementation carries a recorded, justified deviation from the project's stated MISRA C:2012 compatibility requirement. The link asserts the existence of the recorded deviation only; it does NOT assert MISRA conformance, tool qualification, or a completed ISO 26262 or ASPICE assessment.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-DEV-000016",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000012",
+    "rationale": "FB2-REV-000010 reviewed FB2-SW-DSN-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000010",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000054",
+    "rationale": "FB2-REV-000011 reviewed FB2-SW-DSN-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000011",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000071",
+    "rationale": "FB2-REV-000001 reviewed FB2-SW-DSN-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000001",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-ALW-000001",
+    "rationale": "FB2-SW-SWR-000001 is allocated to FB2-SW-DSN-000001 as the software requirement whose implementation that design details: the design's acquisition, PEC-validation and publication responsibilities are the requirement's own clauses. Direction is requirement -> design element, as master prompt section 13 declares for allocated_to.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-SWR-000001",
+    "target_id": "FB2-SW-DSN-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against design.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (2)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "2/2 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (3 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "3 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 3,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-CHALLENGE-SAFETY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000010",
+     "review_path": "docs/artifacts/reviews/records/review-challenge-safety-critical-as-is.json",
+     "review_type": "challenge",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-challenge-safety-critical-as-is.json",
+      "reviewed_by link FB2-LNK-REVB-000012 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000011",
+     "review_path": "docs/artifacts/reviews/records/review-meta-review-prior-review.json",
+     "review_type": "meta",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-prior-review.json",
+      "reviewed_by link FB2-LNK-REVB-000054 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-SAFETY-001",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000001",
+     "review_path": "docs/artifacts/reviews/records/review-vertical-slice.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "nvidia/nemotron-3-ultra-550b-a55b",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-vertical-slice.json",
+      "reviewed_by link FB2-LNK-REVB-000071 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000001, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `124`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_StartMeasurement`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000002, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `131`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_RequestTemperatureRead`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.decomposition[0].child_id` names FB2-SW-DSN-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.decomposition[1].child_id` names FB2-SW-DSN-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: exists only in profile(s) ['synthetic_reference']; a record in profile 'as_is' may not reference it unqualified",
+   "statement": "`.decomposition[2].child_id` names FB2-SW-DSN-000004."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C08-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 with status `mapped` on the grounds: Software architectural design"
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C09-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `mapped` on the grounds: Software architectural design"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 6559,
+  "record_path": "docs/artifacts/corpus/as_is/software/design-afe-driver.json",
+  "record_sha256": "521f450f03821c514165325048bcba7455503e1c95464bd9b97549bdcc47caa7",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "883027e91bcef30595c2b7a81c176cd6a2d4ae0b2a994c2303299226d1c0411e"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchors FB2-SRC-COD-000001 and -000002 previously named AFE_GetCellVoltages and AFE_GetCellTemperatures, neither of which exists; they now name AFE_StartMeasurement (afe.h:124) and AFE_RequestTemperatureRead (afe.h:131), which start a measurement cycle and request a temperature read. The revision history says 'Extracted from AFE driver source', and implementation_mapping asserts LTC_AFE_TriggerMeasurement, LTC_AFE_DMA_RxCallback, LTC_PEC_Calculate and LTC_6813_ReadVoltages are 'implemented'; graft grep finds none of those four names anywhere in the repository, and one of the two named source files (src/app/driver/afe/ltc/common/ltc_afe.c) does not exist. The extraction claim cannot stand, so the record is labelled derived."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SW-DSN-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Design: AFE Driver Architecture (LTC Family)\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "design",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behavior_model": {
+   "states": [
+    "INIT",
+    "WAKEUP",
+    "READ_VOLTAGES",
+    "READ_TEMPERATURES",
+    "BALANCING",
+    "ERROR",
+    "SLEEP"
+   ],
+   "transitions": [
+    {
+     "action": "send_wakeup",
+     "from": "INIT",
+     "guard": "config_valid",
+     "to": "WAKEUP",
+     "trigger": "driver_init"
+    },
+    {
+     "action": "start_voltage_read",
+     "from": "WAKEUP",
+     "guard": "afe_ready",
+     "to": "READ_VOLTAGES",
+     "trigger": "wakeup_done"
+    },
+    {
+     "action": "start_temp_read",
+     "from": "READ_VOLTAGES",
+     "guard": "pec_valid",
+     "to": "READ_TEMPERATURES",
+     "trigger": "voltages_done"
+    },
+    {
+     "action": "apply_balancing",
+     "from": "READ_TEMPERATURES",
+     "guard": "pec_valid",
+     "to": "BALANCING",
+     "trigger": "temps_done"
+    },
+    {
+     "action": "start_voltage_read",
+     "from": "BALANCING",
+     "guard": "period_elapsed",
+     "to": "READ_VOLTAGES",
+     "trigger": "cycle_timer"
+    },
+    {
+     "action": "report_fault",
+     "from": "*",
+     "guard": "retries_exhausted",
+     "to": "ERROR",
+     "trigger": "pec_failure"
+    },
+    {
+     "action": "restart_driver",
+     "from": "ERROR",
+     "guard": "fault_cleared",
+     "to": "INIT",
+     "trigger": "reinit_request"
+    }
+   ],
+   "type": "state_machine"
+  },
+  "budgets": {
+   "cpu_time_ms": 5,
+   "memory_bytes": 8192,
+   "stack_bytes": 2048
+  },
+  "constraints": [
+   "SPI clock \u2264 1 MHz (LTC6811 spec)",
+   "DMA buffer size: 256 bytes per slave",
+   "Task period: 100 ms (FreeRTOS task)",
+   "Stack usage: < 2 KB"
+  ],
+  "created_at": "2026-09-08T00:00:00Z",
+  "decisions": [
+   {
+    "alternatives": [
+     "Polling",
+     "DMA",
+     "Interrupt"
+    ],
+    "decision_id": "DEC-AFE-001",
+    "rationale": "Lowest CPU overhead for multi-slave reads",
+    "selected": "DMA"
+   },
+   {
+    "alternatives": [
+     "Single read all",
+     "Split voltage/temp"
+    ],
+    "decision_id": "DEC-AFE-002",
+    "rationale": "LTC6811 requires separate commands",
+    "selected": "Split voltage/temp"
+   }
+  ],
+  "decomposition": [
+   {
+    "child_id": "FB2-SW-DSN-000002",
+    "relationship": "contains"
+   },
+   {
+    "child_id": "FB2-SW-DSN-000003",
+    "relationship": "contains"
+   },
+   {
+    "child_id": "FB2-SW-DSN-000004",
+    "relationship": "contains"
+   }
+  ],
+  "design_level": "architecture",
+  "engineering_domain": "software",
+  "failure_response": [
+   {
+    "detection": "CRC check on RX",
+    "failure_mode": "PEC failure",
+    "reaction": "Retry 3x, then ERROR state",
+    "recovery": "Reinit on fault clear"
+   },
+   {
+    "detection": "DMA timeout",
+    "failure_mode": "SPI timeout",
+    "reaction": "ERROR state, report to DIAG",
+    "recovery": "Reinit on fault clear"
+   },
+   {
+    "detection": "No RX data",
+    "failure_mode": "AFE not responding",
+    "reaction": "ERROR state",
+    "recovery": "Power cycle AFE via SBC"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SW-DSN-000001",
+  "implementation_mapping": [
+   {
+    "source_file": "src/app/driver/afe/ltc/common/ltc_afe.c",
+    "status": "implemented",
+    "symbol": "LTC_AFE_TriggerMeasurement"
+   },
+   {
+    "source_file": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+    "status": "implemented",
+    "symbol": "LTC_AFE_DMA_RxCallback"
+   },
+   {
+    "source_file": "src/app/driver/afe/ltc/common/ltc_pec.c",
+    "status": "implemented",
+    "symbol": "LTC_PEC_Calculate"
+   },
+   {
+    "source_file": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+    "status": "implemented",
+    "symbol": "LTC_6813_ReadVoltages"
+   }
+  ],
+  "interfaces": [
+   {
+    "direction": "output",
+    "interface_id": "AFE_DATABASE",
+    "signals": [
+     {
+      "name": "cell_voltages",
+      "range": "0-5000",
+      "rate": "20 Hz",
+      "type": "uint16_t[]",
+      "unit": "mV"
+     },
+     {
+      "name": "cell_temperatures",
+      "range": "-400-1500",
+      "rate": "20 Hz",
+      "type": "int16_t[]",
+      "unit": "0.1\u00b0C"
+     },
+     {
+      "name": "balancing_feedback",
+      "range": "0/1",
+      "rate": "20 Hz",
+      "type": "bool[]",
+      "unit": "bool"
+     }
+    ]
+   },
+   {
+    "direction": "bidirectional",
+    "interface_id": "AFE_SPI",
+    "signals": [
+     {
+      "name": "spi_tx",
+      "range": "0-255",
+      "rate": "1 MHz",
+      "type": "uint8_t[]",
+      "unit": "bytes"
+     },
+     {
+      "name": "spi_rx",
+      "range": "0-255",
+      "rate": "1 MHz",
+      "type": "uint8_t[]",
+      "unit": "bytes"
+     }
+    ]
+   }
+  ],
+  "lifecycle_status": "reviewed",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchors FB2-SRC-COD-000001 and -000002 previously named AFE_GetCellVoltages and AFE_GetCellTemperatures, neither of which exists; they now name AFE_StartMeasurement (afe.h:124) and AFE_RequestTemperatureRead (afe.h:131), which start a measurement cycle and request a temperature read. The revision history says 'Extracted from AFE driver source', and implementation_mapping asserts LTC_AFE_TriggerMeasurement, LTC_AFE_DMA_RxCallback, LTC_PEC_Calculate and LTC_6813_ReadVoltages are 'implemented'; graft grep finds none of those four names anywhere in the repository, and one of the two named source files (src/app/driver/afe/ltc/common/ltc_afe.c) does not exist. The extraction claim cannot stand, so the record is labelled derived.",
+  "responsibilities": [
+   "SPI/DMA communication with LTC AFEs",
+   "Command sequencing (wakeup, read, balancing)",
+   "PEC calculation and validation",
+   "Data conversion to mV/\u00b0C",
+   "Database publishing"
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-09-08T00:00:00Z",
+    "description": "Extracted from AFE driver source",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000001",
+   "FB2-SRC-COD-000002"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Software architectural design",
+    "reference": "Part 6, Clause 8",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Software architectural design",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Design: AFE Driver Architecture (LTC Family)",
+  "updated_at": "2026-09-08T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "design",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SW-DSN-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SW-DSN-000001",
+  "revision": "1"
+ }
+}

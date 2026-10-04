@@ -1,0 +1,649 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SIR-000024",
+    "rationale": "The second specification FB2-SW-SIR-000003 is derived from. FB2-SW-SIR-000003 covers the communication and data exchange boundary and its derivation field names every interface specification it came from; this link names the second one so that a reader following the requirement to its evidence reaches both specifications rather than only the first. The direction and the reason are the same as for the first specification: the specification establishes what the interface is by analysing the source, and the requirement states what must be true of it.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000003",
+    "target_id": "FB2-SW-IFS-000005"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000198",
+    "rationale": "Reviewed by FB2-REV-000018, a profile-scoped domain review of all sixteen software_interface_specification records in this profile. The review read the record and checked every source citation it makes against the pinned foxBMS commit 308028fb by reading the blob rather than the working tree: 81 of 81 declared source_refs resolve, 61 of 61 element declaration lines and 60 of 61 element implementation lines carry the claimed symbol, and 572 of 572 in-record 'path Lnn[-Lmm]' prose ranges resolve in bounds. This endpoint's element lines were among those checked. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000018",
+    "target_id": "FB2-SW-IFS-000005"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against software_interface_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (3)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "3/3 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IFS-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000018",
+     "review_path": "docs/artifacts/reviews/records/review-software-interface-specifications.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-software-interface-specifications.json",
+      "reviewed_by link FB2-LNK-REVB-000198 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded: DATA_ReadN/WriteN signatures gained a per-pointer uint32_t length and DATA_QUEUE_MESSAGE_s gained the size array. Symbols and line ranges verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000105, which records anchor class `repository_file`; path `src/app/engine/database/database.h`; line_range `73`; content_hash `43ae9b50e0233395685c8f2b1c8b74f6f4cda8450d5a958b500b5fc4d27c03b2`; symbol `DATA_MAX_ENTRIES_PER_ACCESS`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the copy-length fix: DATA_QUEUE_MESSAGE_s now carries the caller's declared per-pointer size and the copy loop asserts it is at least the registered length. A call site declaring a smaller struct than the type registered for its uniqueId previously overran the caller's object; with the precondition removed all 32 canary bytes behind a 16-byte caller object were clobbered (a 72-b\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000106, which records anchor class `repository_file`; path `src/app/engine/database/database.c`; line_range `79-83`; content_hash `ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf`; symbol `DATA_MAX_QUEUE_TIMEOUT_MS`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the copy-length fix: DATA_QUEUE_MESSAGE_s now carries the caller's declared per-pointer size and the copy loop asserts it is at least the registered length. A call site declaring a smaller struct than the type registered for its uniqueId previously overran the caller's object; with the precondition removed all 32 canary bytes behind a 16-byte caller object were clobbered (a 72-b\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000028, which records anchor class `repository_file`; path `src/app/engine/database/database.c`; line_range `130-196`; content_hash `ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf`; symbol `DATA_AccessDatabaseEntries`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000105 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000105."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000106 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000106."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000028 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000028."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 (software architectural design - interface specification) with status `partially_mapped` on the grounds: Specifies the exchange boundary with the real signatures, the queue timeout as the one stated time limit, the queue serialisation that realises the re-entrancy rule, and the fact that the return value reports enqueue success only."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C08-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Supplies an interface specification for the data-exchange boundary that the design records' signal tables did not."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C09-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Named as the specification the software interface requirements for the data-exchange boundary are derived from."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 22815,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-database-engine.json",
+  "record_sha256": "95862aa318ab18caf106a04106d4b052e48e4b6f692e8ea55a3e80a865d9e45b",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "95862aa318ab18caf106a04106d4b052e48e4b6f692e8ea55a3e80a865d9e45b"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IFS-000005.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Interface Specification: the database engine's data-block exchange interface\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis": {
+   "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+   "direction": "source_to_specification",
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "method": "source_analysis_at_pinned_commit",
+   "tools_used": [
+    "git show 308028fb:<path>",
+    "graft skeleton <file>"
+   ],
+   "what_this_record_is_not": [
+    "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+    "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+    "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+    "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+   ]
+  },
+  "artifact_type": "software_interface_specification",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "consuming_modules": [
+   {
+    "calls": [
+     "DATA_Task"
+    ],
+    "consumption_evidence": "DATA_Task() at src/app/task/config/ftask_cfg.c L211 inside FTSK_RunUserCodeEngine, the 1 ms engine task.",
+    "name": "1 ms engine task",
+    "source_path": "src/app/task/config/ftask_cfg.c"
+   },
+   {
+    "calls": [
+     "DATA_Initialize"
+    ],
+    "consumption_evidence": "STD_RETURN_TYPE_e retval = DATA_Initialize(); at src/app/task/config/ftask_cfg.c L190, with the result tested at L191.",
+    "name": "Start-up task configuration",
+    "source_path": "src/app/task/config/ftask_cfg.c"
+   },
+   {
+    "calls": [
+     "DATA_Read1DataBlock"
+    ],
+    "consumption_evidence": "Through the DATA_READ_DATA macro, which resolves to the one-to-four block read family: DATA_READ_DATA(&tableMinMaxCellVoltages); at src/app/application/algorithm/state_estimation/soc/counting/soc_counting.c L171.",
+    "name": "Application algorithms and state estimation",
+    "source_path": "src/app/application/algorithm/state_estimation/soc/counting/soc_counting.c"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "elements": [
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Serialisation is achieved by routing every access through one queue. DATA_AccessDatabaseEntries sends the request with OS_SendToBackOfQueue(ftsk_databaseQueue, ...) at src/app/engine/database/database.c L158, and the single consumer drains that queue in DATA_Task with OS_ReceiveFromQueue at L284. The queue handle itself is declared in src/app/task/ftask/freertos/ftask_freertos.c L156 and created there at L199.",
+     "protection_mechanism": "Single queue with one consumer; no mutex and no critical section around the copy.",
+     "reentrancy": "serialised_by_queue_or_mutex"
+    },
+    "consuming_module": "Application algorithms and state-estimation modules",
+    "declaration": "extern STD_RETURN_TYPE_e DATA_Read1DataBlock(void *pDataToReceiver0);",
+    "declaration_line": 224,
+    "declaration_path": "src/app/engine/database/database.h",
+    "element_id": "IFSE-000401",
+    "error_paths": [
+     {
+      "condition": "pDataToReceiver0 is NULL.",
+      "evidence": "src/app/engine/database/database.c L134",
+      "observed_behaviour": "A precondition assertion trips at the top of the static engine function.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "The database queue send does not complete within DATA_QUEUE_TIMEOUT_MS.",
+      "evidence": "src/app/engine/database/database.c L146, L157-L160",
+      "observed_behaviour": "The initial STD_NOT_OK is returned to the caller and no access is performed.",
+      "signalled_as": "STD_NOT_OK"
+     },
+     {
+      "condition": "The queue does not yet exist.",
+      "evidence": "src/app/engine/database/database.c L272-L273",
+      "observed_behaviour": "Initialisation records this: DATA_Initialize sets retval to STD_NOT_OK when ftsk_databaseQueue is NULL_PTR.",
+      "signalled_as": "STD_NOT_OK from DATA_Initialize"
+     },
+     {
+      "condition": "The caller's uniqueId does not name an existing entry.",
+      "evidence": "The uniqueId-to-index table is built in DATA_Initialize at src/app/engine/database/database.c L258-L270, which asserts the header pointer is non-null at L262 and rejects an id at or above DATA_BLOCK_ID_MAX at L265 by setting retval to STD_NOT_OK.",
+      "observed_behaviour": "Not handled by this element. The engine resolves entries through a uniqueId-to-index table built at initialisation; an unmatched id is not reported to the caller by the access path this record specifies.",
+      "signalled_as": "not signalled on this path"
+     }
+    ],
+    "implementation_line": 299,
+    "implementation_path": "src/app/engine/database/database.c",
+    "not_specified_by_source": [
+     "The interface does not state which entry it reads. It is resolved from the uniqueId field inside the caller's own struct, so the 'name' of the data block is a property of the caller's object rather than an argument, and nothing documents that convention at the interface.",
+     "The interface does not state the size of the copy or how the destination length is checked against the entry length. DATA_CopyData takes a dataLength that comes from the registered entry and a destination pointer whose size the engine cannot know, so the interface carries an unchecked buffer contract.",
+     "The interface is asynchronous and does not say so. A caller gets STD_OK and no data, and nothing in the header tells it that the data has not arrived yet.",
+     "The interface does not state whether the copy is atomic with respect to a concurrent writer. It is not, because the copy happens in the consumer task while another task may be enqueuing, and the header does not say what a reader sees if a writer is mid-update.",
+     "The interface states no coherency rule for multi-entry reads. DATA_Read4DataBlocks exists and can copy four entries in one request, but nothing states whether those four copies are taken at one instant."
+    ],
+    "parameters": [
+     {
+      "c_type": "void *",
+      "direction": "out",
+      "meaning": "Destination for a copy of one database entry.",
+      "name": "pDataToReceiver0",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "The engine asserts it: FAS_ASSERT(pData0 != NULL_PTR) at src/app/engine/database/database.c L134.",
+      "unit": "one data block of the caller's own type",
+      "valid_range": "Non-null. The caller's database entry must carry the uniqueId of the entry it expects, because the engine resolves the entry from that field rather than from the pointer."
+     }
+    ],
+    "providing_module": "Database engine",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "The return value reports only enqueue success. It does not report whether the access itself later succeeded, and it cannot: the caller has already returned by the time DATA_Task performs the copy.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85; the success branch is src/app/engine/database/database.c L158-L159 and the initial value at L146 is returned at L160.",
+     "values": {
+      "STD_NOT_OK": "The queue send did not succeed within the timeout, so the request was not enqueued and the read or write did not happen.",
+      "STD_OK": "The access request was enqueued on the database queue within the queue timeout."
+     }
+    },
+    "symbol": "DATA_Read1DataBlock",
+    "timing": {
+     "evidence": "The consumer side is on the 1 ms engine task: DATA_Task() is called from FTSK_RunUserCodeEngine at src/app/task/config/ftask_cfg.c L211, and FTSK_TASK_ENGINE_CYCLE_TIME is 1u at src/app/task/config/ftask_cfg.h L76. The caller side has no period at all; it enqueues and returns.",
+     "period_imposed_by_source": true,
+     "period_ms": 1,
+     "timeouts": [
+      {
+       "evidence": "src/app/engine/database/database.c L79 defines DATA_MAX_QUEUE_TIMEOUT_MS as (10u); L81 converts it to queue ticks as DATA_QUEUE_TIMEOUT_MS (DATA_MAX_QUEUE_TIMEOUT_MS / OS_TICK_RATE_MS) and L83 statically asserts the result is greater than zero.",
+       "meaning": "The longest a caller will block trying to enqueue its access request.",
+       "name": "DATA_MAX_QUEUE_TIMEOUT_MS",
+       "unit": "ms",
+       "value": "10"
+      }
+     ]
+    },
+    "validity_signalling": {
+     "evidence": "The public element only forwards to the static DATA_AccessDatabaseEntries at src/app/engine/database/database.c L299-L302, which returns STD_OK on a successful queue send at L158-L159. Nothing in the return path reports whether the copy happened.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "Return value reports enqueue success only. The data itself arrives later, asynchronously."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from task start-up at src/app/task/config/ftask_cfg.c L190. The source comments the surrounding function as operating under the assumption that the operating system is not yet running.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "Start-up task configuration",
+    "declaration": "STD_RETURN_TYPE_e DATA_Initialize(void)",
+    "declaration_line": 228,
+    "declaration_path": "src/app/engine/database/database.c",
+    "element_id": "IFSE-000402",
+    "error_paths": [
+     {
+      "condition": "A registered data block's header pointer is NULL.",
+      "evidence": "src/app/engine/database/database.c L262",
+      "observed_behaviour": "A precondition assertion traps.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "A block id is at or above DATA_BLOCK_ID_MAX.",
+      "evidence": "src/app/engine/database/database.c L264-L268",
+      "observed_behaviour": "retval is set to STD_NOT_OK and initialisation continues rather than aborting, so the caller learns of it only from the return value.",
+      "signalled_as": "STD_NOT_OK"
+     },
+     {
+      "condition": "The database queue was not created.",
+      "evidence": "src/app/engine/database/database.c L272-L273",
+      "observed_behaviour": "retval is set to STD_NOT_OK.",
+      "signalled_as": "STD_NOT_OK"
+     },
+     {
+      "condition": "The task queues have not all been created yet.",
+      "evidence": "const bool allQueuesCreatedCopyForAssert = ftsk_allQueuesCreated; followed by FAS_ASSERT(allQueuesCreatedCopyForAssert == true); at src/app/engine/database/database.c L232-L233",
+      "observed_behaviour": "A precondition assertion traps before any entry is initialised: the element copies the all-queues-created flag to a local, then asserts it is true.",
+      "signalled_as": "precondition assertion"
+     }
+    ],
+    "implementation_line": 228,
+    "implementation_path": "src/app/engine/database/database.c",
+    "not_specified_by_source": [
+     "The interface does not state how many data blocks must be registered, or what a caller must do to register one. The registry is a separate data structure the interface never names.",
+     "The interface does not state that it partially succeeds: on an out-of-range id it sets the failure flag and keeps initialising the remaining entries, so a returned STD_NOT_OK does not say which entries were set up correctly.",
+     "The interface does not state the initial value written into each entry. The body zeroes every byte from the size of the uniqueId field onward, which is an implementation choice the interface does not describe.",
+     "The interface returns no diagnostic identifying which block failed, so a failure is actionable only by inspecting the caller's own configuration."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "Database engine",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "The return value reports only enqueue success. It does not report whether the access itself later succeeded, and it cannot: the caller has already returned by the time DATA_Task performs the copy.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85; the success branch is src/app/engine/database/database.c L158-L159 and the initial value at L146 is returned at L160.",
+     "values": {
+      "STD_NOT_OK": "The queue send did not succeed within the timeout, so the request was not enqueued and the read or write did not happen.",
+      "STD_OK": "The access request was enqueued on the database queue within the queue timeout."
+     }
+    },
+    "symbol": "DATA_Initialize",
+    "timing": {
+     "evidence": "Called once during start-up from the task initialisation function at src/app/task/config/ftask_cfg.c L190.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The single caller in the source tests it and traps on failure: STD_RETURN_TYPE_e retval = DATA_Initialize(); at src/app/task/config/ftask_cfg.c L190 followed by if (retval == STD_NOT_OK) { FAS_ASSERT(FAS_TRAP); } at src/app/task/config/ftask_cfg.c L191-L194.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value STD_RETURN_TYPE_e."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "It is the only consumer of the database queue: it tests the queue handle at src/app/engine/database/database.c L279 and receives from it at L284. A second concurrent invocation would not be excluded by any lock in this element.",
+     "protection_mechanism": "Queue with a single consumer; no mutex.",
+     "reentrancy": "not_reentrant"
+    },
+    "consuming_module": "1 ms engine task",
+    "declaration": "void DATA_Task(void)",
+    "declaration_line": 278,
+    "declaration_path": "src/app/engine/database/database.c",
+    "element_id": "IFSE-000403",
+    "error_paths": [
+     {
+      "condition": "The queue handle is NULL.",
+      "evidence": "src/app/engine/database/database.c L279",
+      "observed_behaviour": "The function returns without doing anything.",
+      "signalled_as": "nothing"
+     },
+     {
+      "condition": "A received request names an access type that is neither read nor write.",
+      "evidence": "src/app/engine/database/database.c L190-L192, marked with an LCOV_EXCL_LINE exclusion",
+      "observed_behaviour": "DATA_CopyData traps on its else branch.",
+      "signalled_as": "precondition assertion"
+     }
+    ],
+    "implementation_line": 278,
+    "implementation_path": "src/app/engine/database/database.c",
+    "not_specified_by_source": [
+     "The interface does not state how many queued requests it will process in one call. It receives in a loop, so the bound is the queue length, and the interface does not name either.",
+     "The interface does not state a worst-case execution time or a budget, although it is the serialisation point for every data block in the system. Nothing in the interface reserves time for it against the 1 ms cycle.",
+     "The interface does not state what a producer should do when the queue is full beyond the enqueue timeout, which lives in the caller-side element.",
+     "The interface does not state whether a queued access can be stale by the time it is performed, which is the central timing question an asynchronous interface raises."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "Database engine",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value; this is the single consumer side of the queue.",
+     "evidence": "Declared void in the header and defined void at src/app/engine/database/database.c L278.",
+     "values": {}
+    },
+    "symbol": "DATA_Task",
+    "timing": {
+     "evidence": "Called from FTSK_RunUserCodeEngine at src/app/task/config/ftask_cfg.c L211, whose cycle time is FTSK_TASK_ENGINE_CYCLE_TIME (1u) at src/app/task/config/ftask_cfg.h L76.",
+     "period_imposed_by_source": true,
+     "period_ms": 1
+    },
+    "validity_signalling": {
+     "evidence": "Defined void at src/app/engine/database/database.c L278; it drains the queue and performs copies.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "None returned. It performs the queued accesses."
+    }
+   }
+  ],
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IFS-000005",
+  "interface_class": "data_exchange",
+  "interface_id": "IFS-DATABASE-000005",
+  "interface_level_gaps": [
+   {
+    "consequence": "A caller that treats STD_OK as 'the data is in my buffer' is wrong, and nothing in the header would tell it so. A requirement written from this header alone would be unsound.",
+    "evidence": "The read element at src/app/engine/database/database.c L299-L302 only enqueues; the copy is performed later in DATA_Task at L278-L294.",
+    "gap": "The interface is asynchronous and does not say so."
+   },
+   {
+    "consequence": "There is no way for a caller to learn that its access failed after it was accepted, and no completion callback. A requirement about detection of a failed read cannot be satisfied through this return value.",
+    "evidence": "src/app/engine/database/database.c L158-L159 sets STD_OK on a successful OS_SendToBackOfQueue and nothing else in the access path returns a value.",
+    "gap": "The return value reports enqueue success and nothing else."
+   },
+   {
+    "consequence": "A caller that gets the uniqueId wrong reads a different entry, or none, and the interface will not say so. The copy length comes from the registered entry and is applied to a destination whose size the engine cannot verify.",
+    "evidence": "FAS_ASSERT(pData0 != NULL_PTR) at src/app/engine/database/database.c L134 is the only argument check; the uniqueId-to-index table is built at L258-L270; DATA_CopyData takes the registered dataLength at src/app/engine/database/database.c L164-L196.",
+    "gap": "The entry is identified by a field inside the caller's own struct rather than by an argument, and the copy length is unchecked."
+   },
+   {
+    "consequence": "The interface cannot support a requirement that a group of values be mutually consistent, and a reader has no way to know how old the data it just requested is. The serialisation is real, and so is the absence of any stated snapshot semantics.",
+    "evidence": "The read family reaches four entries in one request, and DATA_CopyData copies each entry independently at src/app/engine/database/database.c L164-L196 with no snapshot or lock spanning them.",
+    "gap": "No coherency or atomicity statement for multi-entry reads and no staleness bound for any read."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "providing_module": {
+   "name": "Database engine",
+   "role": "Owns the shared data blocks. All access goes through a single queue drained by one task, which is what serialises concurrent access to the blocks in the first place.",
+   "source_paths": [
+    "src/app/engine/database/database.h",
+    "src/app/engine/database/database.c"
+   ]
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Three elements of the database interface, chosen because together they show the property that makes this boundary different from the others in this corpus: it is asynchronous. The public read returns before the data exists, the return value reports only whether the request was queued, and the copy happens later on another task. The record states that rather than describing the interface as if it were a function call.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000105",
+   "FB2-SRC-COD-000106",
+   "FB2-SRC-COD-000028"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Specifies the exchange boundary with the real signatures, the queue timeout as the one stated time limit, the queue serialisation that realises the re-entrancy rule, and the fact that the return value reports enqueue success only.",
+    "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies an interface specification for the data-exchange boundary that the design records' signal tables did not.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Named as the specification the software interface requirements for the data-exchange boundary are derived from.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Interface Specification: the database engine's data-block exchange interface",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_status": {
+   "analysed_against_running_code": false,
+   "conformance_tested": false,
+   "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IFS-000005"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IFS-000005",
+  "revision": "1"
+ }
+}

@@ -1,0 +1,416 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 3,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000029 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[0]` names FB2-REV-FND-000029."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000025 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[1]` names FB2-REV-FND-000025."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: exists only in profile(s) ['as_is']; a record in profile 'synthetic_reference' may not reference it unqualified",
+   "statement": "`.related_records[2]` names FB2-REV-FND-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[3]` names FB2-SCN-MUT-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[4]` names FB2-SCN-MUT-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[5]` names FB2-SCN-MUT-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000010 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[6]` names FB2-SCN-MUT-000010."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[7]` names FB2-SCN-MUT-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000017 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[8]` names FB2-SCN-MUT-000017."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000019 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[9]` names FB2-SCN-MUT-000019."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-MUT-000020 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[10]` names FB2-SCN-MUT-000020."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[11]` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[13]` names FB2-SAF-SEC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.related_records[14]` names FB2-SAF-FSR-000004."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C15-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.9 with status `mapped` on the grounds: Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C16-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6.4 (monitoring and measurement) with status `mapped` on the grounds: The obligation to record rather than to conceal. A validation gate that cannot detect what it claims to detect is a measurement that does not measure."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C17-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by None; method \"docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.\"; 1/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `high`, category `process`, disposition `resolved`. Its resolution text names a corpus id: False."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 14746,
+  "record_path": "docs/artifacts/reviews/findings/finding-000032-self-certifying-mutation-gate.json",
+  "record_sha256": "884df87f86c387d22acacb2bd7fcc79c21330ff2ba6b5b4a791c06f61ab0be32",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "123b832e6bc54d8892b93b4ab5c8f3f3f902bf815cba597c465e47256edbe037"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "baselined: the defect is characterised, the true detection state is measured, the gate is repaired, and the repair is regression-tested. This finding does not assert that the mutation suite is complete, that the detector set is correct, or that any human has confirmed the repair. human_approval_status is pending, production_authorized is false and product_verification_credit is false throughout the corpus."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-FND-000032.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the quality_engineer for this management record, do you agree that \"Finding FB2-REV-FND-000032: the 20/20 mutation acceptance gate was self-certifying - it accepted any finding of the expected severity on the scenario's affected artifact, so 8 of \u2026\" is a correct and complete statement of verification and quality process records and their evidence?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `resolved`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "closure",
+   "priority": 12,
+   "question": "Does the named fix actually close the condition, on the current tree?",
+   "what_in_this_packet_bears_on_it": "resolution text; the named record id or rule.",
+   "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "process",
+  "created_at": "2026-09-29T00:00:00Z",
+  "disposition": "resolved",
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "management",
+  "evidence": "The defect is in docs/artifacts/tools/corpus.py, in the scenario harness. _apply_mutation_and_detect re-ran _validate_links and _validate_semantic_rules on the mutated corpus, then kept every finding whose artifact_id was in the scenario's affected_ids (or whose description mentioned one). cmd_scenario_test then accepted the scenario if ANY of those findings had expected_finding.severity, or had expected_finding.category. Neither the expected description nor expected_detector was consulted at all, and no finding carried an identity for the rule that produced it. The four detectors were proven absent or unreachable by reading the tool: (1) MUT-013 declares 'Requirement applicability validator'; searching corpus.py for an applicability check finds only coverage-plan rendering and variant-applicability output, and no rule reads a non-applicability marking. (2) MUT-003 declares the revision-consistency rule, which lived only inside _validate_artifact, a method _apply_mutation_and_detect never calls. (3) MUT-006 declares the FTTI budget rule, which read d.get('ftti_ms') or d.get('ftti'); the affected record FB2-SAF-SGO-000001 carries neither - it has fault_tolerant_time_interval_ms and timing_budget.total_ftti_ms, while the rule looked for a third spelling. (4) MUT-009 declares the ASIL validator, which fired only on ABSENCE of asil_justification; an unjustified downgrade leaves the justification present and contradicting the assignment, so the rule could only ever have passed on a corpus that had no justification at all. Two patches did not inject the defect they declared. MUT-019 repointed a link to 'FB2-SAF-SGO-000001 refines FB2-SAF-HAZ-000001'; no hazard is ever the source of a refines link, so that edge terminates immediately and the graph stayed acyclic. MUT-020 deleted FB2-LNK-SAF-000014, one of four verifies links covering FB2-SAF-FSR-000002; the other three (FB2-LNK-SAF-000022, FB2-LNK-SAF-000043, FB2-LNK-SAF-000050) remained. The copy-paste that let a standing finding satisfy an expectation is visible in the fixtures: MUT-003, 006, 008, 009, 010, 017, 019 and 020 all carried expected_finding.description 'safety requirement has no verifies/validates link', a string that describes MUT-020's defect and not their own. That text is the message of the verification_traceability_checker rule, so any finding of that rule on the same artifact satisfied eight scenarios. The true state was measured, not estimated. Before the repair, with validate reporting 0 findings, corpus.py check reported 'Acceptance suite: FAILED' with 7/8 gates and 8 failing scenarios: SCN-MUT-003, 006, 009, 010, 013, 017, 019, 020. After the repair, the same command reports 'Acceptance suite: PASSED' with 10/10 gate lines and 23/23 scenario lines, and every mutation line names the rule that fired.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000032",
+  "impact": "The claim carried by docs/artifacts/reports/final-acceptance-report.md - '20/20 mutation scenarios detect their injected defect' - was false at the time it was written, and was false before any defect in this corpus was repaired. It was the only evidence the acceptance suite offered that the detectors were live rather than dormant, so the whole negative-testing claim rested on it. Concretely: four scenarios asserted the existence of detection that no code implemented, so a rule could be deleted, renamed or broken and the suite would still have reported 20/20. MUT-009's rule was satisfiable only by an unhealthy corpus, so the suite was reporting the corpus's health under  the guise of testing it. MUT-019 and MUT-020 mutated a corpus and detected nothing their scenario declared, which means two of the twenty data points said nothing about detection at all. And because the harness could not distinguish a detection from a coincidence, a future genuine regression that removed a working detector would have been masked by whatever unrelated defect the affected artifact happened to carry - the failure mode is silent in both directions. For the corpus itself the practical effect was smaller: the eight standing findings that had been satisfying the scenarios were real defects, and they were found and corrected by a separate pass. The harm was to the evidence, not to the records - a measurement that could not fail was being cited as a measurement.",
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "baselined: the defect is characterised, the true detection state is measured, the gate is repaired, and the repair is regression-tested. This finding does not assert that the mutation suite is complete, that the detector set is correct, or that any human has confirmed the repair. human_approval_status is pending, production_authorized is false and product_verification_credit is false throughout the corpus.",
+  "origin": "synthetic",
+  "owner_role": "quality_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "related_records": [
+   "FB2-REV-FND-000029",
+   "FB2-REV-FND-000025",
+   "FB2-REV-FND-000013",
+   "FB2-SCN-MUT-000003",
+   "FB2-SCN-MUT-000006",
+   "FB2-SCN-MUT-000009",
+   "FB2-SCN-MUT-000010",
+   "FB2-SCN-MUT-000013",
+   "FB2-SCN-MUT-000017",
+   "FB2-SCN-MUT-000019",
+   "FB2-SCN-MUT-000020",
+   "FB2-SAF-SGO-000001",
+   "FB2-PRM-000004",
+   "FB2-SAF-SEC-000001",
+   "FB2-SAF-FSR-000004"
+  ],
+  "resolution": "RESOLVED, and the vocabulary member is corrected from 'accepted' to 'resolved'. Re-verified on 2026-09-30T00:00:00Z: acceptance gate [5/8] reports 20/20 mutations passing, each against its OWN declared detector, plus 3/3 change lifecycles, and coverage dimension negative_scenario_validation reports the same 20/20 from the same single scenario execution, so the two cannot disagree.\n\nThe mechanism that made that number mean something is intact. Findings carry a stable rule identifier; a scenario is resolved to its declared detector by that identifier, read from the evaluator-only oracle manifest; the detector must be emitted by a rule in this module, checked against the module's own AST so an absent detector fails loudly; the detector must be silent on the unmutated corpus, so a standing defect cannot satisfy it; and the baseline is computed once per run and subtracted. Severity and category are reported and a mismatch is flagged as a fixture defect, but they no longer decide a verdict. Two self-tests pin the anti-self-certification property directly: 'scenario fails when its own detector is disabled' and 'standing finding cannot satisfy a scenario'.\n\nWHAT IS NOT CLAIMED. This resolution does not assert that the mutation suite is complete, that the detector set is correct, or that the 20 scenarios are a sufficient sample of what the corpus could get wrong. It asserts that each of the twenty ran, and that each was detected by the rule it names, on a baseline where that rule was silent. That is a narrower claim than 'the corpus is correct' and it is the claim the evidence supports. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "CLOSED",
+   "condition_still_holds": false,
+   "date": "2026-09-30T00:00:00Z",
+   "disposition_before": "accepted",
+   "evidence": "the asserted condition is a gate that accepts any finding of the expected severity on the scenario's affected artifact. Measured in corpus.py: _match_scenario_finding resolves the scenario to a rule identifier, checks the rule is emitted (yes), and subtracts the unmutated baseline before accepting. `check` reports 20/20 mutations passing against their own declared detectors.",
+   "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+   "revision_before": "1"
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Initial record. The mutation acceptance gate matched findings on severity and category after filtering to the scenario's affected artifact ids. Both criteria are shared across rules and an artifact can carry several unrelated defects, so a standing defect inherited from the corpus satisfied scenarios whose own detector did not exist, was unreachable, or read a field the record did not carry. The state was discovered by clearing the corpus's nine standing validator findings, which dropped validate to 0 findings and made the gate's real state visible as 8 of 20 scenarios failing.",
+    "revision": "1"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED @date@ against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: CLOSED. Disposition migrated from 'accepted' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "2"
+   }
+  ],
+  "root_cause": "The harness had no way to know which rule produced a finding, so it could only ask a weaker question - did anything go wrong here - and then treat the answer as the stronger one - did the specific thing this scenario tests go wrong. Findings were plain dicts of severity, category, artifact_id and description. There was no stable rule identifier, so the expected_detector field that every scenario has always carried was decorative. Two design decisions compounded it. First, filtering findings down to the scenario's affected_ids was intended to scope the check, but scoping by artifact id is not scoping by cause: an artifact carries every defect it has, and the harness could not tell which of them the mutation introduced. Second, there was no baseline. The harness never computed what the detectors said about the unmutated corpus, so it had no way to subtract a pre-existing finding, and a detector that fired on the clean corpus was indistinguishable from one that fired because of the mutation. The harness's own author had noticed the symptom and recorded it as a property rather than as a defect: reports/scenario-validation-report.md stated that 'SCN-MUT-008 is the detector that currently fires on the baseline ... the detector fires on the clean baseline by construction', and treated 20/20 as evidence the detectors were live. A detector firing on the clean corpus is exactly what makes a broken scenario pass, so the observation was correct and its interpretation inverted. The mutations were also never executed against a corpus whose standing findings were cleared, so the property was never observed end to end.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "high",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit.",
+    "reference": "SUP.9",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The obligation to record rather than to conceal. A validation gate that cannot detect what it claims to detect is a measurement that does not measure.",
+    "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Finding FB2-REV-FND-000032: the 20/20 mutation acceptance gate was self-certifying - it accepted any finding of the expected severity on the scenario's affected artifact, so 8 of 20 scenarios passed on standing defects and 4 declared a detector that did not exist, was unreachable, or could not fire on the record the scenario targets",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "validator_finding_verbatim": "Not a standing validator finding. The corpus validator reported nothing about this: the harness was green while it was broken. The defect was found by clearing the nine standing validator findings, which dropped validate to 0 findings and exposed the gate's real state, and is recorded here as finding FB2-REV-FND-000032.",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "quality_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-FND-000032"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-FND-000032",
+  "revision": "2"
+ }
+}

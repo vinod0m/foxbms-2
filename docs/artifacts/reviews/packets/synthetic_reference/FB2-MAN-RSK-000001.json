@@ -1,0 +1,825 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-LIF-000106",
+    "rationale": "The risk register's RSK-001 tracks the timing-budget contradiction that the technical safety concept records and does not resolve.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-MAN-RSK-000001",
+    "target_id": "FB2-SAF-TSC-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000137",
+    "rationale": "FB2-REV-000014 reviewed FB2-MAN-RSK-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-MAN-RSK-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against risk_register.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000137 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[0].linked_artifact_refs[0]` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TSC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[0].linked_artifact_refs[1]` names FB2-SAF-TSC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000025 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[0].linked_artifact_refs[2]` names FB2-REV-FND-000025."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-PLN-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[1].linked_artifact_refs[0]` names FB2-MAN-PLN-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-SPL-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[2].linked_artifact_refs[0]` names FB2-MAN-SPL-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SCS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[2].linked_artifact_refs[1]` names FB2-SAF-SCS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-PLN-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[3].linked_artifact_refs[0]` names FB2-MAN-PLN-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000016 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[3].linked_artifact_refs[1]` names FB2-VER-TMS-000016."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000016 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[3].linked_artifact_refs[2]` names FB2-VER-EXE-000016."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-SPL-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[4].linked_artifact_refs[0]` names FB2-SUP-SPL-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[4].linked_artifact_refs[1]` names FB2-SAF-SEC-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[5].linked_artifact_refs[0]` names FB2-SAF-FSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[5].linked_artifact_refs[1]` names FB2-HW-TSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[5].linked_artifact_refs[2]` names FB2-REV-FND-000027."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REL-RLS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[6].linked_artifact_refs[0]` names FB2-REL-RLS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-PRD-EOL-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[6].linked_artifact_refs[1]` names FB2-PRD-EOL-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-DEC-DCM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[6].linked_artifact_refs[2]` names FB2-DEC-DCM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-RUS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.risk_entries[7].linked_artifact_refs[0]` names FB2-SUP-RUS-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C19-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 MAN.5 with status `mapped` on the grounds: Risk management: risk register, analysis and mitigation planning."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C20-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 MAN.3 with status `mapped` on the grounds: The plan this register reports against."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 24083,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json",
+  "record_sha256": "e6041456c6481f0b56bc9880e1d732e69b66f1994db75cf87917ead5ff7c54fc",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "93be59896abd89d2d1973ed581e701b30374798b517a27dc37c77a27629f233c"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic register for a synthetic project. Every probability and impact label is the author's judgement, not an estimate from data.",
+    "The exposure is an ordinal pair, not a number. Two entries with the same pair are not comparable in magnitude, and the register does not pretend otherwise.",
+    "The register does not cover product risk, functional-safety hazard risk or cybersecurity threat risk. Those have separate analyses in this corpus and separate acceptance authorities in a real programme.",
+    "Three entries have a residual exposure equal to their inherent exposure because no action has been taken. That is recorded rather than dressed as progress.",
+    "RSK-003 cannot be closed by any action available to an automated authoring process. It is in the register because omitting it would be the more dishonest choice."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-MAN-RSK-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this management record, do you agree that \"Project risk register for Project Northcell: schedule, resource, technical, supplier, quality and organisational risk\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_authority": {
+   "acceptance_exists": false,
+   "role": "project_manager",
+   "statement": "No risk in this register has been accepted by any human authority. The register's acceptance field exists and is false, because an automated process cannot accept risk. Entries marked 'mitigating' have actions taken or planned; none of them has been signed off, and 'planned' in an action status means the action is written down, not that it happened.",
+   "synthetic_decision_refs": []
+  },
+  "aggregate_exposure": {
+   "accepted_count": 0,
+   "closed_count": 0,
+   "escalated_count": 0,
+   "highest_residual_exposure": "high/major",
+   "open_count": 2,
+   "summary": "Eight entries: six mitigating and two open. No entry is closed and none is accepted. Three entries carry a residual exposure equal to their inherent exposure because no mitigating action has been taken: RSK-002, RSK-003 and RSK-004. The highest residual exposure is high/major and it is held by RSK-003, which cannot be closed by anything this corpus can do."
+  },
+  "artifact_type": "risk_register",
+  "assumption_refs": [
+   "FB2-ASM-006",
+   "FB2-ASM-008"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "management",
+  "fictional_project": true,
+  "human_approval_status": "pending",
+  "id": "FB2-MAN-RSK-000001",
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "Synthetic register for a synthetic project. Every probability and impact label is the author's judgement, not an estimate from data.",
+   "The exposure is an ordinal pair, not a number. Two entries with the same pair are not comparable in magnitude, and the register does not pretend otherwise.",
+   "The register does not cover product risk, functional-safety hazard risk or cybersecurity threat risk. Those have separate analyses in this corpus and separate acceptance authorities in a real programme.",
+   "Three entries have a residual exposure equal to their inherent exposure because no action has been taken. That is recorded rather than dressed as progress.",
+   "RSK-003 cannot be closed by any action available to an automated authoring process. It is in the register because omitting it would be the more dishonest choice."
+  ],
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "register_id": "FB2-MAN-RSK-000001",
+  "review_cadence": "Fortnightly, and immediately on any missed gate date. Review is by the project manager with the owner of each open entry; escalation is to the safety manager where the risk touches a safety record.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Risk register authored because MAN.5 was recorded as a coverage gap. This is project risk to the development, not a threat assessment: the cybersecurity TARA FB2-SAF-TAR-000001 is a different artifact with a different subject matter and does not satisfy MAN.5.",
+    "revision": "1"
+   }
+  ],
+  "risk_entries": [
+   {
+    "category": "technical",
+    "cause": "The margin was entered as a wish rather than as the difference between the interval and the work. Nothing in the process checked the sum.",
+    "effect_on_the_project": "A baselined record cannot be corrected without a controlled change, so the project either carries a known-invalid budget or opens a change against a baselined safety goal.",
+    "impact": "major",
+    "inherent_exposure": "high/major",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-SAF-SGO-000001",
+     "FB2-SAF-TSC-000001",
+     "FB2-REV-FND-000025"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Raise a finding recording the arithmetic rather than editing the safety goal",
+      "action_date": "2026-09-29",
+      "action_owner_role": "safety_engineer",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "Finding FB2-REV-FND-000025 records the arithmetic. The technical safety concept FB2-SAF-TSC-000001 now carries a budget that closes and names the departure.",
+      "status": "done"
+     },
+     {
+      "action": "Open a controlled change against FB2-SAF-SGO-000001 to reconcile the recorded margin with the interval",
+      "action_date": "2026-10-13",
+      "action_owner_role": "safety_manager",
+      "action_type": "escalate",
+      "evidence_of_effect": "Not yet opened. The change record does not exist.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "safety_engineer",
+    "probability": "high",
+    "residual_exposure": "high/moderate",
+    "residual_exposure_argument": "The contradiction is now visible and owned. The residual exposure is the time until the change is opened and the gate cannot pass until it is.",
+    "residual_impact": "moderate",
+    "residual_probability": "high",
+    "risk_id": "RSK-001",
+    "risk_statement": {
+     "condition": "The 100 ms fault-tolerant time interval is spent by a budget whose serial elements sum to 85 ms and whose recorded margin is 20 ms",
+     "consequence": "The safety goal is baselined with an arithmetic that does not close, and every requirement and measure derived from it inherits an unachievable budget"
+    },
+    "status": "mitigating",
+    "title": "The safety goal's timing budget does not close",
+    "trigger_for_escalation": "Any requirement or measure raised against this safety goal before the change is closed."
+   },
+   {
+    "category": "resource",
+    "cause": "Competence planning named one holder per specialism and no deputy, because building a second qualified reviewer was not funded.",
+    "effect_on_the_project": "Gate dates slip on absence, as the progress record for 2026-03-06 shows, and the slip is not recoverable because no one else can perform the review.",
+    "impact": "moderate",
+    "inherent_exposure": "high/moderate",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-MAN-PLN-000001"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Name and fund a deputy for each single-holder specialism",
+      "action_date": "2026-03-20",
+      "action_owner_role": "project_manager",
+      "action_type": "reduce_probability",
+      "evidence_of_effect": "Not done. The register still shows four single points of failure in the plan's resource table.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "project_manager",
+    "probability": "high",
+    "residual_exposure": "high/moderate",
+    "residual_exposure_argument": "No action has been taken, so the residual exposure equals the inherent exposure. Recording it as equal is more useful than recording an improvement that did not happen.",
+    "residual_impact": "moderate",
+    "residual_probability": "high",
+    "risk_id": "RSK-002",
+    "risk_statement": {
+     "condition": "Only one person in the fictional programme is qualified to review severity and controllability reasoning and to approve a safety concept",
+     "consequence": "Every safety gate depends on one person's calendar, and a review queue forms behind a single absence"
+    },
+    "status": "open",
+    "title": "Single qualified reviewer for the safety reasoning",
+    "trigger_for_escalation": "Any absence of the single holder exceeding five working days."
+   },
+   {
+    "category": "organisational",
+    "cause": "The corpus was authored by an automated process with no access to a human review organisation, and no independent reviewer was ever engaged.",
+    "effect_on_the_project": "The safety case cannot be assembled at all. This is not a schedule risk; it is a risk that the project's central deliverable cannot be produced.",
+    "impact": "major",
+    "inherent_exposure": "high/major",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-MAN-SPL-000001",
+     "FB2-SAF-SCS-000001"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Record the absence as an explicit limitation on every review record rather than letting the review count imply independence",
+      "action_date": "2026-09-29",
+      "action_owner_role": "quality_engineer",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "Every review record in the corpus carries a limitations entry stating that the review is automated and is not human confirmation.",
+      "status": "done"
+     },
+     {
+      "action": "Engage an independent confirmation reviewer",
+      "action_date": "2026-10-27",
+      "action_owner_role": "safety_manager",
+      "action_type": "escalate",
+      "evidence_of_effect": "Not engaged. Nothing in this corpus can stand in for it.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "safety_manager",
+    "probability": "high",
+    "residual_exposure": "high/major",
+    "residual_exposure_argument": "Mitigating the impact by documenting it does not reduce the exposure. The project's deliverable cannot exist until a real reviewer is engaged, and that is outside what an automated process can do.",
+    "residual_impact": "major",
+    "residual_probability": "high",
+    "risk_id": "RSK-003",
+    "risk_statement": {
+     "condition": "Every review record in the corpus is an automated AI review performed in a coding-agent session",
+     "consequence": "No review in the corpus has organisational independence, which an ASIL D safety case requires and which master-prompt clause 2.9 says an AI review is not"
+    },
+    "status": "open",
+    "title": "No independent confirmation reviewer exists",
+    "trigger_for_escalation": "Any statement anywhere in the corpus that implies a reviewed or approved state without naming this limitation."
+   },
+   {
+    "category": "schedule",
+    "cause": "The plan funded writing measures and did not fund building the benches, the bus injection nodes, the network capture points or the vehicle. The 2026-11-06 progress record shows the plan did not fund them.",
+    "effect_on_the_project": "The verification-readiness gate cannot pass, so the release gate cannot pass, so the project cannot ship. Nine measures are affected and none can be executed by any means available to this corpus.",
+    "impact": "major",
+    "inherent_exposure": "high/major",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-MAN-PLN-000001",
+     "FB2-VER-TMS-000016",
+     "FB2-VER-EXE-000016"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Record each blocked execution with the reason and the specific condition that would unblock it",
+      "action_date": "2026-09-29",
+      "action_owner_role": "verification_engineer",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "All nine new execution records carry execution_kind 'none' and outcome 'blocked' with a what_would_unblock_it list.",
+      "status": "done"
+     },
+     {
+      "action": "Fund and build the harnesses",
+      "action_date": "2026-10-06",
+      "action_owner_role": "project_manager",
+      "action_type": "reduce_probability",
+      "evidence_of_effect": "Not funded. No budget line exists.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "verification_engineer",
+    "probability": "high",
+    "residual_exposure": "high/major",
+    "residual_exposure_argument": "Honest recording of a blocked execution does not make the project able to proceed. It only makes the blocker impossible to overlook.",
+    "residual_impact": "major",
+    "residual_probability": "high",
+    "risk_id": "RSK-004",
+    "risk_statement": {
+     "condition": "Verification measures are written but no execution environment exists for the security, validation or hardware-injection measures",
+     "consequence": "Every requirement whose measure needs an environment ends the project with an unexecuted plan and a blocked execution record"
+    },
+    "status": "mitigating",
+    "title": "Verification harnesses are unfunded",
+    "trigger_for_escalation": "Any planning cycle that treats the verification measures as covered because they exist."
+   },
+   {
+    "category": "supplier",
+    "cause": "The hypothetical programme assumed a supplier monitoring process would be established during procurement. It has not been.",
+    "effect_on_the_project": "The safety argument's assumption that components meet their specification has no monitoring behind it, and the third-party-component half of FB2-SAF-SEC-000005 cannot be satisfied.",
+    "impact": "major",
+    "inherent_exposure": "medium/major",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-SUP-SPL-000001",
+     "FB2-SAF-SEC-000005"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Define the supplier monitoring process and record it",
+      "action_date": "2026-09-29",
+      "action_owner_role": "quality_engineer",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "Process record FB2-SUP-SPL-000001 defines ACQ.4 with its inputs, outputs, acceptance criteria and one performed instance.",
+      "status": "done"
+     },
+     {
+      "action": "Establish the contractual means to obtain component change notification",
+      "action_date": "2026-10-20",
+      "action_owner_role": "project_manager",
+      "action_type": "reduce_probability",
+      "evidence_of_effect": "Not established. No contract exists.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "quality_engineer",
+    "probability": "medium",
+    "residual_exposure": "medium/major",
+    "residual_exposure_argument": "A defined process with one recorded instance is better than no process, but a process with no contractual hook cannot be executed against a supplier who is not obliged to respond.",
+    "residual_impact": "major",
+    "residual_probability": "medium",
+    "risk_id": "RSK-005",
+    "risk_statement": {
+     "condition": "The item depends on an analogue front end, a safe base controller, a current sensor and a memory device, all from named vendors, none of which is under any monitoring relationship",
+     "consequence": "A component changes behaviour, or an advisory appears against it, and the project has no contractual or technical means of finding out before a vehicle ships"
+    },
+    "status": "mitigating",
+    "title": "Supplier monitoring has no accountable supplier",
+    "trigger_for_escalation": "Any advisory published against any component in the item."
+   },
+   {
+    "category": "quality",
+    "cause": "The requirements were authored from the safety goal without the intermediate system requirements that would have decomposed it, so the hardware record was written at the same level as the functional record and in the same words.",
+    "effect_on_the_project": "A duplicated obligation at two levels is invisible to a link check because both endpoints resolve. It is only visible on read, which is why it was found while writing the technical safety concept.",
+    "impact": "moderate",
+    "inherent_exposure": "high/moderate",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-SAF-FSR-000004",
+     "FB2-HW-TSR-000004",
+     "FB2-REV-FND-000027"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Raise a finding recording the duplication instead of editing either record",
+      "action_date": "2026-09-29",
+      "action_owner_role": "safety_engineer",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "Finding FB2-REV-FND-000027 records the verbatim duplication between FB2-SAF-FSR-000004 and FB2-HW-TSR-000004.",
+      "status": "done"
+     },
+     {
+      "action": "Decompose the functional requirement into distinct technical statements",
+      "action_date": "2026-10-27",
+      "action_owner_role": "hw_engineer",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "Not done. Both records remain as they were.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "safety_engineer",
+    "probability": "high",
+    "residual_exposure": "high/moderate",
+    "residual_exposure_argument": "The finding makes the problem visible to a reviewer but leaves the corpus with the duplication until the change is raised.",
+    "residual_impact": "moderate",
+    "residual_probability": "high",
+    "risk_id": "RSK-006",
+    "risk_statement": {
+     "condition": "Technical safety requirements exist at both the functional and the hardware level with identical text",
+     "consequence": "Two records at two different ISO 26262 levels claim the same obligation, so neither can be reviewed as a decomposition and the reader cannot tell which is authoritative"
+    },
+    "status": "mitigating",
+    "title": "Requirement and concept records are authored before the derivation that would justify them",
+    "trigger_for_escalation": "Any third record appearing with the same statement text."
+   },
+   {
+    "category": "compliance",
+    "cause": "The corpus was built bottom-up from the cell-voltage safety chain, and that chain stops at the reaction. Nothing forced the lifecycle after it to exist.",
+    "effect_on_the_project": "ISO 26262 Part 7 is entirely unsatisfied and the release-readiness gate cannot pass on its lifecycle criteria.",
+    "impact": "major",
+    "inherent_exposure": "high/major",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-REL-RLS-000001",
+     "FB2-PRD-EOL-000001",
+     "FB2-DEC-DCM-000001"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Author a post-development record for each of the six areas",
+      "action_date": "2026-09-29",
+      "action_owner_role": "project_manager",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "FB2-REL-RLS-000001, FB2-PRD-EOL-000001, FB2-PRD-CAL-000001, FB2-OPS-MON-000001, FB2-SVC-SVC-000001 and FB2-DEC-DCM-000001 now exist and each states that none of its steps has been executed.",
+      "status": "done"
+     },
+     {
+      "action": "Obtain the organisational capability to execute them",
+      "action_date": "2026-11-03",
+      "action_owner_role": "project_manager",
+      "action_type": "reduce_probability",
+      "evidence_of_effect": "Not obtained. There is no plant, no line and no service organisation.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "project_manager",
+    "probability": "high",
+    "residual_exposure": "medium/major",
+    "residual_exposure_argument": "The likelihood fell because the areas are now documented and the likelihood that a reader believes they are operational fell. The impact did not move at all.",
+    "residual_impact": "major",
+    "residual_probability": "medium",
+    "risk_id": "RSK-007",
+    "risk_statement": {
+     "condition": "Release identification, production and end-of-line test, calibration, field monitoring, service and decommissioning are all unpopulated",
+     "consequence": "A configuration could ship without being identified, a pack could leave the line without being tested, and an energised pack could be handled by a party that does not know it is energised"
+    },
+    "status": "mitigating",
+    "title": "Incomplete post-development lifecycle",
+    "trigger_for_escalation": "Any external party treating one of these records as an authorised procedure."
+   },
+   {
+    "category": "technical",
+    "cause": "Reuse was treated as a listing exercise rather than as an assurance decision.",
+    "effect_on_the_project": "The freedom-from-interference argument for the software layer rests on an unexamined assumption about what the reused code is permitted to do.",
+    "impact": "major",
+    "inherent_exposure": "medium/major",
+    "last_reviewed": "2026-09-29",
+    "linked_artifact_refs": [
+     "FB2-SUP-RUS-000001"
+    ],
+    "mitigation_actions": [
+     {
+      "action": "Define the reuse process with an assessment per reused element",
+      "action_date": "2026-09-29",
+      "action_owner_role": "sw_engineer",
+      "action_type": "reduce_impact",
+      "evidence_of_effect": "Process record FB2-SUP-RUS-000001 defines REU.2 with its acceptance criteria and one performed instance.",
+      "status": "done"
+     },
+     {
+      "action": "Complete a reuse assessment for every element on a safety path",
+      "action_date": "2026-10-27",
+      "action_owner_role": "sw_engineer",
+      "action_type": "reduce_probability",
+      "evidence_of_effect": "Not done. No assessment record exists.",
+      "status": "planned"
+     }
+    ],
+    "owner_role": "sw_engineer",
+    "probability": "medium",
+    "residual_exposure": "medium/major",
+    "residual_exposure_argument": "Defining the process does not assess anything. The residual exposure is unchanged.",
+    "residual_impact": "major",
+    "residual_probability": "medium",
+    "risk_id": "RSK-008",
+    "risk_statement": {
+     "condition": "The reference implementation reuses an operating system, driver code from several vendors and generated code, and the corpus holds a reuse inventory but no reuse assessment",
+     "consequence": "Code runs on a safety path whose provenance, qualification status and modification constraints are unknown"
+    },
+    "status": "mitigating",
+    "title": "Reused and generated code assurance is not established",
+    "trigger_for_escalation": "Any safety-path requirement whose allocation depends on a reused element with no assessment."
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope_note": "This register covers risk to the development of the hypothetical programme: schedule, resource, technical, supplier, quality, tooling, compliance and organisational risk. It does NOT cover risk arising from the product's behaviour in service, which the cybersecurity TARA FB2-SAF-TAR-000001 and the hazard analysis FB2-SAF-HAZ-000001 address, and it does not cover functional-safety hazard risk, which the safety analyses address. The three are separate registers with separate acceptance authorities in a real programme, and conflating them would let a product risk be accepted by a project manager.",
+  "scoring_method": {
+   "escalation_threshold": "high/major and high/moderate escalate to the safety manager at the next fortnightly review. medium/major escalates to the project manager's sponsor, which in this fictional programme is the safety manager. Every other pair is managed at review.",
+   "exposure_formula": "Exposure is the ordinal pair (probability, impact), written as e.g. 'high/moderate'. It is deliberately NOT a product of two label scores multiplied together: the labels have no numeric meaning, so a product would be a number with no derivation behind it. Escalation is on the pair, not on a total.",
+   "impact_scale": [
+    {
+     "definition": "Absorbed inside the package's float; no gate moved.",
+     "label": "minor"
+    },
+    {
+     "definition": "A gate moves; a package needs rework; float is consumed.",
+     "label": "moderate"
+    },
+    {
+     "definition": "A gate criterion cannot be met as written, or a safety or compliance record must be reopened.",
+     "label": "major"
+    }
+   ],
+   "probability_scale": [
+    {
+     "definition": "Not expected within the planned programme duration; would require an unusual combination of circumstances.",
+     "label": "low"
+    },
+    {
+     "definition": "Could occur once within the planned programme duration.",
+     "label": "medium"
+    },
+    {
+     "definition": "Expected to occur at least once, or already has.",
+     "label": "high"
+    }
+   ]
+  },
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Risk management: risk register, analysis and mitigation planning.",
+    "reference": "MAN.5",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The plan this register reports against.",
+    "reference": "MAN.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Project risk register for Project Northcell: schedule, resource, technical, supplier, quality and organisational risk",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "risk_register",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-MAN-RSK-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-MAN-RSK-000001",
+  "revision": "1"
+ }
+}

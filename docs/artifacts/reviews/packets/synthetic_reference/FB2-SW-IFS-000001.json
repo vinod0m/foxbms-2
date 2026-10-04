@@ -1,0 +1,904 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-IFS-000004",
+    "rationale": "The AFE design record's interfaces field is a signal table: it names cell_voltages as uint16_t[] in mV at 20 Hz and says nothing about who calls it, what the legal string range is or how a failure is reported. FB2-SW-IFS-000001 replaces that table with the six declared elements of the API, their real signatures, the assertion that bounds the string argument, the two-value return contract and the 1 ms period the calling task imposes. It refines FB2-SW-DSN-000001, the architecture record whose signal table it supersedes, and is at the same level as FB2-SW-DSN-000004, the detailed design record for the same element: it adds the interface contract that the detailed design record also does not carry.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IFS-000001",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000020",
+    "rationale": "FB2-SW-SIR-000001 is the software interface requirement set for the acquisition and monitoring boundary and is specified by FB2-SW-IFS-000001 (AFE measurement driver API) and FB2-SW-IFS-000002 (SOA supervision). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000001",
+    "target_id": "FB2-SW-IFS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000194",
+    "rationale": "Reviewed by FB2-REV-000018, a profile-scoped domain review of all sixteen software_interface_specification records in this profile. The review read the record and checked every source citation it makes against the pinned foxBMS commit 308028fb by reading the blob rather than the working tree: 81 of 81 declared source_refs resolve, 61 of 61 element declaration lines and 60 of 61 element implementation lines carry the claimed symbol, and 572 of 572 in-record 'path Lnn[-Lmm]' prose ranges resolve in bounds. This endpoint's element lines were among those checked. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000018",
+    "target_id": "FB2-SW-IFS-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against software_interface_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (10)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "10/10 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IFS-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000018",
+     "review_path": "docs/artifacts/reviews/records/review-software-interface-specifications.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-software-interface-specifications.json",
+      "reviewed_by link FB2-LNK-REVB-000194 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000090, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `68-73`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_REQUEST_e`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000091, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `104-108`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_TriggerIc`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000092, which records anchor class `repository_file`; path `src/app/driver/meas/meas.h`; line_range `76-83`; content_hash `4b2c0e98d4a308604a88e6102a40782a2338680647d3af0a23a1a3d25ad95f96`; symbol `MEAS_Control`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000093, which records anchor class `repository_file`; path `src/app/driver/meas/meas.c`; line_range `84-87`; content_hash `9992c431761c3124adce61b350147db8a4f12f8bdb814bcc09901a2ccfa80ed3`; symbol `MEAS_RequestTemperatureRead`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000094, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.h`; line_range `94`; content_hash `ab0543a8ef7052d52e3e3acb6e4041fb9f2b3e5d658ed026a8a849d3dec65060`; symbol `FTSK_TASK_CYCLIC_1MS_CYCLE_TIME`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C06-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"This file differs between the named commit 308028fb and the working tree that the offline provenance check hashes, so the recorded content_hash is the hash of the file on disk and NOT the hash of the 308028fb blob. This is the convention the rest of this registry already follows (FB2-SRC-COD-000044, FB2-SRC-COD-000045 and FB2-SRC-COD-000071 all name files with this same property and record their \u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000095, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.c`; line_range `246-256`; content_hash `84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52`; symbol `FTSK_RunUserCodeCyclic1ms`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C07-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000096, which records anchor class `repository_file`; path `src/app/application/config/battery_system_cfg.h`; line_range `109`; content_hash `3a38542f4da1986bc1944cd7ce6eabbc38a044255c9273f8273e46f2940670b1`; symbol `BS_NR_OF_STRINGS`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C08-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000097, which records anchor class `repository_file`; path `src/app/main/include/fstd_types.h`; line_range `81-85`; content_hash `ea1f74619aa95bff27a9b1f5c7a5f57c3d0f661d96970f46afda23ed455e9378`; symbol `STD_RETURN_TYPE_e`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C09-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000001, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `124`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_StartMeasurement`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C10-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000002, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `131`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_RequestTemperatureRead`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000090 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000090."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000091 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000091."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000092 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000092."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000093 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000093."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000094 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000094."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000095 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[5]` names FB2-SRC-COD-000095."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000096 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[6]` names FB2-SRC-COD-000096."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000097 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[7]` names FB2-SRC-COD-000097."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[8]` names FB2-SRC-COD-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[9]` names FB2-SRC-COD-000002."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C21-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 (software architectural design - interface specification) with status `partially_mapped` on the grounds: Names the providing and consuming modules, the real signatures, the argument ranges, the validity signalling read off the real error paths, and the timing and concurrency the source imposes. It does not carry a protocol or an ownership rule, and no interface agreement exists."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C22-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Supplies the Interface Specifications family that SWE.2 expects and that the existing design records' interfaces signal tables did not supply. Component design remains absent and the design records remain a reconstruction of an implementation."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C23-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Named as the specification the software interface requirements for this boundary are derived from. It is an input to requirements, not a requirement."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 28793,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-afe-acquisition.json",
+  "record_sha256": "3b46d4c453db09c59682cffac83b7e70e50ee5f7bbf44cb8810408111b0dee25",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "3b46d4c453db09c59682cffac83b7e70e50ee5f7bbf44cb8810408111b0dee25"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IFS-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Interface Specification: the AFE measurement driver API\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis": {
+   "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+   "direction": "source_to_specification",
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "method": "source_analysis_at_pinned_commit",
+   "tools_used": [
+    "git show 308028fb:<path>",
+    "graft skeleton <file>"
+   ],
+   "what_this_record_is_not": [
+    "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+    "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+    "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+    "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+   ]
+  },
+  "artifact_type": "software_interface_specification",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "consuming_modules": [
+   {
+    "calls": [
+     "AFE_TriggerIc",
+     "AFE_Initialize",
+     "AFE_StartMeasurement",
+     "AFE_RequestTemperatureRead",
+     "AFE_IsFirstMeasurementCycleFinished"
+    ],
+    "consumption_evidence": "MEAS_Control at src/app/driver/meas/meas.c L80-L82 calls AFE_TriggerIc and discards the result; MEAS_RequestTemperatureRead at L84-L87 asserts the string range and forwards; MEAS_StartMeasurement at L108-L110 and MEAS_Initialize at L112-L114 forward; MEAS_IsFirstMeasurementCycleFinished at L104-L106 forwards.",
+    "name": "MEAS, the measurement module wrapper",
+    "source_path": "src/app/driver/meas/meas.c"
+   },
+   {
+    "calls": [
+     "MEAS_StartMeasurement",
+     "MEAS_IsFirstMeasurementCycleFinished"
+    ],
+    "consumption_evidence": "(void)MEAS_StartMeasurement() at src/app/engine/sys/sys.c L426 and a comparison of MEAS_IsFirstMeasurementCycleFinished() against true at L432.",
+    "name": "SYS, the system state machine",
+    "source_path": "src/app/engine/sys/sys.c"
+   },
+   {
+    "calls": [
+     "AFE_IdentifyAfes"
+    ],
+    "consumption_evidence": "serialIds = AFE_IdentifyAfes(); at src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c L189.",
+    "name": "CAN asynchronous debug transmitter for hardware identification",
+    "source_path": "src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "elements": [
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "The only path to this function is MEAS_Control at src/app/driver/meas/meas.c L80-L82, called from FTSK_RunUserCodeCyclic1ms at src/app/task/config/ftask_cfg.c L253, which runs in the 1 ms cyclic task whose priority is FTSK_TASK_CYCLIC_1MS_PRIORITY = OS_PRIORITY_VERY_HIGH at src/app/task/config/ftask_cfg.h L88. No interrupt context reaches this entry point in the source.",
+     "protection_mechanism": "None recorded at this entry point. Each backend's own implementation would have to carry its own.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "MEAS_Control",
+    "declaration": "extern STD_RETURN_TYPE_e AFE_TriggerIc(void);",
+    "declaration_line": 108,
+    "declaration_path": "src/app/driver/afe/api/afe.h",
+    "element_id": "IFSE-000001",
+    "error_paths": [
+     {
+      "condition": "The caller is MEAS_Control.",
+      "evidence": "src/app/driver/meas/meas.c L80-L82: void MEAS_Control(void) { AFE_TriggerIc(); }",
+      "observed_behaviour": "The return value is discarded: the body of MEAS_Control is a single call statement with no assignment and no test.",
+      "signalled_as": "not observable at this caller"
+     }
+    ],
+    "implementation_line": 76,
+    "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+    "not_specified_by_source": [
+     "The documentation comment for AFE_TriggerIc records no @return, so the header does not say what the return value means; the two-value enum is the only contract available.",
+     "Which backend implementation is active is not stated by this interface. Seven implementations share the name AFE_TriggerIc, one per AFE family, and the selection is a build-time decision this record does not resolve.",
+     "The period is stated by the caller, not by this interface. The header carries no period, no deadline and no budget.",
+     "Whether the backend is re-entrant safe, and whether AFE_TriggerIc may be called from more than one context, are not specified anywhere in the interface."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "AFE driver, backend-selected",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;",
+     "values": {
+      "STD_NOT_OK": "The request was not accepted.",
+      "STD_OK": "The request was accepted by the AFE state machine."
+     }
+    },
+    "symbol": "AFE_TriggerIc",
+    "timing": {
+     "evidence": "The source imposes the period, not this record. MEAS_Control is documented at src/app/driver/meas/meas.h L76-L83 as 'called every 1ms from the tasks'; it calls AFE_TriggerIc at src/app/driver/meas/meas.c L80-L82; MEAS_Control is called from FTSK_RunUserCodeCyclic1ms at src/app/task/config/ftask_cfg.c L253; and FTSK_TASK_CYCLIC_1MS_CYCLE_TIME is 1u at src/app/task/config/ftask_cfg.h L94.",
+     "period_imposed_by_source": true,
+     "period_ms": 1
+    },
+    "validity_signalling": {
+     "evidence": "The declaration at src/app/driver/afe/api/afe.h L108 returns STD_RETURN_TYPE_e, so a caller that reads the return value can see a rejection.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value STD_RETURN_TYPE_e."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached only from FTSK_InitializeUserCodePreCyclicTasks at src/app/task/config/ftask_cfg.c L230, which the source comments as running before the operating system is started, so no interrupt can race it.",
+     "protection_mechanism": "None recorded. The pre-cyclic start-up context is the constraint, and it is a comment in the source rather than an enforced precondition.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "MEAS_Initialize",
+    "declaration": "extern STD_RETURN_TYPE_e AFE_Initialize(void);",
+    "declaration_line": 111,
+    "declaration_path": "src/app/driver/afe/api/afe.h",
+    "element_id": "IFSE-000002",
+    "error_paths": [
+     {
+      "condition": "Initialisation fails.",
+      "evidence": "src/app/task/config/ftask_cfg.c L230",
+      "observed_behaviour": "The value is discarded by the one caller in the source: FTSK_InitializeUserCodePreCyclicTasks writes (void)MEAS_Initialize() at src/app/task/config/ftask_cfg.c L230.",
+      "signalled_as": "not observable to the task that performs initialisation"
+     }
+    ],
+    "implementation_line": 81,
+    "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+    "not_specified_by_source": [
+     "What initialisation does is backend-specific and not stated by this interface.",
+     "The consequence of a failed initialisation is not specified. The only caller discards the result, so a failure is not observable from the call site.",
+     "The interface does not state whether AFE_Initialize may be called more than once or what a second call does."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "AFE driver, backend-selected",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;",
+     "values": {
+      "STD_NOT_OK": "The request was not accepted.",
+      "STD_OK": "The request was accepted by the AFE state machine."
+     }
+    },
+    "symbol": "AFE_Initialize",
+    "timing": {
+     "evidence": "Called once during start-up: MEAS_Initialize calls AFE_Initialize at src/app/driver/meas/meas.c L112-L114, MEAS_Initialize is called from FTSK_InitializeUserCodePreCyclicTasks at src/app/task/config/ftask_cfg.c L230, and that function is documented in the source as operating under the assumption that the operating system is not yet running. No period applies.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The declaration at src/app/driver/afe/api/afe.h L111 returns STD_RETURN_TYPE_e.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value STD_RETURN_TYPE_e."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from src/app/engine/sys/sys.c L426, which runs in the state-machine trigger, not in an interrupt context in the source.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "MEAS_StartMeasurement",
+    "declaration": "extern STD_RETURN_TYPE_e AFE_StartMeasurement(void);",
+    "declaration_line": 124,
+    "declaration_path": "src/app/driver/afe/api/afe.h",
+    "element_id": "IFSE-000003",
+    "error_paths": [
+     {
+      "condition": "The measurement start request is rejected.",
+      "evidence": "src/app/engine/sys/sys.c L426",
+      "observed_behaviour": "The value is discarded: the caller writes (void)MEAS_StartMeasurement() at src/app/engine/sys/sys.c L426.",
+      "signalled_as": "not observable at this caller"
+     }
+    ],
+    "implementation_line": 142,
+    "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+    "not_specified_by_source": [
+     "The interface does not state what 'measurement started' means in observable terms, such as which output changes or which flag a consumer may poll.",
+     "No completion or timeout is offered. A caller cannot learn that the first cycle finished from this call; it must call AFE_IsFirstMeasurementCycleFinished instead, and the relation between the two is not stated here.",
+     "Whether a second call while a measurement is in progress is accepted, rejected or idempotent is not specified."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "AFE driver, backend-selected",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;",
+     "values": {
+      "STD_NOT_OK": "The request was not accepted.",
+      "STD_OK": "The request was accepted by the AFE state machine."
+     }
+    },
+    "symbol": "AFE_StartMeasurement",
+    "timing": {
+     "evidence": "Called once per start-up sequence by the system state machine: (void)MEAS_StartMeasurement() at src/app/engine/sys/sys.c L426, and MEAS_StartMeasurement forwards to AFE_StartMeasurement at src/app/driver/meas/meas.c L108-L110. It is not called periodically.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The declaration at src/app/driver/afe/api/afe.h L124 returns STD_RETURN_TYPE_e.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value STD_RETURN_TYPE_e."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached through MEAS_RequestTemperatureRead, which is a task-level wrapper; no interrupt path to it appears in the source.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "MEAS_RequestTemperatureRead",
+    "declaration": "extern STD_RETURN_TYPE_e AFE_RequestTemperatureRead(uint8_t string);",
+    "declaration_line": 131,
+    "declaration_path": "src/app/driver/afe/api/afe.h",
+    "element_id": "IFSE-000004",
+    "error_paths": [
+     {
+      "condition": "string is at or above BS_NR_OF_STRINGS.",
+      "evidence": "src/app/driver/meas/meas.c L85",
+      "observed_behaviour": "The wrapper trips a precondition assertion before the request reaches the driver.",
+      "signalled_as": "precondition assertion, not a returned error"
+     },
+     {
+      "condition": "The request is rejected by the AFE state machine.",
+      "evidence": "The return type is STD_RETURN_TYPE_e at src/app/driver/afe/api/afe.h L131.",
+      "observed_behaviour": "STD_NOT_OK is returned to the wrapper's caller.",
+      "signalled_as": "STD_NOT_OK"
+     }
+    ],
+    "implementation_line": 108,
+    "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+    "not_specified_by_source": [
+     "The interface does not state the unit or the valid range of the temperature it causes to be read. Nothing here gives a temperature scale, a resolution or a valid window.",
+     "The interface does not state how a caller obtains the temperature once the request has been accepted, or how it distinguishes a stale reading from a fresh one.",
+     "No completion notification is offered; the function returns before the measurement exists, and the mechanism a caller would use to learn completion is not named by this interface."
+    ],
+    "parameters": [
+     {
+      "c_type": "uint8_t",
+      "direction": "in",
+      "meaning": "Identifies which battery string the request addresses, because the module serves more than one string.",
+      "name": "string",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "The forwarding wrapper asserts it: FAS_ASSERT(string < BS_NR_OF_STRINGS) at src/app/driver/meas/meas.c L85. BS_NR_OF_STRINGS is (1u) at src/app/application/config/battery_system_cfg.h L109.",
+      "unit": "string index (dimensionless)",
+      "valid_range": "0 <= string < BS_NR_OF_STRINGS"
+     }
+    ],
+    "providing_module": "AFE driver, backend-selected",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "No third value exists. STD_RETURN_TYPE_e is a two-value enum declared at src/app/main/include/fstd_types.h L82-L85, so a caller cannot distinguish 'not yet ready' from 'rejected'.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85 declares typedef enum { STD_OK, STD_NOT_OK } STD_RETURN_TYPE_e;",
+     "values": {
+      "STD_NOT_OK": "The request was not accepted.",
+      "STD_OK": "The request was accepted by the AFE state machine."
+     }
+    },
+    "symbol": "AFE_RequestTemperatureRead",
+    "timing": {
+     "evidence": "Requested on demand by consumers, not on a fixed period. The open-wire period that the interface itself fixes is a different request: AFE_ERROR_OPEN_WIRE_PERIOD_ms is (30000u) at src/app/driver/afe/api/afe.h L99.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The return value carries the request outcome; the argument range is enforced one level up by an assertion rather than by a returned error.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value for the request, and a precondition assertion for the argument."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from src/app/engine/sys/sys.c L432; no interrupt path to it appears in the source.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "MEAS_IsFirstMeasurementCycleFinished, SYS",
+    "declaration": "extern bool AFE_IsFirstMeasurementCycleFinished(void);",
+    "declaration_line": 118,
+    "declaration_path": "src/app/driver/afe/api/afe.h",
+    "element_id": "IFSE-000005",
+    "error_paths": [
+     {
+      "condition": "The first cycle has not been made.",
+      "evidence": "src/app/engine/sys/sys.c L432 compares the result against true.",
+      "observed_behaviour": "Returns false and the caller keeps waiting.",
+      "signalled_as": "false"
+     }
+    ],
+    "implementation_line": 152,
+    "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+    "not_specified_by_source": [
+     "The interface does not say whether the flag latches or whether it can return to false. A caller reading 'first cycle finished' would assume a latch, and the source does not state one.",
+     "The interface does not say how long the first cycle takes, so a caller cannot distinguish 'not finished yet' from 'never going to finish'.",
+     "No error state exists. A backend that failed to start a measurement has no way to express that through this element."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "AFE driver, backend-selected",
+    "return_contract": {
+     "c_type": "bool",
+     "default_on_no_information": "The declared false state is the safe direction: before the first cycle the function reports that the cycle has not finished. It cannot report a third condition.",
+     "evidence": "Declared with a doxygen @return of 'true is the first measurement cycle was made, false otherwise' at src/app/driver/afe/api/afe.h L113-L117.",
+     "values": {
+      "false": "The first measurement cycle has not been made yet.",
+      "true": "The first measurement cycle was made."
+     }
+    },
+    "symbol": "AFE_IsFirstMeasurementCycleFinished",
+    "timing": {
+     "evidence": "Polled by the system state machine at src/app/engine/sys/sys.c L432, guarded by a comparison against true, inside the state-machine trigger rather than on a fixed period.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The declaration returns bool, so the caller can distinguish the two states.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value bool."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached from an asynchronous CAN transmit callback body at src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c L189; the source shows no critical section around the read.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "CAN debug transmitter",
+    "declaration": "extern uint64_t *AFE_IdentifyAfes(void);",
+    "declaration_line": 172,
+    "declaration_path": "src/app/driver/afe/api/afe.h",
+    "element_id": "IFSE-000006",
+    "error_paths": [
+     {
+      "condition": "The caller dereferences the returned pointer.",
+      "evidence": "The declared return type at src/app/driver/afe/api/afe.h L172 is a pointer into driver state, and no copy or snapshot is documented.",
+      "observed_behaviour": "The pointer is into the driver's own state structure, so the data read is whatever the driver currently holds.",
+      "signalled_as": "not applicable"
+     }
+    ],
+    "implementation_line": 156,
+    "implementation_path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+    "not_specified_by_source": [
+     "The interface does not state how many serial identifiers there are, so the caller cannot know how far to read from the returned pointer without a separate agreement.",
+     "The interface does not state whether the pointed-to data is stable, whether it changes under the caller, or how long it remains valid.",
+     "No lock, no ownership rule and no lifetime rule are stated. The source hands out a pointer into internal state and says nothing about it."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "AFE driver, backend-selected",
+    "return_contract": {
+     "c_type": "uint64_t *",
+     "default_on_no_information": "Undocumented. The doxygen comment names only the success case: 'pointer to the first serialId of the serialId field in driver state structure'. Nothing states when the pointer is invalid.",
+     "evidence": "Declared at src/app/driver/afe/api/afe.h L169-L172 with the comment 'pointer to the first serialId of the serialId field in driver state structure'.",
+     "values": {
+      "NULL_PTR": "Not stated. The source does not document a null return for this function, so a caller has no documented contract for it.",
+      "non-NULL": "A pointer to the first serialId of the serialId field of the driver state structure."
+     }
+    },
+    "symbol": "AFE_IdentifyAfes",
+    "timing": {
+     "evidence": "Not called periodically. The one caller in the source is the asynchronous CAN debug transmitter, which reads the pointer at src/app/driver/can/cbs/tx-async/can_cbs_tx_f_debug-identify-hardware.c L189.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The declaration returns uint64_t * at src/app/driver/afe/api/afe.h L172 and the only documented behaviour is a non-null pointer into the driver state structure. No failure value is documented, so a caller cannot observe failure from this element.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "Return value is a pointer into driver-internal state."
+    }
+   }
+  ],
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IFS-000001",
+  "interface_class": "acquisition",
+  "interface_id": "IFS-AFE-ACQ-000001",
+  "interface_level_gaps": [
+   {
+    "consequence": "A requirement written against this interface is a requirement against seven implementations that this corpus has not compared with each other.",
+    "evidence": "Seven files define AFE_TriggerIc: src/app/driver/afe/adi/common/ades183x/api/adi_ades183x_afe.c, src/app/driver/afe/debug/can/api/debug_can_afe.c, src/app/driver/afe/debug/default/api/debug_default_afe.c, src/app/driver/afe/ltc/api/ltc_afe.c, src/app/driver/afe/maxim/api/mxm_afe.c, src/app/driver/afe/nxp/api/nxp_afe.c and src/app/driver/afe/ti/api/ti_afe.c.",
+    "gap": "The interface is a family of seven implementations behind one header, and nothing in the interface says which one is active or whether a consumer may rely on behaviour common to all seven."
+   },
+   {
+    "consequence": "For AFE_TriggerIc, AFE_Initialize and AFE_StartMeasurement the interface can signal failure but the code that calls it does not observe it, so a failure of any of the three is invisible at the call site. This is a finding about the implementation, not a defect asserted against it.",
+    "evidence": "src/app/driver/meas/meas.c L80-L82 discards the AFE_TriggerIc result; src/app/task/config/ftask_cfg.c L230 writes (void)MEAS_Initialize(); src/app/engine/sys/sys.c L426 writes (void)MEAS_StartMeasurement().",
+    "gap": "Three of the six elements have a return value that the only caller in the source discards."
+   },
+   {
+    "consequence": "Nothing here can be traced to the hardware that would have to satisfy it. The hardware interface that would carry those limits is FB2-HW-HDD-000001's subject and that record says the schematics are unavailable.",
+    "evidence": "The header declares only the request vocabulary AFE_REQUEST_e at src/app/driver/afe/api/afe.h L68-L73 and two constants, AFE_ERROR_OPEN_WIRE_PERIOD_ms and AFE_DEFAULT_CELL_VOLTAGE_INVALID_VALUE, at L99 and L102; neither is an accuracy or range statement.",
+    "gap": "No element of this interface carries a physical or electrical contract: no cell count, no sense range, no accuracy, no sampling time."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "providing_module": {
+   "name": "AFE driver, backend-selected",
+   "note": "Seven files define a function of the same name for this API - under the adi, debug, debug/default, ltc, maxim, nxp and ti families - so the interface is a family of implementations behind one header rather than one implementation. Which one is compiled is a build-time decision this record does not resolve.",
+   "role": "Provides the measurement interface for the battery strings. Seven backends implement the same entry points, one per AFE family, and the header is the single API all of them present.",
+   "source_paths": [
+    "src/app/driver/afe/api/afe.h",
+    "src/app/driver/afe/ltc/api/ltc_afe.c"
+   ]
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "First interface specification in this corpus. Six elements of the AFE measurement API, each with its declaration transcribed from the header at the pinned commit and checked against the source line it cites, its argument range read from the assertion that enforces it, its return values read from the enum the source defines, and its timing read from the task configuration that calls it.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000090",
+   "FB2-SRC-COD-000091",
+   "FB2-SRC-COD-000092",
+   "FB2-SRC-COD-000093",
+   "FB2-SRC-COD-000094",
+   "FB2-SRC-COD-000095",
+   "FB2-SRC-COD-000096",
+   "FB2-SRC-COD-000097",
+   "FB2-SRC-COD-000001",
+   "FB2-SRC-COD-000002"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Names the providing and consuming modules, the real signatures, the argument ranges, the validity signalling read off the real error paths, and the timing and concurrency the source imposes. It does not carry a protocol or an ownership rule, and no interface agreement exists.",
+    "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies the Interface Specifications family that SWE.2 expects and that the existing design records' interfaces signal tables did not supply. Component design remains absent and the design records remain a reconstruction of an implementation.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Named as the specification the software interface requirements for this boundary are derived from. It is an input to requirements, not a requirement.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Interface Specification: the AFE measurement driver API",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_status": {
+   "analysed_against_running_code": false,
+   "conformance_tested": false,
+   "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IFS-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IFS-000001",
+  "revision": "1"
+ }
+}

@@ -1,0 +1,553 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000012",
+    "rationale": "Implementation element FB2-SW-IMP-000002 is the code location in which FB2-SW-DSN-000002's limit-comparison and diagnosis-raising responsibilities are carried: SOA_CheckVoltages' three-tier voltage comparison, SOA_CheckTemperatures' direction-selected temperature tiers and SOA_CheckCurrent's direction-selected current limits and current-on-open-string detection, all raising entries through DIAG_Handler. The link runs from the implementation to the design per master prompt section 13.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-IMP-000002",
+    "target_id": "FB2-SW-DSN-000002"
+   },
+   {
+    "link_id": "FB2-LNK-IMP-000005",
+    "rationale": "FB2-SW-IMP-000002 realises FB2-SW-SWR-000002 at the requirement level to the extent the requirement's comparison clause describes: SOA_CheckVoltages compares each string's minimum and maximum cell voltage against the configured tiers and raises the corresponding diagnosis entries. The requirement's 10 ms comparison latency and its debounce clause are not realised in that module; the implementation record states both absences.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-IMP-000002",
+    "target_id": "FB2-SW-SWR-000002"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against implementation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (5)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "5/5 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000004, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `81-146`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckVoltages`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000005, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `271-351`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckCurrent`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000006, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `148-269`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckTemperatures`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the additive DIAG_EVENT_NOT_EVALUATED branch was added to DIAG_Handler. It is a distinct else-if appended after RESET; it holds state, writes no entry, invokes no callback, and cannot reach the OK, NOT_OK or RESET clearing paths. Proven by two mutation probes that routed it into RESET and into NOT_OK: each changed a test outcome.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000009, which records anchor class `repository_file`; path `src/app/engine/diag/diag.c`; line_range `341-475`; content_hash `06bae9dfd5935d777e81c5892fa31e72c78af6daaff66c8679ca86862f64a8fb`; symbol `DIAG_Handler`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000010, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_voltage.c`; line_range `72-194`; content_hash `7d99a10c434ce61182f441920fb659da41f17324e7b4a045d5d263d5748b7c72`; symbol `DIAG_ErrorOvervoltage`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000010 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000010."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.implements.design_artifact_id` names FB2-SW-DSN-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.realises_requirements[0].requirement_id` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[1]` names FB2-SRC-COD-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[2]` names FB2-SRC-COD-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[3]` names FB2-SRC-COD-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000010 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[4]` names FB2-SRC-COD-000010."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C18-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 (this record is a code location, not a verification record) with status `partially_mapped` on the grounds: States where the SOA comparison code is. Makes no claim that it was verified and asserts no ASIL classification."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C19-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 (design-to-code traceability) with status `partially_mapped` on the grounds: Supplies the traceability SWE.4 expects. Verification evidence lives in the FB2-VER-TMS-* measures."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 13935,
+  "record_path": "docs/artifacts/corpus/as_is/software/implementation-soa-supervision.json",
+  "record_sha256": "a64ecfd63c8d7deef03e6cfbe6d3196d99a6b0557c7744db8fbb500b741860a6",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "a64ecfd63c8d7deef03e6cfbe6d3196d99a6b0557c7744db8fbb500b741860a6"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Anchors referenced, all pre-existing: FB2-SRC-COD-000004/5/6 name SOA_CheckVoltages / SOA_CheckCurrent / SOA_CheckTemperatures in this file, FB2-SRC-COD-000009 names DIAG_Handler in diag.c and FB2-SRC-COD-000010 names the three voltage callbacks in diag_cbs_voltage.c. No new anchor was created. The design record's four asserted implementation symbols (SOA_CheckVoltageLimits, SOA_CheckCurrentLimits, SOA_CheckTemperatureLimits, DIAG_CBS_Voltage) exist nowhere in the repository and were not carried forward; the disagreement is stated in implements.partial_coverage rather than repaired here, because the design record is a separate artefact."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SW-IMP-000002.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Implementation: SOA supervision - three-tier cell voltage, mode-dependent temperature and direction-dependent current limit comparison with DIAG raising\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anchor_refs": [
+   "FB2-SRC-COD-000004",
+   "FB2-SRC-COD-000005",
+   "FB2-SRC-COD-000006",
+   "FB2-SRC-COD-000009",
+   "FB2-SRC-COD-000010"
+  ],
+  "artifact_type": "implementation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behaviours": [
+   {
+    "behaviour_id": "SOA-IMP-VOLT-TIER",
+    "description": "Compares each string's maximum and minimum cell voltage against three nested over- and under-voltage tiers and raises the matching diagnosis entry on each tier, clearing the tiers the value has returned inside.",
+    "evidence_line_range": "81-146",
+    "evidence_symbol": "SOA_CheckVoltages",
+    "kind": "diagnostic_raise"
+   },
+   {
+    "behaviour_id": "SOA-IMP-DEEP-DISCHARGE",
+    "description": "Raises an additional deep-discharge diagnosis when the undervoltage-MSL handler reports an error and the minimum voltage is also at or below the deep-discharge threshold.",
+    "evidence_line_range": "122-129",
+    "evidence_symbol": "SOA_CheckVoltages",
+    "kind": "diagnostic_raise"
+   },
+   {
+    "behaviour_id": "SOA-IMP-TEMP-DIRECTION",
+    "description": "Selects between the discharge and the charge temperature tier sets from the sign of the string current, so the applicable limit depends on current direction rather than on mode alone.",
+    "evidence_line_range": "160-212",
+    "evidence_symbol": "SOA_CheckTemperatures",
+    "kind": "validation"
+   },
+   {
+    "behaviour_id": "SOA-IMP-CURRENT-SKIP-INVALID",
+    "description": "Skips a string's current comparison entirely when the database marks that string current invalid, so an untrusted measurement does not raise a limit diagnosis.",
+    "evidence_line_range": "271-279",
+    "evidence_symbol": "SOA_CheckCurrent",
+    "kind": "validation"
+   },
+   {
+    "behaviour_id": "SOA-IMP-CURRENT-DIRECTION",
+    "description": "Compares absolute string current against direction-specific string and cell current limits and against the pack current limit, raising the charge or discharge entry accordingly.",
+    "evidence_line_range": "283-348",
+    "evidence_symbol": "SOA_CheckCurrent",
+    "kind": "validation"
+   },
+   {
+    "behaviour_id": "SOA-IMP-CURRENT-ON-OPEN-STRING",
+    "description": "Detects a measured current on a string whose contactors are open, which is the condition the fuse and the open-sense wiring are expected to make impossible.",
+    "evidence_line_range": "324-327",
+    "evidence_symbol": "SOA_CheckCurrent",
+    "kind": "diagnostic_raise"
+   },
+   {
+    "behaviour_id": "SOA-IMP-DIAG-AGGREGATE",
+    "description": "The diagnosis handler every SOA check calls into; it applies the configured per-entry occurrence threshold and delay and is what actually makes a raised entry active.",
+    "evidence_line_range": "341-475",
+    "evidence_symbol": "DIAG_Handler",
+    "kind": "diagnostic_raise"
+   }
+  ],
+  "code_locations": [
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+    "line_range": "81-146",
+    "path": "src/app/application/soa/soa.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckVoltages",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+    "line_range": "148-269",
+    "path": "src/app/application/soa/soa.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckTemperatures",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:9d5cb7407eddc67a4a5a203da103f26b115da90ac7a722a3972ea8909a3212f7",
+    "line_range": "271-351",
+    "path": "src/app/application/soa/soa.c",
+    "repository": "foxbms-2",
+    "symbol": "SOA_CheckCurrent",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:71c7687897444417e944b051b2d0e8c881f00df52ecee9e4db6cfd422778553e",
+    "line_range": "341-475",
+    "path": "src/app/engine/diag/diag.c",
+    "repository": "foxbms-2",
+    "symbol": "DIAG_Handler",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   }
+  ],
+  "concurrency_and_isr_context": [
+   {
+    "context": "task",
+    "entry_points": [
+     "SOA_CheckVoltages",
+     "SOA_CheckTemperatures",
+     "SOA_CheckCurrent",
+     "SOA_CheckSlaveTemperatures"
+    ],
+    "shared_state": "None in this module: the four functions hold no static state and write only through DIAG_Handler and the caller-supplied structures. The call site is BMS_Trigger (bms.c:898-1691), which invokes SOA_CheckVoltages, SOA_CheckTemperatures, SOA_CheckCurrent and SOA_CheckSlaveTemperatures in that order at bms.c:913-917, before the BMS state machine's own re-entrance guard at bms.c:920."
+   }
+  ],
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "software",
+  "evidence_status": {
+   "limitations": [
+    "Every content_hash in code_locations is the sha256 of the pinned blob of that file, and equals the content_hash the corresponding source-registry anchor already carries, so the record and the anchor cannot disagree about which bytes were read.",
+    "Behaviour was verified by reading the code. Nothing was executed. No timing, coverage or stack measurement of this module exists in this corpus.",
+    "The line ranges are those of the pinned commit. soa.c is unmodified between the pin and the working tree, so the same ranges hold for the checked-out file."
+   ],
+   "locations_verified": true,
+   "method": "Each file was read at the pinned commit with 'git show 308028fb:path'; the content_hash of each location is the sha256 of that pinned blob, computed independently of the corpus; the named symbol was confirmed to occur inside the recorded line_range of the pinned content and the range was confirmed within the file. The three soa.c locations were cross-read against 'graft skeleton src/app/application/soa/soa.c'."
+  },
+  "guard": {
+   "confers_no_production_authority": true,
+   "confers_no_verification_credit": true,
+   "human_approval_required": true,
+   "is_implementation_evidence": false,
+   "is_verification_result": false,
+   "statement": "This record says where the SOA comparison code is and what it does, including the parts of FB2-SW-DSN-000002 it does not realise. It is not evidence that FB2-SW-SWR-000002 is met: that requirement's 10 ms comparison latency and its debounce behaviour are not established by anything listed here, and the corpus already records that the source implements no SOA debounce counter. It confers no production authority, no verification credit, and no human approval."
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IMP-000002",
+  "implementation_kind": "function_group",
+  "implementation_status": "in_source_with_deviations",
+  "implements": {
+   "design_artifact_id": "FB2-SW-DSN-000002",
+   "design_level": "detailed_design",
+   "partial_coverage": [
+    "The design's DEBOUNCING state and its 'debounce count configurable (default 2)' constraint are NOT realised in this module. soa.c contains no static variable, no counter and no debounce state at the pinned commit. The debouncing the corpus describes is the DIAG layer's occurrence counter, configured per entry in diag_cfg.c with DIAG_SEN_EVENT_50 for the cell-voltage tiers and DIAG_DELAY_200ms for the MSL tiers (diag_cfg.c:126-131). This is a different mechanism at a different layer with different parameters, and the module does not implement the design's.",
+    "The design's VIOLATION_CONFIRMED -> FAULT_TRIGGERED -> fault_request output is not an output of this module. SOA_CheckVoltages returns void. The fault request is raised downstream by BMS_IsAnyFatalErrorFlagSet and BMS_IsBatterySystemStateOkay in bms.c:515-575, which poll the DIAG fatal-error link table and act on the shortest configured delay. The design's 'SOA_SYS_OUT fault_request' signal is therefore not implemented at the interface the design declares.",
+    "The design's 'violation_details' output does not exist. The detail carried out of the module is the DIAG occurrence counter, not a structured violation record.",
+    "The design's 'per-cell debounce' decision DEC-SOA-002 is not observable in this module for the same reason there is no debounce: nothing is counted per cell here.",
+    "SOA_CheckSlaveTemperatures (soa.c:353-354) exists as an empty function body carrying only a TODO. It is named here so that the record does not imply slave-temperature supervision is implemented; it is not."
+   ],
+   "relationship": "This function group is where FB2-SW-DSN-000002's limit-comparison and diagnosis-raising responsibilities are actually carried. The mechanism, read from the pinned source: SOA_CheckVoltages (soa.c:81-146) iterates BS_NR_OF_STRINGS and, for each string, compares maximumCellVoltage_mV against the nested thresholds BC_VOLTAGE_MAX_MOL_mV, then BC_VOLTAGE_MAX_RSL_mV, then BC_VOLTAGE_MAX_MSL_mV, calling DIAG_Handler with DIAG_EVENT_NOT_OK on each crossed tier and with DIAG_EVENT_OK on each tier the value has fallen back inside; the minimum voltage is handled symmetrically against BC_VOLTAGE_MIN_MOL/RSL/MSL_mV, and the undervoltage-MSL handler's return value is captured so that a simultaneous deep-discharge crossing raises DIAG_ID_DEEP_DISCHARGE_DETECTED as well. SOA_CheckTemperatures (148-269) branches on BMS_GetCurrentFlowDirection(i_current) and compares against a DISCHARGE tier set or a CHARGE tier set accordingly, so the limit that applies depends on current direction rather than on mode alone. SOA_CheckCurrent (271-351) skips a string entirely when invalidStringCurrent[s] is non-zero, computes an absolute current, evaluates string and cell current limits per direction, and separately raises DIAG_ID_CURRENT_ON_OPEN_STRING when a current is measured on a string whose contactors are open. What is absent is any counter: the module holds no static state at all, so it cannot debounce."
+  },
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000004/5/6 name SOA_CheckVoltages / SOA_CheckCurrent / SOA_CheckTemperatures in this file, FB2-SRC-COD-000009 names DIAG_Handler in diag.c and FB2-SRC-COD-000010 names the three voltage callbacks in diag_cbs_voltage.c. No new anchor was created. The design record's four asserted implementation symbols (SOA_CheckVoltageLimits, SOA_CheckCurrentLimits, SOA_CheckTemperatureLimits, DIAG_CBS_Voltage) exist nowhere in the repository and were not carried forward; the disagreement is stated in implements.partial_coverage rather than repaired here, because the design record is a separate artefact.",
+  "realises_requirements": [
+   {
+    "figure_provenance": "mixed_read_and_modelled",
+    "how_realised": "The limit comparison the requirement's statement describes is present: SOA_CheckVoltages reads the per-string minimum and maximum cell voltages the caller passes in and compares each against the configured tier thresholds, calling DIAG_Handler for every tier crossed. The classification latency and any debouncing are not in this module.",
+    "requirement_id": "FB2-SW-SWR-000002"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "First issue. Authored because no artefact of type implementation existed. The design record FB2-SW-DSN-000002 asserts implementation_mapping symbols SOA_CheckVoltageLimits, SOA_CheckCurrentLimits, SOA_CheckTemperatureLimits and DIAG_CBS_Voltage; none of those four names occurs anywhere in the repository. The real symbols are SOA_CheckVoltages, SOA_CheckCurrent, SOA_CheckTemperatures and DIAG_ErrorOvervoltage / DIAG_ErrorUndervoltage / DIAG_ErrorHighVoltageMeasurement, and this record names only those.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000004",
+   "FB2-SRC-COD-000005",
+   "FB2-SRC-COD-000006",
+   "FB2-SRC-COD-000009",
+   "FB2-SRC-COD-000010"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "States where the SOA comparison code is. Makes no claim that it was verified and asserts no ASIL classification.",
+    "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies the traceability SWE.4 expects. Verification evidence lives in the FB2-VER-TMS-* measures.",
+    "reference": "SWE.4 (design-to-code traceability)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Implementation: SOA supervision - three-tier cell voltage, mode-dependent temperature and direction-dependent current limit comparison with DIAG raising",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SW-IMP-000002"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SW-IMP-000002",
+  "revision": "1"
+ }
+}

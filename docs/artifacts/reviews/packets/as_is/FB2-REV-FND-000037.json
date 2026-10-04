@@ -1,0 +1,259 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000015 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.subject_artifact_id` names FB2-VER-EXE-000015."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C02-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by None; method \"docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.\"; 1/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `medium`, category `verification`, disposition `deferred`. Its resolution text names a corpus id: False."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 24176,
+  "record_path": "docs/artifacts/reviews/findings/finding-000037-void-star-queue-buffer-oracle-unreachable.json",
+  "record_sha256": "7148fabf416eec4cfcd3a0d6edd71d590a2bc2e62718b405476a411bb9011fcf",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "111728ec5b90123fbbbbdc49af389dff4164fa5b0da8a7a758bd9628b8d2006a"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft': this record states a measured root cause for four of the five remaining red tests, established by re-diagnosis from source and by four controlled experiments that were each reverted. No test was changed. No human reviewer has confirmed the analysis and human approval remains 'pending'. This record makes no MISRA conformance claim, no tool-qualification claim and no certification claim of any kind."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'deferred' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'deferred' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-30T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-REV-FND-000037.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Finding FB2-REV-FND-000037: the four remaining red tests assert an oracle the shipped CMock configuration cannot express for a void* queue buffer, and the only test-side substitut\u2026\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `deferred`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "ownership of the remainder",
+   "priority": 12,
+   "question": "For the part that is still open: is the named owner real, and is the named trigger for revisiting it real?",
+   "what_in_this_packet_bears_on_it": "resolution text in the record.",
+   "why_this_needs_a_human": "A deferred finding with no live trigger is indistinguishable from an abandoned one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-30T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "verification",
+  "created_at": "2026-09-30T00:00:00Z",
+  "disposition": "deferred",
+  "disposition_note": "disposition 'deferred' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'deferred' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "verification",
+  "evidence": "SCOPE, as measured. The suite is 313 tests: 208 pass, 5 fail, 100 do not build, 877 assertions tested / 847 passed / 27 failed. Two independent full sweeps from a separately provisioned build root produced identical results on every axis, with zero outcome changes and zero per-test assertion-count changes. The five failing tests are tests/unit/app/driver/afe/debug/can/test_debug_can.c (3 assertions), tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_i2c.c (7), tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_afe_cell-temperatures.c (1), tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_afe_cell-voltages.c (1) and tests/unit/app/driver/phy/test_dp83869.c (15 reported). (0) CORRECTION OF THE TASK PREMISE, measured: the fourth test named in the task, tests/unit/app/driver/afe/nxp/mc33775a/config/test_nxp_mc33775a_cfg.c, is NOT failing. Its outcome is 'pass', with Ceedling's summary TESTED: 1 / PASSED: 0 / FAILED: 0 / IGNORED: 1. Reading the file shows why: it is a 78-line shell containing only setUp() at :72 and tearDown() at :75, zero functions matching 'void test', a '@details TODO' stub at :50 and an empty 'Test Cases' section. It therefore registers no test case and executes no assertion. Its green verdict carries no coverage. The genuinely failing fourth test is test_nxp_mc33775a_i2c.c. This correction is material because acting on the premise would have edited a file that is not red. (1) THE DECLARATIONS, read from source: src/app/task/os/os.h:395 declares 'OS_STD_RETURN_e OS_ReceiveFromQueue(OS_QUEUE xQueue, void *const pvBuffer, uint32_t ticksToWait)' and src/app/task/os/os.h:414 declares 'OS_STD_RETURN_e OS_SendToBackOfQueue(OS_QUEUE xQueue, const void *const pvItemToQueue, uint32_t ticksToWait)'. Both payload parameters are untyped. (2) THE COMPARISON CMock ACTUALLY EMITS, read from the CMock 2.7.2 generator source rather than inferred, at lib/cmock_generator_utils.rb:206-210, inside lookup_expect_type: 'elsif arg[:ptr?] && !@arrays && void_pointer_type?(c_type)' followed by the in-source comment 'void* cannot be safely dereferenced; without the array plugin there is no way to specify depth, so fall back to comparing the pointer value itself' and the result \"['UNITY_TEST_ASSERT_EQUAL_PTR', '']\". conf/unit/app_project_posix.yml:368-369 sets ':memcmp_if_unknown: true' and ':when_ptr: :compare_data', i.e. it REQUESTS a content comparison, and CMock silently downgrades it to pointer identity for a void* parameter. Observed verbatim, e.g. test_can_cbs_rx_afe_cell-temperatures.c:287 'Expected 0x000000016D312050 Was 0x000000016D311FC0:Function OS_SendToBackOfQueue Argument pvItemToQueue'. (3) EXPERIMENT 1 - RETYPING THE EXPECTED ARGUMENT TO THE PRODUCT'S ACTUAL STRUCT TYPE STILL FAILS. Applied to test_can_cbs_rx_afe_cell-voltages.c:293 only, replacing '(void *)&messageData' (a uint64_t) with '(void *)&expectedQueueItem' of type CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s. Result: the same failure, same mechanism, at the new line 295: 'Expected 0x000000016D002030 Was 0x000000016D001FA8:Function OS_SendToBackOfQueue Argument pvItemToQueue'. The comparison is selected from the PARAMETER type in os.h, not from the type of the test's argument, so retyping cannot help. Reverted; the file is byte-identical to HEAD. (4) WHY IDENTITY IS UNREACHABLE, read from the module under test in each case: the product's buffer is a function-local, so its address is not nameable by the test. src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-temperatures.c:181 'CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s canrx_canCellTemperatures = {0};' is sent at :186. src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c:168 'CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s canrx_canCellVoltages = {0};' is sent at :173. src/app/driver/afe/debug/can/debug_can.c:236 and :310 declare 'decan_canCellVoltagesFromQueue' and 'decan_canCellTemperaturesFromQueue' as function-locals, received at :239 and :311. src/app/driver/afe/nxp/mc33775a/nxp_mc33775a_i2c.c declares 'AFE_I2C_QUEUE_s transactionData' as a function-local at :259, :290, :330 and :367. The product is correct in every case: src/app/driver/config/can_cfg.h:196-201 documents CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s as the 'data unit to be transferred in ftsk_canToAfeCellTemperaturesQueue' and :202-205 the same for ftsk_canToAfeCellVoltagesQueue, so the object the product sends is the declared item type of the queue it sends it to. (5) EXPERIMENT 2 - THE CONTENT ORACLE IS PROVABLY VACUOUS FOR THIS ARGUMENT. A temporary CMock _Stub callback on OS_SendToBackOfQueue was installed in test_can_cbs_rx_afe_cell-voltages.c and the real payload was dumped at the moment of the call, in both RT1/2 and RT2/2. Measured output, twice: '[EXP] payload bytes: 00 00 00 00 00 00 00 00 00 00 00 00 00 00  (size=14)'. The payload is 14 bytes (the true size of CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s) and every byte is zero. The cause is that the RT1/2 and RT2/2 fixtures register CAN_RxGetSignalDataFromMessageData_Expect without the matching _ReturnThruPtr_pCanSignal, and CMock's expect plugin emits argument CHECKS only - lib/cmock_generator_plugin_expect.rb mock_implementation_always_check_args and mock_implementation_might_check_args only call @utils.code_verify_an_arg_expectation and never write an out-parameter. So the packed value is identically zero whatever the packing logic does, and a content comparison can only ever compare zeros with zeros. It cannot detect a wrong mux value, a wrong cell voltage or a wrong invalid flag, i.e. none of the logic under test. The sibling case in the same file is NOT affected and is genuinely non-vacuous: testCANRX_GetCanAfeCellVoltagesFromMessage registers CAN_RxGetSignalDataFromMessageData_ReturnThruPtr_pCanSignal and asserts real extracted values, so the extraction logic is already covered; the RT1/2 and RT2/2 blocks are deliberately only about the call sequence. Reverted; the file is byte-identical to HEAD. (6) THE CMock CALLBACK ROUTES, quoted from the generator, so that no later reader has to re-derive them. lib/cmock_generator_plugin_callback.rb:57-69 mock_implementation_precheck emits 'if (!Mock.X_CallbackBool && Mock.X_CallbackFunctionPointer != NULL) { ...cb(...); return; }' - a full escape from the mock, so _Stub (which sets CallbackBool=0 at :87) discards the CalledMore, the strict-ordering and the argument assertions and the ReturnVal. _AddCallback sets CallbackBool=1 at :78 and the callback is emitted by mock_implementation at :47-55, which lib/cmock_generator.rb:361 places AFTER the CalledMore assertion at :353 and after the order checks at :356-358 - so _AddCallback preserves the check chain but therefore also preserves the failing argument check and cannot make the test pass. Both _Stub (:88) and _AddCallback (:79) set CallbackCalls = 0 on every registration, so re-registering a stub between two phases of a test erases the first phase's count. With ':callback_include_count: true' (conf/unit/app_project_posix.yml:371) the callback signature takes a fourth 'int cmock_num_calls' parameter, which the experiment confirmed at compile time. A trap specific to this project: lib/cmock_generator_plugin_callback.rb:31-37 derives '#define X_StubWithCallback X_#{callback_after_arg_check ? AddCallback : Stub}' and the shipped conf sets ':callback_after_arg_check: false' (conf/unit/app_project_posix.yml:372), so in this project X_StubWithCallback expands to the full-bypass _Stub, not to the checking _AddCallback. (7) BLAST RADIUS, measured rather than extrapolated. 74 OS_*Queue_Expect* call sites exist across 10 test files. Five of those files are red today and are the four tests of this finding plus test_nxp_mc33775a_i2c.c. Four of the remaining five do not build, so their identical expectation is unobserved: tests/unit/app/application/ethernet/test_ethernet.c:148 passes '&testReceivedSocket' where src/app/application/ethernet/ethernet.c:138-139 has a function-local 'Socket_t connectedSocket' and passes '&connectedSocket'; tests/unit/app/driver/can/test_can.c:394,409,424 pass '&message' and :404 passes '&dummyMessageBuffer' where src/app/driver/can/can.c:996-1000 has a function-local 'message'; tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830.c:201,206 pass '(void *)&testRequest' where src/app/driver/afe/adi/common/ades183x/adi_ades183x.c:373 passes '&request', the address of the by-value parameter of ADI_MakeRequest(AFE_REQUEST_e request) at :369, which is a distinct stack object in the callee frame; tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_f_debug.c:313,683 pass '(void *)&timeData' where src/app/driver/can/cbs/rx/can_cbs_rx_f_debug.c:590 has a function-local 'RTC_TIME_DATA_s timeData = {0}'. The tenth file, tests/unit/app/driver/imd/bender/iso165c/test_bender_iso165c.c, is NOT claimed to be affected: src/app/driver/imd/bender/iso165c/bender_iso165c.c:441,475 pass the propagated parameter '(void *)pCanMessage', so identity can hold there, and the corresponding test tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_imd_bender-iso165c-info.c passes 15/15 in the same sweep. (8) SEPARATELY CONFIRMED, NOT CHANGED: test_dp83869.c was re-diagnosed and its fault re-reproduced independently in this work. See FB2-REV-FND-000035, which already records it; the independent confirmation and the corrected per-case tally are appended to FB2-VER-EXE-000015. (9) One build-failure CLASS is nondeterministic and was not treated as a change: tests/unit/app/driver/rtc/test_rtc.c alternates between 'build:strict_diagnostic' and 'build:other' across sweeps (22/23 and 23/22 on the same two runs). The outcome is 'build_failure' either way, the total is 100 either way, and the 313-test outcome set is otherwise bit-identical.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000037",
+  "impact": "What this costs is verification coverage, not product integrity, and the cost is larger than the 13 red assertions suggest. For four tests the queue payload has no working oracle, so the code path that packs a CAN message and hands it to the AFE task is unverified, and at least four further tests carry the identical expectation behind build failures and will surface the same failure whenever their build problems are fixed. The blast radius is bounded and known: 74 call sites in 10 files, of which 5 files are red, at least 4 more are latent, and 1 is demonstrably not affected. Three remedies were each constructed and each rejected on measurement, not judgement. Retyping the expected argument to the product's struct type: still fails, measured. A _Stub content callback: goes green but the payload compared is 14 zero bytes in both phases, so it constrains nothing that the packing logic controls, and it additionally discards the called-more, strict-ordering and return-value assertions for those calls, as quoted from the CMock generator above. _AddCallback: preserves every check, and therefore preserves the failing one. None of these is a test fix. It would be wrong to present a green run of these four tests as an improvement in verification, because the green would be produced by an assertion that cannot fail for any product defect in the logic under test. This is explicitly not evidence of MISRA conformance, of tool qualification, or of any certification, and no such claim may be inferred from this record.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': this record states a measured root cause for four of the five remaining red tests, established by re-diagnosis from source and by four controlled experiments that were each reverted. No test was changed. No human reviewer has confirmed the analysis and human approval remains 'pending'. This record makes no MISRA conformance claim, no tool-qualification claim and no certification claim of any kind.",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "resolution": "STILL OPEN, and SHARPER than when this record was raised. Re-verified on 2026-09-30T00:00:00Z: the loud red failures this record describes are gone - all four named tests now build and pass - but the condition the record actually diagnosed, that the content oracle for a void* queue payload is provably vacuous, is not gone. For two of the four it has become a SILENT GREEN, which is worse than a red because nothing in the run output distinguishes it from a real pass.\n\nWHAT CHANGED. The SIL harness now loads CMock's array plugin alongside the shipped :callback and :return_thru_ptr entries, which changes the comparison selected for a void* parameter from UNITY_TEST_ASSERT_EQUAL_PTR to UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY. sil/run.sh's own comment on this warns that enabling the plugin ALONE turns loud failures into silent vacuous passes, because the comparison depth is a per-call argument supplied only by the X_ExpectWithArray macro family and a plain X_ExpectAndReturn gets depth zero. The two CAN cell tests did move to OS_SendToBackOfQueue_ExpectWithArrayAndReturn with a correctly typed and correctly sized payload, which is the right move - and it was not sufficient.\n\nWHY IT IS STILL VACUOUS, MEASURED NOT ARGUED. In test_can_cbs_rx_afe_cell-temperatures.c and test_can_cbs_rx_afe_cell-voltages.c the expected payload is declared `CAN_CAN2AFE_CELL_TEMPERATURES_QUEUE_s expectedQueuePayload = {0}` and `CAN_CAN2AFE_CELL_VOLTAGES_QUEUE_s expectedQueuePayload = {0}` - every byte zero. The routine-test block registers CAN_RxGetSignalDataFromMessageData_Expect, which performs argument checks only, with no matching ReturnThruPtr_pCanSignal, and the generated Mockos.c contains no assignment to Expected_pCanSignal anywhere in the CAN_RxGetSignalDataFromMessageData body. The product's extractor therefore never writes its out-parameter, the packed payload it builds is all zeros, and UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY compares 20 zero bytes against 20 zero bytes and 14 against 14. It is a real byte comparison of a constant against itself. The 15 assertions those two files now contribute measure the call sequence and the diagnosis call, not the packing logic, which is the logic under test.\n\nTHE OTHER TWO ARE GENUINELY CLOSED and are recorded as closed rather than carried. test_debug_can.c fills the out-parameter with OS_ReceiveFromQueue_ReturnThruPtr_pvBuffer and then asserts on what the product DID with it, which is a real consumption check. test_nxp_mc33775a_i2c.c compares a fixture derived from the transaction the product actually received, via ExpectWithArray over the real sizeof, which is a real content check. The limit that remains on test_debug_can.c is that its payload is all zeros, so mux and validity decoding are exercised on zeros; that is a narrower claim than a red count implies, and it is stated here rather than left for a reader to assume.\n\nWHAT WOULD CLOSE THE REMAINDER, and why it is not done here. The corrective step is to register ReturnThruPtr_pCanSignal alongside the existing extractor expectations in the two CAN cell tests and to give expectedQueuePayload the non-zero contents the fixture is meant to describe, then to prove the assertion non-vacuous by perturbing one byte the product writes and observing the failure. That is a change to tests/, which is outside this corpus's write boundary, and it is a test-ownership decision: these are the project's only oracle for this signal path. The conf/ alternative - typing the queue-payload parameters so CMock learns a size, or loading the array plugin in the shipped configuration - is also outside this corpus's write boundary.\n\nA NOTE ON THE SHIPPED CONFIGURATION, because it is the part that outlives this harness. conf/unit/app_project_posix.yml still loads neither :array nor :ignore_arg, so the X_ExpectWithArray and X_IgnoreArg_ families these four tests now depend on do not exist under the shipped configuration. These tests now require the SIL harness's isolated copy of the project file. That is an accommodation, not a portable fix, and a run of the shipped suite on Linux or Windows will not build them. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "OPEN",
+   "condition_still_holds": true,
+   "date": "2026-09-30T00:00:00Z",
+   "disposition_before": "deferred",
+   "evidence": "the asserted condition is that the content oracle for a void* queue payload is provably vacuous. Measured per test FUNCTION (the named files each contain one non-vacuous case and one vacuous case, so a file-level count would be wrong): 2 function(s) compare an all-zero expected payload against a product payload the mocked extractor never populates - test_can_cbs_rx_afe_cell-temperatures.c:testCANRX_CellTemperatures, test_can_cbs_rx_afe_cell-voltages.c:testCANRX_CellVoltages. In each, the expected fixture is declared `= {0}`, the block registers CAN_RxGetSignalDataFromMessageData_Expect (argument checks only) with no matching ReturnThruPtr_pCanSignal, and the generated Mock never assigns Expected_pCanSignal, so both sides of the UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY are zero bytes. The array plugin turned a loud red into a silent green; it did not create an oracle. 3 function(s) are genuinely closed: test_nxp_mc33775a_i2c.c:testN77x_TransmitI2c_WRITE, test_nxp_mc33775a_i2c.c:testN77x_TransmitI2c_READ, test_nxp_mc33775a_i2c.c:testN77x_TransmitI2c_WRITEREAD - test_debug_can.c fills the out-parameter with ReturnThruPtr_pvBuffer and asserts on the consumption, and test_nxp_mc33775a_i2c.c compares a fixture derived from the received transaction.",
+   "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+   "revision_before": "1"
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "First record. Independent re-diagnosis of all five remaining red tests from source, with four controlled experiments (each reverted) and two independent full 313-test sweeps before and after. Corrects the task premise that named tests/unit/app/driver/afe/nxp/mc33775a/config/test_nxp_mc33775a_cfg.c as one of the five: that file passes and is an empty test shell. Records that the void*-queue-buffer case is a fourth, distinct cause not covered by the A/B/C taxonomy of FB2-REV-FND-000033, and that the content-comparison substitute is provably vacuous for this argument.",
+    "revision": "1"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED @date@ against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: OPEN. Disposition migrated from 'deferred' to 'deferred' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "2"
+   }
+  ],
+  "root_cause": "A shipped-configuration defect in conf/unit/app_project_posix.yml, combined with a C language scoping fact, makes the assertion inexpressible rather than merely unmet. conf/unit/app_project_posix.yml:369 asks CMock to ':when_ptr: :compare_data' and :368 sets ':memcmp_if_unknown: true', which is a request for a CONTENT comparison of pointer arguments. CMock cannot honour that request for a void* parameter: it has no way to learn the pointee size, its own generator says so in as many words at lib/cmock_generator_utils.rb:207-209, and it silently falls back to UNITY_TEST_ASSERT_EQUAL_PTR. The downgrade is invisible in the test source, so a test that reads as a content assertion is in fact an identity assertion. The second half is scoping: the code under test correctly declares the queue payload as a function-local and passes its address, and a function-local's address is not expressible in the caller, so identity can never hold no matter what the test passes. The two together produce an assertion that is unsatisfiable by construction on any compiler and any platform, and which the CMock feature set offers no way to replace from the test side without deleting the check or making it vacuous. This is a fourth cause, distinct from the three in FB2-REV-FND-000033: that taxonomy classifies cases where a real content oracle exists and differs in achievability (B) or is not achievable but a partial one is meaningful (C). Here the correct content oracle does not merely differ, it is CONSTANT - the value is provably all-zero because the test's own fixture never supplies an input to the mocked signal extractor - so no field of it carries information. Note what is NOT the cause, so that the distinction is not lost: the void* declarations are not defective, and this record does not re-open FB2-REV-FND-000031's measured conclusion that they are required by the design; and the module under test is not defective, since in every one of the five sites it sends exactly the type can_cfg.h documents for that queue.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "medium",
+  "source_refs": [],
+  "standards_mappings": [],
+  "subject_artifact_id": "FB2-VER-EXE-000015",
+  "title": "Finding FB2-REV-FND-000037: the four remaining red tests assert an oracle the shipped CMock configuration cannot express for a void* queue buffer, and the only test-side substitute is provably vacuous; the defect is in conf/unit, not in the tests' intent and not in the product's runtime behaviour",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-REV-FND-000037"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-REV-FND-000037",
+  "revision": "2"
+ }
+}

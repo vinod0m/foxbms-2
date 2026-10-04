@@ -1,0 +1,1016 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-VSW-000001",
+    "rationale": "The integration plan's level IL-01 exit criteria require that no module in scope is vacuous, and that each module have a recorded result. That requirement is the output of the unit test specification, so the plan cannot be executed without it. This is a real ordering constraint, not a convenience link.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-VER-SIP-000001",
+    "target_id": "FB2-VER-UTS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000002",
+    "rationale": "The qualification plan's level L2 states its strategy as the unit tests with their recorded oracle basis, and pass criteria PC-002, PC-003, PC-004 and PC-005 are all stated against what the unit test specification measured. The plan cannot be assessed without knowing what the unit level actually established.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-VER-SQP-000001",
+    "target_id": "FB2-VER-UTS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000006",
+    "rationale": "The summary's what_passed and what_failed sections rest on the same recorded sweep and the same vacuity census the unit test specification reports. The 217 figure and the 5 named vacuous files come from it.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-VER-VSR-000001",
+    "target_id": "FB2-VER-UTS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000007",
+    "rationale": "Deficiencies VDR-001, VDR-002, VDR-003 and VDR-005 are the named gaps of the unit test specification. The register tracks them; the specification is where they are derived.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-MAN-VDR-000001",
+    "target_id": "FB2-VER-UTS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000011",
+    "rationale": "SWE.4 is verification against detailed design. The specification states what of the LTC 6813-1 AFE driver detailed design is covered by the 11 behaviour cases and the 39 PEC drift assertions, and what is not. Note the coverage is partial: 5 of the driver's public entry points carry assertions.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "verifies",
+    "review_state": "pending",
+    "source_id": "FB2-VER-UTS-000001",
+    "target_id": "FB2-SW-DSN-000004"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000012",
+    "rationale": "The specification records that the SOA detailed design is verified by nothing. test_soa.c asserts three NULL-pointer traps and its routine output-verification step is the literal text TODO, so the design's behaviour model, its nine limit providers and its failure response are all uncovered. A link that records non-coverage is still the correct traceability edge, and this is the corpus's clearest example of one.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "verifies",
+    "review_state": "pending",
+    "source_id": "FB2-VER-UTS-000001",
+    "target_id": "FB2-SW-DSN-000005"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000013",
+    "rationale": "The specification records that the contactor detailed design is verified by nothing executed. test_contactor.c is a build failure in the recorded run, so none of its 7 cases has a result, and its 2 assertions are argument-validation only against a design that decomposes into three internal units.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "verifies",
+    "review_state": "pending",
+    "source_id": "FB2-VER-UTS-000001",
+    "target_id": "FB2-SW-DSN-000006"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against unit_test_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "evidence logs (3)",
+    "method": "file existence and recorded hash against the bytes on disk",
+    "result": "3/3 exist with a matching hash"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.requirement_traceability[0].requirement_id` names FB2-SW-SWR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.requirement_traceability[1].requirement_id` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.requirement_traceability[2].requirement_id` names FB2-SW-SWR-000003."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C04-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 with status `partially_mapped` on the grounds: This record supplies the SWE.4 expected family 'Unit Test Specification', which coverage-plan.json recorded as ABSENT. It does not supply 'Unit Test Results': no result is produced by a specification, and the one recorded unit-level execution (FB2-VER-EXE-000015 in the as_is profile) is a host run of a SIL harness, not a result of this specification being executed."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 with status `partially_mapped` on the grounds: Unit-level verification strategy and criteria for the three software requirements the corpus names. The five network-security measures FB2-VER-TMS-000016..000020 cover the security-relevant unit cases; this record covers the structural and measurement aspects they do not state."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C06-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json as captured output, hash `sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589`."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C07-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md as captured output, hash `sha256:dd2d5482f96f2026538ba3ff8fc9a506b546b8c5e07faefb2278f40d83c0e865`."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C08-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md as captured output, hash `sha256:50465b4839cdf42abc6bd1a69e69c39b4bf686c7c47563e0eaa2d6dc95e279ed`."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C09-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C10-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/VACUOUS-TESTS.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C11-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C12-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C13-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REATTRIBUTION.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C14-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C15-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/classification-fix as supporting evidence."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 47455,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/uts-software-unit-verification.json",
+  "record_sha256": "89e59017723b47e87f0ebe9a06b4e28a505600f98b47ce54c32bb599bf61fa38",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "89e59017723b47e87f0ebe9a06b4e28a505600f98b47ce54c32bb599bf61fa38"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "The recorded run cannot be reproduced in this session; its reproduction command is in RUNBOOK.md in the run directory and it takes a full Ceedling sweep of 313 targets.",
+    "The static census of the current tree is a lower bound on what the tests could verify, not a measurement of what they do verify.",
+    "graft callers --depth 2 was run against the modules under test and returned no indexed cross-file call edges for any symbol probed, so the dependency structure used for the SWE.5 plan was derived from the #include graph over src/ instead. This is recorded in FB2-VER-SIP-000001 rather than hidden.",
+    "The 17 build failures attributed to the product are recorded as classifications by the run's own classifier. This record does not independently re-derive each one; the classifier's determinism is separately evidenced in the run directory.",
+    "Module coverage is characterised for 12 modules. The remaining modules in src/ are not characterised here, and their coverage is unknown rather than absent."
+   ]
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": false,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": false,
+    "provenance_consistent": false,
+    "schema_valid": false
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-UTS-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Unit Test Specification: foxBMS 2 software units under test in the SIL host sweep, with the measured coverage gaps named\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "unit_test_specification",
+  "assumption_refs": [
+   "FB2-ASM-001"
+  ],
+  "automated_review_status": {
+   "consistency_checks": false,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": false,
+   "provenance_consistent": false,
+   "schema_valid": false
+  },
+  "baseline_id": "BAS-REF-001",
+  "claims_not_made": [
+   "No statement-coverage percentage is claimed. No statement-coverage tool has been run in this corpus and no statement-coverage artefact exists.",
+   "No branch-coverage percentage is claimed, for the same reason.",
+   "No mutation score is claimed. The corpus runs 20 negative scenarios against its own detectors, which is a validation of the corpus tooling and not a mutation score for the product.",
+   "No claim is made that the 5 vacuous green tests were proven vacuous by removing the call under test. No tracked file records that experiment.",
+   "No claim is made that the 313 test files correspond to 313 modules under test. The module-under-test mapping is not 1:1; several test files target shared layers and several modules have no test file.",
+   "No claim is made that the current tree passes. The 285/7/21 census is a static count of test cases and assertion macros. It says nothing about whether any of them passes, and the tree has not been re-run since commit 176fe234.",
+   "No claim is made that the recorded run's 222 passes represent 222 verified behaviours. 217 of them assert something; the coverage each provides is described per module above and is far from uniform.",
+   "No claim of independence, approval or certification is made for any record in this corpus. human_approval_status is pending for every one of the 289-plus artefacts and no approval has occurred."
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "engineering_domain": "verification",
+  "evidence_files": [
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/VACUOUS-TESTS.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REATTRIBUTION.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/classification-fix"
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-UTS-000001",
+  "independence_statement": "This specification was authored by an AI agent from repository sources and recorded evidence. An AI-authored analysis is NOT an independent review: the same corpus that produced the recorded run also read those sources, and no person who did not author the code has checked any judgement in this record. human_approval_status is pending and production_authorized is false. Nothing here is a qualification statement, a release criterion or a certification of any kind.",
+  "lifecycle_status": "draft",
+  "limitations": [
+   "The recorded run cannot be reproduced in this session; its reproduction command is in RUNBOOK.md in the run directory and it takes a full Ceedling sweep of 313 targets.",
+   "The static census of the current tree is a lower bound on what the tests could verify, not a measurement of what they do verify.",
+   "graft callers --depth 2 was run against the modules under test and returned no indexed cross-file call edges for any symbol probed, so the dependency structure used for the SWE.5 plan was derived from the #include graph over src/ instead. This is recorded in FB2-VER-SIP-000001 rather than hidden.",
+   "The 17 build failures attributed to the product are recorded as classifications by the run's own classifier. This record does not independently re-derive each one; the classifier's determinism is separately evidenced in the run directory.",
+   "Module coverage is characterised for 12 modules. The remaining modules in src/ are not characterised here, and their coverage is unknown rather than absent."
+  ],
+  "logs": [
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "hash": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "type": "custom"
+   },
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+    "hash": "sha256:dd2d5482f96f2026538ba3ff8fc9a506b546b8c5e07faefb2278f40d83c0e865",
+    "type": "custom"
+   },
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md",
+    "hash": "sha256:50465b4839cdf42abc6bd1a69e69c39b4bf686c7c47563e0eaa2d6dc95e279ed",
+    "type": "custom"
+   }
+  ],
+  "measurement_state": {
+   "current_tree_static_census": {
+    "method": "Glob tests/unit/**/test_*.c (313 files). For each, count functions matching void test*(void) and count occurrences of the 43 distinct TEST_ASSERT_* macro spellings present in the suite. A file is 'with test case and assertion' when both counts are non-zero.",
+    "method_limitation": "This is a static re-count. It cannot say whether any file passes, because that requires execution, and it cannot say whether an assertion is reachable. It is therefore not a coverage measurement and is not quoted as one.",
+    "total_test_files": 313,
+    "tree_commit": "ebd6d5a6",
+    "with_no_test_case": 21,
+    "with_test_case_and_assertion": 285,
+    "with_test_case_no_assertion": 7
+   },
+   "recorded_run": {
+    "assertions_failed": 35,
+    "assertions_passed": 950,
+    "assertions_tested": 988,
+    "build_failures": 84,
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "failed": 7,
+    "generated_at": "2026-09-30T01:24:18+0200",
+    "passed": 222,
+    "total_test_files": 313
+   },
+   "why_two_states": "The recorded run predates the current tree. Commit 176fe234 ('fix: 251/313 pass, 0 failing') landed after the run was generated and rewrote or added tests; test_contactor.c and test_app-hl_notification.c are build_failure in the record but now carry 2 and 23 Unity assertions respectively, and test_nxp_mc33775a_cfg.c is recorded as tested=1/passed=0 while the file now holds 8 test cases and 18 assertions. Quoting either figure alone would be quoting a number against the wrong tree, so both are carried and each claim below names which one it comes from."
+  },
+  "modules_under_test": [
+   {
+    "coverage_verified_by": "unit_test_execution",
+    "module_exists": true,
+    "module_id": "MUT-SOA",
+    "module_path": "src/app/application/soa/soa.c",
+    "oracle_basis": "synthetic_assumption",
+    "oracle_basis_justification": "The CMock expectation queue is the oracle, and the queue is authored in the test. The test dictates the diagnosis-call sequence and then confirms the code produced the sequence the test dictated. Nothing compares the classification SOA reached (which cells, which tier, which violation) against an independently derived classification, so the only assertion about behaviour is that a NULL pointer traps.",
+    "oracle_blindness": "Cannot detect a wrong violation classification, a wrong limit, a wrong tier, a missing diagnosis, an extra diagnosis of the right id on the wrong string, or a wrong fault request - because the expected classification is never computed. It also cannot detect the reverse: a code path that satisfies the queue by calling DIAG_Handler the right number of times with the right arguments but reaches them from the wrong branch is indistinguishable. This is a mock-interaction oracle, not a behaviour oracle.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/application/soa/test_soa.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 2,
+      "recorded_run_tested": 2,
+      "test_case_functions": [
+       "testSOA_CheckVoltages",
+       "testSOA_CheckTemperatures"
+      ],
+      "unity_assertion_count": 3
+     }
+    ],
+    "what_is_covered": "Argument validation only, and only of the pointer kind. Three assertions, all of the TEST_ASSERT_FAIL_ASSERT form: SOA_CheckVoltages(NULL_PTR) must assert, SOA_CheckTemperatures(NULL_PTR, &pCurrent) must assert, SOA_CheckTemperatures(&pMinMax, NULL_PTR) must assert. The routine path is driven - the test enumerates every DIAG_Handler call SOA is expected to make for every string - and every one of those expectations is satisfied by a CMock _ExpectAndReturn queue. What is then asserted about the RESULT is the literal comment '/* TODO */' under the banner 'test output verification'. The file's own docstrings list 'RT1/x: TODO' for the routine case of both functions."
+   },
+   {
+    "coverage_verified_by": "unit_test_execution",
+    "module_exists": true,
+    "module_id": "MUT-LTC6813",
+    "module_path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+    "oracle_basis": "source_grounded",
+    "oracle_basis_justification": "Both oracles are internal to the repository and named. The behavioural assertions compare against literals the test states. The PEC oracle is a closed loop over the product: TEST_ASSERT_PEC_CORRECT_IN_ARRAY (tests/unit/support/test_pec_helper.h:63) calls TEST_LTC_Get_<array>, which is defined in the product source at src/app/driver/afe/ltc/6813-1/ltc_6813-1.c:4816 and simply copies the product's own ltc_cmd* constant table into a 4-byte buffer, then compares the PEC bytes already inside that table against LTC_CalculatePec15(2u, data) - the product's own implementation of the same polynomial. No datasheet value and no second implementation participates.",
+    "oracle_blindness": "The PEC oracle cannot detect a PEC that is wrong consistently: if LTC_CalculatePec15 used the wrong polynomial AND the ltc_cmd* tables were regenerated with that same wrong polynomial, all 39 assertions pass. What it does establish, and does establish well, is that the tables and the polynomial have not drifted apart - a table edit that forgets its PEC, or a polynomial change that does not regenerate the tables, fails immediately. It is a drift pin, not a correctness proof. The five behavioural assertions cover 5 of the driver's public entry points; the remaining public surface of a 6813-1 driver of this size is not covered.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 11,
+      "recorded_run_tested": 11,
+      "test_case_functions": [
+       "testLTC_SaveVoltages",
+       "testLTC_SaveTemperatures",
+       "testLTC_SaveAllGpioMeasurement",
+       "testTEST_LTC_CheckReEntrance",
+       "testLTC_GetStateRequest"
+      ],
+      "unity_assertion_count": 5
+     },
+     {
+      "path": "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1_pec_in_arrays.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 1,
+      "recorded_run_tested": 1,
+      "test_case_functions": [],
+      "unity_assertion_count": 39
+     }
+    ],
+    "what_is_covered": "Two distinct things. (a) Five behaviour cases covering the save path for voltages, temperatures and the GPIO multiplexer measurement, the re-entrance guard, and the state-request read, using 5 TEST_ASSERT_EQUAL_UINT8/INT16 assertions. (b) A wire-format pin of 39 PEC positions: for each of 39 LTC command arrays the test checks that the PEC bytes stored in the array match the PEC the product's own LTC_CalculatePec15 computes over the same bytes."
+   },
+   {
+    "coverage_verified_by": "code_reading_only",
+    "module_exists": true,
+    "module_id": "MUT-NXP-MUXCFG",
+    "module_path": "src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.c",
+    "oracle_basis": "source_grounded",
+    "oracle_basis_justification": "Every expected value is a named declaration in the module or its headers: N77X_MUX_SEQUENCE_LENGTH, N77X_MUX_GPIOS_PER_MUX, N77X_MUX_DISABLE_VALUE, BS_NR_OF_TEMP_SENSORS_PER_MODULE. The test is a consistency check between the table and the macros that size it, which is the only oracle available for a module with no code.",
+    "oracle_blindness": "Cannot detect a table that is internally consistent but wired wrongly for the hardware - if mux 0 is really on the wrong pins, every assertion here still passes. It also encodes the 16-temperature-sensor build: testMuxSequenceLengthIsEighteenForThisBuild asserts 16 sensors and 8 GPIOs per mux explicitly, so this test is build-specific and will fail, not silently pass, under a different sensor count, which is the correct failure direction but means it is not portable. Note the recorded run reports tested=1/passed=0 for this file: at the moment the run was generated the file held no test case, and it was rewritten afterwards. The 7 cases and 18 assertions exist now and are unexecuted.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/driver/afe/nxp/mc33775a/config/test_nxp_mc33775a_cfg.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 0,
+      "recorded_run_tested": 1,
+      "test_case_functions": [
+       "testMuxSequenceLengthIsEighteenForThisBuild",
+       "testMuxDisableValueIsTheSentinelOutsideTheChannelRange",
+       "testMuxSequenceFirstBlockIsMuxZeroAllEightChannels",
+       "testMuxSequenceDisablesMuxZeroBeforeStartingMuxOne",
+       "testMuxSequenceSecondBlockIsMuxOneAllEightChannels",
+       "testMuxSequenceEndsByDisablingMuxOne",
+       "testMuxSequenceHasNoThirdMultiplexerBlock"
+      ],
+      "unity_assertion_count": 18
+     }
+    ],
+    "what_is_covered": "Structural invariants of a constant table. The module under test declares no functions at all - only N77X_MUX_CH_CFG_s n77x_muxSequence[N77X_MUX_SEQUENCE_LENGTH] - so there is no behaviour to exercise. The test pins the table length against N77X_MUX_SEQUENCE_LENGTH, pins the disable sentinel N77X_MUX_DISABLE_VALUE and checks it lies outside the channel range, then walks the table checking the mux-0 block, the disable gap at index 8, the mux-1 block, the terminal disable, and the absence of a third multiplexer. 18 assertions across 7 cases."
+   },
+   {
+    "coverage_verified_by": "unit_test_execution",
+    "module_exists": true,
+    "module_id": "MUT-DATABASE",
+    "module_path": "src/app/engine/database/database.c",
+    "oracle_basis": "source_grounded",
+    "oracle_basis_justification": "TEST_ASSERT_EQUAL_MEMORY against a block the test built is the strongest oracle available in this suite: the whole data-block payload including the uniqueId header is compared, not the fields a test author thought to look at. It is still internal - both sides are constructed in the test - but it cannot be satisfied by a test that checks only what it happened to assert.",
+    "oracle_blindness": "Cannot detect a wrong data-block LAYOUT: if the struct and the test's initialiser drift together the memory comparison still passes. It says the round trip preserves bytes, not that the bytes mean what the design intends. Concurrency is not covered - there is no test that two writers race on one block, which is the failure mode a database with a task-model writer actually has.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/engine/database/test_database.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 14,
+      "recorded_run_tested": 14,
+      "test_case_functions": [],
+      "unity_assertion_count": 67
+     },
+     {
+      "path": "tests/unit/app/engine/database/test_database_helper.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 9,
+      "recorded_run_tested": 9,
+      "test_case_functions": [],
+      "unity_assertion_count": 50
+     }
+    ],
+    "what_is_covered": "The database is the best-covered module in the corpus by assertion density: 117 Unity assertions across 23 executed cases in two files, and it is the only module here that uses TEST_ASSERT_EQUAL_MEMORY, which is the assertion that actually compares payload bytes rather than a field the test chose. It covers argument validation (FAIL_ASSERT/PASS_ASSERT pairs), the not-null and copy semantics of the read and write entry points, and the helper's accessors."
+   },
+   {
+    "coverage_verified_by": "unit_test_execution",
+    "module_exists": true,
+    "module_id": "MUT-SOC",
+    "module_path": "src/app/application/algorithm/state_estimation/soc/",
+    "oracle_basis": "synthetic_assumption",
+    "oracle_basis_justification": "The expected state-of-charge values are the ones the test author wrote. Nothing in the repository publishes the intended SOC curve, so the table is the specification and the code is being compared against the table the same author derived. The float comparisons use exact TEST_ASSERT_EQUAL_FLOAT rather than a tolerance, which is only defensible because the estimator returns a table entry verbatim; a computed SOC would need TEST_ASSERT_FLOAT_WITHIN and there are 21 uses of that macro elsewhere in the suite but none here.",
+    "oracle_blindness": "Cannot detect that the SOC curve is wrong. It detects only that the code returns what the table says. The charging-direction, rest-current and full/empty boundary semantics - the parts of a SOC estimator that are actually hard - are not exercised by a voltage sweep alone, and the counting strategy's coulomb-counting path is asserted in 18 places whose expected values are equally authored.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/application/algorithm/state_estimation/soc/counting/test_soc_counting.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 3,
+      "recorded_run_tested": 3,
+      "test_case_functions": [],
+      "unity_assertion_count": 18
+     },
+     {
+      "path": "tests/unit/app/application/algorithm/state_estimation/soc/lookup-table/test_soc_lookup-table.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 6,
+      "recorded_run_tested": 6,
+      "test_case_functions": [],
+      "unity_assertion_count": 30
+     },
+     {
+      "path": "tests/unit/app/application/algorithm/state_estimation/soc/debug/test_soc_debug.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 3,
+      "recorded_run_tested": 3,
+      "test_case_functions": [],
+      "unity_assertion_count": 4
+     },
+     {
+      "path": "tests/unit/app/application/algorithm/state_estimation/soc/none/test_soc_none.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 3,
+      "recorded_run_tested": 3,
+      "test_case_functions": [],
+      "unity_assertion_count": 4
+     }
+    ],
+    "what_is_covered": "The SOC estimator in its three strategies (counting, lookup-table, none) plus its debug build, 56 assertions across 15 executed cases. The lookup-table strategy is checked over a voltage sweep, so it is the one place in the suite where a curve is compared across its range rather than at a point."
+   },
+   {
+    "coverage_verified_by": "none",
+    "module_exists": true,
+    "module_id": "MUT-PHY-DP83869",
+    "module_path": "src/app/driver/phy/dp83869.c",
+    "oracle_basis": "source_grounded",
+    "oracle_basis_justification": "The assertions are TEST_ASSERT_EQUAL against register-level expectations and TEST_ASSERT_FAIL_ASSERT for argument validation, all stated in the test. Classifying the basis is moot for the result but is recorded because the specification is real even where the verdict is not.",
+    "oracle_blindness": "Moot: 0 of 15 assertions passed. The reason is documented separately in TASK2-SEGFAULT.md in the same run directory - the linker crashes on this host and AddressSanitizer hangs at link because the shipped :tools: :test_linker: appends -flto, which deadlocks this toolchain under ASAN. So this is a harness-infrastructure failure, not 15 product defects, and the distinction matters: the module is neither verified nor disproven.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/driver/phy/test_dp83869.c",
+      "path_exists": true,
+      "recorded_run_failed": 15,
+      "recorded_run_outcome": "fail",
+      "recorded_run_passed": 0,
+      "recorded_run_tested": 15,
+      "test_case_functions": [],
+      "unity_assertion_count": 45
+     }
+    ],
+    "what_is_covered": "Nothing. This is the single worst result in the recorded run: 15 test cases, 15 assertions, 0 passed, 15 failed. The 932-line test file is the largest assertion-dense test in the suite and every one of its assertions fails, so the module has an attempted specification and a total failure against it."
+   },
+   {
+    "coverage_verified_by": "code_reading_only",
+    "module_exists": true,
+    "module_id": "MUT-FASSERT",
+    "module_path": "src/app/main/fassert.c",
+    "oracle_basis": "synthetic_assumption",
+    "oracle_basis_justification": "There is no oracle. The only property the test can establish is that the call returns rather than faulting, and that property is the implicit precondition of the harness reaching the end of the case. Labelling it synthetic_assumption rather than source_grounded because the arguments are dummies the test invents and nothing checks what was stored.",
+    "oracle_blindness": "Cannot detect that FAS_StoreAssertLocation fails to store the program counter or the line, stores them swapped, or stores them at all. This module is the assertion mechanism for the whole product, so an undetected fault here would make every other test's PASS_ASSERT meaningless.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/main/test_fassert.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 1,
+      "recorded_run_tested": 1,
+      "test_case_functions": [
+       "testFAS_StoreAssertLocation"
+      ],
+      "unity_assertion_count": 0
+     },
+     {
+      "path": "tests/unit/bootloader/main/test_fassert.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 1,
+      "recorded_run_tested": 1,
+      "test_case_functions": [
+       "testFAS_StoreAssertLocation"
+      ],
+      "unity_assertion_count": 0
+     }
+    ],
+    "what_is_covered": "Nothing observable. Both files declare one test case, testFAS_StoreAssertLocation, which calls FAS_StoreAssertLocation(&dummyProgramCounter, dummyLine) and returns. There is not one TEST_ASSERT_ macro in either file. The harness records both as pass with tested=1/passed=1."
+   },
+   {
+    "coverage_verified_by": "code_reading_only",
+    "module_exists": true,
+    "module_id": "MUT-SYS-RESET",
+    "module_path": "src/app/engine/sys/reset.c",
+    "oracle_basis": "synthetic_assumption",
+    "oracle_basis_justification": "The stated intent - that a general BIST is running afterwards - would be a measured oracle if it were checked, and is not checked at all. The test asserts nothing and the docstring asserts the intent.",
+    "oracle_blindness": "Cannot detect that the reset does not trigger, that the BIST does not run, or that the reset is a no-op on this host. SYS_TriggerSoftwareReset is a hardware-triggered path, so a host run cannot meaningfully exercise it; the honest reading is that this test is a smoke test mislabelled as a verification.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/engine/sys/test_reset.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 1,
+      "recorded_run_tested": 1,
+      "test_case_functions": [
+       "testSYS_TriggerSoftwareReset"
+      ],
+      "unity_assertion_count": 0
+     }
+    ],
+    "what_is_covered": "Nothing observable. One test case, testSYS_TriggerSoftwareReset, whose body is the single line SYS_TriggerSoftwareReset(); and a docstring that says 'make sure that the general BIST is running'. No BIST is observed. The harness records pass, tested=1, passed=1."
+   },
+   {
+    "coverage_verified_by": "code_reading_only",
+    "module_exists": true,
+    "module_id": "MUT-DEBUG-AFE-DMA",
+    "module_path": "src/app/driver/afe/debug/can/api/debug_can_afe_dma.c",
+    "oracle_basis": "synthetic_assumption",
+    "oracle_basis_justification": "No oracle is present. Calling AFE_DmaCallback(0) with a literal channel of 0 is a choice the test makes, and no expected effect is stated.",
+    "oracle_blindness": "Cannot detect that the DMA completion callback is not invoked, is invoked with the wrong state, or drops the completion. A DMA completion path that silently no-ops is exactly the defect this test appears to be for.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/driver/afe/debug/can/api/test_debug_can_afe_dma.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 1,
+      "recorded_run_tested": 1,
+      "test_case_functions": [
+       "testAFE_DmaCallback"
+      ],
+      "unity_assertion_count": 0
+     },
+     {
+      "path": "tests/unit/app/driver/afe/debug/default/api/test_debug_default_afe_dma.c",
+      "path_exists": true,
+      "recorded_run_failed": 0,
+      "recorded_run_outcome": "pass",
+      "recorded_run_passed": 1,
+      "recorded_run_tested": 1,
+      "test_case_functions": [
+       "testAFE_DmaCallback"
+      ],
+      "unity_assertion_count": 0
+     }
+    ],
+    "what_is_covered": "Nothing observable. Two structurally identical files, one per debug AFE variant, each with a single testAFE_DmaCallback case that calls AFE_DmaCallback(0) and asserts nothing. Both are recorded as pass."
+   },
+   {
+    "coverage_verified_by": "none",
+    "module_exists": true,
+    "module_id": "MUT-CONTACTOR",
+    "module_path": "src/app/driver/contactor/contactor.c",
+    "oracle_basis": "synthetic_assumption",
+    "oracle_basis_justification": "The two assertions that exist are argument-validation assertions whose expectation is stated in the test. No routine behaviour oracle is present, and none could be assessed because the file does not build.",
+    "oracle_blindness": "Moot while the file does not build. Once it does, the blind spot is the whole routine: feedback readback, coil command sequencing, and the registry type-uniqueness invariant that FB2-SW-DSN-000006 records as a TODO in the source.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/driver/contactor/test_contactor.c",
+      "path_exists": true,
+      "recorded_run_failed": null,
+      "recorded_run_outcome": "build_failure",
+      "recorded_run_passed": null,
+      "recorded_run_tested": null,
+      "test_case_functions": [],
+      "unity_assertion_count": 2
+     }
+    ],
+    "what_is_covered": "Nothing executed. The test file exists and holds 7 test cases - testCONT_InitializationCheckOfContactorRegistry, its WrongAffiliation counterpart, testCONT_CheckFeedback, testCONT_OpenContactor, testCONT_CloseContactor and two more - but in the recorded run it is a build failure, so none of them has a result. Its 2 Unity assertions are TEST_ASSERT_FAIL_ASSERT and TEST_ASSERT_PASS_ASSERT, i.e. argument-validation assertions only. The current tree has 266 lines and 2 assertions across 7 cases, which is a thin specification for a safety-relevant actuator driver that detailed design FB2-SW-DSN-000006 has decomposed into CONT_OpenContactor, CONT_GetFeedbackOfAllContactors and CONT_InitializationCheckOfContactorRegistry."
+   },
+   {
+    "coverage_verified_by": "none",
+    "module_exists": true,
+    "module_id": "MUT-HL-NOTIFICATION",
+    "module_path": "src/app/hal/app-hl_notification.c",
+    "oracle_basis": "source_grounded",
+    "oracle_basis_justification": "TEST_ASSERT_NOTIFICATION_INERT is a named helper that observes the notification's effect on the mocked hardware, so its expected value is the layer's own declared contract rather than a test author's choice. Classified on the specification, not on a result, which does not exist.",
+    "oracle_blindness": "Moot while unbuilt. The interface-header arity these 20 cases were originally written to check is now covered by CMock's generated argument verification, which REATTRIBUTION.md in the same run directory records; that is a signature check, not a behaviour check, and the two are not interchangeable.",
+    "test_files": [
+     {
+      "path": "tests/unit/app/hal/test_app-hl_notification.c",
+      "path_exists": true,
+      "recorded_run_failed": null,
+      "recorded_run_outcome": "build_failure",
+      "recorded_run_passed": null,
+      "recorded_run_tested": null,
+      "test_case_functions": [],
+      "unity_assertion_count": 23
+     },
+     {
+      "path": "tests/unit/bootloader/hal/test_bootloader-hl_notification.c",
+      "path_exists": true,
+      "recorded_run_failed": null,
+      "recorded_run_outcome": "build_failure",
+      "recorded_run_passed": null,
+      "recorded_run_tested": null,
+      "test_case_functions": [],
+      "unity_assertion_count": 14
+     }
+    ],
+    "what_is_covered": "Nothing executed. Both files are build failures in the recorded run. In the current tree the app file holds 20 test cases and 23 assertions and the bootloader file 10 cases and 14, using TEST_ASSERT_NOTIFICATION_INERT and TEST_ASSERT_EQUAL_UINT32. Those assertion macros are the substantive content: they check the notification bodies are inert and check a status word, which is a real specification of the hardware-abstraction notification layer. It has simply never produced a result."
+   }
+  ],
+  "non_coverage": [
+   {
+    "affected": [
+     "tests/unit/app/driver/contactor/test_contactor.c",
+     "tests/unit/app/hal/test_app-hl_notification.c",
+     "tests/unit/bootloader/hal/test_bootloader-hl_notification.c",
+     "tests/unit/bootloader/driver/crc/test_crc.c"
+    ],
+    "count": 84,
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "gap_class": "build_failure",
+    "gap_id": "GAP-UTS-001",
+    "statement": "84 of the 313 test files did not build in the recorded run, so no test case in them has a result. The 84 fall into 13 classifier classes and the classes are not all the same kind of thing, so the total is grouped here by what the failure actually is. PRODUCT DEFECTS, 17 targets: 16 on a build:real_defect_* class, being 6 out-of-bounds array index, 4 macro arity, 2 implicit function declaration, 2 implicit int, 1 absolute-value truncation and 1 excess initialisers, plus 1 on build:product_tautological_guard. UNDECLARED IDENTIFIER, 8 targets, which the classifier treats as its own class and which could be either a product omission or a harness gap. HARNESS OR TOOLCHAIN, 56 targets, which are not product defects at all: 28 excluded upstream by configuration, 22 failing only a clang-specific diagnostic, 5 failing a strict diagnostic under both compilers, and 1 not buildable on the macOS object format. SIL INTERFACE HEADER MISMATCH, 3 targets, a harness defect rather than a product defect. 17 plus 8 plus 56 plus 3 is 84. The 17 are the part that matters for qualification: an out-of-bounds array index and a macro-arity error are exactly the defects a BMS cannot have, and no test result exists for any file that would have caught them, because the file does not compile."
+   },
+   {
+    "affected": [
+     "tests/unit/app/main/test_fassert.c",
+     "tests/unit/bootloader/main/test_fassert.c",
+     "tests/unit/app/engine/sys/test_reset.c",
+     "tests/unit/app/driver/afe/debug/can/api/test_debug_can_afe_dma.c",
+     "tests/unit/app/driver/afe/debug/default/api/test_debug_default_afe_dma.c"
+    ],
+    "count": 5,
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "gap_class": "vacuous_green",
+    "gap_id": "GAP-UTS-002",
+    "statement": "5 of the 222 files the recorded run reports as pass contain a test case and zero Unity assertion macros. They are listed by name in vacuity_census below. Each contributes 1 to the pass count and 0 to any coverage claim, so the honest reading of the headline figure is 'files whose harness verdict was green', never 'tests that verify something'. The correct number of green files that assert something is 217, not 222."
+   },
+   {
+    "affected": [
+     "tests/unit/app/driver/afe/adi/common/ades183x/ (13 files)",
+     "tests/unit/app/driver/afe/nxp/common/mc3377x/ (6 files)",
+     "tests/unit/app/driver/emac/test_emac-low-level.c",
+     "tests/unit/support/test_fake_functions.c"
+    ],
+    "count": 21,
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "gap_class": "no_test_case",
+    "gap_id": "GAP-UTS-003",
+    "statement": "21 of the 313 test files declare no test case at all - no void test*(void) function exists in them. All 21 are build failures in the recorded run, so they inflate no pass count, and all 21 contribute no coverage. They are concentrated in the two AFE common layers: the ADI ADES183x shared layer (13 files, including api/, config/, pec/ and the 8 driver files) and the NXP MC3377x shared layer (6 files), plus the Ethernet MAC low-level driver and the fake-function support file. Two AFE vendors' common code therefore has a test-file skeleton and no test, and the two shared layers are exactly where a defect would be duplicated across every AFE variant that instantiates them."
+   },
+   {
+    "affected": [
+     "src/app/application/soa/soa.c",
+     "tests/unit/app/application/soa/test_soa.c"
+    ],
+    "count": 1,
+    "evidence_path": "docs/artifacts/corpus/synthetic_reference/verification/uts-software-unit-verification.json",
+    "gap_class": "no_routine_outcome_assertion",
+    "gap_id": "GAP-UTS-004",
+    "statement": "The SOA module is the safety-monitor the corpus's own requirement FB2-SW-SWR-000002 is written about, and its only test file asserts three NULL-pointer traps and nothing else. The routine path is executed and its diagnosis calls are mock-queued, but the test's output-verification step is the literal text '/* TODO */' and both functions' docstrings record 'RT1/x: TODO'. Every one of FB2-SW-SWR-000002's four acceptance criteria - 5 ms classification latency, 1 mV threshold accuracy, 1E-6 events/hour false-positive rate under 5 mV Gaussian noise, 2 ms fault-request latency - is unverified at unit level, and the last two are not implementable as written because FB2-SW-DSN-000005's own declared_gaps records that the SOA module contains no debounce and no reaction path."
+   },
+   {
+    "affected": [
+     "all 313 test files"
+    ],
+    "count": 0,
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "gap_class": "unmeasured_metric",
+    "gap_id": "GAP-UTS-005",
+    "statement": "This corpus contains no statement-coverage measurement and no branch-coverage measurement, and none is asserted anywhere in this record. The recorded run reports 988 assertions executed (950 passed, 35 failed). An assertion count is not a coverage percentage: it does not say which statements executed, how many paths through a function were taken, or which branches were never reached. Any statement of the form 'X% covered' would be unfounded and is listed under claims_not_made."
+   },
+   {
+    "affected": [
+     "all 313 test files",
+     "src/bootloader/**",
+     "src/os/freertos/**"
+    ],
+    "count": 0,
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+    "evidence_sha256": "sha256:dd2d5482f96f2026538ba3ff8fc9a506b546b8c5e07faefb2278f40d83c0e865",
+    "gap_class": "not_executed_on_target",
+    "gap_id": "GAP-UTS-006",
+    "statement": "Every result in this record was produced by a host (macOS arm64) build of the product's own C sources against mocked HL_* interface headers. No test in this corpus has been executed on the product's target hardware, and none can be: the run directory's RUNBOOK.md reproduces a host run and states that the SIL workspace symlinks src/, tests/ and conf/ read-only into an isolated build root. Everything the host harness substitutes for hardware - the FreeRTOS scheduler, the real interrupt and DMA paths, the timing, the CAN and SPI wire behaviour, the FRAM and flash drivers - is outside what any result here demonstrates."
+   }
+  ],
+  "oracle_basis_definitions": {
+   "closed_set": [
+    "source_grounded",
+    "analytical_model",
+    "synthetic_assumption",
+    "measured"
+   ],
+   "definitions": {
+    "analytical_model": "The expected value is computed from a model that is independent of the code under test: a CRC/PEC polynomial, a sensor characteristic fit, a closed-form state-machine successor, an interval or tolerance. The defining property is that the model could in principle disagree with the code, so the assertion can fail for a reason that is not a coincidence.",
+    "measured": "The expected value came from a measurement on the product: a bench run, a bus capture, a timing trace, a regulator measurement. Distinguished from the other three because its authority is physical, not textual.",
+    "source_grounded": "The expected value is read out of the product's own source: a configuration macro, a constant table, a type width, an enum value, or the signature the code was called with. Reading the test is sufficient to find the expected value and it is traceable to a named declaration. Strongest when the test pins a contract the code itself states; weakest when it pins a value the same commit could have changed on both sides at once.",
+    "synthetic_assumption": "The expected value was chosen by the test author and is not derivable from the source or from a model: a conventional constant, a round number, an assumed ordering, a stub value. It can be right or wrong; nothing in the repository settles it."
+   },
+   "discriminator": "Ask where the expected value came from and refuse to record the label until that is answered by a named declaration, a named model, or a named measurement. If the answer is 'the test author picked it', the basis is synthetic_assumption. If the expected value is produced by the same function under test, the basis is source_grounded and oracle_blindness must say so, because a self-referential oracle cannot detect a consistently wrong implementation."
+  },
+  "origin": "derived",
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "requirement_traceability": [
+   {
+    "acceptance_criterion": "Acquisition period 50 ms; PEC/CRC validation 100% of transfers rejected before database write; database publish latency 25 ms from SPI complete to database write.",
+    "covering_test_files": [
+     "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1_pec_in_arrays.c",
+     "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c",
+     "tests/unit/app/engine/database/test_database.c"
+    ],
+    "note": "The PEC criterion is covered for the LTC command tables by 39 assertions, but on the self-consistency oracle described under MUT-LTC6813, so it establishes drift-freedom and not correctness against the device protocol. The 50 ms acquisition period and the 25 ms publish latency are timing criteria and there is no timing oracle anywhere in this suite - the host harness has no cycle time and no wall-clock assertion, so both are unverified at unit level.",
+    "requirement_exists": true,
+    "requirement_id": "FB2-SW-SWR-000001",
+    "verification_state": "partially_verified_at_unit_level"
+   },
+   {
+    "acceptance_criterion": "Limit check latency 5 ms; limit accuracy 1 mV; debounce filtering 1E-6 events/hour under Gaussian noise sigma=5 mV; fault request latency 2 ms.",
+    "covering_test_files": [
+     "tests/unit/app/application/soa/test_soa.c"
+    ],
+    "note": "One test file, two test cases, three assertions, all of them NULL-pointer traps. The routine output-verification step is '/* TODO */'. None of the four criteria has an oracle, and the debounce and reaction-time criteria describe behaviour FB2-SW-DSN-000005 records as absent from the source. This is the largest single requirement-to-verification hole in the corpus.",
+    "requirement_exists": true,
+    "requirement_id": "FB2-SW-SWR-000002",
+    "verification_state": "not_verified_at_unit_level"
+   },
+   {
+    "acceptance_criterion": "Fault response latency 5 ms from FAULT request to coil de-energize; auxiliary feedback readback 100%; state machine transitions valid 100%.",
+    "covering_test_files": [
+     "tests/unit/app/driver/contactor/test_contactor.c"
+    ],
+    "note": "The one test file for the contactor driver does not build in the recorded run, so it has no result. It contains 7 cases and 2 argument-validation assertions, so even once built it would not verify feedback readback or transition validity. The 5 ms fault-response latency has no timing oracle in this corpus at all.",
+    "requirement_exists": true,
+    "requirement_id": "FB2-SW-SWR-000003",
+    "verification_state": "not_verified_at_unit_level"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "First issue. Derived from the recorded SIL host sweep results-sil-all.json and from a mechanical re-read of the 313 test sources at tree commit ebd6d5a6.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "spec_id": "FB2-VER-UTS-000001",
+  "specification_basis": "Derived from two sources, kept separate because they answer different questions. (1) The recorded run docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json - a real macOS arm64 execution of the Ceedling/CMock/Unity host harness, generated_at 2026-09-30T01:24:18+0200 - supplies every pass/fail/build-failure/assertion count below. (2) A mechanical re-read of all 313 test sources at tree commit ebd6d5a6 supplies which files currently contain a test case and which contain a Unity assertion macro. The run cannot be re-executed here, and the two sources disagree, so both are published with their scope attached.",
+  "standards_mappings": [
+   {
+    "rationale": "This record supplies the SWE.4 expected family 'Unit Test Specification', which coverage-plan.json recorded as ABSENT. It does not supply 'Unit Test Results': no result is produced by a specification, and the one recorded unit-level execution (FB2-VER-EXE-000015 in the as_is profile) is a host run of a SIL harness, not a result of this specification being executed.",
+    "reference": "SWE.4",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Unit-level verification strategy and criteria for the three software requirements the corpus names. The five network-security measures FB2-VER-TMS-000016..000020 cover the security-relevant unit cases; this record covers the structural and measurement aspects they do not state.",
+    "reference": "Part 6, Clause 9",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Unit Test Specification: foxBMS 2 software units under test in the SIL host sweep, with the measured coverage gaps named",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "vacuity_census": {
+   "deletion_experiment_status": "NOT CLAIMED. No call-deletion non-vacuity experiment is recorded in any tracked file in this corpus, so this record does not state that any of these 5 tests was proven vacuous by deleting the call under test and observing a green result. What IS established, from tracked files only, is the weaker and sufficient fact: each of the 5 contains zero TEST_ASSERT_ macros, which is a static property of the file and is re-derivable by anyone from the committed source. A perturbation plan naming three of these five was written to docs/artifacts/.work/verification-env/sil/tools/perturb_plan_vacuous5.json. That path is excluded by docs/artifacts/.gitignore line 2 (.work/), so the plan is LOCAL-ONLY and is NOT part of the distribution: it is deliberately not tracked, no result file for it is retained anywhere in the tracked tree, and it is therefore not cited in this record's evidence_files list - a reader of a clean checkout cannot obtain it and must not be given the impression that they can. Its expect_red flag in any case records the opposite expectation - that removing the call should turn the test red - so even where the plan does exist it is evidence of intent, not of a result. This paragraph is the record of that local-only artefact; the figure it would have supported is not claimed and is not reproducible from the distribution.",
+   "method": "Static re-count over the real test sources, joined to the recorded run. For each of the 313 files listed in results-sil-all.json: count void test*(void) definitions and count TEST_ASSERT_* macro occurrences. Join on path to the recorded outcome. A green file with a test case and zero assertion macros is a vacuous green. This is independent of the VACUOUS-TESTS.md finding in the same run directory, which was written against a different tree state.",
+   "recorded_run_green": 222,
+   "recorded_run_green_asserting": 217,
+   "recorded_run_green_not_asserting": 5,
+   "vacuous_green_files": [
+    {
+     "path": "tests/unit/app/main/test_fassert.c",
+     "path_exists": true,
+     "test_case_functions": [
+      "testFAS_StoreAssertLocation"
+     ],
+     "what_it_does_instead": "Calls FAS_StoreAssertLocation(&dummyProgramCounter, dummyLine) with two local dummies and returns. Establishes only that the call returns without faulting."
+    },
+    {
+     "path": "tests/unit/bootloader/main/test_fassert.c",
+     "path_exists": true,
+     "test_case_functions": [
+      "testFAS_StoreAssertLocation"
+     ],
+     "what_it_does_instead": "The bootloader twin of the above, structurally identical, same absence."
+    },
+    {
+     "path": "tests/unit/app/engine/sys/test_reset.c",
+     "path_exists": true,
+     "test_case_functions": [
+      "testSYS_TriggerSoftwareReset"
+     ],
+     "what_it_does_instead": "Body is the single line SYS_TriggerSoftwareReset();. The docstring claims it makes sure the general BIST is running. No BIST is observed."
+    },
+    {
+     "path": "tests/unit/app/driver/afe/debug/can/api/test_debug_can_afe_dma.c",
+     "path_exists": true,
+     "test_case_functions": [
+      "testAFE_DmaCallback"
+     ],
+     "what_it_does_instead": "Calls AFE_DmaCallback(0) with a literal channel and returns."
+    },
+    {
+     "path": "tests/unit/app/driver/afe/debug/default/api/test_debug_default_afe_dma.c",
+     "path_exists": true,
+     "test_case_functions": [
+      "testAFE_DmaCallback"
+     ],
+     "what_it_does_instead": "The default-variant twin of the above, structurally identical, same absence."
+    }
+   ]
+  },
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "unit_test_specification",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-UTS-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-UTS-000001",
+  "revision": "1"
+ }
+}

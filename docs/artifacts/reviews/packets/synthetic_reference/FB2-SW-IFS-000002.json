@@ -1,0 +1,769 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-IFS-000005",
+    "rationale": "The SOA design record's interfaces field is a signal table naming fault_request as bool and violation_details as a struct at event rate. FB2-SW-IFS-000002 replaces it with the four declared elements of the module, three of which return void and register diagnosis events, and the fourth of which is declared and called on the 10 ms cycle and does nothing. It refines FB2-SW-DSN-000002 and sits alongside FB2-SW-DSN-000005, which designs the debounce internally and still carries no interface contract.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IFS-000002",
+    "target_id": "FB2-SW-DSN-000002"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000021",
+    "rationale": "The second specification FB2-SW-SIR-000001 is derived from. FB2-SW-SIR-000001 covers the acquisition and monitoring boundary and its derivation field names every interface specification it came from; this link names the second one so that a reader following the requirement to its evidence reaches both specifications rather than only the first. The direction and the reason are the same as for the first specification: the specification establishes what the interface is by analysing the source, and the requirement states what must be true of it.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000001",
+    "target_id": "FB2-SW-IFS-000002"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000195",
+    "rationale": "Reviewed by FB2-REV-000018, a profile-scoped domain review of all sixteen software_interface_specification records in this profile. The review read the record and checked every source citation it makes against the pinned foxBMS commit 308028fb by reading the blob rather than the working tree: 81 of 81 declared source_refs resolve, 61 of 61 element declaration lines and 60 of 61 element implementation lines carry the claimed symbol, and 572 of 572 in-record 'path Lnn[-Lmm]' prose ranges resolve in bounds. This endpoint's element lines were among those checked. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000018",
+    "target_id": "FB2-SW-IFS-000002"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against software_interface_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (9)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "9/9 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IFS-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000018",
+     "review_path": "docs/artifacts/reviews/records/review-software-interface-specifications.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-software-interface-specifications.json",
+      "reviewed_by link FB2-LNK-REVB-000195 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000098, which records anchor class `repository_file`; path `src/app/application/soa/soa.h`; line_range `70-79`; content_hash `41e6b467b5e42fa2f02c6f500515f3da249b0f2fd4c99144cbde44ff87e4ecf1`; symbol `SOA_CheckVoltages`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000099, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `353-354`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckSlaveTemperatures`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000100, which records anchor class `repository_file`; path `src/app/application/bms/bms.c`; line_range `898-917`; content_hash `c0e2f1d4dd83f059b91c11dd91543ef052d515eb7a247fa26be7b53897523286`; symbol `BMS_Trigger`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000004, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `81-146`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckVoltages`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000005, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `271-351`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckCurrent`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C06-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000006, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `148-269`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckTemperatures`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C07-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000094, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.h`; line_range `94`; content_hash `ab0543a8ef7052d52e3e3acb6e4041fb9f2b3e5d658ed026a8a849d3dec65060`; symbol `FTSK_TASK_CYCLIC_1MS_CYCLE_TIME`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C08-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000116, which records anchor class `repository_file`; path `src/app/application/config/battery_cell_cfg.h`; line_range `141`; content_hash `337db40b6a32cb7bb9c6ced3464002b8fb25e93e73d68dd785e2a1d7d4ccc26f`; symbol `BC_VOLTAGE_MAX_MOL_mV`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C09-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000096, which records anchor class `repository_file`; path `src/app/application/config/battery_system_cfg.h`; line_range `109`; content_hash `3a38542f4da1986bc1944cd7ce6eabbc38a044255c9273f8273e46f2940670b1`; symbol `BS_NR_OF_STRINGS`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000098 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000098."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000099 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000099."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000100 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000100."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[5]` names FB2-SRC-COD-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000094 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[6]` names FB2-SRC-COD-000094."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000116 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[7]` names FB2-SRC-COD-000116."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000096 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[8]` names FB2-SRC-COD-000096."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C19-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 (software architectural design - interface specification) with status `partially_mapped` on the grounds: Specifies the supervision boundary: who provides, who consumes, the real signatures, the argument preconditions, the side-effect-only signalling, and the 10 ms period the caller imposes. No ownership rule and no interface agreement."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C20-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Supplies an interface specification for the SOA element that the design records' signal tables did not. Component design remains absent."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C21-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Named as the specification the software interface requirements for the supervision boundary are derived from."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 22486,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-soa-monitoring.json",
+  "record_sha256": "90faf9695c39a5d9625efd98c57eb04e7b6ae59ec0df41f443cf3a2b9246156e",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "90faf9695c39a5d9625efd98c57eb04e7b6ae59ec0df41f443cf3a2b9246156e"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IFS-000002.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Interface Specification: the safe-operating-area supervision module\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis": {
+   "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+   "direction": "source_to_specification",
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "method": "source_analysis_at_pinned_commit",
+   "tools_used": [
+    "git show 308028fb:<path>",
+    "graft skeleton <file>"
+   ],
+   "what_this_record_is_not": [
+    "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+    "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+    "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+    "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+   ]
+  },
+  "artifact_type": "software_interface_specification",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "consuming_modules": [
+   {
+    "calls": [
+     "SOA_CheckVoltages",
+     "SOA_CheckTemperatures",
+     "SOA_CheckCurrent",
+     "SOA_CheckSlaveTemperatures"
+    ],
+    "consumption_evidence": "All four are called from one block inside BMS_Trigger, at src/app/application/bms/bms.c L913, L914, L915 and L916 respectively, each passing the module's own database entries. The block is guarded by a test that the state machine is not uninitialised, at L911.",
+    "name": "BMS_Trigger, the battery-management state-machine trigger",
+    "source_path": "src/app/application/bms/bms.c"
+   },
+   {
+    "calls": [
+     "DIAG_Handler"
+    ],
+    "consumption_evidence": "Every outcome of every implemented element is a DIAG_Handler call, for example DIAG_Handler(DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MOL, DIAG_EVENT_NOT_OK, DIAG_STRING, s) at src/app/application/soa/soa.c L90.",
+    "name": "DIAG module, the diagnosis consumer of the side effects",
+    "source_path": "src/app/engine/diag/diag.h"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "elements": [
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached only through BMS_Trigger, which runs in the 10 ms cyclic task of priority FTSK_TASK_CYCLIC_10MS_PRIORITY = OS_PRIORITY_HIGH at src/app/task/config/ftask_cfg.h L106. No interrupt context reaches this entry point in the source.",
+     "protection_mechanism": "None at this boundary. The function writes diagnosis state through DIAG_Handler, whose own protection this record does not cover.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS_Trigger",
+    "declaration": "extern void SOA_CheckVoltages(DATA_BLOCK_MIN_MAX_s *pMinimumMaximumCellVoltages);",
+    "declaration_line": 79,
+    "declaration_path": "src/app/application/soa/soa.h",
+    "element_id": "IFSE-000101",
+    "error_paths": [
+     {
+      "condition": "pMinimumMaximumCellVoltages is NULL.",
+      "evidence": "src/app/application/soa/soa.c L82",
+      "observed_behaviour": "A precondition assertion trips at the first statement of the body.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "The undervoltage MSL threshold is reached and deep discharge is also indicated.",
+      "evidence": "src/app/application/soa/soa.c L122-L129",
+      "observed_behaviour": "The return value of DIAG_Handler for the MSL event is captured and, only when it equals DIAG_HANDLER_RETURN_ERR_OCCURRED and the voltage is at or below BC_VOLTAGE_DEEP_DISCHARGE_mV, a further DIAG_ID_DEEP_DISCHARGE_DETECTED event is registered.",
+      "signalled_as": "DIAG_HANDLER_RETURN_ERR_OCCURRED, observed inside the module and not returned"
+     }
+    ],
+    "implementation_line": 81,
+    "implementation_path": "src/app/application/soa/soa.c",
+    "not_specified_by_source": [
+     "The interface does not state the voltage unit it expects in the struct. The values it compares are read as mV by the comparison against BC_VOLTAGE_MAX_MOL_mV and its siblings, which are (2720), (2750), (2800), (1580), (1550) and (1500) in src/app/application/config/battery_cell_cfg.h L135-L180, so the unit is inferable from the configuration rather than declared by the interface.",
+     "The interface does not state the number of strings it iterates. It loops s from 0 to BS_NR_OF_STRINGS, which is (1u) at src/app/application/config/battery_system_cfg.h L109, so a corpus configured for more strings would need this interface re-read rather than trusted.",
+     "The interface returns nothing, so a caller cannot tell whether a violation was detected from this call. The only way to know is to inspect diagnosis state afterwards, and no such rule is stated here.",
+     "The interface does not state whether the diagnosis threshold is reached before the event is raised. The debouncing is inside DIAG_Handler, whose threshold is configuration, and this interface says nothing about it."
+    ],
+    "parameters": [
+     {
+      "c_type": "DATA_BLOCK_MIN_MAX_s *",
+      "direction": "in",
+      "meaning": "The per-string minimum and maximum cell voltages to judge against the safe operating area.",
+      "name": "pMinimumMaximumCellVoltages",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pMinimumMaximumCellVoltages != NULL_PTR) at src/app/application/soa/soa.c L82 is the only range this interface states.",
+      "unit": "struct holding mV values",
+      "valid_range": "Non-null. No element range is stated by the interface; the ranges are the cell voltage limit configuration."
+     }
+    ],
+    "providing_module": "SOA module, safe-operating-area supervision",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+     "evidence": "Declared void in the source; the interface communicates entirely through side effects.",
+     "values": {}
+    },
+    "symbol": "SOA_CheckVoltages",
+    "timing": {
+     "evidence": "The period is imposed by the caller, and the caller is on a fixed task: SOA_CheckVoltages is called at src/app/application/bms/bms.c L913 inside BMS_Trigger, BMS_Trigger is called from FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L280, and FTSK_TASK_CYCLIC_10MS_CYCLE_TIME is 10u at src/app/task/config/ftask_cfg.h L112.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "The declaration returns void at src/app/application/soa/soa.h L79. The function's whole effect is a sequence of DIAG_Handler calls, for example DIAG_Handler(DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MOL, DIAG_EVENT_NOT_OK, DIAG_STRING, s) at src/app/application/soa/soa.c L90. A caller learns the outcome only by later reading the diagnosis state, not from this call.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "Side effect: diagnosis events registered through DIAG_Handler. No return value exists."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached only from BMS_Trigger at src/app/application/bms/bms.c L914, in the 10 ms cyclic task.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS_Trigger",
+    "declaration": "extern void SOA_CheckTemperatures(DATA_BLOCK_MIN_MAX_s *pMinimumMaximumCellTemperatures, DATA_BLOCK_PACK_VALUES_s *pCurrent);",
+    "declaration_line": 88,
+    "declaration_path": "src/app/application/soa/soa.h",
+    "element_id": "IFSE-000102",
+    "error_paths": [
+     {
+      "condition": "Either pointer is NULL.",
+      "evidence": "src/app/application/soa/soa.c L151-L152",
+      "observed_behaviour": "A precondition assertion trips at the top of the body.",
+      "signalled_as": "precondition assertion"
+     }
+    ],
+    "implementation_line": 148,
+    "implementation_path": "src/app/application/soa/soa.c",
+    "not_specified_by_source": [
+     "The interface does not state the temperature unit. Like the voltage interface, the unit is inferable from the configuration constants the body compares against and is not declared by the interface.",
+     "The interface does not state which of the pack values it uses from pCurrent, nor why a current is needed to judge a temperature. The second parameter is a struct far wider than the judgement requires and the interface does not say which fields are read.",
+     "The interface returns nothing and states no outcome.",
+     "No threshold, no debounce and no error case beyond the pointer preconditions is stated by the interface; all of it lives in the diagnosis configuration."
+    ],
+    "parameters": [
+     {
+      "c_type": "DATA_BLOCK_MIN_MAX_s *",
+      "direction": "in",
+      "meaning": "The per-string minimum and maximum cell temperatures to judge.",
+      "name": "pMinimumMaximumCellTemperatures",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pMinimumMaximumCellTemperatures != NULL_PTR) at src/app/application/soa/soa.c L151.",
+      "unit": "struct holding temperature values",
+      "valid_range": "Non-null."
+     },
+     {
+      "c_type": "DATA_BLOCK_PACK_VALUES_s *",
+      "direction": "in",
+      "meaning": "The pack values including current, needed because the temperature judgement the source performs is conditioned on the current in use.",
+      "name": "pCurrent",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pCurrent != NULL_PTR) at src/app/application/soa/soa.c L152.",
+      "unit": "struct holding pack values including current",
+      "valid_range": "Non-null."
+     }
+    ],
+    "providing_module": "SOA module, safe-operating-area supervision",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+     "evidence": "Declared void in the source; the interface communicates entirely through side effects.",
+     "values": {}
+    },
+    "symbol": "SOA_CheckTemperatures",
+    "timing": {
+     "evidence": "Called at src/app/application/bms/bms.c L914 from BMS_Trigger, which runs in the 10 ms cyclic task, FTSK_TASK_CYCLIC_10MS_CYCLE_TIME 10u at src/app/task/config/ftask_cfg.h L112.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "Declared void at src/app/application/soa/soa.h L88-L90; the body registers diagnosis events.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "Side effect: diagnosis events registered through DIAG_Handler. No return value exists."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached only from BMS_Trigger at src/app/application/bms/bms.c L915, in the 10 ms cyclic task.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS_Trigger",
+    "declaration": "extern void SOA_CheckCurrent(DATA_BLOCK_PACK_VALUES_s *pTablePackValues);",
+    "declaration_line": 98,
+    "declaration_path": "src/app/application/soa/soa.h",
+    "element_id": "IFSE-000103",
+    "error_paths": [
+     {
+      "condition": "pTablePackValues is NULL.",
+      "evidence": "src/app/application/soa/soa.c L272",
+      "observed_behaviour": "A precondition assertion trips at the top of the body.",
+      "signalled_as": "precondition assertion"
+     }
+    ],
+    "implementation_line": 271,
+    "implementation_path": "src/app/application/soa/soa.c",
+    "not_specified_by_source": [
+     "The interface does not state the current unit, the sign convention, or whether the limits are symmetric for charge and discharge. Those are in the configuration the body compares against, not in the interface.",
+     "The interface returns nothing and states no outcome.",
+     "The interface does not state the time window over which an over-current must persist, which is the question a monitoring interface usually has to answer. It is answered in the diagnosis configuration instead."
+    ],
+    "parameters": [
+     {
+      "c_type": "DATA_BLOCK_PACK_VALUES_s *",
+      "direction": "in",
+      "meaning": "The pack current to judge against the charge and discharge limits.",
+      "name": "pTablePackValues",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pTablePackValues != NULL_PTR) at src/app/application/soa/soa.c L272.",
+      "unit": "struct holding pack current values",
+      "valid_range": "Non-null."
+     }
+    ],
+    "providing_module": "SOA module, safe-operating-area supervision",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+     "evidence": "Declared void in the source; the interface communicates entirely through side effects.",
+     "values": {}
+    },
+    "symbol": "SOA_CheckCurrent",
+    "timing": {
+     "evidence": "Called at src/app/application/bms/bms.c L915 from BMS_Trigger, in the 10 ms cyclic task, FTSK_TASK_CYCLIC_10MS_CYCLE_TIME 10u at src/app/task/config/ftask_cfg.h L112.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "Declared void at src/app/application/soa/soa.h L98; the body registers diagnosis events.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "Side effect: diagnosis events registered through DIAG_Handler. No return value exists."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "An empty body is trivially re-entrant; the call site is BMS_Trigger at src/app/application/bms/bms.c L916, in the 10 ms cyclic task.",
+     "reentrancy": "not_reentrant"
+    },
+    "consuming_module": "BMS_Trigger",
+    "declaration": "extern void SOA_CheckSlaveTemperatures(void);",
+    "declaration_line": 104,
+    "declaration_path": "src/app/application/soa/soa.h",
+    "element_id": "IFSE-000104",
+    "error_paths": [
+     {
+      "condition": "Any condition.",
+      "evidence": "src/app/application/soa/soa.c L353-L354",
+      "observed_behaviour": "No condition is handled. The body is empty apart from a TODO comment.",
+      "signalled_as": "nothing"
+     }
+    ],
+    "implementation_line": 353,
+    "implementation_path": "src/app/application/soa/soa.c",
+    "not_specified_by_source": [
+     "Everything. This element is declared, called on the 10 ms supervision cycle, and does nothing. The source says so in a TODO comment and this record records it as it stands rather than inferring a slave-temperature check that does not exist.",
+     "The interface does not say what a slave temperature is, how it would be obtained, or what it would be judged against, because no implementation states any of it.",
+     "Because the element is called unconditionally from the same place as the three implemented checks, a reader of the call site alone would conclude the SOA module supervises slave temperatures. It does not."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "SOA module, safe-operating-area supervision",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+     "evidence": "Declared void in the source; the interface communicates entirely through side effects.",
+     "values": {}
+    },
+    "symbol": "SOA_CheckSlaveTemperatures",
+    "timing": {
+     "evidence": "Called at src/app/application/bms/bms.c L916 from BMS_Trigger in the 10 ms cyclic task, even though it does nothing, so the call site presents an interface that a reader could reasonably mistake for a live check.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "The whole implementation is the line 'extern void SOA_CheckSlaveTemperatures(void) { /* TODO: to be implemented */ }' at src/app/application/soa/soa.c L353-L354. It registers nothing and returns nothing.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "None. The interface is empty."
+    }
+   }
+  ],
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IFS-000002",
+  "interface_class": "monitoring",
+  "interface_id": "IFS-SOA-MON-000002",
+  "interface_level_gaps": [
+   {
+    "consequence": "The supervision boundary carries no return path at all. Any requirement about how the module reports a violation has to be written about the diagnosis module's state rather than about this interface, which is why this record exists.",
+    "evidence": "Declarations at src/app/application/soa/soa.h L79, L88-L90, L98 and L104 all return void.",
+    "gap": "All four elements return void. The module cannot tell its caller that it detected anything, and its caller does not ask."
+   },
+   {
+    "consequence": "The SOA element of this corpus is modelled on a module that supervises voltage, temperature and current and declares a fourth slave-temperature check that does nothing. A requirement written against 'the SOA module supervises slave temperatures' would be satisfied by a function with an empty body.",
+    "evidence": "src/app/application/soa/soa.c L353-L354 is the whole implementation, and it carries a TODO comment saying it is to be implemented.",
+    "gap": "One of the four elements is empty."
+   },
+   {
+    "consequence": "The voltage, temperature and current units are recoverable only from the cell configuration constants the bodies compare against, which is an implementation detail rather than an interface contract.",
+    "evidence": "BC_VOLTAGE_MAX_MOL_mV (2720) at src/app/application/config/battery_cell_cfg.h L141 is mV by name only.",
+    "gap": "No element declares the unit of the quantity it judges."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "providing_module": {
+   "name": "SOA module, safe-operating-area supervision",
+   "role": "Judges measured voltage, temperature and current against configured safe-operating-area limits and raises diagnosis events. It decides nothing and acts on nothing itself: it reports through the diagnosis module.",
+   "source_paths": [
+    "src/app/application/soa/soa.h",
+    "src/app/application/soa/soa.c"
+   ]
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Four elements of the SOA supervision interface. Three are implemented and one is an empty function the source marks TODO; that fourth element is recorded as empty rather than described as a check, because a call site that invokes it on the 10 ms cycle otherwise reads as a supervision that does not exist.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000098",
+   "FB2-SRC-COD-000099",
+   "FB2-SRC-COD-000100",
+   "FB2-SRC-COD-000004",
+   "FB2-SRC-COD-000005",
+   "FB2-SRC-COD-000006",
+   "FB2-SRC-COD-000094",
+   "FB2-SRC-COD-000116",
+   "FB2-SRC-COD-000096"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Specifies the supervision boundary: who provides, who consumes, the real signatures, the argument preconditions, the side-effect-only signalling, and the 10 ms period the caller imposes. No ownership rule and no interface agreement.",
+    "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies an interface specification for the SOA element that the design records' signal tables did not. Component design remains absent.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Named as the specification the software interface requirements for the supervision boundary are derived from.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Interface Specification: the safe-operating-area supervision module",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_status": {
+   "analysed_against_running_code": false,
+   "conformance_tested": false,
+   "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IFS-000002"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IFS-000002",
+  "revision": "1"
+ }
+}

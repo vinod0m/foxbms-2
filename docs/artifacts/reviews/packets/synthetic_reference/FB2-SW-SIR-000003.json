@@ -1,0 +1,607 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SIR-000023",
+    "rationale": "FB2-SW-SIR-000003 is the software interface requirement set for the communication and data exchange boundary and is specified by FB2-SW-IFS-000004 (CAN transport) and FB2-SW-IFS-000005 (database engine). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000003",
+    "target_id": "FB2-SW-IFS-000004"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000024",
+    "rationale": "The second specification FB2-SW-SIR-000003 is derived from. FB2-SW-SIR-000003 covers the communication and data exchange boundary and its derivation field names every interface specification it came from; this link names the second one so that a reader following the requirement to its evidence reaches both specifications rather than only the first. The direction and the reason are the same as for the first specification: the specification establishes what the interface is by analysing the source, and the requirement states what must be true of it.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000003",
+    "target_id": "FB2-SW-IFS-000005"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000036",
+    "rationale": "The triage record classifies the disposition of element FB2-SW-SIR-000003-B, which the communication interface-requirement record states and marks NOT SATISFIED. Same dependency direction as the actuation triage: the disposition rests on the requirement record's element statement and is re-read against the source rather than trusted from the status field.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "validates",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000005",
+    "target_id": "FB2-SW-SIR-000003"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against requirement.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (6)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "6/6 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000103, which records anchor class `repository_file`; path `src/app/driver/can/can.h`; line_range `95-101`; content_hash `067fe6ef41b5d184ee170749b72e2325d30c59302c13406a806e7fe5c3079c2c`; symbol `CAN_DataSend`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000104, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `931-977`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_DataSend`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded: DATA_ReadN/WriteN signatures gained a per-pointer uint32_t length and DATA_QUEUE_MESSAGE_s gained the size array. Symbols and line ranges verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000105, which records anchor class `repository_file`; path `src/app/engine/database/database.h`; line_range `73`; content_hash `43ae9b50e0233395685c8f2b1c8b74f6f4cda8450d5a958b500b5fc4d27c03b2`; symbol `DATA_MAX_ENTRIES_PER_ACCESS`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the copy-length fix: DATA_QUEUE_MESSAGE_s now carries the caller's declared per-pointer size and the copy loop asserts it is at least the registered length. A call site declaring a smaller struct than the type registered for its uniqueId previously overran the caller's object; with the precondition removed all 32 canary bytes behind a 16-byte caller object were clobbered (a 72-b\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000106, which records anchor class `repository_file`; path `src/app/engine/database/database.c`; line_range `79-83`; content_hash `ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf`; symbol `DATA_MAX_QUEUE_TIMEOUT_MS`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000094, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.h`; line_range `94`; content_hash `ab0543a8ef7052d52e3e3acb6e4041fb9f2b3e5d658ed026a8a849d3dec65060`; symbol `FTSK_TASK_CYCLIC_1MS_CYCLE_TIME`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C06-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000096, which records anchor class `repository_file`; path `src/app/application/config/battery_system_cfg.h`; line_range `109`; content_hash `3a38542f4da1986bc1944cd7ce6eabbc38a044255c9273f8273e46f2940670b1`; symbol `BS_NR_OF_STRINGS`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000103 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000103."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000104 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000104."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000105 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000105."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000106 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000106."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000094 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000094."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000096 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[5]` names FB2-SRC-COD-000096."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[0]` names FB2-SW-IFS-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[1]` names FB2-SW-IFS-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability_to_existing_requirements[0].interface_spec` names FB2-SW-IFS-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability_to_existing_requirements[1].interface_spec` names FB2-SW-IFS-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability_to_existing_requirements[2].interface_spec` names FB2-SW-IFS-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability_to_existing_requirements[3].interface_spec` names FB2-SW-IFS-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability_to_existing_requirements[4].interface_spec` names FB2-SW-IFS-000005."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C20-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 7 (software requirements analysis) with status `partially_mapped` on the grounds: Supplies software interface requirements, the family SWE.1 expected and that was absent. It does not analyse them from a higher-level requirement, so the process's defining activity is still absent."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C21-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Backs SWE.1 with the software interface requirement family. The status stays partially_mapped because these requirements are derived from an analysis of an existing implementation, not analysed from software requirements or system requirements, and because the existing software requirements remain back-inferred."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C22-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Consumes the interface specifications this requirement set is derived from. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation."
+  },
+  {
+   "claim_class": "classification",
+   "claim_id": "C23-asil",
+   "evidence_in_packet": "The record verbatim in section 3, including the whole asil_allocation_scope block.",
+   "judgement_needed": "Whether presenting this classification this way is acceptable. On an as_is record a reader can take an ASIL value as a statement about the real product, and no machine can tell whether that misreading has happened.",
+   "machine_state": "NO `asil_allocation_scope` block, so the classification is presented unqualified. On an `as_is` profile record that is a reconstruction presented as a determination, and is exactly what an independent audit already raised against this corpus.",
+   "statement": "This record carries safety_allocation.asil = `not_applicable` and a safety_goal_ref of `not_applicable`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 15059,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/sir-communication-data-interfaces.json",
+  "record_sha256": "a11481257d87c8c60541bb51b6e9db8461014ac3f587da2791c4211dec13aa4c",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "a11481257d87c8c60541bb51b6e9db8461014ac3f587da2791c4211dec13aa4c"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-SIR-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"The communication and data-exchange interfaces shall present the following to their consumers: (a) a transmit call whose result reports whether the frame was placed on the bus; (b\u2026\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "requirement quality",
+   "priority": 8,
+   "question": "Are the acceptance criteria complete and decidable - could a verifier say with certainty whether this requirement is met?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria and verification_approach in the record.",
+   "why_this_needs_a_human": "An undecidable requirement cannot be verified, and the corpus cannot tell an undecidable requirement from a merely terse one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "The transmit call shall report whether the frame was placed on a free message box",
+    "measure": "Inspection of the declared return type and of the assignment site",
+    "threshold": "1 success and 1 negative value declared"
+   },
+   {
+    "criterion": "The identifier argument shall be bounded by the identifier width the caller selected",
+    "measure": "Inspection for a range check or mask on the identifier before it reaches the controller",
+    "threshold": "one bound per identifier width"
+   },
+   {
+    "criterion": "The data-block read shall report whether the request was accepted and shall state that the data is not yet available at the point of return",
+    "measure": "Inspection of the declared return type and of whether the body performs the copy",
+    "threshold": "enqueue-only read with an explicit statement of asynchrony"
+   },
+   {
+    "criterion": "The data-block read shall bound the time a caller waits to enqueue its request",
+    "measure": "Inspection of the timeout passed to the queue send",
+    "threshold": "1 queue timeout, in ms"
+   },
+   {
+    "criterion": "Concurrent access to the data blocks shall be serialised through a single consumer",
+    "measure": "Inspection of the number of consumers of the database queue",
+    "threshold": "exactly 1 consumer"
+   }
+  ],
+  "artifact_type": "requirement",
+  "asil_justification": {
+   "derived_asil": "not_applicable",
+   "exposure": {
+    "rating": "not_applicable"
+   },
+   "severity": {
+    "rating": "not_applicable"
+   },
+   "statement": "Not applicable, and deliberately so. This requirement carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. This is not a statement that the interface is unimportant: it is a statement that the classification apparatus is not available in this repository, and a reader must not read 'not_applicable' as 'no consequence'."
+  },
+  "assumption_refs": [],
+  "assumptions": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent. It is a derivation from an analysed specification, not an elicitation, not an analysis of a higher-level requirement, and not independent review."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "classification": "interface",
+  "conditions_modes": [
+   "NORMAL",
+   "CHARGING",
+   "PRECHARGE"
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "derivation": {
+   "authoring_independence": "not_independent",
+   "authoring_independence_statement": "Authored by an AI agent from the interface specifications and the source. No requirements engineer confirmed that this is the interface that was wanted, no stakeholder stated a need that these requirements answer, and no human approved them. They record what the code obliges a consumer to rely on; they do not record what anyone asked for.",
+   "derived_from_interface_specifications": [
+    "FB2-SW-IFS-000004",
+    "FB2-SW-IFS-000005"
+   ],
+   "direction": "specification_to_requirement",
+   "method": "Every statement below names the interface element it obliges and the analysed behaviour it rests on."
+  },
+  "element_requirements": [
+   {
+    "basis": "STD_OK is assigned only inside the message-box loop after the transmit call; the initial negative value is returned when the loop finds no free box.",
+    "id": "FB2-SW-SIR-000003-A",
+    "source_element": "IFSE-000301 CAN_DataSend",
+    "statement": "A transmit call shall report whether the frame was placed on a free message box."
+   },
+   {
+    "basis": "NOT satisfied by the analysed implementation. The source records the absence of a check as a deliberate decision and shifts the value into the controller register with no mask.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000003-B",
+    "source_element": "IFSE-000301 CAN_DataSend",
+    "statement": "The identifier argument shall be bounded by the identifier width the caller selected, and an identifier wider than that width shall be rejected."
+   },
+   {
+    "basis": "The public element only enqueues; the copy is performed later on the consumer task. The return value is the enqueue result.",
+    "id": "FB2-SW-SIR-000003-C",
+    "source_element": "IFSE-000401 DATA_Read1DataBlock",
+    "statement": "The data-block read shall report whether the request was accepted, and shall not be represented as returning the data."
+   },
+   {
+    "basis": "The queue send is given a timeout computed from a declared 10 ms maximum, statically asserted to be non-zero.",
+    "id": "FB2-SW-SIR-000003-D",
+    "source_element": "IFSE-000401 DATA_Read1DataBlock",
+    "statement": "The data-block read shall bound the time a caller waits to enqueue its request."
+   },
+   {
+    "basis": "All access is routed through one queue and one consumer drains it, which is what serialises concurrent access.",
+    "id": "FB2-SW-SIR-000003-E",
+    "source_element": "IFSE-000401 DATA_Read1DataBlock and IFSE-000403 DATA_Task",
+    "statement": "Concurrent access to the data blocks shall be serialised through a single consumer of the database queue."
+   }
+  ],
+  "element_requirements_note": "The failure reaction of these two boundaries is the reason most of this set is unsatisfied. On the communication side a refused transmit is reported but a congested queue is not: when a queued frame cannot be re-queued the branch body is empty apart from a comment, so the frame is discarded with no return value, no diagnosis event and no log. On the data-exchange side a caller that is refused its enqueue gets a negative value but no byte count and no indication that a previously accepted request may now be stale. Neither failure has a detection channel.",
+  "engineering_domain": "software",
+  "failure_reaction": "Two of these five are not satisfied by the implementation as analysed, and the other three are. The unsatisfied pair is the interesting one: B has no bound and no rejection, and the transmit queue discards a frame with no return value, no diagnosis event and no log when the retransmit queue is full. Together they mean the communication boundary has no defined failure behaviour for either an over-wide identifier or a congested bus. Stating them as requirements is what makes that actionable rather than incidental.",
+  "feasibility_dependencies": [],
+  "human_approval_status": "pending",
+  "id": "FB2-SW-SIR-000003",
+  "lifecycle_status": "draft",
+  "not_established_by_this_record": [
+   "Requirements B and the queue-discard behaviour are not satisfied by the implementation as analysed. B would need either a range check on the identifier or a mask on the shift; the queue-discard behaviour would need a defined drop path with a signal. Neither exists and this record does not claim otherwise.",
+   "No requirement here is elicited from a stakeholder, a system requirement or a safety goal.",
+   "The requirement set states no bus-level contract: no bit rate, no identifier allocation, no maximum frame rate, no maximum payload length. The bit rate is configuration and the identifier allocation is spread across the transmit callback files, neither of which is named by the analysed interfaces.",
+   "The requirement set states no coherency or atomicity rule for a multi-entry data-block read, so nothing here can be used to justify a requirement that a group of values be mutually consistent.",
+   "No ASIL, no safety allocation, no conformity claim, no certification, no human approval.",
+   "No verification has been performed against any of these requirements and no test measure exists for any of them."
+  ],
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "rationale": "These requirements exist because the two analysed boundaries behave differently in ways a consumer must know and cannot infer from a signature. The transmit interface has an explicitly unchecked identifier, recorded in the source as a deliberate non-assert, and its queue pump discards a frame when the retransmit queue is full. The data-exchange interface is asynchronous: it returns before the data exists, and its return value reports only whether the request was queued. A consumer of either would have to read the implementation to learn that, which is the situation an interface requirement exists to prevent.",
+  "requirement_kind": "software_interface_requirement",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Five interface requirements over the communication and data-exchange boundaries, derived from FB2-SW-IFS-000004 and FB2-SW-IFS-000005. Two of them are stated because the analysed interface does not satisfy them, and that is the point of writing them down.",
+    "revision": "1"
+   }
+  ],
+  "safety_allocation": {
+   "asil": "not_applicable",
+   "mitigation": "No ASIL is allocated to this requirement. It is a software interface requirement about how two modules call each other, and the product it describes has never had a hazard analysis and risk assessment: no ISO 26262 conformity, no ASIL determination and no certification is claimed for it or for anything in this corpus. The non-applicability is stated with its reason rather than left blank, because an unexplained non-applicability is indistinguishable from a requirement that quietly dropped out of every ASIL-derived view.",
+   "safety_goal_ref": "not_applicable"
+  },
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000103",
+   "FB2-SRC-COD-000104",
+   "FB2-SRC-COD-000105",
+   "FB2-SRC-COD-000106",
+   "FB2-SRC-COD-000094",
+   "FB2-SRC-COD-000096"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Supplies software interface requirements, the family SWE.1 expected and that was absent. It does not analyse them from a higher-level requirement, so the process's defining activity is still absent.",
+    "reference": "Part 6, Clause 7 (software requirements analysis)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Backs SWE.1 with the software interface requirement family. The status stays partially_mapped because these requirements are derived from an analysis of an existing implementation, not analysed from software requirements or system requirements, and because the existing software requirements remain back-inferred.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Consumes the interface specifications this requirement set is derived from. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "statement": "The communication and data-exchange interfaces shall present the following to their consumers: (a) a transmit call whose result reports whether the frame was placed on the bus; (b) an identifier argument whose range is bounded by the identifier width the caller selected; (c) a data-block read whose result reports whether the request was accepted and which shall not be represented as returning the data; (d) a bounded maximum queue wait on that read; and (e) a single-consumer serialisation rule for concurrent access to the data blocks.",
+  "title": "Software interface requirements: the communication and data-exchange interfaces",
+  "traceability_to_existing_requirements": [
+   {
+    "derivation": "Confirm the success value is assigned only after the transmit call inside the message-box loop.",
+    "evidence": "src/app/driver/can/can.c L968, with the initial negative value at L938 returned at L976.",
+    "interface_spec": "FB2-SW-IFS-000004",
+    "requirement": "FB2-SW-SIR-000003-A",
+    "statement": "A transmit call shall report whether the frame was placed on a free message box.",
+    "status": "satisfied at 308028fb"
+   },
+   {
+    "derivation": "Confirm a range check or a mask is applied to the identifier before it reaches the controller register. Neither is present.",
+    "evidence": "src/app/driver/can/can.c L933 records the parameter as accepting the whole range; L953-L966 shift it without a mask.",
+    "interface_spec": "FB2-SW-IFS-000004",
+    "requirement": "FB2-SW-SIR-000003-B",
+    "statement": "The identifier argument shall be bounded by the identifier width the caller selected, and an identifier wider than that width shall be rejected.",
+    "status": "NOT SATISFIED at 308028fb"
+   },
+   {
+    "derivation": "Confirm the public read only enqueues and that its return value is the enqueue result.",
+    "evidence": "src/app/engine/database/database.c L299-L302 enqueues; STD_OK is set on a successful queue send at L158-L159.",
+    "interface_spec": "FB2-SW-IFS-000005",
+    "requirement": "FB2-SW-SIR-000003-C",
+    "statement": "The data-block read shall report whether the request was accepted, and shall not be represented as returning the data.",
+    "status": "satisfied at 308028fb"
+   },
+   {
+    "derivation": "Confirm a timeout is passed to the queue send and that the interface states its value.",
+    "evidence": "DATA_MAX_QUEUE_TIMEOUT_MS is (10u) at src/app/engine/database/database.c L79 and is converted and statically asserted at L81-L83.",
+    "interface_spec": "FB2-SW-IFS-000005",
+    "requirement": "FB2-SW-SIR-000003-D",
+    "statement": "The data-block read shall bound the time a caller waits to enqueue its request.",
+    "status": "satisfied at 308028fb"
+   },
+   {
+    "derivation": "Count the consumers of the database queue in the source.",
+    "evidence": "src/app/engine/database/database.c L284 is the only receive from ftsk_databaseQueue; the queue is created once at src/app/task/ftask/freertos/ftask_freertos.c L199.",
+    "interface_spec": "FB2-SW-IFS-000005",
+    "requirement": "FB2-SW-SIR-000003-E",
+    "statement": "Concurrent access to the data blocks shall be serialised through a single consumer of the database queue.",
+    "status": "satisfied at 308028fb"
+   }
+  ],
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_approach": "analysis",
+  "verification_status": {
+   "analysis_performed": false,
+   "statement": "No test measure exists for any requirement in this record, and no requirement in it has been verified against running code. Every derivation below is an inspection of the source at the pinned commit, which is why the verification approach is analysis and why the coverage matrix in the implementation mapping document reports this record as uncovered. That is the accurate position, not a gap to be filled by writing more prose.",
+   "test_measure_exists": false
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "requirement",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-SIR-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-SIR-000003",
+  "revision": "1"
+ }
+}

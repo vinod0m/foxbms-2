@@ -1,0 +1,556 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 3,
+  "questions": [
+   {
+    "group": "classification presentation",
+    "priority": 26,
+    "question": "This record presents a reconstructed ASIL classification with an explicit scope block. Is presenting it this way acceptable, or should the value be removed?",
+    "what_in_this_packet_bears_on_it": "asil_allocation_scope in section 3.",
+    "why_this_needs_a_human": "Keeping the value is a judgement about the reference project's internal consistency; presenting it on an as_is record is a judgement about what a reader will take from it. Neither is machine-decidable."
+   },
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000004",
+    "rationale": "FSR refines safety goal into functional requirement",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "refines",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-FSR-000003",
+    "target_id": "FB2-SAF-SGO-000001"
+   },
+   {
+    "link_id": "FB2-LNK-SAF-000007",
+    "rationale": "Hardware requirement allocated from functional safety requirement",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-HW-TSR-000003",
+    "target_id": "FB2-SAF-FSR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-SAF-000010",
+    "rationale": "Software requirement allocated from functional safety requirement",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-SWR-000003",
+    "target_id": "FB2-SAF-FSR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-SAF-000016",
+    "rationale": "Test verifies contactor fault response requirement",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "verifies",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000002",
+    "target_id": "FB2-SAF-FSR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000005",
+    "rationale": "FB2-REV-000010 reviewed FB2-SAF-FSR-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000010",
+    "target_id": "FB2-SAF-FSR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000047",
+    "rationale": "FB2-REV-000011 reviewed FB2-SAF-FSR-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000011",
+    "target_id": "FB2-SAF-FSR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000064",
+    "rationale": "FB2-REV-000001 reviewed FB2-SAF-FSR-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000001",
+    "target_id": "FB2-SAF-FSR-000003"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against requirement.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (3)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "3/3 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (3 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "3 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 3,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "consistency",
+     "description": "The contactor reaction requirement's 30 ms acceptance threshold contradicts its own 35 ms rationale and the safety goal's 40 ms allocation for the same chain.",
+     "finding_id": "FB2-REV-FND-000024",
+     "raised_in": null,
+     "severity": "high",
+     "source_path": "docs/artifacts/reviews/records/review-concept-system-validation.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "consistency",
+     "description": "The contactor reaction requirement's 30 ms acceptance threshold contradicts its own 35 ms rationale and the safety goal's 40 ms allocation for the same chain.",
+     "finding_id": "FB2-REV-FND-000024",
+     "raised_in": null,
+     "severity": "high",
+     "source_path": "docs/artifacts/reviews/records/review-concept-system-validation.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-CHALLENGE-SAFETY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000010",
+     "review_path": "docs/artifacts/reviews/records/review-challenge-safety-critical-as-is.json",
+     "review_type": "challenge",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-challenge-safety-critical-as-is.json",
+      "reviewed_by link FB2-LNK-REVB-000005 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000011",
+     "review_path": "docs/artifacts/reviews/records/review-meta-review-prior-review.json",
+     "review_type": "meta",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-prior-review.json",
+      "reviewed_by link FB2-LNK-REVB-000047 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-SAFETY-001",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000001",
+     "review_path": "docs/artifacts/reviews/records/review-vertical-slice.json",
+     "review_type": "domain",
+     "reviewed_revision": "3",
+     "reviewer_model": "nvidia/nemotron-3-ultra-550b-a55b",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-vertical-slice.json",
+      "reviewed_by link FB2-LNK-REVB-000064 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000008, which records anchor class `repository_file`; path `src/app/driver/contactor/contactor.c`; line_range `125-163`; content_hash `71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83`; symbol `CONT_CheckFeedback`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the additive DIAG_EVENT_NOT_EVALUATED branch was added to DIAG_Handler. It is a distinct else-if appended after RESET; it holds state, writes no entry, invokes no callback, and cannot reach the OK, NOT_OK or RESET clearing paths. Proven by two mutation probes that routed it into RESET and into NOT_OK: each changed a test outcome.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000009, which records anchor class `repository_file`; path `src/app/engine/diag/diag.c`; line_range `341-475`; content_hash `06bae9dfd5935d777e81c5892fa31e72c78af6daaff66c8679ca86862f64a8fb`; symbol `DIAG_Handler`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000013, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_contactor.c`; line_range `73-125`; content_hash `a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775`; symbol `DIAG_StringContactorFeedback`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000008."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.safety_allocation.safety_goal_ref` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[0]` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[1]` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C10-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 7 with status `mapped` on the grounds: Functional safety requirement from safety goal"
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C11-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `mapped` on the grounds: Software requirements analysis"
+  },
+  {
+   "claim_class": "classification",
+   "claim_id": "C12-asil",
+   "evidence_in_packet": "The record verbatim in section 3, including the whole asil_allocation_scope block.",
+   "judgement_needed": "Whether presenting this classification this way is acceptable. On an as_is record a reader can take an ASIL value as a statement about the real product, and no machine can tell whether that misreading has happened.",
+   "machine_state": "`asil_allocation_scope.classification_kind` = `reconstructed_back_inference`; asserts a determination for the real product: False",
+   "statement": "This record carries safety_allocation.asil = `ASIL_D` and a safety_goal_ref of `FB2-SAF-SGO-000001`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 17501,
+  "record_path": "docs/artifacts/corpus/as_is/safety/fsr-contactor-response.json",
+  "record_sha256": "71a5cbf1a70a9ecf13fbe38057474bdec4e69521f8f1f93991488d51cf73f0da",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "655eb86aefeee91d182add362c52e48a48b933ca879bf26887a55e15d7ac0df8"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchor FB2-SRC-COD-000007 (CONTACTOR_StateMachine) was deleted because contactor.c has no such function. The surviving anchors name real symbols - CONT_CheckFeedback (contactor.c:125-163), DIAG_Handler (diag.c:341-475), DIAG_StringContactorFeedback / DIAG_PrechargeContactorFeedback (diag_cbs_contactor.c:73-125) - and the last two genuinely perform the auxiliary feedback confirmation this record requires. What no anchor observes is the primary risk-reduction action of this record, opening the HV contactors within 30 ms: that logic lives in src/app/application/bms/bms.c, which this record does not anchor. Part observed, part modelled, so labelled derived."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SAF-FSR-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the safety_engineer for this safety record, do you agree that \"The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.\" is a correct and complete statement of hazard analysis, safety goals, FSR/TSR allocation, safety analyses, the safety case?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "requirement quality",
+   "priority": 8,
+   "question": "Are the acceptance criteria complete and decidable - could a verifier say with certainty whether this requirement is met?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria and verification_approach in the record.",
+   "why_this_needs_a_human": "An undecidable requirement cannot be verified, and the corpus cannot tell an undecidable requirement from a merely terse one."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Contactor open latency",
+    "measure": "Time from FAULT request to contactor feedback open",
+    "threshold": "30",
+    "unit": "ms"
+   },
+   {
+    "criterion": "Feedback verification",
+    "measure": "Auxiliary contact confirmation",
+    "threshold": "100%",
+    "unit": "%"
+   },
+   {
+    "criterion": "Weld detection",
+    "measure": "Weld detection latency",
+    "threshold": "100",
+    "unit": "ms"
+   }
+  ],
+  "artifact_type": "requirement",
+  "asil_allocation_scope": {
+   "classification_belongs_to": "the hypothetical reference project declared by the synthetic_reference profile of this corpus",
+   "classification_kind": "reconstructed_back_inference",
+   "is_a_determination_for_the_real_product": false,
+   "origin_field_relationship": "Because this record now carries a back-inferred classification alongside its source-derived content, origin is 'derived' rather than 'source_observed': master prompt section 5 requires that an artefact containing both observed and modelled content must not be labelled wholly observed. Where this record's origin was 'source_observed' it has been changed to 'derived' for that reason and for no other; no statement, acceptance criterion, threshold, assumption, safety goal reference or mitigation text was altered in the same edit.",
+   "reading_rule": "Any view, report or export that renders this record's asil value must render this field with it. An asil value shown without this field is a defect in that view, not a permissible abbreviation.",
+   "real_product_hazard_analysis_and_risk_assessment_performed": false,
+   "statement": "The asil value in this record's safety_allocation is a RECONSTRUCTED value, not an observation and not a determination. It was produced by reading back the safety-goal classification of the hypothetical reference project this corpus also declares in its synthetic_reference profile, and by attributing that classification to this record because this corpus's own requirement set was written downstream of it. The real foxBMS 2 product has never had a hazard analysis and risk assessment. No HARA has been performed for it, none is claimed here, and nothing in this record may be read as one, as a partial one, or as a substitute for one.",
+   "what_this_field_asserts": [
+    "That the recorded asil value equals the classification the reference project's safety concept and goal chain assigns to this element, as those records state it.",
+    "That the classification originates in the reference project and nowhere else.",
+    "That no classification has been performed for the real product by this corpus or by anyone on its behalf."
+   ],
+   "what_this_field_does_not_assert": [
+    "It does not assert an ASIL for the real foxBMS 2 product. The real product's safety integrity level is undetermined, not ASIL_D; undetermined is the honest answer and this corpus has no standing to change it.",
+    "It does not assert that a hazard analysis and risk assessment exists for the real product in any form, complete or partial.",
+    "It does not assert that any design, in either profile, meets this ASIL. An allocation creates an obligation downstream; it is not evidence the obligation is discharged, and no execution record in this corpus discharges it for this element.",
+    "It does not assert ISO 26262 conformity, certification, or qualification of any product, supplier, tool or process.",
+    "It does not assert an Automotive SPICE capability level for any organisation.",
+    "It does not assert that the exposure or severity inputs behind the reference project's classification are evidenced. They are authored: the reference project's safety goal FB2-SAF-SGO-000001 already records that its exposure rating is an unevidenced authored input and that a single exposure step would move the whole classification one class lower."
+   ],
+   "why_the_value_is_still_here": "The ASIL is retained rather than deleted because it is legitimate inside the fictional project: the reference project needs an allocated class at this element for its own argument to be internally consistent, and removing the number would leave the reference project's allocation silently unallocated. What was illegitimate was its presentation here, as an unqualified field on an as_is record that a reader could take as a statement about the product. That presentation is what this field removes."
+  },
+  "assumption_refs": [
+   "FB2-ASM-001",
+   "FB2-ASM-006",
+   "FB2-ASM-007"
+  ],
+  "assumptions": [
+   "FB2-ASM-001",
+   "FB2-ASM-006",
+   "FB2-ASM-007"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "classification": "safety",
+  "conditions_modes": [
+   "NORMAL",
+   "CHARGING",
+   "PRECHARGE",
+   "DERATING",
+   "FAULT"
+  ],
+  "created_at": "2026-09-08T00:00:00Z",
+  "engineering_domain": "safety",
+  "fault_reaction": {
+   "allocated_element_id": "AR-004",
+   "allocation_basis": "FB2-SAF-FSC-000001.fault_reaction entry 1 and FB2-SAF-TSC-000001.fault_reaction entry 1 both allocate this reaction to AR-004 at 35 ms, realised by FB2-SW-SWR-000003 in software and FB2-HW-TSR-000003 in hardware. The 40 ms end-to-end figure is FB2-SAF-SGO-000001.timing_budget.allocation (contactor_command_ms 5 + contactor_mechanical_ms 30 + feedback_verification_ms 5) and is reconciled against this record's acceptance criteria under FB2-REV-FND-000024. The real source anchors are FB2-SRC-COD-000007 (src/app/driver/contactor/contactor.c, CONTACTOR_StateMachine) and FB2-SRC-COD-000008 (src/app/driver/contactor/contactor.c, CONTACTOR_CheckFeedback); the sequenced opening is in src/app/application/bms/bms.c, which is not one of this record's source_refs and is cited here as text rather than as an anchor because the corpus has no anchor for it.",
+   "element_owns_reaction": true,
+   "mode_dependence": "Mode-dependent, and in the real implementation the dependence is visible in the code rather than in a comment. The opening sequence is entered from any state that receives a FAULT or error request, and FB2-SAF-FSC-000001 records that in MOD-004, with the contactors closed and current flowing, reaching the safe state removes propulsion from a moving vehicle. The real sequence makes one further mode-dependent decision inside it: a contactor is not opened while the string current is at or above BS_MAIN_CONTACTORS_MAXIMUM_BREAK_CURRENT_mA (3500 mA, src/app/application/config/battery_system_cfg.h:180), so the reaction is DELAYED rather than skipped, timeAboveContactorBreakCurrent_ms accumulates, and only after BS_MAIN_FUSE_MAXIMUM_TRIGGER_DURATION_ms (3000 ms, battery_system_cfg.h:190) does the state machine raise DIAG_ID_ALERT_MODE and open the contactors regardless (bms.c:1076-1090). A reaction that waits three seconds before opening is not a reaction that meets any 100 ms interval, and the branch exists because a fuse is expected to clear the fault in the meantime.",
+   "open_limits": "Four limits are recorded. First, the 30 ms feedback-open criterion and the 100 ms feedback-confirmed criterion in this record's acceptance criteria do not distinguish the mechanically open point from the feedback-confirmed point the way the synthetic_reference copy of this requirement now does, and they carry a 100 ms weld-detection figure against FB2-HW-TSR-000003's 100 ms while the synthetic copy carries 50 ms; neither copy of the weld figure was changed here and the disagreement recorded against FB2-REV-FND-000024 is still open. Second, the real reaction is bounded by a per-string timeout rather than by a total reaction time, and the source carries an unresolved 'TODO: add timeout' on the re-issue branch, so the retry count is unbounded in the code. Third, the 30 ms mechanical figure is FB2-PRM-000005 with an upper tolerance of 40 ms, and FB2-ASM-006 is an assumption about the contactor rather than a measurement. Fourth, the watchdog independence the reaction relies on after a software hang is FB2-ASM-007, read out of the source and not measured over temperature or supply range.",
+   "profile_basis": "as_is",
+   "reaction": "The battery state machine runs a sequenced opening, not a single command, and the real reaction is that sequence. On a FAULT request the state machine enters BMS_FSM_STATE_OPEN_CONTACTORS and first calls CONT_OpenAllPrechargeContactors(), because the precharge resistor limits the maximum current and those contactors can always be opened (src/app/application/bms/bms.c:1042-1052). It then waits BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE (50 ms) and opens the strings one at a time starting from the highest string index (bms.c:1053-1165). Per string it opens the first contactor, waits BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR (10 ms), reads back CONT_GetContactorState and BMS_IsContactorFeedbackValid, and only then opens the second contactor. If the feedback does not confirm, the open is RE-ISSUED after BMS_FSM_SHORTTIME (1 ms) rather than abandoned, and the source carries a literal 'TODO: add timeout' on that branch (bms.c:1109-1115). A per-string bound exists: stringOpenTimeout is initialised to BMS_STRING_OPEN_TIMEOUT (1000 ms) and on expiry the state machine moves on to the next string (bms.c:1141-1146). Each string's contacts are opened one after another, so the total time to a fully opened pack is a function of the number of strings and contactors, not a single constant. The de-energisation itself is indirect: CONT_OpenContactor() at src/app/driver/contactor/contactor.c:165-182 sets currentSet = CONT_SWITCH_OFF and calls SPS_RequestContactorState(..., SPS_CHANNEL_OFF) on the safe base controller channel, and carries no timing constant of its own.",
+   "reaction_time_budget_basis": "The 35 ms is the synthetic_reference allocation from FB2-SAF-FSC-000001.fault_reaction entry 1 and FB2-SAF-TSC-000001.fault_reaction, being contactor_command 5 ms plus contactor_mechanical 30 ms from FB2-PRM-000005. It is recorded here because the ASIL and safety goal this record refines are the synthetic_reference ones, and dropping it would leave the record citing a reaction it does not state. It is NOT a figure read from the real implementation. The real implementation's own waits are BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE = 50 ms, BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR = 10 ms, BMS_FSM_SHORTTIME = 1 ms and BMS_STRING_OPEN_TIMEOUT = 1000 ms, all in src/app/application/config/bms_cfg.h, driven from a 10 ms task period (BMS_STATEMACHINE_TASK_CYCLE_CONTEXT_MS, bms_cfg.h:100). On those figures a single contactor cannot be confirmed open in less than the 10 ms wait that follows the first one, and a pack of several strings is bounded by 1000 ms per string before the state machine abandons that string. The real end-to-end time is therefore governed by bms_cfg.h and by the mechanical contactor, and no measurement of it exists in this corpus.",
+   "reaction_time_budget_ms": 35,
+   "triggered_by": "A FAULT state request from the SOA monitor or from a diagnosis entry, surfaced as BMS_IsBatterySystemStateOkay() returning STD_NOT_OK; or a state of the auxiliary feedback that disagrees with the commanded state, which is the weld-detection path and which is also why this branch re-issues rather than proceeds."
+  },
+  "feasibility_dependencies": [
+   "FB2-SAF-FSR-000001",
+   "FB2-SAF-FSR-000002"
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SAF-FSR-000003",
+  "lifecycle_status": "reviewed",
+  "origin": "derived",
+  "owner_role": "safety_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchor FB2-SRC-COD-000007 (CONTACTOR_StateMachine) was deleted because contactor.c has no such function. The surviving anchors name real symbols - CONT_CheckFeedback (contactor.c:125-163), DIAG_Handler (diag.c:341-475), DIAG_StringContactorFeedback / DIAG_PrechargeContactorFeedback (diag_cbs_contactor.c:73-125) - and the last two genuinely perform the auxiliary feedback confirmation this record requires. What no anchor observes is the primary risk-reduction action of this record, opening the HV contactors within 30 ms: that logic lives in src/app/application/bms/bms.c, which this record does not anchor. Part observed, part modelled, so labelled derived.",
+  "rationale": "Contactor opening is the primary risk reduction measure; must complete within FTTI budget",
+  "revision": "3",
+  "revision_history": [
+   {
+    "author": "safety_engineer",
+    "date": "2026-09-08T00:00:00Z",
+    "description": "Back-inferred from CONTACTOR state machine and DIAG callback",
+    "revision": "1"
+   },
+   {
+    "author": "safety_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Added the fault_reaction this requirement was missing, derived from the source rather than from the synthetic concept, because this is an as_is record with origin source_observed and the real reaction is not the one the synthetic copy describes. CONT_OpenContactor() at src/app/driver/contactor/contactor.c:165-182 only sets currentSet and calls SPS_RequestContactorState(); it carries no timing constant and does not touch a coil. The reaction is the state machine's sequence in src/app/application/bms/bms.c:1028-1165 - open all precharge contactors first because the precharge resistor limits the current, then open the strings one at a time from the highest index, one contactor at a time, waiting BMS_TIME_WAIT_AFTER_OPENING_PRECHARGE (50 ms) and BMS_WAIT_TIME_AFTER_OPENING_STRING_CONTACTOR (10 ms), re-issuing the open after BMS_FSM_SHORTTIME (1 ms) when the feedback does not confirm, and giving up on a string after BMS_STRING_OPEN_TIMEOUT (1000 ms). The 35 ms allocation is recorded in its own field with a basis field that says plainly it is the synthetic_reference figure and not one read from the implementation. mode_dependence records a dependence that is visible in the code and not in any comment: a contactor is not opened while the string current is at or above BS_MAIN_CONTACTORS_MAXIMUM_BREAK_CURRENT_mA (3500 mA), so the reaction is DELAYED rather than skipped, and only after BS_MAIN_FUSE_MAXIMUM_TRIGGER_DURATION_ms (3000 ms) does the state machine raise DIAG_ID_ALERT_MODE and open regardless. That is recorded because a reaction that waits three seconds is not a reaction that meets any 100 ms interval, and the corpus's 100 ms interval is a synthetic_reference figure that this as_is record has never been shown to meet. open_limits also carries the unresolved 'TODO: add timeout' on the re-issue branch and the open weld-detection disagreement recorded against FB2-REV-FND-000024. Statement, rationale, all three acceptance criteria, safety_allocation, the ASIL and the safety goal reference are unchanged and no threshold was relaxed - in particular the 30 ms feedback-open threshold is left exactly as it is, because whether that criterion should move is the subject of FB2-REV-FND-000024 and was decided for the synthetic_reference copy only. Human approval remains pending, production_authorized stays false and product_verification_credit stays false. No ASIL, certification or capability level is claimed for the real product.",
+    "revision": "2"
+   },
+   {
+    "author": "safety_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "Added asil_allocation_scope, and moved the origin field from source_observed to derived. An independent audit flagged this record as asserting an unqualified ASIL on an as_is profile record, which presents a classification belonging to the hypothetical reference project as though it were a determination about the real foxBMS product. The ASIL value itself is untouched and remains ASIL_D, because it is legitimate inside the fictional project; what is different now is that the value can no longer be read without the reconstruction stated alongside it. The origin move is required by master prompt section 5: this record carries a back-inferred classification alongside source-derived content, so it may not be labelled wholly observed. It was previously source_observed.",
+    "revision": "3"
+   }
+  ],
+  "safety_allocation": {
+   "asil": "ASIL_D",
+   "mitigation": "Feedback monitoring, independent SBC watchdog, weld detection",
+   "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000008",
+   "FB2-SRC-COD-000009",
+   "FB2-SRC-COD-000013"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Functional safety requirement from safety goal",
+    "reference": "Part 4, Clause 7",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Software requirements analysis",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "statement": "The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.",
+  "title": "FSR: Contactor Opening on SOA Violation",
+  "updated_at": "2026-10-02T00:02:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_approach": "test"
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "requirement",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "derived",
+  "owner_role": "safety_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SAF-FSR-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SAF-FSR-000003",
+  "revision": "3"
+ }
+}

@@ -1,0 +1,449 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SYR-000123",
+    "rationale": "This measure is the source-grounded part of FB2-SYS-SYR-000002's verification: it establishes, from the nested tier comparison and the diagnosis configuration table at the pinned commit, that an excursion into the two outer tiers is graded below the safety-limit tier and cannot reach the fault reaction. It covers the requirement's degradation-discrimination criterion and not its debounce or its declared boundary.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "verifies",
+    "review_state": "pending",
+    "source_id": "FB2-VER-TMS-000023",
+    "target_id": "FB2-SYS-SYR-000002"
+   },
+   {
+    "link_id": "FB2-LNK-EXE-000123",
+    "rationale": "FB2-VER-EXE-000023 is the execution record for FB2-VER-TMS-000023. It carries execution_kind 'none' and outcome 'blocked' with the specific unblock condition that applies to that measure, so the link asserts that an execution record exists and honestly reports that nothing was run. It is not evidence that the measure passed.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "result_of",
+    "review_state": "pending",
+    "source_id": "FB2-VER-EXE-000023",
+    "target_id": "FB2-VER-TMS-000023"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against test_measure.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (2)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "2/2 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000004, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `81-146`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckVoltages`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the additive DIAG_EVENT_NOT_EVALUATED branch was added to DIAG_Handler. It is a distinct else-if appended after RESET; it holds state, writes no entry, invokes no callback, and cannot reach the OK, NOT_OK or RESET clearing paths. Proven by two mutation probes that routed it into RESET and into NOT_OK: each changed a test outcome.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000009, which records anchor class `repository_file`; path `src/app/engine/diag/diag.c`; line_range `341-475`; content_hash `06bae9dfd5935d777e81c5892fa31e72c78af6daaff66c8679ca86862f64a8fb`; symbol `DIAG_Handler`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_requirements[0]` names FB2-SYS-SYR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_designs[0]` names FB2-SW-DSN-000002."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SYS.4 (system integration testing) and SYS.5 (system verification) with status `partially_mapped` on the grounds: This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C08-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 9 (system verification) with status `partially_mapped` on the grounds: Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct."
+  },
+  {
+   "claim_class": "verification_oracle",
+   "claim_id": "C09-oracle",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the criterion would actually FAIL if the property it names were violated. A criterion that cannot fail is the defect this corpus's own FB2-REV-FND-000042 is about.",
+   "machine_state": "count only; whether a criterion is decidable is not machine-checkable",
+   "statement": "This measure declares 0 acceptance criterion/criteria and method `not stated`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 9749,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000002-limit-tier-grading.json",
+  "record_sha256": "6b0743ec3a93c6dfc87c08c99da93583b7dfd0914a32128901ccee142813c480",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "c4c7a71fc25dce7da1c54646b903f8e8da2856d3ae8174c78c99232b13e7c20c"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "This measure verifies the reaction's grading, not its timing and not its debounce. Those are separate measures with separate oracles and this one must not be read as covering them.",
+    "It does not establish that the outer tiers constitute the reference project's degraded mode; it establishes only that they do not reach the fault reaction in this configuration.",
+    "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+    "This is a synthetic measure for the hypothetical reference project."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-TMS-000023.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Test: an excursion into each safe-operating-area tier produces the graded reaction the pinned source actually configures, and only the safety-limit tier reaches the fault reaction\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "oracle strength",
+   "priority": 5,
+   "question": "This measure declares 0 acceptance criterion/criteria. For each, would the criterion actually FAIL if the property it names were violated?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria in section 3.",
+   "why_this_needs_a_human": "A test that cannot fail is indistinguishable from a passing test. This corpus measured 53 such files in its own suite and recorded it as FB2-REV-FND-000042."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "test_measure",
+  "assumption_refs": [
+   "FB2-ASM-001",
+   "FB2-ASM-005"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "cleanup": "Clear the injected states, restore the stubbed diagnosis handler, and re-read the configuration table to confirm it is unchanged.",
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "conf/unit/app_project_posix.yml",
+   "hardware": "POSIX host (Linux) running the unit-test build, with the SOA module linked and the diagnosis handler stubbed to record every entry raised",
+   "software": "foxBMS 2 application firmware built with the unit-test configuration",
+   "tools": [
+    "GCC",
+    "CMock",
+    "Unity"
+   ]
+  },
+  "expected_outcomes": [
+   {
+    "expected_value": "1",
+    "signal": "entries_raised_at_operating_limit",
+    "tolerance": "exact",
+    "unit": "entries"
+   },
+   {
+    "expected_value": "2",
+    "signal": "entries_raised_below_maximum_safety",
+    "tolerance": "exact",
+    "unit": "entries"
+   },
+   {
+    "expected_value": "3",
+    "signal": "entries_raised_at_maximum_safety",
+    "tolerance": "exact",
+    "unit": "entries"
+   },
+   {
+    "expected_value": "1",
+    "signal": "tiers_configured_as_fatal_error",
+    "tolerance": "exact",
+    "unit": "tiers"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-TMS-000023",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "This measure verifies the reaction's grading, not its timing and not its debounce. Those are separate measures with separate oracles and this one must not be read as covering them.",
+   "It does not establish that the outer tiers constitute the reference project's degraded mode; it establishes only that they do not reach the fault reaction in this configuration.",
+   "Nothing has been executed. The paired execution record carries execution_kind 'none' and outcome 'blocked'.",
+   "This is a synthetic measure for the hypothetical reference project."
+  ],
+  "objective": "Establish, against the pinned source rather than against the item's output, which of FB2-SYS-SYR-000002's reactions the code can produce. SOA_CheckVoltages compares each string's extremes against three nested tiers per direction - operating, recommended safety and maximum safety - and raises a diagnosis entry per crossed tier; the configuration table then decides what each entry means. Reading the configuration at the pinned commit shows the maximum-safety entries configured as fatal errors with a delay and the two outer tiers configured as a warning and an information entry with the delay discarded, so an excursion into an outer band is recorded and produces no contactor opening. The measure records that grading as the source-grounded part of the requirement.",
+  "oracle_basis": "source_grounded",
+  "oracle_detail": {
+   "kind": "source_grounded",
+   "oracle_kind": "source_grounded",
+   "residual_risk": "A source-grounded oracle here is only as good as the read of the configuration table. The table is generated from the configuration headers, and a mismatch between the header and the table would not be caught by reading the table alone.",
+   "what_it_still_does_not_prove": "It does not prove the reference project's degraded mode is reached from the outer tiers. It shows the outer tiers do not open contactors; whether the reference project does anything else with them is a separate question this oracle does not answer. It also says nothing about timing, which is the criterion covered by FB2-VER-TMS-000025.",
+   "what_the_oracle_is_not": "It is not a measured reference: no configuration was read out of a running system. It is not an analytical model: no arithmetic model of the reaction chain was computed. It is not a synthetic assumption: the grading is a property of the configuration table that exists.",
+   "why_this_oracle": "The oracle is the grading the pinned configuration states, read from diag_cfg.c at the pinned commit and from the nested comparison structure of SOA_CheckVoltages. FB2-SYS-SYR-000002 requires the item to distinguish a recoverable degradation from a limit violation, and whether the source can make that distinction at all is a question about the configuration, not about a run: a configuration in which every tier were fatal could not distinguish anything, and the source's is not that."
+  },
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "preconditions": [
+   "The reference project's limit configuration is loaded from the parameter registry.",
+   "The diagnosis configuration table is the one in the pinned source, which is what determines the grading."
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "referenced_designs": [
+   "FB2-SW-DSN-000002"
+  ],
+  "referenced_requirements": [
+   "FB2-SYS-SYR-000002"
+  ],
+  "regression_selection": "Re-run on every change to diag_cfg.c, to the diagnosis severity enumeration, to the SOA tier thresholds, or to the SOA comparison structure. Also re-run on any change to the fault-reaction aggregation, because this measure establishes the grading the aggregation then acts on.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "Authored because FB2-SYS-SYR-000002 had no verification. Split from FB2-VER-TMS-000024 because the tier grading is a property of the source that can be falsified against it, whereas the debounce the same requirement demands has no counterpart in the source at all.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000004",
+   "FB2-SRC-COD-000009"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met.",
+    "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct.",
+    "reference": "Part 4, Clause 9 (system verification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "steps": [
+   {
+    "action": "Read the configuration table and record the severity and delay configured for each of the three over-voltage diagnosis entries.",
+    "expected": "Three entries are recorded with distinct severities and distinct delay settings.",
+    "step": 1
+   },
+   {
+    "action": "Inject a maximum cell voltage just above the operating-limit threshold and record every diagnosis entry raised.",
+    "expected": "Exactly one entry is raised, and it is the operating-limit one.",
+    "step": 2
+   },
+   {
+    "action": "Inject a maximum cell voltage between the recommended-safety and maximum-safety thresholds.",
+    "expected": "Two entries are raised, and the maximum-safety entry is not among them.",
+    "step": 3
+   },
+   {
+    "action": "Inject a maximum cell voltage above the maximum-safety threshold.",
+    "expected": "Three entries are raised, including the maximum-safety one, which is the entry configured as a fatal error.",
+    "step": 4
+   },
+   {
+    "action": "Return the voltage below the operating-limit threshold and record the entries again.",
+    "expected": "The entries are cleared with the clear event rather than left latched.",
+    "step": 5
+   }
+  ],
+  "stimuli": [
+   {
+    "signal": "Cell voltage at or above each tier threshold",
+    "timing": "one injection per measurement cycle, tier order from least to most severe",
+    "value": "one injection per tier: at the operating-limit threshold, between operating and recommended-safety, between recommended-safety and maximum-safety, and above maximum-safety"
+   },
+   {
+    "signal": "Diagnosis configuration read-back",
+    "timing": "once, before the injections",
+    "value": "the severity and delay recorded for each of the three over-voltage entries"
+   }
+  ],
+  "test_type": "integration",
+  "timing": {
+   "max_execution_time_ms": 60000,
+   "setup_time_ms": 30000,
+   "teardown_time_ms": 15000
+  },
+  "title": "Test: an excursion into each safe-operating-area tier produces the graded reaction the pinned source actually configures, and only the safety-limit tier reaches the fault reaction",
+  "tolerances": {
+   "entries_raised_at_maximum_safety": "exact",
+   "entries_raised_at_operating_limit": "exact",
+   "entries_raised_below_maximum_safety": "exact",
+   "tiers_configured_as_fatal_error": "exact"
+  },
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-TMS-000023"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-TMS-000023",
+  "revision": "1"
+ }
+}

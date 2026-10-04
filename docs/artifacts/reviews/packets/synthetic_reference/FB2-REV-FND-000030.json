@@ -1,0 +1,295 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 3,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.subject_artifact_id` names FB2-SW-DSN-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C02-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.9 with status `mapped` on the grounds: Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6.4 (monitoring and measurement) with status `mapped` on the grounds: The obligation to record rather than to conceal."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C04-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by None; method \"docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.\"; 1/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `medium`, category `traceability`, disposition `accepted`. Its resolution text names a corpus id: True."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 9974,
+  "record_path": "docs/artifacts/reviews/findings/finding-000030-safety-goal-fwd-refs.json",
+  "record_sha256": "15d084166e59bb978381c1b1eea2efd3245d8ebb62c133be86222132a81387ed",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "d9c96ccb3800b75601f3e9b23c24cb42a9d852266c930cf1f8a786f057234b05"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "draft: this record makes a dangling cross-reference visible and dispositioned. It does not close the condition, no missing work product has been invented to close it, and no human has confirmed it. Human approval of the records it describes remains pending."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-FND-000030.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the quality_engineer for this management record, do you agree that \"Finding FB2-REV-FND-000030: three declared forward references name work products the corpus has never authored, and no rule resolves a payload-field id\" is a correct and complete statement of verification and quality process records and their evidence?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `accepted`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "ownership of the remainder",
+   "priority": 12,
+   "question": "For the part that is still open: is the named owner real, and is the named trigger for revisiting it real?",
+   "what_in_this_packet_bears_on_it": "resolution text in the record.",
+   "why_this_needs_a_human": "A deferred finding with no live trigger is indistinguishable from an abandoned one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "traceability",
+  "created_at": "2026-09-29T00:00:00Z",
+  "disposition": "accepted",
+  "disposition_note": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "management",
+  "evidence": "docs/artifacts/tools/check_references.py resolves every id-shaped string in every corpus and scenario record against the artifact index, the source registry, the assumption registries, the link registries and the parameter registries. After the FB2-SAF-SCO-000001 typo was corrected under FB2-REV-FND-000023, three references remained unresolved in four places: (1) FB2-SW-DSN-000001's decomposition[2].child_id names FB2-SW-DSN-000004, and only FB2-SW-DSN-000001..000003 exist - the same reference appears in the as_is and the synthetic_reference copies of the record; (2) FB2-PIM-IMP-000003 is named by project-plan.json work_breakdown[WBS-008].deliverable_records[4] and by measurement-plan.json metrics[MET-06].linked_improvement_records[0], and only FB2-PIM-IMP-000001 and FB2-PIM-IMP-000002 exist. None of these ids has ever existed, so unlike FB2-SAF-SCO-000001 they are not transcriptions of an id that was renamed.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000030",
+  "impact": "A reader following FB2-SW-DSN-000001's decomposition arrives at a design element that does not exist, and a reader following WBS-008's deliverables or MET-06's linked improvements arrives at a process improvement that does not exist. The traceability report's coverage count for review and for planned deliverables is computed over ids that include these, so the denominators contain entries a reader cannot resolve. The risk of the reverse error is the larger one: because a payload-field id is never resolved by the link validator or by any other rule, a reader cannot tell an intentional forward reference to planned-but-unwritten work from a typo, and this corpus has now demonstrated both - FB2-SAF-SCO-000001 was a typo and these three are not.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "draft: this record makes a dangling cross-reference visible and dispositioned. It does not close the condition, no missing work product has been invented to close it, and no human has confirmed it. Human approval of the records it describes remains pending.",
+  "origin": "synthetic",
+  "owner_role": "quality_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "resolution": "STILL OPEN, and deliberately so. Re-verified on 2026-09-30T00:00:00Z: FB2-SW-DSN-000004 and FB2-PIM-IMP-000003 are still absent from the artifact index. Nothing was authored to close it and nothing should have been.\n\nWHY IT WAS NOT CLOSED. Writing FB2-SW-DSN-000004 would mean inventing the architecture of an AFE driver child element, and writing FB2-PIM-IMP-000003 would mean inventing the content of a process-improvement cycle. No source, parameter, assumption or analysis in this corpus constrains either, so authoring them would be fabrication wearing a record id, which master prompt section 14 forbids by name. The two references were not typos - unlike FB2-SAF-SCO-000001, which was, and which was corrected under FB2-REV-FND-000023 - so they cannot be closed the way that one was.\n\nWHAT IS IN PLACE. docs/artifacts/tools/check_references.py resolves every id-shaped string in every corpus and scenario record against the artifact index, the source registry, the assumption registries, the link registries and the parameter registries, and prints anything that does not resolve. Both ids carry an explicit entry in that tool's KNOWN_BROKEN_ALLOWED declared-forward allowlist, so the tool reports them as declared-forward rather than passing them silently. That is the difference between this class of defect and FB2-SAF-SCO-000001: the tool can now tell a planned-but-unwritten reference from a typo, which is what stopped the same mistyped value appearing in two records before.\n\nWHAT WOULD CLOSE IT, precisely. A decision by an owner who knows the intended architecture and the intended improvement cycle: either author the two records from real design and process input, or mark the three references as planned-not-yet-authored on the face of the records that carry them so a reader is not left resolving a dangling id. Both are engineering and planning decisions. No automated pass may take either, and this corpus is not in a position to invent the content either would need. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "OPEN",
+   "condition_still_holds": true,
+   "date": "2026-09-30T00:00:00Z",
+   "disposition_before": "accepted",
+   "evidence": "the asserted condition is that declared forward references name work products never authored. Measured: ['FB2-SW-DSN-000004', 'FB2-PIM-IMP-000003'] still absent from the artifact index, and 2/2 carry an explicit entry in check_references.py's KNOWN_BROKEN_ALLOWED declared-forward allowlist, so the tool reports them rather than silently passing them. The work products have not been authored.",
+   "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+   "revision_before": "1"
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Raised while remediating finding FB2-REV-FND-000023. The corpus-wide reference sweep that pass required surfaced three references to ids that no record defines. They are not typos - each names a work product the plan declares and the corpus has not written - so they cannot be repaired by correcting a value, and they are recorded here rather than deleted or satisfied by inventing a record.",
+    "revision": "1"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED @date@ against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: OPEN. Disposition migrated from 'accepted' to 'accepted' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "2"
+   }
+  ],
+  "root_cause": "The corpus declares work products in planning artefacts before the artefacts themselves exist, and no record distinguishes a declared-forward reference from a broken one. The link validator only resolves ids expressed as links; a free-string id in a payload field is outside every rule's reach. The gap is structural, not clerical: three separate planning references were written forward and none of them says so.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "medium",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit.",
+    "reference": "SUP.9",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The obligation to record rather than to conceal.",
+    "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "subject_artifact_id": "FB2-SW-DSN-000001",
+  "title": "Finding FB2-REV-FND-000030: three declared forward references name work products the corpus has never authored, and no rule resolves a payload-field id",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "quality_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-FND-000030"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-FND-000030",
+  "revision": "2"
+ }
+}

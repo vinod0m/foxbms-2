@@ -1,0 +1,361 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000037",
+    "rationale": "Execution results from test measure",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "result_of",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-EXE-000005",
+    "target_id": "FB2-VER-TMS-000005"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000185",
+    "rationale": "FB2-REV-000017 reviewed FB2-VER-EXE-000005 at revision 2 and enumerates it in reviewed_ids with the sha256 of the artefact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artefact. This link was authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000017",
+    "target_id": "FB2-VER-EXE-000005"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against execution.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-EXEC-HONESTY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000017",
+     "review_path": "docs/artifacts/reviews/records/review-FB2-REV-000017-execution-record-honesty-synthetic.json",
+     "review_type": "domain",
+     "reviewed_revision": "2",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "verification_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-FB2-REV-000017-execution-record-honesty-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000185 in docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.test_measure_id` names FB2-VER-TMS-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.evidence_refs[0]` names FB2-VER-TMS-000005."
+  },
+  {
+   "claim_class": "execution_classification",
+   "claim_id": "C03-exec",
+   "evidence_in_packet": "The record verbatim in section 3. The test measure it names has its own packet.",
+   "judgement_needed": "Whether this outcome is a legitimate basis for the verification claim its test measure makes. A green run on a host is not evidence about the MCU, and only the domain owner can say whether the measure's acceptance criteria are met at all.",
+   "machine_state": "`actual_target_hardware_run` is the only kind that counts as product-hardware evidence. `actual_host_run`/`actual_simulation_run` are real executions of the product's code on developer infrastructure. `none` means no run was performed. This record's kind is `synthetic_fixture`.",
+   "statement": "This record declares execution_kind `synthetic_fixture`, outcome `pass`, aggregate_outcome `None`, on hardware `x86_64 Linux host (simulated)`, for test measure `FB2-VER-TMS-000005`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000005."
+  },
+  {
+   "claim_class": "execution_metadata",
+   "claim_id": "C05-time",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the recorded interval is the real duration of the run. Duration is not verifiable from a file's contents.",
+   "machine_state": "start and end present",
+   "statement": "`timestamps` = {\"duration_ms\": 5000, \"end\": \"2026-09-13T00:00:05Z\", \"start\": \"2026-09-13T00:00:00Z\"}"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 6075,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/execution-afe-communication.json",
+  "record_sha256": "f3d58a83e336bfda98145b3e0df3473cbf91c04c3f8fa81a781d01f826e0b890",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "4a4398cf04c5f1fad9a037ace8a34ddb29730fedca28e24fe4ccb8437290b796"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic fixture execution (no target hardware)",
+    "No verification credit for production"
+   ]
+  },
+  {
+   "field": "notes",
+   "value": "Synthetic execution demonstrating the verification workflow"
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-13T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-EXE-000005.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Execution: FB2-VER-TMS-000005 (synthetic_fixture)\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "execution classification",
+   "priority": 5,
+   "question": "This is `synthetic_fixture`, on `x86_64 Linux host (simulated)`. Given that, does the outcome support the verification claim its test measure (FB2-VER-TMS-000005) makes?",
+   "what_in_this_packet_bears_on_it": "section 3: the environment block. The test measure has its own packet.",
+   "why_this_needs_a_human": "Whether a given kind of run is sufficient evidence for a given acceptance criterion is a domain judgement. A host run can be perfectly good evidence for driver logic and no evidence at all for register timing."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anomalies": [],
+  "artifact_type": "execution",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-13T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "created_at": "2026-09-13T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "conf/unit/app_project_posix.yml",
+   "hardware": "x86_64 Linux host (simulated)",
+   "software": "Unity 2.5.2, CMock 2.4.0",
+   "tool_versions": {
+    "cmake": "3.22.1",
+    "cmock": "2.4.0",
+    "gcc": "11.4.0",
+    "unity": "2.5.2"
+   },
+   "tools": [
+    "GCC 11.4.0",
+    "CMake 3.22"
+   ]
+  },
+  "evidence_refs": [
+   "FB2-VER-TMS-000005",
+   "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c"
+  ],
+  "execution_kind": "synthetic_fixture",
+  "human_approval_status": "pending",
+  "id": "FB2-VER-EXE-000005",
+  "input_hashes": {},
+  "lifecycle_status": "reviewed",
+  "limitations": [
+   "Synthetic fixture execution (no target hardware)",
+   "No verification credit for production"
+  ],
+  "logs": [],
+  "notes": "Synthetic execution demonstrating the verification workflow",
+  "origin": "synthetic",
+  "outcome": "pass",
+  "output_hashes": {},
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "provenance_repair": {
+   "date": "2026-10-01T00:00:00Z",
+   "input_hash_resolutions": [
+    {
+     "note": "input_hashes.test_source, input_hashes.config and output_hashes.result all carried the identical value sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e: eighteen uses of one constant across six records. A test source, a build configuration and a captured result are three unrelated artefacts and cannot share a content hash, and the value matches no file in the repository at any commit, so it was never measured. These records describe a synthetic fixture run that did not happen: the environment was never provisioned and the timestamps are a constant window. A hash recomputed against a repository file today would assert that this file was an input to a run that does not exist, so the fields are removed and this note records that instead. Two of the six records name no test source at all, so for those there was nothing to recompute against either; the four that do name one keep that name in evidence_refs, which is a statement of scope, not of captured content.",
+     "removed_fields": [
+      {
+       "key": "test_source",
+       "section": "input_hashes",
+       "value": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
+      },
+      {
+       "key": "config",
+       "section": "input_hashes",
+       "value": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
+      },
+      {
+       "key": "result",
+       "section": "output_hashes",
+       "value": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e"
+      }
+     ],
+     "test_source_file_named_by_evidence_refs": [
+      "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c"
+     ]
+    }
+   ],
+   "principle": "A hash that identifies a file still present at the path it names has been re-derived from the bytes on disk and the superseded value is recorded above. A hash that identifies something no run ever captured, or an input consumed at a specific moment in the past, is not overwritten: it is retained with both digests recorded, or removed with this note. No file was created to make a reference resolve.",
+   "session": "opencode-2026-10-01-provenance-repair",
+   "unretained_evidence": [
+    {
+     "note": "build/ does not exist in this repository and never did in any commit, and no directory anywhere in the tree is named synthetic. The fixture output this entry pointed at was never captured and cannot be reconstructed, because the single digest it carried was a constant reused across all six synthetic fixture records rather than a measurement of any content. The gap is already documented in docs/artifacts/evidence/synthetic-fixtures/MANIFEST.md and is open as finding FB2-REV-FND-000143. No fixture file was written.",
+     "previous_hash": "sha256:339004f08d538371540704e160c5195bf5eb89e94fb22727c8faf9dca70f8a4e",
+     "previous_reference": "build/synthetic/FB2-VER-EXE-000005.log",
+     "resolution": "reference removed; no substitute path invented"
+    }
+   ]
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-13T00:00:00Z",
+    "description": "Synthetic fixture execution",
+    "revision": "1"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Provenance repair of the evidence hash and file-reference fields by a separate session (opencode-2026-10-01-provenance-repair); no statement of what the run did was altered. 1 logs[] reference(s) removed because the path never resolved to anything: see provenance_repair.unretained_evidence for each. Nothing was written to make them resolve. 1 input-hash question(s) resolved in favour of retaining what the run actually consumed, or of recording the absence of evidence; see provenance_repair.input_hash_resolutions. The outcome, timestamps, environment, anomalies, evidence_refs, notes and limitations of this record are untouched.",
+    "revision": "2"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [],
+  "test_measure_id": "FB2-VER-TMS-000005",
+  "test_measure_revision": "1",
+  "timestamps": {
+   "duration_ms": 5000,
+   "end": "2026-09-13T00:00:05Z",
+   "start": "2026-09-13T00:00:00Z"
+  },
+  "title": "Execution: FB2-VER-TMS-000005 (synthetic_fixture)",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-EXE-000005"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-EXE-000005",
+  "revision": "2"
+ }
+}

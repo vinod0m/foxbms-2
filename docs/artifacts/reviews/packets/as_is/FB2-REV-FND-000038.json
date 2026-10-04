@@ -1,0 +1,270 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000015 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.subject_artifact_id` names FB2-VER-EXE-000015."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C02-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by None; method \"docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.\"; 1/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `high`, category `verification`, disposition `resolved`. Its resolution text names a corpus id: False."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 17465,
+  "record_path": "docs/artifacts/reviews/findings/finding-000038-wno-array-bounds-masked-real-oob.json",
+  "record_sha256": "f731c0f30ba7260b99af5e83f4f969cfa1cd3690946bb960a4481356f7bcc3f2",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "917df4acd90ef0c312c63fc4632947cf53be238ec20d6e79c65a3f1a476d1c25"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft': the defect is established, measured and reported, and the masking flag has been removed. The defect itself is NOT closed - it lives in tests/ under tests/unit/app/driver/can/cbs/tx-cyclic/ and tests/unit/app/engine/diag/cbs/, which are upstream's and out of scope for the SIL harness. No human reviewer has confirmed this record, and human approval of the artifact it describes remains 'pending'."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'deferred' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "note": "Corpus automation gates only. This is not a statement about the engineering validity of the out-of-bounds finding recorded here.",
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-REV-FND-000038.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the quality_engineer for this verification record, do you agree that \"Finding FB2-REV-FND-000038: the inherited RELAX_CLANG_DIAGNOSTICS flag -Wno-array-bounds was masking genuine out-of-bounds array access in 6 tests; the flag is removed and the def\u2026\" is a correct and complete statement of verification and quality process records and their evidence?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `resolved`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "closure",
+   "priority": 12,
+   "question": "Does the named fix actually close the condition, on the current tree?",
+   "what_in_this_packet_bears_on_it": "resolution text; the named record id or rule.",
+   "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "note": "Corpus automation gates only. This is not a statement about the engineering validity of the out-of-bounds finding recorded here.",
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "verification",
+  "created_at": "2026-09-30T00:00:00Z",
+  "disposition": "resolved",
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'deferred' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "verification",
+  "evidence": "The harness documents RELAX_CLANG_DIAGNOSTICS=1 as silencing 'three diagnostics that Apple clang enables by default and GNU gcc does not'. Two of the three (-Wno-enum-conversion, -Wno-parentheses-equality) are: both are Clang default-on diagnostics whose GCC analogues are not enabled by -Wall or -Wextra. The third, -Wno-array-bounds, is not a clang-only diagnostic. GCC's -Warray-bounds IS enabled by -Wall, so a construct that trips it trips under both compilers and cannot be a platform artefact. Every one of the 25 sites it was hiding is a real out-of-bounds access, verified by hand against the declaration: tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-temperatures.c:93 declares `float_t testSignalData[3u] = {0u, 1u, 2u};` and the test indexes it at 4, 6, 8, 10 and 12 at lines 381, 382, 420, 421, 431, 432, 442, 443, 453, 454, 464, 465 -- out of bounds by up to 9 elements past a 3-element array. The three sibling files test_can_cbs_tx_f_cell-temperatures_{3,4,5}-temp-sensors.c declare the same `float_t[3]` and index it at 4 through 10. tests/unit/app/driver/can/cbs/tx-cyclic/test_can_cbs_tx_f_cell-voltages.c:92 declares `float_t testSignalData[4u]` and indexes it at 6 and 8 at lines 367 and 379. tests/unit/app/engine/diag/cbs/test_diag_cbs_current.c:112-117 writes `diag_kpkDatabaseShim.pTableMsl->cellChargeOvercurrent[BS_NR_OF_STRINGS]` and five siblings into a `uint8_t[1]`, and tests/unit/app/application/config/battery_system_cfg_unit_test.h:124 sets BS_NR_OF_STRINGS to (1u) for the default unit-test build, so the index is 1 into a one-element array -- a genuine off-by-one that looks like a test author intending to exercise the out-of-range string index and instead writing outside the array. The 6 affected tests are: test_can_cbs_tx_f_cell-temperatures.c, test_can_cbs_tx_f_cell-temperatures_3-temp-sensors.c, test_can_cbs_tx_f_cell-temperatures_4-temp-sensors.c, test_can_cbs_tx_f_cell-temperatures_5-temp-sensors.c, test_can_cbs_tx_f_cell-voltages.c and test_diag_cbs_current.c. Raw evidence: the per-test logs under docs/artifacts/.work/verification-env/sil/logs/per-test-*/ carry every diagnostic with file, line and column, and each result record in the sweep JSON carries the diagnostic code set with sites.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000038",
+  "impact": "Two things, and the second is the reason the severity is high. First, a build that compiled because this warning was silenced is exactly the failure mode the task forbids: the 6 tests would have been reported as building, and readers of a pass count would reasonably infer that their assertions mean something. They do not. A test that reads and writes up to 9 elements past a 3-element array is not measuring the code under test; it is reading whatever the linker happened to place next, and the value it then asserts on is not the value the fixture nominally set. The counts would have been green and meaningless. Second, the flag's presence contaminated the classification scheme itself. Because -Warray-bounds was suppressed under RELAX_CLANG_DIAGNOSTICS while the primary recorded sweep ran WITHOUT that mode, these 6 tests were recorded as build failures attributed to 'build:strict_diagnostic' -- a class defined as 'Apple-clang-only diagnostic promoted by -Werror' -- which is a false description of a real defect. Any reader who accepted that class name would have closed the finding as a known host-platform artefact. Removing the flag and re-measuring moves them to build:real_defect_out_of_bounds_array_index, where they are visible as what they are.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': the defect is established, measured and reported, and the masking flag has been removed. The defect itself is NOT closed - it lives in tests/ under tests/unit/app/driver/can/cbs/tx-cyclic/ and tests/unit/app/engine/diag/cbs/, which are upstream's and out of scope for the SIL harness. No human reviewer has confirmed this record, and human approval of the artifact it describes remains 'pending'.",
+  "origin": "derived",
+  "owner_role": "quality_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "resolution": "RESOLVED, in both halves, and this record was stale in a way that mattered. Its resolution said the flag had been removed and the 6 tests 'remain red and are reported as such' - true when written, no longer true, and reporting it otherwise would have told a reader that six real out-of-bounds accesses were still live when they are not.\n\nHALF ONE, the masking flag. Re-verified on 2026-09-30T00:00:00Z: the string '-Wno-array-bounds' appears nowhere in sil/run.sh, so the flag is removed and stays removed. This half was already closed when the record was written.\n\nCORRECTION TO AN EARLIER REVISION OF THIS RESOLUTION, recorded rather than quietly replaced: that revision said the RELAX_CLANG_DIAGNOSTICS list 'now holds exactly two diagnostics, -Wno-enum-conversion and -Wno-parentheses-equality'. That was wrong. It counted only the first two entries in the env-gated block and did not read the whole block. Measured: the block adds SEVEN diagnostics - -Wno-enum-conversion, -Wno-parentheses-equality, -Wno-unknown-warning-option, -Wno-pragma-pack, -Wno-literal-conversion, -Wno-non-literal-null-conversion and -Wno-incompatible-pointer-types-discards-qualifiers - and each carries its own justification comment in sil/run.sh and its own entry in sil/RELAXED-DIAGNOSTICS.md. The list held three entries when this finding was raised; the diagnostic that was removed is the one that caught defects rather than reporting style, and the other six are the ones that satisfy the two-part test this finding established. The wrong count was caught by re-deriving the list programmatically rather than by reading the first two lines, which is the same mistake in miniature as the one this record is about. sil/run.sh's own header comment said 'three diagnostics' and has been brought up to date for the same reason.\n\nHALF TWO, the 6 sites. Closed. All six tests now build and pass: test_can_cbs_tx_f_cell-temperatures.c, test_can_cbs_tx_f_cell-temperatures_3-temp-sensors.c, test_can_cbs_tx_f_cell-temperatures_4-temp-sensors.c, test_can_cbs_tx_f_cell-temperatures_5-temp-sensors.c, test_can_cbs_tx_f_cell-voltages.c and test_diag_cbs_current.c. The fixes are the one-line-per-site changes this record's own resolution specified, and they are test-fixture changes: the declared sizes were corrected - float_t[3] to float_t[13] in the cell-temperature files, which are indexed up to element 12, and float_t[4] to float_t[9] in the cell-voltage file, which is indexed at 6 and 8 - and test_diag_cbs_current.c now writes element 0 of the BS_NR_OF_STRINGS-indexed arrays instead of element 1 into a one-element array. The build-failure class build:real_defect_out_of_bounds_array_index, which carried 6 tests in the baseline sweep, no longer appears in the classifier output at all.\n\nWHAT THIS DOES NOT MEAN. The second harm this record identified was to the evidence rather than to the records - the classification scheme had been describing six real defects as 'build:strict_diagnostic', a class defined as 'Apple-clang-only diagnostic promoted by -Werror', which is a false description. That misclassification is corrected by the sites no longer failing, and the classifier no longer emits that class for them. The general rule this record established - a diagnostic may be silenced in this harness only if it is BOTH Apple-clang-only AND about a construct established to be correct, and a class that exists to explain away a red build must never be able to swallow a real defect - remains in force and is written down in sil/RELAXED-DIAGNOSTICS.md. It is a rule about the harness, not about the product: no product source is involved in this finding, no product behaviour was in question, and the defect was entirely within the test fixtures. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "STALE",
+   "condition_still_holds": false,
+   "date": "2026-09-30T00:00:00Z",
+   "disposition_before": "deferred",
+   "evidence": "the asserted condition has two halves and BOTH are now false. (1) the masking flag: '-Wno-array-bounds' no longer appears anywhere in sil/run.sh (True); the RELAX list now holds exactly ['-Wno-deprecated-non-prototype', '-Wno-enum-conversion', '-Wno-incompatible-pointer-types-discards-qualifiers', '-Wno-literal-conversion', '-Wno-non-literal-null-conversion', '-Wno-parentheses-equality', '-Wno-pragma-pack', '-Wno-strict-prototypes', '-Wno-unknown-warning-option']. (2) the 6 sites: 6/6 now build and pass (test_can_cbs_tx_f_cell-temperatures.c=pass, test_can_cbs_tx_f_cell-temperatures_3-temp-sensors.c=pass, test_can_cbs_tx_f_cell-temperatures_4-temp-sensors.c=pass, test_can_cbs_tx_f_cell-temperatures_5-temp-sensors.c=pass, test_can_cbs_tx_f_cell-voltages.c=pass, test_diag_cbs_current.c=pass). The build-failure class build:real_defect_out_of_bounds_array_index no longer appears in the sweep's classifier output at all. The declared sizes were corrected (float_t[3] -> [13] and float_t[4] -> [9]) and the off-by-one in test_diag_cbs_current.c now writes element 0.",
+   "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+   "revision_before": "1"
+  },
+  "revision": "3",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "New finding. The SIL harness's inherited RELAX_CLANG_DIAGNOSTICS mode silences three diagnostics that Apple clang enables by default and GNU gcc does not. One of the three, -Wno-array-bounds, was not such a diagnostic: it was suppressing real out-of-bounds array access. All 25 sites were verified by hand against the declaration each index refers to. The flag is removed and the 6 affected tests are reported as genuine defects.",
+    "revision": "1"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED @date@ against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: STALE. Disposition migrated from 'deferred' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "2"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "Corrected a factual error introduced by the previous revision of this record's own resolution, and corrected the harness header comment that carried the same error. The previous revision stated that the RELAX_CLANG_DIAGNOSTICS list holds 'exactly two diagnostics'; it holds seven, and the earlier statement counted only the first two entries in the block. The substantive verdict is UNCHANGED and is now stated correctly: the masking flag is removed and the six remaining entries each satisfy the two-part test this finding established (Apple-clang-only AND the construct is correct), none of them being in the class of a diagnostic that catches defects rather than reporting style. sil/run.sh's header comment said 'three diagnostics' and now says seven, with the removal recorded by finding id. No flag was added or removed by this revision, no check was weakened, no test was modified, and the six out-of-bounds sites remain fixed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "3"
+   }
+  ],
+  "root_cause": "The flag list was assembled on the reasoning 'this diagnostic fires under -Werror, and it fires on vendored or generated code, so it is a platform nuisance' rather than on the two-part test each flag actually has to pass. -Warray-bounds passes 'it fires' and fails 'it is clang-only', and the second condition is the one that decides whether silencing is legitimate. There is a compounding factor specific to this harness: -Warray-bounds is a diagnostic that CATCHES defects rather than reporting style, so the cost of a false negative is categorically higher than for the other two. The same reasoning error was audited for the remaining flags and is why the list was not simply extended: four further diagnostics that also fire were examined and NOT silenced, for the same reason in different clothes - -Wtautological-pointer-compare (src/app/driver/afe/maxim/common/mxm_17841b.c:707 compares an array member against NULL, always true), -Wmissing-field-initializers and -Wunused-but-set-variable (both -Wall/-Wextra in BOTH compilers), and the `section` attribute error in src/version/version.h:83, which is a hard Mach-O error that no -W flag can suppress and which was deliberately not worked around by overriding the macro. The general rule now enforced is stated in sil/RELAXED-DIAGNOSTICS.md: a diagnostic may be silenced in this harness only if it is BOTH Apple-clang-only AND about a construct established to be correct, and a class that exists to explain away a red build must never be able to swallow a real defect.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "high",
+  "source_refs": [],
+  "source_refs_note": "Empty by design. The defect is array indexing in test files under tests/unit/, and the corpus source registry holds no anchor covering those files at the pinned baseline. The subject record is named by subject_artifact_id; per-site file:line evidence is in evidence. An anchor was NOT invented to make this field non-empty.",
+  "standards_mappings": [],
+  "subject_artifact_id": "FB2-VER-EXE-000015",
+  "title": "Finding FB2-REV-FND-000038: the inherited RELAX_CLANG_DIAGNOSTICS flag -Wno-array-bounds was masking genuine out-of-bounds array access in 6 tests; the flag is removed and the defect is reported",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "validator_finding_verbatim": "-Wno-array-bounds suppressed 25 out-of-bounds array accesses across 6 tests; clang was correct at every site.",
+  "validator_rule": "Manual harness audit: for every flag under RELAX_CLANG_DIAGNOSTICS, establish both that the diagnostic is Apple-clang-only under the shipped -std=c11 -Wextra -Wall -pedantic -Werror AND that the construct it fires on is correct. A flag failing either test is removed and its diagnostics reported as findings.",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "quality_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-REV-FND-000038"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-REV-FND-000038",
+  "revision": "3"
+ }
+}

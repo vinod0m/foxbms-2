@@ -1,0 +1,530 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000144",
+    "rationale": "FB2-REV-000014 reviewed FB2-SUP-CHC-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-SUP-CHC-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against process_record.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000144 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-PRB-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.inputs[0].controlled_by` names FB2-SUP-PRB-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CFM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.inputs[1].controlled_by` names FB2-SUP-CFM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-QAP-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.inputs[2].controlled_by` names FB2-SUP-QAP-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000023 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.performed_instances[0].inputs_used[0]` names FB2-REV-FND-000023."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000024 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.performed_instances[0].inputs_used[1]` names FB2-REV-FND-000024."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000025 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.performed_instances[0].inputs_used[2]` names FB2-REV-FND-000025."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000026 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.performed_instances[0].inputs_used[3]` names FB2-REV-FND-000026."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.performed_instances[0].inputs_used[4]` names FB2-REV-FND-000027."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000028 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.performed_instances[0].inputs_used[5]` names FB2-REV-FND-000028."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.produces_records[0]` names FB2-MAN-CHG-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.produces_records[1]` names FB2-MAN-CHG-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.produces_records[2]` names FB2-MAN-CHG-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-PRB-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.depends_on_records[0]` names FB2-SUP-PRB-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CFM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.depends_on_records[1]` names FB2-SUP-CFM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-RSK-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.traceability.controlled_by_records[0]` names FB2-MAN-RSK-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-MSM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.process_performance_measurement.measurement_plan_ref` names FB2-MAN-MSM-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C17-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.10 with status `mapped` on the grounds: Change request management: impact analysis, decision, re-baseline and re-verification."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 8952,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/supporting/process-record-sup10-change-control.json",
+  "record_sha256": "c110f877ee5edca6114787adebcbeeb6446b6ff94ec75e65f307bc52e45bee77",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "b457f497f54b3893ffd92119d5ff3932bd219bb06fd93a6d3b382286eb5f10b2"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic process record for a synthetic project.",
+    "One of the three acceptance criteria is recorded as not met, on purpose. The instance shows a control that correctly refused to let the process fabricate the artifacts that would make it look satisfied.",
+    "The second criterion is unexercised rather than met. A control with no instance cannot be called effective and this record does not call it effective."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SUP-CHC-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this supporting record, do you agree that \"SUP.10 Change request management: populated process record for Project Northcell\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Every change record names its trigger, its affected artifacts, the new revisions, the suspect links and the re-verification selection",
+    "evidence_of_conformance": "The three pre-existing change records validate. This pass did not author a new change record: the six contradictions it found are recorded as findings, because a change record would assert that a change was decided and the decision has not been taken.",
+    "how_conformance_is_checked": "Validate against change.schema.json and confirm every one of the five blocks is populated."
+   },
+   {
+    "criterion": "No baselined record is edited without a change record authorising it",
+    "evidence_of_conformance": "Not verifiable across the corpus today, because no record has yet been revised above 1 and so no change has been executed. The criterion is real and currently unexercised; recording it as satisfied would be false.",
+    "how_conformance_is_checked": "Compare a baselined record's revision history against the change records for its id."
+   },
+   {
+    "criterion": "A decision is labelled as a synthetic decision and is never presented as a human approval",
+    "evidence_of_conformance": "All three pre-existing change records carry synthetic_decision labels and the corpus policy records the label format.",
+    "how_conformance_is_checked": "Confirm every decision field carries a synthetic_decision label naming a fictional role."
+   }
+  ],
+  "accountable_role": {
+   "independence": "The change board may not approve a change whose author is a board member. The board chair is the project manager and the authors are domain roles, so the separation holds structurally; no human board member exists.",
+   "role": "project_manager"
+  },
+  "artifact_type": "process_record",
+  "aspice_process_id": "SUP.10",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "created_at": "2026-09-29T00:00:00Z",
+  "definition": "A change request in this corpus is a change record carrying a trigger, an impact analysis, a decision, the new revisions the change would create, the links it makes suspect and the re-verification it requires. The board decides; this process records. A change that would correct a baselined record is handled here and not by the author editing the record, which is why the six findings raised in this pass are findings and not edits.",
+  "engineering_domain": "supporting",
+  "fictional_organisation": {
+   "is_a_real_organisation": false,
+   "name": "Halden Cell Systems (fictional) change control board (fictional)"
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SUP-CHC-000001",
+  "inputs": [
+   {
+    "controlled_by": "FB2-SUP-PRB-000001",
+    "input": "A change proposal with a stated trigger",
+    "kind": "record"
+   },
+   {
+    "controlled_by": "FB2-SUP-CFM-000001",
+    "input": "The affected records at their current revisions",
+    "kind": "artifact"
+   },
+   {
+    "controlled_by": "FB2-SUP-QAP-000001",
+    "input": "The verification measures covering the affected requirements",
+    "kind": "record"
+   }
+  ],
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "Synthetic process record for a synthetic project.",
+   "One of the three acceptance criteria is recorded as not met, on purpose. The instance shows a control that correctly refused to let the process fabricate the artifacts that would make it look satisfied.",
+   "The second criterion is unexercised rather than met. A control with no instance cannot be called effective and this record does not call it effective."
+  ],
+  "origin": "synthetic",
+  "outputs": [
+   {
+    "kind": "record",
+    "output": "A change record with the full impact chain",
+    "retention": "permanent"
+   },
+   {
+    "kind": "decision",
+    "output": "A decision with a named decision maker and a disposition",
+    "retention": "permanent"
+   },
+   {
+    "kind": "data",
+    "output": "A re-verification selection naming the measures to re-run",
+    "retention": "for the lifetime of the change"
+   }
+  ],
+  "owner_role": "project_manager",
+  "performed_instances": [
+   {
+    "conformance_against_acceptance_criteria": "partially_conforming",
+    "decision_or_outcome": "The board accepted all six referrals for future change control. No change record was raised, no record was edited and no revision was raised above 1. The distinction matters: a referral is a problem, a change record is a decision, and only the decision can move a baseline.",
+    "inputs_used": [
+     "FB2-REV-FND-000023",
+     "FB2-REV-FND-000024",
+     "FB2-REV-FND-000025",
+     "FB2-REV-FND-000026",
+     "FB2-REV-FND-000027",
+     "FB2-REV-FND-000028",
+     "The three pre-existing change records"
+    ],
+    "instance_date": "2026-09-29",
+    "instance_description": "Referral of six baselined-record corrections to the change board rather than editing the records in place.",
+    "instance_id": "INST-004",
+    "non_conformances_found": [
+     "Criterion 1 is not met for this instance, and deliberately: producing six change records here would assert six decisions that have not been taken. The instance is recorded as partially conforming so the shortfall is visible rather than papered over by authoring records that would be fiction."
+    ],
+    "outputs_produced": [
+     "Six change referrals, none of which is a change record"
+    ],
+    "participants": [
+     {
+      "is_a_real_person": false,
+      "named_as": "role identity: project_manager (board chair, fictional)",
+      "role": "project_manager"
+     },
+     {
+      "is_a_real_person": false,
+      "named_as": "role identity: safety_engineer (requester, fictional)",
+      "role": "safety_engineer"
+     },
+     {
+      "is_a_real_person": false,
+      "named_as": "role identity: hw_engineer (requester, fictional)",
+      "role": "hw_engineer"
+     },
+     {
+      "is_a_real_person": false,
+      "named_as": "role identity: quality_engineer (secretary recording the referral, fictional)",
+      "role": "quality_engineer"
+     }
+    ],
+    "synthetic_decision": "synthetic_decision:project_manager:SYNTH-SUP10-INST-004"
+   }
+  ],
+  "process_name": "Change request management",
+  "process_performance_measurement": {
+   "how_measured": "Count entries whose residual exposure fell between consecutive reviews, over the number with a taken action.",
+   "measurement_plan_ref": "FB2-MAN-MSM-000001",
+   "metric_id": "MET-05",
+   "metric_name": "Risk exposure movement per review cycle",
+   "unit": "entries"
+  },
+  "process_record_id": "FB2-SUP-CHC-000001",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "purpose": "Decide every proposed change to a baselined record, record which artifacts move, which links and reviews the change puts in question, and which measures must be re-run.",
+  "review_and_communication": [
+   {
+    "acknowledgement_recorded": true,
+    "attendee_roles": [
+     "project_manager",
+     "quality_engineer",
+     "safety_engineer",
+     "hw_engineer"
+    ],
+    "communicated_artifact_revisions": [
+     "FB2-REV-FND-000023 rev 1 .. FB2-REV-FND-000028 rev 1",
+     "Referral register"
+    ],
+    "communication_id": "COM-005",
+    "date": "2026-09-29"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Supporting-process record authored because the generated view reported SUP.10 as a coverage gap: no record whose engineering_domain is 'supporting' named the process. This record populates it - definition, inputs, outputs, accountable role, acceptance criteria, at least one performed instance with fictional participants and a synthetic decision, and the communication records showing how agreed revisions reach affected roles.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Change request management: impact analysis, decision, re-baseline and re-verification.",
+    "reference": "SUP.10",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "SUP.10 Change request management: populated process record for Project Northcell",
+  "traceability": {
+   "controlled_by_records": [
+    "FB2-MAN-RSK-000001"
+   ],
+   "depends_on_records": [
+    "FB2-SUP-PRB-000001",
+    "FB2-SUP-CFM-000001"
+   ],
+   "produces_records": [
+    "FB2-MAN-CHG-000001",
+    "FB2-MAN-CHG-000002",
+    "FB2-MAN-CHG-000003"
+   ]
+  },
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "process_record",
+  "engineering_domain": "supporting",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SUP-CHC-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SUP-CHC-000001",
+  "revision": "1"
+ }
+}

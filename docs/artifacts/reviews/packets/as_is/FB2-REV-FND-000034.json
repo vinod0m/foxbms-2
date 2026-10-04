@@ -1,0 +1,265 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000015 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.subject_artifact_id` names FB2-VER-EXE-000015."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C02-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T12:00:00Z by None; method \"Re-derived from the live tree: the generated Mockcan_helper.c was read in both configurations, and the test was run in both against a byte-identical temporary copy so that no test file belonging to another agent was edited. CMock's standard_treat_as_map was read from the vendored generator source.\"; no path named in method. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `medium`, category `verification`, disposition `resolved`. Its resolution text names a corpus id: False."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 19900,
+  "record_path": "docs/artifacts/reviews/findings/finding-000034-cmock-uint64-treat-as.json",
+  "record_sha256": "b18b428308a033f5c514d216b67063079c3c1fbd66bc6a7c38fd7f45214d9ab2",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "958a9647f52c61c04270df8b6879fd675bbaa13ab40a8c36b0967c9148e10144"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft': configuration defect measured from the CMock generator source and fixed in the SIL harness configuration, with the two affected tests verified green. The same defect remains present in the shipped conf/unit/ and is NOT fixed there, because conf/ is out of scope for this work. A second test-side defect was found and fixed as a direct consequence. human approval remains 'pending'. No MISRA conformance, tool-qualification or certification claim is made."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'partial' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-REV-FND-000034.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Finding FB2-REV-FND-000034: uint64_t is absent from both CMock's standard :treat_as: map and the project's, so :memcmp_if_unknown: emits an 8-byte memcmp of a by-value scalar's ad\u2026\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `resolved`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "closure",
+   "priority": 12,
+   "question": "Does the named fix actually close the condition, on the current tree?",
+   "what_in_this_packet_bears_on_it": "resolution text; the named record id or rule.",
+   "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "verification",
+  "created_at": "2026-09-29T00:00:00Z",
+  "disposition": "resolved",
+  "disposition_note": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'partial' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "verification",
+  "evidence": "ROOT CAUSE, read from the CMock generator source rather than inferred. 'uint64_t' appears NOWHERE in CMock 2.7.2's standard_treat_as_map (ceedling-1.1.9/vendor/cmock/lib/cmock_config.rb:141-183), which maps uint8/uint16/uint32 and their _t spellings plus the other C scalar spellings, but contains no 64-bit unsigned entry - verified by a direct search returning zero matches. It is also absent from the shipped project's own ':treat_as:' list at conf/unit/app_project_posix.yml:362-367, which lists only uint8, uint16, uint32, int8 and bool. With neither source supplying it and ':memcmp_if_unknown: true' set at conf/unit/app_project_posix.yml:368, cmock_unityhelper_parser.rb:34 does not raise and instead falls through to line 36, returning the memory fallback. For a BY-VALUE argument that yields UNITY_TEST_ASSERT_EQUAL_MEMORY with the '&' argument modifier, i.e. CMock emits, for the by-value uint64_t parameter 'canSignal' of CAN_TxSetMessageDataWithSignalData (src/app/driver/can/cbs/can_helper.h:131-136): UNITY_TEST_ASSERT_EQUAL_MEMORY(&cmock_call_instance->Expected_canSignal, &canSignal, sizeof(uint64_t), ...). That is an 8-byte memcmp of the ADDRESS of a scalar, so it compares two stack addresses and fails whenever the value happens to differ. Confirmed verbatim in the generated mock Mockcan_helper.c:500 and :528. Symptom before the fix, identical in both affected tests: 'Memory Mismatch. Byte 0 Expected 0x00 Was 0x38:Function CAN_TxSetMessageDataWithSignalData Argument canSignal' at test_can_cbs_tx_f_debug-build-configuration.c:698 and :1757, and 'Memory Mismatch. Byte 0 Expected 0x00 Was 0x6A' at test_can_cbs_tx_f_pack-minimum-maximum-values.c:718 and :881. Note this is a configuration defect and NOT a product defect and NOT a driver bug: can_helper.h:131 correctly declares a by-value uint64_t. FIX APPLIED, in the SIL harness configuration only (docs/artifacts/.work/verification-env/sil/run.sh, which rewrites its own isolated copy of the Ceedling project file): ':treat_as:' gains 'uint64_t: UINT64' and 'uint64: UINT64'. CMock then emits UNITY_TEST_ASSERT_EQUAL_UINT64 and the assertion checks the VALUE, which is what the test means. A SECOND, GENUINE TEST DEFECT WAS EXPOSED BY THE FIX, and this is the substantive reason the finding matters. Once the assertion compared values instead of addresses, it failed with a real value mismatch: 'Expected 0 Was 18446744073709551416'. That second operand is 18446744073709551416 - 2^64 = -200, which is BC_TEMPERATURE_MIN_CHARGE_MSL_ddegC (src/app/application/config/battery_cell_cfg.h:124). The product passes '(int64_t)signalData' (can_cbs_tx_f_debug-build-configuration.c:874), the correct sign-extended conversion. The test passed 'temperatureMinChargeSignals[0u]', a float_t, directly into a uint64_t parameter. Measured on this host: (uint64_t)(-200.0f) is 0, while (uint64_t)(int64_t)(-200.0f) is 18446744073709551416. Converting a negative float to an unsigned type is not the same value as sign-extending it, so the test's EXPECTATION was 0 and the code under test was right. Under the broken address comparison this defect was invisible, because the comparison never looked at the value. The same shape appears in test_can_cbs_tx_f_pack-minimum-maximum-values.c, where testMinimumTemperature0 is -150.0f (line 99) and the product uses '(int64_t)signalData' (can_cbs_tx_f_pack-minimum-maximum-values.c:447). FIXED test-side by casting the signal fixtures through (int64_t) at the expectation sites, exactly as the product does: 81 sites in test_can_cbs_tx_f_debug-build-configuration.c and 4 in test_can_cbs_tx_f_pack-minimum-maximum-values.c, each carrying a comment recording why. The cast is confined to the test's own expectation arguments and changes no product behaviour. RESULT: test_can_cbs_tx_f_debug-build-configuration.c 23/23 and test_can_cbs_tx_f_pack-minimum-maximum-values.c 14/14, both previously 21/23 and 12/14.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000034",
+  "impact": "Two distinct things were wrong and only one of them was visible before. The configuration defect made four assertions compare stack addresses, which is an assertion that cannot detect a wrong value and can fail for reasons unrelated to the code - the worst kind of oracle, because it looks like coverage. Fixing it revealed a real test defect that had been hidden underneath it for as long as the configuration had been wrong: the tests encoded an expectation of 0 where the driver correctly encodes -200, because a negative float_t was implicitly converted to uint64_t instead of sign-extended. That defect is a silent under-test of a CAN signal path, and it is exactly the kind that an address comparison cannot find. The cost of the fix is bounded and was measured: the SIL harness configuration changed, no file under src/ changed, and the two affected tests went from 21/23 and 12/14 to 23/23 and 14/14 with zero regressions across the 313-test suite. The limit must be stated: the defect in conf/unit/app_project_posix.yml is NOT fixed there. Only the SIL harness's isolated copy carries the ':treat_as:' entry. A run against the shipped conf/ on Linux or Windows will still exhibit the address-comparison behaviour and will still hide the negative-float defect. That is a product-owner decision about the shipped configuration and it is recorded here as open, not closed. Passing these two tests under the SIL harness says nothing about CAN bit packing on a real bus, about signal scaling or offset, or about any other device behaviour; the harness mocks the HAL and verifies driver logic against upstream's own assertions only. No MISRA conformance, tool-qualification or certification claim is made or implied.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': configuration defect measured from the CMock generator source and fixed in the SIL harness configuration, with the two affected tests verified green. The same defect remains present in the shipped conf/unit/ and is NOT fixed there, because conf/ is out of scope for this work. A second test-side defect was found and fixed as a direct consequence. human approval remains 'pending'. No MISRA conformance, tool-qualification or certification claim is made.",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "resolution": "RESOLVED for the condition this record asserts: uint64_t is no longer absent from the project's :treat_as: map.\n\nWHAT FIXED IT. One line added to UPSTREAM-SHARED configuration, conf/unit/app_project_posix.yml, in the :treat_as: block, in the file's existing style and position:\n    :treat_as:\n      uint64_t: UINT64\n      uint8: HEX8\n      ...\nThis is a change to the configuration every foxBMS developer builds against, and it is intended to be: the gap is genuine and platform-independent, so leaving it would leave every developer on the defective comparator. The fix is deliberately minimal - one entry, no reordering, no change to :memcmp_if_unknown:, and the bare `uint64` spelling deliberately NOT added because the repository uses uint64_t throughout its own code.\n\nEVIDENCE, RE-DERIVED 2026-09-30 FROM THE LIVE TREE. For the by-value uint64_t parameter `canSignal` of CAN_TxSetMessageDataWithSignalData (src/app/driver/can/cbs/can_helper.h:131-136), the generated mock now emits:\n    UNITY_TEST_ASSERT_EQUAL_UINT64(cmock_call_instance->Expected_canSignal, canSignal, ...)\nwhere before the change it emitted:\n    UNITY_TEST_ASSERT_EQUAL_MEMORY(&cmock_call_instance->Expected_canSignal, &canSignal, sizeof(uint64_t), ...)\n\nThe load-bearing fact behind the fix is unchanged and was re-confirmed by reading the generator: ceedling-1.1.9/vendor/cmock/lib/cmock_config.rb:141-183 `standard_treat_as_map` contains no 64-bit entry of any kind - no uint64, no uint64_t, no int64_t - so without a project-supplied mapping the type is genuinely unmapped and :memcmp_if_unknown: genuinely selects the memory fallback.\n\nTHIS RECORD'S OWN HARM CLAIM IS CORRECTED, and the correction matters more than the fix. Revision 2 and revision 1 described the pre-fix assertion as 'comparing two stack addresses', 'an assertion that cannot detect a wrong value', and 'the worst kind of oracle, because it looks like coverage'. Measurement contradicts all of that. The memory comparison took the address of the mock's own by-value parameter `canSignal` - a real, correctly-sized 8-byte uint64_t object - and the address of the stored expected value, so it was a byte comparison of the two values, not of their addresses. Three measurements, each against a byte-identical copy of tests/unit/app/driver/can/cbs/tx-async/test_can_cbs_tx_f_debug-build-configuration.c:\n  (a) with the expected canSignal deliberately changed 0x26 -> 0x27, the PRE-fix configuration       still failed the case: 'Memory Mismatch. Byte 0 Expected 0x27 Was 0x26'. The wrong value was       detected.\n  (b) the UNPERTURBED upstream test, whose (int64_t) expectations carry full 64-bit two's-complement       patterns, passed 23/23 in BOTH the pre-fix and post-fix configurations. The pre-fix oracle was       not producing false failures on the large values either.\n  (c) the only real difference is the comparator chosen and the quality of the diagnostic:       'Expected 39 Was 38' (a numeric comparison) versus 'Memory Mismatch. Byte 0 Expected 0x27       Was 0x26' (a byte comparison).\nSo the fix is correct and worth making - it makes the configuration complete for the only 64-bit type the product uses, and it buys a typed numeric comparison and a readable diagnostic instead of a byte compare - but it did NOT rescue a blind oracle, and the earlier rounds' framing of the impact was wrong. The genuine defect the earlier rounds actually found and fixed was the SEPARATE test-side one: a negative float_t passed straight into a uint64_t parameter, which the product sign-extends. That was the real cause of the four original failures, not the comparator.\n\nA MEASUREMENT CAVEAT WORTH RECORDING. The SIL harness structurally MASKS this defect and could not be used to demonstrate it: sil/run.sh unconditionally strips and re-inserts `uint64_t: UINT64` and `uint64: UINT64` into its own copy of project.yml on every invocation, so removing the entry from the shipped config changes nothing observable through the harness. The demonstration above required removing the mapping from the BUILD TREE's project.yml and invoking Ceedling directly, which is the state a developer running the shipped config on Linux or Windows is in. A future reader who tries to reproduce this through run.sh will get a false negative.\n\nRESIDUAL, ENUMERATED, AND IT IS A SEPARATE DEFECT. The same gap is still present in the other three shipped unit-test configurations - conf/unit/app_project_posix.yml was the only one this authorisation named, and the other three were therefore not touched:\n  conf/unit/bootloader_project_posix.yml   no uint64_t entry\n  conf/unit/app_project_win32.yml          no uint64_t entry\n  conf/unit/bootloader_project_win32.yml   no uint64_t entry\nThis is not hypothetical for the bootloader: src/bootloader/driver/can/can_bootloader-version-info.h:85 declares TEST_CANTX_TransmitBootMagic(uint64_t messageData), a by-value uint64_t parameter, so the bootloader variant mocks a by-value 64-bit argument under a configuration that does not map the type. It belongs to its own record, raised by whoever owns the remaining three configs; it is not a remainder of this one, and stating it here rather than closing over it is deliberate.\n\nSCOPE OF THE RESULT. This is a test-configuration change and establishes nothing about foxBMS 2 product behaviour: no file under src/ changed, no register map, timing, clocking, interrupt, DMA, bus or electrical behaviour was exercised, and no CAN bit packing on a real bus was verified. The harness mocks the HAL. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "CLOSED",
+   "condition_still_holds": false,
+   "date": "2026-09-30T12:00:00Z",
+   "disposition_before": "accepted",
+   "evidence": "uint64_t: UINT64 is present in the :treat_as: block of conf/unit/app_project_posix.yml, so the condition this record asserts - that the type is absent from the project's map - no longer holds. The generated mock emits UNITY_TEST_ASSERT_EQUAL_UINT64 rather than UNITY_TEST_ASSERT_EQUAL_MEMORY for the by-value canSignal parameter. The record's characterisation of the pre-fix harm is refuted: a wrong expected value was detected in the pre-fix state as well ('Memory Mismatch. Byte 0 Expected 0x27 Was 0x26'), and the unperturbed test passed 23/23 in both states. Separately measured and NOT closed here: the same mapping gap remains in conf/unit/bootloader_project_posix.yml and both win32 configs, and src/bootloader/driver/can/can_bootloader-version-info.h:85 has a by-value uint64_t parameter, so that is a live defect in the bootloader variant.",
+   "method": "Re-derived from the live tree: the generated Mockcan_helper.c was read in both configurations, and the test was run in both against a byte-identical temporary copy so that no test file belonging to another agent was edited. CMock's standard_treat_as_map was read from the vendored generator source.",
+   "revision_before": "2"
+  },
+  "revision": "3",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "First record. Root cause located in the CMock type map rather than in the tests, fixed in the SIL harness configuration, and the newly-surfaced test defect recorded with its own evidence.",
+    "revision": "1"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED @date@ against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: OPEN. Disposition migrated from 'partial' to 'accepted' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-30T12:00:00Z",
+    "description": "SHIPPED CONFIGURATION FIXED AND VERIFIED. The owner authorised a change to conf/, which this record's revision 2 named as the unblock condition, so `uint64_t: UINT64` was added to the :treat_as: block of conf/unit/app_project_posix.yml and the effect was measured rather than asserted. The measurement CORRECTED this record: its stated mechanism - that the pre-fix comparison was of two stack ADDRESSES and 'cannot detect a wrong value' - is refuted. The pre-fix comparison took the address of the mock's own by-value parameter and the address of the stored expected value, both 8-byte uint64_t objects, so it did compare the value's bytes, and a wrong expected value was detected in the pre-fix state too. Disposition moved from 'accepted' to 'resolved' because the condition this record asserts - that uint64_t is absent from the project's :treat_as: - no longer holds. A live residual in the other three shipped configs is enumerated in resolution and is a separate defect with its own trigger, not a remainder of this one. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "3"
+   }
+  ],
+  "root_cause": "Two independent defects stacked on the same four assertions. FIRST, a CMock configuration gap: uint64_t is in neither CMock's standard ':treat_as:' map nor the project's ':treat_as:' list, and ':memcmp_if_unknown: true' then converts 'CMock does not know this type' into 'compare the bytes of the argument', which for a by-value scalar means comparing the bytes of its address. CMock's generator cannot distinguish 'a pointer I was asked to dereference' from 'a scalar of a type I have no comparator for' at that point, and for the latter the address is the only thing it has. SECOND, and previously masked by the first, a test defect: the tests pass a negative float_t signal fixture directly into a uint64_t parameter, producing an expectation of 0, whereas the product sign-extends via an explicit (int64_t) cast and produces the correct two's-complement value. The first defect hid the second because the address comparison never inspected the value at all. The fix for the first is a ':treat_as:' mapping for uint64_t; that alone is not sufficient to make the tests pass, and treating it as sufficient would have left four assertions failing for a reason that has nothing to do with the configuration.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "medium",
+  "source_refs": [],
+  "standards_mappings": [],
+  "subject_artifact_id": "FB2-VER-EXE-000015",
+  "title": "Finding FB2-REV-FND-000034: uint64_t is absent from both CMock's standard :treat_as: map and the project's, so :memcmp_if_unknown: emits an 8-byte memcmp of a by-value scalar's address; fixing it exposed a second, genuine test defect",
+  "updated_at": "2026-09-30T12:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-REV-FND-000034"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-REV-FND-000034",
+  "revision": "3"
+ }
+}

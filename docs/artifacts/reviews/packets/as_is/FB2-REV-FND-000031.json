@@ -1,0 +1,259 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.subject_artifact_id` names FB2-VER-EXE-000012."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C02-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by None; method \"docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.\"; 1/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `medium`, category `verification`, disposition `resolved`. Its resolution text names a corpus id: True."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 16601,
+  "record_path": "docs/artifacts/reviews/findings/finding-000031-untyped-void-pointer-cmock-identity.json",
+  "record_sha256": "5bfec9612e63b67edf3a082df86dfe7eed1c18663569ab8c72db8e7d95c82b00",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "6b681cf2700d3c77c0383396e1a240f2a39abc282fc9c44fb4f2e586ed9e2c5d"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft': this record states a measured root cause and a demonstrated, but only partially applied, test-side remediation. One of the affected tests is fixed and green; the remaining affected tests are NOT fixed. No human reviewer has confirmed the analysis, and human approval remains 'pending'. This record makes no MISRA conformance claim, no tool-qualification claim and no certification claim of any kind."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'partial' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-REV-FND-000031.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Finding FB2-REV-FND-000031: the void*-declared database and OS-queue APIs are correctly polymorphic, so the pointer-identity test failure is a test-harness assertion defect, not a\u2026\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `resolved`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "closure",
+   "priority": 12,
+   "question": "Does the named fix actually close the condition, on the current tree?",
+   "what_in_this_packet_bears_on_it": "resolution text; the named record id or rule.",
+   "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "verification",
+  "created_at": "2026-09-29T00:00:00Z",
+  "disposition": "resolved",
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'partial' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "verification",
+  "evidence": "CALL-SITE MAP, re-derived from source (the reported line numbers were verified, not trusted). Affected declarations: src/app/engine/database/database.h declares DATA_Write1/2/3/4DataBlocks and DATA_Read1/2/3/4DataBlocks with untyped void* parameters; src/app/task/os/os.h:389,402 declares OS_ReceiveFromQueue(OS_QUEUE, void *const pvBuffer, uint32_t) and OS_SendToBackOfQueue(OS_QUEUE, const void *const pvItemToQueue, uint32_t). The product-side callers do not call these functions directly. They go through the variadic macros DATA_WRITE_DATA(...) and DATA_READ_DATA(...) defined at database.h:84-102, which expand to the arity-selected DATA_*DataBlocks function. Measured caller counts: DATA_WRITE_DATA 72 call sites in src/*.c plus 4 in src/*.h; DATA_READ_DATA 68 in src/*.c plus 4 in src/*.h; OS_ReceiveFromQueue 14 src/*.c call sites; OS_SendToBackOfQueue 17 src/*.c call sites. 142 DATA_* macro invocations were resolved to their argument types. WHAT THE FUNCTIONS ACTUALLY WRITE, read from the implementation and not the comment: DATA_CopyData (database.c:164-196) does a raw memcpy of a runtime-determined dataLength into or out of a byte array. That length is obtained in DATA_IterateOverDatabaseEntries (database.c:220) from data_baseHeader.pDatabase[entryIndex].dataLength, where entryIndex is derived by reading the uniqueId field out of the caller's own struct (database.c:213-216). So neither the pointee type nor the copy length is a property of the function signature; both are properties of the value the caller passes. TYPES VARY BY CALL SITE, decisively: 34 of the 37 DATA_BLOCK_*_s types defined in src/ (91% of the database) are provably passed at DATA_WRITE_DATA/DATA_READ_DATA call sites, including DATA_BLOCK_CELL_VOLTAGE_s, DATA_BLOCK_SOC_s, DATA_BLOCK_SOH_s, DATA_BLOCK_POWER_s, DATA_BLOCK_STATE_REQUEST_s and 28 others. OS_ReceiveFromQueue and OS_SendToBackOfQueue receive 10 and 11 distinct buffer expressions respectively, resolving to at least DATA_QUEUE_MESSAGE_s, CAN_MESSAGE_t, the N77X I2C transaction struct, ADI_REQUEST_s, the RTC time struct, a uint8_t element of a receive array, and a socket-descriptor int. Both are one-line wrappers over FreeRTOS xQueueReceive and xQueueSendToBack (os_freertos.c:293-316), whose own public API is void*-based and whose item size is fixed at queue-creation time. THE FAILURE MECHANISM, read from the CMock 2.7.2 generator source rather than inferred: conf/unit/app_project_posix.yml:368-369 sets :memcmp_if_unknown: true and :when_ptr: :compare_data but loads only the :callback and :return_thru_ptr plugins, so CMock's array handling is off. cmock_generator_utils.rb:207-210 then selects UNITY_TEST_ASSERT_EQUAL_PTR for any void* argument, with the in-source comment 'void* cannot be safely dereferenced; without the array plugin there is no way to specify depth, so fall back to comparing the pointer value itself'. The resulting assertion is pointer identity, which cannot hold, because the test and the code under test each hold their own file-scope static copy with internal linkage. Observed verbatim for the five originally-known sites: test_diag_cfg.c 'Expected 0x0000000100840000 Was 0x0000000100840098:Function DATA_Write4DataBlocks Argument pDataFromSender0', test_moving_average.c:135, test_soc_lookup-table.c:114, test_state_estimation.c:116/123/129/135, all of the same form. NO CMock CONFIGURATION CAN SIZE A void* PARAMETER: cmock_header_parser.rb:519-520 applies :treat_as_array only when the argument is NOT a pointer, so it cannot supply a pointee size for void*; and :treat_as_void widens the set of types routed into the identity branch rather than sizing them. The only other void* branch, cmock_generator_utils.rb:211-215, requires the array plugin and then hardcodes depth 1, which would compare a single byte and would be a weakened assertion. THE PRODUCT CODE IS CORRECT, demonstrated rather than argued: replacing the unsatisfiable identity expectation in tests/unit/app/engine/config/test_diag_cfg.c with a CMock callback that does TEST_ASSERT_EQUAL_MEMORY over sizeof(DATA_BLOCK_ERROR_STATE_s), sizeof(DATA_BLOCK_MOL_FLAG_s), sizeof(DATA_BLOCK_RSL_FLAG_s) and sizeof(DATA_BLOCK_MSL_FLAG_s) makes that test pass, with no change to any file under src/. The oracle was then shown to be non-vacuous: deliberately setting .aerosolAlert = true in the test's own copy of DATA_BLOCK_ERROR_STATE_s makes it fail with 'Memory Mismatch. Byte 70 Expected 0x01 Was 0x00:Function DATA_Write4DataBlocks', after which the deliberate change was reverted.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000031",
+  "impact": "The reported framing, that this is a product API defect, is incorrect, and acting on it would cause harm. Typing these parameters is not merely inelegant, it is impossible to do correctly: a single concrete type would be wrong for at least 33 of the 37 database entry types, so the change would either break the build on const conversions at the ~146 product call sites or silently mistype most of the database. A reviewer who 'fixed' the signature would be making a safety-relevant data path less safe while believing they were improving it. What the defect actually costs is verification coverage, not product integrity: 17 tests and 36 assertions currently carry an assertion that can never pass, so those code paths have no working oracle. 14 of those tests remain red after this change, so the coverage gap is only partly closed. It is worth stating the limit of what was demonstrated: the callback fix was applied and verified on one test, test_diag_cfg.c, chosen as the cleanest case with a single expectation on a single function. It has NOT been applied to the other 14 affected tests, several of which interleave expectations on two or three different mocked functions and depend on return values that vary per call, so a per-test callback there is a redesign of the test rather than a mechanical edit, and doing it blind risks introducing real regressions in tests that are the project's only oracle. The two independent defects previously reported alongside this one are unaffected by this work and remain open: the CMock compare_data-on-a-by-value-uint64_t configuration defect at src/app/driver/can/cbs/can_helper.h:131, which is a conf/unit defect and not a product defect, and the un-isolated test_dp83869.c segfault. Nothing here is evidence of MISRA conformance, of tool qualification, or of any certification, and no such claim may be inferred from this record.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': this record states a measured root cause and a demonstrated, but only partially applied, test-side remediation. One of the affected tests is fixed and green; the remaining affected tests are NOT fixed. No human reviewer has confirmed the analysis, and human approval remains 'pending'. This record makes no MISRA conformance claim, no tool-qualification claim and no certification claim of any kind.",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "resolution": "RESOLVED, and SUPERSEDED - this record's condition no longer holds because a later, better-rooted remediation addressed it, and this record's residual statement is now wrong. Successors: FB2-REV-FND-000033 for the test-side classification, and the CMock array-plugin remediation recorded in FB2-REV-FND-000037.\n\nWHAT STILL HOLDS, and is the load-bearing part of this record. The diagnosis is CONFIRMED UNCHANGED: the void* on the database access functions and on the OS queue wrappers is required by the design, not an oversight. The database functions derive both the pointee type and the copy length at run time from a uniqueId field read out of the caller's own struct, and the project's own source carries an active suppression saying the cast 'is required in order to have a generic interface for all database entries'. A single concrete type would be wrong for at least 33 of the 37 database entry types. The proposed product-side fix of typing the parameters therefore stays REJECTED, on the evidence this record already gave, and no one should 'fix' that signature on the strength of this finding being filed.\n\nWHAT NO LONGER HOLDS, and why this record was stale. Its resolution said the callback treatment had been applied to one representative test and that 14 affected tests remained red. Re-verified on 2026-09-30T00:00:00Z: the most recent full SIL host sweep records 1 failing test in the entire 313-test suite, and it is tests/unit/app/driver/phy/test_dp83869.c, which is a different defect recorded as FB2-REV-FND-000035. No void*-identity failure remains. The residual was closed not by typing the parameters - which would have been the wrong fix - but by the class-A/B/C analysis in FB2-REV-FND-000033, which established that the three named situations needed three different oracles, and by the array plugin, which made the void* parameter byte-comparable at all.\n\nTHE LIMIT THAT SURVIVES, stated because 'resolved' should not be read as 'verified'. This resolution is about the test harness's oracles, not about the product. A passing test under this harness says nothing about register-map correctness, timing, clocking, interrupt behaviour, DMA transfer, bus or electrical behaviour, or device identity; the harness mocks the HAL and checks driver logic against upstream's own pre-existing assertions. Two of the affected assertions are separately recorded as vacuous in FB2-REV-FND-000037, so a green verdict on those files is not yet evidence about the packing logic. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "SUPERSEDED",
+   "condition_still_holds": false,
+   "date": "2026-09-30T00:00:00Z",
+   "disposition_before": "partial",
+   "evidence": "the first clause of the asserted condition still holds: the product declarations are unchanged and the void* is still required (OS_ReceiveFromQueue/OS_SendToBackOfQueue payload parameters and the DATA_*DataBlocks parameters are untyped: False). The second clause - that a pointer-identity TEST FAILURE is the consequence - no longer holds as a live count: the most recent full sweep records 1 failing test(s) in total (tests/unit/app/driver/phy/test_dp83869.c), and none of them is a void*-identity failure. So the first clause of the title still holds and the second no longer does: the polymorphism conclusion is CONFIRMED UNCHANGED, and the test-failure residual was closed by the better-rooted class-A/B/C analysis in FB2-REV-FND-000033 and by the CMock array-plugin remediation, not by typing the parameters this finding correctly rejects. The proposed product-side fix stays rejected on the evidence this record already gave.",
+   "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+   "revision_before": "1"
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "First record of this defect. Re-derives the call-site map from source, establishes that the void* parameters are required by design, refutes the proposed product-side fix with a measured type census, and demonstrates the correct test-side fix on one representative test with a non-vacuity check.",
+    "revision": "1"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED @date@ against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: SUPERSEDED. Disposition migrated from 'partial' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "2"
+   }
+  ],
+  "root_cause": "The product declarations are correct and the test-side expectation mechanism is wrong. Three independent conditions combine. First, the APIs are genuinely polymorphic and their void* is required: the database access functions derive both the pointee type and the copy length at run time from a uniqueId field read out of the caller's own struct (database.c:213-222), and the OS queue wrappers are thin pass-throughs to FreeRTOS whose queue item type is fixed at creation time. The project has already documented this intent itself: src/app/engine/database/database.c:177 carries an active upstream MISRA/Axivion suppression reading 'AXIVION Next Codeline Style MisraC2012-11.5 this casted is required in order to have a generic interface for all database entries'. Second, conf/unit/app_project_posix.yml asks CMock to compare pointers by content (:when_ptr: :compare_data) while providing CMock no way to learn the pointee size of a void* and not loading the plugin that would allow a depth to be specified, so the generator silently falls back to pointer identity. Third, the tests register their expectation against their own file-scope static copy of the data block while the code under test passes its own different static copy, so identity can never hold. The tests are not wrong in intent: the test author's own comment reads '/** local copy of the #DATA_BLOCK_ERROR_STATE_s table */', which shows a content comparison was intended. A content assertion was silently downgraded into an identity assertion by the configuration, and that downgrade is invisible in the test source.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "medium",
+  "source_refs": [],
+  "standards_mappings": [],
+  "subject_artifact_id": "FB2-VER-EXE-000012",
+  "title": "Finding FB2-REV-FND-000031: the void*-declared database and OS-queue APIs are correctly polymorphic, so the pointer-identity test failure is a test-harness assertion defect, not a product API defect",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-REV-FND-000031"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-REV-FND-000031",
+  "revision": "2"
+ }
+}

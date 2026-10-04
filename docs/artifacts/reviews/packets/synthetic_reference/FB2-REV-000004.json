@@ -1,0 +1,439 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000021",
+    "rationale": "FB2-REV-000004 reviewed FB2-MAN-CHG-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000004",
+    "target_id": "FB2-MAN-CHG-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000022",
+    "rationale": "FB2-REV-000004 reviewed FB2-MAN-CHG-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000004",
+    "target_id": "FB2-MAN-CHG-000002"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000023",
+    "rationale": "FB2-REV-000004 reviewed FB2-MAN-CHG-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000004",
+    "target_id": "FB2-MAN-CHG-000003"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against review.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[0].artifact_id` names FB2-MAN-CHG-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[1].artifact_id` names FB2-MAN-CHG-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[2].artifact_id` names FB2-MAN-CHG-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000120 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[0].finding_id` names FB2-REV-FND-000120."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[0].artifact_id` names FB2-MAN-CHG-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000121 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[1].finding_id` names FB2-REV-FND-000121."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[1].artifact_id` names FB2-MAN-CHG-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000120 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[0].finding_id` names FB2-REV-FND-000120."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000121 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[1].finding_id` names FB2-REV-FND-000121."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C10-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/management/change-001-cell-voltage-max-limit.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-MAN-CHG-000001 at revision `1` with digest `fbac6174f91644d8f6c014f7c210b6760b6bd1a1fc4421410ca4104c1191400d`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C11-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/management/change-002-afe-communication-interface.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-MAN-CHG-000002 at revision `1` with digest `fed963350022756641232e8c91a09bff154ff2baef9dcf291e808d2a3a962345`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C12-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/management/change-003-soa-debounce-reset-defect.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-MAN-CHG-000003 at revision `1` with digest `468f43dc167e46de12b81a376ce873fac379031c0a7b146ed9d3f83fed2a593a`."
+  },
+  {
+   "claim_class": "review_independence",
+   "claim_id": "C13-rev-id",
+   "evidence_in_packet": "The record verbatim in section 3, including the reviewer's own note.",
+   "judgement_needed": "Whether this reviewer was independent enough for the claim being made. A single AI session reviewing its own output is not independence, and the record says so.",
+   "machine_state": "declared in the record; independence is not machine-verifiable",
+   "statement": "reviewer_identity = {\"model\": \"openrouter/stealth/space-bunny-alpha\", \"role\": \"configuration_manager\", \"session_id\": \"opencode-2026-09-29-artifact-review-pass\"}"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 8143,
+  "record_path": "docs/artifacts/reviews/records/review-change-management.json",
+  "record_sha256": "6f75886f61e2f1ed52b97e966bf276dafd7f95a92344e5cff7baee7b535bd592",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "0168ae86691feb4202da5dc63344486e547329072df09382727c35ef307ba45d"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+    "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+    "No artifact covered by this review carries production authority or product verification credit.",
+    "No change was enacted in the foxBMS source by this review or by any record it covers. All three records state implementation_status 'not_in_source'; this was confirmed by reading the field and not by inspecting a diff, because no diff exists to inspect for these changes.",
+    "Verification performed: (a) all 16 affected_artifacts ids resolved against the artifact index; (b) decision authority checked for synthetic labelling and fictional-identity disclosure in all three; (c) every record scanned for a real-change claim; (d) implementation_status and corpus_boundaries read in all three. All four checks passed with no exceptions.",
+    "This review did not re-derive the change impact analyses. It confirmed that the named artifacts exist and that the decision labelling is honest; it did not independently re-compute which artifacts a voltage-limit change, an AFE front-end migration or a debounce defect would actually affect.",
+    "The three scenario fixtures under docs/artifacts/scenarios/change-lifecycles/ were read for comparison only and were not modified by this review."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity."
+  },
+  {
+   "field": "scope",
+   "value": "Full scope over all 3 synthetic_reference change records (FB2-MAN-CHG-000001..000003). Every record carries profile 'synthetic_reference', so every reviewed_id below resolves unambiguously in that profile."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-000004.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the configuration_manager for this management record, do you agree that \"Review: change management records CR-001..CR-003\" is a correct and complete statement of configuration and change control?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "review conclusion",
+   "priority": 5,
+   "question": "This review reached conclusions about the records it covers. Are those conclusions correct?",
+   "what_in_this_packet_bears_on_it": "The findings and dispositions listed under what is already checked.",
+   "why_this_needs_a_human": "A review is an argument. Its digests prove it read the bytes; nothing proves it read them correctly."
+  },
+  {
+   "group": "independence",
+   "priority": 10,
+   "question": "This review was performed by openrouter/stealth/space-bunny-alpha in session `opencode-2026-09-29-artifact-review-pass`. Is that independence sufficient for the weight this review's conclusions are being given?",
+   "what_in_this_packet_bears_on_it": "reviewer_identity in section 3, including its note.",
+   "why_this_needs_a_human": "Independence is a governance judgement. A single automated session reviewing its own output is not organisational independence, and the corpus says so itself."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "review",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "checklist_version": "CHKL-CHANGE-CTL-1.0.0",
+  "created_at": "2026-09-29T00:00:00Z",
+  "dispositions": [
+   {
+    "action": "No record change required. Id resolution and the canonical-record / fixture distinction are correct and disclosed. No change record is rewritten by this review.",
+    "disposition": "accepted",
+    "finding_id": "FB2-REV-FND-000120",
+    "resolved_artifact_id": null
+   },
+   {
+    "action": "No record change required. Decision labelling satisfies master-prompt clause 2.9 for synthetic workflow decisions. Retained as a positive check result so the absence of a finding is attributable to a check rather than to a skipped check.",
+    "disposition": "accepted",
+    "finding_id": "FB2-REV-FND-000121",
+    "resolved_artifact_id": null
+   }
+  ],
+  "engineering_domain": "management",
+  "findings": [
+   {
+    "artifact_id": "FB2-MAN-CHG-000002",
+    "category": "provenance",
+    "description": "All 16 artifact ids named across the three records' impact_analysis.affected_artifacts resolve to an existing artifact. The records also disclose, per record, that they differ from the corresponding change-lifecycle scenario fixture (relationship_to_scenario_fixture.same_subject_different_artifact = true, with a differences_that_matter list). Checked and correct: a reader who assumed the canonical record and the fixture were the same artifact, or that the fixture's 'approved in full' disposition governed the canonical record, would be wrong. This finding records the verified distinction.",
+    "evidence": "FB2-MAN-CHG-000001 affected_artifacts [FSR-000002, HAZ-000001, HW-TSR-000001, SW-DSN-000002, VER-TMS-000001]; CHG-000002 [SYS-HSI-000001, HW-TSR-000001, HW-TSR-000002, SW-SWR-000001, SW-DSN-000001, VER-TMS-000003, VER-TMS-000005]; CHG-000003 [FSR-000002, SW-DSN-000002, SW-SWR-000002, VER-TMS-000001]. All 16 resolve. All three records carry implementation_status 'not_in_source' and a corpus_boundaries block with asserts_real_project_change=false and asserts_real_approval=false.",
+    "finding_id": "FB2-REV-FND-000120",
+    "severity": "info"
+   },
+   {
+    "artifact_id": "FB2-MAN-CHG-000003",
+    "category": "process",
+    "description": "Each record's decision is labelled synthetic and names a fictional decision maker with an explicit disclaimer ('fictional role identity A. Renner; synthetic scenario character; not a foxBMS maintainer, not SoftwareDevLabs staff, not a real person'). This satisfies the master-prompt requirement that fictitious workflow approvals be separately labelled synthetic_decision. Checked and correct. Recorded because a reader scanning only the decision_maker field could otherwise mistake a fictional change-control-board decision for a real one.",
+    "evidence": "Each of the three records carries a synthetic_decision object; decision.decision_maker carries the fictional-identity disclaimer verbatim; corpus_boundaries asserts asserts_real_approval=false and human_approval_status stays 'pending'; implementation_status is 'not_in_source' in all three.",
+    "finding_id": "FB2-REV-FND-000121",
+    "severity": "info"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-REV-000004",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity.",
+  "limitations": [
+   "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+   "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+   "No artifact covered by this review carries production authority or product verification credit.",
+   "No change was enacted in the foxBMS source by this review or by any record it covers. All three records state implementation_status 'not_in_source'; this was confirmed by reading the field and not by inspecting a diff, because no diff exists to inspect for these changes.",
+   "Verification performed: (a) all 16 affected_artifacts ids resolved against the artifact index; (b) decision authority checked for synthetic labelling and fictional-identity disclosure in all three; (c) every record scanned for a real-change claim; (d) implementation_status and corpus_boundaries read in all three. All four checks passed with no exceptions.",
+   "This review did not re-derive the change impact analyses. It confirmed that the named artifacts exist and that the decision labelling is honest; it did not independently re-compute which artifacts a voltage-limit change, an AFE front-end migration or a debounce defect would actually affect.",
+   "The three scenario fixtures under docs/artifacts/scenarios/change-lifecycles/ were read for comparison only and were not modified by this review."
+  ],
+  "origin": "derived",
+  "owner_role": "configuration_manager",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "results_summary": {
+   "affected_artifact_ids_named": 16,
+   "affected_artifact_ids_resolved": 16,
+   "records_asserting_a_real_change": 0,
+   "records_asserting_real_approval": 0,
+   "records_reviewed": 3,
+   "records_with_synthetic_decision_label": 3
+  },
+  "review_method": "Record inspection plus index resolution. Every id named in impact_analysis was resolved against the corpus artifact index. Decision and boundary fields were read directly and cross-checked against master-prompt clause 2.9 and the corpus-boundary policy.",
+  "review_type": "domain",
+  "reviewed_ids": [
+   {
+    "artifact_id": "FB2-MAN-CHG-000001",
+    "digest": "fbac6174f91644d8f6c014f7c210b6760b6bd1a1fc4421410ca4104c1191400d",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-MAN-CHG-000002",
+    "digest": "fed963350022756641232e8c91a09bff154ff2baef9dcf291e808d2a3a962345",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-MAN-CHG-000003",
+    "digest": "468f43dc167e46de12b81a376ce873fac379031c0a7b146ed9d3f83fed2a593a",
+    "revision": "1"
+   }
+  ],
+  "reviewer_identity": {
+   "model": "openrouter/stealth/space-bunny-alpha",
+   "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. Per master-prompt clause 2.9 this is an automated review: it is NOT organizational independence, NOT human confirmation, and NOT a qualified-checker result. No human reviewer, independent party, or separate agent session participated.",
+   "role": "configuration_manager",
+   "session_id": "opencode-2026-09-29-artifact-review-pass"
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "configuration_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Domain review of the three canonical change records for id resolution, decision authority and absence of any real-change claim.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope": "Full scope over all 3 synthetic_reference change records (FB2-MAN-CHG-000001..000003). Every record carries profile 'synthetic_reference', so every reviewed_id below resolves unambiguously in that profile.",
+  "source_refs": [],
+  "standards_mappings": [],
+  "title": "Review: change management records CR-001..CR-003",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "review",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "configuration_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-000004"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-000004",
+  "revision": "1"
+ }
+}

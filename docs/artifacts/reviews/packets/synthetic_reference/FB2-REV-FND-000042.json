@@ -1,0 +1,276 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 3,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C01-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.9 with status `mapped` on the grounds: Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C02-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6.4 (monitoring and measurement) with status `mapped` on the grounds: The obligation to record rather than to conceal."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C03-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by finding-closure pass over the 38 pre-existing records; method 'docs/artifacts/tests/audit_findings.py and docs/artifacts/tests/rule_scope_probe.py'; 2/2 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `high`, category `verification`, disposition `accepted`. Its resolution text names a corpus id: False."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 10094,
+  "record_path": "docs/artifacts/reviews/findings/finding-000042-vacuous-green-census.json",
+  "record_sha256": "94b1cf544255eca838ef199be0e2a7dbba7ff912033645223b16fdc006b3e740",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "7653698a450c41ceb7b58a7afbcd40657c722fa120c8a065d8dee86e30ae4682"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft': raised by the finding-closure pass and verified by re-derivation from the live corpus. No human reviewer has confirmed this record and human_approval_status remains pending. This record makes no MISRA conformance claim, no tool-qualification claim, no certification claim and no ASPICE capability-level claim of any kind."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-30T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-FND-000042.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the data_quality_engineer for this verification record, do you agree that \"Finding FB2-REV-FND-000042: 53 of the 245 green tests in the SIL host sweep assert nothing, so a headline pass count is not a coverage count - this is the live, larger form of the\u2026\" is a correct and complete statement of the measurable quality claims this corpus makes about its own numbers?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `accepted`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "ownership of the remainder",
+   "priority": 12,
+   "question": "For the part that is still open: is the named owner real, and is the named trigger for revisiting it real?",
+   "what_in_this_packet_bears_on_it": "resolution text in the record.",
+   "why_this_needs_a_human": "A deferred finding with no live trigger is indistinguishable from an abandoned one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-30T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "verification",
+  "created_at": "2026-09-30T00:00:00Z",
+  "disposition": "accepted",
+  "disposition_note": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "verification",
+  "evidence": "MEASURED by the harness's own instrument, not by inspection. docs/artifacts/.work/verification-env/sil/tools/find_vacuous_tests.py reads every test_*.c under tests/unit/ and classifies it; it runs nothing, so it cannot be perturbed by a concurrent build. Its output, archived at docs/artifacts/.work/verification-env/sil/logs/vacuous-final.json and written up at docs/artifacts/.work/verification-env/sil/VACUOUS-TESTS.md: 82 of the 313 test files are vacuous; 30 of those are build failures or excluded upstream and so inflate nothing today; of the green files, 53 assert nothing and 192 carry a real assertion; green-by-class is 3 files with no test case at all and 50 with test cases but no assertions. The comparison is stated in both directions and the unflattering number is the one this record leads with: the asserting count ROSE from 175 to 192 across the work, and the vacuous green count also rose from 47 to 53, because 6 of the 23 tests that newly went from build failure to pass are themselves vacuous. Bringing those up is real progress - they now compile, link and execute the product code - and it adds no assertion coverage, and quoting '23 tests fixed' without that qualifier would overstate the result.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000042",
+  "impact": "A pass count that includes files which assert nothing overstates coverage by a measured amount: of 245 green files, 192 carry a real assertion and 53 do not, so the headline number is 27 percent higher than the number of files that can fail. The direction of the error matters as much as its size - a reader who learns to quote the green count learns to quote a number that is wrong in the flattering direction, which is the direction nobody checks. The starkest single case is test_app-hl_notification.c: 20 test functions that call a notification entry point and assert nothing about what it did, with a 10-case bootloader twin. Those 30 cases do exercise the arity of the calls and the mock does verify the arguments, so the signatures are genuinely checked; no test asserts an effect. Quoting '30 tests pass' for them overstates what was established.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': raised by the finding-closure pass and verified by re-derivation from the live corpus. No human reviewer has confirmed this record and human_approval_status remains pending. This record makes no MISRA conformance claim, no tool-qualification claim, no certification claim and no ASPICE capability-level claim of any kind.",
+  "origin": "derived",
+  "owner_role": "data_quality_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "resolution": "ACKNOWLEDGED AND NOT CLOSED. No test was written and none should have been by this pass. For the 21 config-module files the module under test is a constant table with no functions - `grep -cE '^[a-zA-Z_].*\\(.*\\) *\\{'` over src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.c returns 0 - so a test could only assert structural invariants of a constant, and which of those are contractual and which are incidental to one AFE's wiring is a decision about intent that no mechanical derivation from the code can produce. Writing cases would be inventing the specification. For the DMA and state-estimation files the intended coverage is likewise not derivable from what is there.\n\nWHAT IS IN PLACE, and it is the part that does not need an owner's decision. The census is mechanical, reproducible and archived, so the number can be re-derived on demand rather than remembered. The harness's own write-up states the reading rule in the form that matters: the headline pass count must be read as 'tests whose harness verdict was green', never as 'tests that verify something', and any statement of the form 'N tests pass' that does not carry that qualifier overstates the result. This record exists so that the qualifier is attached at the corpus level and not only in a working note under .work/ that a future reader may never open.\n\nWHAT WOULD CLOSE IT, and every item needs a decision by someone who knows what the module is supposed to guarantee, followed by tests written against that decision. First, for each of the 53, decide whether a real test is wanted or whether the file is a placeholder that should be marked explicitly ignored so the sweep can tell 'empty on purpose' from 'empty and not marked as such' - Ceedling's TEST_IGNORE_MESSAGE would do it. Second, for test_app-hl_notification.c and its bootloader twin, decide whether the intent is signature and non-faulting entry - in which case the file should say so, because CMock's argument checks already establish that - or coverage of the notification bodies, in which case the 30 cases need assertions about what each one does. Third, and separately from the per-file decisions, the sweep's own reporting should carry the two counts side by side so that no reader can quote the green total without the asserting total beside it.\n\nA NOTE ON WHAT THIS IS NOT. This is a finding about the test corpus, not about the product. It is not evidence of a defect in foxBMS 2 source, and it is not a statement that 53 things are broken. It is a statement that 53 of the numbers a reader would most naturally quote do not mean what they appear to mean. The limit of the harness is unchanged by any of it: it mocks the HAL and verifies driver logic against upstream's own assertions, so it establishes nothing about register maps, timing, clocking, interrupts, DMA transfer, bus or electrical behaviour, or device identity. No human has confirmed this analysis; human approval of this record remains pending. No tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "date": "2026-09-30T00:00:00Z",
+   "method": "docs/artifacts/tests/audit_findings.py and docs/artifacts/tests/rule_scope_probe.py",
+   "raised_by": "finding-closure pass over the 38 pre-existing records"
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "New record raised by the finding-closure pass. It records a condition that pass discovered while re-deriving the conditions the 38 existing records assert, and that would otherwise have been lost - either because it was a rule defect that no record named, or because closing the record that did name its neighbourhood would have quietly carried it away with it. ACKNOWLEDGED AND NOT CLOSED. No test was written and none should have been by this pass. For the 21 config-module files the module under test is a constant table with no functions - `grep -cE '^[a-zA-Z_].*\\(.*\\) *\\{'` over src/app/driver/afe/nxp/mc33775a/config/nxp_mc33775a_cfg.c returns 0 - so a test could only assert structural invariants of a constant, and which of those are contractual and which are incidental to one AFE's wiring is a decision about intent that no mechanical derivation from the code can produce. Writing cases would be inventing the specification. For the DMA and state-estimation files the intended coverage is likewise not derivable from what is there. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "1"
+   }
+  ],
+  "root_cause": "The foxBMS 2 unit-test suite contains a large number of test files that build, link, run and exit zero without asserting anything: 21 config-module tests each holding a single empty testDummy, DMA and AFE-driver stubs, state-estimation placeholders, and three files with no test case at all. The corpus treats a green Ceedling verdict as a pass and counts it, so the sweep's pass count mixes files that verify something with files that cannot fail. The root cause is the same one this corpus has met three times in this pass - a count that measures the harness's verdict rather than the thing the count is named for - and it is the count a reader is most likely to quote.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "high",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit.",
+    "reference": "SUP.9",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The obligation to record rather than to conceal.",
+    "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Finding FB2-REV-FND-000042: 53 of the 245 green tests in the SIL host sweep assert nothing, so a headline pass count is not a coverage count - this is the live, larger form of the vacuity concern FB2-REV-FND-000037 raised about four tests",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "data_quality_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-FND-000042"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-FND-000042",
+  "revision": "1"
+ }
+}

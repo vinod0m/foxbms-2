@@ -1,0 +1,508 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SEC-000078",
+    "rationale": "The measure verifies FB2-SAF-SEC-000002 against that requirement's own acceptance criteria, with its oracle basis declared in its oracle_detail field. The link's direction is measure to requirement, which is the corpus's convention and the only direction under which the requirement can be seen as covered.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "verifies",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000017",
+    "target_id": "FB2-SAF-SEC-000002"
+   },
+   {
+    "link_id": "FB2-LNK-SEC-000079",
+    "rationale": "The measure also verifies the system requirement's interface half: the integrity and freshness of the item's external interface is what the requirement assumes and what this measure would exercise.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "verifies",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000017",
+    "target_id": "FB2-SYS-SYR-000007"
+   },
+   {
+    "link_id": "FB2-LNK-SEC-000080",
+    "rationale": "The measure also verifies the system requirement's service-link half, whose framing clause is the same interface the security requirement constrains from the other direction.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "verifies",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000017",
+    "target_id": "FB2-SYS-SYR-000008"
+   },
+   {
+    "link_id": "FB2-LNK-EXE-000095",
+    "rationale": "The execution record is the outcome of the named measure at the named revision. Both are blocked and neither claims a pass.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "result_of",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-EXE-000017",
+    "target_id": "FB2-VER-TMS-000017"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000162",
+    "rationale": "FB2-REV-000015 reviewed FB2-VER-TMS-000017 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artefact's content at review time; its scope field names ids_c, which is this set. SOURCE CORRECTED 2026-10-04: this link previously ran from FB2-REV-000013, whose reviewed_ids does not name this artefact and whose scope names a different, adjacent set (FB2-VER-TMS-000012..000015 and FB2-VER-EXE-000012..000015). The corpus-wide reviewed_id set was equal, so the weaker reviewed_by_agrees_with_records field stayed true and the defect was invisible to it; reviewed_by_attribution_agrees_per_review is the field that saw it. The prior source and the prior rationale are preserved in provenance_repair.source_endpoint_correction. Nothing else about the link changed. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artefact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000015",
+    "target_id": "FB2-VER-TMS-000017"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against test_measure.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000015",
+     "review_path": "docs/artifacts/reviews/records/review-security-verification-measures.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "cybersecurity_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-security-verification-measures.json",
+      "reviewed_by link FB2-LNK-REVB-000162 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_requirements[0]` names FB2-SAF-SEC-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000007 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_designs[0]` names FB2-SYS-SYR-000007."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.referenced_designs[1]` names FB2-SYS-SYR-000008."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C04-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SYS.5 with status `mapped` on the grounds: System qualification test: the security requirements are system-level work products and this is the measure that would qualify them."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.6 with status `mapped` on the grounds: Software qualification test: the measures exercise the master software's handling of the specified inputs."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C06-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 9 (system verification) with status `mapped` on the grounds: Verification of the system requirement as written, against its own acceptance criteria."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 ISO SAE 21434 relationship with status `mapped` on the grounds: Recorded as a relationship, not as a mapping. No ISO/SAE 21434 work product exists in this corpus and the corpus-local TARA FB2-SAF-TAR-000001 is machine-pinned to is_iso_21434_tara = false."
+  },
+  {
+   "claim_class": "verification_oracle",
+   "claim_id": "C08-oracle",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the criterion would actually FAIL if the property it names were violated. A criterion that cannot fail is the defect this corpus's own FB2-REV-FND-000042 is about.",
+   "machine_state": "count only; whether a criterion is decidable is not machine-checkable",
+   "statement": "This measure declares 0 acceptance criterion/criteria and method `not stated`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 10119,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/test-sec-000002-bounded-connection-admission.json",
+  "record_sha256": "94e031bbef94b7d008ccdefd6bd82b9dcc3a9f50466c183471bef13e1473710e",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "c5f5fcc1307b36f46e2fcf8d7c2d22eadb26b6e3e2df6de810b56f69599ff029"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Planned, not executed. Planning a security measure is not evidence that the requirement is satisfied, and the paired execution record carries execution_kind 'none' and outcome 'blocked' for that reason.",
+    "Not a penetration test. No exploit was developed, no advisory source was consulted and no vulnerability was scored. A requirement can pass every expected outcome here and still leave the item exploitable by a route this measure does not exercise.",
+    "The requirement verified here constrains a mechanism the hypothetical project has planned. Nothing in this corpus establishes that the mechanism exists.",
+    "No human security reviewer has confirmed this measure. Human approval is pending."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-TMS-000017.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the cybersecurity_engineer for this verification record, do you agree that \"Verification: a peer holding the maximum permitted connections open and silent does not deny service to legitimate peers\" is a correct and complete statement of cybersecurity requirements, attack surface, authentication and integrity verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "oracle strength",
+   "priority": 5,
+   "question": "This measure declares 0 acceptance criterion/criteria. For each, would the criterion actually FAIL if the property it names were violated?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria in section 3.",
+   "why_this_needs_a_human": "A test that cannot fail is indistinguishable from a passing test. This corpus measured 53 such files in its own suite and recorded it as FB2-REV-FND-000042."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "test_measure",
+  "assumption_refs": [
+   "FB2-ASM-011"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "cleanup": "Close all test sockets, confirm the service has returned to its steady state and archive the connection counter trace alongside the diagnosis log.",
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "VAR-REF-001 with the commissioning service enabled",
+   "hardware": "Hypothetical 400 V pack on a bench with a routable network segment",
+   "software": "BMS master firmware under test",
+   "tools": [
+    "Connection exhaustion harness",
+    "Traffic generator with a silent-connection mode"
+   ]
+  },
+  "expected_outcomes": [
+   {
+    "expected_value": "4",
+    "signal": "concurrent_connections_serviced",
+    "tolerance": "at most",
+    "unit": "connections"
+   },
+   {
+    "expected_value": "2000",
+    "signal": "receive_timeout",
+    "tolerance": "at most",
+    "unit": "ms"
+   },
+   {
+    "expected_value": "65536",
+    "signal": "per_connection_byte_budget",
+    "tolerance": "at most",
+    "unit": "bytes"
+   },
+   {
+    "expected_value": "100",
+    "signal": "breach_to_close_time",
+    "tolerance": "at most",
+    "unit": "ms"
+   },
+   {
+    "expected_value": "1",
+    "signal": "legitimate_connections_per_hour_under_exhaustion",
+    "tolerance": "at least",
+    "unit": "connections/hour"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-TMS-000017",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "Planned, not executed. Planning a security measure is not evidence that the requirement is satisfied, and the paired execution record carries execution_kind 'none' and outcome 'blocked' for that reason.",
+   "Not a penetration test. No exploit was developed, no advisory source was consulted and no vulnerability was scored. A requirement can pass every expected outcome here and still leave the item exploitable by a route this measure does not exercise.",
+   "The requirement verified here constrains a mechanism the hypothetical project has planned. Nothing in this corpus establishes that the mechanism exists.",
+   "No human security reviewer has confirmed this measure. Human approval is pending."
+  ],
+  "objective": "Confirm that a hostile peer cannot make the service unavailable to a legitimate peer by opening the maximum number of permitted connections and sending nothing on them, and that every refusal and every budget breach is diagnosable. This is the measure for the requirement's availability clause; the resource figures it checks are the requirement's own, not figures this measure chooses.",
+  "oracle_basis": "analytical_model",
+  "oracle_detail": {
+   "kind": "analytical_model",
+   "model_sensitivity": "Availability under exhaustion falls as C rises. At C = 4 with a 2000 ms timeout the worst case is that 4 of the pool are blocked for at most 2 s each. Raising C to 16 without shortening T would make a silent peer able to consume four times the blocked-time budget, which is why the requirement fixes both figures rather than one.",
+   "oracle_kind": "analytical_model",
+   "what_it_still_does_not_prove": "The model says nothing about a peer that stays within the caps and still consumes the service's CPU through a cheap request pattern, nor about a peer that opens and closes rapidly enough to churn through the cap. It also cannot prove the 'resources released' part of the breach criterion, which is a code-path property no external model reaches.",
+   "what_the_oracle_is_not": "It is not a measurement: no service was starved and nothing was timed. It is not a source-grounded oracle: the caps are engineering choices, not properties of a protocol, and the requirement carries them as proposals. It is not a synthetic assumption about the world, though it is an assumption about the implementation: the model holds only if the implementation actually enforces the caps rather than declaring them.",
+   "why_this_oracle": "The oracle is a resource model rather than an observation. A service with a hard cap C on concurrent connections and a finite receive timeout T cannot be starved by a peer that sends nothing: at most C connections can be blocked for at most T each, after which their resources are reclaimed, so the steady-state availability of the remaining capacity is a function of C and T and not of how long the hostile peer holds its sockets. The expected outcomes are the model's outputs - C, T, the byte budget and the breach-response time - each chosen so the model closes: 4 connections at a 2000 ms timeout bounds the blocked-time budget, and a 128 KiB burst exceeds the 65536-byte budget by a factor of two so the breach is unambiguous."
+  },
+  "origin": "synthetic",
+  "owner_role": "cybersecurity_engineer",
+  "preconditions": [
+   "The service under test implements the caps the requirement states.",
+   "The hostile peer can hold sockets open without sending data.",
+   "The legitimate peer behaves as a legitimate peer."
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "referenced_designs": [
+   "FB2-SYS-SYR-000007",
+   "FB2-SYS-SYR-000008"
+  ],
+  "referenced_requirements": [
+   "FB2-SAF-SEC-000002"
+  ],
+  "regression_selection": "Re-run on any change to the connection limit, the timeout, the buffer sizes or the accept loop. This is the measure that would catch the single-deep-queue and discarded-enqueue behaviour the requirement's rationale describes, so it is never sampled out.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Security verification measure authored because FB2-SAF-SEC-000002 had no verifies or validates link in either direction (findings FB2-REV-FND-000008..12) and contributed five of the validator's standing medium findings. The measure states its oracle basis explicitly and says which kind of oracle it is.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "security_verification_note": "This measure verifies the requirement as written against the item's observable behaviour. It does not establish that the threat it addresses is exploitable, and it is not a penetration test: no exploit was developed, no advisory was checked and no CVSS score was assigned to any finding.",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "System qualification test: the security requirements are system-level work products and this is the measure that would qualify them.",
+    "reference": "SYS.5",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Software qualification test: the measures exercise the master software's handling of the specified inputs.",
+    "reference": "SWE.6",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Verification of the system requirement as written, against its own acceptance criteria.",
+    "reference": "Part 4, Clause 9 (system verification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Recorded as a relationship, not as a mapping. No ISO/SAE 21434 work product exists in this corpus and the corpus-local TARA FB2-SAF-TAR-000001 is machine-pinned to is_iso_21434_tara = false.",
+    "reference": "ISO SAE 21434 relationship",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "steps": [
+   {
+    "action": "Open the permitted maximum of silent connections and hold them",
+    "expected": "The service accepts exactly the cap and refuses the next attempt",
+    "step": 1
+   },
+   {
+    "action": "Attempt a legitimate connection while the cap is held",
+    "expected": "The legitimate peer is served, or refused within a bounded time and diagnosed",
+    "step": 2
+   },
+   {
+    "action": "Burst 128 KiB on one held connection",
+    "expected": "The connection is closed within 100 ms of the breach and its resources are released",
+    "step": 3
+   },
+   {
+    "action": "Hold the cap open for 30 minutes",
+    "expected": "No service task is blocked indefinitely; the receive timeout fires within 2000 ms",
+    "step": 4
+   },
+   {
+    "action": "Run for 1 hour with the hostile peer active",
+    "expected": "At least 1 legitimate connection served per hour",
+    "step": 5
+   },
+   {
+    "action": "Review the diagnosis log",
+    "expected": "One entry per refusal and per detected breach",
+    "step": 6
+   }
+  ],
+  "stimuli": [
+   {
+    "signal": "Concurrent connections from a hostile peer",
+    "timing": "continuously",
+    "value": "one per second up to the permitted cap, then held open and silent"
+   },
+   {
+    "signal": "Legitimate peer connection attempts",
+    "timing": "1 Hz",
+    "value": "one per second throughout the exhaustion window"
+   },
+   {
+    "signal": "Per-connection payload",
+    "timing": "two phases",
+    "value": "nothing sent for 30 min, then a burst of 128 KiB"
+   },
+   {
+    "signal": "Admission attempts beyond the cap",
+    "timing": "1 Hz",
+    "value": "one per second"
+   }
+  ],
+  "test_type": "robustness",
+  "timing": {
+   "max_execution_time_ms": 86400000,
+   "setup_time_ms": 3600000,
+   "teardown_time_ms": 1800000
+  },
+  "title": "Verification: a peer holding the maximum permitted connections open and silent does not deny service to legitimate peers",
+  "tolerances": {
+   "breach_to_close_time": "at most",
+   "concurrent_connections_serviced": "at most",
+   "legitimate_connections_per_hour_under_exhaustion": "at least",
+   "per_connection_byte_budget": "at most",
+   "receive_timeout": "at most"
+  },
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "test_measure",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "cybersecurity_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-TMS-000017"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-TMS-000017",
+  "revision": "1"
+ }
+}

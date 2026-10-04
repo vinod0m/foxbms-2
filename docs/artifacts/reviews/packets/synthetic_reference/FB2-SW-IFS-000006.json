@@ -1,0 +1,782 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000199",
+    "rationale": "Reviewed by FB2-REV-000018, a profile-scoped domain review of all sixteen software_interface_specification records in this profile. The review read the record and checked every source citation it makes against the pinned foxBMS commit 308028fb by reading the blob rather than the working tree: 81 of 81 declared source_refs resolve, 61 of 61 element declaration lines and 60 of 61 element implementation lines carry the claimed symbol, and 572 of 572 in-record 'path Lnn[-Lmm]' prose ranges resolve in bounds. This endpoint's element lines were among those checked. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000018",
+    "target_id": "FB2-SW-IFS-000006"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against software_interface_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (10)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "10/10 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IFS-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000018",
+     "review_path": "docs/artifacts/reviews/records/review-software-interface-specifications.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-software-interface-specifications.json",
+      "reviewed_by link FB2-LNK-REVB-000199 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded: the @param event documentation gained DIAG_EVENT_NOT_EVALUATED. No signature or type changed.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000107, which records anchor class `repository_file`; path `src/app/engine/diag/diag.h`; line_range `105-121`; content_hash `a6914649558d88bd47e225c65568e7e592de00f57b946361d300cbf05f29899a`; symbol `DIAG_Handler`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the additive DIAG_EVENT_NOT_EVALUATED branch was added to DIAG_Handler. It is a distinct else-if appended after RESET; it holds state, writes no entry, invokes no callback, and cannot reach the OK, NOT_OK or RESET clearing paths. Proven by two mutation probes that routed it into RESET and into NOT_OK: each changed a test outcome.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000009, which records anchor class `repository_file`; path `src/app/engine/diag/diag.c`; line_range `341-475`; content_hash `06bae9dfd5935d777e81c5892fa31e72c78af6daaff66c8679ca86862f64a8fb`; symbol `DIAG_Handler`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000010, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_voltage.c`; line_range `72-194`; content_hash `7d99a10c434ce61182f441920fb659da41f17324e7b4a045d5d263d5748b7c72`; symbol `DIAG_ErrorOvervoltage`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000011, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_current.c`; line_range `72-305`; content_hash `94e6410f69d3caaeb46258a7fb31657aabbe13b033f7eeabd634bc8f48d40419`; symbol `DIAG_ErrorOvercurrentCharge`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000012, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_temperature.c`; line_range `73-217`; content_hash `79e3a12da1396d8a8efbe0355982a2ab1391a7a3c33f38b7cc79c11adffcd7b2`; symbol `DIAG_ErrorOvertemperatureCharge`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C06-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000013, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_contactor.c`; line_range `73-125`; content_hash `a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775`; symbol `DIAG_StringContactorFeedback`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C07-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000014, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_insulation.c`; line_range `72-113`; content_hash `594eec823344ec1ca4331c0bfc0da5fe980354e05bc4abd89493eafa0b20a574`; symbol `DIAG_Insulation`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C08-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000015, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_interlock.c`; line_range `73-88`; content_hash `644e87d6a400b5e273e2daf42f732f8fc450e107380fd11993100ec815897abc`; symbol `DIAG_ErrorInterlock`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C09-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000094, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.h`; line_range `94`; content_hash `ab0543a8ef7052d52e3e3acb6e4041fb9f2b3e5d658ed026a8a849d3dec65060`; symbol `FTSK_TASK_CYCLIC_1MS_CYCLE_TIME`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C10-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000096, which records anchor class `repository_file`; path `src/app/application/config/battery_system_cfg.h`; line_range `109`; content_hash `3a38542f4da1986bc1944cd7ce6eabbc38a044255c9273f8273e46f2940670b1`; symbol `BS_NR_OF_STRINGS`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000107 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000107."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000010 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000010."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000011 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000011."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000012."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[5]` names FB2-SRC-COD-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000014 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[6]` names FB2-SRC-COD-000014."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000015 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[7]` names FB2-SRC-COD-000015."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000094 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[8]` names FB2-SRC-COD-000094."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000096 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[9]` names FB2-SRC-COD-000096."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C21-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 (software architectural design - interface specification) with status `partially_mapped` on the grounds: Specifies the diagnosis boundary with the real signature, four separately-returned rejection reasons read off distinct source lines, and the threshold semantics that make an unreported error report as success."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C22-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Supplies an interface specification for the diagnosis boundary that the design records' signal tables did not."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C23-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Named as the specification the software interface requirements for the diagnostics boundary are derived from."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 24848,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-diag-diagnostics.json",
+  "record_sha256": "d705537b7a0eb481c53f6e3e34fd1636dbb83968b342fba7d53fe47e37e353ff",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "d705537b7a0eb481c53f6e3e34fd1636dbb83968b342fba7d53fe47e37e353ff"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IFS-000006.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Interface Specification: the diagnosis module's event-reporting interface\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis": {
+   "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+   "direction": "source_to_specification",
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "method": "source_analysis_at_pinned_commit",
+   "tools_used": [
+    "git show 308028fb:<path>",
+    "graft skeleton <file>"
+   ],
+   "what_this_record_is_not": [
+    "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+    "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+    "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+    "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+   ]
+  },
+  "artifact_type": "software_interface_specification",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "consuming_modules": [
+   {
+    "calls": [
+     "DIAG_Handler"
+    ],
+    "consumption_evidence": "DIAG_Handler(DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MOL, DIAG_EVENT_NOT_OK, DIAG_STRING, s) at src/app/application/soa/soa.c L90, and the same pattern for the undervoltage, temperature and current channels.",
+    "name": "SOA supervision module",
+    "source_path": "src/app/application/soa/soa.c"
+   },
+   {
+    "calls": [
+     "DIAG_Handler"
+    ],
+    "consumption_evidence": "DIAG_Handler(DIAG_ID_STRING_PLUS_CONTACTOR_FEEDBACK, feedbackStatus, DIAG_STRING, ...) at src/app/driver/contactor/contactor.c L138.",
+    "name": "Contactor driver",
+    "source_path": "src/app/driver/contactor/contactor.c"
+   },
+   {
+    "calls": [
+     "DIAG_UpdateFlags"
+    ],
+    "consumption_evidence": "DIAG_UpdateFlags() at src/app/task/config/ftask_cfg.c L250 on the 1 ms cycle; the implementation is declared at src/app/engine/config/diag_cfg.h L316 and defined at src/app/engine/config/diag_cfg.c L223.",
+    "name": "DIAG configuration module",
+    "source_path": "src/app/engine/config/diag_cfg.c"
+   },
+   {
+    "calls": [
+     "DIAG_Initialize"
+    ],
+    "consumption_evidence": "DIAG_Initialize(&diag_device) at src/app/main/main.c L118.",
+    "name": "Start-up sequence",
+    "source_path": "src/app/main/main.c"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "elements": [
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "All the consumers this record can see call it from task context, including the 10 ms supervision block at src/app/application/soa/soa.c L90 and the contactor feedback check at src/app/driver/contactor/contactor.c L138. No critical section or lock protects the module state this element mutates, and the source does not state that one is unnecessary.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "Every supervising module in the application and driver layers",
+    "declaration": "extern DIAG_RETURNTYPE_e DIAG_Handler(DIAG_ID_e diagId, DIAG_EVENT_e event, DIAG_IMPACT_LEVEL_e impact, uint32_t data);",
+    "declaration_line": 121,
+    "declaration_path": "src/app/engine/diag/diag.h",
+    "element_id": "IFSE-000501",
+    "error_paths": [
+     {
+      "condition": "The module is uninitialised.",
+      "evidence": "src/app/engine/diag/diag.c L351-L353",
+      "observed_behaviour": "Returns DIAG_HANDLER_RETURN_NOT_READY and does nothing else.",
+      "signalled_as": "DIAG_HANDLER_RETURN_NOT_READY"
+     },
+     {
+      "condition": "diagId is at or above DIAG_ID_MAX.",
+      "evidence": "src/app/engine/diag/diag.c L355-L357",
+      "observed_behaviour": "Returns DIAG_HANDLER_RETURN_WRONG_ID.",
+      "signalled_as": "DIAG_HANDLER_RETURN_WRONG_ID"
+     },
+     {
+      "condition": "impact is neither DIAG_SYSTEM nor DIAG_STRING.",
+      "evidence": "src/app/engine/diag/diag.c L359-L361",
+      "observed_behaviour": "Returns DIAG_HANDLER_INVALID_ERR_IMPACT.",
+      "signalled_as": "DIAG_HANDLER_INVALID_ERR_IMPACT"
+     },
+     {
+      "condition": "impact is DIAG_STRING and data is at or above BS_NR_OF_STRINGS.",
+      "evidence": "src/app/engine/diag/diag.c L363-L365",
+      "observed_behaviour": "Returns DIAG_HANDLER_INVALID_DATA.",
+      "signalled_as": "DIAG_HANDLER_INVALID_DATA"
+     },
+     {
+      "condition": "event is none of the three defined values.",
+      "evidence": "src/app/engine/diag/diag.c L342 initialises the variable; the branches at L384, L419 and L448 have no else.",
+      "observed_behaviour": "No branch runs, so the return variable keeps its initial value and DIAG_HANDLER_RETURN_UNKNOWN is returned.",
+      "signalled_as": "DIAG_HANDLER_RETURN_UNKNOWN"
+     },
+     {
+      "condition": "The event is NOT_OK and the channel's error-enable mask bit is clear.",
+      "evidence": "src/app/engine/diag/diag.c L443-L446",
+      "observed_behaviour": "The error flag bit is cleared, the warning flag bit is set, and DIAG_HANDLER_RETURN_WARNING_OCCURRED is returned: the same physical condition is reported as an error or a warning depending on configuration.",
+      "signalled_as": "DIAG_HANDLER_RETURN_WARNING_OCCURRED"
+     },
+     {
+      "condition": "The event is NOT_OK, the channel is enabled, and the occurrence counter is below the configured threshold.",
+      "evidence": "src/app/engine/diag/diag.c L421-L424, including the comment 'Function does not return an error-message!'",
+      "observed_behaviour": "The counter is incremented but DIAG_HANDLER_RETURN_OK is returned, with the source comment stating plainly that the function does not return an error message in this case.",
+      "signalled_as": "DIAG_HANDLER_RETURN_OK despite an error having occurred"
+     },
+     {
+      "condition": "The event is OK and the occurrence counter is 1.",
+      "evidence": "src/app/engine/diag/diag.c L394-L416",
+      "observed_behaviour": "The error and warning bits are cleared, the counter is zeroed, an entry is written, and if the channel is configured fatal a fatal error is cleared. The callback is invoked with DIAG_EVENT_RESET when evaluation is enabled.",
+      "signalled_as": "DIAG_HANDLER_RETURN_OK"
+     }
+    ],
+    "implementation_line": 341,
+    "implementation_path": "src/app/engine/diag/diag.c",
+    "not_specified_by_source": [
+     "The interface does not state whether an error that is still below its threshold has been recorded at all. The counter is incremented but the caller is told OK, and the source says so in a comment, so a caller cannot distinguish 'no error' from 'an error that has not yet reached its threshold'. This is the single most consequential thing the interface does not say.",
+     "The interface does not state the configured threshold, its unit, or where it comes from. It is read from the configuration table at src/app/engine/diag/diag.c L380, and the threshold itself is not a parameter of this interface.",
+     "The interface does not state whether the callback is invoked with this thread or another, and it is invoked synchronously inside this element at src/app/engine/diag/diag.c L409-L411 and L432-L434, so a callback that blocks delays every caller of the diagnosis module.",
+     "DIAG_HANDLER_INVALID_TYPE is declared by the return type and this record found no path that returns it, so a caller cannot rely on it and must not treat its absence as a configuration error.",
+     "The interface does not state the string index encoding: data is a plain uint32_t whose meaning depends on impact, and nothing at the interface says so."
+    ],
+    "parameters": [
+     {
+      "c_type": "DIAG_ID_e",
+      "direction": "in",
+      "meaning": "Which diagnosis channel the event belongs to.",
+      "name": "diagId",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "if (diagId >= DIAG_ID_MAX) { return DIAG_HANDLER_RETURN_WRONG_ID; } at src/app/engine/diag/diag.c L355-L357.",
+      "unit": "diagnosis identifier enumerator",
+      "valid_range": "diagId < DIAG_ID_MAX"
+     },
+     {
+      "c_type": "DIAG_EVENT_e",
+      "direction": "in",
+      "meaning": "What happened: OK, NOT_OK or RESET.",
+      "name": "event",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "The three branches are tested at src/app/engine/diag/diag.c L384, L419 and L448; no else branch assigns the return variable.",
+      "unit": "diagnosis event enumerator",
+      "valid_range": "Any of the three defined events. The source has no branch for any other value, and in that case the return variable keeps its initial DIAG_HANDLER_RETURN_UNKNOWN, which is how an unrecognised event surfaces."
+     },
+     {
+      "c_type": "DIAG_IMPACT_LEVEL_e",
+      "direction": "in",
+      "meaning": "Whether the event is system-wide or belongs to one string.",
+      "name": "impact",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "if (!((impact == DIAG_SYSTEM) || (DIAG_STRING))) { return DIAG_HANDLER_INVALID_ERR_IMPACT; } at src/app/engine/diag/diag.c L359-L361.",
+      "unit": "impact level enumerator",
+      "valid_range": "Either DIAG_SYSTEM or DIAG_STRING."
+     },
+     {
+      "c_type": "uint32_t",
+      "direction": "in",
+      "meaning": "Which string the event concerns. It is reinterpreted as a string index only when impact is DIAG_STRING.",
+      "name": "data",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "if ((impact == DIAG_STRING) && (data >= BS_NR_OF_STRINGS)) { return DIAG_HANDLER_INVALID_DATA; } at src/app/engine/diag/diag.c L363-L365. BS_NR_OF_STRINGS is (1u) at src/app/application/config/battery_system_cfg.h L109.",
+      "unit": "string index when impact is DIAG_STRING; otherwise ignored",
+      "valid_range": "data < BS_NR_OF_STRINGS, and only enforced when impact is DIAG_STRING."
+     }
+    ],
+    "providing_module": "DIAG module",
+    "return_contract": {
+     "c_type": "DIAG_RETURNTYPE_e",
+     "default_on_no_information": "DIAG_HANDLER_RETURN_UNKNOWN is the safe default: it is the value the return variable carries before any branch runs, so an unrecognised event yields 'unknown' rather than 'ok'. The one value with no reachable assignment is DIAG_HANDLER_INVALID_TYPE.",
+     "evidence": "The enum is declared at src/app/engine/diag/diag.h L67-L78. Each enumerator is written in full and each assignment is at the line given, so that no abbreviation in this record has to be resolved by the reader: DIAG_HANDLER_RETURN_NOT_READY at src/app/engine/diag/diag.c L353, DIAG_HANDLER_RETURN_WRONG_ID at L357, DIAG_HANDLER_INVALID_ERR_IMPACT at L361, DIAG_HANDLER_INVALID_DATA at L365, DIAG_HANDLER_RETURN_OK at L418 and L452, DIAG_HANDLER_RETURN_ERR_OCCURRED at L437 and L440, DIAG_HANDLER_RETURN_WARNING_OCCURRED at L446, and the initial DIAG_HANDLER_RETURN_UNKNOWN at L342.",
+     "values": {
+      "DIAG_HANDLER_INVALID_DATA": "The impact is DIAG_STRING and the string index is at or above BS_NR_OF_STRINGS.",
+      "DIAG_HANDLER_INVALID_ERR_IMPACT": "The impact is neither DIAG_SYSTEM nor DIAG_STRING.",
+      "DIAG_HANDLER_INVALID_TYPE": "Declared by the type; the source does not assign it on any path this record could find.",
+      "DIAG_HANDLER_RETURN_ERR_OCCURRED": "An error occurred, is enabled by the mask, and has reached or passed its configured threshold.",
+      "DIAG_HANDLER_RETURN_NOT_READY": "The module is still in its uninitialised state.",
+      "DIAG_HANDLER_RETURN_OK": "Either the event was OK, or a NOT_OK event occurred below its configured threshold, so no error was reported.",
+      "DIAG_HANDLER_RETURN_UNKNOWN": "The initial value of the return variable. Reachable if the event is none of DIAG_EVENT_OK, DIAG_EVENT_NOT_OK or DIAG_EVENT_RESET, because no branch assigns it.",
+      "DIAG_HANDLER_RETURN_WARNING_OCCURRED": "An error occurred but is not enabled by the mask, so it is recorded as a warning rather than an error.",
+      "DIAG_HANDLER_RETURN_WRONG_ID": "The supplied diagnosis id is at or above DIAG_ID_MAX."
+     }
+    },
+    "symbol": "DIAG_Handler",
+    "timing": {
+     "evidence": "The module's own flag update runs on the 1 ms cycle: DIAG_UpdateFlags() at src/app/task/config/ftask_cfg.c L250 in FTSK_RunUserCodeCyclic1ms, whose cycle time is FTSK_TASK_CYCLIC_1MS_CYCLE_TIME (1u) at src/app/task/config/ftask_cfg.h L94. DIAG_Handler itself is event-driven and has no period of its own; its callers run on the 1 ms or the 10 ms cycle.",
+     "period_imposed_by_source": true,
+     "period_ms": 1
+    },
+    "validity_signalling": {
+     "evidence": "Five distinct rejection and outcome codes are returned, each on its own path: src/app/engine/diag/diag.c L342, L353, L357, L361, L365, L418, L437, L440, L446 and L452.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value DIAG_RETURNTYPE_e, with a distinct code per rejection reason."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Task-level convenience wrapper; no interrupt context reaches it in the source this record examined.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "Callers that only need a yes/no answer",
+    "declaration": "extern STD_RETURN_TYPE_e DIAG_CheckEvent(STD_RETURN_TYPE_e cond, DIAG_ID_e diagId, DIAG_IMPACT_LEVEL_e impact, uint32_t data);",
+    "declaration_line": 137,
+    "declaration_path": "src/app/engine/diag/diag.h",
+    "element_id": "IFSE-000502",
+    "error_paths": [
+     {
+      "condition": "The wrapped DIAG_Handler rejects the call for any of its five reasons.",
+      "evidence": "The documented purpose at src/app/engine/diag/diag.h L123-L136 and the two-value return type.",
+      "observed_behaviour": "This element does not forward the rejection code. The header documents it as a simplification to a two-value result, so a wrong id or a not-ready module is indistinguishable here from a normal evaluation.",
+      "signalled_as": "collapsed to STD_OK or STD_NOT_OK"
+     }
+    ],
+    "implementation_line": 477,
+    "implementation_path": "src/app/engine/diag/diag.c",
+    "not_specified_by_source": [
+     "The interface does not document how the wrapped element's rejection codes are mapped onto its own two return values. A caller cannot tell a configuration error from a genuine condition failure.",
+     "The interface inherits every unspecified behaviour of the element it wraps, including the threshold semantics that make an error report as OK.",
+     "The interface does not state whether the callback configured for the channel is invoked. It is, by the wrapped element, and that is not mentioned here."
+    ],
+    "parameters": [
+     {
+      "c_type": "STD_RETURN_TYPE_e",
+      "direction": "in",
+      "meaning": "The condition to report. STD_OK is reported as an OK event; anything else is reported as NOT_OK.",
+      "name": "cond",
+      "nullable": false,
+      "range_enforcement": "not_enforced",
+      "range_evidence": "The body branches on cond == STD_OK at src/app/engine/diag/diag.c L479.",
+      "unit": "the caller's own success or failure",
+      "valid_range": "STD_OK or STD_NOT_OK."
+     },
+     {
+      "c_type": "DIAG_ID_e",
+      "direction": "in",
+      "meaning": "Which diagnosis channel to use.",
+      "name": "diagId",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "Enforced by the wrapped DIAG_Handler rather than by this element.",
+      "unit": "diagnosis identifier enumerator",
+      "valid_range": "diagId < DIAG_ID_MAX."
+     },
+     {
+      "c_type": "DIAG_IMPACT_LEVEL_e",
+      "direction": "in",
+      "meaning": "Whether the event is system-wide or per string.",
+      "name": "impact",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "Enforced by the wrapped DIAG_Handler rather than by this element.",
+      "unit": "impact level enumerator",
+      "valid_range": "Either DIAG_SYSTEM or DIAG_STRING."
+     },
+     {
+      "c_type": "uint32_t",
+      "direction": "in",
+      "meaning": "Which string the event concerns.",
+      "name": "data",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "Enforced by the wrapped DIAG_Handler rather than by this element.",
+      "unit": "string index when impact is DIAG_STRING",
+      "valid_range": "data < BS_NR_OF_STRINGS when impact is DIAG_STRING."
+     }
+    ],
+    "providing_module": "DIAG module",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "The element collapses the wrapped element's nine return codes into two. A caller of this element cannot see a wrong id, a bad impact, bad data or a not-ready module; those are all reported as whatever this element chooses, and the source does not document that mapping.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85; the definition is at src/app/engine/diag/diag.c L477.",
+     "values": {
+      "STD_NOT_OK": "cond was not OK and the event reached its threshold.",
+      "STD_OK": "cond was STD_OK, or cond was not OK and the event did not reach its threshold."
+     }
+    },
+    "symbol": "DIAG_CheckEvent",
+    "timing": {
+     "evidence": "Event-driven; it has no period of its own and is called where its caller evaluates a condition.",
+     "period_imposed_by_source": false,
+     "period_ms": null
+    },
+    "validity_signalling": {
+     "evidence": "The element is documented in the header as a wrapper that reduces the interface to a pass/fail test, at src/app/engine/diag/diag.h L123-L137, and it returns STD_RETURN_TYPE_e, not DIAG_RETURNTYPE_e.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value STD_RETURN_TYPE_e only. The wrapped element's detailed codes are discarded."
+    }
+   }
+  ],
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IFS-000006",
+  "interface_class": "diagnostics",
+  "interface_id": "IFS-DIAGNOS-000006",
+  "interface_level_gaps": [
+   {
+    "consequence": "The interface cannot be used by a caller that needs to know whether a fault is present, only whether it has reached its debounce count. Any requirement that a supervision module shall report a violated limit is unsatisfiable through this return value and must be written against the module's stored state instead.",
+    "evidence": "src/app/engine/diag/diag.c L421-L424 increments the occurrence counter and returns DIAG_HANDLER_RETURN_OK, with the source comment stating that the function does not return an error message in this case.",
+    "gap": "An error below its configured threshold is reported to the caller as success."
+   },
+   {
+    "consequence": "The severity a caller observes is not a property of the interface but of configuration, and nothing at the interface lets a caller discover which. This record does not claim it is a defect; it records that the interface does not determine the severity.",
+    "evidence": "src/app/engine/diag/diag.c L443-L446 clears the error bit, sets the warning bit and returns DIAG_HANDLER_RETURN_WARNING_OCCURRED when the channel's enable-mask bit is clear.",
+    "gap": "The same physical condition is reported as an error or as a warning depending on a configuration mask the interface does not expose."
+   },
+   {
+    "consequence": "DIAG_HANDLER_INVALID_TYPE is part of the interface's type but not of its behaviour, so a caller cannot treat it as a signal and a configuration fault in that dimension would be silent.",
+    "evidence": "Declared at src/app/engine/diag/diag.h L75. This record traced every assignment of the return variable in the implementation at src/app/engine/diag/diag.c L341-L474 and found no path that returns it.",
+    "gap": "One of the nine declared return codes has no reachable assignment."
+   },
+   {
+    "consequence": "The interface is called from the 10 ms supervision task and from the contactor driver, and from at least one asynchronous CAN transmit context elsewhere in the driver layer. Nothing here states that those callers are mutually excluded, so the interface's re-entrancy contract is simply absent.",
+    "evidence": "The element reads and writes the module's error, warning and occurrence arrays at src/app/engine/diag/diag.c L378-L382 with no critical section, mutex or lock in the element or in its callers.",
+    "gap": "No protection and no stated concurrency rule for the module state this element mutates."
+   },
+   {
+    "consequence": "A callback that blocks delays every caller of the diagnosis module, which is a latency path into the 1 ms and 10 ms cycles that no interface statement discloses.",
+    "evidence": "fpCallback is invoked inside DIAG_Handler at src/app/engine/diag/diag.c L409-L411 and L432-L434.",
+    "gap": "The configured callback is invoked synchronously inside the reporting call and the interface does not say so."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "providing_module": {
+   "name": "DIAG module",
+   "role": "Aggregates events from every supervising module, debounces them against per-channel configured thresholds, records them, raises fatal errors, and invokes a per-channel callback.",
+   "source_paths": [
+    "src/app/engine/diag/diag.h",
+    "src/app/engine/diag/diag.c"
+   ]
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Two elements of the diagnosis interface, chosen because between them they carry every supervising module in this corpus: SOA_CheckVoltages and CONT_CheckFeedback both reach the system through DIAG_Handler. Eight of its nine return codes are given distinct meanings, each traced to the source line that assigns it, and the one that has no assignment is recorded as such rather than described as a configuration-error signal.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000107",
+   "FB2-SRC-COD-000009",
+   "FB2-SRC-COD-000010",
+   "FB2-SRC-COD-000011",
+   "FB2-SRC-COD-000012",
+   "FB2-SRC-COD-000013",
+   "FB2-SRC-COD-000014",
+   "FB2-SRC-COD-000015",
+   "FB2-SRC-COD-000094",
+   "FB2-SRC-COD-000096"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Specifies the diagnosis boundary with the real signature, four separately-returned rejection reasons read off distinct source lines, and the threshold semantics that make an unreported error report as success.",
+    "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies an interface specification for the diagnosis boundary that the design records' signal tables did not.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Named as the specification the software interface requirements for the diagnostics boundary are derived from.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Interface Specification: the diagnosis module's event-reporting interface",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_status": {
+   "analysed_against_running_code": false,
+   "conformance_tested": false,
+   "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IFS-000006"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IFS-000006",
+  "revision": "1"
+ }
+}

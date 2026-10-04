@@ -1,0 +1,584 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-LIF-000099",
+    "rationale": "The release identification record depends on the safe-state requirement because the end-of-line station's safe-state test is the only check of it that happens after the line, and the release cannot be identified without knowing which reaction it verifies.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-REL-RLS-000001",
+    "target_id": "FB2-SYS-SYR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000147",
+    "rationale": "FB2-REV-000014 reviewed FB2-REL-RLS-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-REL-RLS-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against post_development_record.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (1)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "0/1 fully checked; see claims"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000147 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "anchor resolves in the registry but claims nothing checkable in this repository: names a fetched URL, not a file in this tree; its content_hash pins one retrieval and cannot be re-checked here The registry's own note on this hash: \"sha256 of the HTML response body fetched over HTTPS on 2026-10-01 (HTTP 200) from the url_or_path recorded here; section anchor \"design-resources\" verified present in the body. The URL is a moving \"latest\" target, so this hash pins the retrieval, not a stable artefact.\"",
+   "statement": "This record cites anchor FB2-SRC-DOC-000002, which records anchor class `fetched_url`; url_or_path `https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/hardware/design-resources.html`; content_hash `b6b09f7d2ba2254bc1a43e06019faf299260532c731a77bc41655ae96daf9979`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-DOC-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-DOC-000002."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SPL.2 with status `mapped` on the grounds: Release management: what is released, identified and how it is described."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C04-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 7, Clause 9 (configuration management and release) with status `mapped` on the grounds: The identification of a released configuration and its records."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 7, Clause 11 (release and production after development) with status `mapped` on the grounds: The activities this record identifies. Recorded as mapped for the activity identity only; no clause text is reproduced."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 15412,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/release/release-configuration-identification.json",
+  "record_sha256": "9b656e4ab1231ffd4166472c682d91d8d7e9e8d4e07f3352a119ca66db64bfec",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "0bd246aa21be5a20f57c383996933770ef0c373af8352138e66bc1ccc86d40b2"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic. The release described has not occurred and no item exists to release.",
+    "The identification scheme is described and not demonstrated. No readback has been performed and no string has been resolved.",
+    "The real foxBMS source demonstrates a release version history (docs/general/releases.csv), and that history is the only real basis for any release process claim. It is a version history, not a release plan or a release checklist, and this record does not claim the real project performs any of these steps.",
+    "The release checklist in step 5 requires a safety case review record. The corpus has one, and it is a skeleton with no evidence behind it, so on this corpus's own terms the release checklist could not be completed."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. No release has been made."
+  },
+  {
+   "field": "scope",
+   "value": {
+    "in_scope": [
+     "Software configuration: application, bootloader and the commissioning tool",
+     "Hardware: board revision and the component set fitted to it",
+     "Data: the safe-operating-area limit set and the calibration data",
+     "Documentation: the set of documents shipped with the release"
+    ],
+    "out_of_scope": [
+     "The pack, which is configured and identified by the pack integrator against this item, not by this item's release",
+     "The vehicle, which has its own configuration identification",
+     "Any statement that the released configuration is safe: this record identifies a configuration, it does not qualify one"
+    ]
+   }
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REL-RLS-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this release record, do you agree that \"Release and configuration identification for the hypothetical 400 V BMS\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "unverifiable provenance",
+   "priority": 25,
+   "question": "1 of this record's source anchors cannot be checked against this repository. Does the claim still hold, on evidence outside the corpus?",
+   "what_in_this_packet_bears_on_it": "The anchors' entries in the claims section.",
+   "why_this_needs_a_human": "The corpus declines to make a statement it cannot support. Whether the claim is nonetheless true is a human question."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Identification uniqueness",
+    "measure": "Distinct released configurations sharing an identification string",
+    "threshold": "0",
+    "unit": "configurations"
+   },
+   {
+    "criterion": "Identification readback",
+    "measure": "Identification strings readable from the delivered item",
+    "threshold": "100",
+    "unit": "% of items"
+   },
+   {
+    "criterion": "Limit traceability",
+    "measure": "Released limit values resolving to a canonical parameter id",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Checklist completeness",
+    "measure": "Release checklist fields populated before the release decision",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Unverified-verification disclosure",
+    "measure": "Release notes naming every unexecuted verification and its reason",
+    "threshold": "100",
+    "unit": "% of unexecuted verifications"
+   }
+  ],
+  "artifact_type": "post_development_record",
+  "assumption_refs": [
+   "FB2-ASM-012"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "calendar_note": "Every date in this record is synthetic and belongs to the hypothetical Project Northcell. No organisation, plant, vehicle, technician or recycler named here exists.",
+  "configuration_identification": {
+   "baseline_id": "BAS-REF-001",
+   "configuration_items": [
+    {
+     "how_the_identifier_is_established": "Computed over the built artefact at the release build, recorded in the build identity record",
+     "identifier": "Content hash of the built application image",
+     "item": "Application firmware",
+     "recorded_on": "The release record and the item's non-volatile memory"
+    },
+    {
+     "how_the_identifier_is_established": "Computed the same way as the application",
+     "identifier": "Content hash of the built bootloader image",
+     "item": "Bootloader",
+     "recorded_on": "The release record and the item's non-volatile memory"
+    },
+    {
+     "how_the_identifier_is_established": "Computed over the distributed archive",
+     "identifier": "Content hash of the tool distribution",
+     "item": "Commissioning tool",
+     "recorded_on": "The release record"
+    },
+    {
+     "how_the_identifier_is_established": "Physical marking plus the hardware configuration record",
+     "identifier": "Board revision identifier printed on the board",
+     "item": "BMS master board",
+     "recorded_on": "The board and the release record"
+    },
+    {
+     "how_the_identifier_is_established": "Part marking plus the hardware configuration record",
+     "identifier": "Front-end part number and slave hardware revision",
+     "item": "Monitoring slaves",
+     "recorded_on": "Each slave and the release record"
+    },
+    {
+     "how_the_identifier_is_established": "Resolved from the canonical parameter registry, never retyped",
+     "identifier": "The set of canonical parameter ids and values",
+     "item": "Safe operating area limit set",
+     "recorded_on": "The release record and the item's non-volatile memory"
+    },
+    {
+     "how_the_identifier_is_established": "Resolved from the canonical parameter registry",
+     "identifier": "The set of canonical parameter ids and values",
+     "item": "Calibration data",
+     "recorded_on": "The release record and the item's non-volatile memory"
+    }
+   ],
+   "identification_scheme": "One identification string per released configuration, formed from the content hashes of the software items and the canonical identifiers of the hardware and data items. The string is written to the item's non-volatile memory at the end of the line and read back before the item is allowed to leave. A readback that does not resolve to exactly one configuration is a line stop. In this corpus the scheme is described and nothing has been written or read: no item exists."
+  },
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "release",
+  "evidence_state": {
+   "any_step_executed": false,
+   "executed_steps": [],
+   "reason": "No production line, vehicle, charging site, workshop, fleet or recycling facility exists anywhere in this corpus. Master-prompt clause 2.5 forbids energising hardware and connecting to vehicles, so no step below can be performed by any means available here. The record documents the procedure and records that it has not been run."
+  },
+  "fictional_project": true,
+  "human_approval_status": "pending",
+  "id": "FB2-REL-RLS-000001",
+  "interactions_with_other_lifecycle_areas": [
+   {
+    "consequence_if_the_interaction_is_broken": "An item ships with an identification nobody verified, which is the failure the readback step exists to prevent.",
+    "direction": "this_area_provides_to_other",
+    "interaction": "The identification is written and read back on the production line",
+    "other_area": "Production control and end-of-line test"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "An item is identified as one configuration and programmed as another, and the identification becomes actively misleading.",
+    "direction": "mutual",
+    "interaction": "The calibration record is part of the configuration identification",
+    "other_area": "Calibration and programming"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "A service action is performed against a configuration the technician did not know was fitted.",
+    "direction": "this_area_provides_to_other",
+    "interaction": "The service class reads the identification to determine what is fitted",
+    "other_area": "Installation, operation and service"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "A field event cannot be attributed to a configuration and the event analysis produces a trend that mixes configurations.",
+    "direction": "this_area_provides_to_other",
+    "interaction": "Field data is keyed by the identification string",
+    "other_area": "Field monitoring and incident handling"
+   }
+  ],
+  "lifecycle_area": "release_and_configuration_identification",
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. No release has been made.",
+  "limitations": [
+   "Synthetic. The release described has not occurred and no item exists to release.",
+   "The identification scheme is described and not demonstrated. No readback has been performed and no string has been resolved.",
+   "The real foxBMS source demonstrates a release version history (docs/general/releases.csv), and that history is the only real basis for any release process claim. It is a version history, not a release plan or a release checklist, and this record does not claim the real project performs any of these steps.",
+   "The release checklist in step 5 requires a safety case review record. The corpus has one, and it is a skeleton with no evidence behind it, so on this corpus's own terms the release checklist could not be completed."
+  ],
+  "operational_authorisation_statement": "This record is a fictional engineering artefact. It is NOT an authorised release procedure, it grants no production authority, and no step in it has been performed. The release it describes has not happened. production_authorized is false and human_approval_status is pending on every record it would release.",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "post_development_id": "FB2-REL-RLS-000001",
+  "procedures": [
+   {
+    "acceptance_condition": "The recorded hash matches the hash of the artefact that will be shipped, and the build is reproducible from the recorded configuration",
+    "action": "Freeze the software build and record its content hash, its build configuration and its compiler and linker versions",
+    "decision_point": "The build is declared reproducible or it is not released",
+    "record_produced": "Build identity record",
+    "step": 1,
+    "synthetic_decision": "synthetic_decision:sw_engineer:SYNTH-REL-STEP-001"
+   },
+   {
+    "acceptance_condition": "Every component on a safety-relevant path is named with its part number and its variant eligibility",
+    "action": "Record the hardware configuration: board revision, the fitted component set and any component substitutions permitted for this variant",
+    "decision_point": "Whether a proposed substitution is eligible",
+    "record_produced": "Hardware configuration record",
+    "step": 2,
+    "synthetic_decision": "synthetic_decision:hw_engineer:SYNTH-REL-STEP-002"
+   },
+   {
+    "acceptance_condition": "Every limit value resolves to a parameter in the canonical parameter registry and no value appears here that does not",
+    "action": "Record the data configuration: the safe-operating-area limit set, the sensor tables and the calibration values, each with the parameter id that owns it",
+    "decision_point": "Whether the limit set may differ from the baselined set",
+    "record_produced": "Data configuration record",
+    "step": 3,
+    "synthetic_decision": "synthetic_decision:safety_engineer:SYNTH-REL-STEP-003"
+   },
+   {
+    "acceptance_condition": "The string on the item can be read back and resolves to exactly one configuration",
+    "action": "Generate the configuration identification string from the content of steps 1 to 3 and record it on the physical item and in the non-volatile memory",
+    "decision_point": "Whether the item may ship with an identification that cannot be read back",
+    "record_produced": "Configuration identification record",
+    "step": 4,
+    "synthetic_decision": "synthetic_decision:quality_engineer:SYNTH-REL-STEP-004"
+   },
+   {
+    "acceptance_condition": "No critical or high finding is open against any released record, and every unexecuted verification is named with the reason it is unexecuted",
+    "action": "Complete the release checklist: verification status of every requirement, open finding count by severity, change records included, and the safety case review record",
+    "decision_point": "Whether the release proceeds with unexecuted verification",
+    "record_produced": "Release checklist record",
+    "step": 5,
+    "synthetic_decision": "synthetic_decision:project_manager:SYNTH-REL-STEP-005"
+   },
+   {
+    "acceptance_condition": "The 'what was not and why' section is populated and is not empty; a release note that lists only successes is a marketing document",
+    "action": "Publish the release notes stating what changed, what was re-verified, what was not and why, and what a recipient must do differently",
+    "record_produced": "Release notes",
+    "step": 6
+   }
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "purpose": "Establish what a release of this item is, how that release is identified unambiguously, and what a recipient must be able to determine from the identification alone. A release that cannot be identified cannot be recalled, and an item whose configuration cannot be recalled cannot be serviced.",
+  "records_produced": [
+   {
+    "identification_rule": "Content hash of the built artefacts plus the build configuration identifier",
+    "kind": "record",
+    "record": "Build identity record",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Board revision and fitted component set",
+    "kind": "record",
+    "record": "Hardware configuration record",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Parameter id and value for every limit and calibration entry",
+    "kind": "record",
+    "record": "Data configuration record",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Identification string read back from the item's non-volatile memory",
+    "kind": "identification_record",
+    "record": "Configuration identification record",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Checklist version, completion state and the identity of each approver role",
+    "kind": "certificate",
+    "record": "Release checklist record",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Release identification string and the release date",
+    "kind": "report",
+    "record": "Release notes",
+    "retention": "permanent"
+   }
+  ],
+  "responsible_roles": [
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: project_manager (release manager, fictional)",
+    "responsibility": "Owns the release decision and the release record",
+    "role": "project_manager"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: traceability_engineer (configuration controller, fictional)",
+    "responsibility": "Produces the content manifest and the identification string",
+    "role": "traceability_engineer"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: quality_engineer (release auditor, fictional)",
+    "responsibility": "Confirms that the release checklist in this record is complete",
+    "role": "quality_engineer"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: sw_engineer (software owner, fictional)",
+    "responsibility": "Confirms the software build identity",
+    "role": "sw_engineer"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: hw_engineer (hardware owner, fictional)",
+    "responsibility": "Confirms the board revision and component set",
+    "role": "hw_engineer"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Release and configuration identification record. Authored because the generated lifecycle-continuation view reported release and configuration identification as a coverage gap with zero records, and the coverage plan recorded SPL.2 as only partially mapped on the strength of the real project's version history.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope": {
+   "in_scope": [
+    "Software configuration: application, bootloader and the commissioning tool",
+    "Hardware: board revision and the component set fitted to it",
+    "Data: the safe-operating-area limit set and the calibration data",
+    "Documentation: the set of documents shipped with the release"
+   ],
+   "out_of_scope": [
+    "The pack, which is configured and identified by the pack integrator against this item, not by this item's release",
+    "The vehicle, which has its own configuration identification",
+    "Any statement that the released configuration is safe: this record identifies a configuration, it does not qualify one"
+   ]
+  },
+  "source_refs": [
+   "FB2-SRC-DOC-000002"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Release management: what is released, identified and how it is described.",
+    "reference": "SPL.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The identification of a released configuration and its records.",
+    "reference": "Part 7, Clause 9 (configuration management and release)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The activities this record identifies. Recorded as mapped for the activity identity only; no clause text is reproduced.",
+    "reference": "Part 7, Clause 11 (release and production after development)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Release and configuration identification for the hypothetical 400 V BMS",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "post_development_record",
+  "engineering_domain": "release",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REL-RLS-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REL-RLS-000001",
+  "revision": "1"
+ }
+}

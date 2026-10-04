@@ -1,0 +1,549 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SIR-000033",
+    "rationale": "Element requirement G obliges the supervisor trigger that FB2-SW-IFS-000015 specifies, and rests on that specification's finding that the watchdog refresh discards its own result. Direction is specification to requirement.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000015"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000208",
+    "rationale": "Reviewed by FB2-REV-000018, a profile-scoped domain review of all sixteen software_interface_specification records in this profile. The review read the record and checked every source citation it makes against the pinned foxBMS commit 308028fb by reading the blob rather than the working tree: 81 of 81 declared source_refs resolve, 61 of 61 element declaration lines and 60 of 61 element implementation lines carry the claimed symbol, and 572 of 572 in-record 'path Lnn[-Lmm]' prose ranges resolve in bounds. This endpoint's element lines were among those checked. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000018",
+    "target_id": "FB2-SW-IFS-000015"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against software_interface_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (1)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "1/1 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IFS-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000018",
+     "review_path": "docs/artifacts/reviews/records/review-software-interface-specifications.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-software-interface-specifications.json",
+      "reviewed_by link FB2-LNK-REVB-000208 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000027, which records anchor class `repository_file`; path `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`; line_range `160-182`; content_hash `159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec`; symbol `FS8x_WD_Refresh`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000027."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Backs SWE.2 with a real interface specification: providing and consuming module, the real C signature transcribed from the header at 308028fb, per-parameter direction, unit, meaning and valid range with the mechanism that enforces it, a return contract whose values are the enumerators the source defines, validity signalling read off the real error paths, timing where the source imposes one, concurrency, and a required not_specified_by_source list. Three elements over the SBC supervisor, a multi-instance state machine with a void watchdog-driving trigger. The status stays partially_mapped: the whole family remains a reconstruction of an existing implementation rather than the product of an architectural design activity, and Component Design remains absent."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 18561,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-sbc-supervisor.json",
+  "record_sha256": "3a0a79159617ad93ddf60a3644b5273945989ffe4e3b3aee6558b1136a1ea1b5",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "61298c8f719bf5b9123bbb04ef842100dd9ce3ba20065ff889eb3fc94c617043"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IFS-000015.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Interface Specification: the system-power-controller supervisor interface\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis": {
+   "commit": "308028fb",
+   "direction": "source_to_specification",
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+   "method": "source_analysis_at_pinned_commit",
+   "tools_used": [
+    "graft skeleton",
+    "graft callers",
+    "git show 308028fb:<path>"
+   ],
+   "what_this_record_is_not": [
+    "Not a requirement. It records what the source does, not what it ought to do.",
+    "Not evidence that any check fires at run time; nothing here was executed.",
+    "Not an interface agreement; no consuming module has signed this."
+   ]
+  },
+  "artifact_type": "software_interface_specification",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at commit 308028fb. Reproducible, not independent: no software engineer has reviewed this record, no requirement author has confirmed that these are the obligations anyone intends, and no interface agreement exists with any consuming module. An AI-authored artefact is not independent evidence and this one carries no approval of any kind.",
+   "interface_agreement_status": "none - no consuming module has agreed this interface"
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "consuming_modules": [
+   {
+    "calls": [
+     "SBC_Trigger",
+     "SBC_GetState",
+     "SBC_SetStateRequest"
+    ],
+    "consumption_evidence": "SBC_Trigger(&sbc_stateMcuSupervisor) is called from FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L269, in the same function as ADC_Control at L264 and SPS_Ctrl at L265. The header names the 10 ms task at src/app/driver/sbc/sbc.h L70 and the cycle context is defined as 10u at src/app/driver/sbc/sbc.h L78.",
+    "name": "The 10 ms cyclic task",
+    "source_path": "src/app/task/config/ftask_cfg.c"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "elements": [
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from the 10 ms cyclic task. The re-entrance and timer guards are inside the function, and the request write in SBC_SetStateRequest is inside a task critical section.",
+     "protection_mechanism": "re-entrance flag and a down-counting timer",
+     "reentrancy": "guarded_by_critical_section"
+    },
+    "consuming_module": "The 10 ms cyclic task",
+    "declaration": "extern void SBC_Trigger(SBC_STATE_s *pInstance);",
+    "declaration_line": 215,
+    "declaration_path": "src/app/driver/sbc/sbc.h",
+    "element_id": "IFSE-001501",
+    "error_paths": [
+     {
+      "condition": "re-entrance detected",
+      "evidence": "src/app/driver/sbc/sbc.c L273-L274.",
+      "observed_behaviour": "Returns immediately without advancing the state machine."
+     },
+     {
+      "condition": "the state timer has not elapsed",
+      "evidence": "src/app/driver/sbc/sbc.c L283-L286.",
+      "observed_behaviour": "Decrements the timer and returns without handling the state machine this cycle."
+     }
+    ],
+    "implementation_line": 267,
+    "implementation_path": "src/app/driver/sbc/sbc.c",
+    "not_specified_by_source": [
+     "The interface does not state whether the device watchdog was refreshed on this call, even though refreshing it is the safety-relevant effect and the return value is void.",
+     "The re-entrance and timer guards skip silently, so a persistently deferred supervisor is not observable through this interface.",
+     "The header does not state which device the watchdog refresh reaches, only that it happens if the watchdog state is activated, at src/app/driver/sbc/sbc.c L278."
+    ],
+    "parameters": [
+     {
+      "c_type": "SBC_STATE_s *",
+      "direction": "in_out",
+      "meaning": "Which SBC instance to advance. The driver is written as a multi-instance state machine, and this pointer selects the one.",
+      "name": "pInstance",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pInstance != NULL_PTR) at src/app/driver/sbc/sbc.c L268.",
+      "unit": "instance state (dimensionless)",
+      "valid_range": "Non-null."
+     }
+    ],
+    "providing_module": "SBC driver",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "A void periodic entry point for a device whose watchdog is safety-relevant gives the caller no way to learn whether the watchdog was refreshed or the state machine advanced.",
+     "evidence": "src/app/driver/sbc/sbc.h L215 declares void; src/app/driver/sbc/sbc.c L267 is the definition.",
+     "values": {
+      "(no return value)": "The function returns nothing; it advances the state machine and may refresh the device watchdog."
+     }
+    },
+    "symbol": "SBC_Trigger",
+    "timing": {
+     "evidence": "Driven every 10 ms: the cycle context is defined as 10u at src/app/driver/sbc/sbc.h L78, checked against FTSK_TASK_CYCLIC_10MS_CYCLE_TIME at src/app/driver/sbc/sbc.h L80, and the caller is FTSK_RunUserCodeCyclic10ms at src/app/task/config/ftask_cfg.c L269.",
+     "period_imposed_by_source": true,
+     "period_ms": 10,
+     "timeouts": [
+      {
+       "evidence": "The macro is defined at src/app/driver/sbc/sbc.h L105 and the periodic refresh is driven from SBC_Trigger at src/app/driver/sbc/sbc.c L277-L280.",
+       "meaning": "The period within which the device watchdog must be refreshed.",
+       "name": "SBC_WINDOW_WATCHDOG_PERIOD_MS",
+       "unit": "ms",
+       "value": "100u"
+      },
+      {
+       "evidence": "The macro is defined at src/app/driver/sbc/sbc.h L100 and the down-counting timer is at src/app/driver/sbc/sbc.c L283-L286.",
+       "meaning": "The longest state dwell, expressed in trigger calls rather than in time.",
+       "name": "SBC_STATEMACHINE_LONGTIME",
+       "unit": "SBC_Trigger calls",
+       "value": "10u"
+      }
+     ]
+    },
+    "validity_signalling": {
+     "evidence": "The re-entrance guard returns at src/app/driver/sbc/sbc.c L273-L274 and the timer guard at L286; neither reports the skip.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "No return value. The re-entrance guard and the timer guard both return early without effect and without signalling."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Called from a task. The check and the write are inside a task critical section, so a concurrent request cannot interleave.",
+     "protection_mechanism": "OS_EnterTaskCritical / OS_ExitTaskCritical around the check and the write",
+     "reentrancy": "guarded_by_critical_section"
+    },
+    "consuming_module": "Application code that requests an SBC state",
+    "declaration": "extern SBC_RETURN_TYPE_e SBC_SetStateRequest(SBC_STATE_s *pInstance, SBC_STATE_REQUEST_e stateRequest);",
+    "declaration_line": 196,
+    "declaration_path": "src/app/driver/sbc/sbc.h",
+    "element_id": "IFSE-001502",
+    "error_paths": [
+     {
+      "condition": "the request is illegal in the current state",
+      "evidence": "src/app/driver/sbc/sbc.c L248, L253-L255 and the return at L258.",
+      "observed_behaviour": "Returns SBC_ILLEGAL_REQUEST and does not record the request."
+     }
+    ],
+    "implementation_line": 245,
+    "implementation_path": "src/app/driver/sbc/sbc.c",
+    "not_specified_by_source": [
+     "The interface does not say what happens to a request that is legal now but whose target state has moved on by the time the 10 ms cycle runs.",
+     "The enumerator set is not documented per value in the header, so a caller cannot be sure which value a particular misuse produces beyond the two named here.",
+     "The interface does not state whether a request that is refused is remembered or discarded; the source discards it at src/app/driver/sbc/sbc.c L253-L255."
+    ],
+    "parameters": [
+     {
+      "c_type": "SBC_STATE_s *",
+      "direction": "in_out",
+      "meaning": "Which SBC instance to request the state of.",
+      "name": "pInstance",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pInstance != NULL_PTR) at src/app/driver/sbc/sbc.c L246 and L268.",
+      "unit": "instance state (dimensionless)",
+      "valid_range": "Non-null."
+     },
+     {
+      "c_type": "SBC_STATE_REQUEST_e",
+      "direction": "in",
+      "meaning": "Which state to move the supervisor to.",
+      "name": "stateRequest",
+      "nullable": false,
+      "range_enforcement": "returned_error",
+      "range_evidence": "Checked by SBC_CheckStateRequest at src/app/driver/sbc/sbc.c L251; the request is only recorded when the check returns SBC_OK at L253-L255.",
+      "unit": "the requested state (SBC_STATE_REQUEST_e)",
+      "valid_range": "A member of SBC_STATE_REQUEST_e; legality is decided by SBC_CheckStateRequest, whose verdict is returned rather than asserted."
+     }
+    ],
+    "providing_module": "SBC driver",
+    "return_contract": {
+     "c_type": "SBC_RETURN_TYPE_e",
+     "default_on_no_information": "A genuine refusal channel: the default is SBC_ILLEGAL_REQUEST and the request is only written on SBC_OK, so a caller can tell that a request was refused.",
+     "evidence": "retVal is initialised to SBC_ILLEGAL_REQUEST at src/app/driver/sbc/sbc.c L248, overwritten by the check at L251, and returned at L258; the enumerators are declared at src/app/driver/sbc/sbc.h L108-L126.",
+     "values": {
+      "SBC_ILLEGAL_REQUEST": "The request is not permitted in the current state and is discarded.",
+      "SBC_OK": "The request was legal and has been recorded."
+     }
+    },
+    "symbol": "SBC_SetStateRequest",
+    "timing": {
+     "evidence": "Not periodic; recorded immediately and acted on by the 10 ms SBC_Trigger cycle.",
+     "period_imposed_by_source": false,
+     "period_ms": null,
+     "timeouts": []
+    },
+    "validity_signalling": {
+     "evidence": "src/app/driver/sbc/sbc.c L250-L256 wraps the check and the write in OS_EnterTaskCritical and OS_ExitTaskCritical; the return at L258 reflects the same check.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value SBC_RETURN_TYPE_e. The request is recorded inside a task critical section and only on SBC_OK, so acceptance and recording are atomic with respect to another task."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "A plain read of a field with no lock, while the write on IFSE-001502 is inside a task critical section; the interface does not describe an atomic relationship between them.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "Diagnostic and monitoring code",
+    "declaration": "extern SBC_STATEMACHINE_e SBC_GetState(SBC_STATE_s *pInstance);",
+    "declaration_line": 206,
+    "declaration_path": "src/app/driver/sbc/sbc.h",
+    "element_id": "IFSE-001503",
+    "error_paths": [
+     {
+      "condition": "none - the read cannot fail",
+      "evidence": "src/app/driver/sbc/sbc.c L261-L265.",
+      "observed_behaviour": "Returns the current state unconditionally."
+     }
+    ],
+    "implementation_line": 261,
+    "implementation_path": "src/app/driver/sbc/sbc.c",
+    "not_specified_by_source": [
+     "The read is unguarded while the corresponding write is critical-sectioned, so the interface does not state whether a read can observe a half-updated state.",
+     "The interface does not state when the state was last updated relative to the 10 ms cycle.",
+     "Because the driver is multi-instance, the interface gives no default instance; a caller that passes the wrong pointer gets the wrong supervisor's state with no error."
+    ],
+    "parameters": [
+     {
+      "c_type": "SBC_STATE_s *",
+      "direction": "in",
+      "meaning": "Which SBC instance to read.",
+      "name": "pInstance",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(pInstance != NULL_PTR) at src/app/driver/sbc/sbc.c L262.",
+      "unit": "instance state (dimensionless)",
+      "valid_range": "Non-null."
+     }
+    ],
+    "providing_module": "SBC driver",
+    "return_contract": {
+     "c_type": "SBC_STATEMACHINE_e",
+     "default_on_no_information": "A state read with no separate failure value; the enumerator set includes error states, so a fault is visible when the supervisor is in one.",
+     "evidence": "The value is read directly from pInstance->state at src/app/driver/sbc/sbc.c L264.",
+     "values": {
+      "(state enumerators)": "The current state of the named supervisor instance, one of the SBC_STATEMACHINE_e values declared at src/app/driver/sbc/sbc.h L137-L144."
+     }
+    },
+    "symbol": "SBC_GetState",
+    "timing": {
+     "evidence": "A read of instance state; no period.",
+     "period_imposed_by_source": false,
+     "period_ms": null,
+     "timeouts": []
+    },
+    "validity_signalling": {
+     "evidence": "src/app/driver/sbc/sbc.c L261-L265 returns pInstance->state; the enumerators including the error states are at src/app/driver/sbc/sbc.h L114-L146.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value only, but the enumerator set includes error states, so a stuck or faulted supervisor is visible to a caller that reads the state."
+    }
+   }
+  ],
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IFS-000015",
+  "interface_class": "actuation",
+  "interface_id": "IFS-SBC-000015",
+  "interface_level_gaps": [
+   {
+    "consequence": "A caller cannot learn whether the watchdog was refreshed. If the refresh were to fail silently, the device would time out and this interface would be the place a caller would look for evidence, and there is none.",
+    "evidence": "SBC_Trigger is void at src/app/driver/sbc/sbc.h L215 and the periodic watchdog refresh is driven from inside it at src/app/driver/sbc/sbc.c L277-L280, with its return value discarded with an explicit cast at L280.",
+    "gap": "The interface that drives the device watchdog is void, and the watchdog is the safety-relevant effect of that call."
+   },
+   {
+    "consequence": "The interface does not state whether a read concurrent with a request can observe a partially updated instance.",
+    "evidence": "The write is wrapped at src/app/driver/sbc/sbc.c L250-L256 and the read at L261-L265 is a bare field access.",
+    "gap": "The state read is not protected by the same critical section as the state write."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "providing_module": {
+   "name": "SBC driver, the system power controller",
+   "role": "Supervises the SBC device that arbitrates the high-voltage contactor and precharge sequence, and drives its periodic watchdog so the device does not time out. It is a state machine driven by requests from the application and advanced by a 10 ms trigger.",
+   "source_paths": [
+    "src/app/driver/sbc/sbc.h",
+    "src/app/driver/sbc/sbc.c",
+    "src/app/driver/sbc/fs8x_driver/sbc_fs8x.c"
+   ]
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Three elements over the SBC supervisor boundary, read from sbc.h and sbc.c at 308028fb. The SBC is the component that arbitrates the high-voltage contactor and precharge sequence, so this boundary carries safety weight; the record notes that the instance pointer is the parameter that makes it multi-instance and that the watchdog is driven from the 10 ms cycle.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000027"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Backs SWE.2 with a real interface specification: providing and consuming module, the real C signature transcribed from the header at 308028fb, per-parameter direction, unit, meaning and valid range with the mechanism that enforces it, a return contract whose values are the enumerators the source defines, validity signalling read off the real error paths, timing where the source imposes one, concurrency, and a required not_specified_by_source list. Three elements over the SBC supervisor, a multi-instance state machine with a void watchdog-driving trigger. The status stays partially_mapped: the whole family remains a reconstruction of an existing implementation rather than the product of an architectural design activity, and Component Design remains absent.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Interface Specification: the system-power-controller supervisor interface",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_status": {
+   "analysed_against_running_code": false,
+   "conformance_tested": false,
+   "statement": "Read from the source at commit 308028fb only. Not analysed against a running build and not conformance-tested: nothing in this record was observed executing. Where a value is described as enforced, the enforcement is the code path named in the evidence field, not an observation of the check firing."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IFS-000015"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IFS-000015",
+  "revision": "1"
+ }
+}

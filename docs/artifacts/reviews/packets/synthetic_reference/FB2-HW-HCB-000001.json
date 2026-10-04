@@ -1,0 +1,724 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-HW-000001",
+    "rationale": "The hardware verification plan is scoped by the configuration baseline: the plan's own scope_basis names FB2-HW-HCB-000001 and takes the board set and the released versions from it rather than choosing them. Without that dependency the plan's subject would be undefined, since the release index is the only place in this repository that says which boards exist and at which versions. The direction is plan to baseline: the plan is the finer statement and the baseline is what it rests on.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-HW-HVP-000001",
+    "target_id": "FB2-HW-HCB-000001"
+   },
+   {
+    "link_id": "FB2-LNK-HW-000002",
+    "rationale": "The HWE.3 gap record repeats the same search result that the configuration baseline records: zero Altium source files in the working tree and in every commit, and the designs hosted on an external server. The gap record does not re-derive that from scratch, it depends on the baseline's measurement and extends it with the count of the records that inherit the limitation. If the baseline's availability finding were wrong, this record would be wrong too, so the dependency is declared rather than left implicit.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-HW-HDD-000001",
+    "target_id": "FB2-HW-HCB-000001"
+   },
+   {
+    "link_id": "FB2-LNK-HW-000003",
+    "rationale": "The system-domain variant applicability record refines the hardware configuration baseline at the system level. The baseline fixes seven board designations and ten released versions; the applicability record states which of them a system requirement can be stated against, and records the three board designations the variant registry names for which the release index releases nothing. It is the finer statement: it answers a question the baseline does not ask.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SYS-HVA-000001",
+    "target_id": "FB2-HW-HCB-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against hardware_configuration_baseline.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (1)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "1/1 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol not declared (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-HW-000004, which records anchor class `repository_file`; path `hardware/README.md`; line_range `1-87`; content_hash `710a164beb69c711571607073e6d05abdae660a39a9975fb3c67140e8cced808`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-HW-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-HW-000004."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C03-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 5, Clause 7 (configuration management of hardware items) with status `mapped` on the grounds: A configuration baseline is the precondition a hardware requirements analysis and a hardware integration and test plan are both written against; this record supplies the item set and the exact released versions."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C04-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 HWE.1 with status `partially_mapped` on the grounds: Names the configuration the existing hardware technical requirements apply to. It does not analyse anything and does not supply the HW Interface Requirements family HWE.1 expects."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 HWE.2 with status `partially_mapped` on the grounds: Identifies which released boards constitute the hardware set, which is the input a hardware architecture would allocate over. No architecture, block diagram or interface schematic record is supplied."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C06-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 HWE.4 with status `partially_mapped` on the grounds: Fixes the configuration a hardware integration and test plan is scoped against, so that the plan has a defined subject. The plan itself is FB2-HW-HVP-000001 and it has no executed step."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 31133,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/hardware/hardware-configuration-baseline.json",
+  "record_sha256": "4efd58387d6fb065feeef98adc1262950a5fe03287945b8efdb03bd7636a9335",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "4efd58387d6fb065feeef98adc1262950a5fe03287945b8efdb03bd7636a9335"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-HW-HCB-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the hw_engineer for this hardware record, do you agree that \"Hardware Configuration Baseline: the released foxBMS 2 board set\" is a correct and complete statement of hardware requirements, architecture, detailed design, hardware safety analysis?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "hardware_configuration_baseline",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "This record was authored by an AI agent reading hardware/README.md and the docs/hardware/ tree. It is therefore a transcription and a mechanical derivation, not an independent configuration audit. No hardware engineer has reviewed it, no board has been inspected, and no claim in it has been checked against a physical board or against a design source. An AI-authored artefact is not independent evidence."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "baseline_subject": {
+   "authority": "hardware/README.md - the hardware release index of the foxBMS 2 project",
+   "authority_commit": "308028fb13d046ba29b98886895c2e17937b1437",
+   "authority_path": "hardware/README.md",
+   "derivation": "Every row of the release index that begins with a pipe and carries a Version cell was parsed: the Item string, the Version string and the href of the File cell were taken verbatim. The release URL is that href; the release archive name is its last path segment. No row was added, merged, deduplicated or reordered. Counts are: 10 release rows across 7 distinct Item strings.",
+   "description": "The set of foxBMS 2 printed circuit boards that the project publishes as released hardware, with the exact version of each release, and the status of each board's design artefacts as seen from this repository."
+  },
+  "board_inventory": [
+   {
+    "board_id": "HW-BMS-MASTER-TI-TMS570LC4357",
+    "cells_monitored": null,
+    "design_artefact_location": "External release archive on an external Fraunhofer IISB server; not present in this repository",
+    "design_artefact_verifiable_from_this_repository": false,
+    "documentation_in_repository": {
+     "changelog_versions": [
+      "1.0.0",
+      "1.0.1",
+      "1.0.2",
+      "1.1.0",
+      "1.1.1",
+      "1.1.2",
+      "1.1.3",
+      "1.1.4",
+      "1.1.5",
+      "1.2.0",
+      "1.2.1",
+      "1.2.2",
+      "1.2.3-0"
+     ],
+     "note": "Release notes exist for five versions and the changelog records thirteen. The changelog heading for the released version is 'v1.2.3-0', not 'v1.2.3': this is the only board in the release index whose released version carries the SUFFIX component the README documents, and the release index prints it without that component.",
+     "per_version_artefact_directory_present": true,
+     "release_note_versions": [
+      "1.1.1",
+      "1.1.3",
+      "1.1.5",
+      "1.2.2",
+      "1.2.3"
+     ]
+    },
+    "item_label": "TI BMS-Master",
+    "latest_released_version": "1.2.3",
+    "primary_device": "TMS570LC4357",
+    "release_download_attempted": false,
+    "release_download_outcome": "No release archive was downloaded. The archives are hosted outside this repository, may require credentials this corpus does not hold, and the content is proprietary CAD that cannot be read or verified by an offline text corpus in any case. The unavailability is therefore recorded as a fact about access, not measured by a failed download.",
+    "released_versions": [
+     {
+      "release_artifact": "master-v1.2.3.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/master-v1.2.3.latest.zip",
+      "version": "1.2.3",
+      "version_kind": "numeric"
+     }
+    ],
+    "role": "master",
+    "verifiability_reason": "Not verifiable from this repository. Verified two ways: git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md; and git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns nothing, so no Altium source file was ever added to this repository in any branch. What IS in this repository is derived documentation for the board under docs/hardware/, never the design sources themselves.",
+    "version_string_discrepancies": [
+     "The release index hardware/README.md prints the released master version as 1.2.3. The master changelog docs/hardware/master/ti-tms570lc4357-vx.x.x/ti-tms570lc4357-changelog.rst heads that same version 'v1.2.3-0' (L14). Under the scheme the README documents, MAJOR.MINOR.PATCH-SUFFIX, the released master version is 1.2.3-0 and the release index drops the suffix. Both strings are recorded here; neither is corrected, because this record does not know which the project treats as authoritative."
+    ]
+   },
+   {
+    "board_id": "HW-IF-LTC-LTC6820",
+    "cells_monitored": null,
+    "design_artefact_location": "External release archive on an external Fraunhofer IISB server; not present in this repository",
+    "design_artefact_verifiable_from_this_repository": false,
+    "documentation_in_repository": {
+     "changelog_versions": [
+      "1.0.0",
+      "1.0.1",
+      "1.0.2",
+      "1.0.3"
+     ],
+     "note": "Release notes exist for the released version only; the changelog records four versions.",
+     "per_version_artefact_directory_present": true,
+     "release_note_versions": [
+      "1.0.3"
+     ]
+    },
+    "item_label": "LTC Interface (LTC6820)",
+    "latest_released_version": "1.0.3",
+    "primary_device": "LTC6820",
+    "release_download_attempted": false,
+    "release_download_outcome": "No release archive was downloaded. The archives are hosted outside this repository, may require credentials this corpus does not hold, and the content is proprietary CAD that cannot be read or verified by an offline text corpus in any case. The unavailability is therefore recorded as a fact about access, not measured by a failed download.",
+    "released_versions": [
+     {
+      "release_artifact": "interface-ltc-ltc6820-v1.0.3.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/interface-ltc-ltc6820-v1.0.3.latest.zip",
+      "version": "1.0.3",
+      "version_kind": "numeric"
+     }
+    ],
+    "role": "interface",
+    "verifiability_reason": "Not verifiable from this repository. Verified two ways: git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md; and git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns nothing, so no Altium source file was ever added to this repository in any branch. What IS in this repository is derived documentation for the board under docs/hardware/, never the design sources themselves."
+   },
+   {
+    "board_id": "HW-IF-NXP-MC33664",
+    "cells_monitored": null,
+    "design_artefact_location": "External release archive on an external Fraunhofer IISB server; not present in this repository",
+    "design_artefact_verifiable_from_this_repository": false,
+    "documentation_in_repository": {
+     "changelog_versions": [
+      "1.0.0",
+      "1.0.1",
+      "1.0.2"
+     ],
+     "note": "Release notes exist for the released version. The per-version directory carries a mechanical-dimensions image but no pinout table and no electrical-ratings table, so for this board the repository holds documentation of the released version and no electrical data to verify against.",
+     "per_version_artefact_directory_present": true,
+     "release_note_versions": [
+      "1.0.2"
+     ]
+    },
+    "item_label": "NXP Interface (MC33664)",
+    "latest_released_version": "1.0.2",
+    "primary_device": "MC33664",
+    "release_download_attempted": false,
+    "release_download_outcome": "No release archive was downloaded. The archives are hosted outside this repository, may require credentials this corpus does not hold, and the content is proprietary CAD that cannot be read or verified by an offline text corpus in any case. The unavailability is therefore recorded as a fact about access, not measured by a failed download.",
+    "released_versions": [
+     {
+      "release_artifact": "interface-nxp-mc33664-v1.0.2.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/interface-nxp-mc33664-v1.0.2.latest.zip",
+      "version": "1.0.2",
+      "version_kind": "numeric"
+     }
+    ],
+    "role": "interface",
+    "verifiability_reason": "Not verifiable from this repository. Verified two ways: git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md; and git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns nothing, so no Altium source file was ever added to this repository in any branch. What IS in this repository is derived documentation for the board under docs/hardware/, never the design sources themselves."
+   },
+   {
+    "board_id": "HW-IF-MAXIM-MAX17841B",
+    "cells_monitored": null,
+    "design_artefact_location": "External release archive on an external Fraunhofer IISB server; not present in this repository",
+    "design_artefact_verifiable_from_this_repository": false,
+    "documentation_in_repository": {
+     "changelog_versions": [
+      "1.0.0"
+     ],
+     "note": "Release notes, a block-diagram source, a rendering and four connector tables exist for the single released version.",
+     "per_version_artefact_directory_present": true,
+     "release_note_versions": [
+      "1.0.0"
+     ]
+    },
+    "item_label": "MAXIM Interface (MAX17841b)",
+    "latest_released_version": "1.0.0",
+    "primary_device": "MAX17841b",
+    "release_download_attempted": false,
+    "release_download_outcome": "No release archive was downloaded. The archives are hosted outside this repository, may require credentials this corpus does not hold, and the content is proprietary CAD that cannot be read or verified by an offline text corpus in any case. The unavailability is therefore recorded as a fact about access, not measured by a failed download.",
+    "released_versions": [
+     {
+      "release_artifact": "interface-maxim-max17841b-v1.0.0.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/interface-maxim-max17841b-v1.0.0.latest.zip",
+      "version": "1.0.0",
+      "version_kind": "numeric"
+     }
+    ],
+    "role": "interface",
+    "verifiability_reason": "Not verifiable from this repository. Verified two ways: git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md; and git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns nothing, so no Altium source file was ever added to this repository in any branch. What IS in this repository is derived documentation for the board under docs/hardware/, never the design sources themselves."
+   },
+   {
+    "board_id": "HW-SLAVE-12-LTC-LTC6811-1",
+    "cells_monitored": 12,
+    "design_artefact_location": "External release archive on an external Fraunhofer IISB server; not present in this repository",
+    "design_artefact_verifiable_from_this_repository": false,
+    "documentation_in_repository": {
+     "changelog_versions": [
+      "2.0.0",
+      "2.0.1",
+      "2.0.2",
+      "2.0.3",
+      "2.1.0",
+      "2.1.1",
+      "2.1.2",
+      "2.1.3",
+      "2.1.4",
+      "2.1.5",
+      "2.1.6",
+      "2.1.7"
+     ],
+     "note": "The two released versions, 2.1.5 and 2.1.7, are the only two boards in the release index with more than one released version, and they are the only two released versions with NO per-version documentation directory under docs/hardware/. Per-version documentation exists for 2.0.3, 2.1.2 and 2.1.6. This is the sharpest coverage hole the baseline exposes: the newest released 12-cell slave carries an electrical-ratings table in the repository only for an older version.",
+     "per_version_artefact_directory_present": false,
+     "release_note_versions": [
+      "2.0.3",
+      "2.1.2",
+      "2.1.6"
+     ]
+    },
+    "item_label": "LTC 12 Cell Slave (LTC6811-1)",
+    "latest_released_version": "2.1.7",
+    "primary_device": "LTC6811-1",
+    "release_download_attempted": false,
+    "release_download_outcome": "No release archive was downloaded. The archives are hosted outside this repository, may require credentials this corpus does not hold, and the content is proprietary CAD that cannot be read or verified by an offline text corpus in any case. The unavailability is therefore recorded as a fact about access, not measured by a failed download.",
+    "released_versions": [
+     {
+      "release_artifact": "slave-12-ltc-ltc6811-1-v2.1.5.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/slave-12-ltc-ltc6811-1-v2.1.5.latest.zip",
+      "version": "2.1.5",
+      "version_kind": "numeric"
+     },
+     {
+      "release_artifact": "slave-12-ltc-ltc6811-1-v2.1.7.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/slave-12-ltc-ltc6811-1-v2.1.7.latest.zip",
+      "version": "2.1.7",
+      "version_kind": "numeric"
+     }
+    ],
+    "role": "slave",
+    "verifiability_reason": "Not verifiable from this repository. Verified two ways: git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md; and git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns nothing, so no Altium source file was ever added to this repository in any branch. What IS in this repository is derived documentation for the board under docs/hardware/, never the design sources themselves.",
+    "version_string_discrepancies": [
+     "Both released versions of this board are plain MAJOR.MINOR.PATCH with no suffix, so the SUFFIX component of the documented scheme is not exercised here, unlike the released master (1.2.3-0)."
+    ]
+   },
+   {
+    "board_id": "HW-SLAVE-18-LTC-LTC6813-1",
+    "cells_monitored": 18,
+    "design_artefact_location": "External release archive on an external Fraunhofer IISB server; not present in this repository",
+    "design_artefact_verifiable_from_this_repository": false,
+    "documentation_in_repository": {
+     "changelog_versions": [
+      "1.0.0",
+      "1.0.1",
+      "1.1.0",
+      "1.1.1",
+      "1.1.2",
+      "1.1.3",
+      "1.1.4",
+      "1.1.5",
+      "1.1.6"
+     ],
+     "note": "The most documented slave: three released versions, release notes for four versions including two of the three released ones, and a full per-version artefact set (pinout, eight connector tables, electrical ratings, mechanical dimensions, temperature-sensor connector and a drawio source) for v1.1.3.",
+     "per_version_artefact_directory_present": true,
+     "release_note_versions": [
+      "1.1.3",
+      "1.1.4",
+      "1.1.5",
+      "1.1.6"
+     ]
+    },
+    "item_label": "LTC 18 Cell Slave (LTC6813-1)",
+    "latest_released_version": "1.1.6",
+    "primary_device": "LTC6813-1",
+    "release_download_attempted": false,
+    "release_download_outcome": "No release archive was downloaded. The archives are hosted outside this repository, may require credentials this corpus does not hold, and the content is proprietary CAD that cannot be read or verified by an offline text corpus in any case. The unavailability is therefore recorded as a fact about access, not measured by a failed download.",
+    "released_versions": [
+     {
+      "release_artifact": "slave-18-ltc-ltc6813-1-v1.1.3.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/slave-18-ltc-ltc6813-1-v1.1.3.latest.zip",
+      "version": "1.1.3",
+      "version_kind": "numeric"
+     },
+     {
+      "release_artifact": "slave-18-ltc-ltc6813-1-v1.1.5.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/slave-18-ltc-ltc6813-1-v1.1.5.latest.zip",
+      "version": "1.1.5",
+      "version_kind": "numeric"
+     },
+     {
+      "release_artifact": "slave-18-ltc-ltc6813-1-v1.1.6.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/slave-18-ltc-ltc6813-1-v1.1.6.latest.zip",
+      "version": "1.1.6",
+      "version_kind": "numeric"
+     }
+    ],
+    "role": "slave",
+    "verifiability_reason": "Not verifiable from this repository. Verified two ways: git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md; and git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns nothing, so no Altium source file was ever added to this repository in any branch. What IS in this repository is derived documentation for the board under docs/hardware/, never the design sources themselves."
+   },
+   {
+    "board_id": "HW-SLAVE-14-NXP-MC33775A",
+    "cells_monitored": 14,
+    "design_artefact_location": "External release archive on an external Fraunhofer IISB server; not present in this repository",
+    "design_artefact_verifiable_from_this_repository": false,
+    "documentation_in_repository": {
+     "changelog_versions": [
+      "1.0.0",
+      "1.0.1",
+      "1.0.2",
+      "1.0.3-0"
+     ],
+     "note": "Release notes exist for three versions. As with the master, the changelog heads the released version 'v1.0.3-0' while the release index prints '1.0.3'. The per-version directory carries a mechanical-dimensions table for all three versions and, for v1.0.3, a pinout table and drawio source.",
+     "per_version_artefact_directory_present": true,
+     "release_note_versions": [
+      "1.0.0",
+      "1.0.2",
+      "1.0.3"
+     ]
+    },
+    "item_label": "NXP 14 Cell Slave (MC33775A)",
+    "latest_released_version": "1.0.3",
+    "primary_device": "MC33775A",
+    "release_download_attempted": false,
+    "release_download_outcome": "No release archive was downloaded. The archives are hosted outside this repository, may require credentials this corpus does not hold, and the content is proprietary CAD that cannot be read or verified by an offline text corpus in any case. The unavailability is therefore recorded as a fact about access, not measured by a failed download.",
+    "released_versions": [
+     {
+      "release_artifact": "slave-14-nxp-mc33775a-v1.0.3.latest.zip",
+      "release_url": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release/slave-14-nxp-mc33775a-v1.0.3.latest.zip",
+      "version": "1.0.3",
+      "version_kind": "numeric"
+     }
+    ],
+    "role": "slave",
+    "verifiability_reason": "Not verifiable from this repository. Verified two ways: git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md; and git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns nothing, so no Altium source file was ever added to this repository in any branch. What IS in this repository is derived documentation for the board under docs/hardware/, never the design sources themselves.",
+    "version_string_discrepancies": [
+     "The release index prints the released MC33775A version as 1.0.3. The changelog heads it 'v1.0.3-0'. This is the second and last released version whose changelog heading carries the documented SUFFIX component while the release index omits it."
+    ]
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "design_artefact_availability": {
+   "access_conditions": "The designs are published as per-release zip archives on an external Fraunhofer IISB server. This corpus does not hold credentials for that server, does not claim to, and did not attempt a download. The archives are proprietary CAD and are not readable by an offline text corpus in any case, so obtaining them would not make a schematic, layout or BOM verifiable here.",
+   "consequence": "No board-level design content may be authored from this repository: not a net, not a reference designator, not a component, not a register, not an offset. Where a claim about the hardware would require one of those, this corpus has no basis for it and says so rather than supplying one. See FB2-HW-HDD-000001 for the recorded consequence for HWE.3.",
+   "design_file_extensions_sought": [
+    "*.SchDoc",
+    "*.PcbDoc",
+    "*.PrjPcb"
+   ],
+   "designs_hosted_externally": true,
+   "external_host": "https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/hardware/release",
+   "local_design_files_present": false,
+   "search_performed": "git ls-tree -r --name-only 308028fb -- hardware/ returns exactly one path, hardware/README.md, which is the whole of the hardware/ tree. git log --all --name-only --diff-filter=A -- '*.SchDoc' '*.PcbDoc' '*.PrjPcb' returns no output, so no Altium source file was ever added to any branch of this repository. git ls-tree -r --name-only 308028fb -- docs/hardware/ returns 166 documentation files and no Altium source file.",
+   "search_result": "Zero Altium design source files, in the working tree and in every commit of every branch. The design sources for all seven boards live outside this repository."
+  },
+  "documentation_inventory": {
+   "altium_source_files_present": false,
+   "csv_pinout_and_rating_tables": 93,
+   "drawio_block_diagrams": 26,
+   "statement": "A separate and substantial hardware documentation tree is tracked in this repository at docs/hardware/. At commit 308028fb it holds 166 tracked files, of which 93 are CSV tables (pinouts, electrical ratings, connector pin assignments, mechanical dimensions) and 26 are draw.io diagram sources, plus per-version release notes in reStructuredText and one changelog per board family. It holds no Altium source file. The distinction matters and is recorded because it is easy to get wrong in either direction: hardware/README.md is not the only first-party hardware evidence in this repository, and docs/hardware/ is not a substitute for the design sources, which remain external. Where this repository can verify a hardware claim at all, it is against these tables and notes.",
+   "tracked_files": 166,
+   "tree": "docs/hardware/"
+  },
+  "engineering_domain": "hardware",
+  "human_approval_status": "pending",
+  "id": "FB2-HW-HCB-000001",
+  "inventory_counts": {
+   "count_disagreements_recorded": [
+    "The figure 8 is sometimes given for the size of this board set. It is reproducible from hardware/README.md under no rule applied to that file: the file yields 7 distinct board designations and 10 release rows, and 8 matches neither. This record states the two figures the file does support and does not carry the 8 forward, because carrying a number that the authority file does not yield would be exactly the kind of untraceable count this corpus exists to remove.",
+    "Counting released boards as 10 (one per release row) and counting board designs as 7 (one per Item string) are both defensible; which one a reader wants depends on whether they are counting what can be built (a version) or what exists (a design). Both are recorded so neither reader has to guess."
+   ],
+   "derivation": "Release rows are the table rows of hardware/README.md that carry a Version cell: TI BMS-Master 1.2.3; LTC Interface (LTC6820) 1.0.3; NXP Interface (MC33664) 1.0.2; MAXIM Interface (MAX17841b) 1.0.0; LTC 12 Cell Slave (LTC6811-1) 2.1.5 and 2.1.7; LTC 18 Cell Slave (LTC6813-1) 1.1.3, 1.1.5 and 1.1.6; NXP 14 Cell Slave (MC33775A) 1.0.3. Distinct board designations are the distinct Item strings among those rows, which is 7.",
+   "distinct_board_designations": 7,
+   "release_rows": 10
+  },
+  "lifecycle_status": "draft",
+  "not_established_by_this_record": [
+   "No schematic, PCB layout, bill of materials or component specification. None can be authored from this repository because the Altium sources are external and were never present in any commit.",
+   "No net, reference designator, component, register, memory-mapped offset, mask or base address. Those live in the external design sources and in the device data sheets this corpus does not hold.",
+   "No verification result of any kind. This record identifies a configuration; it does not test, inspect or demonstrate that any board conforms to anything.",
+   "No confirmation that a released version is manufacturable, that its documentation matches its design, or that the archives on the external server still resolve. The URLs are transcribed from the index, not fetched.",
+   "No statement about which board version any particular vehicle, test bench or hardware-in-the-loop rig is fitted with. That is fleet and test-rig configuration data, and this repository does not hold it.",
+   "No ASIL, no conformity claim, no certification, no supplier qualification, no human approval and no ASPICE capability level."
+  ],
+  "origin": "derived",
+  "owner_role": "hw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "hw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "First record in this corpus to identify the hardware configuration at all. Every board id, item label, version, release archive name and release URL is transcribed from hardware/README.md, the only file under hardware/, and every derived count is mechanically reproducible from that file. Recorded as origin=derived because the content is derived from a tracked first-party file rather than synthesised.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-HW-000004"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "A configuration baseline is the precondition a hardware requirements analysis and a hardware integration and test plan are both written against; this record supplies the item set and the exact released versions.",
+    "reference": "Part 5, Clause 7 (configuration management of hardware items)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Names the configuration the existing hardware technical requirements apply to. It does not analyse anything and does not supply the HW Interface Requirements family HWE.1 expects.",
+    "reference": "HWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Identifies which released boards constitute the hardware set, which is the input a hardware architecture would allocate over. No architecture, block diagram or interface schematic record is supplied.",
+    "reference": "HWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Fixes the configuration a hardware integration and test plan is scoped against, so that the plan has a defined subject. The plan itself is FB2-HW-HVP-000001 and it has no executed step.",
+    "reference": "HWE.4",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Hardware Configuration Baseline: the released foxBMS 2 board set",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "variant_cross_reference": {
+   "board_designation_count_named_by_the_registry": 9,
+   "board_designations_named_by_the_registry": [
+    "HW-BMS-MASTER",
+    "HW-BMS-SLAVE-12-LTC6804",
+    "HW-BMS-SLAVE-14-MAX17852",
+    "HW-BMS-SLAVE-14-MC33775A",
+    "HW-BMS-SLAVE-16-ADES1830",
+    "HW-BMS-SLAVE-18-LTC6813",
+    "HW-IF-LTC6820",
+    "HW-IF-MAX17841B",
+    "HW-IF-MC33664"
+   ],
+   "board_designations_with_no_released_version_in_the_authority_file": [
+    {
+     "designation": "HW-BMS-SLAVE-16-ADES1830",
+     "named_by_variant": [
+      "VAR-AFE-ADI-1830"
+     ],
+     "variant_note": "Driver fully implemented. Hardware design package available. Not in reference configuration."
+    },
+    {
+     "designation": "HW-BMS-SLAVE-12-LTC6804",
+     "named_by_variant": [
+      "VAR-AFE-LTC-6806"
+     ],
+     "variant_note": "Legacy part. Driver maintained for compatibility. Not recommended for new designs."
+    },
+    {
+     "designation": "HW-BMS-SLAVE-14-MAX17852",
+     "named_by_variant": [
+      "VAR-AFE-MAXIM-17852"
+     ],
+     "variant_note": "Next-gen Maxim part. Driver partially implemented."
+    }
+   ],
+   "registry": "docs/artifacts/sources/variant-matrix.json",
+   "statement": "The variant registry names nine board designations; six of them are boards this record's release index releases and three are not. Two of the three are documented in this repository but released nowhere: the ADI ADES1830 has per-version release notes and a full artefact set for v0.9.0 under docs/hardware/slaves/16-adi-ades1830-vx.x.x/, and the LTC6804-1 has a note whose version component is the literal x.x.x. The third, HW-BMS-SLAVE-14-MAX17852, has exactly one tracked file under its tree, docs/hardware/slaves/14-maxim-max17852-vx.x.x/.dummy. The disagreement runs in both directions: the release index sells the 12-cell LTC6811-1 slave at two versions and the registry names no board designation for it, because that designation exists in docs/artifacts/sources/source-inventory.json rather than in the registry. This record states the reconciliation and edits neither file. The single place where two first-party files genuinely conflict is the ADES1830, whose variant note asserts that a hardware design package is available while the release index contains no ADI board at any version; 'available' and 'released' are different claims and the release index supports only the second. The full reconciliation, including the one variant that names no board at all, is FB2-SYS-HVA-000001."
+  },
+  "versioning_scheme": {
+   "authority_quote_basis": "Derived from the 'Hardware Versioning' section of hardware/README.md, which states that the basic pattern is MAJOR.MINOR.PATCH with MAJOR, MINOR and PATCH as numbers, that the full version identifier of a hardware release is MAJOR.MINOR.PATCH-SUFFIX where SUFFIX is a number, and that the README always points to a generic link of the latest released version, i.e. the one with the latest suffix.",
+   "components": [
+    {
+     "kind": "number",
+     "meaning": "Major revision of the design.",
+     "name": "MAJOR"
+    },
+    {
+     "kind": "number",
+     "meaning": "Minor revision of the design.",
+     "name": "MINOR"
+    },
+    {
+     "kind": "number",
+     "meaning": "Patch revision of the design.",
+     "name": "PATCH"
+    },
+    {
+     "kind": "suffix",
+     "meaning": "A number appended after a hyphen for changes made in the Altium projects that are not related to the schematic or the layout, where it would be wrong to bump MAJOR, MINOR or PATCH because the MAJOR.MINOR.PATCH version string is printed on the hardware.",
+     "name": "SUFFIX"
+    }
+   ],
+   "observations": [
+    "No version printed in the release index carries a suffix: all ten are plain MAJOR.MINOR.PATCH.",
+    "The suffix does appear in two changelog headings, so the scheme is in use: the master changelog heads the released master version 'v1.2.3-0' and the MC33775A changelog heads the released version 'v1.0.3-0'. Both released versions are printed without the suffix in the release index. This record records both spellings and corrects neither.",
+    "The authority file states that it always points to a generic link of the latest released version, but the release index lists more than one version per board for three boards, each with a version-specific archive name, so the release index is a list of releases rather than a single latest link per board."
+   ],
+   "pattern": "MAJOR.MINOR.PATCH-SUFFIX",
+   "suffix_rationale": "The authority file gives the reason for the suffix explicitly: a change confined to the Altium project metadata does not change the hardware that was built, and the version string is printed on the hardware, so the numeric part is held and a suffix is incremented instead."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "hardware_configuration_baseline",
+  "engineering_domain": "hardware",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "hw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-HW-HCB-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-HW-HCB-000001",
+  "revision": "1"
+ }
+}

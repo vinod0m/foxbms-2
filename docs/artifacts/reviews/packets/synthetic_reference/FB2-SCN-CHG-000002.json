@@ -1,0 +1,382 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000076",
+    "rationale": "FB2-REV-000008 reviewed FB2-SCN-CHG-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The recorded source revision was advanced from 2 to 3 and then to 4 for the digest refreshes described in provenance_repair; that refresh does not assert that the reviewing session examined revision 3, and this link has not been re-examined. The target revision was advanced from 1 to 2 because the artefact itself advanced: the reviewed fixture at revision 1 was the duplicate copy under docs/artifacts/corpus/scenarios/, which has been removed. The rationale, the relation type and the review_state are unchanged, and the link has not been re-examined.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000008",
+    "target_id": "FB2-SCN-CHG-000002"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against scenario.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-SCOPE-DESIGN-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000008",
+     "review_path": "docs/artifacts/reviews/records/review-scope-planning-scenarios.json",
+     "review_type": "domain",
+     "reviewed_revision": "2",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "system_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-scope-planning-scenarios.json",
+      "reviewed_by link FB2-LNK-REVB-000076 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.impact_analysis.affected_evidence[0]` names FB2-VER-EXE-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-HSI-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[0].artifact_id` names FB2-SYS-HSI-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[1].artifact_id` names FB2-HW-TSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[2].artifact_id` names FB2-HW-TSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[3].artifact_id` names FB2-SW-SWR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[4].artifact_id` names FB2-SW-DSN-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[5].artifact_id` names FB2-VER-TMS-000001."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 5958,
+  "record_path": "docs/artifacts/scenarios/change-lifecycles/change-002-hsi-interface.json",
+  "record_sha256": "09f253f66a92357102307eba5621adc1449b384a8b23bd7bf2f3c4bdf85f8dbd",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "3074601d885cf0445fa7f761de8f9e2bd4733ddd3b9e740237caa90d350b445f"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SCN-CHG-000002.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the system_engineer for this system record, do you agree that \"Change Lifecycle: AFE Communication Interface Change (LTC6811 -> ADI ADES1830)\" is a correct and complete statement of stakeholder needs, system requirements, architecture, HSI, validation?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 3,
+ "record_verbatim": {
+  "artifact_type": "scenario",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_before": "BAS-REF-001",
+  "baseline_id": "BAS-REF-001",
+  "change_summary": {
+   "cost_impact": "New slave board spin; new driver development; re-verification",
+   "description": "Migration from LTC6811 (isoSPI) to ADI ADES1830 (SPI/DMA) due to obsolescence",
+   "safety_impact": "Loss of transformer isolation; different fault modes; independent monitor redesign required",
+   "schedule_impact": "3 months for design, implementation, verification"
+  },
+  "change_type": "hsi_interface",
+  "created_at": "2026-09-08T00:00:00Z",
+  "decision": {
+   "date": "2026-10-15T00:00:00Z",
+   "decision_id": "DEC-CHG-002",
+   "decision_maker": "system_architect (fictional: Dr. Michael Torres)",
+   "disposition": "approved",
+   "rationale": "Obsolescence forces migration. ADI ADES1830 offers integrated balancing, 16 channels, SPI/DMA. Higher integration but loss of transformer isolation. Independent monitor must be redesigned."
+  },
+  "engineering_domain": "system",
+  "human_approval_status": "pending",
+  "id": "FB2-SCN-CHG-000002",
+  "impact_analysis": {
+   "affected_artifacts": [
+    "FB2-SYS-HSI-000001 (HSI authority - new interface spec HSI_AFE_SPI_ADI)",
+    "FB2-HW-TSR-000001 (new AFE accuracy spec)",
+    "FB2-HW-TSR-000002 (new communication integrity spec - SPI/DMA vs isoSPI)",
+    "FB2-SW-SWR-000001 (new AFE driver requirements)",
+    "FB2-SW-DSN-000001 (new AFE driver architecture)",
+    "FB2-VER-TMS-000001 (new test for ADI driver)",
+    "FB2-SRC-COD-000001/000002 (new driver implementation)",
+    "FB2-SRC-HW-000002 (new slave board variant)",
+    "VAR-AFE-ADI-1830 (new variant modeled)"
+   ],
+   "affected_evidence": [
+    "FB2-VER-EXE-000001"
+   ],
+   "affected_links": [
+    "FB2-LNK-SAF-000005 (HW TSR allocates to FSR-001)",
+    "FB2-LNK-SAF-000006 (HW TSR allocates to FSR-001)",
+    "FB2-LNK-SAF-000008 (SW SWR allocates to FSR-001)",
+    "FB2-LNK-SAF-000011 (Design implements SWR-001)",
+    "FB2-LNK-SAF-000014 (Test verifies FSR-002)"
+   ],
+   "affected_reviews": [
+    "FB2-REV-000001"
+   ],
+   "risk_assessment": "Major architecture change: isoSPI (transformer isolated) -> SPI/DMA (direct). Different fault modes, timing, diagnostic coverage. Requires new HW safety analysis (FMEDA), new SW architecture, new verification. Independent monitor interface may need redesign."
+  },
+  "lifecycle_status": "baselined",
+  "new_revisions": [
+   {
+    "artifact_id": "FB2-SYS-HSI-000001",
+    "new_revision": "2",
+    "old_revision": "1"
+   },
+   {
+    "artifact_id": "FB2-HW-TSR-000001",
+    "new_revision": "2",
+    "old_revision": "1"
+   },
+   {
+    "artifact_id": "FB2-HW-TSR-000002",
+    "new_revision": "2",
+    "old_revision": "1"
+   },
+   {
+    "artifact_id": "FB2-SW-SWR-000001",
+    "new_revision": "2",
+    "old_revision": "1"
+   },
+   {
+    "artifact_id": "FB2-SW-DSN-000001",
+    "new_revision": "2",
+    "old_revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000001",
+    "new_revision": "2",
+    "old_revision": "1"
+   }
+  ],
+  "origin": "synthetic",
+  "owner_role": "system_engineer",
+  "post_change_baseline": "BAS-REF-003",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "required_updates": [
+   "Create new HSI specification HSI_AFE_SPI_ADI",
+   "Update HW TSRs for ADI ADES1830 specs",
+   "Create new SW requirements for ADI driver",
+   "Create new AFE driver architecture design",
+   "Implement new ADI driver (src/app/driver/afe/adi/ades1830)",
+   "Create new verification tests for ADI driver",
+   "Update variant matrix (VAR-AFE-ADI-1830 -> modeled)",
+   "Redo HW FMEDA for new AFE",
+   "Redo independent monitor interface design",
+   "Re-run all affected reviews"
+  ],
+  "reverification_selection": [
+   "New test: ADI AFE voltage acquisition accuracy",
+   "New test: ADI AFE SPI/DMA communication integrity",
+   "New test: ADI AFE balancing control",
+   "Regression: Contactor fault response",
+   "Regression: Independent monitor (redesigned)"
+  ],
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "system_engineer",
+    "date": "2026-09-08T00:00:00Z",
+    "description": "Change lifecycle demo: HSI interface change",
+    "revision": "1"
+   },
+   {
+    "author": "traceability_engineer",
+    "date": "2026-10-03T00:00:00Z",
+    "description": "Widened the abbreviated source-anchor reference 'FB2-SRC-COD-000001/002' in impact_analysis.affected_artifacts to 'FB2-SRC-COD-000001/000002', naming both anchors in full. The abbreviation matched the reference checker as a single id and so silently covered only one of the two drivers the entry claims; both FB2-SRC-COD-000001 and FB2-SRC-COD-000002 exist in the source registry. Text-only change to free-text impact_analysis prose: no decision, revision list, baseline, expectation or remediation is touched. Recorded while removing the duplicate revision-1 fixture under corpus/scenarios/; this is the only string the duplicate carried that the live copy did not.",
+    "revision": "2"
+   }
+  ],
+  "scenario_id": "SCN-CHG-002",
+  "scenario_type": "change_lifecycle",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [],
+  "suspect_links": [
+   "FB2-LNK-SAF-000005 (allocation may not hold for new AFE)",
+   "FB2-LNK-SAF-000006 (communication integrity link type may change)",
+   "FB2-LNK-SAF-000008 (SWR allocation may need new requirements)",
+   "FB2-LNK-SAF-000011 (design completely new)",
+   "FB2-LNK-SAF-000014 (test completely new)"
+  ],
+  "title": "Change Lifecycle: AFE Communication Interface Change (LTC6811 -> ADI ADES1830)",
+  "trigger": {
+   "date": "2026-10-01T00:00:00Z",
+   "description": "LTC6811 entering NRND (Not Recommended for New Designs); migration to ADI ADES1830 required",
+   "source": "Obsolescence notice for LTC6811"
+  },
+  "updated_at": "2026-10-03T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "scenario",
+  "engineering_domain": "system",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "system_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SCN-CHG-000002"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SCN-CHG-000002",
+  "revision": "2"
+ }
+}

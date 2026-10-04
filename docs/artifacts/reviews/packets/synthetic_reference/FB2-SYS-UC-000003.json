@@ -1,0 +1,420 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-CPT-000021",
+    "rationale": "The use case is enabled by the item definition and its operational situations are drawn from the definition's situations; the link records that direction so the item's boundary is the reason the use case exists.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "supports",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-ITE-000001",
+    "target_id": "FB2-SYS-UC-000003"
+   },
+   {
+    "link_id": "FB2-LNK-ELC-000063",
+    "rationale": "The system requirement refines the operational scenario's obligation into a measurable system-level statement. The use case is the parent and the requirement is the child, which is the direction refines runs in everywhere in this registry.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "refines",
+    "review_state": "reviewed",
+    "source_id": "FB2-SYS-SYR-000004",
+    "target_id": "FB2-SYS-UC-000003"
+   },
+   {
+    "link_id": "FB2-LNK-VAL-000071",
+    "rationale": "The measure validates the degraded-capability need and the service need against the single-channel degradation use case, judging by whether a degradation is announced and diagnosable rather than escalated immediately. The relation is validates rather than verifies because the target is a stakeholder need or a use case, not a requirement: validation addresses intent and operational scenario, and the master prompt separates it from requirement verification for exactly that reason.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "validates",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000014",
+    "target_id": "FB2-SYS-UC-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000134",
+    "rationale": "FB2-REV-000013 reviewed FB2-SYS-UC-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000013",
+    "target_id": "FB2-SYS-UC-000003"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against use_case.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000013",
+     "review_path": "docs/artifacts/reviews/records/review-concept-system-validation.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-concept-system-validation.json",
+      "reviewed_by link FB2-LNK-REVB-000134 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-NED-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.primary_stakeholders[0]` names FB2-SYS-NED-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-NED-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.primary_stakeholders[1]` names FB2-SYS-NED-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.operational_scenarios[0].related_requirement_refs[0]` names FB2-SYS-SYR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.operational_scenarios[0].related_requirement_refs[1]` names FB2-SYS-SYR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.operational_scenarios[1].related_requirement_refs[0]` names FB2-SYS-SYR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000014 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.validation_measures[0]` names FB2-VER-TMS-000014."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SYS.1 with status `mapped` on the grounds: Requirements elicitation: use cases and their operational scenarios."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C08-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 VAL.1 with status `mapped` on the grounds: The use case is the object validation is written against."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 5631,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/system/use-case-single-channel-degradation.json",
+  "record_sha256": "930b4629d9a2930523e90cffe21196011242d1ab2e356551596b284eec8dac1a",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "9f64aae371d2aa72b2c74222d9168738c29fcf8087e7bf3ca97b7306aa1cc407"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "The plausibility envelope that decides degraded versus fault is not numerically specified anywhere in the corpus, so the boundary this use case depends on does not exist yet as a checkable value.",
+    "No channel was degraded and no degradation was injected.",
+    "The service-technician diagnosability criterion has no agreed definition."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SYS-UC-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the system_engineer for this system record, do you agree that \"Use case: a single measurement channel degrades in service\" is a correct and complete statement of stakeholder needs, system requirements, architecture, HSI, validation?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "use_case",
+  "assumption_refs": [
+   "FB2-ASM-001",
+   "FB2-ASM-003",
+   "FB2-ASM-006"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "system",
+  "human_approval_status": "pending",
+  "id": "FB2-SYS-UC-000003",
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "The plausibility envelope that decides degraded versus fault is not numerically specified anywhere in the corpus, so the boundary this use case depends on does not exist yet as a checkable value.",
+   "No channel was degraded and no degradation was injected.",
+   "The service-technician diagnosability criterion has no agreed definition."
+  ],
+  "main_success_scenario": [
+   {
+    "action": "A degradation begins on one measurement channel",
+    "expected_observable_outcome": "The item detects the disagreement without being told",
+    "step": 1
+   },
+   {
+    "action": "The item moves to its degraded mode",
+    "expected_observable_outcome": "Contactor control is retained and the reduction is published to the vehicle control unit",
+    "step": 2
+   },
+   {
+    "action": "The service technician inspects the item",
+    "expected_observable_outcome": "The technician can identify which channel degraded from the item's own output without external equipment",
+    "step": 3
+   },
+   {
+    "action": "The degradation is repaired and cleared",
+    "expected_observable_outcome": "The item returns to normal mode and the degraded indication clears",
+    "step": 4
+   }
+  ],
+  "operational_scenarios": [
+   {
+    "expected_item_behaviour": "Enter degraded mode with monitoring rate increased and transfer limited, rather than opening the contactors",
+    "expected_observable_outcome": "Degraded state published; no safe-state reaction; technician can diagnose the affected channel",
+    "initial_conditions": [
+     "Both channels healthy",
+     "Pack mid-charge"
+    ],
+    "observable_by": "The service technician and the vehicle manufacturer",
+    "operational_situation": "Pack at rest in a workshop, item powered, healthy pack",
+    "perturbation": "The redundant channel is offset progressively beyond the plausibility envelope",
+    "related_requirement_refs": [
+     "FB2-SYS-SYR-000002",
+     "FB2-SYS-SYR-000004"
+    ],
+    "safe_state_interaction": "Deliberately not reached for a moderate degradation. Reaching it is the failure this scenario exists to detect, because an item that escalates every degradation is safe and useless.",
+    "scenario_id": "OS-001"
+   },
+   {
+    "expected_item_behaviour": "Escalate to the safe state rather than continue on an unusable channel",
+    "expected_observable_outcome": "Contactors open; fault latched and diagnosable",
+    "initial_conditions": [
+     "Item already in degraded mode"
+    ],
+    "observable_by": "The service technician",
+    "operational_situation": "Pack at rest in a workshop, degradation continues past the point of any usable reference",
+    "perturbation": "The degraded channel is driven to a total loss of reference",
+    "related_requirement_refs": [
+     "FB2-SYS-SYR-000002"
+    ],
+    "safe_state_interaction": "Reached. The boundary between the first scenario and this one is the degraded-to-fault threshold, and no numerical value for that boundary exists in this corpus.",
+    "scenario_id": "OS-009"
+   }
+  ],
+  "origin": "synthetic",
+  "owner_role": "system_engineer",
+  "postconditions": [
+   "The channel is repaired and the item is back in normal mode.",
+   "The degraded indication has cleared and no fault entry remains latched."
+  ],
+  "preconditions": [
+   "The pack is at a nominal state and the vehicle is stationary.",
+   "Both measurement channels are healthy at the start of the run.",
+   "A channel-degradation mechanism is available to the test."
+  ],
+  "primary_stakeholders": [
+   "FB2-SYS-NED-000002",
+   "FB2-SYS-NED-000005"
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "system_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Use case authored because SYS.1 was recorded as a coverage gap. Each use case carries operational scenarios, because a use case without a scenario cannot be validated and the gap report separately recorded that validation measures were missing.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Requirements elicitation: use cases and their operational scenarios.",
+    "reference": "SYS.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The use case is the object validation is written against.",
+    "reference": "VAL.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Use case: a single measurement channel degrades in service",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "use_case_id": "FB2-SYS-UC-000003",
+  "use_case_name": "Use case: a single measurement channel degrades in service",
+  "validation_measures": [
+   "FB2-VER-TMS-000014"
+  ],
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "use_case",
+  "engineering_domain": "system",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "system_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SYS-UC-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SYS-UC-000003",
+  "revision": "1"
+ }
+}

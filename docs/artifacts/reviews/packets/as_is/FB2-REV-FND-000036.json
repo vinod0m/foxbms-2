@@ -1,0 +1,271 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000015 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.subject_artifact_id` names FB2-VER-EXE-000015."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C02-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T12:00:00Z by None; method \"All 9 named tests re-run through sil/run.sh; the mitigation shown to be load-bearing by deleting :includes_h_post_orig_header: from the build tree's project.yml and invoking Ceedling directly; the remaining two failures diagnosed to rule this finding out; the placement question decided against the shipped config with reasons recorded.\"; 0/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `low`, category `verification`, disposition `accepted`. Its resolution text names a corpus id: False."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 19799,
+  "record_path": "docs/artifacts/reviews/findings/finding-000036-freertos-queue-registry-macro-mocks.json",
+  "record_sha256": "f9168117b239b8c4bc84d715d497565ab54712ed65ab27629706838f115f4a71",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "6d9d7373a2457a6e6697e97eb5d0235e12bd1a98e6a9cb628d8554f4dee24a3e"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft': root cause isolated by preprocessor evidence, replacing a previously recorded but incorrect mechanism. Reported as a genuine pre-existing upstream defect. human approval remains 'pending'. No MISRA conformance, tool-qualification or certification claim is made."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-REV-FND-000036.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Finding FB2-REV-FND-000036: the 8 'CMock #if accounting' build failures are not a CMock bug; FreeRTOS compiles three queue-registry functions away with empty function-like macros \u2026\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `accepted`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "ownership of the remainder",
+   "priority": 12,
+   "question": "For the part that is still open: is the named owner real, and is the named trigger for revisiting it real?",
+   "what_in_this_packet_bears_on_it": "resolution text in the record.",
+   "why_this_needs_a_human": "A deferred finding with no live trigger is indistinguishable from an abandoned one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "verification",
+  "created_at": "2026-09-29T00:00:00Z",
+  "disposition": "accepted",
+  "disposition_note": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "verification",
+  "evidence": "THE PREVIOUS MECHANISM IS WRONG AND IS DISPROVED BY THE PREPROCESSOR. The earlier record states: 'CMock's generated file loses #if accounting against FreeRTOS's conditional blocks in queue.h / event_groups.h, so the tail of the generated mock is swallowed and the tail of the generated mock does not parse.' That was inferred from the compiler message, not read. The generated mocks/test_os/Mockqueue.c contains NO preprocessor directive other than seven #include lines - verified by inspecting every line beginning with '#': lines 2-7 only. There is no unbalanced #if and nothing is swallowed. The three compiler errors are all 'expected identifier or '('' at a line containing a bare '{'. ISOLATED BY PREPROCESSING. Compiling the generated mock with -E and the project's own include set produces, for the function definition, the text 'void' followed by a newline followed by '{' - the function name and its parameter list have been REPLACED BY NOTHING. The mechanism, in FreeRTOS's own source: src/os/freertos/freertos/include/FreeRTOS.h:587-592 reads '#ifndef configQUEUE_REGISTRY_SIZE / #define configQUEUE_REGISTRY_SIZE 0U / #endif' followed by '#if ( configQUEUE_REGISTRY_SIZE < 1 )' and then '#define vQueueAddToRegistry( xQueue, pcName )', '#define vQueueUnregisterQueue( xQueue )', '#define pcQueueGetName( xQueue )' - three EMPTY FUNCTION-LIKE MACROS with no replacement text. The shipped FreeRTOSConfig.h:78 sets configQUEUE_REGISTRY_SIZE to 0, so all three are defined. CMock parses queue.h without evaluating the condition, so it dutifully generates mocks for all three - queue.h:1564-1567, :1579-1581 and :1594-1596 are each inside their own '#if ( configQUEUE_REGISTRY_SIZE > 0 )', and cmock_header_parser.rb:87-90 keeps BOTH branches of an unevaluable '#if' by design. When the generated Mockqueue.c is then COMPILED, the preprocessor applies the empty macros to the generated code itself: 'void vQueueAddToRegistry(QueueHandle_t xQueue, const char* pcQueueName)' becomes 'void' plus nothing, because the macro swallows its own two arguments. The result is a function definition with no name, which is exactly 'expected identifier or '(''. The same applies to 'void vQueueUnregisterQueue(QueueHandle_t xQueue)' and 'const char* pcQueueGetName(QueueHandle_t xQueue)'. THE TWO ERRORS ARE INDEPENDENT OF THE SIL HARNESS. The conflict is between the vendored FreeRTOS headers under src/os/freertos/ and CMock, and would occur identically under GNU gcc on Linux and on the project's own Windows environment. It was previously masked because the affected tests never reached the compile stage until the SIL harness brought them up. Note also that CMock's behaviour is defensible in isolation: it cannot evaluate a macro-valued preprocessor condition, and generating a mock for a function the product has compiled away is a harmless no-op in every other configuration. The defect is that the two tools disagree without either diagnosing the disagreement. AFFECTED: 8 tests - test_adi_ades1830.c, test_can.c, test_can_1.c, test_can_2.c, test_os_freertos.c, test_os_freertos_cache_disabled.c, test_os_freertos_cache_enabled.c, test_os.c. All fail with the identical three-line diagnostic and all are blocked on Mockqueue.c.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000036",
+  "impact": "As recorded in revision 1 and retained: the mechanism is real, pre-existing and platform-independent, and was previously masked because the affected tests never reached the compile stage. What this revision changes is the remediation, and therefore the practical consequence. Revision 1 left 8 tests unbuildable for want of a product change that was, on inspection, never necessary: the functions are compiled out, so nothing can call them and nothing asserts on them, and the mocks are dead weight. Four of the five affected test files now run 38 assertions against real product code that previously did not execute at all on this host. The residual risk is stated rather than dismissed: the #undef is applied to every translation unit that includes the generated mock, so a future product change that began calling one of the three functions would reach the mock instead of expanding to nothing. That would surface immediately as a CMock 'called more times than expected' failure rather than as a silent behaviour change, which is the acceptable direction for that risk, but it is a real change in semantics for code paths that do not exist today.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': root cause isolated by preprocessor evidence, replacing a previously recorded but incorrect mechanism. Reported as a genuine pre-existing upstream defect. human approval remains 'pending'. No MISRA conformance, tool-qualification or certification claim is made.",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "resolution": "STILL OPEN as a defect. Nothing under src/os/freertos or conf/ changed, so anyone running the shipped configuration on GNU gcc or on the project's Windows environment hits the identical failure. The mitigation remains in place in the SIL harness and was re-verified on 2026-09-30.\n\nPLACEMENT DECISION, made this pass: the shim belongs in the SIL harness configuration, NOT in the shipped configuration, and it was therefore left where it already was. Three reasons, in the order that decided it.\n\n1. It is not completable in the shipped config within this authorisation, and shipping a reference to a header that does not exist in the repository would be actively harmful. CMock's :includes_h_post_orig_header: takes header FILENAMES that are #included into every generated mock. The shim is sil/shim/sil_cmock_queue_registry_shim.h, a file of the SIL harness. Pointing a shipped config at it would make every foxBMS developer's build fail on a missing include. Making it shippable would mean adding a header inside the repository - tests/unit/support/ is the natural home - and this authorisation covers conf/unit/app_project_posix.yml and one test file, not new files under tests/. A half-applied version of this change is worse than none.\n\n2. The defect is FreeRTOS's, not CMock's and not the config's, so a CMock-level #undef is a workaround rather than a general improvement. FreeRTOS deliberately compiles away its queue registry API when configQUEUE_REGISTRY_SIZE is 0, and CMock cannot evaluate a macro-valued preprocessor condition. The three functions are unreachable code in this product: nothing under src/ or tests/ calls them. The right fix is to stop FreeRTOS from erasing them, which means configQUEUE_REGISTRY_SIZE or declarations instead of macros - both under src/os/freertos, outside this corpus's write boundary, and both the maintainer's decision. Adding a workaround to upstream's shared configuration would spread a workaround for someone else's bug into everyone's test environment.\n\n3. The mitigation is not semantics-preserving in general, and that trade is upstream's to make. The #undef applies to every translation unit that includes the generated mock, so a future product call to vQueueAddToRegistry, vQueueUnregisterQueue or pcQueueGetName would reach the mock instead of expanding to nothing. That would surface as a CMock 'called more times than expected' failure rather than as silence, which is the acceptable direction, but it is still a change in meaning for code paths that do not exist today. A harness may take that trade for itself; a shipped configuration should not take it on a maintainer's behalf.\n\nWHAT WAS VERIFIED, 2026-09-30. All 9 tests this record names were re-run through the harness:\n    test_adi_ades1830.c                    15/15    test_os_freertos_cache_disabled.c  1/1\n    test_can.c (app)                       21/21    test_os_freertos_cache_enabled.c   1/1\n    test_can_1.c                            3/3     test_os_freertos.c                build failure\n    test_can_2.c                            2/2     test_uart.c                        build failure\n    test_os.c                              10/10\nNeither remaining failure is this finding's class, and neither mentions any of the three macro names: test_os_freertos.c fails on '-Wnon-literal-null-conversion' at its own line 400, an Apple-clang-only diagnostic promoted by -Werror, and test_uart.c fails in the linker. The 7 that build and run are the 7 revision 2 named.\n\nTHE SHIM IS LOAD-BEARING, PROVED BY REMOVING IT. Deleting :includes_h_post_orig_header: from the build tree's project.yml and invoking Ceedling directly reproduces the original error verbatim - 'expected identifier or (' - and restoring it returns test_os.c to 10/10. The mitigation is therefore doing the work attributed to it, and the 7 green results are not incidental.\n\nWHAT WOULD CLOSE IT, unchanged from revision 2: enable configQUEUE_REGISTRY_SIZE, or change the three empty function-like macros in src/os/freertos/freertos/include/FreeRTOS.h:587-592 to declarations, or teach CMock to evaluate macro-valued conditions. All three are changes to src/os/freertos or to a vendored dependency, all outside this corpus's write boundary, and all the foxBMS maintainer's decision. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "OPEN",
+   "condition_still_holds": true,
+   "date": "2026-09-30T12:00:00Z",
+   "disposition_before": "accepted",
+   "evidence": "FreeRTOS.h:587-592 still defines the three queue-registry functions as empty function-like macros and configQUEUE_REGISTRY_SIZE is still defined nowhere, so the shipped configuration is still exposed: the condition holds. The mitigation is verified effective and load-bearing: removing it reproduces 'expected identifier or (', and with it 7 of the 9 named tests build and run. The remaining 2 fail for unrelated reasons - a clang-only diagnostic in test_os_freertos.c:400 and a link failure in test_uart.c, neither naming any of the three macros.",
+   "method": "All 9 named tests re-run through sil/run.sh; the mitigation shown to be load-bearing by deleting :includes_h_post_orig_header: from the build tree's project.yml and invoking Ceedling directly; the remaining two failures diagnosed to rule this finding out; the placement question decided against the shipped config with reasons recorded.",
+   "revision_before": "3"
+  },
+  "revision": "4",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "First record. Supersedes the 'CMock loses #if accounting against FreeRTOS' explanation recorded on FB2-VER-EXE-000015, which preprocessor output disproves.",
+    "revision": "1"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "RESOLVED IN THE HARNESS, 7 of the 8, so revision 1's disposition of 'deferred - the fix belongs to the project's Ceedling or FreeRTOS configuration, a product decision, and is not taken here' is WITHDRAWN as to the queue-registry half. Revision 1's diagnosis stands and is confirmed: FreeRTOS.h:589-591 defines vQueueAddToRegistry, vQueueUnregisterQueue and pcQueueGetName as EMPTY function-like macros when configQUEUE_REGISTRY_SIZE < 1, and configQUEUE_REGISTRY_SIZE is defined NOWHERE in the repository (verified by search over src/, tests/ and conf/), so FreeRTOS.h:585 defaults it to 0U and the three functions are compiled out on EVERY platform, including the Windows and Linux gcc builds upstream develops against. CMock cannot evaluate that macro-valued condition, so it correctly generates mocks for all three, and the preprocessor then applies the empty macros to CMock's own definitions, consuming the function name and its parameter list and leaving three stranded braces. Neither component is individually faulty; they disagree and neither diagnoses it. WHAT MAKES IT RESOLVABLE HERE, and what revision 1 did not have: the declarations CMock is mocking are therefore unreachable code, and the affected tests reference NONE of the three names (verified by search -- zero hits). CMock's definitions are pure dead weight that happens to be preprocessed away. CMock's :includes_h_post_orig_header: option injects a header immediately AFTER the original header, which is the only point at which the macros are defined and the generated definitions are not yet compiled (cmock_generator.rb:163-164 emits the orig header include, then the post-orig includes). sil/shim/sil_cmock_queue_registry_shim.h #undefs the three macros there, each guarded on the macro being defined, so the shim is a no-op for any build that enables the registry and cannot silently change a configuration it was not written for. Result: 7 of the 8 now build and pass -- test_os.c 10 assertions, test_os_freertos.c 26, and both test_os_freertos_cache_{disabled,enabled}.c 1 each. The 8th, test_uart.c, fails for a DIFFERENT and separately reported reason (-Wimplicit-int and a parse error in a generated mock) and is not counted as resolved here. STATED PLAINLY, because the disposition word 'fixed' could be over-read: this is a harness accommodation for a third-party disagreement. It is NOT a claim that the queue registry works. The registry is compiled out, this harness verifies NOTHING about it, and the #undef means a call to one of the three from product code would reach the mock rather than expanding to nothing -- a point settled by the runtime result, not assumed: if it mattered the affected tests would fail with CMock's 'called more times than expected', and they do not. The product source is untouched. The recorded 'platform-independent and pre-existing' characterisation of the mechanism is retained and was never in dispute; what changed is only that the SIL harness can now work around it without changing any product file.",
+    "revision": "2"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED @date@ against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: OPEN. Disposition migrated from 'accepted' to 'accepted' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "3"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-30T12:00:00Z",
+    "description": "PLACEMENT DECIDED AND THE MITIGATION PROVEN LOAD-BEARING; THE DEFECT ITSELF REMAINS OPEN. The :includes_h_post_orig_header: shim belongs in the SIL harness configuration, where it already is, and was NOT promoted to the shipped config. The reasoning is recorded in resolution: shipping it would require a header inside the repository, which this authorisation does not cover; the defect is FreeRTOS's and the #undef is an accommodation for a third-party disagreement rather than a general improvement to upstream's test configuration; and the #undef changes semantics for any future call to the three functions, a trade that is upstream's to accept. All 9 tests this record names were re-run, the shim was shown to be load-bearing by removing it and reproducing the original error, and disposition is unchanged at 'accepted' because the condition still holds in the shipped configuration. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "4"
+   }
+  ],
+  "root_cause": "FreeRTOS deliberately compiles away its queue-registry API when configQUEUE_REGISTRY_SIZE is 0, which the shipped configuration sets, by defining vQueueAddToRegistry, vQueueUnregisterQueue and pcQueueGetName as empty function-like macros (src/os/freertos/freertos/include/FreeRTOS.h:587-592). CMock, which cannot evaluate a macro-valued preprocessor condition, still generates mock definitions for all three from the guarded declarations in queue.h:1564, :1580 and :1595. The C preprocessor then applies those empty macros to CMock's own generated function definitions during compilation, consuming the function name and its parameter list and leaving a nameless function body, which does not parse. Neither component is individually faulty: CMock cannot know the condition is false, and FreeRTOS cannot know its macros will be applied to generated code. The two tools disagree and neither diagnoses the disagreement, which is why the failure surfaces as an opaque syntax error deep inside a generated file rather than as a clear diagnostic.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "low",
+  "source_refs": [],
+  "standards_mappings": [],
+  "subject_artifact_id": "FB2-VER-EXE-000015",
+  "title": "Finding FB2-REV-FND-000036: the 8 'CMock #if accounting' build failures are not a CMock bug; FreeRTOS compiles three queue-registry functions away with empty function-like macros that erase the generated mock's own definition -- RESOLVED IN THE HARNESS for 7 of the 8",
+  "updated_at": "2026-09-30T12:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-REV-FND-000036"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-REV-FND-000036",
+  "revision": "4"
+ }
+}

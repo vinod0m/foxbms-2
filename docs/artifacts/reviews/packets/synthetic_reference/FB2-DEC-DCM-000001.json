@@ -1,0 +1,484 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-LIF-000110",
+    "rationale": "The decommissioning assumptions depend on the item definition's scope statement, which places cell chemistry outside the item's boundary and is the reason the recycler's obligations are assumed rather than owned.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-DEC-DCM-000001",
+    "target_id": "FB2-SAF-ITE-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000152",
+    "rationale": "FB2-REV-000014 reviewed FB2-DEC-DCM-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-DEC-DCM-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against post_development_record.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000152 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C01-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 7, Clause 12 (end of life and decommissioning) with status `mapped` on the grounds: The end-of-life activity this record identifies."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 14204,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/decommissioning/decommissioning-and-recycling-assumptions.json",
+  "record_sha256": "60040a1ca73a71aa20a429009f220bd415d92be81c85c130b69b0b625f410e95",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "228aa72e38287ac5c227cef92ff4cf80a61983facc31faffa9a97b9a3fe6d258"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic. There is no pack, no item, no vehicle and no recycler. Nothing below has been performed and no assumption below has been agreed by any party.",
+    "No regulatory requirement on battery end-of-life or waste handling is stated or assessed anywhere in this record. That is a real omission: a real programme's decommissioning record would be dominated by such requirements, and this one cannot be, because this corpus neither knows nor asserts them.",
+    "The first assumption is the one whose failure is fatal, and the item has no control over it. The record says so rather than listing a control it does not have.",
+    "One assumption is recorded explicitly with 'control_that_makes_it_visible: none'. An assumption with no control is still worth recording, because a programme that does not record it will discover it in the field.",
+    "This record contributes nothing to end-of-life safety in practice. Its value is that it says explicitly who owns the risk once the item is gone, rather than leaving the question open."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record and no pack exists to decommission."
+  },
+  {
+   "field": "scope",
+   "value": {
+    "in_scope": [
+     "What the item assumes about being removed from a vehicle",
+     "What the item assumes about the state of the pack at that point",
+     "What it assumes about who handles the pack afterwards",
+     "The information the item leaves behind for whoever does",
+     "What the item contributes to end-of-life safety and what it cannot"
+    ],
+    "out_of_scope": [
+     "The pack's own end-of-life requirements, which the pack integrator and the recycler own",
+     "Cell recycling, which is the cell supplier's domain",
+     "Any regulatory requirement on waste handling, which this corpus neither knows nor asserts",
+     "Any statement that a procedure described here has been performed"
+    ]
+   }
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-DEC-DCM-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this decommissioning record, do you agree that \"Decommissioning and recycling safety assumptions for the hypothetical 400 V BMS\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Assumption coverage",
+    "measure": "End-of-life assumptions with a named responsibility holder",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Control visibility",
+    "measure": "Assumptions with a named control that makes them visible",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "False-assumption consequence",
+    "measure": "Assumptions stating what follows if the assumption is false",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Receiver informed",
+    "measure": "Assumptions passed to the receiving party in service documentation",
+    "threshold": "100",
+    "unit": "%"
+   }
+  ],
+  "artifact_type": "post_development_record",
+  "assumption_refs": [
+   "FB2-ASM-002"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "calendar_note": "Every date in this record is synthetic and belongs to the hypothetical Project Northcell. No organisation, plant, vehicle, technician or recycler named here exists.",
+  "created_at": "2026-09-29T00:00:00Z",
+  "end_of_life_assumptions": [
+   {
+    "assumption": "The pack is removed from a vehicle by a party qualified to work on a 400 volt system, with the vehicle's high-voltage system isolated by the vehicle first.",
+    "basis": "Declared. No party has agreed it and nothing enforces it.",
+    "control_that_makes_it_visible": "The service documentation states the assumption at the point of removal, not in a decommissioning record the removing party never sees.",
+    "if_false": "A person works on an energised pack. This is the assumption whose failure is fatal rather than merely inconvenient, which is why it is first and why no control in this item can be relied upon to catch it.",
+    "responsibility_holder": "pack_safety_owner (fictional role identity)"
+   },
+   {
+    "assumption": "At removal the pack may be energised and within its operating envelope, and its state cannot be determined from the item after removal.",
+    "basis": "Derived from the chemistry: a lithium-ion cell retains a hazardous voltage long after load is removed. The item cannot measure its own state once disconnected.",
+    "control_that_makes_it_visible": "The final state record states that it describes the item's state at removal and is not a statement about the pack's charge.",
+    "if_false": "A removed pack is treated as safe because the item recorded a normal state before removal, and is handled accordingly while still holding a hazardous charge.",
+    "responsibility_holder": "recycler_safety_officer (fictional role identity)"
+   },
+   {
+    "assumption": "The receiving party can reach a measurement of the removed pack's voltage before it does anything else.",
+    "basis": "Declared. It depends on the receiving party's equipment and training, neither of which this project controls.",
+    "control_that_makes_it_visible": "The receiver assumption record passed with the service documentation. The control is communication, not enforcement, and it is recorded as such.",
+    "if_false": "The receiving party acts before measuring. Nothing in the item prevents this and nothing in this corpus addresses it.",
+    "responsibility_holder": "recycler_safety_officer (fictional role identity)"
+   },
+   {
+    "assumption": "The cell chemistry's own end-of-life requirements are met by the cell supplier and are not the item's to discharge.",
+    "basis": "Declared and consistent with the item definition's scope statement, which places thermal runaway and cell chemistry outside the item's boundary.",
+    "control_that_makes_it_visible": "The scope statement in FB2-SAF-ITE-000001 classifies the hazard as inherent to the chemistry rather than to the item, so the boundary decision is visible and can be challenged.",
+    "if_false": "A cell is treated as a component rather than as a hazardous material at end of life, and the item's boundary was wrong in a way that matters at exactly one moment in the product's life.",
+    "responsibility_holder": "cell_supplier_quality_engineer (fictional role identity)"
+   },
+   {
+    "assumption": "The item is not modified after removal in a way that a removing party would reasonably expect to be safe.",
+    "basis": "Declared. Not enforceable by the item.",
+    "control_that_makes_it_visible": "None. This record states the assumption and states that no control exists, which is the honest position and is the reason the assumption appears here at all.",
+    "if_false": "The item is opened or its contacts bridged, and a stored charge discharges through an unintended path.",
+    "responsibility_holder": "recycler_safety_officer (fictional role identity)"
+   }
+  ],
+  "engineering_domain": "decommissioning",
+  "evidence_state": {
+   "any_step_executed": false,
+   "executed_steps": [],
+   "reason": "No production line, vehicle, charging site, workshop, fleet or recycling facility exists anywhere in this corpus. Master-prompt clause 2.5 forbids energising hardware and connecting to vehicles, so no step below can be performed by any means available here. The record documents the procedure and records that it has not been run."
+  },
+  "fictional_project": true,
+  "human_approval_status": "pending",
+  "id": "FB2-DEC-DCM-000001",
+  "interactions_with_other_lifecycle_areas": [
+   {
+    "consequence_if_the_interaction_is_broken": "The assumptions exist in a record the removing party never sees, which is the same as them not existing.",
+    "direction": "this_area_provides_to_other",
+    "interaction": "The removal assumptions are delivered in the service documentation at the point of removal",
+    "other_area": "Installation, operation and service"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "A pack's remaining life cannot be estimated from the record left behind.",
+    "direction": "this_area_requires_from_other",
+    "interaction": "The final state record carries the configuration identification",
+    "other_area": "Release and configuration identification"
+   },
+   {
+    "consequence_if_the_interaction_is_broken": "A pack is retired for a reason its own record contradicts, or kept because a record is missing.",
+    "direction": "this_area_requires_from_other",
+    "interaction": "The field record informs the end-of-life decision",
+    "other_area": "Field monitoring and incident handling"
+   }
+  ],
+  "lifecycle_area": "decommissioning_and_recycling",
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record and no pack exists to decommission.",
+  "limitations": [
+   "Synthetic. There is no pack, no item, no vehicle and no recycler. Nothing below has been performed and no assumption below has been agreed by any party.",
+   "No regulatory requirement on battery end-of-life or waste handling is stated or assessed anywhere in this record. That is a real omission: a real programme's decommissioning record would be dominated by such requirements, and this one cannot be, because this corpus neither knows nor asserts them.",
+   "The first assumption is the one whose failure is fatal, and the item has no control over it. The record says so rather than listing a control it does not have.",
+   "One assumption is recorded explicitly with 'control_that_makes_it_visible: none'. An assumption with no control is still worth recording, because a programme that does not record it will discover it in the field.",
+   "This record contributes nothing to end-of-life safety in practice. Its value is that it says explicitly who owns the risk once the item is gone, rather than leaving the question open."
+  ],
+  "operational_authorisation_statement": "This record is a fictional engineering artefact. It is NOT an authorised decommissioning procedure, it instructs nobody to dismantle anything, and no pack, item or recycler exists. production_authorized is false.",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "post_development_id": "FB2-DEC-DCM-000001",
+  "procedures": [
+   {
+    "acceptance_condition": "The assumption is stated to every party that performs a removal, including the recycler",
+    "action": "The item assumes it is removed from a vehicle by a qualified party and that the vehicle's high-voltage system has been isolated by the vehicle's own means before removal",
+    "decision_point": "Whether removal may be performed by an unqualified party",
+    "record_produced": "Removal assumption record",
+    "step": 1,
+    "synthetic_decision": "synthetic_decision:pack_safety_owner:SYNTH-DEC-STEP-001"
+   },
+   {
+    "acceptance_condition": "No procedure relies on the item being able to report its own state at removal; the assumption is that it cannot",
+    "action": "The item assumes that at removal the pack may still be energised and may still be within its operating envelope, and that this is not knowable from the item after removal",
+    "record_produced": "Energised-state assumption record",
+    "step": 2
+   },
+   {
+    "acceptance_condition": "The final state record is written before removal and remains readable after it",
+    "action": "The item contributes a final state record: its configuration identification, its event log and its diagnosis state, written to non-volatile memory and readable after removal",
+    "decision_point": "Whether an item whose final state cannot be written is removed at all",
+    "record_produced": "Final state record",
+    "step": 3,
+    "synthetic_decision": "synthetic_decision:recycler_safety_officer:SYNTH-DEC-STEP-003"
+   },
+   {
+    "acceptance_condition": "The declaration appears in the service documentation the removing party receives, not only here",
+    "action": "The item declares that it contributes nothing to end-of-life safety once removed, and that the responsibility for a removed pack lies with the party handling it",
+    "decision_point": "This step is a declaration and carries no decision point; no synthetic_decision label applies",
+    "record_produced": "Declaration of non-contribution",
+    "step": 4
+   },
+   {
+    "acceptance_condition": "The assumption is recorded here and passed to the receiver in the service documentation; it is not enforced by anything in the item",
+    "action": "The item assumes the receiving party treats a removed pack as energised until a measurement says otherwise, and that it can reach that measurement",
+    "record_produced": "Receiver assumption record",
+    "step": 5
+   }
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "purpose": "State what this item assumes about its own end of life, who is responsible for what, and what control makes each assumption visible. An item that assumes nothing is an item whose end-of-life obligations have been pushed onto a party that never agreed to them.",
+  "records_produced": [
+   {
+    "identification_rule": "Item identification and the assumption passed to the removing party",
+    "kind": "record",
+    "record": "Removal assumption record",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Item identification, configuration identification, event log and diagnosis state",
+    "kind": "data",
+    "record": "Final state record",
+    "retention": "retained until the pack is recycled"
+   },
+   {
+    "identification_rule": "Item identification and the declaration text version",
+    "kind": "record",
+    "record": "Declaration of non-contribution",
+    "retention": "permanent"
+   },
+   {
+    "identification_rule": "Item identification and the assumption passed to the receiving party",
+    "kind": "record",
+    "record": "Receiver assumption record",
+    "retention": "permanent"
+   }
+  ],
+  "responsible_roles": [
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: project_manager (documentation owner, fictional)",
+    "responsibility": "Owns this record",
+    "role": "project_manager"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: recycler_safety_officer (end-of-life responsible party, fictional)",
+    "responsibility": "Assumed to treat a pack as energised until proven otherwise",
+    "role": "recycler_safety_officer"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: pack_safety_owner (pack end-of-life owner, fictional)",
+    "responsibility": "Owns the pack's own end-of-life decisions",
+    "role": "pack_safety_owner"
+   },
+   {
+    "is_a_real_person": false,
+    "named_as": "role identity: service_technician (removal performer, fictional)",
+    "responsibility": "Performs the removal from the vehicle",
+    "role": "service_technician"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Decommissioning and recycling assumptions record. Authored because the lifecycle-continuation view reported decommissioning and recycling as a gap with zero records and no assumption was stated anywhere.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope": {
+   "in_scope": [
+    "What the item assumes about being removed from a vehicle",
+    "What the item assumes about the state of the pack at that point",
+    "What it assumes about who handles the pack afterwards",
+    "The information the item leaves behind for whoever does",
+    "What the item contributes to end-of-life safety and what it cannot"
+   ],
+   "out_of_scope": [
+    "The pack's own end-of-life requirements, which the pack integrator and the recycler own",
+    "Cell recycling, which is the cell supplier's domain",
+    "Any regulatory requirement on waste handling, which this corpus neither knows nor asserts",
+    "Any statement that a procedure described here has been performed"
+   ]
+  },
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "The end-of-life activity this record identifies.",
+    "reference": "Part 7, Clause 12 (end of life and decommissioning)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Decommissioning and recycling safety assumptions for the hypothetical 400 V BMS",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "post_development_record",
+  "engineering_domain": "decommissioning",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-DEC-DCM-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-DEC-DCM-000001",
+  "revision": "1"
+ }
+}

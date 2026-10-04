@@ -1,0 +1,583 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000011",
+    "rationale": "Implementation element FB2-SW-IMP-000001 is the code location in which FB2-SW-DSN-000001's acquisition, PEC-validation and publication responsibilities are carried: the pinned source's LTC_Trigger sequencer, its LTC_StartVoltageMeasurement command selection, its LTC_CheckPec per-LTC integrity gate and its LTC_SaveRxToVoltageBuffer reassembly into the published database block. The link runs from the implementation to the design because that is the direction master prompt section 13 declares for implements (implementation element -> design/requirement).",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-IMP-000001",
+    "target_id": "FB2-SW-DSN-000001"
+   },
+   {
+    "link_id": "FB2-LNK-IMP-000004",
+    "rationale": "FB2-SW-IMP-000001 realises FB2-SW-SWR-000001 at the requirement level: the acquisition the statement calls for is triggered through AFE_StartMeasurement into the LTC sequencer, the PEC validation it calls for is LTC_CheckPec's per-LTC comparison, and the publication it calls for is the DATA_WRITE_DATA path. The requirement's own quantified figures - 20 Hz, 5 ms, 100% - are not established by this link, and the implementation record marks them as modelled rather than read from source.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "implements",
+    "review_state": "reviewed",
+    "source_id": "FB2-SW-IMP-000001",
+    "target_id": "FB2-SW-SWR-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against implementation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (4)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "4/4 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000001, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `124`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_StartMeasurement`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000002, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe.h`; line_range `131`; content_hash `88310361dab277e626fa190c1789785bb5dd21f11b8fe25690e111f456d9c25d`; symbol `AFE_RequestTemperatureRead`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000034, which records anchor class `repository_file`; path `src/app/driver/afe/ltc/6813-1/ltc_6813-1.c`; line_range `112-117`; content_hash `f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a`; symbol `ltc_RxPecBuffer`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000003, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe_plausibility.h`; line_range `97-99`; content_hash `a184baac5a2ee62ad1fc646e20ba704e1dd570ecdf35b586d13728eecfe9c306`; symbol `AFE_PlausibilityCheckVoltageMeasurementRange`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000034 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000034."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.implements.design_artifact_id` names FB2-SW-DSN-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.realises_requirements[0].requirement_id` names FB2-SW-SWR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[1]` names FB2-SRC-COD-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000034 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[2]` names FB2-SRC-COD-000034."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[3]` names FB2-SRC-COD-000003."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C15-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 (software unit verification is separate; this record is the code location the design maps to) with status `partially_mapped` on the grounds: This record states where the code is and what it does. It makes no claim that the software unit was verified, and no ISO 26262 classification is asserted for it."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C16-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 (software unit verification and traceability to the implementation) with status `partially_mapped` on the grounds: The record supplies the design-to-code traceability that SWE.4 expects. It does not supply the verification evidence, which lives in the FB2-VER-TMS-* measures."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 18207,
+  "record_path": "docs/artifacts/corpus/as_is/software/implementation-afe-ltc-driver.json",
+  "record_sha256": "02b5498fabd1fdf5ff7b74cb5d67b47da3395006a3a34cca5e550ac972f19885",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "4b4d9c852eda348b3f292cb034d32d0b47425dc43536bf14b56e90d14a5e4419"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Anchor discipline: this record references only anchors the previous re-derivation produced and did not invent any new one. FB2-SRC-COD-000001 (afe.h:124, AFE_StartMeasurement) and FB2-SRC-COD-000002 (afe.h:131, AFE_RequestTemperatureRead) are the declared API entries; FB2-SRC-COD-000034 (ltc_6813-1.c:112-117, ltc_RxPecBuffer / ltc_TxPecBuffer) is the PEC buffer pair this backend uses; FB2-SRC-COD-000003 (afe_plausibility.h:97-99) is the plausibility entry that the design's validation responsibility reaches through. The code_locations above are additional, finer-grained positions than any anchor carries, and each is independently verifiable by the method in evidence_status.method."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SW-IMP-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Implementation: LTC 6813-1 AFE measurement cycle, PEC validation and database publication\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anchor_refs": [
+   "FB2-SRC-COD-000001",
+   "FB2-SRC-COD-000002",
+   "FB2-SRC-COD-000034",
+   "FB2-SRC-COD-000003"
+  ],
+  "artifact_type": "implementation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behaviours": [
+   {
+    "behaviour_id": "AFE-IMP-TRIGGER",
+    "description": "Starts a measurement cycle by submitting an LTC_STATE_INIT_REQUEST to the per-driver state request setter, which is what the task layer calls each cycle.",
+    "evidence_line_range": "142-150",
+    "evidence_symbol": "AFE_StartMeasurement",
+    "kind": "state_transition"
+   },
+   {
+    "behaviour_id": "AFE-IMP-ADCV-CMD",
+    "description": "Selects and transmits one of the ltc_cmdADCV_* commands for a full-cell or two-cell ADC measurement, and refuses to transmit for an unsupported mode/channel combination.",
+    "evidence_line_range": "3678-3711",
+    "evidence_symbol": "LTC_StartVoltageMeasurement",
+    "kind": "transfer"
+   },
+   {
+    "behaviour_id": "AFE-IMP-PEC-GATE",
+    "description": "Recomputes the 15-bit PEC for each LTC in the daisy chain and records the comparison result per LTC, so a corrupted frame is marked rather than consumed.",
+    "evidence_line_range": "3838-3878",
+    "evidence_symbol": "LTC_CheckPec",
+    "kind": "integrity_check"
+   },
+   {
+    "behaviour_id": "AFE-IMP-VOLT-REASSEMBLY",
+    "description": "Reassembles the cell voltages from the received byte pairs of each register group and writes them into the database block, skipping channels the configuration marks unused.",
+    "evidence_line_range": "3064-3150",
+    "evidence_symbol": "LTC_SaveRxToVoltageBuffer",
+    "kind": "conversion"
+   },
+   {
+    "behaviour_id": "AFE-IMP-PUBLISH",
+    "description": "Publishes the parsed voltage block to the database; the database write path stamps the block header with the current tick so every published block carries an age.",
+    "evidence_line_range": "653",
+    "evidence_symbol": "DATA_WRITE_DATA",
+    "kind": "publication"
+   },
+   {
+    "behaviour_id": "AFE-IMP-PEC-ALGO",
+    "description": "The CRC-15 polynomial used for the LTC packet error code, shared by every LTC-family backend.",
+    "evidence_line_range": "75-115",
+    "evidence_symbol": "LTC_CalculatePec15",
+    "kind": "integrity_check"
+   },
+   {
+    "behaviour_id": "AFE-IMP-DMA-XFER",
+    "description": "Configures the paired SPI transmit and receive DMA channels for the frame, elevating privilege for the register write, and lets the completion interrupt finish the transfer.",
+    "evidence_line_range": "403-511",
+    "evidence_symbol": "SPI_TransmitReceiveDataDma",
+    "kind": "transfer"
+   },
+   {
+    "behaviour_id": "AFE-IMP-DMA-DONE",
+    "description": "Clears the driver's transmit-in-progress flag when the DMA receive-complete interrupt reports that the transfer finished.",
+    "evidence_line_range": "88-93",
+    "evidence_symbol": "AFE_DmaCallback",
+    "kind": "interrupt_dispatch"
+   }
+  ],
+  "code_locations": [
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+    "line_range": "833-2964",
+    "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+    "repository": "foxbms-2",
+    "symbol": "LTC_Trigger",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+    "line_range": "3678-3711",
+    "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+    "repository": "foxbms-2",
+    "symbol": "LTC_StartVoltageMeasurement",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+    "line_range": "3838-3878",
+    "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+    "repository": "foxbms-2",
+    "symbol": "LTC_CheckPec",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+    "line_range": "3064-3150",
+    "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+    "repository": "foxbms-2",
+    "symbol": "LTC_SaveRxToVoltageBuffer",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:af26f839e70fc0cf1bb1ab47231f3f342895f32871b9489163082d37635d18fa",
+    "line_range": "75-115",
+    "path": "src/app/driver/afe/ltc/common/ltc_pec.c",
+    "repository": "foxbms-2",
+    "symbol": "LTC_CalculatePec15",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:972adaeef5c8682198672beeb7c90a57fca8b114f9bbe9ee41590f9a19cc7af6",
+    "line_range": "142-150",
+    "path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+    "repository": "foxbms-2",
+    "symbol": "AFE_StartMeasurement",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:cf3f363240ca36bf2177e90ecdc048672546318db72b1f5d94129deab67d5a92",
+    "line_range": "403-511",
+    "path": "src/app/driver/spi/spi.c",
+    "repository": "foxbms-2",
+    "symbol": "SPI_TransmitReceiveDataDma",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:62fbd4b2bb9cf25916aaa8c40bce6419cc9f6962c08a0bfff1dae8bc6749e285",
+    "line_range": "88-93",
+    "path": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+    "repository": "foxbms-2",
+    "symbol": "AFE_DmaCallback",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:8d4822e23aa934807bed6bf6b50be97753abd96b80c344dccba0b299cf559d3d",
+    "line_range": "393-400",
+    "path": "src/app/driver/dma/dma.c",
+    "repository": "foxbms-2",
+    "symbol": "AFE_DmaCallback",
+    "symbol_role": "translation_unit_body",
+    "verified_against_pinned_source": true
+   }
+  ],
+  "concurrency_and_isr_context": [
+   {
+    "context": "task",
+    "entry_points": [
+     "AFE_StartMeasurement",
+     "AFE_RequestTemperatureRead"
+    ],
+    "shared_state": "ltc_state, the per-driver LTC_STATE_s, written by the task and read by the same task; the sequencer guards re-entrance with LTC_CheckReEntrance (ltc_6813-1.c:748-761). The transmit_in_progress flag it also holds is written from the DMA driver's receive-complete interrupt by AFE_DmaCallback and cleared by the task, which is the one genuinely cross-context interaction in this element."
+   }
+  ],
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "software",
+  "evidence_status": {
+   "limitations": [
+    "The content_hash recorded here is the sha256 of the file AT THE PINNED COMMIT. For this file it is also the sha256 of the working-tree copy, so the working tree and the pin agree; for files where they differ this distinction matters and is stated in the relevant record.",
+    "Existence was verified. Behaviour was verified by reading the code. Nothing here was executed, and no measurement of this module's timing, coverage or throughput exists in this corpus.",
+    "The design record FB2-SW-DSN-000001 asserts four implementation symbols that do not exist anywhere in the repository. Those assertions were not carried into this record and are not corrected here, because the design record is a separate artefact; the disagreement is stated in implements.partial_coverage and in this record's provenance_note."
+   ],
+   "locations_verified": true,
+   "method": "For each code_location: the file was read at the pinned commit with 'git show 308028fb:path'; the file's sha256 was computed from that pinned blob and is the value recorded in content_hash; the named symbol was confirmed to occur inside the recorded line_range of that pinned content, and the line range was confirmed to lie within the pinned file's length. Line ranges were cross-read against 'graft skeleton' output for the same files, which reports definition line spans independently of this authoring pass. The DMA path was additionally confirmed by reading SPI_TransmitReceiveDataDma in spi.c, AFE_DmaCallback in ltc_afe_dma.c, and the DMA driver's receive-complete interrupt case in dma.c at the pinned commit."
+  },
+  "guard": {
+   "confers_no_production_authority": true,
+   "confers_no_verification_credit": true,
+   "human_approval_required": true,
+   "is_implementation_evidence": false,
+   "is_verification_result": false,
+   "statement": "This record says where the code for FB2-SW-DSN-000001's acquisition path is and what that code does. It is not evidence that FB2-SW-SWR-000001 is met: the quantified acceptance criteria of that requirement (20 Hz acquisition, 5 ms publication latency, 100% PEC coverage) are not established by any location listed here, and the two measures that address them carry their own outcome, which in the as_is profile is a host-run record with its own limitations. It confers no production authority and no product verification credit, and no human has approved it."
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IMP-000001",
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source_with_deviations",
+  "implements": {
+   "design_artifact_id": "FB2-SW-DSN-000001",
+   "design_level": "architecture",
+   "partial_coverage": [
+    "The design's implementation_mapping asserts four symbols - LTC_AFE_TriggerMeasurement, LTC_AFE_DMA_RxCallback, LTC_PEC_Calculate and LTC_6813_ReadVoltages - and two paths, src/app/driver/afe/ltc/common/ltc_afe.c and src/app/driver/afe/ltc/common/ltc_afe_dma.c. None of the four symbols occurs anywhere in the repository. Of the two paths, ltc_afe_dma.c does exist and is where the DMA completion callback AFE_DmaCallback lives; ltc_afe.c does not exist - the module is at src/app/driver/afe/ltc/api/ltc_afe.c. The design's DMA mechanism is therefore substantively realised and its symbol names and one of its two paths are wrong; this record names the symbols and paths that exist and does not adopt the design's spelling.",
+    "The design's 'DMA buffer size: 256 bytes per slave' constraint has no counterpart this record can point at. The realised transfer sizes its DMA channel from the frame length passed to SPI_TransmitReceiveDataDma rather than from a fixed per-slave buffer of that size, and no 256-byte per-slave buffer was found in the AFE code. The constraint is recorded as unevidenced rather than claimed as met.",
+    "The design's 'database publishing' happens through the DATA_WRITE_DATA macro (ltc_6813-1.c:653), which timestamps the block header in database.c:160-194 (DATA_CopyData sets previousTimestamp and timestamp from OS_GetTickCount). The design says nothing about timestamping; the code carries a per-block age that the design does not describe.",
+    "The design's balancing behaviour is only partially realised in this file: LTC_BalanceControl (ltc_6813-1.c:3453-3583) and LTC_SaveBalancingFeedback (710-720) exist in the same translation unit, but this record scopes itself to the voltage acquisition path and does not claim the balancing behaviour as realised.",
+    "The design's temperature read (state READ_TEMPERATURES) is realised by the same sequencer through LTC_StartGpioMeasurement (3727-3781) rather than by a separate temperature command sequence, which is a structural difference from the design's two-state split.",
+    "The design's 'Task period: 100 ms' and 'Stack usage: < 2 KB' constraints are not established by anything in this record. No task period or stack figure for this module is measured or recorded anywhere in this corpus."
+   ],
+   "relationship": "This translation unit is where FB2-SW-DSN-000001's acquisition, PEC-validation and publication responsibilities are actually carried. The mechanism, read from the pinned source: AFE_StartMeasurement (ltc_afe.c:142-150) submits an LTC_STATE_INIT_REQUEST to LTC_SetStateRequest, which is the entry into LTC_Trigger's step sequencer; LTC_StartVoltageMeasurement (ltc_6813-1.c:3678-3711) sends one of the ltc_cmdADCV_* commands, selecting between fast/normal/filtered ADC modes and between all-channel and two-cell channel selection, and returns STD_NOT_OK for any other combination rather than transmitting; LTC_CheckPec (3838-3878) recomputes a 15-bit PEC per LTC from the six received bytes with LTC_CalculatePec15 (ltc_pec.c:75-115) and compares it byte-for-byte against the two received PEC bytes, writing PEC_valid[stringNumber][i] into the error table and returning STD_NOT_OK on the first mismatch unless LTC_DISCARD_PEC is set; LTC_SaveRxToVoltageBuffer (3064-3150) reassembles three voltages per register group from the little-endian byte pairs at offset 4 + 2*c + 8*m and writes the result into ltc_state->ltcData.cellVoltage, after which DATA_WRITE_DATA publishes the block. The DMA transfer the design selects is not in this file but is real and is carried by the SPI driver (SPI_TransmitReceiveDataDma, src/app/driver/spi/spi.c:403-511) with completion signalled through AFE_DmaCallback (src/app/driver/afe/ltc/common/ltc_afe_dma.c:88-93), which the DMA driver calls from its receive-complete interrupt when FOXBMS_AFE_DRIVER_LTC is 1 (src/app/driver/dma/dma.c:393-400). So the design's INIT -> READ_VOLTAGES -> VALIDATE -> PUBLISH sequence is realised as a table-driven sequencer plus a per-LTC PEC gate plus a DMA-backed SPI transfer plus a block write, not as the seven-state machine the design record draws."
+  },
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity or human confirmation.",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_note": "Anchor discipline: this record references only anchors the previous re-derivation produced and did not invent any new one. FB2-SRC-COD-000001 (afe.h:124, AFE_StartMeasurement) and FB2-SRC-COD-000002 (afe.h:131, AFE_RequestTemperatureRead) are the declared API entries; FB2-SRC-COD-000034 (ltc_6813-1.c:112-117, ltc_RxPecBuffer / ltc_TxPecBuffer) is the PEC buffer pair this backend uses; FB2-SRC-COD-000003 (afe_plausibility.h:97-99) is the plausibility entry that the design's validation responsibility reaches through. The code_locations above are additional, finer-grained positions than any anchor carries, and each is independently verifiable by the method in evidence_status.method.",
+  "realises_requirements": [
+   {
+    "figure_provenance": "mixed_read_and_modelled",
+    "how_realised": "Acquisition is started through AFE_StartMeasurement -> LTC_SetStateRequest -> LTC_Trigger; integrity is gated by LTC_CheckPec, which invalidates the per-LTC PEC_valid flag on a mismatch and only then permits the parsed values to reach the database block; publication is DATA_WRITE_DATA(ltc_state->ltcData.cellVoltage) at ltc_6813-1.c:653, whose database handler stamps a timestamp. That is the three-part mechanism the requirement's statement describes (trigger acquisition, validate PEC, publish).",
+    "requirement_id": "FB2-SW-SWR-000001"
+   }
+  ],
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "First issue. Authored because the corpus held no artefact of type implementation: the design-to-code relationship existed only as an implementation_mapping array inside FB2-SW-DSN-000001, and that array asserted four symbols (LTC_AFE_TriggerMeasurement, LTC_AFE_DMA_RxCallback, LTC_PEC_Calculate, LTC_6813_ReadVoltages) that exist nowhere in the repository. This record names only symbols that were read out of the pinned source and verified to exist there.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000001",
+   "FB2-SRC-COD-000002",
+   "FB2-SRC-COD-000034",
+   "FB2-SRC-COD-000003"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "This record states where the code is and what it does. It makes no claim that the software unit was verified, and no ISO 26262 classification is asserted for it.",
+    "reference": "Part 6, Clause 9 (software unit verification is separate; this record is the code location the design maps to)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "The record supplies the design-to-code traceability that SWE.4 expects. It does not supply the verification evidence, which lives in the FB2-VER-TMS-* measures.",
+    "reference": "SWE.4 (software unit verification and traceability to the implementation)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Implementation: LTC 6813-1 AFE measurement cycle, PEC validation and database publication",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SW-IMP-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SW-IMP-000001",
+  "revision": "1"
+ }
+}

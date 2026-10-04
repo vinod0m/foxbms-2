@@ -1,0 +1,672 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-VSW-000004",
+    "rationale": "The summary reports the state the qualification plan describes, including the eleven pass criteria of which six are unmet. If the plan is revised, the summary's verdict is no longer accurate and must be reissued.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-VER-VSR-000001",
+    "target_id": "FB2-VER-SQP-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000005",
+    "rationale": "The summary's what_is_blocked section reports that 0 of 9 integration steps have been executed. That figure is the integration plan's execution_state, so the summary cannot outlive it.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-VER-VSR-000001",
+    "target_id": "FB2-VER-SIP-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000006",
+    "rationale": "The summary's what_passed and what_failed sections rest on the same recorded sweep and the same vacuity census the unit test specification reports. The 217 figure and the 5 named vacuous files come from it.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-VER-VSR-000001",
+    "target_id": "FB2-VER-UTS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-VSW-000010",
+    "rationale": "The register's residual_risk_statement is written against the summary's verdict. The summary says verification is incomplete; the register says what is being carried by leaving it that way. They cannot disagree, so the register tracks the summary.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "depends_on",
+    "review_state": "pending",
+    "source_id": "FB2-MAN-VDR-000001",
+    "target_id": "FB2-VER-VSR-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against verification_summary.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "evidence logs (3)",
+    "method": "file existence and recorded hash against the bytes on disk",
+    "result": "3/3 exist with a matching hash"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C01-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4, SWE.5, SWE.6 with status `partially_mapped` on the grounds: This is the reporting counterpart of FB2-VER-UTS-000001, FB2-VER-SIP-000001 and FB2-VER-SQP-000001. It reports the state those three plans describe. It is a summary, not a result, and it changes no process disposition by itself."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C02-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 with status `partially_mapped` on the grounds: Summary of the software verification evidence available for the three named software requirements."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C03-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json as captured output, hash `sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589`."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C04-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md as captured output, hash `sha256:50465b4839cdf42abc6bd1a69e69c39b4bf686c7c47563e0eaa2d6dc95e279ed`."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C05-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md as captured output, hash `sha256:dd2d5482f96f2026538ba3ff8fc9a506b546b8c5e07faefb2278f40d83c0e865`."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C06-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C07-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C08-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C09-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C10-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/VACUOUS-TESTS.md as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C11-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REATTRIBUTION.md as supporting evidence."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 31101,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/verification/svs-verification-summary.json",
+  "record_sha256": "694c6d72223d6d3fb02d333d4af3db84be209712786c7c891684bb08a7c6ac49",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "79b5d1ce0c36e5af10ad282bfc07a419e0320a8042e36581decf0e073913b150"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "The recorded sweep is a point-in-time measurement. The tree has moved since: commit 176fe234 landed after the sweep was generated and its own message reads 251/313 pass, so the recorded 222 is not a current figure and no re-run has been performed.",
+    "This summary reports recorded results and the absence of results. It does not and cannot make the verification complete.",
+    "The 217 figure is a join between the recorded outcomes and the current test sources. Where the tree has changed since the sweep, a target's recorded verdict and its current content no longer correspond, and this summary says so rather than reconciling the two.",
+    "No coverage measurement underlies any statement here. The 988 assertions executed is not a coverage figure and is not used as one.",
+    "The 17 build failures attributed to the product are the run's own classifier output. This summary reports the classification and does not independently re-derive each defect.",
+    "The linker crash affecting test_dp83869.c is diagnosed in TASK2-SEGFAULT.md as a host toolchain problem. That diagnosis is the run's; it was not re-tested here."
+   ]
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": false,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": false,
+    "provenance_consistent": false,
+    "schema_valid": false
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-VER-VSR-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_lead for this verification record, do you agree that \"Software Verification Summary: INCOMPLETE - one host unit sweep recorded, no integration, no qualification, no target-hardware run\" is a correct and complete statement of the verification strategy and the independence of verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "verification_summary",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": false,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": false,
+   "provenance_consistent": false,
+   "schema_valid": false
+  },
+  "baseline_id": "BAS-REF-001",
+  "counts_with_sources": [
+   {
+    "claim": "313 test targets in the recorded sweep",
+    "derivation": "results-sil-all.json .total",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "313"
+   },
+   {
+    "claim": "Targets green",
+    "derivation": "results-sil-all.json .passed_tests",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "222"
+   },
+   {
+    "claim": "Targets failed",
+    "derivation": "results-sil-all.json .failed_tests",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "7"
+   },
+   {
+    "claim": "Targets that did not build",
+    "derivation": "results-sil-all.json .build_failures",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "84"
+   },
+   {
+    "claim": "Build-failure classifier classes (see the later entry for why this count mixes two populations)",
+    "derivation": "len(results-sil-all.json .build_failure_classes)",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "13"
+   },
+   {
+    "claim": "Build failures attributed to real product defects",
+    "derivation": "Sum of the product-attributed classes in results-sil-all.json .build_failure_classes: out_of_bounds_array_index 6, macro_arity 4, implicit_function_declaration 2, implicit_int 2, absolute_value_truncation 1, excess_initializers 1 = 16 across six real_defect_* classes, plus product_tautological_guard 1 = 17. Revision 1 published 15 against this same enumeration, which is arithmetically wrong; corrected here to the value the enumeration produces.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "17"
+   },
+   {
+    "claim": "Targets that failed to build for reasons attributed to the host toolchain or the harness, not the product",
+    "derivation": "clang_only_diagnostic 22 + strict_diagnostic_both_compilers 5 + undeclared_identifier 8 + sil_interface_header_mismatch 3 + not_buildable_on_macos_object_format 1 = 39. These are the harness and host conditions, kept separate from the 17 product-attributed ones so that neither is read as the other.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "39"
+   },
+   {
+    "claim": "Targets that reached a compiler at all (the build: classes only)",
+    "derivation": "Sum of the 12 keys prefixed build: in .build_failure_classes = 56, which is 17 product-attributed plus 39 host-attributed. Published because the headline figure of 84 is the sum of these 56 and the 28 upstream-configured exclusions below, so 84 must not be read as 84 compiler failures.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "56"
+   },
+   {
+    "claim": "Keys in build_failure_classes, one of which is an exclusion rather than a build failure",
+    "derivation": "len(results-sil-all.json .build_failure_classes) = 13 keys. Twelve carry the build: prefix; the thirteenth is excluded:upstream_config, which is a deliberate exclusion rather than a build failure. The field name therefore covers two populations, and the split is published above as 56 and 28 so the 84 total is not misread.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "13"
+   },
+   {
+    "claim": "Build failures excluded upstream by configuration",
+    "derivation": "results-sil-all.json .build_failure_classes['excluded:upstream_config']",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "28"
+   },
+   {
+    "claim": "Assertions executed",
+    "derivation": "results-sil-all.json .total_assertions_tested",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "988"
+   },
+   {
+    "claim": "Assertions passed",
+    "derivation": "results-sil-all.json .total_assertions_passed",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "950"
+   },
+   {
+    "claim": "Assertions failed",
+    "derivation": "results-sil-all.json .total_assertions_failed",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "35"
+   },
+   {
+    "claim": "Green targets that contain at least one Unity assertion",
+    "derivation": "222 green targets, joined to the committed test sources by path, minus the 5 that contain zero TEST_ASSERT_ macros. Recomputable by anyone from the tree; the join key is the test path in each record.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "217"
+   },
+   {
+    "claim": "Green targets that assert nothing",
+    "derivation": "The 5 named in what_failed, each with a test case and zero TEST_ASSERT_ macros in the committed source.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "5"
+   },
+   {
+    "claim": "Test files declaring no test case, in the current tree",
+    "derivation": "Glob tests/unit/**/test_*.c at tree commit ebd6d5a6, 313 files, count void test*(void) definitions, 21 files have none. All 21 are build_failure in the recorded run.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "21"
+   },
+   {
+    "claim": "Test files with a test case and at least one assertion, in the current tree",
+    "derivation": "313 minus 21 with no test case minus 7 with a test case and no TEST_ASSERT_ macro.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "285"
+   },
+   {
+    "claim": "Interface headers the harness substitutes for hardware",
+    "derivation": "count of distinct values in halcogen_via_module_under_test across all 313 records",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "38"
+   },
+   {
+    "claim": "Tests requiring HL_spi.h",
+    "derivation": "count of records whose halcogen_via_module_under_test contains HL_spi.h",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "70"
+   },
+   {
+    "claim": "Tests requiring HL_can.h",
+    "derivation": "count of records whose halcogen_via_module_under_test contains HL_can.h",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "69"
+   },
+   {
+    "claim": "Tests requiring HL_het.h",
+    "derivation": "count of records whose halcogen_via_module_under_test contains HL_het.h",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "60"
+   },
+   {
+    "claim": "src translation units in the dependency graph",
+    "derivation": "glob of src/app/**/*.c and src/bootloader/**/*.c at tree commit ebd6d5a6; recorded in FB2-VER-SIP-000001 dependency_basis",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+    "source_sha256": "sha256:dd2d5482f96f2026538ba3ff8fc9a506b546b8c5e07faefb2278f40d83c0e865",
+    "value": "263"
+   },
+   {
+    "claim": "src translation units with at least one intra-source include edge",
+    "derivation": "Recomputed from the tree at commit ebd6d5a6: each .c's own quoted #include directives, each resolved to the sibling .c that owns the named header (same stem), excluding a self-edge. 209 of 263 translation units have at least one such edge. Revision 1 published 191, which this rule does not produce and which no variant of it reproduces; 209 is what the stated rule yields and is published here instead. The fan-in ranking in FB2-VER-SIP-000001 does reproduce exactly under the same rule.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+    "source_sha256": "sha256:dd2d5482f96f2026538ba3ff8fc9a506b546b8c5e07faefb2278f40d83c0e865",
+    "value": "209"
+   },
+   {
+    "claim": "Target-hardware executions",
+    "derivation": "Every one of the 313 records is a host build. No record in the corpus has execution_kind describing a run on the product's own hardware.",
+    "source_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "source_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "value": "0"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "engineering_domain": "verification",
+  "evidence_files": [
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/RUNBOOK.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/VACUOUS-TESTS.md",
+   "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REATTRIBUTION.md"
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-VSR-000001",
+  "independence_statement": "No verification in this corpus was performed independently. Every artefact is AI-authored, every human_approval_status is pending and every production_authorized flag is false. An AI-authored review is not independence: the pass criteria PC-011 in FB2-VER-SQP-000001 requires a person who did not author the code, and no such person has reviewed anything here. This summary is itself AI-authored from the same sources the tests were derived from, so its judgements about what the tests do and do not verify have not been checked by anyone either.",
+  "lifecycle_status": "draft",
+  "limitations": [
+   "The recorded sweep is a point-in-time measurement. The tree has moved since: commit 176fe234 landed after the sweep was generated and its own message reads 251/313 pass, so the recorded 222 is not a current figure and no re-run has been performed.",
+   "This summary reports recorded results and the absence of results. It does not and cannot make the verification complete.",
+   "The 217 figure is a join between the recorded outcomes and the current test sources. Where the tree has changed since the sweep, a target's recorded verdict and its current content no longer correspond, and this summary says so rather than reconciling the two.",
+   "No coverage measurement underlies any statement here. The 988 assertions executed is not a coverage figure and is not used as one.",
+   "The 17 build failures attributed to the product are the run's own classifier output. This summary reports the classification and does not independently re-derive each defect.",
+   "The linker crash affecting test_dp83869.c is diagnosed in TASK2-SEGFAULT.md as a host toolchain problem. That diagnosis is the run's; it was not re-tested here."
+  ],
+  "logs": [
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "hash": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "type": "custom"
+   },
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/TASK2-SEGFAULT.md",
+    "hash": "sha256:50465b4839cdf42abc6bd1a69e69c39b4bf686c7c47563e0eaa2d6dc95e279ed",
+    "type": "custom"
+   },
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/REPORT.md",
+    "hash": "sha256:dd2d5482f96f2026538ba3ff8fc9a506b546b8c5e07faefb2278f40d83c0e865",
+    "type": "custom"
+   }
+  ],
+  "origin": "derived",
+  "outstanding": [
+   "Execute the 84 build failures, or record a decision for each. 15 are classified as real product defects and are unresolved.",
+   "Decide, per vacuous test, whether a specification is wanted. The corpus's own finding states that writing tests for the config-module cases would be inventing the specification, so this is a specification decision and not an engineering one.",
+   "Give the SOA module an outcome oracle, or accept that FB2-SW-SWR-000002 has no unit verification of behaviour.",
+   "Resolve the FB2-SW-SWR-000002 debounce contradiction between the requirement and the source.",
+   "Author the SW Integration Test Specification and the SW Qualification Test Specification. Both expected families are absent.",
+   "Obtain a coverage measurement. Until one exists, no percentage of this product is known to anyone, and PC-006 stays unmet.",
+   "Clear the 19 zero-test-case AFE shared-layer test files by decision or by test. The ADI ADES183x and NXP MC3377x shared layers are the only code in the tree instantiated by more than one vendor, so an undetected defect there multiplies.",
+   "Perform a target-hardware run and record it with input and output hashes.",
+   "Have a person who did not author the code review the verification. Every artefact in this corpus is AI-authored and none is approved; PC-011 is unmet and is not a formality."
+  ],
+  "overall_verdict": {
+   "statement": "VERIFICATION IS INCOMPLETE. One level of software verification has produced a recorded result: unit verification, executed once on a host. Software integration has not been executed at all, 0 of 9 ordered steps. Software qualification has not been executed at all. No target-hardware verification has been performed. Of the three software requirements the corpus names, one is partially verified at unit level and two are not verified at unit level. Nothing in this corpus demonstrates that the foxBMS 2 product meets its software requirements, and no artefact in it is approved.",
+   "verdict": "incomplete"
+  },
+  "owner_role": "verification_lead",
+  "period": "2026-09-29 to 2026-10-01. The recorded sweep is dated 2026-09-30; the specifications, plan and this summary are dated 2026-10-01. The tree the sweep measured is not the tree as it now stands.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "verification_lead",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "First issue. Reports the state established by the single recorded host sweep and by the absence of integration, qualification and target-hardware evidence.",
+    "revision": "1"
+   },
+   {
+    "author": "verification_lead",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Corrected the product-attributed build-failure count from 15 to 17, the value its own enumeration produces, and published the 39 host-attributed and 56 build-class subtotals so that the headline 84 is not read as 84 compiler failures. Also carried the 191 to 209 correction into the translation-unit-with-edge figure taken from FB2-VER-SIP-000001. Every other published figure was re-derived from its tracked source and holds as before.",
+    "revision": "2"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "This is the reporting counterpart of FB2-VER-UTS-000001, FB2-VER-SIP-000001 and FB2-VER-SQP-000001. It reports the state those three plans describe. It is a summary, not a result, and it changes no process disposition by itself.",
+    "reference": "SWE.4, SWE.5, SWE.6",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Summary of the software verification evidence available for the three named software requirements.",
+    "reference": "Part 6, Clause 9",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "summary_basis": "Everything below is read from one place: the recorded macOS arm64 host sweep of the SIL Ceedling harness, evidence file docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json, generated 2026-09-30T01:24:18+0200, together with the classification, re-attribution and vacuity findings in the same run directory, and the three plans this corpus now holds. No figure in this summary is from any other source, and no figure is estimated.",
+  "summary_id": "FB2-VER-VSR-000001",
+  "target_hardware": {
+   "performed": false,
+   "statement": "NO TARGET-HARDWARE VERIFICATION WAS PERFORMED. Every result in this corpus was produced by a host build of the product's own C sources on an Apple Silicon Mac, against mocked interface headers. The run directory's RUNBOOK.md reproduces a host run and states that the SIL workspace symlinks src/, tests/ and conf/ read-only into an isolated build root. The corpus's own coverage report reads 0 target-hardware executions, and records 15 host/simulation executions as real product code but not target hardware. The sil/ directory in the harness exists precisely to substitute for the hardware, and the substitution is not a small one.",
+   "what_a_target_run_would_add": "Everything the host substitutes for, which is most of what a BMS does. The FreeRTOS scheduler and the real task periods behind every timing criterion; the real interrupt and DMA completion paths by which a cell voltage reaches the database; the SPI transfer ordering and the het pin multiplexer that select the cell; the CAN wire behaviour and the frame that carries a diagnosis; the FRAM and flash drivers; and a real time base, without which not one of the latency criteria in FB2-SW-SWR-000001, 000002 or 000003 can be measured. A target run would also be the first evidence in this corpus that the product behaves as its sources suggest when the sources are the ones actually compiled onto the board."
+  },
+  "title": "Software Verification Summary: INCOMPLETE - one host unit sweep recorded, no integration, no qualification, no target-hardware run",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "what_failed": {
+   "items": [
+    "tests/unit/app/driver/phy/test_dp83869.c: 15 cases, 15 assertions, 0 passed, 15 failed. The single worst result in the run. The cause is documented in TASK2-SEGFAULT.md in the same run directory: the linker crashes on this host, and AddressSanitizer hangs at the link step because the shipped :tools: :test_linker: appends -flto, which deadlocks this toolchain under ASAN. This is a harness-infrastructure failure, not 15 product defects, so the module is neither verified nor disproven.",
+    "tests/unit/app/driver/can/test_can.c: 21 cases, 16 passed, 5 failed.",
+    "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830.c: 15 cases, 12 passed, 3 failed.",
+    "tests/unit/app/driver/afe/nxp/mc33775a/test_nxp_mc33775a_i2c.c: 10 cases, 3 passed, 7 failed.",
+    "tests/unit/app/driver/afe/debug/can/test_debug_can.c: 7 cases, 4 passed, 3 failed.",
+    "tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_afe_cell-temperatures.c: 2 cases, 1 passed, 1 failed.",
+    "tests/unit/app/driver/can/cbs/rx/test_can_cbs_rx_afe_cell-voltages.c: 2 cases, 1 passed, 1 failed.",
+    "84 of 313 targets did not build, in 13 classifier classes. 17 of the 84 are attributed to the product rather than to the harness or to configuration: 16 on a build:real_defect_* class (6 out-of-bounds array index, 4 macro arity, 2 implicit function declaration, 2 implicit int, 1 absolute-value truncation, 1 excess initialisers) plus 1 on build:product_tautological_guard: 6 out-of-bounds array index, 4 macro arity, 2 implicit function declaration, 2 implicit int, 1 absolute-value truncation, 1 excess initialisers, 1 tautological guard. A further 8 are undeclared identifier. 28 are excluded upstream by configuration, 22 fail only a clang-specific diagnostic, 5 fail a strict diagnostic under both compilers, 1 is not buildable on the macOS object format and 3 are SIL interface header mismatches. The 17 defect-attributed ones are unresolved product defects as far as this corpus is concerned.",
+    "5 green targets assert nothing: tests/unit/app/main/test_fassert.c, tests/unit/bootloader/main/test_fassert.c, tests/unit/app/engine/sys/test_reset.c, tests/unit/app/driver/afe/debug/can/api/test_debug_can_afe_dma.c, tests/unit/app/driver/afe/debug/default/api/test_debug_default_afe_dma.c. Each declares one test case, calls the code under test, and contains zero TEST_ASSERT_ macros. They contribute 5 to the pass count and 0 to any coverage claim.",
+    "21 of 313 test files declare no test case at all, and all 21 are build failures, so they inflate nothing. They are concentrated in the two AFE shared layers: ADI ADES183x at 13 files and NXP MC3377x at 6, plus test_emac-low-level.c and test_fake_functions.c.",
+    "tests/unit/app/application/soa/test_soa.c passes with 2 cases and 3 assertions, all of them NULL-pointer traps, and its routine output-verification step is the literal text /* TODO */. A green verdict that verifies no behaviour of the module FB2-SW-SWR-000002 is written about."
+   ],
+   "statement": "7 targets failed with 35 failed assertions out of 72 tested, and 84 targets did not build at all. The failures are not all the same kind of thing and the distinction matters: some are product defects, some are harness limitations, and one is a linker crash on this host."
+  },
+  "what_is_blocked": {
+   "items": [
+    {
+     "blocked_because": "The SW Integration Test Specification does not exist. FB2-VER-TMS-000007 is a planning stub with 3 steps and no oracles. A plan is not a specification: FB2-VER-SIP-000001 gives an order and criteria, and without oracles the order is a schedule.",
+     "item": "Software integration testing, all 5 levels, 0 of 9 ordered steps executed",
+     "unblock_condition": "Author an integration test specification with an oracle per step, then execute IL-01. IL-01 is partially executable now once the 84 build failures are cleared."
+    },
+    {
+     "blocked_because": "No FreeRTOS host build, no task-period observation capability, no CAN frame observer, no SPI or DMA hardware or model, and no target board. The HL_* interface headers the harness supplies are CMock doubles: 38 distinct headers, with HL_spi required by 70 tests, HL_can by 69 and HL_het by 60, and none of them can observe the peripheral they stand for.",
+     "item": "Software integration levels IL-02 through IL-05",
+     "unblock_condition": "A FreeRTOS host build, a CAN bus simulator or controller with frame observation, and an SPI/DAM model. Hardware, not authoring."
+    },
+    {
+     "blocked_because": "The SW Qualification Test Specification does not exist and no qualification level has been executed. Every latency acceptance criterion in the three software requirements is a wall-clock criterion and the host harness has no wall-clock oracle.",
+     "item": "Software qualification, FB2-VER-EXE-000008 and the five network-security measures FB2-VER-TMS-000016..000020",
+     "unblock_condition": "Author the qualification specification with a measurable oracle per criterion, then run it on a target board with a real time base."
+    },
+    {
+     "blocked_because": "FB2-SW-DSN-000005's own declared_gaps records that the SOA module contains no debounce and no reaction path. The requirement specifies behaviour the source does not contain, so there is nothing to verify and no harness that could produce a result.",
+     "item": "The debounce and reaction-path criteria of FB2-SW-SWR-000002",
+     "unblock_condition": "A human decision: either withdraw the debounce criterion from FB2-SW-SWR-000002, or add a debounce and reaction path to the SOA module. No amount of harness work resolves this."
+    }
+   ],
+   "statement": "Four things are blocked. None of them is blocked because the work is hard; three are blocked because the artefact that would unblock them has not been authored, and one is blocked because the hardware does not exist in this corpus."
+  },
+  "what_passed": {
+   "items": [
+    "213 green targets that contain at least one Unity assertion and at least one test case, with 0 failed assertions recorded among them.",
+    "src/app/engine/database/database.c: 14 cases, 67 assertions, 0 failures.",
+    "src/app/engine/database/database_helper.c: 9 cases, 50 assertions, 0 failures.",
+    "LTC 6813-1 PEC drift pin: 1 case, 39 assertions, 0 failures.",
+    "SOC estimator, all four strategies: 15 cases, 56 assertions, 0 failures.",
+    "src/app/driver/crc/crc.c: 1 case, 4 assertions, 0 failures.",
+    "tests/unit/app/application/algorithm/moving_average/test_moving_average.c: 1 case, 10 assertions, 0 failures."
+   ],
+   "statement": "The recorded sweep reports 222 of 313 targets green and 950 of 988 assertions passed. Read with the qualification below, not without it: 5 of the 222 green targets contain no Unity assertion at all, so the count of green targets that assert something is 217, and the count of modules whose behaviour is verified is far smaller again because the oracle behind many of the assertions is a mock queue the test itself authored."
+  },
+  "what_was_verified": [
+   {
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "how": "Ceedling 1.1.9-2209dc2 with CMock 2.7.2 and Unity 2.7.2, compiled by gcc/clang 17.0.0 on arm64-apple-darwin27, over 313 targets, against SIL HL_* interface headers generated per test from the host-declared interface headers. The sweep is deterministic: the run directory records a 24-run classifier determinism check.",
+    "item": "Unit behaviour of the modules that have a test file and a recorded green result",
+    "level": "L2 unit verification, host"
+   },
+   {
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "how": "TEST_ASSERT_PEC_CORRECT_IN_ARRAY compares the PEC bytes stored in each ltc_cmd* constant table against LTC_CalculatePec15 applied to the same table. This establishes that the tables and the polynomial have not drifted apart. It does not establish that either is correct against the device protocol, and a consistently wrong PEC passes all 39 assertions.",
+    "item": "The internal consistency of 39 LTC command arrays' PEC bytes against the product's own PEC implementation",
+    "level": "L2 unit verification, host"
+   },
+   {
+    "evidence_path": "docs/artifacts/evidence/actual-runs/foxbms2-sil-host-unit-test-macos-2026-09-29/results-sil-all.json",
+    "evidence_sha256": "sha256:edd3e70888c75ba075db2dadb17cd9cfb369adfce4b8ac4a05aaefada3c64589",
+    "how": "23 cases and 117 Unity assertions across two test files, the only place in the suite that uses TEST_ASSERT_EQUAL_MEMORY to compare whole payloads rather than selected fields. Green in the recorded run: 14 cases and 9 cases, 0 failures.",
+    "item": "Data-block store and helper semantics",
+    "level": "L2 unit verification, host"
+   },
+   {
+    "evidence_path": "docs/artifacts/corpus/synthetic_reference/management/risk-register.json",
+    "how": "26 deviation records in the corpus document justified departures from the coding guidelines. The corpus has not itself run the formatter over the tree.",
+    "item": "Coding-guideline departures",
+    "level": "L1 static review"
+   }
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "verification_summary",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "verification_lead",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-VER-VSR-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-VER-VSR-000001",
+  "revision": "2"
+ }
+}

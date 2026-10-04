@@ -1,0 +1,567 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "provenance honesty",
+    "priority": 20,
+    "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+    "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+    "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000028",
+    "rationale": "Blocked execution record: upstream CI run not captured",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "result_of",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-EXE-000004",
+    "target_id": "FB2-VER-TMS-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000180",
+    "rationale": "FB2-REV-000016 reviewed FB2-VER-EXE-000004 at revision 3 and enumerates it in reviewed_ids with the sha256 of the artefact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artefact. This link was authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-execution-records.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000016",
+    "target_id": "FB2-VER-EXE-000004"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against execution.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "evidence logs (1)",
+    "method": "file existence and recorded hash against the bytes on disk",
+    "result": "1/1 exist with a matching hash"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "consistency",
+     "description": "This record reports a zero-duration run for work that demonstrably happened. It carries execution_kind none and outcome blocked, which is correct and is not what this finding disputes: the unit test was not executed, because its include closure needs three HALCoGen-generated TI headers that this host cannot produce. But the same record retains real, hash-verified evidence of real work: docs/artif\u2026",
+     "finding_id": "FB2-REV-FND-000044",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-FB2-REV-000016-execution-record-honesty-as-is.json"
+    },
+    {
+     "category": "consistency",
+     "description": "This record reports a zero-duration run for work that demonstrably happened. It carries execution_kind none and outcome blocked, which is correct and is not what this finding disputes: the unit test was not executed, because its include closure needs three HALCoGen-generated TI headers that this host cannot produce. But the same record retains real, hash-verified evidence of real work: docs/artif\u2026",
+     "finding_id": "FB2-REV-FND-000044",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-FB2-REV-000017-execution-record-honesty-synthetic.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "consistency",
+     "description": "This record reports a zero-duration run for work that demonstrably happened. It carries execution_kind none and outcome blocked, which is correct and is not what this finding disputes: the unit test was not executed, because its include closure needs three HALCoGen-generated TI headers that this host cannot produce. But the same record retains real, hash-verified evidence of real work: docs/artif\u2026",
+     "finding_id": "FB2-REV-FND-000044",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-FB2-REV-000016-execution-record-honesty-as-is.json"
+    },
+    {
+     "category": "consistency",
+     "description": "This record reports a zero-duration run for work that demonstrably happened. It carries execution_kind none and outcome blocked, which is correct and is not what this finding disputes: the unit test was not executed, because its include closure needs three HALCoGen-generated TI headers that this host cannot produce. But the same record retains real, hash-verified evidence of real work: docs/artif\u2026",
+     "finding_id": "FB2-REV-FND-000044",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-FB2-REV-000017-execution-record-honesty-synthetic.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-EXEC-HONESTY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000016",
+     "review_path": "docs/artifacts/reviews/records/review-FB2-REV-000016-execution-record-honesty-as-is.json",
+     "review_type": "domain",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "verification_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-FB2-REV-000016-execution-record-honesty-as-is.json",
+      "reviewed_by link FB2-LNK-REVB-000180 in docs/artifacts/traceability/link-registry/as_is/links-execution-records.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.test_measure_id` names FB2-VER-TMS-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.evidence_refs[0]` names FB2-VER-TMS-000004."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C03-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json as captured output, hash `sha256:df51a921954ace7f5d3f897dea1ff595cf675d6fd09629cdeda6deb65dc0f7a3`."
+  },
+  {
+   "claim_class": "execution_classification",
+   "claim_id": "C04-exec",
+   "evidence_in_packet": "The record verbatim in section 3. The test measure it names has its own packet.",
+   "judgement_needed": "Whether this outcome is a legitimate basis for the verification claim its test measure makes. A green run on a host is not evidence about the MCU, and only the domain owner can say whether the measure's acceptance criteria are met at all.",
+   "machine_state": "`actual_target_hardware_run` is the only kind that counts as product-hardware evidence. `actual_host_run`/`actual_simulation_run` are real executions of the product's code on developer infrastructure. `none` means no run was performed. This record's kind is `none`.",
+   "statement": "This record declares execution_kind `none`, outcome `blocked`, aggregate_outcome `None`, on hardware `arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)`, for test measure `FB2-VER-TMS-000004`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000004."
+  },
+  {
+   "claim_class": "execution_metadata",
+   "claim_id": "C06-time",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the recorded interval is the real duration of the run. Duration is not verifiable from a file's contents.",
+   "machine_state": "start and end present",
+   "statement": "`timestamps` = {\"duration_ms\": 0, \"end\": \"2026-09-29T08:13:21Z\", \"start\": \"2026-09-29T08:13:21Z\"}"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 19043,
+  "record_path": "docs/artifacts/corpus/as_is/verification/execution-afe-ltc-driver.json",
+  "record_sha256": "ff042d978b7825e5ae6a0edd67b643186c2a92049bd183845cef4253d97bbfa9",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "f91ff5bebe1691a5b7d5cba42f7e88eeeb4371359100ab16ad64033be89caa7e"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Not executed: HALCoGen-generated TI headers unavailable on this host",
+    "No verification credit for production"
+   ]
+  },
+  {
+   "field": "notes",
+   "value": "Re-investigated with a real toolchain on 2026-09-29. The blocker is narrower and now precisely known: the test's include closure needs exactly three HALCoGen headers. The evidence path in revision 1 was wrong and has been corrected. Still blocked, honestly."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T08:15:33Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-VER-EXE-000004.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Execution: FB2-VER-TMS-000004 (still blocked: HALCoGen unavailable)\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "execution classification",
+   "priority": 5,
+   "question": "This is `none`, on `arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)`. Given that, does the outcome support the verification claim its test measure (FB2-VER-TMS-000004) makes?",
+   "what_in_this_packet_bears_on_it": "section 3: the environment block. The test measure has its own packet.",
+   "why_this_needs_a_human": "Whether a given kind of run is sufficient evidence for a given acceptance criterion is a domain judgement. A host run can be perfectly good evidence for driver logic and no evidence at all for register timing."
+  },
+  {
+   "group": "gap honesty",
+   "priority": 15,
+   "question": "This record records that no run happened. Is the stated blocker the real one, and is the gap still open today?",
+   "what_in_this_packet_bears_on_it": "notes and limitations in section 3.",
+   "why_this_needs_a_human": "Blockers move. A record that says 'blocked' for a reason that has since been removed understates the corpus's real gaps."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "2 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anomalies": [
+   {
+    "description": "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.",
+    "disposition": "accepted",
+    "severity": "high"
+   },
+   {
+    "description": "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.",
+    "disposition": "accepted",
+    "severity": "high"
+   },
+   {
+    "description": "Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(\".kernelTEXT\") and similar), because Mach-O requires a 'SEGMENT,SECTION' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.",
+    "disposition": "accepted",
+    "severity": "medium"
+   },
+   {
+    "description": "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.",
+    "disposition": "accepted",
+    "severity": "low"
+   },
+   {
+    "description": "Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor's directive-only pass with \"Failed to read './test/preprocess/files/<test>/directives_only/raw/ftask.h' for comment stripping ... No such file or directory\". The value was set to :none, which selects Ceedling's own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.",
+    "disposition": "accepted",
+    "severity": "medium"
+   },
+   {
+    "description": "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.",
+    "disposition": "accepted",
+    "severity": "low"
+   },
+   {
+    "description": "The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.",
+    "disposition": "accepted",
+    "severity": "low"
+   },
+   {
+    "description": "The test file named by the previous record, tests/unit/app/driver/ltc/6813-1/test_ltc_6813-1.c, does not exist in this checkout; the 'afe/' path segment is missing. The real file is tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c. evidence_refs has been corrected.",
+    "disposition": "fixed",
+    "severity": "medium"
+   },
+   {
+    "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+    "disposition": "deferred",
+    "severity": "high"
+   },
+   {
+    "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+    "disposition": "deferred",
+    "severity": "high"
+   },
+   {
+    "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+    "disposition": "deferred",
+    "severity": "high"
+   },
+   {
+    "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+    "disposition": "deferred",
+    "severity": "high"
+   },
+   {
+    "description": "SIL supersession. tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c now BUILDS and RUNS under the SIL harness and its assertions pass, because sil/iface supplies host-declared HL_can.h, HL_het.h, HL_reg_can.h, HL_reg_het.h and HL_reg_system.h and the module under test can_cfg.c/can.c compile against them. What that establishes is the driver's logic and the structure of the arguments it hands to the TI HAL. It establishes NOTHING about the CAN/HET register map, which remains unobtained. This record therefore stays execution_kind=none / outcome=blocked; the host-run evidence is recorded separately and is not presented as closing the requirement.",
+    "disposition": "deferred",
+    "severity": "high"
+   }
+  ],
+  "artifact_type": "execution",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T08:15:33Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "created_at": "2026-09-19T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "conf/unit/app_project_posix.yml",
+   "hardware": "arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)",
+   "software": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]",
+   "tool_versions": {
+    "ceedling": "1.1.9-2209dc2",
+    "cexception": "1.3.5",
+    "clang": "17.0.0",
+    "cmock": "2.7.2",
+    "gcc": "17.0.0",
+    "ruby": "4.0.7",
+    "unity": "2.7.2"
+   },
+   "tools": [
+    "ceedling",
+    "cmock",
+    "unity",
+    "cexception",
+    "gcc (Apple clang driver)"
+   ]
+  },
+  "evidence_refs": [
+   "FB2-VER-TMS-000004",
+   "tests/unit/app/driver/afe/ltc/6813-1/test_ltc_6813-1.c"
+  ],
+  "execution_kind": "none",
+  "human_approval_status": "pending",
+  "id": "FB2-VER-EXE-000004",
+  "input_hashes": {
+   "test_source": "sha256:451bd4ff80f72eae255ab1642261d3b642d023a7e8654f819fb789a185699949"
+  },
+  "lifecycle_status": "reviewed",
+  "limitations": [
+   "Not executed: HALCoGen-generated TI headers unavailable on this host",
+   "No verification credit for production"
+  ],
+  "logs": [
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json",
+    "hash": "sha256:df51a921954ace7f5d3f897dea1ff595cf675d6fd09629cdeda6deb65dc0f7a3",
+    "type": "custom"
+   }
+  ],
+  "notes": "Re-investigated with a real toolchain on 2026-09-29. The blocker is narrower and now precisely known: the test's include closure needs exactly three HALCoGen headers. The evidence path in revision 1 was wrong and has been corrected. Still blocked, honestly.",
+  "origin": "source_observed",
+  "outcome": "blocked",
+  "output_hashes": {
+   "halcogen_dependency_closure": "sha256:df51a921954ace7f5d3f897dea1ff595cf675d6fd09629cdeda6deb65dc0f7a3"
+  },
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "revision": "3",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-19T00:00:00Z",
+    "description": "Blocked execution record: upstream CI run not captured in corpus; no run performed here",
+    "revision": "1"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "Superseded the prior record with a real, reproducible macOS host run. Prior state: execution_kind=none, outcome=blocked.",
+    "revision": "2"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T16:03:04Z",
+    "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016.",
+    "revision": "3"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T16:05:38Z",
+    "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016.",
+    "revision": "3"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T16:07:46Z",
+    "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016.",
+    "revision": "3"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T16:09:52Z",
+    "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016.",
+    "revision": "3"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T16:10:04Z",
+    "description": "Superseded. Revisions 1-2 recorded execution_kind=none / outcome=blocked with the requirement that 'no substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map'. A SIL harness now builds and runs this test on the host, and it PASSES, but only in the driver-logic sense. The register map is still not obtained, so the register-map half of that condition is NOT met and is recorded as still open. Execution_kind stays none and outcome stays blocked for this record, because this record continues to describe the target-hardware claim. The real host-run evidence lives in FB2-VER-EXE-000015 and FB2-VER-EXE-000016.",
+    "revision": "3"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [],
+  "test_measure_id": "FB2-VER-TMS-000004",
+  "test_measure_revision": "1",
+  "timestamps": {
+   "duration_ms": 0,
+   "end": "2026-09-29T08:13:21Z",
+   "start": "2026-09-29T08:13:21Z"
+  },
+  "title": "Execution: FB2-VER-TMS-000004 (still blocked: HALCoGen unavailable)",
+  "unblocking_conditions": [
+   "HALCoGen (proprietary TI generator) must be run on conf/hcg/app.hcg to emit include/HL_het.h, include/HL_spi.h and include/HL_sys_dma.h, which this test's include closure requires. No substitute is acceptable: this test exercises the LTC SPI/HET transfer path and would not be meaningful against a stubbed register map.",
+   "Until then this record stays execution_kind=none, outcome=blocked. It must not be presented as a passing execution."
+  ],
+  "updated_at": "2026-09-29T16:10:04Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-VER-EXE-000004"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-VER-EXE-000004",
+  "revision": "3"
+ }
+}

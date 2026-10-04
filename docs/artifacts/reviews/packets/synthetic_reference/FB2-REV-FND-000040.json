@@ -1,0 +1,286 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 3,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C01-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.9 with status `mapped` on the grounds: Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C02-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6.4 (monitoring and measurement) with status `mapped` on the grounds: The obligation to record rather than to conceal."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C03-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T12:00:00Z by None; method 'Rule source re-read; corpus re-scanned for diagnostic_coverage claims by declared type and domain; counterfactual records run through the real _validate_semantic_rules in memory; non-vacuity proved by re-inserting the old filter in memory; suite re-run via corpus.py selftest, check and validate.'; no path named in method. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `medium`, category `process`, disposition `resolved`. Its resolution text names a corpus id: True."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 12596,
+  "record_path": "docs/artifacts/reviews/findings/finding-000040-diagnostic-coverage-rule-fsr-id-filter.json",
+  "record_sha256": "e1e9a12dc8d63aeec03e4ceb324af849e979a2e0f6d924d63df5f90f0a8eb1de",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "1dee0092028f660dc0986ea39da5d494de67cbc3ebe89343e0f9d92df722911a"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft': raised by the finding-closure pass and verified by re-derivation from the live corpus. No human reviewer has confirmed this record and human_approval_status remains pending. This record makes no MISRA conformance claim, no tool-qualification claim, no certification claim and no ASPICE capability-level claim of any kind."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-30T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-FND-000040.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the data_quality_engineer for this management record, do you agree that \"Finding FB2-REV-FND-000040: the diagnostic-coverage claim validator carries the same '-FSR-' id filter as the fault_reaction rule had, and is currently inert rather than correct\" is a correct and complete statement of the measurable quality claims this corpus makes about its own numbers?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `resolved`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "closure",
+   "priority": 12,
+   "question": "Does the named fix actually close the condition, on the current tree?",
+   "what_in_this_packet_bears_on_it": "resolution text; the named record id or rule.",
+   "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-30T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "category": "process",
+  "created_at": "2026-09-30T00:00:00Z",
+  "disposition": "resolved",
+  "disposition_note": "disposition 'accepted' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "management",
+  "evidence": "MEASURED. The rule as it stands in docs/artifacts/tools/corpus.py: `if d.get(\"artifact_type\") == \"requirement\" and d.get(\"engineering_domain\") == \"safety\" and \"-FSR-\" in _id(key)`, then read diagnostic_coverage, and report if diagnostic_coverage is claimed without diagnostic_coverage_evidence. Corpus-wide scan: diagnostic_coverage is claimed by FSR records and by no SEC record, so 0 requirements are excluded that would otherwise have been reported. The filter is reproducible from the source line alone, and docs/artifacts/tests/rule_scope_probe.py prints it under 'ADJACENT RULE NOTED, NOT CHANGED'.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000040",
+  "impact": "Today, no measurable harm, and it is important to say that plainly rather than inflate it. The rule reads the field diagnostic_coverage and the field diagnostic_coverage_evidence. No FB2-SAF-SEC-* record claims diagnostic coverage, so the filter currently excludes nothing that would have been reported: the rule is inert on this corpus, not wrong on it. The harm is prospective and specific. If a future security requirement claims a diagnostic coverage figure - and the security concept does have a diagnostic story, since the requirements mandate a diagnosis entry per rejected frame - the rule would silently decline to check the claim, and the silence would look identical to the silence this finding was raised about in FB2-REV-FND-000039. A check that is inert until the day it is needed, and wrong on that day, is a trap with a long fuse.",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft': raised by the finding-closure pass and verified by re-derivation from the live corpus. No human reviewer has confirmed this record and human_approval_status remains pending. This record makes no MISRA conformance claim, no tool-qualification claim, no certification claim and no ASPICE capability-level claim of any kind.",
+  "origin": "derived",
+  "owner_role": "data_quality_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "resolution": "RESOLVED. The filter this record identified is gone.\n\nWHAT FIXED IT. The `and \"-FSR-\" in _id(key)` clause is deleted from the MUT-010 rule in docs/artifacts/tools/corpus.py, so the population is now `artifact_type == requirement and engineering_domain == safety` - the same selection its sibling safety rules use. The finding text was generalised from 'FSR {aid} claims diagnostic coverage' to 'safety requirement {aid} claims diagnostic coverage', because keeping the FSR wording would have been a second and quieter way of encoding the same assumption about the population. Nothing else in the rule changed, and no acceptance gate, scenario, mutation fixture, or coverage-dimension computation was touched; SCN-MUT-010's mutation fixture and oracle manifest were left exactly as they are and still match, because the scenario harness keys on the rule id rather than on the description string.\n\nTHE WIDENED RULE WAS MEASURED, AND IT REPORTS NOTHING. On the corpus as it stands: 233 records in the index, 12 of them safety-domain requirements (7 FB2-SAF-FSR-* and 5 FB2-SAF-SEC-*), and 0 of those 12 carries a diagnostic_coverage field at all. Findings reported by diagnostic_coverage_claim_validator: 0. There were no findings to answer by doing the work, and none were re-narrowed away to achieve that.\n\nTHAT ZERO IS NOT EVIDENCE THE RULE WORKS, and this is the reason the self-tests below exist. 'Reports nothing on a corpus where nothing is wrong' is not 'would report the defect', which is the entire content of this finding: the harm was always prospective, so a prospective check cannot be validated by a retrospective count. Leaving it at a measured zero would have meant asking the next reader to take the coverage on trust.\n\nPROOF THAT THE RULE IS LIVE, BY COUNTERFACTUAL. Four synthetic records were run through the real _validate_semantic_rules in memory, with nothing on disk changed, and the findings filtered to this rule alone:\n  1. FB2-SAF-SEC-999991 claims diagnostic_coverage='99%', evidence field REMOVED\n       -> FIRED: high | safety requirement FB2-SAF-SEC-999991 claims diagnostic coverage '99%' without evidence\n  2. the same record WITH diagnostic_coverage_evidence present\n       -> silent\n  3. FB2-SAF-FSR-000003, the record class SCN-MUT-010 exercises\n       -> FIRED: high | safety requirement FB2-SAF-FSR-000003 claims diagnostic coverage '99%' without evidence\n  4. FB2-SYS-SYR-999988 with engineering_domain=system\n       -> silent, as the domain boundary requires\n  5. FB2-SAF-SEC-000001 - a real corpus id, in the class the old filter hid\n       -> FIRED: high | safety requirement FB2-SAF-SEC-000001 claims diagnostic coverage '90%' without evidence\n\nTHE FOUR SELF-TESTS ADDED, following the pattern the MUT-008 fix used, all registered in cmd_selftest:\n  diagnostic_coverage rule covers security requirements (widened scope)\n  diagnostic_coverage rule still covers FSR requirements (nothing lost)\n  diagnostic_coverage rule still respects the safety-domain boundary\n  diagnostic_coverage rule silent when evidence is present\n\nTHEY ARE NOT VACUOUS EITHER, and that was proved rather than assumed. Re-inserting the old `and \"-FSR-\" in _id(key)` clause into an in-memory copy of corpus.py and asking the same four questions gives:\n  FB2-SAF-SEC-999991  expected_fired=True  got=False  -> the widened-scope test FAILS\n  FB2-SAF-FSR-999990  expected_fired=True  got=True   -> passes\n  FB2-SAF-FSR-999989  expected_fired=True  got=True   -> passes\n  FB2-SYS-SYR-999988  expected_fired=False got=False  -> passes\nSo a future edit that re-narrows the population fails the suite on this corpus, which is the property the MUT-008 tests were added for and the reason the coverage does not have to be taken on trust.\n\nSUITE STATE AFTER THE CHANGE: selftest 28 -> 32 passing, 0 failing; check PASSED 8/8; validate 0 findings, errors=0. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "CLOSED",
+   "condition_still_holds": false,
+   "date": "2026-09-30T12:00:00Z",
+   "disposition_before": "accepted",
+   "evidence": "The MUT-010 rule no longer contains an id filter: its population is artifact_type == requirement and engineering_domain == safety, matching the sibling safety rules. The widened rule reports 0 findings on the current corpus because 0 of the 12 safety-domain requirements carries diagnostic_coverage - a measured zero, not a disabled check. The rule is shown live by a counterfactual that fires on a synthetic SEC record with the evidence field removed and on the real id FB2-SAF-SEC-000001, and silent when the evidence is present or the domain is not safety. The four new self-tests are shown non-vacuous: with the old filter restored in memory the widened-scope test fails. selftest 32/32, check 8/8, validate 0 findings errors=0.",
+   "method": "Rule source re-read; corpus re-scanned for diagnostic_coverage claims by declared type and domain; counterfactual records run through the real _validate_semantic_rules in memory; non-vacuity proved by re-inserting the old filter in memory; suite re-run via corpus.py selftest, check and validate.",
+   "revision_before": "1"
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "New record raised by the finding-closure pass. It records a condition that pass discovered while re-deriving the conditions the 38 existing records assert, and that would otherwise have been lost - either because it was a rule defect that no record named, or because closing the record that did name its neighbourhood would have quietly carried it away with it. ACKNOWLEDGED AND NOT FIXED, deliberately, and the reason is scope rather than difficulty. The change to make is a one-clause deletion identical to the one applied in FB2-REV-FND-000039, and it is exactly the kind of change that should not be made in a pass whose authorisation covers one specific rule. Making it here would mean widening a second rule on the strength of a symptom that does not currently manifest, with no measurement showing what the widened rule would report on this corpus. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "1"
+   },
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-30T12:00:00Z",
+    "description": "FILTER REMOVED, WIDENED RULE MEASURED, AND ITS LIVENESS PROVEN BY SELF-TEST AND COUNTERFACTUAL. The '\"-FSR-\" in id' clause is deleted from the MUT-010 rule in docs/artifacts/tools/corpus.py and the finding text is generalised from 'FSR' to 'safety requirement', so the population is declared type and declared domain like the sibling safety rules. The widened rule was then MEASURED and reports zero findings on the current corpus - 233 records, 12 safety-domain requirements, none carrying diagnostic_coverage - which is a true statement about the corpus and no evidence at all that the rule works. Four self-tests were therefore added, following the pattern the MUT-008 fix used, and a counterfactual confirms the rule fires on an in-memory record with the evidence field removed. Non-vacuity of the self-tests was proved by re-inserting the old filter in memory and observing the security-requirement test fail. No acceptance gate, scenario, mutation fixture or coverage-dimension computation was changed. Disposition moved from 'accepted' to 'resolved' because the condition this record asserts - that the rule carries the filter - no longer holds. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "2"
+   }
+  ],
+  "root_cause": "The same authoring decision as FB2-REV-FND-000039, reached independently in a second rule: the population was narrowed by id substring rather than by declared type and domain. The two rules were written at different times for different fields and neither was reconciled against the other, which is the general failure mode - scope expressed in a place no check reads.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "medium",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Problem resolution management: a material contradiction becomes a recorded problem, not a silent edit.",
+    "reference": "SUP.9",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The obligation to record rather than to conceal.",
+    "reference": "Part 2, Clause 6.4 (monitoring and measurement)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Finding FB2-REV-FND-000040: the diagnostic-coverage claim validator carries the same '-FSR-' id filter as the fault_reaction rule had, and is currently inert rather than correct",
+  "updated_at": "2026-09-30T12:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "data_quality_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-FND-000040"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-FND-000040",
+  "revision": "2"
+ }
+}

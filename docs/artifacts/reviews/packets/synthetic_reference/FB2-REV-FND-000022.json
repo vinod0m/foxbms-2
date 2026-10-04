@@ -1,0 +1,343 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 3,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against finding.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C01-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `unverified` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2 with status `unverified` on the grounds: The claim of compliance evidence is recorded here as an unverified reference. No corpus artifact supports it, and the corpus does not claim conformity anywhere."
+  },
+  {
+   "claim_class": "finding_classification",
+   "claim_id": "C02-fnd",
+   "evidence_in_packet": "The record verbatim in section 3, including the resolution and disposition_note prose.",
+   "judgement_needed": "Whether the defect class is right and whether the stated resolution was actually verified. A `resolved` finding whose condition still holds is worse than an `accepted` one, because it tells a reader the work is finished.",
+   "machine_state": "reverification state: reverification dated 2026-09-30T00:00:00Z by None; method \"docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.\"; 1/1 named method path(s) exist. Per docs/artifacts/governance/finding-disposition-vocabulary.md, `resolved` asserts the condition NO LONGER HOLDS and must name what fixed it; `accepted`, `deferred` and `in_progress` all assert the condition STILL HOLDS.",
+   "statement": "This finding is recorded as severity `high`, category `consistency`, disposition `resolved`. Its resolution text names a corpus id: False."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 39405,
+  "record_path": "docs/artifacts/reviews/findings/finding-000022-root-traceability-document-conformity-claim.json",
+  "record_sha256": "7a44ab77d1083b1320baab82117f0530a4025d506f770d2d63bc8fd263545649",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "5c656d3e720c616716a8445000faee873c3a974cd5b0c485cce154e6c8e355f1"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "lifecycle_status_note",
+   "value": "'reviewed': the remediation described below was performed and the resulting files were read back and checked. 'reviewed' here means the edits were verified to remove the claimed defects and to leave the document under tool control. It does NOT mean a human approved this finding or the document: human_approval_status remains 'pending' for every artifact."
+  },
+  {
+   "field": "disposition_note",
+   "value": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-FND-000022.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the quality_engineer for this management record, do you agree that \"Finding FB2-REV-FND-000022: repository-root TRACEABILITY_DOCUMENT.md states ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability, and lies outside the corpu\u2026\" is a correct and complete statement of verification and quality process records and their evidence?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "finding classification",
+   "priority": 5,
+   "question": "This finding is `resolved`. Under docs/artifacts/governance/finding-disposition-vocabulary.md, is that the right member for the condition as it stands now?",
+   "what_in_this_packet_bears_on_it": "resolution and reverification blocks in section 3, plus docs/artifacts/governance/finding-disposition-vocabulary.md.",
+   "why_this_needs_a_human": "The vocabulary is normative and the six members assert different facts about whether the defect is still live. Only someone who knows the current state can choose correctly."
+  },
+  {
+   "group": "closure",
+   "priority": 12,
+   "question": "Does the named fix actually close the condition, on the current tree?",
+   "what_in_this_packet_bears_on_it": "resolution text; the named record id or rule.",
+   "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "finding",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "canonical_document_generator": "python3 docs/artifacts/tools/corpus.py render (docs/artifacts/tools/corpus.py cmd_render)",
+  "canonical_document_path": "docs/artifacts/views/traceability/traceability-document.md",
+  "category": "consistency",
+  "closure_note": "Two premises of revision 1 are now outdated and are corrected here rather than left to mislead. First, revision 1 recorded, correctly at the time, that no functional safety concept and no technical safety concept record existed, and that this absence was why no ASIL determination was supported. As of 2026-09-29 the corpus does contain FB2-SAF-FSC-000001 (functional safety concept) and FB2-SAF-TSC-000001 (technical safety concept), authored under the same session. That closes the record-level gap the finding described. It does NOT change the remediation and does NOT make the ASIL value a determination of the real product: both concepts are synthetic records in a hypothetical project and each states in its own limitations field that it establishes no ASIL capability for any real product, the asil field on FB2-SAF-SGO-000001 still carries no justification, the corpus's own validator still raises an open finding for it on every run, and no HARA has been performed on the real foxBMS 2 product. The ASIL qualification in the document header therefore remains correct and is still required. Second, revision 1 and revision 2 both required that the document be brought inside the controlled area. That has NOT been done: the file is still at the repository root and is still hand-authored. The repository owner authorised amending it, not relocating it.",
+  "created_at": "2026-09-29T00:00:00Z",
+  "disposition": "resolved",
+  "disposition_note": "disposition 'resolved' is used in the sense defined normatively by docs/artifacts/governance/finding-disposition-vocabulary.md and permitted by the enum in docs/artifacts/schemas/finding.schema.json. It was 'accepted' before this revision, and that word was ambiguous: 'accepted' was carrying at least three different jobs across this corpus - closed, acknowledged-but-unfixed, and known-limitation - which left a reader unable to tell a closed finding from an open one by machine. 'resolved' was added to the enum so the distinction is data rather than prose. This record was not deleted and its existence remains part of the audit trail. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "engineering_domain": "management",
+  "evidence": "RETAINED REVISION-1 HISTORY - this field records what was observed when the finding was raised and must not be read as the current state of the file. The claims it makes about the file's contents described the file before remediation. See revision 3 of revision_history, remediation_performed, updated_evidence and resolution for the current state. Direct read of the file on 2026-09-29, lines as numbered in the file at that time. Line 19, under '1.1 Purpose', stated verbatim: 'Provides evidence for compliance with ISO 26262, IEC 61508, and other applicable safety standards'. Line 23, under '1.2 Scope', stated verbatim: 'Safety Requirements (ASIL-D, ASIL-B)'. Line 7 attributed the document to baseline commit 308028fb and line 8 stated 'Document Version: 1.0' dated 2026-09-11. One further defect found in the second review pass was not in revision 1: a document-control block near the end of the file recorded a named reviewer, a named approver and an approved status, an approval that had never taken place. Three independent checks contradicted or failed to support the claim. First, conformity: every indexed record carries human_approval_status 'pending', production_authorized false and product_verification_credit false, and the acceptance suite's own gate 'no production_authorized/approved artifacts' passes precisely because nothing is approved. No certification, no tool qualification and no third-party assessment record exists in the corpus. Second, IEC 61508: a recursive search for the string '61508' across the whole of docs/artifacts returned no match in any record. The only two standards in governance/standards-lock.json are ISO_26262_2018 (edition 2018) and ASPICE_PAM_41 (edition 4.1), locked_by 'safety'. There is no IEC 61508 requirement, mapping, analysis or normative reference anywhere in the corpus, so the document claimed compliance evidence for a standard the corpus has never ingested or referenced. Third, ASIL: the corpus does carry ASIL field values, FB2-SAF-SGO-000001 with asil 'ASIL_D' and FB2-SAF-FSR-000004 with safety_allocation.asil 'ASIL_B', so the letters are not invented. But the asil field on FB2-SAF-SGO-000001 carries NO justification field, and the corpus's own validator raises an open finding for it - 'safety goal FB2-SAF-SGO-000001 ASIL ASIL_D lacks justification' - so the value is an unjustified field on a synthetic record, not a derivation. Revision 1 further recorded that the concept-phase records that would justify an ASIL D determination were absent. THAT PART OF REVISION 1 IS NOW OUTDATED: FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 exist as of 2026-09-29. Their existence is recorded in closure_note and does not change the remediation, because both concepts are synthetic and each states in its own limitations field that it establishes no ASIL capability for any real product. The ASIL field remains unjustified and is still flagged by the validator.",
+  "human_approval_status": "pending",
+  "id": "FB2-REV-FND-000022",
+  "impact": "RETAINED REVISION-1 HISTORY, with one premise corrected - see the sentence on the safety concepts below. Three distinct harms, in increasing order of seriousness. First, an internal contradiction: the document claimed compliance evidence while the corpus it describes is uniformly unapproved and unauthorized, so a reader who trusts the document will draw the opposite conclusion from the one the guard fields support. Second, a claim against a standard the corpus never engaged: naming IEC 61508 implies the lifecycle work was performed against a standard that was never locked, never mapped and never analysed in this corpus, which would misdirect any subsequent assessment activity toward work that has not been done. Note carefully what is and is not being alleged. foxBMS's own pinned documentation does list IEC 61508 as a candidate standard and cites IEC 61508-3:2010, so the standard is a legitimate consideration for the product and its removal from the sentence is not the remedy. The remedy is that the corpus performed no IEC 61508 work, so it cannot supply compliance evidence for it; if IEC 61508 engagement is wanted, the standard must first be added to the lock and the referenced records produced. This is what the revision-3 correction did: it removed the two IEC 61508-3 clause rows and added an explicit not-engaged note, rather than deleting the standard from the project's consideration. Third, and most serious for a safety corpus, an ASIL capability statement. Presenting 'ASIL-D' as an established characteristic of the corpus's safety requirements, when the asil field has no justification and the corpus's own validator flags it, is a safety-capability claim of exactly the kind this corpus exists to avoid making. A fourth harm was found in the second review pass and was worse than the first three in one specific way: a fabricated human-approval sign-off block near the end of the file named a reviewer and an approver and recorded the status as approved. An assessor who skimmed to that block got the exact opposite of the true state, and the fabrication was more likely to be believed than the disclaimer at the top of the file, because a sign-off block is what readers are trained to look for. The file also sits at the repository root rather than under docs/artifacts, so it is the most prominent document in the tree and the one most likely to be read first by a person who has not seen the generated views that carry the guard fields and the non-conformity disclaimer. No artifact was relabelled and no acceptance check was altered to accommodate this finding. CORRECTION TO REVISION 1: revision 1 recorded that the concept-phase records were absent. FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 now exist, so that premise is no longer current; see closure_note. Their existence does not reduce the harm, because they are synthetic and disclaim any ASIL capability.",
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "'reviewed': the remediation described below was performed and the resulting files were read back and checked. 'reviewed' here means the edits were verified to remove the claimed defects and to leave the document under tool control. It does NOT mean a human approved this finding or the document: human_approval_status remains 'pending' for every artifact.",
+  "origin": "derived",
+  "owner_role": "quality_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "remediation_performed": {
+   "authorization": "The repository owner gave explicit instruction to amend this file, after being told it lay outside the docs/artifacts write boundary and had been logged as a finding rather than edited. That instruction is the sole authority for the out-of-boundary write. It is recorded here so the change is traceable rather than silent, which is the failure mode this finding was raised to prevent. No other file outside docs/artifacts/ was modified, and no foxBMS source, test, config or build file was touched.",
+   "date": "2026-09-29",
+   "edits": [
+    "Inserted a 'READ FIRST' block immediately below the H1 stating that the document is a synthetic corpus and not a conformity or certification package; that it asserts no ISO 26262 or IEC 61508 compliance; that no ASPICE capability level is claimed; that every ASIL label is hypothetical and not assigned to the real product; that no artifact is human-approved, tool-qualified or production-authorized; and that authoring was automated review, which is not independence and not human confirmation.",
+    "Line 19: deleted 'Provides evidence for compliance with ISO 26262, IEC 61508, and other applicable safety standards'. Replaced with an explicit statement that traceability demonstrates that a coherent record chain exists and is navigable, and that it does not demonstrate correctness or satisfy any standard's obligations.",
+    "Line 23: replaced 'Safety Requirements (ASIL-D, ASIL-B)' with a statement carrying hypothetical ASIL-D and ASIL-B labels for a fictional reference project, explicitly not assigned to the real foxBMS 2 product, which has never undergone a HARA.",
+    "Document control block: version 1.0 -> 2.0, date 2026-09-11 -> 2026-09-29, project title qualified as a synthetic reference corpus, classification qualified as not a certification package.",
+    "Section 9 retitled from 'Standards Compliance Traceability' to 'Standards Reference Traceability', with a preamble stating it is a reference index and not a compliance matrix, and that the clause identifiers are the corpus's own references rather than verified citations against the normative standards.",
+    "The three ASIL occurrences in the data tables (lines 88, 89, 98) relabelled to 'hypothetical ASIL-D' and 'hypothetical ASIL-B' so the qualification is visible at the point of use, not only in the header.",
+    "Section 10.1 coverage table marked STALE with a pointer to the tool-computed figures, because its counts predate the corpus expansion and understate it."
+   ],
+   "edits_revision_3": [
+    "Removed the document-control sign-off block at the end of the file, which recorded a named reviewer, a named approver and an approved status. Replaced it with a document-control table stating: authored by an automated agent session with the corpus role names explicitly labelled as fictional labels; reviewed by nobody; approved by nobody; no independent confirmation; human approval status pending for this document and pending for all 220 indexed records; production_authorized false for this document and for all 220; tool qualification none; certification none; ASPICE capability level not asserted.",
+    "Replaced the false closing sentence 'This document is automatically generated from the foxBMS 2 lifecycle artifact corpus. Manual edits will be overwritten on next generation.' with a provenance section stating that the file is hand-authored, that no tool reads or regenerates it, that git ls-tree at the pinned commit contains no TRACEABILITY entry so it is not a build output, that it is therefore subject to undetectable drift, which surfaces are authoritative, and that the durable fix has not been implemented.",
+    "Removed the two IEC 61508-3 clause rows from the standards-reference table and added a subsection stating the position precisely: IEC 61508 is not locked; iec_61508_records_in_corpus is 0; the pinned source lists it as a candidate and cites IEC 61508-3:2010 so it must not be deleted from the project's consideration; the corpus cannot supply anything for an IEC 61508 clause row; and what engagement would require.",
+    "Corrected the standards-reference preamble so it no longer asserts that the clause ids 'are the corpus's own references' in a way that would have covered the IEC rows. It now scopes the claim to the two locked standards and states that normative text is not ingested, so the clause ids are references against a locked standard's structure and are not verified citations.",
+    "Qualified the ASIL in the artifact-type definition table row for Safety Goal, which the revision-2 pass had missed because it qualified the three data-table occurrences but not the point of definition, which is where a reader looks up what an ASIL field means.",
+    "Replaced every unmeasured coverage claim with a measured figure and a stated method. Removed the Integration Tests row claiming 100 percent achieved. Removed the '100% line/branch' achievement column from the design-to-source table and stated that no line or branch coverage was measured and none exists in the corpus. Replaced the six percentage completeness claims in the traceability-completeness table, none of which any tool computed, with the closest measured proxy named as such.",
+    "Repointed the stale-source note at corpus.py coverage as authoritative and marked reports/coverage-report.md as a hand-written snapshot whose figures are stale, listing the stale and current values side by side.",
+    "Corrected the mutation figures from 6/20 functional with four scenarios marked Documented Limitation to 20/20 detected, listing each of the 20 with its real artifact id, short key, target and matching-scope finding count as printed by corpus.py check.",
+    "Scoped the review and finding counts to the records they belong to and added corpus-wide figures: 15 review records, 30 finding records (23 accepted, 7 partial), 49 finding entries inside review records, 144/186 artifacts covered by a reviewed_by link, 0/220 human approval, 0/220 production authorization.",
+    "Corrected the identifier scheme statement, which read FB2-XXXX-XXXXXXXX and matched no record in the corpus, to the four forms the corpus actually uses, including the three-digit assumption form and the domain-less parameter form.",
+    "Corrected every identifier that did not resolve, and added a script that resolves every identifier-shaped string in the file against the corpus index, the assumption, parameter, link and source registries, the variant matrix and the short scenario-id key space.",
+    "Beyond the review's list, corrected: a second hazard id that never existed; four software-TSR ids in a family that does not exist; a design id that does not exist, which is a declared forward reference recorded as finding FB2-REV-FND-000030 rather than a broken link; a variant id that does not exist, the LTC6811 being the reference configuration rather than a variant of it, plus 19 real variants that the file omitted; three post-change baselines that do not exist, marked as declared forward references; a parameter table that listed four of ten parameters and had ftti_ms and afe_acquisition_period_ms swapped between two ids; a test-measure-to-requirement mapping that paired the wrong requirement with the wrong measure; a fabricated execution outcome of type synthetic_fixture with outcome planned that no execution record has; a chained baseline sequence the records do not contain; two duplicated glossary rows; a section numbered 5.2 appearing inside section 6; and an unresolvable id range written as a string no tool can resolve."
+   ],
+   "edits_revision_4": [
+    "Extended docs/artifacts/tools/corpus.py cmd_render with an eleventh view, traceability/traceability-document.md, emitted through the same emit()/_view_preamble path as the other ten so it is indistinguishable in form from them and carries the same provenance and guard-field contract.",
+    "Its content is derived only: artifact census by profile and type, non-record registry entry counts, guard-field census across every indexed record, an ASIL-field section that states the field is a hypothetical value and not a determination, link registry census by relation and profile, link-metadata completeness, verification reachability per profile with the uncovered requirement ids named, live ASPICE and ISO disposition tallies read from the coverage plan plus the locked standards, the coverage dimensions recomputed by _coverage_dimensions() with a column stating what each numerator counts, and the negative-scenario table built from the suite executed on that same render.",
+    "Reduced the repository-root TRACEABILITY_DOCUMENT.md from 606 hand-authored lines to a pointer stating what the document is, that it is at docs/artifacts/views/traceability/traceability-document.md, that it is generated and how to regenerate it, why it is a pointer, and what it does not claim.",
+    "Reduced docs/artifacts/reports/TRACEABILITY_DOCUMENT.md to the same kind of pointer and regenerated TRACEABILITY_DOCUMENT.docx from it with pandoc, so the binary can no longer carry content the markdown no longer has.",
+    "Repaired a non-determinism the new view exposed: a rule message interpolates a Python set whose repr order varies with PYTHONHASHSEED, which made two renders of the same corpus differ. Fixed in the presentation layer by sorting the members of any {...} or [...] group in the cell renderer; the rule that produced the message was not touched."
+   ],
+   "not_done": [
+    "The file was NOT relocated under docs/artifacts/ as a canonical record. The opposite was done and is better: the canonical document is a GENERATED VIEW inside the tool's write boundary, and the repository-root path - which the owner required to stay meaningful - is a pointer to it. Nothing at the repository root is written by the renderer, so the tool's 'all writes stay inside docs/artifacts/' invariant still holds.",
+    "The pointer files at the repository root and under docs/artifacts/reports/ are not themselves generated. They are hand-written but carry no engineering content, no figure and no claim, which is what makes them incapable of going stale or overclaiming.",
+    "No coverage dimension was changed other than the two named above. The presence-check and declared-constant dimensions are labelled as such in the generated document rather than redefined."
+   ],
+   "revision": 4,
+   "verified_by": "The edited file was read back after writing; the compliance sentence, the IEC 61508 claim and the bare ASIL capability statement no longer appear, and each replacement is present.",
+   "verified_by_revision_3": "A script was written to check the corrected file mechanically. It resolves every identifier-shaped string in the document against the corpus index, the assumption, parameter, link and source registries, the variant matrix and the short scenario-id key space, and separately asserts that no APPROVED status, no approver field, no named reviewer, no conformity or certification claim, no capability-level claim, no IEC 61508 clause row, no 'automatically generated' claim, and no percentage without a stated method survives. All three checks pass. The six identifiers that do not resolve are all named on lines that say what they are: four of them are cited only to record that the previous revision of the file was wrong, and two are the declared forward reference recorded as finding FB2-REV-FND-000030. corpus.py validate, corpus.py check and corpus.py selftest were re-run after the edit and are unchanged.",
+   "verified_by_revision_4": "A script checks that every figure in the generated document matches a live tool run, that no overclaim string survives in any of the four artefacts, and that two renders are byte-identical apart from the Generated: stamp. All pass. corpus.py validate, check, selftest and render_spec_documents.py --check were re-run after every change."
+  },
+  "residual_risk": "Closed by construction rather than by human discipline. The file this finding was raised about is no longer an independent document: it is a pointer, and the document it points to is emitted by docs/artifacts/tools/corpus.py cmd_render from the canonical records, byte-identically on every run apart from the timestamp. The residual risk this record previously stated - that the validator does not read the file, the renderer does not regenerate it, and the guard-field discipline has no authority over it, so it can drift back toward the overclaim with nothing detecting it - no longer holds for these paths. The earlier residual risk was real and is retained as evidence in revision 3 of revision_history: the revision-2 pass fixed the three defects it looked for and left a fabricated approval sign-off, a false provenance claim and two IEC 61508 rows in place, and no gate fired. THREE RESIDUALS REMAIN, and none of them is this finding: (1) a generated document can only be as honest as the records it derives from, so the corpus's own gaps - the `gap` and `partially_mapped` dispositions in the coverage plan, the absence of any target-hardware execution, the unverified ASIL justification - are reported by the document as gaps rather than closed by it; (2) the pointer files are hand-written, but they contain no engineering content, no figure and no claim, so the only way they can mislead is by being deleted, which `git status` shows; (3) the corpus's own coverage dimensions that are presence checks or declared constants - scope_accounting, export_reproducibility, semantic_consistency_checks, human_approval, production_authorization, and standards_mapping as a count of plan entries - remain presence checks or constants. They are not fixed here because no gate keys off them; they are now labelled **presence**, **constant** or **counted** in the generated document's own coverage table, so no dimension can be read as stronger than it is.",
+  "resolution": "RESOLVED, and the vocabulary member is corrected. This record was already correct at revision 4: it said RESOLVED and named the fix, and the fix holds. It was filed as disposition 'accepted', which under the enum that existed at the time was the only member available for a closed finding. `resolved` has been added to the enum and this record has been migrated to it. The distinction was real - nine closed records and five live defects all carried the same word - and it is now machine-readable rather than prose-only.\n\nRE-VERIFIED on 2026-09-30T00:00:00Z, by measurement rather than by reading: the repository-root TRACEABILITY_DOCUMENT.md is 55 lines, declares itself a pointer, and contains none of the strings 'IEC 61508', 'compliance evidence', 'ASIL-D', 'Approver', 'Reviewer' or 'Approved'. The canonical generated document exists at docs/artifacts/views/traceability/traceability-document.md and is produced by `corpus.py render` with the same emit helper and the same provenance preamble as every other generated view, so it carries the same contract and its numbers are computed at render time from the artifact index, the link registries, the guard fields and the live coverage dispositions.\n\nWHAT THE RESOLUTION GUARANTEES AND WHAT IT DOES NOT. The condition this record described cannot recur by hand-editing, because the file is no longer hand-authored: the root file and the reports/ copy are both short pointers with no engineering content, and the .docx beside the reports pointer was regenerated from that pointer so no third copy can drift. That is a stronger statement than a human-discipline fix. It is NOT an approval. The out-of-boundary write to the repository-root file was made on the explicit instruction of the repository owner after being told the file lay outside docs/artifacts, and that authorisation is recorded in remediation_performed so the change is traceable rather than silent - which is the failure mode this finding was raised to prevent. No human has approved the document or this finding; the second review pass that found the fabricated sign-off block was a separate automated review session, which is not organisational independence and is not a human confirmation measure. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+  "reverification": {
+   "audit_class": "CLOSED",
+   "condition_still_holds": false,
+   "date": "2026-09-30T00:00:00Z",
+   "disposition_before": "accepted",
+   "evidence": "the asserted condition is that the repository-root document states ISO 26262/IEC 61508 compliance evidence, an ASIL capability, and/or a fabricated approval block. Measured: the file is 55 lines, contains none of the overclaim strings, declares itself a pointer, and the canonical generated document exists at docs/artifacts/views/traceability/traceability-document.md (17278 bytes).",
+   "method": "docs/artifacts/tests/audit_findings.py - the asserted condition was re-derived from the live corpus (link registries, canonical records, validator source, and the SIL harness's own archived sweep), not read from this record.",
+   "revision_before": "4"
+  },
+  "revision": "5",
+  "revision_history": [
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "First-class record of a conformity and ASIL-capability claim made by TRACEABILITY_DOCUMENT.md at the repository root, which is outside the docs/artifacts write boundary and therefore reported rather than corrected.",
+    "revision": "1"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Remediation performed. The repository owner explicitly authorized amending the repository-root file, widening the write boundary for this one file only. The conformity sentence, the IEC 61508 compliance claim and the ASIL capability statement were removed or restated; a non-conformity header was added; the ASIL values in the data tables were relabelled hypothetical; the standards table was retitled as a reference index; and the stale coverage table was marked stale. The authorization, the exact edits and the residual risk are recorded in remediation_performed and residual_risk.",
+    "revision": "2"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Second remediation pass, after an independent adversarial review found the revision-2 fix incomplete. Verified defects and corrected: (1) a fabricated human-approval sign-off block (Reviewer/Approver/Status: APPROVED naming fictional corpus roles) survived at the end of the file and contradicted the READ FIRST header in the same file and all 220 corpus records - removed and replaced with a document-control table stating the real position; (2) the false provenance claim 'This document is automatically generated ... Manual edits will be overwritten on next generation' survived, which is false and told the next editor the authorised edits would be erased - replaced with a section stating the file is hand-authored, not generated, not under tool control, and therefore drift-prone; (3) two IEC 61508-3 clause rows survived in section 9 despite the revision-2 remediation record and commit message claiming they were removed, while the same revision's new section-9 preamble asserted the clause ids were the corpus's own references - rows removed and the preamble corrected; (4) the artifact-type definition table still carried a bare unqualified 'ASIL' at the point of definition - qualified; (5) several unmeasured '100%' and 'complete chain' coverage claims with no stated method were replaced by measured figures with named methods; (6) the STALE note pointed at the stale hand-written coverage-report.md as 'authoritative, tool-computed' - repointed at the live tool; (7) the mutation count contradicted the tool (said 6/20 functional, corpus.py check reports PASS for all 20) - corrected; (8) review and finding counts understated the corpus - scoped to their records and corpus-wide figures added; (9) the stated id scheme was wrong and several ids did not resolve - corrected; (10) scenario ids used the short key form inconsistently with the stated scheme - normalised. Also corrected beyond the review's list: a non-existent hazard id, four non-existent SW-TSR ids, a non-existent design id, a non-existent variant id, three non-existent baselines, a swapped parameter mapping, a mispaired test-measure-to-requirement mapping, a fabricated execution outcome, two duplicated glossary rows, a misnumbered section heading, and a '100% line/branch achieved' column with no coverage measurement behind it. This revision also corrects three stale fields in this record itself: the disposition_note asserted a corpus convention the corpus contradicts, the resolution still opened 'NOT RESOLVED, AND NOT RESOLVABLE', and root_cause/impact/resolution all still asserted that no functional or technical safety concept record exists.",
+    "revision": "3"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Durable fix implemented; the drift risk this finding recorded is closed by construction rather than by human discipline. The document is now generated. cmd_render emits docs/artifacts/views/traceability/traceability-document.md from the canonical records - artifact index, link registries, guard fields, coverage-plan dispositions and the coverage dimensions recomputed by the same function `corpus.py coverage` prints - using the existing view preamble, so it carries the identical 'Derived, not authored' / 'Regenerable' / guard-field / 'Not a conformity claim' contract every other generated view carries. Every figure is computed at render time; none is transcribed from a report or from prose. Two render runs are byte-identical apart from the Generated: stamp. The duplication is resolved by making the generated file canonical and reducing BOTH hand-authored copies - the repository-root file and docs/artifacts/reports/TRACEABILITY_DOCUMENT.md - to short pointers with no engineering content, and regenerating the .docx beside the reports pointer from that pointer so no third copy can carry stale content. In the same pass the coverage dimension negative_scenario_validation was found to have been counting scenario FILES rather than executing them; it now runs the mutation and change-lifecycle scenarios through the same path acceptance gate [5/8] uses and reports passes, and traceability_integrity was found to have read its dangling count from whatever findings happened to be in memory rather than measuring it, so it now re-runs link validation for its own figure. No gate was weakened, no rule changed and no scenario altered.",
+    "revision": "4"
+   },
+   {
+    "author": "data_quality_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "CORRECTED 2026-09-30T00:00:00Z against the corpus as it stands, by re-deriving the condition this record asserts rather than by trusting the record's own history. Method and full per-record evidence: docs/artifacts/tests/audit_findings.py. Classification vocabulary: docs/artifacts/governance/finding-disposition-vocabulary.md. Audit class: CLOSED. Disposition migrated from 'accepted' to 'resolved' and `resolution` rewritten to the current position: what the condition was, what fixed it or why it is still open, the evidence re-derived on 2026-09-30T00:00:00Z, and any residual. The `reverification` field added to this record carries that evidence in full so the record carries its own proof of currency. No other field was altered: severity, category, evidence, impact, root_cause, lifecycle_status, human_approval_status, production_authorized and product_verification_credit are unchanged. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "5"
+   }
+  ],
+  "root_cause": "RETAINED REVISION-1 HISTORY - the causal account still holds, with one premise corrected at the end. The document was authored at the repository root on 2026-09-11, during the period before the corpus had a generated view layer, and it was written as a summary of the corpus's ID scheme and link structure rather than as a governance-controlled document. It therefore never passed through the corpus's guard-field discipline: it carries no 'Derived, not authored' provenance header, no human_approval_status, no production_authorized field, and no statement of what the corpus does not claim, all of which the generated views carry. Three habits produced the specific overclaims. The first is conflating a standards MAPPING with a standards CONFORMITY claim: the corpus deliberately holds a mapping from artifacts to ISO 26262 clause references, and somewhere in drafting, 'maps to ISO 26262 Part 2' was written up as 'provides evidence for compliance with ISO 26262'. Structural mapping is not conformity, and the corpus states this explicitly in the standards-mapping view. The second is conflating a field VALUE with a DETERMINATION: FB2-SAF-SGO-000001 carries asil 'ASIL_D' with no justification field, and the document read that as evidence of an established ASIL D capability. The value is real and traceable to that record; what is missing is the derivation, and the corpus's own validator says so on every run. The third, found in the second review pass, is worse than the other two because it is not an overclaim at all: a document-control block was written with a named reviewer, a named approver and an approved status, and no such review or approval ever took place. The names were drawn from the corpus's own fictional role vocabulary (safety_engineer, safety_manager), so the fabrication looked internally consistent to anyone who had read a corpus record. The IEC 61508 reference has no traceable origin in any corpus record. It was most plausibly carried over from the pinned source's own safety documentation, which does list IEC 61508 as an example standard that might suit foxBMS users, and then converted from a candidate-standard mention into an asserted compliance claim during drafting. That conversion from 'a standard we might apply' to 'evidence for compliance' is the same category of error as the ISO 26262 claim, and it is the specific step that is unsupportable. Finally, the file's location is the proximate cause of all of this surviving. Because it was written outside docs/artifacts, it fell outside every control this corpus applies: the validator does not read it, the renderer does not regenerate it, and the guard-field and non-conformity rules that govern every generated surface have no reach over it. That last fact is also why the revision-2 fix was incomplete: nothing in the toolchain could detect that the pass had missed the sign-off block, the provenance claim and the IEC rows. CORRECTION TO REVISION 1: revision 1 attributed the missing derivation to the absence of concept-phase records. FB2-SAF-FSC-000001 and FB2-SAF-TSC-000001 now exist, so the concept phase is no longer empty; the derivation is still missing, and the asil field is still unjustified, so the causal account stands with that premise replaced.",
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "severity": "high",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "The claim of compliance evidence is recorded here as an unverified reference. No corpus artifact supports it, and the corpus does not claim conformity anywhere.",
+    "reference": "Part 2",
+    "standard_id": "ISO_26262_2018",
+    "status": "unverified"
+   }
+  ],
+  "subject_artifact_id": null,
+  "subject_file": "TRACEABILITY_DOCUMENT.md",
+  "subject_file_is_corpus_output": true,
+  "subject_file_is_generated": true,
+  "subject_file_location": "repository root, one level above docs/artifacts/ - now a POINTER; the document itself is generated at docs/artifacts/views/traceability/traceability-document.md, with a second pointer at docs/artifacts/reports/TRACEABILITY_DOCUMENT.md",
+  "title": "Finding FB2-REV-FND-000022: repository-root TRACEABILITY_DOCUMENT.md states ISO 26262 and IEC 61508 compliance evidence and an ASIL-D/ASIL-B capability, and lies outside the corpus write boundary",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "updated_evidence": "Verified 2026-09-29 after the revision-4 changes, by script rather than by eye. Ownership: `corpus.py render` writes docs/artifacts/views/traceability/traceability-document.md; the file carries the identical preamble contract as the other ten views; two renders are byte-identical apart from the Generated: stamp. Duplication: exactly one file under docs/artifacts/ or the repository root contains traceability engineering content, and the other two are pointers to it. String scan across the generated document, the root pointer, the reports pointer and the .docx: 'APPROVED', 'Approver', 'Reviewer:', 'compliance', 'certification' and an unqualified ASIL value do not occur in any of them; 'conformity' occurs only in explicit negations. Numeric agreement: every figure in the generated document was compared against a live tool run and matches. corpus.py validate reports 0 findings, corpus.py check reports Acceptance suite: PASSED with 8/8 gates and 23/23 scenario lines, corpus.py selftest reports 24/24, and render_spec_documents.py --check reports INTEGRITY CHECK PASSED with byte-identical output across runs.",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "finding",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "derived",
+  "owner_role": "quality_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-FND-000022"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-FND-000022",
+  "revision": "5"
+ }
+}

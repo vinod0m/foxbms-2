@@ -1,0 +1,735 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-IFS-000006",
+    "rationale": "The contactor design record's interfaces field is a signal table naming the command and feedback signals. FB2-SW-IFS-000003 replaces it with the four declared elements, the two precondition assertions on every actuation request, the two-value return contract and the finding that the negative value is ambiguous between a registry miss and a completed request. It refines FB2-SW-DSN-000003 and sits alongside FB2-SW-DSN-000006, whose detailed design names the registry data model and the four-way feedback dispatch and still states no interface contract.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "refines",
+    "review_state": "pending",
+    "source_id": "FB2-SW-IFS-000003",
+    "target_id": "FB2-SW-DSN-000003"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000022",
+    "rationale": "FB2-SW-SIR-000002 is the software interface requirement set for the actuation boundary and is specified by FB2-SW-IFS-000003 (contactor actuation and feedback driver). The direction is specification to requirement, which is the direction a requirement is written in: the interface specification establishes what the interface is by analysing the source at the pinned commit, and the requirement states what must be true of it. This is the opposite of the direction the three existing FB2-SW-SWR-* requirements were produced in - those are back-inferred from the implementation and their revision history says so - and naming the relationship explicitly is what keeps the two directions distinguishable. Every statement in the requirement is traceable to a named element of the specification, and the requirement carries that traceability as a field rather than leaving it in prose.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-hardware-and-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000002",
+    "target_id": "FB2-SW-IFS-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000196",
+    "rationale": "Reviewed by FB2-REV-000018, a profile-scoped domain review of all sixteen software_interface_specification records in this profile. The review read the record and checked every source citation it makes against the pinned foxBMS commit 308028fb by reading the blob rather than the working tree: 81 of 81 declared source_refs resolve, 61 of 61 element declaration lines and 60 of 61 element implementation lines carry the claimed symbol, and 572 of 572 in-record 'path Lnn[-Lmm]' prose ranges resolve in bounds. This endpoint's element lines were among those checked. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000018",
+    "target_id": "FB2-SW-IFS-000003"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against software_interface_specification.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (5)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "5/5 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-IFS-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000018",
+     "review_path": "docs/artifacts/reviews/records/review-software-interface-specifications.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "sw_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-software-interface-specifications.json",
+      "reviewed_by link FB2-LNK-REVB-000196 in docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000101, which records anchor class `repository_file`; path `src/app/driver/contactor/contactor.h`; line_range `69-77`; content_hash `9cf58622c01f3cffaf26d8e76f06d9abde1ea1d29afbe1cd1ad3bff262973396`; symbol `CONT_GetContactorState`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000102, which records anchor class `repository_file`; path `src/app/driver/contactor/contactor.c`; line_range `184-201`; content_hash `71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83`; symbol `CONT_CloseContactor`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000008, which records anchor class `repository_file`; path `src/app/driver/contactor/contactor.c`; line_range `125-163`; content_hash `71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83`; symbol `CONT_CheckFeedback`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000096, which records anchor class `repository_file`; path `src/app/application/config/battery_system_cfg.h`; line_range `109`; content_hash `3a38542f4da1986bc1944cd7ce6eabbc38a044255c9273f8273e46f2940670b1`; symbol `BS_NR_OF_STRINGS`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000094, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.h`; line_range `94`; content_hash `ab0543a8ef7052d52e3e3acb6e4041fb9f2b3e5d658ed026a8a849d3dec65060`; symbol `FTSK_TASK_CYCLIC_1MS_CYCLE_TIME`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000101 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000101."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000102 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000102."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000008."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000096 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000096."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000094 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000094."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C11-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 8 (software architectural design - interface specification) with status `partially_mapped` on the grounds: Specifies the actuation boundary with the real signatures, the two precondition assertions, the two-value return contract and its ambiguity, and the side-effect-only feedback reporting. No ownership rule and no interface agreement."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C12-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Supplies an interface specification for the contactor element that the design records' signal tables did not."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C13-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Named as the specification the software interface requirements for the actuation boundary are derived from."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 24581,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-contactor-actuation.json",
+  "record_sha256": "96e36c38892e5fc8d6de07d428a446ed372627b1697d7d7a9da503bb890c0ef2",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "96e36c38892e5fc8d6de07d428a446ed372627b1697d7d7a9da503bb890c0ef2"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-IFS-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Interface Specification: the contactor actuation and feedback driver\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "design adequacy",
+   "priority": 8,
+   "question": "Does this design specify enough for an implementer to build it without inventing a decision?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Design adequacy is judged by building it, or by reading it as an implementer would. No validator measures it."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis": {
+   "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+   "direction": "source_to_specification",
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "method": "source_analysis_at_pinned_commit",
+   "tools_used": [
+    "git show 308028fb:<path>",
+    "graft skeleton <file>"
+   ],
+   "what_this_record_is_not": [
+    "Not an interface agreement. No supplier, integrator or reviewer has agreed this interface; it records what the source is, not what anyone needs.",
+    "Not a conformance statement. Nothing here has been tested against a running target; the corpus's actual_product_evidence dimension stands at 0 target-hardware executions.",
+    "Not a requirements document. It states no requirement. The software interface requirements derived from it are separate records that cite this one.",
+    "Not independent review. It was authored by an AI agent reading the source. An AI-authored artefact is not independent evidence, and no human engineer has reviewed any statement in it."
+   ]
+  },
+  "artifact_type": "software_interface_specification",
+  "assumption_refs": [],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the source text at the pinned commit. Reproducible, not independent: no software engineer has reviewed it, no requirement author has confirmed that this is the interface that was wanted, and no conformance test has compared it against running code. It is not offered as independent evidence of anything.",
+   "interface_agreement_status": "No agreement exists. There is no interface control document in this repository for this boundary, no named counterparty, and no signature from either side. This record describes an interface as implemented; it does not bind anyone to it."
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "consuming_modules": [
+   {
+    "calls": [
+     "CONT_CloseContactor",
+     "CONT_GetContactorState",
+     "CONT_OpenAllContactors",
+     "CONT_CheckFeedback"
+    ],
+    "consumption_evidence": "The state machine is the only consumer. CONT_OpenAllPrechargeContactors at src/app/application/bms/bms.c L1045, CONT_OpenContactor at L1070 and L1086, CONT_GetContactorState at L1094 and L1303, CONT_CloseContactor at L1281 and L1328, CONT_OpenAllContactors at L1160 and CONT_CheckFeedback at L917.",
+    "name": "BMS state machine",
+    "source_path": "src/app/application/bms/bms.c"
+   },
+   {
+    "calls": [
+     "SPS_RequestContactorState"
+    ],
+    "consumption_evidence": "The close request forwards to SPS_RequestContactorState(cont_contactorStates[contactorIndex].spsChannel, SPS_CHANNEL_ON) at src/app/driver/contactor/contactor.c L195 and the implementation discards that call's return value.",
+    "name": "SPS module, the downstream actuator interface",
+    "source_path": "src/app/driver/contactor/contactor.c"
+   }
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "elements": [
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached from the BMS state machine in src/app/application/bms/bms.c; no interrupt context reaches this entry point in the source.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS state machine",
+    "declaration": "extern STD_RETURN_TYPE_e CONT_CloseContactor(uint8_t stringNumber, CONT_TYPE_e contactor);",
+    "declaration_line": 93,
+    "declaration_path": "src/app/driver/contactor/contactor.h",
+    "element_id": "IFSE-000201",
+    "error_paths": [
+     {
+      "condition": "stringNumber is at or above BS_NR_OF_STRINGS.",
+      "evidence": "src/app/driver/contactor/contactor.c L185",
+      "observed_behaviour": "A precondition assertion trips before the loop.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "contactor is CONT_UNDEFINED.",
+      "evidence": "src/app/driver/contactor/contactor.c L186",
+      "observed_behaviour": "A precondition assertion trips before the loop.",
+      "signalled_as": "precondition assertion"
+     },
+     {
+      "condition": "No registry entry matches the string and type pair.",
+      "evidence": "src/app/driver/contactor/contactor.c L187, L189-L199 and L200",
+      "observed_behaviour": "The loop completes without a match, the initial STD_NOT_OK is returned, and no contactor state is changed.",
+      "signalled_as": "STD_NOT_OK"
+     }
+    ],
+    "implementation_line": 184,
+    "implementation_path": "src/app/driver/contactor/contactor.c",
+    "not_specified_by_source": [
+     "The interface returns STD_OK when the request has been placed on a registry entry, not when the contactor has closed. Nothing here reports the resulting electrical state; that is what CONT_GetContactorState and CONT_CheckFeedback are for, and neither is named by this element.",
+     "The interface does not state that the request is forwarded to the SPS module by name or what happens if that forward fails. The forward is SPS_RequestContactorState(..., SPS_CHANNEL_ON) at src/app/driver/contactor/contactor.c L195 and its return value is not read, so a failure inside the SPS module is invisible here.",
+     "The interface does not state BS_NR_OF_CONTACTORS, the size of the registry it searches. That is (2u * BS_NR_OF_STRINGS) + BS_NR_OF_CONTACTORS_OUTSIDE_STRINGS at src/app/application/config/battery_system_cfg.h L237.",
+     "The interface does not state whether a request for a contactor that is already closed is idempotent, accepted or rejected. The implementation sets the same field and returns STD_OK, so it is idempotent in effect, but that is not stated."
+    ],
+    "parameters": [
+     {
+      "c_type": "uint8_t",
+      "direction": "in",
+      "meaning": "The string the contactor belongs to.",
+      "name": "stringNumber",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(stringNumber < BS_NR_OF_STRINGS) at src/app/driver/contactor/contactor.c L185. BS_NR_OF_STRINGS is (1u) at src/app/application/config/battery_system_cfg.h L109.",
+      "unit": "string index (dimensionless)",
+      "valid_range": "0 <= stringNumber < BS_NR_OF_STRINGS"
+     },
+     {
+      "c_type": "CONT_TYPE_e",
+      "direction": "in",
+      "meaning": "Which kind of contactor of that string to act on: the plus contactor, the minus contactor or the precharge contactor.",
+      "name": "contactor",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(contactor != CONT_UNDEFINED) at src/app/driver/contactor/contactor.c L186.",
+      "unit": "contactor type enumerator",
+      "valid_range": "Any enumerator except CONT_UNDEFINED."
+     }
+    ],
+    "providing_module": "Contactor driver",
+    "return_contract": {
+     "c_type": "STD_RETURN_TYPE_e",
+     "default_on_no_information": "No third value exists. STD_NOT_OK is returned both when the request was refused and when the registry simply has no such contactor, so a caller cannot tell a configuration mistake from a busy resource.",
+     "evidence": "src/app/main/include/fstd_types.h L82-L85; the two return paths are at src/app/driver/contactor/contactor.c L196 and L187/L200.",
+     "values": {
+      "STD_NOT_OK": "No contactor in the registry matched the string and type pair, so nothing was set.",
+      "STD_OK": "A matching contactor was found in the registry and the requested state was set on it."
+     }
+    },
+    "symbol": "CONT_CloseContactor",
+    "timing": {
+     "evidence": "Called from the BMS state machine, which runs on the 10 ms cyclic task: for example CONT_CloseContactor(bms_state.firstClosedString, CONT_MINUS) at src/app/application/bms/bms.c L1281. FTSK_TASK_CYCLIC_10MS_CYCLE_TIME is 10u at src/app/task/config/ftask_cfg.h L112.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "STD_OK is set only inside the loop after a registry match, at src/app/driver/contactor/contactor.c L196; the initial value STD_NOT_OK at L187 is returned unchanged if the loop completes without a match, at L200.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value STD_RETURN_TYPE_e."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached from the BMS state machine in src/app/application/bms/bms.c; no interrupt context reaches it in the source.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS state machine",
+    "declaration": "extern CONT_ELECTRICAL_STATE_TYPE_e CONT_GetContactorState(uint8_t stringNumber, CONT_TYPE_e contactorType);",
+    "declaration_line": 77,
+    "declaration_path": "src/app/driver/contactor/contactor.h",
+    "element_id": "IFSE-000202",
+    "error_paths": [
+     {
+      "condition": "No registry entry matches the pair.",
+      "evidence": "src/app/driver/contactor/contactor.c L249 and L258",
+      "observed_behaviour": "CONT_SWITCH_UNDEFINED is returned.",
+      "signalled_as": "CONT_SWITCH_UNDEFINED"
+     },
+     {
+      "condition": "stringNumber is out of range or contactorType is CONT_UNDEFINED.",
+      "evidence": "src/app/driver/contactor/contactor.c L247-L248",
+      "observed_behaviour": "A precondition assertion trips before the loop.",
+      "signalled_as": "precondition assertion"
+     }
+    ],
+    "implementation_line": 246,
+    "implementation_path": "src/app/driver/contactor/contactor.c",
+    "not_specified_by_source": [
+     "The interface returns the contactor's feedback field, not its commanded set field. The source keeps the two separately, as currentSet and feedback, and this element exposes only the feedback, so a caller can read what the contactor reports but not what it was told to do. Nothing in this element states the distinction.",
+     "The interface does not state the size of the registry it searches or what the caller's obligations are if more than one contactor of the same type is registered for a string. The driver carries a TODO saying it does not check that only one contactor of each type is configured for each string.",
+     "The interface states no timing expectation: it does not say how stale the feedback may be, so a caller cannot distinguish a contactor that is slow from one that has failed."
+    ],
+    "parameters": [
+     {
+      "c_type": "uint8_t",
+      "direction": "in",
+      "meaning": "The string the contactor belongs to.",
+      "name": "stringNumber",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(stringNumber < BS_NR_OF_STRINGS) at src/app/driver/contactor/contactor.c L247.",
+      "unit": "string index (dimensionless)",
+      "valid_range": "0 <= stringNumber < BS_NR_OF_STRINGS"
+     },
+     {
+      "c_type": "CONT_TYPE_e",
+      "direction": "in",
+      "meaning": "Which kind of contactor of that string to read.",
+      "name": "contactorType",
+      "nullable": false,
+      "range_enforcement": "precondition_assertion",
+      "range_evidence": "FAS_ASSERT(contactorType != CONT_UNDEFINED) at src/app/driver/contactor/contactor.c L248.",
+      "unit": "contactor type enumerator",
+      "valid_range": "Any enumerator except CONT_UNDEFINED."
+     }
+    ],
+    "providing_module": "Contactor driver",
+    "return_contract": {
+     "c_type": "CONT_ELECTRICAL_STATE_TYPE_e",
+     "default_on_no_information": "CONT_SWITCH_UNDEFINED is the documented default: the local variable feedback is initialised to it at src/app/driver/contactor/contactor.c L249 and returned at L258 if the loop finds no match. A caller therefore gets an explicit 'no such contactor' rather than a stale state.",
+     "evidence": "The declaration and its doxygen @return of 'current state, taken from #CONT_ELECTRICAL_STATE_TYPE_e' at src/app/driver/contactor/contactor.h L69-L77.",
+     "values": {
+      "CONT_SWITCH_UNDEFINED": "Initialised as the value to return and returned unchanged when no registry entry matches the string and type pair."
+     }
+    },
+    "symbol": "CONT_GetContactorState",
+    "timing": {
+     "evidence": "Called from the BMS state machine in src/app/application/bms/bms.c, for example at L1094 and L1303; that state machine runs on the 10 ms cyclic task.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "The no-match case returns CONT_SWITCH_UNDEFINED, so a caller can detect it: src/app/driver/contactor/contactor.c L249 and L258.",
+     "failure_is_observable_to_caller": true,
+     "mechanism": "Return value CONT_ELECTRICAL_STATE_TYPE_e."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached only from BMS_Trigger at src/app/application/bms/bms.c L917, in the 10 ms cyclic task.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS state machine, DIAG module",
+    "declaration": "extern void CONT_CheckFeedback(void);",
+    "declaration_line": 128,
+    "declaration_path": "src/app/driver/contactor/contactor.h",
+    "element_id": "IFSE-000203",
+    "error_paths": [
+     {
+      "condition": "A contactor's feedback does not match what it was commanded to do.",
+      "evidence": "src/app/driver/contactor/contactor.c L131-L135 and the three DIAG_Handler calls at L138, L145 and L152",
+      "observed_behaviour": "A DIAG_EVENT_NOT_OK is registered for the diagnosis id matching that contactor type; a match registers DIAG_EVENT_OK.",
+      "signalled_as": "diagnosis event, not a return value"
+     },
+     {
+      "condition": "A registry entry has a type outside CONT_PLUS, CONT_MINUS and CONT_PRECHARGE.",
+      "evidence": "src/app/driver/contactor/contactor.c L158-L160",
+      "observed_behaviour": "The switch falls to its default branch and a precondition assertion traps.",
+      "signalled_as": "precondition assertion"
+     }
+    ],
+    "implementation_line": 125,
+    "implementation_path": "src/app/driver/contactor/contactor.c",
+    "not_specified_by_source": [
+     "The interface reports a mismatch as a diagnosis event and nothing else, so a caller cannot distinguish 'contactor open when it should be closed' from 'contactor closed when it should be open'. The diagnosis id and the string index are passed, and the polarity is lost at this boundary.",
+     "The interface does not state how many contactors it checks. The body iterates BS_NR_OF_CONTACTORS, defined as (2u * BS_NR_OF_STRINGS) + BS_NR_OF_CONTACTORS_OUTSIDE_STRINGS at src/app/application/config/battery_system_cfg.h L237.",
+     "The source carries an open item in the interface itself: a TODO in the body at src/app/driver/contactor/contactor.c L130 saying that a check that only one contactor of each type is configured for each string is still to be added. The interface therefore does not guarantee that a string has exactly one contactor per type, and this record does not claim it does.",
+     "The interface does not state a debounce or a settling time, so it does not say whether a transient mismatch during switching is expected to be reported."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "Contactor driver",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+     "evidence": "Declared void in the source; the interface communicates entirely through side effects.",
+     "values": {}
+    },
+    "symbol": "CONT_CheckFeedback",
+    "timing": {
+     "evidence": "Called at src/app/application/bms/bms.c L917 from BMS_Trigger, in the 10 ms cyclic task, FTSK_TASK_CYCLIC_10MS_CYCLE_TIME 10u at src/app/task/config/ftask_cfg.h L112.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "Declared void at src/app/driver/contactor/contactor.h L128. The body computes feedbackStatus by comparing currentSet with feedback at src/app/driver/contactor/contactor.c L132 and then registers a diagnosis event per contactor, for DIAG_ID_STRING_PLUS_CONTACTOR_FEEDBACK at L138, DIAG_ID_STRING_MINUS_CONTACTOR_FEEDBACK at L145 and DIAG_ID_PRECHARGE_CONTACTOR_FEEDBACK at L152.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "Side effect: one diagnosis event per configured contactor, with the event value derived by comparing the commanded state with the feedback."
+    }
+   },
+   {
+    "concurrency": {
+     "calling_context": "task",
+     "evidence": "Reached only from BMS_Trigger at src/app/application/bms/bms.c L1160, in the 10 ms cyclic task.",
+     "reentrancy": "unspecified"
+    },
+    "consuming_module": "BMS state machine",
+    "declaration": "extern void CONT_OpenAllContactors(void);",
+    "declaration_line": 121,
+    "declaration_path": "src/app/driver/contactor/contactor.h",
+    "element_id": "IFSE-000204",
+    "error_paths": [
+     {
+      "condition": "Any condition.",
+      "evidence": "The body at src/app/driver/contactor/contactor.c L236-L244 opens every registry entry and returns.",
+      "observed_behaviour": "No error path is observable; the function has no return value and registers no diagnosis event of its own.",
+      "signalled_as": "nothing"
+     }
+    ],
+    "implementation_line": 236,
+    "implementation_path": "src/app/driver/contactor/contactor.c",
+    "not_specified_by_source": [
+     "The interface is unconditional and unchecked. It opens every registered contactor including any that sit outside a string, because the registry size includes BS_NR_OF_CONTACTORS_OUTSIDE_STRINGS, and it says nothing about that.",
+     "The interface reports nothing, so a caller cannot know whether the sweep completed or which contactors were affected.",
+     "The interface states no relationship to the precharge contactors: CONT_OpenAllPrechargeContactors is a separate function in the same header, and the two are not distinguished here."
+    ],
+    "parameters": [
+     {
+      "c_type": "void",
+      "direction": "none",
+      "meaning": "The function takes no argument.",
+      "name": "(none)",
+      "unit": "(no parameter)"
+     }
+    ],
+    "providing_module": "Contactor driver",
+    "return_contract": {
+     "c_type": "void",
+     "default_on_no_information": "Not applicable as a return value, and that is itself the contract weakness: the function reports nothing to its caller. Its only output is the side effect of registering diagnosis events with the DIAG module.",
+     "evidence": "Declared void in the source; the interface communicates entirely through side effects.",
+     "values": {}
+    },
+    "symbol": "CONT_OpenAllContactors",
+    "timing": {
+     "evidence": "Called at src/app/application/bms/bms.c L1160 from BMS_Trigger, in the 10 ms cyclic task.",
+     "period_imposed_by_source": true,
+     "period_ms": 10
+    },
+    "validity_signalling": {
+     "evidence": "Declared void at src/app/driver/contactor/contactor.h L121; the implementation iterates the registry and opens each entry.",
+     "failure_is_observable_to_caller": false,
+     "mechanism": "None returned. The effect is a sweep over the contactor registry."
+    }
+   }
+  ],
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IFS-000003",
+  "interface_class": "actuation",
+  "interface_id": "IFS-CONTACT-000003",
+  "interface_level_gaps": [
+   {
+    "consequence": "No single element of this interface lets a caller close a contactor and learn that it closed. A requirement about actuation has to be written across two elements, and the source does not state the pair as a contract.",
+    "evidence": "STD_OK is set at src/app/driver/contactor/contactor.c L196 immediately after the SPS forward at L195, with no confirmation of the resulting state.",
+    "gap": "The interface never reports the electrical outcome of a request. Closing returns STD_OK when the request is placed on a registry entry, and the electrical state is a separate read through CONT_GetContactorState."
+   },
+   {
+    "consequence": "A caller cannot distinguish a configuration error, which no amount of retrying will fix, from a transient condition. A requirement that says the interface shall report failure distinctly per cause is not satisfiable against this implementation.",
+    "evidence": "The initial STD_NOT_OK at src/app/driver/contactor/contactor.c L187 is returned unchanged both when the loop finds no matching registry entry, at L200, and on the path where the forward to the SPS module has already been made.",
+    "gap": "STD_NOT_OK is ambiguous between two different situations."
+   },
+   {
+    "consequence": "A failure reported by the SPS module does not reach the caller of the contactor interface, so the interface cannot signal it.",
+    "evidence": "SPS_RequestContactorState is called at src/app/driver/contactor/contactor.c L195 and its return value is not assigned or tested on the following lines.",
+    "gap": "The forward to the actuator is unchecked."
+   },
+   {
+    "consequence": "The interface does not guarantee one contactor per type per string, so a caller reading a contactor state may be reading an arbitrary one of several.",
+    "evidence": "The TODO at src/app/driver/contactor/contactor.c L130 states that the check that only one contactor of each type is configured for each string is still to be added.",
+    "gap": "The feedback interface carries an open item in the source itself."
+   }
+  ],
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "providing_module": {
+   "name": "Contactor driver",
+   "role": "Acts on the contactors and reads their feedback. It keeps the commanded state and the feedback separately and forwards actuation requests to the SPS module.",
+   "source_paths": [
+    "src/app/driver/contactor/contactor.h",
+    "src/app/driver/contactor/contactor.c"
+   ]
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Four elements of the contactor driver: the close request, the state read, the feedback check and the unconditional open sweep. Two findings are recorded from the source rather than smoothed over: STD_NOT_OK is ambiguous between a refused request and a registry miss, and the feedback check carries an open TODO about contactor-type uniqueness per string.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000101",
+   "FB2-SRC-COD-000102",
+   "FB2-SRC-COD-000008",
+   "FB2-SRC-COD-000096",
+   "FB2-SRC-COD-000094"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Specifies the actuation boundary with the real signatures, the two precondition assertions, the two-value return contract and its ambiguity, and the side-effect-only feedback reporting. No ownership rule and no interface agreement.",
+    "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Supplies an interface specification for the contactor element that the design records' signal tables did not.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Named as the specification the software interface requirements for the actuation boundary are derived from.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "title": "Interface Specification: the contactor actuation and feedback driver",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_status": {
+   "analysed_against_running_code": false,
+   "conformance_tested": false,
+   "statement": "The contract above was read from the source at the pinned commit and has not been compared with what the code does when it runs. Every behavioural statement is a reading of the implementation text, not an observation of behaviour. Where the two could differ, this record does not know."
+  }
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "software_interface_specification",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-IFS-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-IFS-000003",
+  "revision": "1"
+ }
+}

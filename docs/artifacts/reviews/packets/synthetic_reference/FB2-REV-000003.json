@@ -1,0 +1,716 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000024",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-TAR-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-TAR-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000025",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-SEC-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-SEC-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000026",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-SEC-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-SEC-000002"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000027",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-SEC-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-SEC-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000028",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-SEC-000004 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-SEC-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000029",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-SEC-000005 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-SEC-000005"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against review.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (4)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "4/4 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000057, which records anchor class `repository_file`; path `src/app/application/ethernet/ethernet.c`; line_range `241-294`; content_hash `7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346`; symbol `ETH_ListenForConnection`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000059, which records anchor class `repository_file`; path `src/app/application/ethernet/ethernet.c`; line_range `344-364`; content_hash `7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346`; symbol `ulApplicationGetNextSequenceNumber`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000065, which records anchor class `repository_file`; path `src/app/driver/can/can.c`; line_range `643-692`; content_hash `571fa2e20ed3430218f54a5fc56da8c104b86f3fd55188e26da76bf2f660cfc6`; symbol `CAN_RxInterrupt`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000067, which records anchor class `repository_file`; path `src/app/driver/uart/uart.c`; line_range `144-164`; content_hash `0be7bfb3346d84112dca9a3b17dda72d8ae127dc2e0d39311cbe91671617177e`; symbol `UART_Initialize`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000057 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000057."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000059 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000059."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000065 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000065."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000067 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000067."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TAR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[0].artifact_id` names FB2-SAF-TAR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[1].artifact_id` names FB2-SAF-SEC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[2].artifact_id` names FB2-SAF-SEC-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[3].artifact_id` names FB2-SAF-SEC-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[4].artifact_id` names FB2-SAF-SEC-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[5].artifact_id` names FB2-SAF-SEC-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000110 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[0].finding_id` names FB2-REV-FND-000110."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[0].artifact_id` names FB2-SAF-SEC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000111 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[1].finding_id` names FB2-REV-FND-000111."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[1].artifact_id` names FB2-SAF-SEC-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000110 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[0].finding_id` names FB2-REV-FND-000110."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000111 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[1].finding_id` names FB2-REV-FND-000111."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C21-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TAR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.digest_corrections[0].artifact_id` names FB2-SAF-TAR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C22-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.digest_corrections[1].artifact_id` names FB2-SAF-SEC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C23-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.digest_corrections[2].artifact_id` names FB2-SAF-SEC-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C24-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.digest_corrections[3].artifact_id` names FB2-SAF-SEC-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C25-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.digest_corrections[4].artifact_id` names FB2-SAF-SEC-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C26-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.digest_corrections[5].artifact_id` names FB2-SAF-SEC-000005."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C27-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-SAF-TAR-000001 at revision `2` with digest `6839fe9146d24db863da57c3bbd9db0dc40537b3a04d322042cf9a0e1b866b39`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C28-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/safety/sec-authenticated-transport-network-service.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-SAF-SEC-000001 at revision `3` with digest `6ee726f47d7a7c1884e9e35fa395d6eab7967069e7a53ddb5bf7295a14c11fe6`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C29-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/safety/sec-bounded-connection-admission-resource-budget.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-SAF-SEC-000002 at revision `3` with digest `f19fb37d59bae6278f01c2cafd30924e03999a550af123915666d470f4bcd333`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C30-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/safety/sec-message-integrity-freshness-safety-bus.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-SAF-SEC-000003 at revision `4` with digest `49a864216377ffe3f1927e7b7ee5d5d532c9f3a9ae0d775388adaffd05c55483`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C31-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/safety/sec-serial-link-framing-integrity-control-byte.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-SAF-SEC-000004 at revision `4` with digest `e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C32-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/safety/sec-strong-entropy-and-component-vulnerability-governance.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-SAF-SEC-000005 at revision `4` with digest `de81ba78e5bf1d1053691765a8c979144c221cda4df016538f6c0f87b8dba87a`."
+  },
+  {
+   "claim_class": "review_independence",
+   "claim_id": "C33-rev-id",
+   "evidence_in_packet": "The record verbatim in section 3, including the reviewer's own note.",
+   "judgement_needed": "Whether this reviewer was independent enough for the claim being made. A single AI session reviewing its own output is not independence, and the record says so.",
+   "machine_state": "declared in the record; independence is not machine-verifiable",
+   "statement": "reviewer_identity = {\"model\": \"openrouter/stealth/space-bunny-alpha\", \"role\": \"safety_engineer\", \"session_id\": \"opencode-2026-09-29-artifact-review-pass\"}"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 16343,
+  "record_path": "docs/artifacts/reviews/records/review-cybersecurity-work-products.json",
+  "record_sha256": "e4f76454c8db8fc0c7eb79a8fe7badc101ffc0c716689aa3debf2336d927aa43",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "ff303ca49feaca441cc8a96cc3774b6181b18a6bc9bd00093abf6e9729dd0e82"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+    "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+    "No artifact covered by this review carries production authority or product verification credit.",
+    "No penetration test, no exploit, no attack and no exploitability assessment was performed or is claimed by this review or by any artifact it covers. The TARA's own threat descriptions were checked for fabricated vulnerability data and none was found.",
+    "Verification performed: (a) every file:line assertion in the real_source_presence fields of SEC-000001..SEC-000005 was spot-checked against the real source and all sampled assertions matched exactly; (b) the TARA was searched for CVE identifiers, CVSS scores and exploit claims - none present, and an explicit 'No exploitability assessment of any kind was performed' statement is present; (c) the TARA declares is_iso_21434_tara=false and lists its own limitations including the absence of damage scenarios, attack-path analysis and TARA review; (d) every artifact was scanned for certification, tool-qualification, human-approval and ASPICE-capability claims - none present.",
+    "The file:line check was a spot check of the highest-consequence assertions (ethernet accept and queue hand-off, backlog and receive-timeout constants, UART XOFF/XON gating, CAN dispatch match, TCP initial-sequence-number generator and its seed). It was not an exhaustive check of every line reference in every record, and a residual possibility of an unchecked but incorrect line reference remains.",
+    "This review does not assess whether the threat enumeration is complete. Completeness of a TARA is a specialist activity and is not claimed here."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity."
+  },
+  {
+   "field": "scope",
+   "value": "Full scope over all 6 synthetic_reference cybersecurity artifacts (FB2-SAF-TAR-000001 and FB2-SAF-SEC-000001..000005). Every artifact carries profile 'synthetic_reference', so every reviewed_id below resolves unambiguously in that profile. The HSI design was examined only for the purpose of FB2-REV-FND-000111 and is reviewed in full by FB2-REV-000008."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the safety_engineer for this safety record, do you agree that \"Review: cybersecurity work products (TARA and SEC-000001..SEC-000005)\" is a correct and complete statement of hazard analysis, safety goals, FSR/TSR allocation, safety analyses, the safety case?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "review conclusion",
+   "priority": 5,
+   "question": "This review reached conclusions about the records it covers. Are those conclusions correct?",
+   "what_in_this_packet_bears_on_it": "The findings and dispositions listed under what is already checked.",
+   "why_this_needs_a_human": "A review is an argument. Its digests prove it read the bytes; nothing proves it read them correctly."
+  },
+  {
+   "group": "independence",
+   "priority": 10,
+   "question": "This review was performed by openrouter/stealth/space-bunny-alpha in session `opencode-2026-09-29-artifact-review-pass`. Is that independence sufficient for the weight this review's conclusions are being given?",
+   "what_in_this_packet_bears_on_it": "reviewer_identity in section 3, including its note.",
+   "why_this_needs_a_human": "Independence is a governance judgement. A single automated session reviewing its own output is not organisational independence, and the corpus says so itself."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "review",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "checklist_version": "CHKL-CYBERSEC-SRC-1.0.0",
+  "created_at": "2026-09-29T00:00:00Z",
+  "digest_corrections": [
+   {
+    "artifact_id": "FB2-SAF-TAR-000001",
+    "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+    "current_artifact_revision": "2",
+    "current_digest": "6839fe9146d24db863da57c3bbd9db0dc40537b3a04d322042cf9a0e1b866b39",
+    "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 2. The digest this review recorded is the sha256 of the file as committed in 2d35c4c1, a2db50fa, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session.",
+    "previous_digest": "5473b36724edb0d88aef7b5c94524c1db852c56223e0261fb314b118a4e4dbb8",
+    "previous_reviewed_revision": "1",
+    "profile": "synthetic_reference"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000001",
+    "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+    "current_artifact_revision": "3",
+    "current_digest": "6ee726f47d7a7c1884e9e35fa395d6eab7967069e7a53ddb5bf7295a14c11fe6",
+    "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 3. The digest this review recorded is the sha256 of the file as committed in e98547f4, 2d35c4c1, a2db50fa, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session.",
+    "previous_digest": "412a76d530977c4911f3bfa18df18e20ef1b1b24f469102dbcdc7e58c7837d86",
+    "previous_reviewed_revision": "1",
+    "profile": "synthetic_reference"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000002",
+    "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+    "current_artifact_revision": "3",
+    "current_digest": "f19fb37d59bae6278f01c2cafd30924e03999a550af123915666d470f4bcd333",
+    "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 3. The digest this review recorded is the sha256 of the file as committed in e98547f4, 2d35c4c1, a2db50fa, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session.",
+    "previous_digest": "536b0d8c2c2e818319dc5db755e521865f6ada84b72510728bfc27c5a370f39e",
+    "previous_reviewed_revision": "1",
+    "profile": "synthetic_reference"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000003",
+    "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+    "current_artifact_revision": "4",
+    "current_digest": "49a864216377ffe3f1927e7b7ee5d5d532c9f3a9ae0d775388adaffd05c55483",
+    "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 4. The digest this review recorded is the sha256 of the file as committed in 2d35c4c1, a2db50fa, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session.",
+    "previous_digest": "bb735f6ca5898b43815c2b84dbabf2b9cc8db99a6e0aca64c335f9233de6bc9c",
+    "previous_reviewed_revision": "1",
+    "profile": "synthetic_reference"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000004",
+    "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+    "current_artifact_revision": "4",
+    "current_digest": "e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa",
+    "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 4. The digest this review recorded is the sha256 of the file as committed in 2d35c4c1, a2db50fa, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session.",
+    "previous_digest": "847420e2c97e873b1a7f89c15f7a9e00f0bc0385f102f749572a4676572ccb95",
+    "previous_reviewed_revision": "1",
+    "profile": "synthetic_reference"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000005",
+    "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+    "current_artifact_revision": "4",
+    "current_digest": "de81ba78e5bf1d1053691765a8c979144c221cda4df016538f6c0f87b8dba87a",
+    "explanation": "The artefact has been revised since this review was issued: the review recorded revision 1, the artefact is now revision 4. The digest this review recorded is the sha256 of the file as committed in 2d35c4c1, a2db50fa, which is no longer the working-tree content. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands; it does not assert that the reviewer of the original pass examined this revision, because that reviewer was a different session.",
+    "previous_digest": "61e8e8f640f8ea713d7a24271501f97d47f32a0d6c9e82be31c48c05d4526cbb",
+    "previous_reviewed_revision": "1",
+    "profile": "synthetic_reference"
+   }
+  ],
+  "dispositions": [
+   {
+    "action": "Accepted as a real and currently unresolvable-in-this-revision gap. Authoring security verification measures is outside the scope of a review and no such measure exists in the corpus. No finding is weakened and no artifact is relabelled to make the gap disappear. Carried forward as a standing finding.",
+    "disposition": "accepted",
+    "finding_id": "FB2-REV-FND-000110",
+    "resolved_artifact_id": null
+   },
+   {
+    "action": "Referred to the interface owner as an open question, not a defect. Whether FB2-SYS-HSI-000001 must carry a trace to the security requirement set is a design-ownership decision this automated pass is not entitled to make. No change made to either artifact by this review.",
+    "disposition": "deferred",
+    "finding_id": "FB2-REV-FND-000111",
+    "resolved_artifact_id": null
+   }
+  ],
+  "engineering_domain": "safety",
+  "findings": [
+   {
+    "artifact_id": "FB2-SAF-SEC-000001",
+    "category": "verification",
+    "description": "No test measure, execution record or verification link of any kind exists for FB2-SAF-SEC-000001, or for SEC-000002..SEC-000005. All five carry verification_status 'not_verified' and all five are absent from both the source and the target sets of any verifies/validates link in the link registry. The acceptance criteria are specified and measurable, but nothing in the corpus plans, performs or evidences them. This is a real, open verification gap, not a documentation defect, and it is carried as a standing medium-severity validator finding as well.",
+    "evidence": "Link registry relation census: verifies links run TMS->FSR (15), TMS->SWR (10) and TMS->TSR (7); validates links run TMS->SCO (1) and TMS->SGO (1). No verifies or validates link has any FB2-SAF-SEC-* artifact as source or target. The 16 test measures in the corpus reference no SEC artifact.",
+    "finding_id": "FB2-REV-FND-000110",
+    "severity": "medium"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000003",
+    "category": "traceability",
+    "description": "No corpus artifact connects the interface design FB2-SYS-HSI-000001 to the security requirement set. HSI-000001 contains no reference to any FB2-SAF-SEC-* artifact and none to FB2-SAF-TAR-000001. Whether such a trace is required is an open interface-coverage question and is NOT asserted here as a confirmed gap: the SEC requirements concern the network, CAN and serial paths, while HSI-000001 describes the cell-voltage AFE SPI interface, so an absence of reference may be correct. Recorded so the question is visible to the interface owner rather than silently absent.",
+    "evidence": "docs/artifacts/corpus/synthetic_reference/system/hsi-cell-voltage.json contains no occurrence of the substrings 'SEC-000', 'TAR-000001', 'FB2-SAF-SEC' or 'FB2-SAF-TAR' in any field, including its interfaces, decisions and responsibilities blocks.",
+    "finding_id": "FB2-REV-FND-000111",
+    "severity": "medium"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-REV-000003",
+  "lifecycle_status": "draft",
+  "lifecycle_status_note": "'draft' rather than 'reviewed' or 'approved': this record is the output of an automated review pass and no human reviewer has confirmed it. automated_review_status below refers to corpus automation only and is not a statement about engineering validity.",
+  "limitations": [
+   "Automated AI review performed in a single agent session. It is not organizational independence, not human confirmation, and not a qualified-checker result (master-prompt clause 2.9).",
+   "human_approval_status is 'pending' for every artifact covered by this review. No human reviewer signed any of them.",
+   "No artifact covered by this review carries production authority or product verification credit.",
+   "No penetration test, no exploit, no attack and no exploitability assessment was performed or is claimed by this review or by any artifact it covers. The TARA's own threat descriptions were checked for fabricated vulnerability data and none was found.",
+   "Verification performed: (a) every file:line assertion in the real_source_presence fields of SEC-000001..SEC-000005 was spot-checked against the real source and all sampled assertions matched exactly; (b) the TARA was searched for CVE identifiers, CVSS scores and exploit claims - none present, and an explicit 'No exploitability assessment of any kind was performed' statement is present; (c) the TARA declares is_iso_21434_tara=false and lists its own limitations including the absence of damage scenarios, attack-path analysis and TARA review; (d) every artifact was scanned for certification, tool-qualification, human-approval and ASPICE-capability claims - none present.",
+   "The file:line check was a spot check of the highest-consequence assertions (ethernet accept and queue hand-off, backlog and receive-timeout constants, UART XOFF/XON gating, CAN dispatch match, TCP initial-sequence-number generator and its seed). It was not an exhaustive check of every line reference in every record, and a residual possibility of an unchecked but incorrect line reference remains.",
+   "This review does not assess whether the threat enumeration is complete. Completeness of a TARA is a specialist activity and is not claimed here."
+  ],
+  "origin": "derived",
+  "owner_role": "safety_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "results_summary": {
+   "artifacts_reviewed": 6,
+   "certification_or_aspice_claims_found": 0,
+   "cve_or_cvss_claims_found": 0,
+   "exploitability_claims_found": 0,
+   "line_level_claims_matched": 15,
+   "line_level_claims_spot_checked": 15,
+   "requirements_with_verification_evidence": 0,
+   "requirements_without_verification_evidence": 5
+  },
+  "review_method": "Direct source verification. Each concrete claim of presence or absence in the real_source_presence fields was checked by reading the cited source line. Absence claims were checked by confirming that the claimed control does not exist on the path. Fabricated-data screening was a pattern search over the serialized record for CVE and CVSS identifiers and for exploit language.",
+  "review_type": "domain",
+  "reviewed_ids": [
+   {
+    "artifact_id": "FB2-SAF-TAR-000001",
+    "digest": "6839fe9146d24db863da57c3bbd9db0dc40537b3a04d322042cf9a0e1b866b39",
+    "revision": "2"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000001",
+    "digest": "6ee726f47d7a7c1884e9e35fa395d6eab7967069e7a53ddb5bf7295a14c11fe6",
+    "revision": "3"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000002",
+    "digest": "f19fb37d59bae6278f01c2cafd30924e03999a550af123915666d470f4bcd333",
+    "revision": "3"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000003",
+    "digest": "49a864216377ffe3f1927e7b7ee5d5d532c9f3a9ae0d775388adaffd05c55483",
+    "revision": "4"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000004",
+    "digest": "e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa",
+    "revision": "4"
+   },
+   {
+    "artifact_id": "FB2-SAF-SEC-000005",
+    "digest": "de81ba78e5bf1d1053691765a8c979144c221cda4df016538f6c0f87b8dba87a",
+    "revision": "4"
+   }
+  ],
+  "reviewer_identity": {
+   "model": "openrouter/stealth/space-bunny-alpha",
+   "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. Per master-prompt clause 2.9 this is an automated review: it is NOT organizational independence, NOT human confirmation, and NOT a qualified-checker result. No human reviewer, independent party, or separate agent session participated.",
+   "role": "safety_engineer",
+   "session_id": "opencode-2026-09-29-artifact-review-pass"
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "safety_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Domain review of the TARA and the five derived security requirements for threat-to-source fidelity, overclaim risk and absence of fabricated vulnerability data.",
+    "revision": "1"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Provenance repair by a separate session (opencode-2026-10-01-provenance-repair), not a re-review. All 6 reviewed_ids digests in this record were re-derived from the artefact files as they stand on disk in the correct profile (synthetic_reference).  6 of 6 named artefacts have been revised or had their bytes replaced since this review was issued, so this record is re-issued at revision 2 and its digest for those artefacts now names the current revision; per-artefact detail, including the superseded digest and the basis for each classification, is in digest_corrections.  The findings, dispositions, scope, checklist and reviewer_identity of the original pass are untouched by this repair. The digest refresh does not carry the weight of a re-review: the original reviewer session did not examine the current revision of the revised artefacts, and no substantive re-examination was performed here.",
+    "revision": "2"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope": "Full scope over all 6 synthetic_reference cybersecurity artifacts (FB2-SAF-TAR-000001 and FB2-SAF-SEC-000001..000005). Every artifact carries profile 'synthetic_reference', so every reviewed_id below resolves unambiguously in that profile. The HSI design was examined only for the purpose of FB2-REV-FND-000111 and is reviewed in full by FB2-REV-000008.",
+  "source_refs": [
+   "FB2-SRC-COD-000057",
+   "FB2-SRC-COD-000059",
+   "FB2-SRC-COD-000065",
+   "FB2-SRC-COD-000067"
+  ],
+  "standards_mappings": [],
+  "title": "Review: cybersecurity work products (TARA and SEC-000001..SEC-000005)",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "review",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "safety_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-000003",
+  "revision": "2"
+ }
+}

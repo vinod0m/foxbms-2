@@ -1,0 +1,477 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against implementation.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (4)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "4/4 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000039, which records anchor class `repository_file`; path `src/app/driver/emac/emac.c`; line_range `581-584`; content_hash `744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0`; symbol `EMAC_TxInterruptServiceRoutine`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000040, which records anchor class `repository_file`; path `src/app/driver/emac/emac.c`; line_range `597-600`; content_hash `744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0`; symbol `EMAC_RxInterruptServiceRoutine`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000078, which records anchor class `repository_file`; path `src/app/driver/emac/emac.c`; line_range `234-239`; content_hash `744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0`; symbol `EMAC_InitializeHardware`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000079, which records anchor class `repository_file`; path `src/app/driver/emac/emac.c`; line_range `601-608`; content_hash `744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0`; symbol `EMAC_RxInterruptServiceRoutine`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000039 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000039."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000040 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000040."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000078 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000078."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000079 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000079."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000039 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000039."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000040 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[1]` names FB2-SRC-COD-000040."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000078 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[2]` names FB2-SRC-COD-000078."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000079 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.anchor_refs[3]` names FB2-SRC-COD-000079."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C13-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 6, Clause 9 (this record is a code location, not a verification record) with status `partially_mapped` on the grounds: States where the EMAC driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C14-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.4 (design-to-code traceability) with status `gap` on the grounds: There is no software design artefact for the EMAC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 12195,
+  "record_path": "docs/artifacts/corpus/as_is/software/implementation-emac-driver.json",
+  "record_sha256": "2b30b02c674bbe3ddc220975970a108a91c19eb6e9f56072690deef7264874fa",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "2b30b02c674bbe3ddc220975970a108a91c19eb6e9f56072690deef7264874fa"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "provenance_note",
+   "value": "Anchors referenced, all pre-existing: FB2-SRC-COD-000039 and -000040 name the two registered interrupt service routines, FB2-SRC-COD-000078 the destination-address filter configuration and FB2-SRC-COD-000079 the receive handler body, all in emac.c, and are the same four anchors deviations FB2-SW-DEV-000009 and -000010 reference. No new anchor was created."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-02T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-SW-IMP-000006.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"Implementation: EMAC driver - hardware and DMA initialisation, transmit, and the two registered interrupt service routines (emac.c)\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "anchor_refs": [
+   "FB2-SRC-COD-000039",
+   "FB2-SRC-COD-000040",
+   "FB2-SRC-COD-000078",
+   "FB2-SRC-COD-000079"
+  ],
+  "artifact_type": "implementation",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-02T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "behaviours": [
+   {
+    "behaviour_id": "EMAC-IMP-HW-INIT",
+    "description": "Brings the MAC up, including the destination-address match filter configuration that anchors the interface's frame acceptance behaviour.",
+    "evidence_line_range": "217-294",
+    "evidence_symbol": "EMAC_InitializeHardware",
+    "kind": "startup"
+   },
+   {
+    "behaviour_id": "EMAC-IMP-TX-DESCRIPTOR",
+    "description": "Takes the next available transmit buffer descriptor and submits the packet to the DMA engine.",
+    "evidence_line_range": "375-461",
+    "evidence_symbol": "EMAC_Transmit",
+    "kind": "transfer"
+   },
+   {
+    "behaviour_id": "EMAC-IMP-TX-ISR",
+    "description": "Registered transmit interrupt handler: runs the descriptor handler first and acknowledges the interrupt source afterwards.",
+    "evidence_line_range": "585-591",
+    "evidence_symbol": "EMAC_TxInterruptServiceRoutine",
+    "kind": "interrupt_dispatch"
+   },
+   {
+    "behaviour_id": "EMAC-IMP-RX-ISR",
+    "description": "Registered receive interrupt handler: does not walk descriptors itself, but signals the receiving task with a counting notification so the descriptor processing happens in task context.",
+    "evidence_line_range": "601-608",
+    "evidence_symbol": "EMAC_RxInterruptServiceRoutine",
+    "kind": "interrupt_dispatch"
+   }
+  ],
+  "code_locations": [
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "217-294",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_InitializeHardware",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "375-461",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_Transmit",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "585-591",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_TxInterruptServiceRoutine",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "601-608",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_RxInterruptServiceRoutine",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   },
+   {
+    "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+    "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+    "line_range": "234-239",
+    "path": "src/app/driver/emac/emac.c",
+    "repository": "foxbms-2",
+    "symbol": "EMAC_InitializeHardware",
+    "symbol_role": "definition",
+    "verified_against_pinned_source": true
+   }
+  ],
+  "concurrency_and_isr_context": [
+   {
+    "context": "interrupt",
+    "entry_points": [
+     "EMAC_TxInterruptServiceRoutine",
+     "EMAC_RxInterruptServiceRoutine"
+    ],
+    "shared_state": "The EMAC transmit and receive buffer descriptor rings, and the EMAC core interrupt source. The transmit handler mutates the descriptor chain and the receive handler only notifies ftsk_taskHandleEmac, so the receive-side descriptor processing is deliberately task-context work."
+   },
+   {
+    "context": "task",
+    "entry_points": [
+     "EMAC_Transmit",
+     "EMAC_EndOfReception",
+     "EMAC_AcknowledgeRxInterrupt"
+    ],
+    "shared_state": "The same receive descriptor ring the receive handler signals work on."
+   }
+  ],
+  "created_at": "2026-10-02T00:00:00Z",
+  "engineering_domain": "software",
+  "evidence_status": {
+   "limitations": [
+    "The fifth location's symbol is EMAC_InitializeHardware and its range 234-239 is the destination-address match configuration inside that function's body, which is the range anchor FB2-SRC-COD-000078 already records. That anchor spells the symbol as 'EMAC_Initialize', and no symbol of that name exists in emac.c; this record uses the name that does exist rather than reproducing the anchor's. The anchor's own spelling is a source-registry matter and is left for the digest workstream that owns the registry, not altered here.",
+    "Behaviour was verified by reading the code. No Ethernet frame was sent or received, no PHY was linked, and no timing measurement of this driver exists in this corpus.",
+    "emac.c is unmodified between the pin and the working tree, so the same ranges and hash hold for the checked-out file."
+   ],
+   "locations_verified": true,
+   "method": "emac.c was read at the pinned commit with 'git show 308028fb:src/app/driver/emac/emac.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000039, -000040, -000078 and -000079 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The function spans were cross-read against 'graft skeleton src/app/driver/emac/emac.c', which reports EMAC_InitializeHardware at L217-L294, EMAC_Transmit at L375-L461, EMAC_TxInterruptServiceRoutine at L585-L591 and EMAC_RxInterruptServiceRoutine at L601-L608 independently of this authoring pass. Note that the registry anchor FB2-SRC-COD-000040 records the receive handler's range as 597-600, which covers its pragma and signature lines rather than its body; the body span 601-608 recorded here is what anchor FB2-SRC-COD-000079 already carries, and both are consistent with the same function."
+  },
+  "guard": {
+   "confers_no_production_authority": true,
+   "confers_no_verification_credit": true,
+   "human_approval_required": true,
+   "is_implementation_evidence": false,
+   "is_verification_result": false,
+   "statement": "This record says where the EMAC driver code is and what it does. It implements no design artefact and realises no requirement in this profile, and both gaps are declared. It is not evidence that any requirement is met, and no frame was transmitted or received to establish anything about its behaviour. It confers no production authority, no verification credit and no human approval."
+  },
+  "human_approval_status": "pending",
+  "id": "FB2-SW-IMP-000006",
+  "implementation_kind": "driver_module",
+  "implementation_status": "in_source",
+  "implements": {
+   "design_artifact_id": null,
+   "design_gap_reason": "The as_is profile contains no software design artefact for the EMAC driver. Its three design records cover the AFE driver, the SOA module and the contactor driver, and deviations FB2-SW-DEV-000009 and -000010 each record emac.c as gap_no_design_artifact_in_profile. Attaching this module to an existing design would assert Ethernet design coverage the profile does not have, so design_artifact_id is null and no implements link is created. This is a typed leaf exception under master prompt section 13.",
+   "design_level": null,
+   "relationship": "No design artefact in the as_is profile describes the EMAC driver, so there is no design for this element to implement and no implements link is asserted. What the module does, read from the pinned source: EMAC_InitializeHardware (emac.c:217-294) configures the instance, copies the MAC address in reverse byte order into the interface structure, initialises the controller and MDIO modules, sets the source address and the per-channel address with EMAC_MAC_ADDRESS_MATCH - the destination-address match filter configuration anchor FB2-SRC-COD-000078 records at lines 234-239 - and then calls EMAC_SetupLink, returning EMAC_ERROR_CONNECT if the link cannot be established. EMAC_Transmit (375-461) takes the next free transmit buffer descriptor and hands the packet to the DMA engine. EMAC_TxInterruptServiceRoutine (585-591) is a registered interrupt handler that calls EMAC_TxInterruptHandler and only then acknowledges the interrupt source, which is the ordering deviation FB2-SW-DEV-000009 records. EMAC_RxInterruptServiceRoutine (601-608) is the second registered handler and does not process the frame itself: it gives a counting notification to the receiving task, so the descriptor walk happens in task context rather than in the handler, which is the structural difference deviation FB2-SW-DEV-000010 records. So the driver provides link establishment, buffered transmit and an interrupt-to-task hand-off on receive."
+  },
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. automated_review_status below refers to corpus automation and is not a statement about engineering validity or human confirmation.",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000039 and -000040 name the two registered interrupt service routines, FB2-SRC-COD-000078 the destination-address filter configuration and FB2-SRC-COD-000079 the receive handler body, all in emac.c, and are the same four anchors deviations FB2-SW-DEV-000009 and -000010 reference. No new anchor was created.",
+  "realises_requirements": [],
+  "requirement_gap_reason": "No requirement in the as_is profile covers the EMAC driver. The as_is requirement set is the three cell-voltage, contactor and SOA records; none of them states anything about Ethernet transport, and the requirements that do concern a network interface are security requirements in the synthetic_reference profile, which a source-observed as_is record may not claim as its own coverage. realises_requirements is empty rather than populated with a requirement this code does not serve.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-02T00:00:00Z",
+    "description": "First issue. Authored to cover a module the as_is corpus anchors through two deviations (FB2-SW-DEV-000009 and FB2-SW-DEV-000010) and for which it holds no design artefact at all.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000039",
+   "FB2-SRC-COD-000040",
+   "FB2-SRC-COD-000078",
+   "FB2-SRC-COD-000079"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "States where the EMAC driver code is. Makes no claim that it was verified and asserts no ASIL classification.",
+    "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "There is no software design artefact for the EMAC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design.",
+    "reference": "SWE.4 (design-to-code traceability)",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "gap"
+   }
+  ],
+  "title": "Implementation: EMAC driver - hardware and DMA initialisation, transmit, and the two registered interrupt service routines (emac.c)",
+  "updated_at": "2026-10-02T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "implementation",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "source_observed",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-SW-IMP-000006"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-SW-IMP-000006",
+  "revision": "1"
+ }
+}

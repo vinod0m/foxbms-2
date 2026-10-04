@@ -1,0 +1,496 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SAF-000030",
+    "rationale": "Test measure verifies independent monitor TSR",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "verifies",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000004",
+    "target_id": "FB2-HW-TSR-000004"
+   },
+   {
+    "link_id": "FB2-LNK-SAF-000058",
+    "rationale": "Hardware requirement allocated from functional safety requirement",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-HW-TSR-000004",
+    "target_id": "FB2-SAF-FSR-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000036",
+    "rationale": "FB2-REV-000012 reviewed FB2-HW-TSR-000004 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000012",
+    "target_id": "FB2-HW-TSR-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000069",
+    "rationale": "FB2-REV-000005 reviewed FB2-HW-TSR-000004 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000005",
+    "target_id": "FB2-HW-TSR-000004"
+   },
+   {
+    "link_id": "FB2-LNK-CPT-000011",
+    "rationale": "Architectural element AR-005 of the technical safety concept is realised by FB2-HW-TSR-000004. The element's role and the record's statement were read against each other.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-TSC-000001",
+    "target_id": "FB2-HW-TSR-000004"
+   },
+   {
+    "link_id": "FB2-LNK-ELC-000050",
+    "rationale": "FB2-HW-TSR-000004 is the lower-level requirement allocated to the system requirement FB2-SYS-SYR-000003. The two statements and acceptance criteria were read against each other before the link was made, so the system requirement is covered indirectly through its allocation rather than directly by a measure of its own.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-HW-TSR-000004",
+    "target_id": "FB2-SYS-SYR-000003"
+   },
+   {
+    "link_id": "FB2-LNK-ELC-000053",
+    "rationale": "FB2-HW-TSR-000004 is the lower-level requirement allocated to the system requirement FB2-SYS-SYR-000005. The two statements and acceptance criteria were read against each other before the link was made, so the system requirement is covered indirectly through its allocation rather than directly by a measure of its own.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "allocated_to",
+    "review_state": "reviewed",
+    "source_id": "FB2-HW-TSR-000004",
+    "target_id": "FB2-SYS-SYR-000005"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against requirement.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (2 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "2 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 2,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "finding_cross_domain",
+     "description": "FB2-HW-TSR-000004 and FB2-SAF-FSR-000004 are the same sentence at two ISO 26262 levels, and their shared monitoring-coverage criterion is a disjunction with an undefined term.",
+     "finding_id": "FB2-REV-FND-000027",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-concept-system-validation.json"
+    },
+    {
+     "category": "consistency",
+     "description": "FB2-HW-TSR-000004 and FB2-SAF-FSR-000004 carry byte-identical statement text under two different artifact ids in the same profile, and both are lifecycle_status 'baselined'. Duplication is defensible here because a hardware TSR and a safety FSR legitimately allocate the same capability at different levels, and the records agree today. The risk is that a later revision of one will silently leave t\u2026",
+     "finding_id": "FB2-REV-FND-000134",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-safety-analyses-case.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "finding_cross_domain",
+     "description": "FB2-HW-TSR-000004 and FB2-SAF-FSR-000004 are the same sentence at two ISO 26262 levels, and their shared monitoring-coverage criterion is a disjunction with an undefined term.",
+     "finding_id": "FB2-REV-FND-000027",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-concept-system-validation.json"
+    },
+    {
+     "category": "consistency",
+     "description": "FB2-HW-TSR-000004 and FB2-SAF-FSR-000004 carry byte-identical statement text under two different artifact ids in the same profile, and both are lifecycle_status 'baselined'. Duplication is defensible here because a hardware TSR and a safety FSR legitimately allocate the same capability at different levels, and the records agree today. The risk is that a later revision of one will silently leave t\u2026",
+     "finding_id": "FB2-REV-FND-000134",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-safety-analyses-case.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000012",
+     "review_path": "docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+     "review_type": "meta",
+     "reviewed_revision": "2",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000036 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-SAFETY-CHAIN-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000005",
+     "review_path": "docs/artifacts/reviews/records/review-safety-analyses-case.json",
+     "review_type": "domain",
+     "reviewed_revision": "2",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-safety-analyses-case.json",
+      "reviewed_by link FB2-LNK-REVB-000069 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.safety_allocation.safety_goal_ref` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[0]` names FB2-HW-TSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[1]` names FB2-HW-TSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[2]` names FB2-HW-TSR-000003."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C05-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 5, Clause 7 with status `mapped` on the grounds: Hardware safety requirements"
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C06-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 9, Clause 7 with status `mapped` on the grounds: Freedom from interference / independence"
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C07-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 HWE.1, HWE.2 with status `mapped` on the grounds: Hardware requirements and architecture"
+  },
+  {
+   "claim_class": "classification",
+   "claim_id": "C08-asil",
+   "evidence_in_packet": "The record verbatim in section 3, including the whole asil_allocation_scope block.",
+   "judgement_needed": "Whether presenting this classification this way is acceptable. On an as_is record a reader can take an ASIL value as a statement about the real product, and no machine can tell whether that misreading has happened.",
+   "machine_state": "NO `asil_allocation_scope` block, so the classification is presented unqualified. On an `as_is` profile record that is a reconstruction presented as a determination, and is exactly what an independent audit already raised against this corpus.",
+   "statement": "This record carries safety_allocation.asil = `ASIL_B` and a safety_goal_ref of `FB2-SAF-SGO-000001`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 8811,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/hardware/tsr-independent-monitor.json",
+  "record_sha256": "9efbb3787aedcd37e4b41e15ff2ae6c885c1a4a446be09f4196d88acd2e54262",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "b416fc195ed4ca242608d99189418cb45ceced2c92f8f8306859e06af5d2a666"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-HW-TSR-000004.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the hw_engineer for this hardware record, do you agree that \"The hardware shall realise the ASIL B overvoltage reaction as a discrete chain separate from the main measurement chain: every cell monitored by the main chain shall be divided by\u2026\" is a correct and complete statement of hardware requirements, architecture, detailed design, hardware safety analysis?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "requirement quality",
+   "priority": 8,
+   "question": "Are the acceptance criteria complete and decidable - could a verifier say with certainty whether this requirement is met?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria and verification_approach in the record.",
+   "why_this_needs_a_human": "An undecidable requirement cannot be verified, and the corpus cannot tell an undecidable requirement from a merely terse one."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "2 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Independent chain coverage",
+    "measure": "Cells in the pack that the main measurement chain monitors and that the independent divider network also measures, as a fraction of that monitored set",
+    "threshold": "100",
+    "unit": "%"
+   },
+   {
+    "criterion": "Independent chain detection latency",
+    "measure": "Time from the independent comparator's threshold being exceeded to the contactor driver command at the coil",
+    "threshold": "50",
+    "unit": "ms"
+   },
+   {
+    "criterion": "Supply-rail separation",
+    "measure": "Supply rails common to the independent chain and the main measurement chain",
+    "threshold": "0",
+    "unit": "rails"
+   },
+   {
+    "criterion": "Threshold-reference separation",
+    "measure": "Overvoltage threshold references common to the independent chain and the main chain",
+    "threshold": "0",
+    "unit": "references"
+   },
+   {
+    "criterion": "Command-source separation",
+    "measure": "Contactor driver stages the independent chain can reach that are commanded from the main microcontroller",
+    "threshold": "0",
+    "unit": "stages"
+   },
+   {
+    "criterion": "Overvoltage threshold accuracy",
+    "measure": "Difference between the overvoltage threshold realised by the independent comparator chain and the configured cell shutdown threshold",
+    "threshold": "50",
+    "unit": "mV"
+   },
+   {
+    "criterion": "Independent chain diagnosability",
+    "measure": "Diagnosis entries raised per detected failure of the independent chain itself: supply rail out of range, threshold reference out of range, or self-test failure",
+    "threshold": "1",
+    "unit": "entry per detected failure"
+   }
+  ],
+  "artifact_type": "requirement",
+  "assumption_refs": [
+   "FB2-ASM-008"
+  ],
+  "assumptions": [
+   "FB2-ASM-008"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "classification": "safety",
+  "conditions_modes": [
+   "NORMAL",
+   "CHARGING",
+   "PRECHARGE",
+   "DERATING",
+   "FAULT"
+  ],
+  "created_at": "2026-09-08T00:00:00Z",
+  "engineering_domain": "hardware",
+  "feasibility_dependencies": [
+   "FB2-HW-TSR-000001",
+   "FB2-HW-TSR-000002",
+   "FB2-HW-TSR-000003"
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-HW-TSR-000004",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "hw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "rationale": "Hardware realisation of the second barrier required by FB2-SAF-FSR-000004, decomposed at system level by FB2-SYS-SYR-000005 and allocated to element AR-005 of FB2-SAF-TSC-000001. Freedom from interference for the ASIL D cell-voltage goal rests on this chain sharing no measurement, reference, supply or command resource with the main chain: as allocated in FB2-SAF-SGO-000001 the main path is 85 ms of the 100 ms interval, 95 ms at the 40 ms upper tolerance of FB2-PRM-000005, and 110 ms if detection waits one full acquisition period of FB2-PRM-000003 instead of the 25 ms allocated. Its own budget is 50 ms (FB2-PRM-000007) and it is an alternative to that path, not an addition to it.",
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "hw_engineer",
+    "date": "2026-09-08T00:00:00Z",
+    "description": "Synthetic independent HW monitor (addresses FTTI violation)",
+    "revision": "1"
+   },
+   {
+    "author": "hw_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Separated this technical safety requirement (ISO 26262 Part 5) from FB2-SAF-FSR-000004 (Part 4), which carried identical statement, rationale, safety_allocation and acceptance_criteria, and made the shared 'All cells (or representative subset >= 50%)' coverage criterion measurable. Remediation of finding FB2-REV-FND-000027. This record now states the hardware obligation and carries hardware acceptance criteria only: 100 percent coverage of the cells the main measurement chain monitors; the 50 ms chain latency measured at the coil; zero shared supply rails; zero shared threshold references; zero reachable contactor driver stages commanded from the main microcontroller; 50 mV threshold accuracy; and one diagnosis entry per detected failure of the independent chain itself. The structural counts are stated separately per shared resource rather than as the single 'Independence 100% no shared MCU, power supply or communication' criterion the functional record used, because a count of shared rails and a count of shared references are separately decidable on hardware and a single percentage of an undefined denominator is not. The coverage criterion is resolved to 100 percent of the monitored cell set: 'representative subset' was undefined, no selection method is recorded anywhere in the corpus, and FB2-ASM-008's own stated implementation - separate voltage dividers, comparator and contactor drive - is a per-cell network, so 100 percent is the only defensible reading. Feasibility remains an open assumption under FB2-ASM-008 and is not asserted here. The statement is aligned with the hardware obligation FB2-SAF-TSC-000001 already published for this requirement in its technical_safety_requirements block, so the record and the concept now agree. The ASIL (ASIL_B) and safety_goal_ref (FB2-SAF-SGO-000001) are unchanged; the contactors are explicitly excluded from the independence requirement because both paths act on them and claiming otherwise would have been a false claim. Removed the 115 ms figure from the rationale and replaced it with arithmetic derived from the corpus's own parameter registry. Finding FB2-REV-FND-000026 reported 115 ms as appearing in no record; that part of its evidence is corrected here. The figure is real but stale: it is the sum of a superseded allocation recorded in FB2-REV-000001 (as_is vertical-slice review, embedded finding FB2-FND-000001) as 'FSR-001 specifies 10 Hz (100 ms); FSR-002 specifies 10 ms check; FSR-003 specifies 5 ms contactor; sum = 115 ms'. 100 + 10 + 5 = 115. The allocation has since changed - FB2-PRM-000003 now gives afe_acquisition_period_ms = 50 and FB2-SAF-SGO-000001 allocates 25 ms for acquisition - so the figure no longer describes anything in this corpus. The justification is now stated on figures that still hold: the main path is 85 ms of the 100 ms interval; at the 40 ms upper tolerance of FB2-PRM-000005 the contactor chain is 5 + 40 + 5 = 50 ms and the main path is 95 ms; and if detection waits one full acquisition period of FB2-PRM-000003 (50 ms) rather than the 25 ms allocated, the main path is 85 - 25 + 50 = 110 ms and overruns the interval. A main-path-only reaction therefore has no tolerance for a degraded contactor or for one acquisition period, which is the substantive argument for a second barrier and does not need the 115 ms. FB2-ASM-008's rationale carried the same stale figure and was corrected in the same pass.",
+    "revision": "2"
+   }
+  ],
+  "safety_allocation": {
+   "asil": "ASIL_B",
+   "mitigation": "Independent power, sensing, and actuation path",
+   "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Hardware safety requirements",
+    "reference": "Part 5, Clause 7",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Freedom from interference / independence",
+    "reference": "Part 9, Clause 7",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Hardware requirements and architecture",
+    "reference": "HWE.1, HWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "statement": "The hardware shall realise the ASIL B overvoltage reaction as a discrete chain separate from the main measurement chain: every cell monitored by the main chain shall be divided by a dedicated divider network into a comparator that holds its own overvoltage threshold reference on a supply rail not shared with the main chain, and the comparator output shall drive a contactor driver stage whose command is not sourced from the main microcontroller. No divider, reference, comparator, driver or supply of this chain shall be common with the main measurement or actuation chain, and the chain shall reach the contactor-open command within 50 ms of the overvoltage it detects. The contactors are common to both paths and are not part of this requirement. Allocated from FB2-SAF-FSR-000004 through FB2-SYS-SYR-000005 to architectural element AR-005 of FB2-SAF-TSC-000001.",
+  "title": "TSR: Independent Hardware Voltage Monitor",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_approach": "test"
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "requirement",
+  "engineering_domain": "hardware",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "hw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-HW-TSR-000004"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-HW-TSR-000004",
+  "revision": "2"
+ }
+}

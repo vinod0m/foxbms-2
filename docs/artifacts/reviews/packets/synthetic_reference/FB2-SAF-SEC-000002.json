@@ -1,0 +1,534 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SEC-000002",
+    "rationale": "Threat analysis FB2-SAF-TAR-000001 derives security requirement FB2-SAF-SEC-000002 from its threat and mitigation set; the requirement carries the mitigations forward and the TARA carries the evidence they rest on.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "supports",
+    "review_state": "pending",
+    "source_id": "FB2-SAF-TAR-000001",
+    "target_id": "FB2-SAF-SEC-000002"
+   },
+   {
+    "link_id": "FB2-LNK-SEC-000007",
+    "rationale": "Bounded connection admission and a per-service resource budget protect the availability leg of the safety goal's assurance argument.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "supports",
+    "review_state": "pending",
+    "source_id": "FB2-SAF-SEC-000002",
+    "target_id": "FB2-SAF-SGO-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000014",
+    "rationale": "FB2-REV-000009 reviewed FB2-SAF-SEC-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000009",
+    "target_id": "FB2-SAF-SEC-000002"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000026",
+    "rationale": "FB2-REV-000003 reviewed FB2-SAF-SEC-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000003",
+    "target_id": "FB2-SAF-SEC-000002"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000056",
+    "rationale": "FB2-REV-000012 reviewed FB2-SAF-SEC-000002 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000012",
+    "target_id": "FB2-SAF-SEC-000002"
+   },
+   {
+    "link_id": "FB2-LNK-SEC-000078",
+    "rationale": "The measure verifies FB2-SAF-SEC-000002 against that requirement's own acceptance criteria, with its oracle basis declared in its oracle_detail field. The link's direction is measure to requirement, which is the corpus's convention and the only direction under which the requirement can be seen as covered.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "verifies",
+    "review_state": "reviewed",
+    "source_id": "FB2-VER-TMS-000017",
+    "target_id": "FB2-SAF-SEC-000002"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against requirement.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (3)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "3/3 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (3 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "3 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 3,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-CHALLENGE-SAFETY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000009",
+     "review_path": "docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+     "review_type": "challenge",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000014 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-CYBERSEC-SRC-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000003",
+     "review_path": "docs/artifacts/reviews/records/review-cybersecurity-work-products.json",
+     "review_type": "domain",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-cybersecurity-work-products.json",
+      "reviewed_by link FB2-LNK-REVB-000026 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000012",
+     "review_path": "docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+     "review_type": "meta",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000056 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000057, which records anchor class `repository_file`; path `src/app/application/ethernet/ethernet.c`; line_range `241-294`; content_hash `7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346`; symbol `ETH_ListenForConnection`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000058, which records anchor class `repository_file`; path `src/app/application/ethernet/ethernet.c`; line_range `128-239`; content_hash `7f5650af290553f5e3965b5463cca3d2fd132d62f4c8398f25e8472bd3d77346`; symbol `ETH_EchoServerInstance`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000062, which records anchor class `repository_file`; path `src/app/application/config/ethernet_cfg.h`; line_range `84-96`; content_hash `24dfc5030b534a41d45466a17fe14efc4178877cd839ebaa3f50d5a0d9cc8b2c`; symbol `ETH_ECHO_SERVER_PORT_NUMBER`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TAR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[0]` names FB2-SAF-TAR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SEC-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.feasibility_dependencies[1]` names FB2-SAF-SEC-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.safety_allocation.safety_goal_ref` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000057 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000057."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000058 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000058."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000062 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000062."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-TAR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derived_from` names FB2-SAF-TAR-000001."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C11-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `unverified` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_SAE_21434_2021 Clause 15.4 (mitigation concept), resource-exhaustion threat category with status `unverified` on the grounds: Named for traceability of intent only; no ISO/SAE 21434 work product exists and no conformance is claimed."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C12-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 4, Clause 7 (availability of technical safety requirements) with status `gap` on the grounds: The hypothetical project has no resource-budget concept for communication services. This requirement is the proposed closure and it is unverified."
+  },
+  {
+   "claim_class": "classification",
+   "claim_id": "C13-asil",
+   "evidence_in_packet": "The record verbatim in section 3, including the whole asil_allocation_scope block.",
+   "judgement_needed": "Whether presenting this classification this way is acceptable. On an as_is record a reader can take an ASIL value as a statement about the real product, and no machine can tell whether that misreading has happened.",
+   "machine_state": "NO `asil_allocation_scope` block, so the classification is presented unqualified. On an `as_is` profile record that is a reconstruction presented as a determination, and is exactly what an independent audit already raised against this corpus.",
+   "statement": "This record carries safety_allocation.asil = `not_applicable` and a safety_goal_ref of `FB2-SAF-SGO-000001`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 17928,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/safety/sec-bounded-connection-admission-resource-budget.json",
+  "record_sha256": "f19fb37d59bae6278f01c2cafd30924e03999a550af123915666d470f4bcd333",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "d7b6b75a84d99218b646188083878ca5ffb2df712db202b3dab2240ab3378d62"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SAF-SEC-000002.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the cybersecurity_engineer for this safety record, do you agree that \"The BMS master software shall bound the resources consumed by any network service by enforcing, for every service, a hard cap on concurrently serviced connections, a finite receiv\u2026\" is a correct and complete statement of cybersecurity requirements, attack surface, authentication and integrity verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "requirement quality",
+   "priority": 8,
+   "question": "Are the acceptance criteria complete and decidable - could a verifier say with certainty whether this requirement is met?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria and verification_approach in the record.",
+   "why_this_needs_a_human": "An undecidable requirement cannot be verified, and the corpus cannot tell an undecidable requirement from a merely terse one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "Concurrent connection cap",
+    "measure": "Connections simultaneously serviced by one service instance",
+    "threshold": "4",
+    "unit": "connections"
+   },
+   {
+    "criterion": "Receive timeout",
+    "measure": "Maximum time a service task may block in a receive call waiting for a peer that has sent nothing",
+    "threshold": "2000",
+    "unit": "ms"
+   },
+   {
+    "criterion": "Per-connection byte budget",
+    "measure": "Bytes a single connection may cause to be buffered before the connection is closed",
+    "threshold": "65536",
+    "unit": "bytes"
+   },
+   {
+    "criterion": "Budget-breach response time",
+    "measure": "Time from budget breach to the connection being closed and its resources released",
+    "threshold": "100",
+    "unit": "ms"
+   },
+   {
+    "criterion": "Service availability under exhaustion",
+    "measure": "Successful authenticated connections served per hour while a hostile peer holds the maximum permitted concurrent connections open and silent",
+    "threshold": ">= 1",
+    "unit": "connections/hour"
+   },
+   {
+    "criterion": "Admission-refusal diagnosability",
+    "measure": "Diagnosis entries raised per refused admission and per detected budget breach",
+    "threshold": "1",
+    "unit": "entry per event"
+   }
+  ],
+  "artifact_type": "requirement",
+  "asil_justification": {
+   "added_in_revision": "2",
+   "classification_status": "recorded_reasoning",
+   "open_item": "The bound is contingent. The record states that the affected service is not on a safety path in the real source. If the project adds a safety-relevant service on the same path, the bound no longer holds and this requirement's classification would have to be revisited. This field does not claim the bound is durable.",
+   "reason": "This requirement is classified 'security' and it bounds connection admission and the resource budget of a service. ISO 26262 does not allocate an ASIL to a security requirement, so not_applicable is the schema's own enumerated value for that case. The TARA entry THR-003 records the availability impact as currently bounded, and that bound is a property of the threat analysis, not of any ASIL determination.",
+   "requirement_classification": "security",
+   "scope_of_this_classification": "This field records why safety_allocation.asil is not_applicable on this requirement. It is a statement about this record's own allocation bookkeeping inside a fictional reference project. It is not a determination about the real foxBMS 2 product and not evidence about that product's availability posture.",
+   "what_this_does_not_assert": [
+    "It does not assert conformity with ISO 26262, and it is not a certification, a type approval, or evidence of one. Nothing in this field was audited to produce it.",
+    "It does not assert human approval. human_approval_status on this record is pending, production_authorized is false and product_verification_credit is false, and no functional-safety expert has confirmed any of it.",
+    "It does not establish that any ASIL was correctly assigned to any safety requirement in this corpus. It explains only why this requirement is not itself an ASIL-allocated item.",
+    "It does not assert tool qualification. No tool used anywhere in this corpus has been qualified for a safety purpose.",
+    "It does not assert an ASPICE capability level for anything."
+   ]
+  },
+  "assumption_refs": [
+   "FB2-ASM-011"
+  ],
+  "assumptions": [
+   "FB2-ASM-011"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "classification": "security",
+  "conditions_modes": [
+   "NORMAL",
+   "CHARGING",
+   "DISCHARGE",
+   "PRECHARGE",
+   "DEGRADED",
+   "COMMISSIONING"
+  ],
+  "created_at": "2026-09-29T00:00:00Z",
+  "derived_from": "FB2-SAF-TAR-000001",
+  "engineering_domain": "safety",
+  "fault_reaction": {
+   "added_in_revision": "3",
+   "allocated_element_id": null,
+   "allocation_basis": "NO ELEMENT ALLOCATES A FAULT REACTION FOR THE SECURITY CHAIN. FB2-SAF-FSC-000001.safety_strategies.fault_reaction lists four reactions and allocates them to AR-002, AR-004, AR-005 and AR-006; FB2-SAF-TSC-000001.fault_reaction lists the same four. None of them is a reaction to a detected security attack, and FB2-SAF-TSC-000001.safety_strategies.fault_detection lists five detection mechanisms, none of which is a communication-integrity or authentication check. The security chain therefore has no element-level reaction budget anywhere in this corpus. That is a real gap and it is recorded as one rather than closed by inventing an allocation. The reaction this field states is the one this requirement's own statement mandates and the one its own acceptance criteria decide; who carries it technically, and within what time, is not derivable from any record that exists.",
+   "budget_absence_note": "No reaction_time_budget_ms is stated, and that is deliberate rather than an omission. The safety goal FB2-SAF-SGO-000001.timing_budget.allocation has ten entries, none of which is a cybersecurity leg, and neither safety concept allocates one to the security chain, so there is no interval in this corpus against which a security reaction time could be checked. The decidable bounds that DO exist are stated in reaction_time_bound, transcribed from this record's own acceptance criteria. Inventing a millisecond figure here would create a number with nothing to verify it against, which is the failure mode finding FB2-REV-FND-000025 was raised about.",
+   "derivation": "Transcribed, not invented. reaction, triggered_by, diagnosis, reaction_time_bound and mode_dependence are each quoted or paraphrased from text this record already carried at revision 2: its own statement, its own acceptance_criteria and its own conditions_modes. The numeric bound in reaction_time_bound is a threshold this record's own acceptance criteria already stated; where the record states no such bound, this field says so rather than supplying one. No acceptance criterion, ASIL value, verification approach, verification_status, statement or rationale was altered by adding this field.",
+   "diagnosis": "One diagnosis entry per refused admission and one per detected budget breach. Transcribed from this record's own acceptance criterion 'Admission-refusal diagnosability / Diagnosis entries raised per refused admission and per detected budget breach / 1 / entry per event'.",
+   "element_owns_reaction": false,
+   "mode_dependence": "Mode-independent on the reaction itself, and this is load-bearing rather than incidental. A resource-exhaustion reaction closes a connection; in DEGRADED and COMMISSIONING the same closure applies, and no mode in this record's conditions_modes (NORMAL, CHARGING, DISCHARGE, PRECHARGE, DEGRADED, COMMISSIONING) is granted an exemption. The one mode-sensitive consequence is recorded in this record's own acceptance criteria and is not a mode-dependent reaction: 'Service availability under exhaustion' requires at least one successful authenticated connection per hour while a hostile peer holds the maximum permitted concurrent connections open and silent, so a reaction that simply closed everything would fail the record's own criterion.",
+   "open_limits": "real_source_control_status on this record is 'partially_present', so part of the control exists in the real foxBMS 2 source and part does not; the record's own block states which is which, and this field does not restate it. The verification leg is a plan, not an outcome: verification_status is not_verified and verification_approach is the single word 'test'. The reaction has no element-level allocation in either safety concept, and the 100 ms budget above is a requirement threshold with no element, no measurement and no timing analysis behind it. Whether 100 ms is achievable on the target is not established anywhere in this corpus.",
+   "reaction": "Refuse the admission, or close the connection deterministically. Both halves are the requirement's own text: the statement requires 'a deterministic close of any connection that exceeds its budget' and 'a diagnosis entry on every admission refusal and every budget breach'. The reaction is bounded resource consumption under a hostile peer - the cap is the reaction, and exceeding it terminates the connection rather than degrading the service.",
+   "reaction_time_bound": "'Budget-breach response time / Time from budget breach to the connection being closed and its resources released / 100 ms'. Transcribed from this record's own acceptance criterion and the only reaction-time bound this record states. Two other figures in the record are the limits the reaction enforces rather than its own latency: the concurrent cap of 4 connections, the 2000 ms receive timeout and the 65536-byte per-connection budget.",
+   "triggered_by": "An inbound connection arriving when the service is already at its concurrent-connection cap; a service task blocking in a receive call past the finite receive timeout; a single connection buffering past its per-connection byte budget.",
+   "unverified_leg_note": "The verification leg is absent in the real source and the record says so: real_source_control_status is 'partially_present'. This block therefore describes what the requirement specifies, not what the foxBMS 2 product does. No measurement, no timing analysis and no injection campaign exists in this corpus for any part of it."
+  },
+  "feasibility_dependencies": [
+   "FB2-SAF-TAR-000001",
+   "FB2-SAF-SEC-000001"
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SAF-SEC-000002",
+  "latent_defect_note": "A separate, configuration-dependent latent defect is recorded in the TARA and is NOT addressed by this requirement: at src/app/application/ethernet/ethernet.c:189 the receive buffer is printed with a %s conversion although the buffer is not guaranteed to be NUL-terminated when a receive fills all ipconfigTCP_MSS bytes. Under the evidenced configuration this code is compiled out, because ipconfigHAS_DEBUG_PRINTF is not defined in the project's FreeRTOSIPConfig.h and therefore takes the default ipconfigDISABLE, which reduces FreeRTOS_debug_printf to a no-op (src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfigDefaults.h:3162-3176). No out-of-bounds read is therefore claimed to be reachable, and this requirement does not claim to fix it. Anchor FB2-SRC-COD-000075.",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "cybersecurity_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "rationale": "A service with unbounded connection resources can be made to stop serving legitimate peers by a peer that requires no special capability. In the real source the relevant conditions are present in combination: the listen backlog is a compile-time constant of 1, the accept loop hands every accepted socket to a single-deep queue with a zero block time and discards the enqueue result, and the receive timeout is portMAX_DELAY, so a connected peer that sends nothing blocks its service task indefinitely. The requirement also requires the refusal to be diagnosable, because a silently discarded overflow cannot be distinguished from normal operation during field analysis (TARA threats THR-001, THR-003).",
+  "real_source_control_status": "partially_present",
+  "real_source_control_status_note": "Part of the capability this requirement specifies is present in the real foxBMS 2 source and part is not; see real_source_presence for the itemised split.",
+  "real_source_presence": "Control PARTIALLY PRESENT, and the partial presence is stated explicitly. Present: the receive into the service buffer is length-bounded \u2014 src/app/application/ethernet/ethernet.c:157 declares uint8_t rxBuffer[ipconfigTCP_MSS] and :175 passes ipconfigTCP_MSS as the receive length, and :224 does the same on the drain path, so no read can exceed the array (TARA mitigation MIT-003, present_in_source). ABSENT: every admission control. src/app/application/config/ethernet_cfg.h:85 sets the backlog to 1, :94 sets the receive timeout to portMAX_DELAY, src/app/application/ethernet/ethernet.c:292 discards the return value of the queue send, and no per-connection cap, idle timeout or deterministic close exists. Anchors FB2-SRC-COD-000058, FB2-SRC-COD-000062.",
+  "revision": "3",
+  "revision_history": [
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "First issue. Forward-engineered security requirement 'bounded-connection-admission-resource-budget' for the synthetic_reference project. Derived from threat analysis FB2-SAF-TAR-000001.",
+    "revision": "1"
+   },
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Added the asil_justification that the requirement applicability validator requires and did not find: this record marks safety_allocation.asil as not_applicable, which requirement.schema.json enumerates as the value for a requirement to which no ASIL determination applies, and the rule requires a recorded reason for that marking. The reason had been present only inside safety_allocation.mitigation and safety_allocation.safety_goal_ref, which are required on every requirement whatever its marking and are therefore populated identically on the ASIL_D records; they cannot serve as a justification specific to this marking. The new field states the reason on its own, names what the safety_goal_ref trace does and does not carry, and records the open items where the marking depends on something not yet established. The asil value, the statement, the mitigation, the safety_goal_ref and the revision-relevant content of the record are unchanged. Remediation of the requirement applicability validator finding raised by finding FB2-REV-FND-000032. Nothing in this field asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false.",
+    "revision": "2"
+   },
+   {
+    "author": "cybersecurity_engineer",
+    "date": "2026-09-30T00:00:00Z",
+    "description": "Added the fault_reaction block that the safety-requirement completeness validator (MUT-008, safety_requirement_completeness_checker) requires and did not find. That rule used to carry an id filter '-FSR-' in id which made it structurally incapable of reporting this record, while its sibling verification_traceability_checker selected the same population - requirement plus engineering_domain equals safety - with no id filter at all. The filter has been removed from the rule, which widened its scope and weakened nothing; see finding FB2-REV-FND-000039. The block authored here is transcribed from this record's own statement, acceptance_criteria and conditions_modes, and records three absences honestly rather than filling them: neither safety concept allocates a fault reaction to any element for the security chain (element_owns_reaction is therefore false), the safety goal's timing budget has no cybersecurity leg so no reaction-time budget is stated, and the control's real-source status and unverified verification leg are carried through. No acceptance criterion, ASIL value, statement, rationale, verification approach or verification status was changed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human has approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
+    "revision": "3"
+   }
+  ],
+  "safety_allocation": {
+   "asil": "not_applicable",
+   "mitigation": "Availability mitigation. The recorded impact of TARA threat THR-003 is currently bounded because the affected service is not on a safety path in the real source; this requirement exists so that the hypothetical project does not rely on that boundary once it adds a safety-relevant service.",
+   "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000057",
+   "FB2-SRC-COD-000058",
+   "FB2-SRC-COD-000062"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Named for traceability of intent only; no ISO/SAE 21434 work product exists and no conformance is claimed.",
+    "reference": "Clause 15.4 (mitigation concept), resource-exhaustion threat category",
+    "standard_id": "ISO_SAE_21434_2021",
+    "status": "unverified"
+   },
+   {
+    "rationale": "The hypothetical project has no resource-budget concept for communication services. This requirement is the proposed closure and it is unverified.",
+    "reference": "Part 4, Clause 7 (availability of technical safety requirements)",
+    "standard_id": "ISO_26262_2018",
+    "status": "gap"
+   }
+  ],
+  "statement": "The BMS master software shall bound the resources consumed by any network service by enforcing, for every service, a hard cap on concurrently serviced connections, a finite receive timeout, a per-connection byte budget, and a deterministic close of any connection that exceeds its budget, and shall raise a diagnosis entry on every admission refusal and every budget breach.",
+  "title": "SEC-000002: Bounded connection admission and per-service resource budget",
+  "updated_at": "2026-09-30T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_approach": "test",
+  "verification_status": "not_verified"
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "requirement",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "cybersecurity_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SAF-SEC-000002"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SAF-SEC-000002",
+  "revision": "3"
+ }
+}

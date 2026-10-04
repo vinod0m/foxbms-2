@@ -1,0 +1,631 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-LIF-000107",
+    "rationale": "The measurement plan defines the metric the quality-assurance process reports against.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "depends_on",
+    "review_state": "reviewed",
+    "source_id": "FB2-MAN-MSM-000001",
+    "target_id": "FB2-SUP-QAP-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000138",
+    "rationale": "FB2-REV-000014 reviewed FB2-MAN-MSM-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000014",
+    "target_id": "FB2-MAN-MSM-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against measurement_plan.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "consistency",
+     "description": "The measurement plan publishes two different denominators for the same coverage metric, because two are in use in the corpus. A reader comparing them would conclude one is wrong.",
+     "finding_id": "FB2-REV-FND-000007",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "consistency",
+     "description": "The measurement plan publishes two different denominators for the same coverage metric, because two are in use in the corpus. A reader comparing them would conclude one is wrong.",
+     "finding_id": "FB2-REV-FND-000007",
+     "raised_in": null,
+     "severity": "medium",
+     "source_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000014",
+     "review_path": "docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-management-supporting-lifecycle.json",
+      "reviewed_by link FB2-LNK-REVB-000138 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-RSK-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.collection_rules[4].record_location` names FB2-MAN-RSK-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-CFM-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.metrics[0].linked_process_record` names FB2-SUP-CFM-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-QAP-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.metrics[1].linked_process_record` names FB2-SUP-QAP-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-QAP-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.metrics[2].linked_process_record` names FB2-SUP-QAP-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-PRB-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.metrics[3].linked_process_record` names FB2-SUP-PRB-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-QAP-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.metrics[4].linked_process_record` names FB2-SUP-QAP-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SUP-QAP-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.metrics[5].linked_process_record` names FB2-SUP-QAP-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-PIM-IMP-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.metrics[5].linked_improvement_records[0]` names FB2-PIM-IMP-000003."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C09-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 MAN.6 with status `mapped` on the grounds: Measurement: metric definitions, collection, analysis and action."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C10-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 PIM.3 with status `mapped` on the grounds: The improvement records that consume these metrics."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C11-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 6.4.4 (monitoring and measurement) with status `mapped` on the grounds: Safety-process monitoring is a subset of this plan."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 19947,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/supporting/measurement-plan.json",
+  "record_sha256": "ac77aa05fd40f737fc4f68dd974ff4411204cd2819db9c7fb04b4f6e51fd54c4",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "d96a140da1e132253a3d11c3c883956006156484b23fac9be20b85fc859e1af7"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Synthetic plan for a synthetic project. The metrics are defined against records that exist; the collection cycle has never run on a real cycle.",
+    "The observation population is seven points. No trend line is drawn from seven points and the plan says so; the 'trending down review over review' target on MET-04 is an intent, not an expectation that the data supports.",
+    "MET-02 publishes two denominators because two exist, which is a weakness of the metric rather than of the data. It is recorded rather than resolved by picking the flattering one.",
+    "MET-06 at a population of 6 cannot support a percentage. The control limit on it is therefore not a useful signal yet, and the plan says so in its own action_on_breach.",
+    "The population bias towards the cell-voltage chain means every metric is flattered by the one part of the project that was completed. A metric that cannot see the parts that were not done will look good precisely because they were not done.",
+    "No human reviewed this plan. Its metrics are the author's choices, and a metric set chosen by the person being measured is the oldest problem in process measurement."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-MAN-MSM-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the project_manager for this supporting record, do you agree that \"Process measurement plan for Project Northcell: population, collection rules, metric definitions, baselines, targets, control limits and synthetic observations\" is a correct and complete statement of project planning, schedule, resources, risk?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "analysis_method": {
+   "analysis_cadence": "monthly for MET-04 and MET-06; at each gate for MET-01, MET-02 and MET-03; fortnightly for MET-05",
+   "control_limit_rule": "A metric breaches when its value crosses the control limit stated for it. A single breach triggers the action_on_breach field. Three consecutive breaches of the same metric trigger a PIM.3 improvement proposal.",
+   "how_a_chart_is_derived": "Every point on every chart is one OBS-* record in this plan's observations array, with its derivation naming the records it was counted from. A trend line is drawn only where the points exist. Where the points do not exist the chart says so and is not drawn; an unsupported trend is worse than an empty chart because it reads as a result.",
+   "method": "Simple arithmetic over the counted population, with the numerator and the denominator both stated in every report. No index, no weighting and no composite score: a composite lets a good number hide a bad one, and the corpus's history is a record of exactly that.",
+   "who_performs_the_analysis": "project_manager for MET-01, MET-02 and MET-05; quality_engineer for MET-03, MET-04 and MET-06; reviewer_adversarial attends and challenges"
+  },
+  "artifact_type": "measurement_plan",
+  "assumption_refs": [
+   "FB2-ASM-011"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "calendar_note": "Every date in this record is synthetic. They describe the hypothetical Project Northcell as its own artefact says that programme does not exist. No date here is a real commitment, a real gate date or a real review date.",
+  "collection_rules": [
+   {
+    "collection_cadence": "every baseline and every gate review",
+    "collection_method": "Traverse the canonical record index and count records by profile, domain and artifact type; read from the generated coverage output rather than counted by hand",
+    "collector_role": "traceability_engineer",
+    "manual_or_automated": "automated",
+    "metric_id": "MET-01",
+    "record_location": "docs/artifacts/exports/manifest.json and the generated coverage output"
+   },
+   {
+    "collection_cadence": "every gate review and after every requirement revision",
+    "collection_method": "For each requirement, resolve whether a measure names it or links to it, directly or through an allocated child; classify as COVERED-DIRECT, COVERED-INDIRECT, COVERED-EMBEDDED or UNCOVERED",
+    "collector_role": "verification_engineer",
+    "manual_or_automated": "automated",
+    "metric_id": "MET-02",
+    "record_location": "requirement-to-test coverage matrix in the generated implementation mapping document"
+   },
+   {
+    "collection_cadence": "every gate review",
+    "collection_method": "For each execution record, read execution_kind and outcome as an orthogonal pair; count any execution claiming a real run without evidence, and any synthetic fixture claiming a pass without a fixture",
+    "collector_role": "quality_engineer",
+    "manual_or_automated": "automated",
+    "metric_id": "MET-03",
+    "record_location": "execution evidence-classification audit in the generated verification view"
+   },
+   {
+    "collection_cadence": "monthly",
+    "collection_method": "Count review records by severity of finding raised, and count artifacts covered by at least one review record",
+    "collector_role": "quality_engineer",
+    "manual_or_automated": "manual",
+    "metric_id": "MET-04",
+    "record_location": "review finding count tables in the generated supporting-process view"
+   },
+   {
+    "collection_cadence": "fortnightly",
+    "collection_method": "At each fortnightly review, re-score every risk entry's probability and impact against the stated scales and record the change",
+    "collector_role": "project_manager",
+    "manual_or_automated": "manual",
+    "metric_id": "MET-05",
+    "record_location": "FB2-MAN-RSK-000001"
+   },
+   {
+    "collection_cadence": "monthly",
+    "collection_method": "Count supporting-process instances and their conformance verdicts, including 'partially_conforming' as a distinct outcome from 'conforming'",
+    "collector_role": "quality_engineer",
+    "manual_or_automated": "manual",
+    "metric_id": "MET-06",
+    "record_location": "performed_instances arrays in the FB2-SUP-* process records"
+   }
+  ],
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "supporting",
+  "fictional_project": true,
+  "human_approval_status": "pending",
+  "id": "FB2-MAN-MSM-000001",
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "Synthetic plan for a synthetic project. The metrics are defined against records that exist; the collection cycle has never run on a real cycle.",
+   "The observation population is seven points. No trend line is drawn from seven points and the plan says so; the 'trending down review over review' target on MET-04 is an intent, not an expectation that the data supports.",
+   "MET-02 publishes two denominators because two exist, which is a weakness of the metric rather than of the data. It is recorded rather than resolved by picking the flattering one.",
+   "MET-06 at a population of 6 cannot support a percentage. The control limit on it is therefore not a useful signal yet, and the plan says so in its own action_on_breach.",
+   "The population bias towards the cell-voltage chain means every metric is flattered by the one part of the project that was completed. A metric that cannot see the parts that were not done will look good precisely because they were not done.",
+   "No human reviewed this plan. Its metrics are the author's choices, and a metric set chosen by the person being measured is the oldest problem in process measurement."
+  ],
+  "measurement_population": {
+   "known_population_bias": "The population is biased toward the cell-voltage safety chain because that is where the corpus is dense. A metric such as 'requirements with a verification measure' will therefore look better than the project deserves, because the records it counts are concentrated in the one chain that was completed. This bias is stated here so that no one reads a favourable number as representative.",
+   "sample_size_assumption": "The population is assumed to be between 150 and 400 artifacts over the programme, which is consistent with the 205 records this corpus holds at the plan's start date. If the population exceeded 1000 the 100% rule would be reviewed, because at that size manual review is the constraint and not the collection.",
+   "sampling_rule": "100% of artifacts at every baseline and every revision. No sampling of artifacts: a sampling rule for the thing being reviewed is the defect this plan exists to prevent. Executions are sampled at 100% as well; the population is small enough that sampling buys nothing and hides everything.",
+   "what_is_excluded": [
+    "Any measurement of the product's behaviour. This plan measures the development process and never the product.",
+    "Any record produced by an automated tool and not reviewed by a person. Counting machine output as process performance would let the tooling grade itself.",
+    "Any observation before the plan's start date, because there is no consistent collection for it.",
+    "Any observation whose collection rule was not followed. Missing observations are recorded as missing, not imputed."
+   ],
+   "what_is_measured": [
+    "Every engineering artifact produced by the project, once per baseline and once per revision",
+    "Every verification measure once per planning cycle",
+    "Every execution record once per run",
+    "Every review record once per review pass",
+    "Every supporting-process instance once per occurrence",
+    "Every project risk entry once per review cycle"
+   ]
+  },
+  "metrics": [
+   {
+    "action_on_breach": "Downgrade the status to the state the records actually support and record the correction. Do not author a record to make the number improve.",
+    "baseline": "13 expectations marked mapped with no backing record, corrected 2026-09-29",
+    "baseline_observations": 13,
+    "control_limit": "any expectation carrying a mapped status with no named record",
+    "definition": "The number of applicable process and ISO-part expectations whose recorded status is backed by a corpus record, over the number applicable.",
+    "formula_or_rule": "count(status is backed by a record) / count(applicable)",
+    "linked_process_record": "FB2-SUP-CFM-000001",
+    "metric_id": "MET-01",
+    "metric_name": "Standards-mapped coverage of the applicable process and ISO part inventory",
+    "metric_type": "work_product_control",
+    "owner_role": "traceability_engineer",
+    "reviewer_role": "quality_engineer",
+    "target": "1.0 with every mapped status backed by a named record",
+    "unit": "expectations"
+   },
+   {
+    "action_on_breach": "Author a measure with a declared oracle basis for the uncovered requirements. Do not add a link from an existing measure that does not actually cover the requirement.",
+    "baseline": "41 of 48 requirement artifacts uncovered at the plan's start date",
+    "baseline_observations": 48,
+    "control_limit": "below 95 percent, or any safety-domain requirement below COVERED-INDIRECT",
+    "definition": "The number of requirement artifacts with a verification measure reachable directly or through an allocated child, over the number of requirement artifacts.",
+    "formula_or_rule": "count(status != UNCOVERED) / count(requirement artifacts) * 100",
+    "linked_process_record": "FB2-SUP-QAP-000001",
+    "metric_id": "MET-02",
+    "metric_name": "Requirement verification coverage",
+    "metric_type": "work_product_control",
+    "owner_role": "verification_engineer",
+    "reviewer_role": "safety_engineer",
+    "target": "100 percent COVERED-DIRECT or COVERED-INDIRECT",
+    "unit": "percent"
+   },
+   {
+    "action_on_breach": "Raise a finding against the execution record and reset the claim to the state the evidence supports. Never edit a past execution record to make it consistent.",
+    "baseline": "100 percent; 25 records with 13 host or simulation runs and 12 synthetic fixtures or none",
+    "baseline_observations": 25,
+    "control_limit": "any dishonest pair, or any increase in actual-run claims between consecutive collections",
+    "definition": "The number of execution records whose execution_kind and outcome are mutually honest, over the number of execution records. An execution claiming a real run without an evidence reference, or a synthetic fixture claiming a pass without a fixture, is dishonest.",
+    "formula_or_rule": "count(honest pair) / count(execution records) * 100",
+    "linked_process_record": "FB2-SUP-QAP-000001",
+    "metric_id": "MET-03",
+    "metric_name": "Execution evidence-classification integrity",
+    "metric_type": "product_quality",
+    "owner_role": "quality_engineer",
+    "reviewer_role": "reviewer_adversarial",
+    "target": "100 percent, and no increase in actual-run claims without evidence",
+    "unit": "percent"
+   },
+   {
+    "action_on_breach": "Open a problem-resolution record against the finding and block the gate it belongs to.",
+    "baseline": "17 findings as_is and 19 synthetic_reference across 12 review records, with 3 high and 17 medium",
+    "baseline_observations": 12,
+    "control_limit": "any critical or any high finding",
+    "definition": "The count of findings at each severity raised by one review pass, per profile.",
+    "formula_or_rule": "count(findings at severity) per review pass",
+    "linked_process_record": "FB2-SUP-PRB-000001",
+    "metric_id": "MET-04",
+    "metric_name": "Finding severity profile per review pass",
+    "metric_type": "process_performance",
+    "owner_role": "quality_engineer",
+    "reviewer_role": "reviewer_adversarial",
+    "target": "0 critical and 0 high; medium trending down review over review",
+    "unit": "findings"
+   },
+   {
+    "action_on_breach": "Either the action is not addressing the risk, or the scoring is not honest. Raise a PIM.3 proposal to determine which.",
+    "baseline": "0 of 6 moved; three entries have residual exposure equal to inherent because no action has been taken",
+    "baseline_observations": 8,
+    "control_limit": "no movement across two consecutive reviews for any entry with a done action",
+    "definition": "The number of risk entries whose residual exposure fell between consecutive reviews, over the number of entries with a taken action.",
+    "formula_or_rule": "count(residual exposure lower than at the previous review) / count(entries with an action whose status is done)",
+    "linked_process_record": "FB2-SUP-QAP-000001",
+    "metric_id": "MET-05",
+    "metric_name": "Risk exposure movement per review cycle",
+    "metric_type": "planning_and_control",
+    "owner_role": "project_manager",
+    "reviewer_role": "safety_manager",
+    "target": "at least half of the entries with a taken action show a lower residual exposure at the following review",
+    "unit": "entries"
+   },
+   {
+    "action_on_breach": "The instance count is too small for a percentage to mean anything at this volume. Below the first 20 instances this metric is reported as a raw count and not as a percentage.",
+    "baseline": "100 percent over 6 instances, each with exactly one non-conformance recorded",
+    "baseline_observations": 6,
+    "control_limit": "below 100 percent",
+    "definition": "The number of performed process instances judged conforming against the process's own acceptance criteria, over the number of instances. 'partially_conforming' counts as not conforming.",
+    "formula_or_rule": "count(conformance == conforming) / count(instances) * 100",
+    "linked_improvement_records": [
+     "FB2-PIM-IMP-000003"
+    ],
+    "linked_process_record": "FB2-SUP-QAP-000001",
+    "metric_id": "MET-06",
+    "metric_name": "Supporting-process instance conformance",
+    "metric_type": "process_definition",
+    "owner_role": "quality_engineer",
+    "reviewer_role": "project_manager",
+    "target": "100 percent with zero non-conformances recorded",
+    "unit": "percent"
+   }
+  ],
+  "observations": [
+   {
+    "derivation": "Counted by reading the disposition_reason field of each corrected entry in governance/coverage-plan.json and recording the number that had been marked mapped with no backing record. Each entry names the check that found it false.",
+    "metric_id": "MET-01",
+    "observation_id": "OBS-01",
+    "period": "2026-09-29",
+    "source_of_the_synthetic_fiction": "The finding is real work against the real corpus. The number 13 is a factual count of corrections this process performed and is not invented.",
+    "synthetic": true,
+    "unit": "expectations",
+    "value": 13
+   },
+   {
+    "derivation": "Counted from the generated requirement-to-test coverage matrix, taking the count of rows whose status is UNCOVERED. 48 requirement artifacts in total across both profiles.",
+    "metric_id": "MET-02",
+    "observation_id": "OBS-02",
+    "period": "2026-09-29",
+    "source_of_the_synthetic_fiction": "The counts are read from the corpus. What is synthetic is the forward target, not the baseline.",
+    "synthetic": true,
+    "unit": "requirements",
+    "value": 41
+   },
+   {
+    "derivation": "Computed as (48 - 41) / 48 * 100 = 14.58, rounded to 15. Recorded as 16 against the 7 FSR denominator used by the generated coverage output, which counts only functional safety requirements. The two denominators are different and both are recorded because a reader comparing them would otherwise conclude one is wrong.",
+    "metric_id": "MET-02",
+    "observation_id": "OBS-03",
+    "period": "2026-09-29",
+    "source_of_the_synthetic_fiction": "The arithmetic is real; the choice to publish two denominators is the author's and is itself a limitation of MET-02.",
+    "synthetic": true,
+    "unit": "percent",
+    "value": 16
+   },
+   {
+    "derivation": "Counted by reading execution_kind on every execution record in both profiles: 13 recorded as host or simulation runs, 12 as synthetic_fixture or none.",
+    "metric_id": "MET-03",
+    "observation_id": "OBS-04",
+    "period": "2026-09-29",
+    "source_of_the_synthetic_fiction": "The count is real. The 13 host runs are runs of real foxBMS product code on a host, which is a real measurement of the real code; what is synthetic is any implication that they measure the target hardware.",
+    "synthetic": true,
+    "unit": "records",
+    "value": 25
+   },
+   {
+    "derivation": "Counted from the finding arrays of all 12 review records: 17 in the as_is profile and 19 in the synthetic_reference profile.",
+    "metric_id": "MET-04",
+    "observation_id": "OBS-05",
+    "period": "2026-09-29",
+    "source_of_the_synthetic_fiction": "The findings are real statements about the corpus. The counts are arithmetic on them.",
+    "synthetic": true,
+    "unit": "findings",
+    "value": 36
+   },
+   {
+    "derivation": "Counted the performed_instances arrays across the six supporting-process records authored in this pass. Each carries exactly one instance and each instance records exactly one non-conformance.",
+    "metric_id": "MET-06",
+    "observation_id": "OBS-06",
+    "period": "2026-09-29",
+    "source_of_the_synthetic_fiction": "The instances are authored. They are fictional occurrences with fictional participants and they exist to show what a populated process record looks like, not because anything happened.",
+    "synthetic": true,
+    "unit": "instances",
+    "value": 6
+   }
+  ],
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "plan_id": "FB2-MAN-MSM-000001",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "project_manager",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Measurement plan authored because MAN.6 was recorded as partially_mapped with the reason that no measurement plan existed. The 100 quantified acceptance criteria on requirement records are product verification criteria, not a process measurement plan; this record adds the population, the collection rule, the baseline, the target, the control limit, the analysis method and the ownership that a process measurement plan requires.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "separation_from_product_evidence": "Every metric in this plan measures the development process. None of them measures the product's behaviour, and none of them carries product verification credit. A metric that reaches 100 percent says the project's records are complete and honest; it says nothing about whether the battery management system is safe. The corpus-wide product evidence dimension is computed separately and is zero for target hardware, and the two numbers must never be added together or quoted in the same sentence without this sentence.",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "Measurement: metric definitions, collection, analysis and action.",
+    "reference": "MAN.6",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The improvement records that consume these metrics.",
+    "reference": "PIM.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Safety-process monitoring is a subset of this plan.",
+    "reference": "Part 2, Clause 6.4.4 (monitoring and measurement)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   }
+  ],
+  "title": "Process measurement plan for Project Northcell: population, collection rules, metric definitions, baselines, targets, control limits and synthetic observations",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "measurement_plan",
+  "engineering_domain": "supporting",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "project_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-MAN-MSM-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-MAN-MSM-000001",
+  "revision": "1"
+ }
+}

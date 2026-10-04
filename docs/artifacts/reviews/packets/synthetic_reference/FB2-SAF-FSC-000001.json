@@ -1,0 +1,1061 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 0,
+  "questions": [],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-CPT-000002",
+    "rationale": "The functional safety concept refines the item definition: it allocates the item's safety objective to the item's architectural elements.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "refines",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-FSC-000001",
+    "target_id": "FB2-SAF-ITE-000001"
+   },
+   {
+    "link_id": "FB2-LNK-CPT-000003",
+    "rationale": "The technical safety concept refines the functional safety concept's allocation into hardware and software, the technical requirements that follow from it and the timing budget.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "refines",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-TSC-000001",
+    "target_id": "FB2-SAF-FSC-000001"
+   },
+   {
+    "link_id": "FB2-LNK-CPT-000004",
+    "rationale": "The functional safety concept refines the safety goal into architectural elements, safety strategies and a scope boundary.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "refines",
+    "review_state": "reviewed",
+    "source_id": "FB2-SAF-FSC-000001",
+    "target_id": "FB2-SAF-SGO-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000117",
+    "rationale": "FB2-REV-000013 reviewed FB2-SAF-FSC-000001 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000013",
+    "target_id": "FB2-SAF-FSC-000001"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against safety_concept.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (8)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "8/8 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 1,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": [
+    {
+     "checklist_version": "2.0.0-concept-lifecycle",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000013",
+     "review_path": "docs/artifacts/reviews/records/review-concept-system-validation.json",
+     "review_type": "cross_domain",
+     "reviewed_revision": "3",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-concept-system-validation.json",
+      "reviewed_by link FB2-LNK-REVB-000117 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000004, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `81-146`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckVoltages`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000005, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `271-351`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckCurrent`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the measurement-validity fix AND the not-evaluated fix. SOA_CheckVoltages/CheckTemperatures withhold a verdict when the min/max block covers only a subset of the string; SOA_CheckCurrent and the pack-current path now emit DIAG_EVENT_NOT_EVALUATED instead of leaving a stale verdict. Symbol and line range verified unchanged.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000006, which records anchor class `repository_file`; path `src/app/application/soa/soa.c`; line_range `148-269`; content_hash `8d915d39c309530aa41f71f21368061f7e1808f1e1a1b3d6e4eb508d44e9c74e`; symbol `SOA_CheckTemperatures`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000008, which records anchor class `repository_file`; path `src/app/driver/contactor/contactor.c`; line_range `125-163`; content_hash `71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83`; symbol `CONT_CheckFeedback`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the additive DIAG_EVENT_NOT_EVALUATED branch was added to DIAG_Handler. It is a distinct else-if appended after RESET; it holds state, writes no entry, invokes no callback, and cannot reach the OK, NOT_OK or RESET clearing paths. Proven by two mutation probes that routed it into RESET and into NOT_OK: each changed a test outcome.\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000009, which records anchor class `repository_file`; path `src/app/engine/diag/diag.c`; line_range `341-475`; content_hash `06bae9dfd5935d777e81c5892fa31e72c78af6daaff66c8679ca86862f64a8fb`; symbol `DIAG_Handler`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C06-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000027, which records anchor class `repository_file`; path `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`; line_range `160-182`; content_hash `159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec`; symbol `FS8x_WD_Refresh`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C07-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"Re-recorded after the copy-length fix: DATA_QUEUE_MESSAGE_s now carries the caller's declared per-pointer size and the copy loop asserts it is at least the registered length. A call site declaring a smaller struct than the type registered for its uniqueId previously overran the caller's object; with the precondition removed all 32 canary bytes behind a 16-byte caller object were clobbered (a 72-b\u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000028, which records anchor class `repository_file`; path `src/app/engine/database/database.c`; line_range `130-196`; content_hash `ddbe4086f30d0338e33ef12497d7e228aea91bdb9bb6dcecf902651be3718ccf`; symbol `DATA_AccessDatabaseEntries`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C08-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000029, which records anchor class `repository_file`; path `src/app/engine/sys/sys.c`; line_range `691-739`; content_hash `f5e20d579eafa3df2b2c81c2bc8d58f56aeff2f3772a2ef47b24eaac6988d338`; symbol `SYS_SetStateRequest`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000008 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000008."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[5]` names FB2-SRC-COD-000027."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000028 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[6]` names FB2-SRC-COD-000028."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000029 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[7]` names FB2-SRC-COD-000029."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-ITE-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.item_ref` names FB2-SAF-ITE-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-HAZ-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[0]` names FB2-SAF-HAZ-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[1]` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[2]` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C21-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[3]` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C22-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[4]` names FB2-SAF-FSR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C23-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[5]` names FB2-SAF-FSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C24-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-ANL-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[6]` names FB2-SAF-ANL-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C25-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-ANL-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[7]` names FB2-SAF-ANL-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C26-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SCS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.concept_identity.derived_from[8]` names FB2-SAF-SCS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C27-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.safety_goals_addressed[0].safety_goal_id` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C28-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[0].records_in_conflict[0]` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C29-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000025 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[0].finding_ref` names FB2-REV-FND-000025."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C30-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[1].records_in_conflict[0]` names FB2-SAF-FSR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C31-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[1].records_in_conflict[1]` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C32-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000024 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[1].finding_ref` names FB2-REV-FND-000024."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C33-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[2].records_in_conflict[0]` names FB2-SAF-FSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C34-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-HW-TSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[2].records_in_conflict[1]` names FB2-HW-TSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C35-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[2].finding_ref` names FB2-REV-FND-000027."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C36-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[3].records_in_conflict[0]` names FB2-SAF-FSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C37-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[3].records_in_conflict[1]` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C38-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000026 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.contradictions_found_while_authoring[3].finding_ref` names FB2-REV-FND-000026."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C39-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 3, Clause 7 (functional safety concept) with status `mapped` on the grounds: The item-related assumptions, the high-level architectural elements and the safety strategies are exactly what this clause asks for. Recorded as mapped for the conceptual role only; no normative text is reproduced and the clause was not consulted for this record."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C40-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 3, Clause 6 (hazard analysis and safety goals) with status `mapped` on the grounds: The concept consumes the safety goal produced there and allocates it."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C41-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SYS.3 with status `mapped` on the grounds: System architectural design: the high-level architectural elements and their allocation."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 36125,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json",
+  "record_sha256": "ecd4f0564c65f5fa018bdb3b2880c258fa09e2e5165d865bc8cb4c8ff0216d0f",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "d0bbcd597884c35f94bb67315239742184641f9ad1078b1c513cd6513878f7a2"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "This concept is synthetic and describes a hypothetical programme. It establishes no property of the real foxBMS project and asserts no ASIL capability.",
+    "No diagnostic coverage figure in this concept is measured. Every one is either a requirement-side claim, an analytical estimate on an assumed noise distribution, or an assumption about a component that this corpus has not measured.",
+    "The independence of the hardware monitor is assumed (FB2-ASM-008), not demonstrated. An independent-monitor concept that had been analysed for common-cause failure would state which failures it does and does not cover; this one states that no such analysis exists in the corpus, which is why the dependent-failure analysis FB2-SAF-ANL-000003 exists and is referenced rather than replaced.",
+    "This concept does not verify anything. Verification is planned and, where a fixture exists, executed, in the FB2-VER-* records; none of that evidence is product evidence.",
+    "The architecture is a high-level functional decomposition. It says what each element is accountable for and not how any of them is built, and it does not establish that the elements as described can be built within the stated timing.",
+    "Human approval of this concept is pending. No functional-safety expert has confirmed it, and an automated review pass is not the independent confirmation an ASIL D concept requires."
+   ]
+  },
+  {
+   "field": "provenance_note",
+   "value": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes; anchor FB2-SRC-COD-000007 was deleted outright because contactor.c contains no contactor state machine. Origin remains synthetic, which already declared this content modelled rather than observed."
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SAF-FSC-000001.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the safety_engineer for this safety record, do you agree that \"Functional Safety Concept: allocation of the cell-voltage safety goal to the architectural elements of the item\" is a correct and complete statement of hazard analysis, safety goals, FSR/TSR allocation, safety analyses, the safety case?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  },
+  {
+   "group": "lifecycle status",
+   "priority": 50,
+   "question": "`lifecycle_status` is `baselined`. Is that the right status for this revision?",
+   "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+   "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "architectural_elements": [
+   {
+    "element_id": "AR-001",
+    "element_kind": "hardware_and_software",
+    "element_name": "Measurement acquisition and validation chain",
+    "independence_note": "Shares the supply and the MCU with AR-002 to AR-004. It is not independent of them; AR-005 is the independent path.",
+    "interfaces": [
+     "slave analogue front end -> isoSPI/SPI link",
+     "SPI link -> shared data store"
+    ],
+    "owns_objective_part": "Detection of the condition. It is the only element that can observe an out-of-range cell voltage in the first place.",
+    "role": "Convert the cell voltages on the sense leads into validated, age-stamped values in the shared data store, or declare that the conversion did not succeed."
+   },
+   {
+    "element_id": "AR-002",
+    "element_kind": "software",
+    "element_name": "Safe-operating-area decision function",
+    "independence_note": "Runs on the main MCU. A failure of this element leaves AR-005 as the only barrier, which is the reason AR-005 exists at all.",
+    "interfaces": [
+     "shared data store",
+     "fault management and state machine (SYS)"
+    ],
+    "owns_objective_part": "Confirmation. It decides that the condition is real rather than a measurement artefact, and it is the element whose debounce directly costs detection latency.",
+    "role": "Compare acquired values against the configured limits with a debounce, apply plausibility and redundancy checks, classify the result as within limits, degraded or out of limits, and request the safe state when the classification warrants it."
+   },
+   {
+    "element_id": "AR-003",
+    "element_kind": "software",
+    "element_name": "Shared data and communication path",
+    "independence_note": "This is also the attack surface the cybersecurity concept bounds. Its integrity is assumed by FB2-SAF-SEC-000003 and FB2-SAF-SEC-000004; the assumption is one-directional and is stated as such.",
+    "interfaces": [
+     "AR-001 -> AR-002",
+     "AR-002 -> AR-004",
+     "AR-004 -> vehicle control unit"
+    ],
+    "owns_objective_part": "Chain integrity. It holds no part of the objective on its own, but a stale or forged value crossing it invalidates the detection and the confirmation that AR-001 and AR-002 produced.",
+    "role": "Carry measurements, ages and decisions between elements with a defined freshness and integrity, and exchange state with the vehicle controller without allowing an external actor to override an item-side safety decision."
+   },
+   {
+    "element_id": "AR-004",
+    "element_kind": "hardware_and_software",
+    "element_name": "Contactor actuation and feedback path",
+    "independence_note": "Its controller has its own watchdog independent of the main MCU (FB2-ASM-007), which makes this element's actuation path partly independent of AR-002.",
+    "interfaces": [
+     "AR-002 -> SYS state machine",
+     "SYS state machine -> safe base controller -> contactor coils",
+     "auxiliary contacts -> AR-003"
+    ],
+    "owns_objective_part": "Actuation and confirmation. Without it the safe state is commanded but not achieved, which is a different outcome from reaching it.",
+    "role": "Command the contactor drivers into the safe state, confirm by auxiliary feedback that the contactor actually opened, and detect a welded contactor."
+   },
+   {
+    "element_id": "AR-005",
+    "element_kind": "hardware",
+    "element_name": "Independent hardware voltage monitor",
+    "independence_note": "This is the element whose independence FB2-SAF-FSR-000004 claims. The claim is recorded as an assumption (FB2-ASM-008), not as a demonstrated property, and this concept does not upgrade it.",
+    "interfaces": [
+     "independent dividers/comparator -> independent actuation -> contactor coils"
+    ],
+    "owns_objective_part": "A second, independent realisation of detection and actuation. It is the element that makes the ASIL D objective survive a failure of AR-001 to AR-004.",
+    "role": "Measure a subset of the cell voltages through its own dividers and comparator and open the contactors on its own command, with no path through the main MCU, its supply or its software."
+   },
+   {
+    "element_id": "AR-006",
+    "element_kind": "hardware",
+    "element_name": "Supply and watchdog supervision",
+    "independence_note": "Its failure mode is benign to the goal: losing supply supervision means the watchdog no longer acts, which is a loss of a barrier, not a direct cause of the hazard.",
+    "interfaces": [
+     "supply rails -> safe base controller watchdog",
+     "reset line -> MCU"
+    ],
+    "owns_objective_part": "None of the safety goal's objective is allocated to it. This is a deliberate statement: a design in which every element carries part of the objective has no element left whose failure is harmless.",
+    "role": "Detect an out-of-range or unstable supply and force the safe base controller into its defined state when the MCU stops servicing it."
+   }
+  ],
+  "artifact_type": "safety_concept",
+  "assumption_refs": [
+   "FB2-ASM-001",
+   "FB2-ASM-002",
+   "FB2-ASM-003",
+   "FB2-ASM-004",
+   "FB2-ASM-005",
+   "FB2-ASM-006",
+   "FB2-ASM-007",
+   "FB2-ASM-008",
+   "FB2-ASM-011"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "concept_assumptions": [
+   "FB2-ASM-001",
+   "FB2-ASM-002",
+   "FB2-ASM-003",
+   "FB2-ASM-004",
+   "FB2-ASM-005",
+   "FB2-ASM-006",
+   "FB2-ASM-007",
+   "FB2-ASM-008",
+   "FB2-ASM-011"
+  ],
+  "concept_identity": {
+   "clause_reference": "ISO 26262-3:2018 Clause 7 (working title: functional safety concept). The clause reference is recorded from the locked standards baseline; no clause text was consulted or reproduced.",
+   "concept_id": "FB2-SAF-FSC-000001",
+   "derived_from": [
+    "FB2-SAF-HAZ-000001",
+    "FB2-SAF-SGO-000001",
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004",
+    "FB2-SAF-ANL-000001",
+    "FB2-SAF-ANL-000004",
+    "FB2-SAF-SCS-000001"
+   ],
+   "fictional": true,
+   "item_ref": "FB2-SAF-ITE-000001"
+  },
+  "concept_stage": "functional_safety_concept",
+  "contradictions_found_while_authoring": [
+   {
+    "contradiction": "The safety goal's timing budget allocation sums to 85 ms and its recorded margin is 20 ms, giving 105 ms against a fault-tolerant time interval of 100 ms. The margin is therefore larger than the time available, which means it is an overrun rather than a margin.",
+    "finding_ref": "FB2-REV-FND-000025",
+    "how_this_concept_handles_it": "RESOLVED at source. The safety goal's margin is now 15 ms, so its budget closes: 85 ms serial + 15 ms = 100 ms against the 100 ms interval, which is the figure this concept and FB2-SAF-TSC-000001 had already computed independently. The safety goal was revised rather than left in contradiction, and the two records no longer depart from one another. Finding FB2-REV-FND-000025.",
+    "records_in_conflict": [
+     "FB2-SAF-SGO-000001",
+     "FB2-SAF-FSC-000001"
+    ]
+   },
+   {
+    "contradiction": "FB2-SAF-FSR-000003 requires the contactors open within 30 ms of the fault request with feedback confirmation within a further 5 ms, so its own acceptance criterion (30 ms to feedback open) contradicts its own rationale (30 ms mechanical plus 5 ms feedback, i.e. 35 ms), and the safety goal allocates 5 ms of command plus 30 ms of mechanical time plus 5 ms of feedback verification, i.e. 40 ms, before detection.",
+    "finding_ref": "FB2-REV-FND-000024",
+    "how_this_concept_handles_it": "RESOLVED at source. FB2-SAF-FSR-000003 now states the three points of the chain separately: 5 ms to the coil command, 35 ms to the mechanically open contactor and 40 ms to the feedback-confirmed contactor, which is the 40 ms end-to-end figure this concept identified. Its 'Contactor open latency' criterion, which measures from the fault request to feedback open, now carries the 40 ms it was spending from rather than the 30 ms mechanical figure. The functional strategy allocation in this concept is unchanged and now agrees with the requirement it allocates. Finding FB2-REV-FND-000024.",
+    "records_in_conflict": [
+     "FB2-SAF-FSR-000003",
+     "FB2-SAF-SGO-000001"
+    ]
+   },
+   {
+    "contradiction": "FB2-SAF-FSR-000004 states a functional safety requirement whose text is identical, word for word, to the hardware technical safety requirement FB2-HW-TSR-000004, including the ASIL B allocation and the acceptance criteria.",
+    "finding_ref": "FB2-REV-FND-000027",
+    "how_this_concept_handles_it": "RESOLVED at source. FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 no longer carry the same text. The Part 4 record now states the safety intent and carries only behaviourally decidable criteria; the Part 5 record states the hardware obligation and carries the structural independence and coverage criteria, aligned with the statement this concept already published for FB2-HW-TSR-000004 in the technical concept's technical_safety_requirements block. AR-005 remains a pure hardware element and the system-level decomposition continues to land in FB2-SYS-SYR-000005. Finding FB2-REV-FND-000027.",
+    "records_in_conflict": [
+     "FB2-SAF-FSR-000004",
+     "FB2-HW-TSR-000004"
+    ]
+   },
+   {
+    "contradiction": "FB2-SAF-FSR-000004 justifies the independent monitor by a main-path figure of 115 ms against the 100 ms FTTI. No record in the corpus contains 115 ms; the safety goal's own allocation for the main path sums to 85 ms.",
+    "finding_ref": "FB2-REV-FND-000026",
+    "how_this_concept_handles_it": "RESOLVED at source, and this block's premise is corrected. The 115 ms figure is not unsourced: it is the sum of a superseded allocation recorded in FB2-REV-000001 (as_is vertical-slice review, embedded finding FB2-FND-000001) as 'FSR-001 specifies 10 Hz (100 ms); FSR-002 specifies 10 ms check; FSR-003 specifies 5 ms contactor; sum = 115 ms'. It is stale, not fabricated, and it described an allocation the corpus has since replaced. FB2-SAF-FSR-000004, FB2-HW-TSR-000004 and FB2-ASM-008 no longer carry it. The justification is now stated on figures that still hold: the main path is 85 ms of the 100 ms interval, 95 ms at the 40 ms upper tolerance of FB2-PRM-000005, and 110 ms if detection waits one full acquisition period of FB2-PRM-000003 instead of the 25 ms allocated. Finding FB2-REV-FND-000026.",
+    "records_in_conflict": [
+     "FB2-SAF-FSR-000004",
+     "FB2-SAF-SGO-000001"
+    ]
+   }
+  ],
+  "created_at": "2026-09-29T00:00:00Z",
+  "engineering_domain": "safety",
+  "external_measures": [
+   {
+    "measure": "Cell-level overvoltage protection inside each cell",
+    "owner_outside_the_item": "Cell supplier (fictional role: cell_supplier_quality_engineer)",
+    "why_the_item_cannot_do_it": "The cell protection is inside the cell, physically unreachable from the item, and reacts even with the item unpowered. It is a second barrier the item does not control and could not replace."
+   },
+   {
+    "measure": "Cell chemistry limits and the cell supplier's own safety case",
+    "owner_outside_the_item": "Cell supplier (fictional role: cell_supplier_quality_engineer)",
+    "why_the_item_cannot_do_it": "The safe operating area of the chemistry is a property of the chemistry. The item monitors against limits it is given; it cannot widen them."
+   },
+   {
+    "measure": "Vehicle high-voltage isolation on collision",
+    "owner_outside_the_item": "Vehicle manufacturer (fictional role: vehicle_safety_owner)",
+    "why_the_item_cannot_do_it": "The item supervises the interlock line. Whether a collision warrants isolation depends on vehicle-level information the item does not have."
+   },
+   {
+    "measure": "Certified recycling handling of an energised pack",
+    "owner_outside_the_item": "Recycler (fictional role: recycler_safety_officer)",
+    "why_the_item_cannot_do_it": "The item is removed from the vehicle before end of life. It contributes no control once it is disconnected."
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SAF-FSC-000001",
+  "interfaces_to_other_safety_related_items": [
+   {
+    "assumption_dependence": "That the interlock assertion cannot be defeated from inside the item, and that the vehicle-level monitor is itself qualified.",
+    "interface_description": "Interlock assertion into the item and item state and insulation diagnosis out of it",
+    "other_item": "Vehicle high-voltage safety monitor",
+    "shared_objective_or_none": "Shared objective in MOD-004 and MOD-006: both items may require the pack to be isolated. Neither coordinates with the other; both act independently."
+   },
+   {
+    "assumption_dependence": "That the cell's threshold and timing are known and compatible with the item's limits.",
+    "interface_description": "The cell's own overvoltage protection acts on the cell independently of the item",
+    "other_item": "Cell protection circuit embedded in each cell",
+    "shared_objective_or_none": "Shared objective for overvoltage. Two independent mechanisms pursue the same safe outcome with thresholds the item does not control."
+   },
+   {
+    "assumption_dependence": "That the component meets its stated accuracy and error-detection specification over the full temperature range. Nothing in this corpus demonstrates that.",
+    "interface_description": "The cell input network, its protection and its calibration are inside the item but are supplied by a component vendor",
+    "other_item": "Cell-sensing front end and its analogue network",
+    "shared_objective_or_none": "None. The item owns the objective; the vendor owns the component's behaviour within its specification."
+   }
+  ],
+  "item_related_assumptions": [
+   {
+    "assumption": "A cell can leave its safe operating area at any time without warning, and the item will observe it as a voltage outside the configured limit.",
+    "consequence_if_false": "If a cell failed in a way that stayed inside the limit while being dangerous (a chemistry failure at nominal voltage), every requirement in the concept would be satisfied and the hazard would still occur. The concept's coverage would be an illusion.",
+    "evidence_class": "synthetic_assumption"
+   },
+   {
+    "assumption": "Cell-voltage measurement noise is Gaussian with sigma not exceeding 5 mV.",
+    "consequence_if_false": "The debounce strategy in FB2-SAF-FSR-000002 is dimensioned on this figure. A heavier-tailed or correlated noise distribution would produce either late detection or a false reaction, and the recorded false-positive rate of 1e-6 per hour would be wrong.",
+    "evidence_class": "synthetic_assumption"
+   },
+   {
+    "assumption": "The contactor opens mechanically within 30 ms worst case over the whole temperature range.",
+    "consequence_if_false": "The mechanical part of the timing budget is spent before the item has finished deciding, and the whole FTTI is lost.",
+    "evidence_class": "synthetic_assumption"
+   },
+   {
+    "assumption": "The external converter respects the charge and discharge limits the item publishes.",
+    "consequence_if_false": "The item's safe operating area is not enforced by anyone; the item detects the excursion but the cause is outside its control, and the reaction is a protective disconnect rather than a correction.",
+    "evidence_class": "synthetic_assumption"
+   },
+   {
+    "assumption": "The independent hardware monitor can be built with a separate divider, comparator and supply, and can actuate the contactors without passing through the main MCU.",
+    "consequence_if_false": "The independent path is not independent, the ASIL D objective has no second barrier, and the freedom-from-interference claim in FB2-SAF-FSR-000004 is false.",
+    "evidence_class": "synthetic_assumption"
+   },
+   {
+    "assumption": "The real foxBMS source at commit 308028fb implements the observed measurement, SOA, contactor and diagnosis behaviour, so that grounding this concept on it grounds the concept on something that exists.",
+    "consequence_if_false": "The concept's grounding becomes an invention. The observed behaviour is recorded in the as_is profile and is not restated here as if it were the hypothetical item's verified behaviour.",
+    "evidence_class": "source_observed"
+   }
+  ],
+  "lifecycle_status": "baselined",
+  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
+  "limitations": [
+   "This concept is synthetic and describes a hypothetical programme. It establishes no property of the real foxBMS project and asserts no ASIL capability.",
+   "No diagnostic coverage figure in this concept is measured. Every one is either a requirement-side claim, an analytical estimate on an assumed noise distribution, or an assumption about a component that this corpus has not measured.",
+   "The independence of the hardware monitor is assumed (FB2-ASM-008), not demonstrated. An independent-monitor concept that had been analysed for common-cause failure would state which failures it does and does not cover; this one states that no such analysis exists in the corpus, which is why the dependent-failure analysis FB2-SAF-ANL-000003 exists and is referenced rather than replaced.",
+   "This concept does not verify anything. Verification is planned and, where a fixture exists, executed, in the FB2-VER-* records; none of that evidence is product evidence.",
+   "The architecture is a high-level functional decomposition. It says what each element is accountable for and not how any of them is built, and it does not establish that the elements as described can be built within the stated timing.",
+   "Human approval of this concept is pending. No functional-safety expert has confirmed it, and an automated review pass is not the independent confirmation an ASIL D concept requires."
+  ],
+  "origin": "synthetic",
+  "owner_role": "safety_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes; anchor FB2-SRC-COD-000007 was deleted outright because contactor.c contains no contactor state machine. Origin remains synthetic, which already declared this content modelled rather than observed.",
+  "revision": "3",
+  "revision_history": [
+   {
+    "author": "safety_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "First functional safety concept for the synthetic_reference profile. The corpus previously had a hazard, a safety goal and four functional safety requirements with no record of how the goal was to be achieved by any architecture. This concept supplies that: the item-related assumptions, the high-level architectural elements and their roles, the safety strategies, the scope boundary, the interfaces to other safety-related items and the allocation of the safety goal to elements. Not a safety plan: a plan states what will be done, this states what the item is.",
+    "revision": "1"
+   },
+   {
+    "author": "safety_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Regenerated as a dependent of the remediation of findings FB2-REV-FND-000024, 000025, 000026 and 000027. The four contradiction blocks recorded here described conditions in FB2-SAF-SGO-000001, FB2-SAF-FSR-000003, FB2-SAF-FSR-000004 and FB2-HW-TSR-000004 that have now been corrected at source; the blocks are retained with their contradiction text unchanged so the record of what was found survives, and their how_this_concept_handles_it text now states what was actually done rather than a decision this pass declined to take. No allocation, strategy, budget, assumption or coverage claim in this concept was changed; the concept's own figures were already the ones the corrected records now agree with.",
+    "revision": "2"
+   },
+   {
+    "author": "safety_engineer",
+    "date": "2026-09-29T00:00:00Z",
+    "description": "Regenerated as a dependent of finding FB2-REV-FND-000027. safety_strategies.fault_detection[AR-005] still carried the requirement's old unmeasurable coverage disjunction ('All monitored cells, or a representative subset of at least 50%') and pointed at finding FB2-REV-FND-000027 as an unresolved conflict. FB2-HW-TSR-000004 now states the coverage as 100 percent of the main measurement chain's monitored cell set, so this strategy entry states the same figure and records that the requirement is specified rather than demonstrated. No functional element, capability, safety strategy detection budget, reaction budget or degradation mode was changed.",
+    "revision": "3"
+   }
+  ],
+  "safety_goals_addressed": [
+   {
+    "allocation_statement": "The goal's objective - detect a cell voltage limit violation and reach the safe state, all contactors open, within the FTTI - is split across five of the six architectural elements below, and no single element is accountable for the whole objective. AR-001 owns detection of the condition; AR-002 owns the decision that the condition is confirmed; AR-003 owns carrying the decision to the actuator without it ageing or being forged; AR-004 owns commanding and confirming the contactor state; AR-005 owns an independent, second detection and actuation path that does not pass through any of the above. AR-006 owns only supply integrity and is explicitly not allocated any part of the goal's objective, which is why it can fail without defeating the goal.",
+    "asil": "ASIL_D",
+    "safety_goal_id": "FB2-SAF-SGO-000001"
+   }
+  ],
+  "safety_strategies": {
+   "degraded_operation": [
+    {
+     "capability_kept": "Monitoring at a higher rate, charge and discharge within reduced limits, contactor control retained",
+     "capability_removed": "Full-rate charge and discharge, and the ability to claim the item is healthy",
+     "degraded_mode": "Derated charge and discharge with enhanced monitoring",
+     "duration_limit": "Until the degraded condition is cleared by service or exceeds the vehicle's own derating time limit",
+     "entry_condition": "A diagnosis entry whose severity permits operation but forbids full-rate transfer",
+     "user_indication": "The degraded state is published to the vehicle control unit so the driver is told the pack is restricted"
+    },
+    {
+     "capability_kept": "Contactor control and a coarser measurement set",
+     "capability_removed": "Fast detection on the degraded channel",
+     "degraded_mode": "Reduced-rate monitoring after a measurement-path degradation",
+     "duration_limit": "Until service; a degraded channel is not cleared by the condition disappearing",
+     "entry_condition": "Plausibility or redundancy detects a disagreement between channels",
+     "user_indication": "Published to the vehicle control unit"
+    }
+   ],
+   "fault_detection": [
+    {
+     "coverage_claim": "Single-bit and double-bit errors in the transferred word",
+     "coverage_claim_evidence": [
+      "FB2-HW-TSR-000001 requires the front end to detect a single-bit error on every transfer; no measurement of that coverage exists in this corpus.",
+      "FB2-VER-TMS-000001 and FB2-VER-EXE-000001 exercise the software path; the front end's own error-detection capability is not exercised by them."
+     ],
+     "detection_time_budget_ms": 2,
+     "detects": "A corrupted or mis-addressed cell-voltage transfer on the slave link",
+     "element_id": "AR-001",
+     "mechanism": "Front-end error-detection code on every measurement transfer"
+    },
+    {
+     "coverage_claim": "Front-end gain, offset and open-sense-line failures",
+     "coverage_claim_evidence": [
+      "FB2-SAF-FSR-000001 names plausibility and redundancy as the mitigation; the coverage figure itself is not quantified anywhere in this corpus."
+     ],
+     "detection_time_budget_ms": 5,
+     "detects": "A measurement that is physically implausible or that disagrees with a redundant channel",
+     "element_id": "AR-002",
+     "mechanism": "Measurement plausibility and spread checks against independent channels"
+    },
+    {
+     "coverage_claim": "Confirmed limit violations after two consecutive samples within 100 ms",
+     "coverage_claim_evidence": [
+      "FB2-SAF-FSR-000002 and FB2-SW-SWR-000002 carry the debounce and its 1e-6 per hour false-positive claim; the claim is an analytical estimate on the assumed noise distribution, not a measurement, and is labelled as such there."
+     ],
+     "detection_time_budget_ms": 5,
+     "detects": "A cell voltage above the maximum or below the minimum limit",
+     "element_id": "AR-002",
+     "mechanism": "Safe-operating-area comparison with debounce"
+    },
+    {
+     "coverage_claim": "Coil-path failure and welded contacts",
+     "coverage_claim_evidence": [
+      "FB2-HW-TSR-000003 sets a 2 ms feedback latency and a 100 ms weld-detection time; no hardware measurement of either exists in this corpus."
+     ],
+     "detection_time_budget_ms": 5,
+     "detects": "A contactor that did not open, or that opened when it was commanded closed",
+     "element_id": "AR-004",
+     "mechanism": "Contactor auxiliary feedback and weld detection"
+    },
+    {
+     "coverage_claim": "Every cell the item monitors, detected by the independent hardware monitor independently of the main MCU and its software",
+     "coverage_claim_evidence": [
+      "FB2-HW-TSR-000004 now states the coverage as 100 percent of the cells the main measurement chain monitors, with the population named and the selection method no longer a matter of interpretation. The requirement replaced the 'all cells or representative subset >= 50%' disjunction under finding FB2-REV-FND-000027. The requirement is specified, not demonstrated: no schematic, no BOM and no measurement of the independent chain exists in this corpus, and its feasibility as a full per-cell network remains the open assumption FB2-ASM-008."
+     ],
+     "detection_time_budget_ms": 50,
+     "detects": "A cell voltage above the hardware monitor's own threshold, independently of the main MCU and its software",
+     "element_id": "AR-005",
+     "mechanism": "Independent hardware threshold monitor"
+    },
+    {
+     "coverage_claim": "Not quantified",
+     "coverage_claim_evidence": [],
+     "detection_time_budget_ms": 5,
+     "detects": "Loss of the measurement link and loss of the main MCU",
+     "element_id": "AR-003",
+     "mechanism": "Link and watchdog supervision"
+    }
+   ],
+   "fault_reaction": [
+    {
+     "element_id": "AR-004",
+     "mode_dependence": "Mode-dependent, and this is the load-bearing caveat of the concept. In MOD-004 (closed, current flowing) opening the contactors removes propulsion from a moving vehicle, so the item must distinguish a genuine limit violation from a degraded condition and must not enter FAULT for the latter. In MOD-001, MOD-002 and MOD-007 the reaction is unambiguous and immediate. In MOD-006 the state is already latched. Disconnecting a battery is itself an action with consequences, and this concept does not treat it as unconditionally safe.",
+     "reaction": "Open all high-voltage contactors, disable charging, latch the fault and log it",
+     "reaction_time_budget_ms": 35,
+     "triggered_by": "A confirmed safe-operating-area violation"
+    },
+    {
+     "element_id": "AR-005",
+     "mode_dependence": "The independent path has no mode arbitration. It opens the contactors whenever its threshold is exceeded. In MOD-004 that means a hardware false positive disconnects a moving vehicle, which is why the independent monitor's threshold accuracy is a safety requirement in its own right and not only a specification detail.",
+     "reaction": "Open the contactors through the independent path, without waiting for the main MCU",
+     "reaction_time_budget_ms": 50,
+     "triggered_by": "The independent monitor's own hardware threshold"
+    },
+    {
+     "element_id": "AR-002",
+     "mode_dependence": "Mode-independent. The latch is what makes the safe state persistent rather than a transient that a clearing condition would undo.",
+     "reaction": "Enter the latched FAULT mode and refuse to leave it without an authorised service action",
+     "reaction_time_budget_ms": 3,
+     "triggered_by": "Any condition whose severity requires the safe state"
+    },
+    {
+     "element_id": "AR-006",
+     "mode_dependence": "Mode-independent, and it is the reaction that still works when AR-002 has failed, which is the reason it exists.",
+     "reaction": "Force the safe base controller into its defined state",
+     "reaction_time_budget_ms": 5,
+     "triggered_by": "Watchdog expiry or supply out of range"
+    }
+   ],
+   "safe_state": "All high-voltage contactors open, charging disabled, propulsion disabled, fault logged and latched. The safe state is reachable from every mode and is identical in every mode; what differs between modes is how much capability is lost by reaching it, which is why the fault reaction above is stated per mode.",
+   "strategy_allocation": "Detection is split so that no single element both detects and acts: AR-001 and AR-005 detect, AR-002 confirms, AR-004 acts and confirms the action, AR-003 carries the decision, AR-006 acts only when the others have failed. A failure of AR-001 to AR-004 together is covered by AR-005, which shares nothing with them. A failure of AR-005 costs a barrier but does not cause the hazard, because the goal's objective is still achieved by AR-001 to AR-004 in that case. That asymmetry is the allocation's load-bearing property and it is what the ASIL D assignment rests on."
+  },
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope_statement": {
+   "boundary_argument": "The scope is the set of failures the item can cause or detect-and-react to. Every element inside the boundary can produce the hazardous event by failing to report an overvoltage, failing to report it in time, or failing to open the contactor. Every element outside the boundary either cannot produce the event at all, or produces it through a route that passes back into one of the inside elements (for example a converter that overdrives a cell produces an overvoltage, which AR-001 then detects and AR-004 then reacts to, so the requirement lands inside the boundary even though the cause does not). The argument is drawn at the item's electrical interfaces, not at its functions, because the item's functions are chosen by the integrator and its interfaces are constrained by the chemistry.",
+   "inside_safety_scope": [
+    "Acquisition, validation and age-stamping of cell voltage and cell temperature",
+    "Safe-operating-area monitoring, debounce, classification and the latched reaction",
+    "Measurement plausibility and redundancy evaluation",
+    "Contactor and precharge sequencing, actuation and feedback confirmation",
+    "The independent hardware monitor and its own actuation path",
+    "Supply and watchdog supervision as a barrier",
+    "The integrity of the internal data path, to the extent that a forged or stale value could defeat a detection"
+   ],
+   "outside_safety_scope": [
+    {
+     "element": "Thermal runaway from cell chemistry",
+     "hazard_class": "inherent_battery_hazard_outside_fuSaS_scope",
+     "why_outside": "A property of the cells, not of an E/E system. No requirement in this concept can prevent it, and pretending otherwise would inflate the ASIL of the item over a hazard it does not reach."
+    },
+    {
+     "element": "Mechanical protection of the pack",
+     "hazard_class": "inherent_battery_hazard_outside_fuSaS_scope",
+     "why_outside": "Venting and enclosure are mechanical. Their adequacy is the pack integrator's safety case."
+    },
+    {
+     "element": "Converter and charger control strategy",
+     "hazard_class": "external_system_behaviour",
+     "why_outside": "The item publishes limits and assumes they are respected (FB2-ASM-003). A converter that ignores them is an external-system behaviour failure, and the item's response to it is the protective disconnect already specified."
+    },
+    {
+     "element": "Vehicle-level crash isolation policy",
+     "hazard_class": "external_system_behaviour",
+     "why_outside": "Whether a collision requires isolation is a vehicle-level decision. The item supervises the interlock it is given."
+    },
+    {
+     "element": "Production programming and end-of-line test execution",
+     "hazard_class": "production_or_service_process",
+     "why_outside": "A lifecycle process, not a function. A wrongly configured item is a production escape, and it is handled by the production records, not by a functional requirement."
+    },
+    {
+     "element": "Electromagnetic robustness of the item under the full test level",
+     "hazard_class": "environmental",
+     "why_outside": "An environmental property. The concept assumes a level of robustness and does not claim to establish it."
+    }
+   ]
+  },
+  "source_refs": [
+   "FB2-SRC-COD-000004",
+   "FB2-SRC-COD-000005",
+   "FB2-SRC-COD-000006",
+   "FB2-SRC-COD-000008",
+   "FB2-SRC-COD-000009",
+   "FB2-SRC-COD-000027",
+   "FB2-SRC-COD-000028",
+   "FB2-SRC-COD-000029"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "The item-related assumptions, the high-level architectural elements and the safety strategies are exactly what this clause asks for. Recorded as mapped for the conceptual role only; no normative text is reproduced and the clause was not consulted for this record.",
+    "reference": "Part 3, Clause 7 (functional safety concept)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "The concept consumes the safety goal produced there and allocates it.",
+    "reference": "Part 3, Clause 6 (hazard analysis and safety goals)",
+    "standard_id": "ISO_26262_2018",
+    "status": "mapped"
+   },
+   {
+    "rationale": "System architectural design: the high-level architectural elements and their allocation.",
+    "reference": "SYS.3",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   }
+  ],
+  "title": "Functional Safety Concept: allocation of the cell-voltage safety goal to the architectural elements of the item",
+  "updated_at": "2026-09-29T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_and_validation_criteria": [
+   {
+    "criterion": "Every architecture element allocated part of the safety goal has a fault detection and a fault reaction allocated to it, and the reaction reaches the safe state.",
+    "how_it_would_be_checked": "Traversal of the refines and allocated_to links from the safety goal to the architecture, then a coverage check that each element appears in both the detection and the reaction list.",
+    "record_kind_expected": "Traceability query result plus a review record"
+   },
+   {
+    "criterion": "The serial timing budget closes inside the FTTI with a non-negative margin.",
+    "how_it_would_be_checked": "Arithmetic over the safety goal's timing budget allocation, compared with the FTTI, performed by the technical safety concept rather than asserted.",
+    "record_kind_expected": "Technical safety concept with an explicit arithmetic_check"
+   },
+   {
+    "criterion": "Each claimed diagnostic coverage figure has a named evidence source.",
+    "how_it_would_be_checked": "Check that every coverage_claim is accompanied by a non-empty coverage_claim_evidence list.",
+    "record_kind_expected": "Safety concept record plus analysis records"
+   },
+   {
+    "criterion": "The safe state is reachable from every operating mode named in the item definition.",
+    "how_it_would_be_checked": "For each mode in the item definition, confirm that a reaction is allocated and that its mode_dependence field is populated rather than assumed.",
+    "record_kind_expected": "Item definition plus this concept"
+   },
+   {
+    "criterion": "Stakeholder intent is validated in operational scenarios, not only in requirement-level tests.",
+    "how_it_would_be_checked": "Each validation measure must validate a stakeholder need or safety goal and must state the observable by which the outcome is judged.",
+    "record_kind_expected": "Validation test measures and their executions"
+   }
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "safety_concept",
+  "engineering_domain": "safety",
+  "human_approval_status": "pending",
+  "lifecycle_status": "baselined",
+  "origin": "synthetic",
+  "owner_role": "safety_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SAF-FSC-000001"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SAF-FSC-000001",
+  "revision": "3"
+ }
+}

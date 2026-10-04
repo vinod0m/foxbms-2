@@ -1,0 +1,997 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-SIR-000027",
+    "rationale": "Element requirement A of this set obliges the switch-feedback read that FB2-SW-IFS-000009 specifies, and rests on the return contract that specification transcribes. The link records the direction honestly: the requirement was derived from the specification, not the other way round. A reader tracing upward from the requirement reaches the specification and can see that the obligation was found by reading the code, not by analysing a higher-level requirement; that reversed direction is the record's own stated gap and is not concealed by this link.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000009"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000028",
+    "rationale": "Element requirement B obliges the plausibility comparisons that FB2-SW-IFS-000010 specifies, and rests on that specification's finding that the averaged output is written on the rejected path and that the tolerance is not stated in any header. Direction is specification to requirement, and the requirement does not exist independently of the analysis that produced the specification.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000010"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000029",
+    "rationale": "Element requirement C obliges the redundancy validators that FB2-SW-IFS-000011 specifies, and rests on that specification's finding that both elements return a single aggregate verdict over every quantity they check. Direction is specification to requirement.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000011"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000030",
+    "rationale": "Element requirement D obliges the balancing entry points that FB2-SW-IFS-000012 specifies, and rests on that specification's finding that the three symbols are declared once and defined once per strategy file. Direction is specification to requirement.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000012"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000031",
+    "rationale": "Element requirement E obliges the conversion sequence that FB2-SW-IFS-000013 specifies, and rests on that specification's finding that the state machine has no timeout and no production-visible state. Direction is specification to requirement.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000013"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000032",
+    "rationale": "Element requirement F obliges the transmit-status interface that FB2-SW-IFS-000014 specifies, and rests on that specification's finding that two declared symbols have no definition anywhere in the tree at the pinned commit. Direction is specification to requirement.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000014"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000033",
+    "rationale": "Element requirement G obliges the supervisor trigger that FB2-SW-IFS-000015 specifies, and rests on that specification's finding that the watchdog refresh discards its own result. Direction is specification to requirement.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000015"
+   },
+   {
+    "link_id": "FB2-LNK-SIR-000034",
+    "rationale": "Element requirement H obliges the insulation trigger that FB2-SW-IFS-000016 specifies, and rests on that specification's finding that a timer-skipped cycle returns the success value. Direction is specification to requirement.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-software-interfaces.json",
+    "relation_type": "specified_by",
+    "review_state": "pending",
+    "source_id": "FB2-SW-SIR-000006",
+    "target_id": "FB2-SW-IFS-000016"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against requirement.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors (12)",
+    "method": "per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk",
+    "result": "12/12 fully checked with no contradiction"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C01-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000031, which records anchor class `repository_file`; path `src/app/application/redundancy/redundancy.c`; line_range `658-673`; content_hash `8cd338327a83e2daf405b436046d6dd77bff951a1013e6f7b3d2a4a3bdd588db`; symbol `MRC_ValidateBatteryVoltageMeasurement`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C02-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000038, which records anchor class `repository_file`; path `src/app/driver/config/pex_cfg.h`; line_range `73-97`; content_hash `5eac30c992da846cb0540d58db018c88b03002c033b928d7a235138ceb889e91`; symbol `PEX_PORT_EXPANDER1`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C03-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000027, which records anchor class `repository_file`; path `src/app/driver/sbc/fs8x_driver/sbc_fs8x.c`; line_range `160-182`; content_hash `159f7b8e8a16e9ca1d10c0c19a751a0e2e928076ff5f5b58aa54befb60ce7eec`; symbol `FS8x_WD_Refresh`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C04-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000026, which records anchor class `repository_file`; path `src/app/driver/imd/bender/iso165c/bender_iso165c.c`; line_range `508-522`; content_hash `9824f74fcd4e3d4609801f2839647cf1c7677bb11d4c6ce87c0819a304b850ef`; symbol `I165C_RequestRelayState`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C05-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000014, which records anchor class `repository_file`; path `src/app/engine/diag/cbs/diag_cbs_insulation.c`; line_range `72-113`; content_hash `594eec823344ec1ca4331c0bfc0da5fe980354e05bc4abd89493eafa0b20a574`; symbol `DIAG_Insulation`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C06-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000112, which records anchor class `repository_file`; path `src/app/driver/spi/spi.h`; line_range `178-186`; content_hash `983aeeff2d73be60d764de8edc042c7224f6605d7a315f843322ae68a848e565`; symbol `SPI_Lock`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C07-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000113, which records anchor class `repository_file`; path `src/app/driver/spi/spi.c`; line_range `513-526`; content_hash `cf3f363240ca36bf2177e90ecdc048672546318db72b1f5d94129deab67d5a92`; symbol `SPI_Lock`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C08-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time) The registry's own note on this hash: \"This file differs between the named commit 308028fb and the working tree that the offline provenance check hashes, so the recorded content_hash is the hash of the file on disk and NOT the hash of the 308028fb blob. This is the convention the rest of this registry already follows (FB2-SRC-COD-000044, FB2-SRC-COD-000045 and FB2-SRC-COD-000071 all name files with this same property and record their \u2026\"",
+   "statement": "This record cites anchor FB2-SRC-COD-000095, which records anchor class `repository_file`; path `src/app/task/config/ftask_cfg.c`; line_range `246-256`; content_hash `84e1d09eecf5a1b82337a8a21df72017dca7376c38fdcc3aceee5a3c7b3eca52`; symbol `FTSK_RunUserCodeCyclic1ms`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C09-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000019, which records anchor class `repository_file`; path `src/app/application/bal/bal.c`; line_range `100-180`; content_hash `4146f0cd87d9d8b0c8650087575d29aa1c5219bd97ac857686af2fe69fec3730`; symbol `BAL_TransferStateRequest`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C10-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000020, which records anchor class `repository_file`; path `src/app/application/bal/voltage/bal_strategy_voltage.c`; line_range `122-153`; content_hash `7043bb54794bb6e26ddf08b5ae17d7140f06340c07b1af9f15d80b270bb430c1`; symbol `BAL_ActivateBalancing`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C11-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000003, which records anchor class `repository_file`; path `src/app/driver/afe/api/afe_plausibility.h`; line_range `97-99`; content_hash `a184baac5a2ee62ad1fc646e20ba704e1dd570ecdf35b586d13728eecfe9c306`; symbol `AFE_PlausibilityCheckVoltageMeasurementRange`."
+  },
+  {
+   "claim_class": "source_anchor",
+   "claim_id": "C12-anchor",
+   "evidence_in_packet": "The anchor's own correction and hash_note blocks are in docs/artifacts/sources/source-registry.json and the full record is in section 3.",
+   "judgement_needed": "Whether that attribution is the right reading of the source. A digest proves the bytes have not changed; it does not prove this record uses them correctly, and for an anchor with no local file it proves nothing at all here.",
+   "machine_state": "file exists; hash match; line_range in_bounds; symbol present (re-derived at packet generation time)",
+   "statement": "This record cites anchor FB2-SRC-COD-000097, which records anchor class `repository_file`; path `src/app/main/include/fstd_types.h`; line_range `81-85`; content_hash `ea1f74619aa95bff27a9b1f5c7a5f57c3d0f661d96970f46afda23ed455e9378`; symbol `STD_RETURN_TYPE_e`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000031 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[0]` names FB2-SRC-COD-000031."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000038 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[1]` names FB2-SRC-COD-000038."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[2]` names FB2-SRC-COD-000027."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000026 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[3]` names FB2-SRC-COD-000026."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000014 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[4]` names FB2-SRC-COD-000014."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000112 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[5]` names FB2-SRC-COD-000112."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000113 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[6]` names FB2-SRC-COD-000113."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000095 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[7]` names FB2-SRC-COD-000095."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C21-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000019 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[8]` names FB2-SRC-COD-000019."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C22-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000020 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[9]` names FB2-SRC-COD-000020."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C23-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[10]` names FB2-SRC-COD-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C24-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000097 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.source_refs[11]` names FB2-SRC-COD-000097."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C25-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[0]` names FB2-SW-IFS-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C26-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000010 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[1]` names FB2-SW-IFS-000010."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C27-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000011 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[2]` names FB2-SW-IFS-000011."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C28-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[3]` names FB2-SW-IFS-000012."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C29-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000013 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[4]` names FB2-SW-IFS-000013."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C30-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000014 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[5]` names FB2-SW-IFS-000014."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C31-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000015 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[6]` names FB2-SW-IFS-000015."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C32-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-IFS-000016 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.derivation.derived_from_interface_specifications[7]` names FB2-SW-IFS-000016."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C33-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[0].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C34-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[0].upward_traceability.fsr` names FB2-SAF-FSR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C35-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000007 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[0].upward_traceability.system_requirement` names FB2-SYS-SYR-000007."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C36-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[1].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C37-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[1].upward_traceability.fsr` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C38-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[1].upward_traceability.system_requirement` names FB2-SYS-SYR-000006."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C39-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[2].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C40-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[2].upward_traceability.fsr` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C41-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[2].upward_traceability.system_requirement` names FB2-SYS-SYR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C42-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[3].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C43-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[3].upward_traceability.fsr` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C44-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[3].upward_traceability.system_requirement` names FB2-SYS-SYR-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C45-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[4].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C46-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[4].upward_traceability.fsr` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C47-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[4].upward_traceability.system_requirement` names FB2-SYS-SYR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C48-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[5].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C49-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[5].upward_traceability.fsr` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C50-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[5].upward_traceability.system_requirement` names FB2-SYS-SYR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C51-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[6].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C52-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[6].upward_traceability.fsr` names FB2-SAF-FSR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C53-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[6].upward_traceability.system_requirement` names FB2-SYS-SYR-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C54-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-SGO-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[7].upward_traceability.safety_goal` names FB2-SAF-SGO-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C55-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[7].upward_traceability.fsr` names FB2-SAF-FSR-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C56-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SYS-SYR-000006 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.element_requirements[7].upward_traceability.system_requirement` names FB2-SYS-SYR-000006."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C57-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.1 with status `partially_mapped` on the grounds: Backs SWE.1 with a fifth interface-requirement record, covering the eight boundaries specified in FB2-SW-IFS-000009..000016, and gives every element requirement an explicit upward traceability to a safety goal, FSR or system requirement so that the obligation is not orphaned. The status stays partially_mapped and the reason is stated in the record itself: these requirements were produced specification-to-requirement, from interface specifications that were themselves produced by analysing the source. The process's defining activity, analysing requirements downward from a higher-level requirement, has still not occurred for any requirement in this corpus. Recording upward traceability makes the gap legible; it does not close it."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C58-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SWE.2 with status `partially_mapped` on the grounds: Consumes the eight interface specifications this requirement set is derived from, FB2-SW-IFS-000009..000016. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation, which is the reverse of the direction the process expects."
+  },
+  {
+   "claim_class": "classification",
+   "claim_id": "C59-asil",
+   "evidence_in_packet": "The record verbatim in section 3, including the whole asil_allocation_scope block.",
+   "judgement_needed": "Whether presenting this classification this way is acceptable. On an as_is record a reader can take an ASIL value as a statement about the real product, and no machine can tell whether that misreading has happened.",
+   "machine_state": "NO `asil_allocation_scope` block, so the classification is presented unqualified. On an `as_is` profile record that is a reconstruction presented as a determination, and is exactly what an independent audit already raised against this corpus.",
+   "statement": "This record carries safety_allocation.asil = `not_applicable` and a safety_goal_ref of `not_applicable`."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": true,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 27378,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/software/sir-power-path-monitoring-interfaces.json",
+  "record_sha256": "92422b9a1ae82eaf0cb9f99e8efa519a30c0960d6338ae42ac001dca46c0b6db",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "5e8be71664d3982a4c4329dac262750eb86f45406c3366a94d0c5317905978c0"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-01T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-SW-SIR-000006.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the sw_engineer for this software record, do you agree that \"The power-path, plausibility, redundancy, balancing, ADC, DMA, SBC and insulation interfaces shall present the following to their consumers: (a) a switch-feedback read that distin\u2026\" is a correct and complete statement of software requirements, architecture, detailed design, implementation mapping, unit verification?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "requirement quality",
+   "priority": 8,
+   "question": "Are the acceptance criteria complete and decidable - could a verifier say with certainty whether this requirement is met?",
+   "what_in_this_packet_bears_on_it": "acceptance_criteria and verification_approach in the record.",
+   "why_this_needs_a_human": "An undecidable requirement cannot be verified, and the corpus cannot tell an undecidable requirement from a merely terse one."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "acceptance_criteria": [
+   {
+    "criterion": "A switch-feedback read shall distinguish a closed contactor from a faulty feedback line and shall state a settling time between command and read",
+    "measure": "Inspect the return contract of the feedback read for a fault state distinct from the open state, and the timing field for a stated settling interval",
+    "threshold": "a fault state distinct from CONT_SWITCH_OFF, and a stated settling time"
+   },
+   {
+    "criterion": "A plausibility comparison shall state its tolerance and shall not publish an averaged output on the path where it rejected the inputs",
+    "measure": "Inspect the tolerance declaration in the header and the write to the output parameter on both the accepted and the rejected path",
+    "threshold": "tolerance stated at the interface, and no output write on the rejected path"
+   },
+   {
+    "criterion": "A redundancy validation shall identify which measured quantity failed",
+    "measure": "Inspect the return contract for a per-quantity verdict or an out-parameter naming the failing quantity",
+    "threshold": "the failing quantity is recoverable from the interface alone"
+   },
+   {
+    "criterion": "A balancing interface shall identify which strategy provides it",
+    "measure": "Inspect the interface for a statement of the providing implementation, given that three source files define the same three symbols",
+    "threshold": "the providing strategy is named or selected through the interface"
+   },
+   {
+    "criterion": "A conversion sequence shall have a timeout and an observable state in the production interface",
+    "measure": "Inspect the state machine for a timeout and for a production-visible state accessor",
+    "threshold": "a timeout, and a state accessor outside the unit-test section"
+   },
+   {
+    "criterion": "A declared transmit-status symbol shall have a definition in the source tree",
+    "measure": "Search the whole tree at 308028fb for the definition of every symbol the header declares",
+    "threshold": "every declared symbol has a definition, or the declaration is withdrawn"
+   },
+   {
+    "criterion": "A supervisor trigger shall report whether its device watchdog was refreshed",
+    "measure": "Inspect the return contract of the trigger for a watchdog outcome",
+    "threshold": "the watchdog outcome is observable to the caller"
+   },
+   {
+    "criterion": "An insulation trigger shall return success only on a cycle in which the state machine advanced",
+    "measure": "Inspect the return contract for the skipped-cycle path",
+    "threshold": "a skipped cycle is distinguishable from an advancing one"
+   }
+  ],
+  "artifact_type": "requirement",
+  "asil_justification": {
+   "derived_asil": "not_applicable",
+   "exposure": {
+    "rating": "not_applicable"
+   },
+   "severity": {
+    "rating": "not_applicable"
+   },
+   "statement": "Not applicable, and deliberately so. This requirement set carries no safety allocation because the item it describes has not been through a hazard analysis and risk assessment, so there is no severity or exposure rating to derive an ASIL from. No ASIL is asserted for the real product and none is asserted here. The upstream safety goal, FSR and system requirement each element names is a traceability relationship recorded for the corpus, not an ASIL allocation. A reader must not read 'not_applicable' as 'no consequence': six of these eight requirements are unsatisfied and at least two of them, the contactor feedback read and the insulation trigger, would matter to a safety case if one were ever built."
+  },
+  "assumption_refs": [],
+  "assumptions": [
+   "The eight interface specifications FB2-SW-IFS-000009..000016 accurately transcribe the source at commit 308028fb; every element requirement below names the element and line it rests on.",
+   "The upstream safety goal, FSR and system requirement identifiers named per element exist in this corpus and state what this record says they state; the traceability is recorded as a relationship between records, not as an allocation."
+  ],
+  "authority_and_independence": {
+   "approval_claimed": false,
+   "independence": "not_independent",
+   "independence_statement": "Authored by an AI agent from the eight interface specifications and the source at commit 308028fb. Reproducible, not independent: no software engineer has reviewed these requirements, no requirements engineer has confirmed that this is the set of obligations that was wanted, no hardware engineer has confirmed the feedback-path findings, and no human has approved any of it. An AI-authored artefact is not independent evidence.",
+   "requirement_agreement_status": "none - no requirement author has agreed this set"
+  },
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-01T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "classification": "interface",
+  "conditions_modes": [
+   "The requirements are stated for the code as it stands at 308028fb and are not re-verified against any later tree state."
+  ],
+  "created_at": "2026-10-01T00:00:00Z",
+  "derivation": {
+   "authoring_independence": "not_independent",
+   "authoring_independence_statement": "Authored by an AI agent from the interface specifications and the source. No requirements engineer confirmed that this is the interface that was wanted, no stakeholder stated a need these requirements answer, and no human approved them.",
+   "derived_from_interface_specifications": [
+    "FB2-SW-IFS-000009",
+    "FB2-SW-IFS-000010",
+    "FB2-SW-IFS-000011",
+    "FB2-SW-IFS-000012",
+    "FB2-SW-IFS-000013",
+    "FB2-SW-IFS-000014",
+    "FB2-SW-IFS-000015",
+    "FB2-SW-IFS-000016"
+   ],
+   "direction": "specification_to_requirement",
+   "method": "Every element requirement below names the interface element it obliges, the upstream safety goal, FSR or system requirement it serves, and the source behaviour at 308028fb it rests on."
+  },
+  "derivation_direction_is_reversed": {
+   "consequence_for_the_status": "SWE.1 therefore remains partially_mapped. Recording upward traceability is the most that can honestly be done with the evidence available, and it is a real improvement over an untraceable requirement set; it is not the activity the process names, so it does not earn a mapped status.",
+   "statement": "The derivation direction of this record remains reversed relative to what the process expects, and this record does not paper over that. SWE.1 expects software requirements to be analysed downward from software requirements or system requirements, so that the system requirement is the reason the software requirement exists. These eight requirements were produced in the opposite direction: eight interface specifications were written by analysing an existing implementation, and these requirements were then derived from those specifications. The upstream references recorded per element below were added afterwards, by asking which safety goal, FSR or system requirement each obligation would serve. That is a traceability exercise conducted after the fact, not a derivation. It makes each obligation non-orphaned and reviewable against a higher-level statement; it does not make the requirement the origin of the obligation. The gap is not closed by this record and cannot be closed from the evidence present in this repository, because there is no elicited need and no system requirement above these modules to derive from."
+  },
+  "element_requirements": [
+   {
+    "basis": "The return contract offers only CONT_SWITCH_ON and CONT_SWITCH_OFF, and the port-expander read is not checked, so a failed read and an open contactor are the same value.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-A",
+    "source_element": "IFSE-000903 SPS_GetChannelPexFeedback",
+    "statement": "A switch-feedback read shall distinguish a closed contactor from a faulty feedback line, and shall state the settling time between a command and a readable feedback level.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000004",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000007",
+     "why_this_obligation_serves_it": "FB2-SAF-SGO-000001 is the cell-voltage safety goal and FB2-SYS-SYR-000007 requires the item to publish its state rather than accept a request that contradicts its own safety evaluation. A contactor-closure claim is part of the state the item publishes, and the independent hardware monitor named in FB2-SAF-FSR-000004 is a second barrier over the same quantity. If the feedback read cannot distinguish a closed contactor from a broken feedback line, then the software-side barrier and the wiring are not independent, and the published state can be wrong in a way the second barrier is meant to catch."
+    }
+   },
+   {
+    "basis": "The average is written unconditionally at the output parameter on both paths, and the tolerance macros are used in the comparison without being stated in any header the specification transcribes.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-B",
+    "source_element": "IFSE-001002 PL_CheckCellVoltage and IFSE-001003 PL_CheckCellTemperature",
+    "statement": "A plausibility comparison shall state its tolerance at the interface, and shall not publish an averaged output on the path where it rejected its inputs.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000001",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000006",
+     "why_this_obligation_serves_it": "FB2-SYS-SYR-000006 requires pack current and cell temperature to be plausibility-checked before they are supplied to the supervisory functions, and FB2-SAF-FSR-000001 is the cell-voltage acquisition and validation requirement. A check that publishes the average of two measurements it has just declared implausible does not perform the check its system requirement asks for: a consumer that takes the value gets a plausible-looking number built from a measurement the check rejected, and the rejection is only discoverable by a caller that bothers to read the return value."
+    }
+   },
+   {
+    "basis": "Both elements return one aggregate verdict, over respectively every cell of every string and four pack quantities, and the per-quantity detail is written to the database rather than returned.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-C",
+    "source_element": "IFSE-001102 MRC_ValidateAfeMeasurement and IFSE-001103 MRC_ValidatePackMeasurement",
+    "statement": "A redundancy validation shall identify which measured quantity failed, rather than returning a single aggregate verdict.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000002",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000002",
+     "why_this_obligation_serves_it": "FB2-SYS-SYR-000002 requires the item to enforce the configured safe operating area and share the result, and FB2-SAF-FSR-000002 is the SOA voltage-limit monitoring requirement. The redundancy module is the second barrier whose verdict the supervision path acts on. If a failure cannot be attributed to a quantity, then the reaction cannot be selected on the basis of which quantity failed, and the diagnosis that would name the failing cell has to be reconstructed by a second reader of the database rather than read from the interface."
+    }
+   },
+   {
+    "basis": "The three symbols are declared once in bal.h and defined once in each of three strategy files, so the declared interface does not identify the implementation a caller will link.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-D",
+    "source_element": "IFSE-001201 BAL_Trigger, IFSE-001202 BAL_SetStateRequest and IFSE-001203 BAL_GetState",
+    "statement": "A balancing interface shall identify the strategy that provides it, so that a caller can tell which behaviour it is linked against.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000002",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000004",
+     "why_this_obligation_serves_it": "FB2-SYS-SYR-000004 requires the fault reaction to be selected by mode and a degraded condition to be recognisable, which means the state machine that decides how the item reacts has to be identifiable. Balancing is a degradation-handling function, and in a build that links the do-nothing strategy the three entry points still exist, still return plausible values, and do nothing. An interface that does not name its provider cannot distinguish a balanced cell from an unbalanced one."
+    }
+   },
+   {
+    "basis": "The three-state machine has no timeout and no error member, and the only state accessor is declared in the unit-test section of the header.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-E",
+    "source_element": "IFSE-001301 ADC_Control",
+    "statement": "A conversion sequence shall have a timeout, and its state shall be observable in the production interface rather than only through a unit-test accessor.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000001",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000001",
+     "why_this_obligation_serves_it": "FB2-SYS-SYR-000001 requires every monitored cell voltage to be acquired, validated and published, and FB2-SAF-FSR-000001 is the acquisition and validation requirement. The conversion sequence produces the analogue measurements that feed acquisition. A sequence with no timeout can stop advancing with no data published and no production-visible sign of it, so the acquisition requirement is met vacuously: the item neither publishes a wrong value nor a right one, and nothing says which."
+    }
+   },
+   {
+    "basis": "A whole-tree search at 308028fb finds both symbols only at their declarations in dma.h; the implemented counterparts are AFE_IsTransmitOngoing and AFE_SetTransmitOngoing in the AFE tree, with a different signature.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-F",
+    "source_element": "IFSE-001402 DMA_IsTransmitOngoing and IFSE-001403 DMA_SetTransmitOngoing",
+    "statement": "Every symbol a public header declares shall have a definition in the source tree, or the declaration shall be withdrawn.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000001",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000001",
+     "why_this_obligation_serves_it": "The transmit-in-progress flag is what keeps a second acquisition from starting while one is in flight, so it sits directly under the acquisition requirement that measurements be acquired and published correctly. As declared, the interface is not satisfiable: a caller that trusted the DMA header and called either symbol would fail to link, and the functionality that exists under a different name in a different module is scoped to an AFE state structure rather than to a DMA channel. The gap is not cosmetic; it means the acquisition path's concurrency guard is not the one its header advertises."
+    }
+   },
+   {
+    "basis": "SBC_Trigger is void and the periodic watchdog refresh it performs discards its own return value with an explicit cast, so neither the refresh nor its failure is observable to the caller.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-G",
+    "source_element": "IFSE-001501 SBC_Trigger",
+    "statement": "A supervisor trigger that drives a device watchdog shall report whether the watchdog was refreshed.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000003",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000003",
+     "why_this_obligation_serves_it": "FB2-SYS-SYR-000003 requires the item to reach and confirm the safe state within the fault-tolerant time interval, and FB2-SAF-FSR-000003 is the contactor-opening-on-SOA-violation requirement. The SBC arbitrates the high-voltage contactor sequence, and the periodic watchdog is what keeps it alive to carry that out. If the watchdog refresh fails silently, the device times out and the safe state is reached by the device rather than by the item, with no confirmation through this interface. The requirement to confirm arrival at the safe state cannot be met by a trigger that cannot say whether it did its part."
+    }
+   },
+   {
+    "basis": "The default return is STD_OK and the timer early-exit leaves it at that value, so a cycle in which the state machine deliberately did not advance reports success.",
+    "gap": "unsatisfied_by_the_analysed_implementation",
+    "id": "FB2-SW-SIR-000006-H",
+    "source_element": "IFSE-001601 IMD_Trigger",
+    "statement": "An insulation trigger shall return success only on a cycle in which its state machine advanced, so that a skipped cycle is distinguishable from an advancing one.",
+    "upward_traceability": {
+     "fsr": "FB2-SAF-FSR-000001",
+     "safety_goal": "FB2-SAF-SGO-000001",
+     "system_requirement": "FB2-SYS-SYR-000006",
+     "why_this_obligation_serves_it": "FB2-SYS-SYR-000006 requires cell temperature and pack measurements to be acquired and supplied to the supervisory functions, and the insulation measurement shares that acquisition cycle. A trigger that returns success on a cycle it deliberately skipped cannot be used as a liveness signal, so a supervisory function watching it sees a healthy insulation monitor while the monitor is not running. The trigger is the only element in this extension that reports its own failure at all, which is why this requirement is about the meaning of its success value rather than about a missing error channel."
+    }
+   }
+  ],
+  "element_requirements_note": "All eight are unsatisfied by the implementation as analysed at 308028fb, and this record does not claim otherwise. That ratio is the finding, not a defect in the record. The common thread is that each of these boundaries was specified in this pass, and in every case what the specification found is the same thing: the interface does not state something a consumer needs in order to know whether the thing it asked for happened. None of the eight is visible in a signature, and all eight are the kind of property an interface requirement exists to state.",
+  "engineering_domain": "software",
+  "failure_reaction": "Eight of eight are unsatisfied by the implementation as analysed, and this record does not claim otherwise. Two are the highest consequence in the set: the switch-feedback read that cannot distinguish a closed contactor from a faulty feedback line, and the insulation trigger whose success value does not mean the cycle did work, because both corrupt the second barrier the safety case relies on. Three are interface-clarity gaps with a bounded fix: the tolerance statements, the per-quantity verdict, and the conversion timeout. Three need a decision before they can be fixed at all: which balancing strategy provides the interface, whether the DMA declarations are withdrawn or implemented, and whether the watchdog refresh is reportable. The engineering actions themselves belong with the module owners; this record names the obligation and stops.",
+  "feasibility_dependencies": [
+   "FB2-SW-IFS-000009 through FB2-SW-IFS-000016, the interface specifications these requirements are derived from."
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-SW-SIR-000006",
+  "lifecycle_status": "draft",
+  "not_established_by_this_record": [
+   "Every requirement in this set is unsatisfied by the implementation as analysed at 308028fb. The record exists to state what these interfaces would owe a consumer, and it must not be read as a description of what the code does today.",
+   "The derivation direction remains reversed. These requirements were derived from interface specifications that were themselves produced by analysing an existing implementation. The upward traceability recorded per element was added afterwards as a traceability exercise; it makes each obligation non-orphaned and does not make the requirement the origin of that obligation. See derivation_direction_is_reversed.",
+   "No requirement in this set is elicited from a stakeholder, a system requirement or a safety goal. The upstream identifiers named per element are recorded as traceability relationships between records in this corpus, not as allocations and not as a derivation.",
+   "No requirement in this set has a test measure. The eight boundaries have software-in-the-loop unit tests, which exercise the code as it is; none of those tests asserts any obligation stated here, because six of these requirements would fail if one did.",
+   "No requirement in this set is approved. human_approval_status is pending, production_authorized is false, and the record was authored by an AI agent, which is not independent evidence.",
+   "The ASIL allocation is not applicable because no hazard analysis and risk assessment exists for this product, which is a statement about the absence of the classification apparatus and not about the absence of consequence.",
+   "The DMA finding is recorded as it was found: two declared symbols with no definition. This record does not implement them, withdraw them, or decide which of the two candidate resolutions is right.",
+   "Whether the contactor feedback path is genuinely independent of the feedback wiring is a hardware question this record cannot answer; it records that the interface does not let a consumer tell the two apart."
+  ],
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "rationale": "These eight boundaries were specified in this pass because the corpus already treats them as safety-relevant and the software-in-the-loop run already exercises them. What the specification of each boundary exposed is the same class of problem the earlier four interface-requirement records found: the interface promises less than a consumer needs, and the shortfall is not visible in a signature. A contactor feedback read returns the same value for a closed contactor and a broken feedback line. A plausibility check averages two measurements and publishes the average even when it has just rejected them. A redundancy check returns one verdict for every cell of every string. A conversion sequence can be stuck with no error state. Two declared transmit-status symbols do not exist. A watchdog refresh is invisible. None of that is a code defect in the ordinary sense; it is the absence of a stated contract, which is precisely what an interface requirement exists to put right.",
+  "requirement_kind": "software_interface_requirement",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "sw_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Eight element requirements over the eight boundaries specified in FB2-SW-IFS-000009..000016: the power-path switch, the plausibility checks, the redundancy management, the balancing state machine, the ADC conversion sequence, the DMA transmit-status interface, the SBC supervisor and the insulation monitoring. Each element requirement names the interface element it obliges, the upstream safety goal, FSR or system requirement it serves, and the source behaviour it rests on. Six of the eight are unsatisfied by the implementation at 308028fb and are recorded as such.",
+    "revision": "1"
+   }
+  ],
+  "safety_allocation": {
+   "asil": "not_applicable",
+   "mitigation": "No ASIL is allocated. The upstream references named per element below are recorded so that no obligation in this set is orphaned, not as an allocation. The product has had no hazard analysis and risk assessment, no ASIL determination and no certification, and none is claimed for it or for anything in this corpus.",
+   "safety_goal_ref": "not_applicable"
+  },
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [
+   "FB2-SRC-COD-000031",
+   "FB2-SRC-COD-000038",
+   "FB2-SRC-COD-000027",
+   "FB2-SRC-COD-000026",
+   "FB2-SRC-COD-000014",
+   "FB2-SRC-COD-000112",
+   "FB2-SRC-COD-000113",
+   "FB2-SRC-COD-000095",
+   "FB2-SRC-COD-000019",
+   "FB2-SRC-COD-000020",
+   "FB2-SRC-COD-000003",
+   "FB2-SRC-COD-000097"
+  ],
+  "standards_mappings": [
+   {
+    "rationale": "Backs SWE.1 with a fifth interface-requirement record, covering the eight boundaries specified in FB2-SW-IFS-000009..000016, and gives every element requirement an explicit upward traceability to a safety goal, FSR or system requirement so that the obligation is not orphaned. The status stays partially_mapped and the reason is stated in the record itself: these requirements were produced specification-to-requirement, from interface specifications that were themselves produced by analysing the source. The process's defining activity, analysing requirements downward from a higher-level requirement, has still not occurred for any requirement in this corpus. Recording upward traceability makes the gap legible; it does not close it.",
+    "reference": "SWE.1",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   },
+   {
+    "rationale": "Consumes the eight interface specifications this requirement set is derived from, FB2-SW-IFS-000009..000016. A requirement derived from a specification is the direction that makes the specification the engineering content and this the obligation, which is the reverse of the direction the process expects.",
+    "reference": "SWE.2",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "partially_mapped"
+   }
+  ],
+  "statement": "The power-path, plausibility, redundancy, balancing, ADC, DMA, SBC and insulation interfaces shall present the following to their consumers: (a) a switch-feedback read that distinguishes a closed contactor from a faulty feedback line and states a settling time; (b) a plausibility comparison that states its tolerance and that does not publish an averaged value it has just declared implausible; (c) a redundancy validation that identifies which quantity failed rather than returning one aggregate verdict; (d) a balancing interface that identifies the strategy that provides it; (e) a conversion sequence with a timeout and an observable state; (f) a transmit-status interface whose declared symbols have definitions; (g) a supervisor trigger that reports whether its watchdog was refreshed; and (h) an insulation trigger whose success return means the cycle did work.",
+  "title": "Software interface requirements: the power-path, balancing, redundancy, insulation, ADC, DMA and SBC interfaces",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ],
+  "verification_approach": "analysis"
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "requirement",
+  "engineering_domain": "software",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "derived",
+  "owner_role": "sw_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-SW-SIR-000006"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-SW-SIR-000006",
+  "revision": "1"
+ }
+}

@@ -1,0 +1,1058 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `draft`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-CHG-000013",
+    "rationale": "The ASIL D requirement specifies how many consecutive violations confirm a fault but says nothing about a partially advanced counter when the value returns in range. That silence is the root cause of the implementation divergence this change corrects.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "changes",
+    "review_state": "pending",
+    "source_id": "FB2-MAN-CHG-000003",
+    "target_id": "FB2-SAF-FSR-000002"
+   },
+   {
+    "link_id": "FB2-LNK-CHG-000014",
+    "rationale": "The SOA design already specifies the DEBOUNCING -> IDLE transition with the action reset_debounce, so the design is correct and is not revised. It is a declared target of the change because the divergence was located here and the absence of a revision is a decision that belongs on the record.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "changes",
+    "review_state": "pending",
+    "source_id": "FB2-MAN-CHG-000003",
+    "target_id": "FB2-SW-DSN-000002"
+   },
+   {
+    "link_id": "FB2-LNK-CHG-000015",
+    "rationale": "The software requirement an implementation is actually written against is silent on counter reset, and its acceptance criteria are a copy of the safety requirement's. The new fail-able reset criterion must be added in both places.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "changes",
+    "review_state": "pending",
+    "source_id": "FB2-MAN-CHG-000003",
+    "target_id": "FB2-SW-SWR-000002"
+   },
+   {
+    "link_id": "FB2-LNK-CHG-000016",
+    "rationale": "The limit-monitor test performs its two violations back to back and only then an in-range sample, so it never observes a partially advanced counter at the moment of recovery. The defect is not expressible in the current step structure, which is why the measure is a declared target and not a regression to re-run.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "changes",
+    "review_state": "pending",
+    "source_id": "FB2-MAN-CHG-000003",
+    "target_id": "FB2-VER-TMS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000020",
+    "rationale": "FB2-REV-000009 reviewed FB2-MAN-CHG-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000009",
+    "target_id": "FB2-MAN-CHG-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000023",
+    "rationale": "FB2-REV-000004 reviewed FB2-MAN-CHG-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000004",
+    "target_id": "FB2-MAN-CHG-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000062",
+    "rationale": "FB2-REV-000012 reviewed FB2-MAN-CHG-000003 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000012",
+    "target_id": "FB2-MAN-CHG-000003"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against change.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage (3 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "3 digest(s) match the record now, 0 mismatch, 0 placeholder"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": true,
+   "digest_mismatch": 0,
+   "digest_ok": 3,
+   "digest_placeholder": 0,
+   "disputed": [
+    {
+     "category": "process",
+     "description": "Each record's decision is labelled synthetic and names a fictional decision maker with an explicit disclaimer ('fictional role identity A. Renner; synthetic scenario character; not a foxBMS maintainer, not SoftwareDevLabs staff, not a real person'). This satisfies the master-prompt requirement that fictitious workflow approvals be separately labelled synthetic_decision. Checked and correct. Recor\u2026",
+     "finding_id": "FB2-REV-FND-000121",
+     "raised_in": null,
+     "severity": "info",
+     "source_path": "docs/artifacts/reviews/records/review-change-management.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "process",
+     "description": "Each record's decision is labelled synthetic and names a fictional decision maker with an explicit disclaimer ('fictional role identity A. Renner; synthetic scenario character; not a foxBMS maintainer, not SoftwareDevLabs staff, not a real person'). This satisfies the master-prompt requirement that fictitious workflow approvals be separately labelled synthetic_decision. Checked and correct. Recor\u2026",
+     "finding_id": "FB2-REV-FND-000121",
+     "raised_in": null,
+     "severity": "info",
+     "source_path": "docs/artifacts/reviews/records/review-change-management.json"
+    }
+   ],
+   "reviews": [
+    {
+     "checklist_version": "CHKL-CHALLENGE-SAFETY-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000009",
+     "review_path": "docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+     "review_type": "challenge",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "safety_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-challenge-safety-critical-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000020 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-CHANGE-CTL-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000004",
+     "review_path": "docs/artifacts/reviews/records/review-change-management.json",
+     "review_type": "domain",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "configuration_manager",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-change-management.json",
+      "reviewed_by link FB2-LNK-REVB-000023 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
+    {
+     "checklist_version": "CHKL-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000012",
+     "review_path": "docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+     "review_type": "meta",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000062 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    }
+   ]
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.impact_analysis.affected_artifacts[0]` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.impact_analysis.affected_artifacts[1]` names FB2-SW-DSN-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.impact_analysis.affected_artifacts[2]` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.impact_analysis.affected_artifacts[3]` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.impact_analysis.affected_links[0]` names FB2-LNK-SAF-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.impact_analysis.affected_links[1]` names FB2-LNK-SAF-000012."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000022 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.impact_analysis.affected_links[2]` names FB2-LNK-SAF-000022."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000023 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.impact_analysis.affected_links[3]` names FB2-LNK-SAF-000023."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000033 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.impact_analysis.affected_links[4]` names FB2-LNK-SAF-000033."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-CHG-REF-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.decision.decision_id` names FB2-CHG-REF-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[0].artifact_id` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[1].artifact_id` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.new_revisions[2].artifact_id` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_links[0]` names FB2-LNK-SAF-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_links[1]` names FB2-LNK-SAF-000012."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000022 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_links[2]` names FB2-LNK-SAF-000022."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000023 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_links[3]` names FB2-LNK-SAF-000023."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000033 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_links[4]` names FB2-LNK-SAF-000033."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.required_updates[0]` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.required_updates[1]` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C21-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.required_updates[2]` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C22-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reverification_selection[0]` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C23-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reverification_selection[1]` names FB2-VER-TMS-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C24-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_artifact_rationale[0].artifact_id` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C25-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_artifact_rationale[1].artifact_id` names FB2-SW-DSN-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C26-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_artifact_rationale[2].artifact_id` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C27-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.affected_artifact_rationale[3].artifact_id` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C28-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000009 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_link_rationale[0].link_id` names FB2-LNK-SAF-000009."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C29-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000012 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_link_rationale[1].link_id` names FB2-LNK-SAF-000012."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C30-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000022 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_link_rationale[2].link_id` names FB2-LNK-SAF-000022."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C31-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000023 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_link_rationale[3].link_id` names FB2-LNK-SAF-000023."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C32-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-LNK-SAF-000033 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a link in the link registry",
+   "statement": "`.suspect_link_rationale[4].link_id` names FB2-LNK-SAF-000033."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C33-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.implementation_target.anchor_id` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C34-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-EXE-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.evidence_invalidation[0].execution_id` names FB2-VER-EXE-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C35-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.evidence_invalidation[0].test_measure_id` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C36-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-FSR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.re_review_scope[0].target` names FB2-SAF-FSR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C37-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-SWR-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.re_review_scope[1].target` names FB2-SW-SWR-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C38-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SW-DSN-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.re_review_scope[2].target` names FB2-SW-DSN-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C39-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.re_review_scope[3].target` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C40-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-HAZ-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.re_review_scope[4].target` names FB2-SAF-HAZ-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C41-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reverification_criterion.selected[0].test_measure_id` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C42-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reverification_criterion.selected[1].test_measure_id` names FB2-VER-TMS-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C43-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reverification_criterion.excluded[0].test_measure_id` names FB2-VER-TMS-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C44-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.interaction_with_other_changes[0].change_record_id` names FB2-MAN-CHG-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C45-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-MAN-CHG-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.interaction_with_other_changes[1].change_record_id` names FB2-MAN-CHG-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C46-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SRC-COD-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
+   "statement": "`.not_included_and_why[0].reference` names FB2-SRC-COD-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C47-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SAF-HAZ-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.not_included_and_why[2].reference` names FB2-SAF-HAZ-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C48-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-SCN-CHG-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.relationship_to_scenario_fixture.scenario_fixture_id` names FB2-SCN-CHG-000003."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C49-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ASPICE_PAM_41 SUP.9 (Problem Resolution Management), SUP.10 (Change Request Management), SUP.11 (Traceability Management), SWE.4/SWE.5 (verification and defect correction) as inventoried in governance/coverage-plan.json with status `mapped` on the grounds: This is a problem-resolution case: a defect found against a baselined design, corrected, and re-verified, with the requirement that permitted it made explicit."
+  },
+  {
+   "claim_class": "standards_mapping",
+   "claim_id": "C50-std",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
+   "machine_state": "no machine check: clause selection is not verifiable from the repository",
+   "statement": "This record maps to ISO_26262_2018 Part 2, Clause 8 (management of change); Part 6, Clause 9 (diagnostic coverage); Part 9, Clause 7 (safety analysis) with status `partially_mapped` on the grounds: Process-level mapping only. Clause titles are taken from the edition metadata already locked in governance/standards-lock.json; no normative ISO text is reproduced or verified by this corpus (rights-sensitive handling)."
+  },
+  {
+   "claim_class": "change_decision",
+   "claim_id": "C51-chg",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the recorded decision reflects what a real change process would decide, and whether the required updates are the right ones.",
+   "machine_state": "ids resolve (listed above); no machine check on the decision itself",
+   "statement": "This change record states decision `approved` by `-`, with 3 required update(s) and 2 reverification selection(s)."
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 32309,
+  "record_path": "docs/artifacts/corpus/synthetic_reference/management/change-003-soa-debounce-reset-defect.json",
+  "record_sha256": "468f43dc167e46de12b81a376ce873fac379031c0a7b146ed9d3f83fed2a593a",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "59eb4648c6c67aa64b941c556657933c7a6aae6f9c92a674f8e50c0dddfd280e"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "corpus_boundaries",
+   "value": {
+    "asserts_measured_test_result": false,
+    "asserts_real_approval": false,
+    "asserts_real_defect_in_real_product": false,
+    "asserts_real_project_change": false,
+    "human_approval_status": "pending",
+    "product_verification_credit": false,
+    "production_authorized": false
+   }
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-08T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-MAN-CHG-000003.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the change_manager for this management record, do you agree that \"Change Record CR-003: SOA Debounce Counter Not Reset on Return to In-Range Voltage (Design-Implementation Divergence)\" is a correct and complete statement of change management?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+  },
+  {
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "affected_artifact_rationale": [
+   {
+    "artifact_id": "FB2-SAF-FSR-000002",
+    "current_text_binding": "Statement: 'monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms'. Acceptance criteria: limit check latency 5 ms, limit accuracy 1 mV, debounce filtering 1E-6 events/hour against sigma=5 mV noise, FAULT request latency 2 ms.",
+    "not_changed": "The 5 ms classification latency, the 1 mV limit accuracy and the 2 ms FAULT request latency are unaffected; a counter clear is a constant-time operation and is not on the critical path. The 2-consecutive count itself is deliberately left alone: CR-001 owns the count, and two changes must not both move it in the same baseline.",
+    "revision_required": true,
+    "type": "requirement",
+    "what_changes": "The requirement is amended to state the reset semantics explicitly: the consecutive-violation count shall be cleared when a sample returns within limits, and a confirmed violation shall require consecutive violations without an intervening in-range sample. The 1E-6 events/hour false-positive criterion is re-stated to include the recovery case, because the reported failure mode is a false positive that the current criterion does not mention.",
+    "why_re_review": "This is the ASIL D requirement and it is the level at which the ambiguity actually lives. It specifies how many consecutive violations are needed to confirm, and says nothing about what happens to a partially advanced count when the value returns in range. The requirement is therefore the root cause of the divergence: an implementation that never resets conforms to the requirement as written."
+   },
+   {
+    "artifact_id": "FB2-SW-DSN-000002",
+    "current_text_binding": "State machine IDLE, CHECKING, DEBOUNCING, VIOLATION_CONFIRMED, FAULT_TRIGGERED. The transition DEBOUNCING -> IDLE is specified as trigger 'back_in_limits', guard 'voltage within limits', action 'reset_debounce'. Constraint: 'Debounce count configurable (default: 2)'.",
+    "not_changed": "Every element: the state set, all six transitions including DEBOUNCING -> IDLE, the guards, the actions, and the 'reset_debounce' action itself. The design is baselined at revision 1 and stays there.",
+    "revision_required": false,
+    "type": "design",
+    "what_changes": "Nothing. Explicitly nothing, and that is the finding.",
+    "why_no_revision": "This is the substantive difference between this record and its scenario fixture, which raises the design to revision 2. A revision that changes nothing inflates the revision history and destroys the ability to tell, from the revision number alone, whether the design was ever in question. The divergence is recorded against the implementation, which is where it is.",
+    "why_re_review": "Not because the design is wrong - because the design is right and the record must say so. The design already specifies the transition and the action that the implementation omits, so the design is not revised. It is reviewed once more to confirm the specification is unambiguous about the action, and that confirmation is recorded here as a finding of 'no change required' rather than as a new revision."
+   },
+   {
+    "artifact_id": "FB2-SW-SWR-000002",
+    "current_text_binding": "Statement: 'compare against configured minimum (2.5V) and maximum (4.2V) limits with a debounce of 2 consecutive violations within 100 ms'. Acceptance criteria mirror FB2-SAF-FSR-000002 one for one.",
+    "not_changed": "The acquisition source, the comparison itself and the classification latency are unaffected. The 2-consecutive count is left alone for the same reason as above.",
+    "revision_required": true,
+    "type": "requirement",
+    "what_changes": "A new acceptance criterion is added for counter reset on return to in-range, and the criterion is stated in terms a unit test can fail: after any number of sub-threshold excursions each followed by an in-range sample, the next single excursion shall not confirm a violation.",
+    "why_re_review": "The software requirement is the one an implementation is actually written against, and it is silent on reset for the same reason the safety requirement is. Its acceptance criteria are a copy of the safety requirement's, which means the missing criterion is duplicated in both places and must be added in both."
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000001",
+    "current_text_binding": "Step 1: 'Inject cell voltage 4300 mV (above 4200 mV limit)' expecting the debounce counter to increment. Step 2: 'Repeat injection 2 times (debounce count)' expecting a FAULT request. Step 3: 'Inject voltage 4100 mV (within limits)' expecting no fault. referenced_requirements: FB2-SAF-FSR-000002, FB2-SW-SWR-000002.",
+    "not_changed": "Test level, method and referenced requirements are unchanged. Steps 1 to 3 are retained: they still verify the positive path, and removing them would lose the confirmation coverage that this measure exists to provide.",
+    "revision_required": true,
+    "type": "test_measure",
+    "what_changes": "A recovery sequence is added: several sub-threshold excursions, each separated by an in-range sample, followed by a final in-range sample, expecting no FAULT request; and a follow-on single excursion expecting no FAULT request, which is the case that currently fails. The added steps are the ones that fail before the correction and pass after, which is what makes the re-execution evidence.",
+    "why_re_review": "The test's structure is why the defect survived. It performs its two violations back to back and only then an in-range sample, so the counter is never observed in a partially advanced state at the moment of recovery. A missing reset is only observable in a sequence where an excursion is followed by a recovery, repeatedly, and the current test contains no such step."
+   }
+  ],
+  "artifact_type": "change",
+  "assumption_refs": [
+   "FB2-ASM-005",
+   "FB2-ASM-006"
+  ],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-08T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "change_control": {
+   "approval_note": "No approval of any kind has been recorded. human_approval_status stays pending; decision.disposition below is a fictional workflow outcome, not a human sign-off.",
+   "approvals_recorded": 0,
+   "change_class": "defect",
+   "change_control_board": "synthetic project change control board (fictional body, see governance/role-and-review-policy.json)",
+   "change_request_id": "CR-003",
+   "raised_by_role": "integration_test_lead",
+   "raised_on": "2026-11-01T00:00:00Z",
+   "required_approvals": [
+    "sw_architect",
+    "safety_manager",
+    "verification_lead",
+    "change_manager"
+   ]
+  },
+  "change_type": "software_behavior",
+  "change_type_note": "The schema enumerates change_type as one of safety_threshold, hsi_interface, software_behavior, hardware_design, process, configuration. 'software_behavior' is the value that fits; the scenario fixture for the same subject uses the string 'software_behavioral_defect', which is not in the enumeration because the scenario schema does not constrain that field. The difference is recorded here so the two artifacts are not mistaken for a schema disagreement.",
+  "corpus_boundaries": {
+   "asserts_measured_test_result": false,
+   "asserts_real_approval": false,
+   "asserts_real_defect_in_real_product": false,
+   "asserts_real_project_change": false,
+   "human_approval_status": "pending",
+   "product_verification_credit": false,
+   "production_authorized": false
+  },
+  "created_at": "2026-09-21T00:00:00Z",
+  "decision": {
+   "date": "2026-11-05T00:00:00Z",
+   "decision_id": "FB2-CHG-REF-000003",
+   "decision_maker": "change_control_board chair, fictional role identity 'A. Renner' (synthetic scenario character; not a foxBMS maintainer, not SoftwareDevLabs staff, not a real person)",
+   "disposition": "approved",
+   "rationale": "Dispositioned approved as a defect correction with a deliberately narrow work scope. The board fixes three things and refuses one. Fixed: the software requirement is clarified to state the reset semantics explicitly, because a requirement that is silent on reset cannot constrain an implementation; the safety requirement is clarified in the same terms so the two do not diverge again; and the test is extended with the recovery sequence, because a defect that the verification set could not express cannot be shown fixed by a test that still cannot express it. Refused: no new design element. FB2-SW-DSN-000002 already specifies the DEBOUNCING -> IDLE transition with the reset_debounce action, so revising the design would add a revision that changes nothing and would make the record of what the design already required harder to read. The correction is to the implementation and to the requirement that left the behaviour open, and this record is also the precondition for baselining the CR-001 debounce increase."
+  },
+  "decision_disposition_scope": "Approved means: the synthetic project proceeds to raise the revisions listed in new_revisions and to correct the synthetic implementation. It does not mean the defect has been reproduced on any hardware, that a corrected build exists, that any test has been re-executed, or that the design has been changed.",
+  "engineering_domain": "management",
+  "evidence_invalidation": [
+   {
+    "action": "supersede, do not overwrite",
+    "current_state": "synthetic_fixture result at BAS-REF-001",
+    "execution_id": "FB2-VER-EXE-000001",
+    "test_measure_id": "FB2-VER-TMS-000001",
+    "why": "The execution passed against a measure that cannot express the defect. A passing result is retained as a true record of what was run; it is not restated as a pass of the corrected behaviour, and it is not deleted."
+   }
+  ],
+  "evidence_reference_note": "impact_analysis.affected_evidence is empty by schema, not by omission. The change schema admits only ids matching ^FB2-EVD-[A-Z]{2,4}-[0-9]{6}$, and no artifact with an FB2-EVD- prefix exists in either profile. The execution this change invalidates is FB2-VER-EXE-000001, which does exist in synthetic_reference; it is named in evidence_invalidation above rather than forced into a slot whose id scheme does not admit it.",
+  "human_approval_status": "pending",
+  "id": "FB2-MAN-CHG-000003",
+  "impact_analysis": {
+   "affected_artifacts": [
+    "FB2-SAF-FSR-000002",
+    "FB2-SW-DSN-000002",
+    "FB2-SW-SWR-000002",
+    "FB2-VER-TMS-000001"
+   ],
+   "affected_evidence": [],
+   "affected_links": [
+    "FB2-LNK-SAF-000009",
+    "FB2-LNK-SAF-000012",
+    "FB2-LNK-SAF-000022",
+    "FB2-LNK-SAF-000023",
+    "FB2-LNK-SAF-000033"
+   ],
+   "affected_reviews": [],
+   "risk_assessment": "The safety exposure is availability and trust, not a missing safety function, and the distinction matters for how the fix is reviewed. (1) No hazard is created: the protective reaction still occurs, and it occurs sooner than it should. FB2-SAF-HAZ-000001 lists 'All HV contactors open' and 'Vehicle propulsion disabled' as safe states for the cell-voltage hazard, and a spurious entry into those states is a conservative failure in the safety sense. (2) The exposure is that the ASIL D path becomes untrustworthy. A monitor that reports a fault that is not present trains the operator and the service technician to disregard it, and a de-energised contactor under load at an arbitrary moment is itself a wear event. The realistic field consequence is repeated, unjustified loss of propulsion that a technician cannot reproduce, which is a maintenance-attrition failure mode rather than a hazard. (3) The mechanism is a design-implementation divergence, not a design defect. FB2-SW-DSN-000002 already specifies the transition DEBOUNCING -> IDLE, triggered by 'back_in_limits', guarded by 'voltage within limits', with the action 'reset_debounce'. The design is correct and complete on this point; the implementation does not perform the action the design names. That is why this record does not revise the design, and it is a materially different finding from a missing design element. (4) The requirement permitted the divergence. FB2-SW-SWR-000002 states 'a debounce of 2 consecutive violations within 100 ms' and FB2-SAF-FSR-000002 repeats it, and neither says what happens to a partially advanced counter when the value returns in range. A requirement that specifies the trigger count but not the reset semantics leaves the reset behaviour unspecified, which is how an implementation that never resets can pass a conformance review. (5) Verification did not catch it. FB2-VER-TMS-000001 exercises an excursion, a repetition, and then a single in-range value; it never performs a sequence of excursions each followed by recovery, which is the only sequence in which a missing reset is observable. (6) Interaction with CR-001: raising the debounce count from 2 to 3 as commissioned by FB2-MAN-CHG-000001 makes this defect worse, not better, because the counter is advanced more often and survives more opportunities to be wrongly confirmed. Fixing the reset is a precondition of baselining the new debounce count, not a parallel activity."
+  },
+  "implementation_note": "No foxBMS source, test, configuration or build file is modified by this record, and none may be. The pinned foxBMS sources at commit 308028fb are untouched. The defect described here is a defect in the synthetic-reference project's implementation of its own design, not an observation about any real foxBMS build: no field report, integration test result or reproduction of a foxBMS product exists or is claimed. The scenario that triggers this record is a synthetic one.",
+  "implementation_status": "not_in_source",
+  "implementation_target": {
+   "anchor_id": "FB2-SRC-COD-000004",
+   "correction_scope": "the synthetic project's implementation of the DEBOUNCING -> IDLE transition, which the design names as 'reset_debounce'",
+   "modification": "none - no file under src/ is modified by this record and none may be",
+   "resolves_to": "src/app/application/soa/soa.c, symbol SOA_CheckVoltageLimits, lines 120-180, at commit 308028fb, in docs/artifacts/sources/source-registry.json",
+   "verification_note": "A read-only search of the working tree at the pinned commit finds no symbol SOA_CheckVoltageLimits, so the anchor is a corpus bookkeeping location rather than a verified symbol in this checkout. The corpus's own design record claims this mapping with status 'implemented'; that claim belongs to the fictional project and the discrepancy is reported here rather than relied on.",
+   "why_not_in_affected_artifacts": "The anchor resolves, but it is a source anchor, not a corpus artifact: it has no revision, no lifecycle_status and no entry in the artifact index, so a 'changes' link pointed at it would dangle. Its id even matches the change schema's affected_artifacts pattern, which makes the category error easy to commit. It is recorded here because it is the correct level at which a software defect is located."
+  },
+  "interaction_with_other_changes": [
+   {
+    "change_record_id": "FB2-MAN-CHG-000001",
+    "detail": "CR-001 raises the debounce count from 2 to 3. A larger count makes the unreset counter more damaging, because the counter is advanced more often and a partially advanced count confirms sooner. The reset correction in this record is therefore a precondition of baselining CR-001's new count, not an independent activity that can be scheduled after it.",
+    "recommended_order": "correct and verify the reset first, then baseline the increased debounce count",
+    "relationship": "ordering constraint"
+   },
+   {
+    "change_record_id": "FB2-MAN-CHG-000002",
+    "detail": "CR-002 reissues FB2-ASM-005, the noise-sigma assumption that the false-positive criterion in FB2-SAF-FSR-000002 rests on. The criterion amended by this record is the same criterion, so both changes edit it. The debounce count is the field they would both want to move, and the rule is the one already applied: CR-001 owns the count, this record owns the reset semantics, and neither moves the other's field.",
+    "relationship": "shared assumption, no ordering constraint"
+   }
+  ],
+  "lifecycle_status": "draft",
+  "new_revisions": [
+   {
+    "artifact_id": "FB2-SAF-FSR-000002",
+    "new_revision": "2",
+    "old_revision": "1"
+   },
+   {
+    "artifact_id": "FB2-SW-SWR-000002",
+    "new_revision": "2",
+    "old_revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000001",
+    "new_revision": "2",
+    "old_revision": "1"
+   }
+  ],
+  "not_included_and_why": [
+   {
+    "decision": "not used in affected_artifacts or new_revisions; recorded in implementation_target instead",
+    "justification": "The anchor is real and it resolves to a named symbol and line range, which is exactly what a software defect report needs. But it has no revision and no lifecycle_status, so it cannot carry a revision transition and a 'changes' link pointed at it would dangle. 'new_revisions' is for artifacts that move from one revision to another; a source file has no revision in this corpus, so a new_revisions entry for it would be a category error that also happens to satisfy the id pattern.",
+    "reference": "FB2-SRC-COD-000004",
+    "referenced_by": "this scenario's fixture, in impact_analysis.affected_artifacts and new_revisions[].artifact_id",
+    "status": "resolves, but as the wrong kind of object: a source anchor in docs/artifacts/sources/source-registry.json, not a corpus artifact"
+   },
+   {
+    "decision": "retained in affected_artifacts and required_artifact_rationale, REMOVED from new_revisions and required_updates",
+    "justification": "The design already specifies DEBOUNCING -> IDLE with the action reset_debounce, so it is correct. Keeping it in affected_artifacts records that the divergence was found there and reviewed, which is true and useful; removing it from new_revisions records that nothing about it changes, which is the actionable statement. A design revision that alters no text would make the revision history unreadable and would imply a design question that was never opened.",
+    "reference": "FB2-SW-DSN-000002 as a revised artifact",
+    "referenced_by": "this scenario's fixture, in impact_analysis.affected_artifacts and new_revisions",
+    "status": "resolves in synthetic_reference as a design"
+   },
+   {
+    "decision": "not included as an affected artifact",
+    "justification": "A spurious FAULT is a conservative failure against FB2-SAF-HAZ-000001: the hazard's safe states are all still achieved, more eagerly. No hazardous event, ASIL allocation or safe state moves, so requiring a hazard revision here would be a change record inventing work. The absence is recorded in re_review_scope as a confirmatory review so that it is a decision on the record rather than an omission.",
+    "reference": "FB2-SAF-HAZ-000001",
+    "referenced_by": "not referenced by this scenario's fixture"
+   }
+  ],
+  "origin": "synthetic",
+  "owner_role": "change_manager",
+  "post_change_baseline": "BAS-REF-004",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "re_review_scope": [
+   {
+    "review_type_needed": "safety_requirement_review with a separated challenge pass (ASIL D)",
+    "target": "FB2-SAF-FSR-000002",
+    "why": "The requirement is ASIL D and the change is to the semantics of the confirmation rule, not to a number in it. A separated challenge is the appropriate control because the failure mode is conservative and therefore easy to accept without challenge."
+   },
+   {
+    "review_type_needed": "software_requirement_review",
+    "target": "FB2-SW-SWR-000002",
+    "why": "The new acceptance criterion must be stated so that a unit test can fail it. A criterion that cannot fail is a criterion that provides no coverage."
+   },
+   {
+    "review_type_needed": "software_design_review - confirmatory only",
+    "target": "FB2-SW-DSN-000002",
+    "why": "Recorded so that the absence of a design revision is a reviewed decision rather than an oversight. The review must confirm the design's reset_debounce action is unambiguous."
+   },
+   {
+    "review_type_needed": "verification_review",
+    "target": "FB2-VER-TMS-000001",
+    "why": "The review must confirm that the added steps fail against the uncorrected implementation. A regression step that passes both before and after a fix is not evidence of a fix."
+   },
+   {
+    "review_type_needed": "no change expected, confirmatory only",
+    "target": "FB2-SAF-HAZ-000001",
+    "why": "Recorded explicitly so the absence of a hazard revision is a decision: a spurious FAULT is a conservative failure against this hazard, so the hazardous event, its ASIL D allocation and the safe-state list are unchanged."
+   }
+  ],
+  "record_kind": "canonical_change_record",
+  "record_purpose": "This is the change-management record of record for the synthetic-reference project. It is not a test fixture: the change-lifecycle demonstration of the same subject (docs/artifacts/scenarios/change-lifecycles/change-003-software-defect.json, FB2-SCN-CHG-000003) exists separately to exercise the corpus scenario gate, and the two are intentionally different artifacts with different jobs.",
+  "relationship_to_scenario_fixture": {
+   "differences_that_matter": [
+    "The fixture revises the design to revision 2; this record does not, because the design already specifies the reset and is therefore not in question. This is the substantive engineering difference between the two artifacts.",
+    "The fixture uses change_type 'software_behavioral_defect', which the change schema's enumeration does not admit; this record uses 'software_behavior' and says why.",
+    "The fixture places the code id in the artifact lists; this record keeps it in implementation_target, because an anchor is not an artifact.",
+    "This record adds the false-positive consequence analysis, the explicit statement that no change to the hazard is expected, the ordering constraint against CR-001, and the requirement that the added regression step be shown to fail before the fix - which is the condition that turns a re-run into evidence of a fix."
+   ],
+   "fixture_is_unmodified": true,
+   "same_subject_different_artifact": true,
+   "scenario_fixture_id": "FB2-SCN-CHG-000003",
+   "scenario_path": "docs/artifacts/scenarios/change-lifecycles/change-003-software-defect.json"
+  },
+  "required_updates": [
+   "FB2-SAF-FSR-000002",
+   "FB2-SW-SWR-000002",
+   "FB2-VER-TMS-000001"
+  ],
+  "reverification_criterion": {
+   "acceptance_condition": "Re-verification is complete when the added recovery sequence in FB2-VER-TMS-000001 has been executed against the corrected implementation and passes, and the same sequence has been shown to fail against the uncorrected implementation. The second half is the part that is easy to skip and is the only thing that distinguishes evidence of a fix from evidence of a re-run. Both conditions are currently unmet: nothing has been executed.",
+   "excluded": [
+    {
+     "basis": "the plausibility test operates on the acquisition path upstream of the limit comparison and has no path to the debounce counter",
+     "test_measure_id": "FB2-VER-TMS-000003"
+    }
+   ],
+   "not_yet_executed": true,
+   "selected": [
+    {
+     "basis": "direct - the only measure of the limit monitor, and the one whose step structure must change to express the defect at all",
+     "test_measure_id": "FB2-VER-TMS-000001"
+    },
+    {
+     "basis": "regression - the contactor reaction is where a spurious FAULT becomes a physical event; this measure is the end-to-end detector of the reported behaviour and its result is what an operator would actually experience",
+     "test_measure_id": "FB2-VER-TMS-000002"
+    }
+   ],
+   "selection_rule": "Select every test measure whose stimulus can express the defect, plus the end-to-end measure that would show the consequence, because a fix to a debounce counter can only be shown by a test that sequences recovery between excursions."
+  },
+  "reverification_selection": [
+   "FB2-VER-TMS-000001",
+   "FB2-VER-TMS-000002"
+  ],
+  "reviews_note": "impact_analysis.affected_reviews is empty by schema, not by omission. The change schema admits only ids matching ^FB2-REV-[A-Z]{2,4}-[0-9]{6}$, i.e. a review id with a two-to-four letter type segment. The corpus contains exactly one review artifact, FB2-REV-000001, which has no such segment, belongs to the as_is profile, and is an automated review of the reconstructed foxBMS artifacts rather than a review of the synthetic-reference change. There is therefore no review in the synthetic_reference profile for this change to invalidate. The review work this change requires is listed as re_review_scope below, and it cannot be discharged by this record.",
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "change_manager",
+    "date": "2026-09-21T00:00:00Z",
+    "description": "Canonical change record raised for the synthetic-reference project. No product change is effected by this record.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+   {
+    "rationale": "This is a problem-resolution case: a defect found against a baselined design, corrected, and re-verified, with the requirement that permitted it made explicit.",
+    "reference": "SUP.9 (Problem Resolution Management), SUP.10 (Change Request Management), SUP.11 (Traceability Management), SWE.4/SWE.5 (verification and defect correction) as inventoried in governance/coverage-plan.json",
+    "standard_id": "ASPICE_PAM_41",
+    "status": "mapped"
+   },
+   {
+    "rationale": "Process-level mapping only. Clause titles are taken from the edition metadata already locked in governance/standards-lock.json; no normative ISO text is reproduced or verified by this corpus (rights-sensitive handling).",
+    "reference": "Part 2, Clause 8 (management of change); Part 6, Clause 9 (diagnostic coverage); Part 9, Clause 7 (safety analysis)",
+    "standard_id": "ISO_26262_2018",
+    "status": "partially_mapped"
+   }
+  ],
+  "suspect_link_rationale": [
+   {
+    "endpoints": "FB2-SW-SWR-000002 -> FB2-SAF-FSR-000002",
+    "link_id": "FB2-LNK-SAF-000009",
+    "relation_type": "allocated_to",
+    "resolution": "re-affirm at revision 2 of both requirements, with the reset criterion present on both sides of the allocation.",
+    "why_suspect": "The allocation is between two requirements that are both being clarified in the same way, and today they are clear in the same way: neither mentions the reset. An allocation between two identically incomplete requirements is internally consistent and externally wrong, which is the hardest kind of traceability defect to see in review."
+   },
+   {
+    "endpoints": "FB2-SW-DSN-000002 -> FB2-SW-SWR-000002",
+    "link_id": "FB2-LNK-SAF-000012",
+    "relation_type": "implements",
+    "resolution": "no revision to the design endpoint; the requirement endpoint moves to revision 2 and the link's rationale is extended to name the reset action as the point where the requirement and the design are now aligned.",
+    "why_suspect": "This is the link that should have caught the defect and did not. The design specifies the reset action; the requirement does not mention it; the implementation does not perform it. The link asserts the design implements the requirement, which was true, while the design also specified something the requirement never asked for. After this change the requirement asks for it explicitly and the link becomes the check it should have been."
+   },
+   {
+    "endpoints": "FB2-VER-TMS-000001 -> FB2-SAF-FSR-000002",
+    "link_id": "FB2-LNK-SAF-000022",
+    "relation_type": "verifies",
+    "resolution": "re-affirm only after the recovery sequence exists in the measure and has been executed.",
+    "why_suspect": "The link asserts that the requirement is verified. It was verified only on the confirmation path, and the requirement's acceptance criteria contain nothing about recovery, so the link asserted more coverage than the test provided. This is the specific reason a behavioural defect reached a baselined design: the link existed, was reviewed, and was believed."
+   },
+   {
+    "endpoints": "FB2-VER-TMS-000001 -> FB2-SW-SWR-000002",
+    "link_id": "FB2-LNK-SAF-000023",
+    "relation_type": "verifies",
+    "resolution": "re-affirm together with FB2-LNK-SAF-000022 as a single re-execution against the revised measure.",
+    "why_suspect": "The same measure against the software requirement, and therefore the same overstatement of coverage. Both verifies links must be re-affirmed together or the requirement is left half-verified, which is worse than leaving both suspect."
+   },
+   {
+    "endpoints": "FB2-VER-EXE-000001 -> FB2-VER-TMS-000001",
+    "link_id": "FB2-LNK-SAF-000033",
+    "relation_type": "result_of",
+    "resolution": "supersede with a new execution against the revised measure. The existing record is retained as the true record of the earlier measure, and its outcome is not restated.",
+    "why_suspect": "The execution evidence rests on a measure that cannot express the defect. It is therefore not evidence that the behaviour is correct; it is evidence that the measure was run. Keeping it as live coverage is how a defect survives a passing test suite."
+   }
+  ],
+  "suspect_link_registry_state": "The baseline link registry (traceability/link-registry/synthetic_reference/links-cell-voltage.json) still records change_suspect_status=false on all five links above. That is the correct state today: the change is approved only in the fictional workflow sense, no affected artifact has been revised, and no revision has been baselined. change_suspect_status becomes true for these links as part of establishing BAS-REF-004. This record deliberately does not pre-flip the baseline flags, because doing so would assert a change state that has not occurred.",
+  "suspect_links": [
+   "FB2-LNK-SAF-000009",
+   "FB2-LNK-SAF-000012",
+   "FB2-LNK-SAF-000022",
+   "FB2-LNK-SAF-000023",
+   "FB2-LNK-SAF-000033"
+  ],
+  "synthetic_decision": {
+   "is_human_approval": false,
+   "is_synthetic": true,
+   "label": "synthetic_decision:change_control_board_chair:FB2-CHG-REF-000003",
+   "statement": "decision.disposition 'approved' is a fictional workflow outcome of the synthetic-reference project's change control board. It is NOT a human approval, NOT a foxBMS maintainer decision, NOT a SoftwareDevLabs decision, and NOT a statement that any defect was found, reproduced or fixed in any real product. The observation that triggers this record is a synthetic one: no field report about a foxBMS product exists, and none is claimed. human_approval_status remains 'pending' and production_authorized remains false."
+  },
+  "title": "Change Record CR-003: SOA Debounce Counter Not Reset on Return to In-Range Voltage (Design-Implementation Divergence)",
+  "trigger": {
+   "date": "2026-11-01T00:00:00Z",
+   "description": "A transient voltage excursion above the configured limit advances the debounce counter, and when the voltage returns within limits the counter is not cleared. Because the counter is not cleared, a later, unrelated excursion resumes from a partially advanced count and confirms a violation that no single excursion justifies. The trigger is a behavioural observation against a baselined design, not a supplier event and not a change in requirement.",
+   "external_to_corpus": false,
+   "source": "Synthetic integration test observation and field report from the synthetic-reference project (hypothetical)",
+   "trigger_class": "internal_defect"
+  },
+  "updated_at": "2026-09-21T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "change",
+  "engineering_domain": "management",
+  "human_approval_status": "pending",
+  "lifecycle_status": "draft",
+  "origin": "synthetic",
+  "owner_role": "change_manager",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-MAN-CHG-000003"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-MAN-CHG-000003",
+  "revision": "1"
+ }
+}

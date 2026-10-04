@@ -1,0 +1,533 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 1,
+  "questions": [
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against execution.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "evidence logs (1)",
+    "method": "file existence and recorded hash against the bytes on disk",
+    "result": "1/1 exist with a matching hash"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C01-log",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this log is the output of the run this record describes, and whether it shows what the record says it shows. The hash proves the file has not changed; it does not prove the file is about this run.",
+   "machine_state": "file exists; hash matches the bytes on disk now",
+   "statement": "`logs[]` names docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json as captured output, hash `sha256:b6e5322b58af2451dae2dfe9fabc7ed3fea5776780072fe69cd62f741dcfd9b7`."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C02-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C03-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C04-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C05-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed as supporting evidence."
+  },
+  {
+   "claim_class": "evidence_file",
+   "claim_id": "C06-ev",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether that file supports the claim it is offered for.",
+   "machine_state": "file exists",
+   "statement": "`evidence_files[]` names docs/artifacts/evidence/verification-env/RUNBOOK.md as supporting evidence."
+  },
+  {
+   "claim_class": "execution_classification",
+   "claim_id": "C07-exec",
+   "evidence_in_packet": "The record verbatim in section 3. The test measure it names has its own packet.",
+   "judgement_needed": "Whether this outcome is a legitimate basis for the verification claim its test measure makes. A green run on a host is not evidence about the MCU, and only the domain owner can say whether the measure's acceptance criteria are met at all.",
+   "machine_state": "`actual_target_hardware_run` is the only kind that counts as product-hardware evidence. `actual_host_run`/`actual_simulation_run` are real executions of the product's code on developer infrastructure. `none` means no run was performed. This record's kind is `actual_host_run`.",
+   "statement": "This record declares execution_kind `actual_host_run`, outcome `fail`, aggregate_outcome `partial`, on hardware `arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)`, for test measure `FB2-VER-TMS-000001..000005`."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-tms",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether this execution is the execution of that measure.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`test_measure_id` names FB2-VER-TMS-000005."
+  },
+  {
+   "claim_class": "execution_metadata",
+   "claim_id": "C13-time",
+   "evidence_in_packet": "The record verbatim in section 3.",
+   "judgement_needed": "Whether the recorded interval is the real duration of the run. Duration is not verifiable from a file's contents.",
+   "machine_state": "start and end present",
+   "statement": "`timestamps` = {\"duration_ms\": 137200, \"end\": \"2026-09-29T10:33:16+0200\", \"start\": \"2026-09-29T10:33:16+0200\"}"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
+  "record_bytes": 15137,
+  "record_path": "docs/artifacts/corpus/as_is/verification/execution-host-unit-test-sweep-relaxed.json",
+  "record_sha256": "c050950193bf2858e3588187d7aaf83ded7af3c7be96bc3cb45e18a48c6047ee",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "e51ca1e0f8a5f24457b4932bf98d4a4b8d271ab17c6bd9013a4dd132d8aa1490"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Apple Silicon macOS host; upstream develops and runs this suite on Windows and Linux",
+    "Not target hardware: no TMS570 execution, no timing, no interrupts",
+    "HALCoGen absent; see the per-run anomalies",
+    "177 of 313 repository tests not in scope because they need HALCoGen output"
+   ]
+  },
+  {
+   "field": "notes",
+   "value": "Real sweep. 98 of 136 tests pass, 7 fail, 31 do not build. 380 of 391 assertions pass. Each test was run in its own Ceedling invocation so every verdict is attributable and every log is retained."
+  },
+  {
+   "field": "scope",
+   "value": {
+    "assertions_failed": 10,
+    "assertions_passed": 380,
+    "assertions_tested": 391,
+    "selection_rule": "quoted-#include closure contains no HALCoGen-generated header (analyze_hcg_closure.py)",
+    "tests_build_failed": 31,
+    "tests_failed": 7,
+    "tests_in_repository": 313,
+    "tests_passed": 98,
+    "tests_selected": 136
+   }
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-09-29T08:15:33Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "decision_recorded_in_record": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/as_is/FB2-VER-EXE-000007.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Execution: foxBMS 2 host unit test sweep, extended clang diagnostic set (136 tests, macOS arm64)\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "execution classification",
+   "priority": 5,
+   "question": "This is `actual_host_run`, on `arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)`. Given that, does the outcome support the verification claim its test measure (FB2-VER-TMS-000001..000005) makes?",
+   "what_in_this_packet_bears_on_it": "section 3: the environment block. The test measure has its own packet.",
+   "why_this_needs_a_human": "Whether a given kind of run is sufficient evidence for a given acceptance criterion is a domain judgement. A host run can be perfectly good evidence for driver logic and no evidence at all for register timing."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
+   "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
+   "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
+  },
+  {
+   "group": "review coverage",
+   "priority": 30,
+   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "aggregate_outcome": "partial",
+  "anomalies": [
+   {
+    "description": "macOS is not a supported foxBMS 2 host platform. cli/cmd_embedded_ut/embedded_ut_impl.py resolves the Ceedling project file with get_platform(), which returns only 'linux' or 'win32' and raises SystemExit at import time for any other value (embedded_ut_impl.py:88-91). The upstream entry point 'fox.py ceedling' therefore cannot be used on macOS at all. This run reproduced that entry point's build layout manually in an isolated workspace under docs/artifacts/.work/verification-env/ without modifying cli/.",
+    "disposition": "accepted",
+    "severity": "high"
+   },
+   {
+    "description": "HALCoGen, the proprietary Texas Instruments code generator, is not available on this host. The repository ships its inputs (conf/hcg/app.hcg, conf/hcg/app.dil) but not its output; conf/hcg/include/ and conf/hcg/source/ are gitignored and empty. Per tools/waf-tools/f_hcg.py:150-157 the only artefact the host build needs from HALCoGen is include/config_cpu_clock_hz.h, which was regenerated with HALCOGEN_CPU_CLOCK_HZ=100000000 read out of the repository's own conf/hcg/app.dil (DRIVER.OS.VAR.OS_CPUCLOCKHZ.VALUE). A minimal stand-in for HL_spi.h, which tests/unit/support/struct_helper.h includes for the single type spi_config_reg_t, was reconstructed from the public TMS570 SPI configuration register map. It is NOT the TI original and provides no register offsets, functions, enums or macros.",
+    "disposition": "accepted",
+    "severity": "high"
+   },
+   {
+    "description": "Apple clang rejects the three TI section-placement attributes defined in src/os/freertos/freertos/include/mpu_wrappers.h (PRIVILEGED_FUNCTION, PRIVILEGED_DATA, FREERTOS_SYSTEM_CALL all use section(\".kernelTEXT\") and similar), because Mach-O requires a 'SEGMENT,SECTION' pair. GNU/Linux ELF accepts them, so this is a macOS-only build failure. A force-included shim (foxbms_host_port_shim.h) pre-defines the mpu_wrappers.h include guard so those three macros become empty. The attributes only control target image layout and have no effect on test semantics.",
+    "disposition": "accepted",
+    "severity": "medium"
+   },
+   {
+    "description": "The compiler driver named by the shipped configuration is 'gcc'. On macOS /usr/bin/gcc is the Apple clang driver, so the test binaries are Mach-O rather than ELF. Diagnostics that Apple clang enables by default but GNU gcc does not under the same -std=c11 -Wextra -Wall -pedantic -Werror set were suppressed (-Wno-strict-prototypes, -Wno-deprecated-non-prototype). Each suppresses a diagnostic only.",
+    "disposition": "accepted",
+    "severity": "low"
+   },
+   {
+    "description": "Ceedling 1.1.9 aborts on this test tree with :use_test_preprocessor: :all, failing in the preprocessor's directive-only pass with \"Failed to read './test/preprocess/files/<test>/directives_only/raw/ftask.h' for comment stripping ... No such file or directory\". The value was set to :none, which selects Ceedling's own documented source-scan fallback and resolves the same headers. This is a Ceedling-side workaround in the isolated copy of the project file only.",
+    "disposition": "accepted",
+    "severity": "medium"
+   },
+   {
+    "description": "The project file :use_backtrace: :gdb requires an executable named 'gdb' on PATH or Ceedling refuses to start. GNU gdb does not ship with macOS. A shim at bin/gdb forwards the backtrace request to LLDB. It runs only when a test binary crashes and never influences a pass/fail verdict.",
+    "disposition": "accepted",
+    "severity": "low"
+   },
+   {
+    "description": "The Ceedling project file was reproduced byte-identically from the shipped conf/unit/app_project_posix.yml and then rewritten only in the isolated copy. The four rewrites are: :use_test_preprocessor :all to :none, a force-include of foxbms_host_port_shim.h, and the two -Wno- diagnostic flags. No file under src/, tests/, conf/, tools/, cli/, gui/, hardware/ or the repository-root wscript, fox.py or fox.sh was modified.",
+    "disposition": "accepted",
+    "severity": "low"
+   },
+   {
+    "description": "This run additionally suppresses -Wno-enum-conversion, -Wno-array-bounds and -Wno-parentheses-equality, which unblocks six further tests relative to the strict run: four now pass (test_contactor, test_diag_cbs_current, test_diag_cbs_deep-discharge, test_sys_mon) and two now run and FAIL (test_redundancy, test_diag). Relaxing the diagnostics did not merely unlock more passes, it exposed two previously hidden test failures. The strict run remains the primary result.",
+    "disposition": "investigating",
+    "severity": "high"
+   },
+   {
+    "description": "The 136 tests in scope are those whose quoted-#include closure reaches no HALCoGen-generated header. Of the repository's 313 test_*.c files, 177 are outside that scope and were not run here. 34 distinct HL_*.h headers are required by the remainder, which cannot be honestly stubbed.",
+    "disposition": "deferred",
+    "severity": "high"
+   }
+  ],
+  "artifact_type": "execution",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-09-29T08:15:33Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "build_failure_breakdown": [
+   {
+    "cause": "Excluded by the shipped Ceedling :paths: configuration",
+    "count": 21,
+    "tests": [
+     "tests/unit/app/driver/afe/adi/common/ades183x/api/test_adi_ades183x_afe.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/api/test_adi_ades183x_afe_dma.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/config/test_adi_ades183x_cfg.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/pec/test_adi_ades183x_pec.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_buffers.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_commands.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_commands_voltages.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_diagnostic_w.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_helpers.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_initialization.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_temperatures.c",
+     "tests/unit/app/driver/afe/adi/common/ades183x/test_adi_ades183x_voltages.c",
+     "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x-ll.c",
+     "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x.c",
+     "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_afe_dma.c",
+     "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_database.c",
+     "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_helpers.c",
+     "tests/unit/app/driver/afe/nxp/common/mc3377x/test_nxp_mc3377x_mux.c",
+     "tests/unit/bootloader/engine/boot/test_boot_cfg.c",
+     "tests/unit/support/test_fake_functions.c"
+    ]
+   },
+   {
+    "cause": "Requires a HALCoGen-generated TI header (not stubbed)",
+    "count": 10,
+    "tests": [
+     "tests/unit/app/driver/afe/adi/ades1830/pec/test_adi_ades1830_pec.c",
+     "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_buffers.c",
+     "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_commands.c",
+     "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_commands_voltages.c",
+     "tests/unit/app/driver/afe/adi/ades1830/test_adi_ades1830_diagnostic_w.c",
+     "tests/unit/app/driver/afe/nxp/mc33775a/config/test_nxp_mc33775a_cfg.c",
+     "tests/unit/app/driver/afe/ti/api/test_ti_afe.c",
+     "tests/unit/app/driver/afe/ti/dummy/api/test_ti_dummy_afe.c",
+     "tests/unit/app/driver/emac/test_emac-low-level.c",
+     "tests/unit/app/driver/mcu/test_mcu.c"
+    ]
+   }
+  ],
+  "created_at": "2026-09-29T08:15:33Z",
+  "engineering_domain": "verification",
+  "environment": {
+   "configuration": "conf/unit/app_project_posix.yml",
+   "hardware": "arm64-apple-darwin27 (Apple Silicon Mac, Darwin 27.0.0)",
+   "software": "ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [arm64-darwin27]",
+   "tool_versions": {
+    "ceedling": "1.1.9-2209dc2",
+    "cexception": "1.3.5",
+    "clang": "17.0.0",
+    "cmock": "2.7.2",
+    "gcc": "17.0.0",
+    "ruby": "4.0.7",
+    "unity": "2.7.2"
+   },
+   "tools": [
+    "ceedling",
+    "cmock",
+    "unity",
+    "cexception",
+    "gcc (Apple clang driver)"
+   ]
+  },
+  "evidence_files": [
+   "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json",
+   "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/halcogen-dependency-closure.json",
+   "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-strict",
+   "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed",
+   "docs/artifacts/evidence/verification-env/RUNBOOK.md"
+  ],
+  "evidence_refs": [
+   "tests/unit/app/driver/foxmath/test_foxmath.c",
+   "src/app/engine/database/database.h",
+   "src/os/freertos/freertos/include/mpu_wrappers.h"
+  ],
+  "execution_kind": "actual_host_run",
+  "human_approval_status": "pending",
+  "id": "FB2-VER-EXE-000007",
+  "input_hashes": {
+   "ceedling_project_file_shipped": "sha256:ed84a79520d0933313a529808635ebcd6494423f8eeb0defc423104bb599988f",
+   "halcogen_dil_input": "sha256:c9be5d9bb068ef95a1e26bfe22e29aa142a03c53e1e354ac2ac55672180cf3ac",
+   "halcogen_hcg_input": "sha256:8118efee47afdaf389a455f86f70cb6eb0ba60b94a852a510ffeac8dba778b79",
+   "repository_head": "sha256:27418be73b0d10701cf8f1fba917456fe2e53833c8b300e0d92a84617fc93259"
+  },
+  "lifecycle_status": "reviewed",
+  "limitations": [
+   "Apple Silicon macOS host; upstream develops and runs this suite on Windows and Linux",
+   "Not target hardware: no TMS570 execution, no timing, no interrupts",
+   "HALCoGen absent; see the per-run anomalies",
+   "177 of 313 repository tests not in scope because they need HALCoGen output"
+  ],
+  "logs": [
+   {
+    "file": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/results-relaxed.json",
+    "hash": "sha256:b6e5322b58af2451dae2dfe9fabc7ed3fea5776780072fe69cd62f741dcfd9b7",
+    "type": "custom"
+   }
+  ],
+  "notes": "Real sweep. 98 of 136 tests pass, 7 fail, 31 do not build. 380 of 391 assertions pass. Each test was run in its own Ceedling invocation so every verdict is attributable and every log is retained.",
+  "origin": "source_observed",
+  "outcome": "fail",
+  "output_hashes": {
+   "halcogen_dependency_closure": "sha256:df51a921954ace7f5d3f897dea1ff595cf675d6fd09629cdeda6deb65dc0f7a3",
+   "per_test_log_manifest_relaxed": "sha256:c9ee0687d4a0af02c561e8c22db28959be975438a1e4809fb6dd3c306c06a341",
+   "results": "sha256:b6e5322b58af2451dae2dfe9fabc7ed3fea5776780072fe69cd62f741dcfd9b7"
+  },
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "provenance_repair": {
+   "date": "2026-10-01T00:00:00Z",
+   "principle": "A hash that identifies a file still present at the path it names has been re-derived from the bytes on disk and the superseded value is recorded above. A hash that identifies something no run ever captured, or an input consumed at a specific moment in the past, is not overwritten: it is retained with both digests recorded, or removed with this note. No file was created to make a reference resolve.",
+   "session": "opencode-2026-10-01-provenance-repair",
+   "unretained_evidence": [
+    {
+     "file_extension": ".txt",
+     "files_present_at_that_path": 136,
+     "named_set": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed",
+     "note": "The per-test logs this entry describes do exist: 136 .txt files are present at docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed and were listed as per_test_log_manifest_relaxed. What does not exist is the per-test log manifest whose digest was recorded here, in output_hashes.per_test_log_manifest_relaxed and nowhere else in the repository; the bytes it named are unrecoverable, so no digest can be given for it. Unlike the per-test logs, which were regenerated in place, no manifest was retained or regenerated. The directory and its file count are recorded here instead of a path that does not resolve. Generating a manifest now would add a file to the evidence tree that no run produced, which is left to the corpus owner rather than done silently.",
+     "output_hash_key_still_naming_the_unrecovered_manifest": "per_test_log_manifest_relaxed",
+     "previous_hash": "sha256:c9ee0687d4a0af02c561e8c22db28959be975438a1e4809fb6dd3c306c06a341",
+     "previous_reference": "docs/artifacts/evidence/actual-runs/foxbms2-host-unit-test-macos-2026-09-29/logs-relaxed (one .txt per test, 136 files)",
+     "resolution": "reference removed; no entry is made to name a directory"
+    }
+   ]
+  },
+  "revision": "2",
+  "revision_history": [
+   {
+    "author": "verification_engineer",
+    "date": "2026-09-29T08:15:33Z",
+    "description": "New artifact: bulk host unit test sweep executed on macOS arm64. No prior record existed for the sweep.",
+    "revision": "1"
+   },
+   {
+    "author": "quality_engineer",
+    "date": "2026-10-01T00:00:00Z",
+    "description": "Provenance repair of the evidence hash and file-reference fields by a separate session (opencode-2026-10-01-provenance-repair); no statement of what the run did was altered. 1 logs[] reference(s) removed because the path never resolved to anything: see provenance_repair.unretained_evidence for each. Nothing was written to make them resolve. The outcome, timestamps, environment, anomalies, evidence_refs, notes and limitations of this record are untouched.",
+    "revision": "2"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope": {
+   "assertions_failed": 10,
+   "assertions_passed": 380,
+   "assertions_tested": 391,
+   "selection_rule": "quoted-#include closure contains no HALCoGen-generated header (analyze_hcg_closure.py)",
+   "tests_build_failed": 31,
+   "tests_failed": 7,
+   "tests_in_repository": 313,
+   "tests_passed": 98,
+   "tests_selected": 136
+  },
+  "source_refs": [],
+  "standards_mappings": [],
+  "test_measure_id": "FB2-VER-TMS-000001..000005",
+  "test_measure_revision": "1",
+  "timestamps": {
+   "duration_ms": 137200,
+   "end": "2026-09-29T10:33:16+0200",
+   "start": "2026-09-29T10:33:16+0200"
+  },
+  "title": "Execution: foxBMS 2 host unit test sweep, extended clang diagnostic set (136 tests, macOS arm64)",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_recording": "Transcribe a completed signature into the record as human_approval_status plus a revision_history entry naming the reviewer, and archive the signed packet outside docs/artifacts/reviews/packets/.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record, and the corpus rule `human_approval_rejected` fails validation on any record whose human_approval_status is not pending, so no tool can manufacture the state.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action.",
+ "target": {
+  "artifact_type": "execution",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "source_observed",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "as_is",
+   "FB2-VER-EXE-000007"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "as_is",
+  "record_id": "FB2-VER-EXE-000007",
+  "revision": "2"
+ }
+}
