@@ -1,5 +1,35 @@
 {
  "baseline_id": "BAS-REF-001",
+ "counted_metrics": {
+  "approval_staleness": {
+   "current": 0,
+   "denominator": 0,
+   "detail": "STALE / TOTAL APPROVALS: 0/0. An approval is STALE when its ledger entry's approved_record_sha256 no longer equals the record's current CONTENT digest - that is, when the record's content changed after the judgement was made. STALE IS NOT INVALID: a stale approval does not fail validation, is reported in a finding naming the record, the ledger entry and the fields that changed, and is counted here so the invalidation is visible on every run instead of surfacing months later. A stale approval is excluded from the human_approval and production_authorization numerators, because those numerators mean 'records carrying an approval that describes the bytes now on disk'; human_approval and this figure together account for every approval in the ledger, so nothing is silently dropped. Current value 0/0: the ledger at docs/artifacts/governance/approval-ledger.jsonl holds 0 entries, so there are nothing to go stale. This is a measured zero over an empty population, not a constant.",
+   "figure": "0/0",
+   "kind_counts": {
+    "human_approval": {
+     "stale": 0,
+     "stale_ids": [],
+     "total": 0
+    },
+    "production_authorization": {
+     "stale": 0,
+     "stale_ids": [],
+     "total": 0
+    },
+    "verification_credit": {
+     "stale": 0,
+     "stale_ids": [],
+     "total": 0
+    }
+   },
+   "measured": true,
+   "metric": "approval_staleness",
+   "numerator": 0,
+   "stale": 0,
+   "total_approvals": 0
+  }
+ },
  "dimensions": {
   "actual_product_evidence": {
    "denominator": 33,
@@ -31,12 +61,14 @@
   "final_status": "synthetic_ready_with_limitations",
   "human_approval": {
    "denominator": 321,
-   "detail": "0 of 321 records carry a properly evidenced human approval -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carry human_approval_status at its no-claim value and 0 carry the grant value. This is a measured zero, not a constant and not a schema limitation. Counts a record in the numerator only if human_approval_status carries its grant value AND approval_evidence.human_approval carries all six required elements: a named individual (not a role, not a team), their declared role, independence evidence against this record's own owner_role and its current-revision author, an ISO-8601 date, the sha256 of the review packet they signed plus that packet's own recorded record digest, and a revision_history entry recording the approval. Computed by the same predicate the validator enforces, so the figure cannot read higher than the gate permits. Denominator: every record carrying an id.",
+   "detail": "0 of 321 records carry a properly evidenced human approval -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carry human_approval_status at its no-claim value and 0 carry the grant value. This is a measured zero, not a constant and not a schema limitation. Counts a record in the numerator only if human_approval_status carries its grant value AND approval_evidence.human_approval carries all six required elements: a named individual (not a role, not a team), their declared role, independence evidence against this record's own owner_role and its current-revision author, an ISO-8601 date, the sha256 of the review packet they signed under docs/artifacts/reviews/signed/ plus that packet's own recorded record digest, and approval_ledger_ref naming this approval's entry in the append-only ledger. The approval must also be CURRENT: an entry whose approved digest no longer matches the record's content is stale, is reported and counted in approval_staleness, and is not counted here. Computed by the same predicate the validator enforces, so the figure cannot read higher than the gate permits. Denominator: every record carrying an id.",
    "evidenced": 0,
+   "evidenced_current": 0,
    "granted_claims": 0,
    "measured": true,
    "no_claim_records": 321,
    "numerator": 0,
+   "stale_approvals": 0,
    "unevidenced_claims": 0
   },
   "negative_scenario_validation": {
@@ -46,12 +78,14 @@
   },
   "production_authorization": {
    "denominator": 321,
-   "detail": "0 of 321 records carry a properly evidenced production authorization -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carry production_authorized at its no-claim value and 0 carry the grant value. This is a measured zero, not a constant and not a schema limitation. Counts a record in the numerator only if production_authorized carries its grant value AND approval_evidence.production_authorization carries all six required elements: a named individual (not a role, not a team), their declared role, independence evidence against this record's own owner_role and its current-revision author, an ISO-8601 date, the sha256 of the review packet they signed plus that packet's own recorded record digest, and a revision_history entry recording the approval. Computed by the same predicate the validator enforces, so the figure cannot read higher than the gate permits. Denominator: every record carrying an id. STRICTLY STRICTER than a human approval: the approving role must be one this corpus grants production authority to, and the record's family must be one human approval is required for.",
+   "detail": "0 of 321 records carry a properly evidenced production authorization -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carry production_authorized at its no-claim value and 0 carry the grant value. This is a measured zero, not a constant and not a schema limitation. Counts a record in the numerator only if production_authorized carries its grant value AND approval_evidence.production_authorization carries all six required elements: a named individual (not a role, not a team), their declared role, independence evidence against this record's own owner_role and its current-revision author, an ISO-8601 date, the sha256 of the review packet they signed under docs/artifacts/reviews/signed/ plus that packet's own recorded record digest, and approval_ledger_ref naming this approval's entry in the append-only ledger. The approval must also be CURRENT: an entry whose approved digest no longer matches the record's content is stale, is reported and counted in approval_staleness, and is not counted here. Computed by the same predicate the validator enforces, so the figure cannot read higher than the gate permits. Denominator: every record carrying an id. STRICTLY STRICTER than a human approval: the approving role must be one this corpus grants production authority to, and the record's family must be one human approval is required for.",
    "evidenced": 0,
+   "evidenced_current": 0,
    "granted_claims": 0,
    "measured": true,
    "no_claim_records": 321,
    "numerator": 0,
+   "stale_approvals": 0,
    "unevidenced_claims": 0
   },
   "scope_accounting": {
@@ -134,7 +168,7 @@
   "Human approval: all pending",
   "Production authorization: all false"
  ],
- "generated_at": "2026-10-04T03:52:30Z",
+ "generated_at": "2026-10-04T17:58:55Z",
  "profile": "synthetic_reference",
  "schema_version": "1.0.0"
 }

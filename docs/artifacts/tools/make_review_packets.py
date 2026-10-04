@@ -157,6 +157,17 @@ SIGNATURE_FIELDS = (
     ("signature", "Signature"),
 )
 
+# APPROVAL-LEDGER-A1. An approval is recorded in an append-only ledger, not in
+# the record's revision_history, because revision_history is a content change and
+# a content change bumps the revision, which stales every link pinning that
+# revision and invalidates every review digest stored for the record. The record
+# keeps only a reference. These two paths are named here so the generator, the
+# validator and the documentation cannot drift apart on where an approval lives.
+LEDGER_PATH = "docs/artifacts/governance/approval-ledger.jsonl"
+LEDGER_DOC = "docs/artifacts/governance/approval-ledger.md"
+SIGNED_ROOT = "docs/artifacts/reviews/signed"
+REGENERATED_ROOT = "docs/artifacts/reviews/packets"
+
 ARTEFACT_ID_RE = re.compile(r"^FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}$")
 ID_ANYWHERE_RE = re.compile(r"FB2-[A-Z]{2,3}-[A-Z]{2,3}-[0-9]{6}")
 LINE_RANGE_RE = re.compile(r"^\s*(\d+)\s*(?:-\s*(\d+)\s*)?$")
@@ -1591,11 +1602,19 @@ def render_markdown(live: Live, rel: str, raw_text: str, digest: str,
       "`human_approval_status` was `approved`, however well evidenced - a ban, which cannot tell "
       "a fabricated approval from a real one because it never looks at one. That ban was replaced "
       "(amendment `APPROVAL-RULE-A1`, recorded at "
-      "`docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract`). "
+      "`docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract`, "
+      "whose text is kept there for the audit trail and whose element 6 has since been "
+      "superseded). "
       "**Recording the first real approval no longer turns `corpus.py check` red.** What it does "
       "instead is make the tool check six things, and fail if any one is missing.")
     A("")
-    A("**A properly formed approval must carry, on the record itself, all six of these:**")
+    A("The corpus now reads its approval contract from "
+      "`docs/artifacts/governance/role-and-review-policy.json#/approval_ledger_contract` "
+      "(amendment `APPROVAL-LEDGER-A1`), which supersedes element 6 of the six-element "
+      "contract and tightens element 5. Elements 1-4 and the production-authority bar are "
+      "unchanged.")
+    A("")
+    A("**A properly formed approval must carry all six of these:**")
     A("")
     A("| # | element | what the validator actually checks |")
     A("| --- | --- | --- |")
@@ -1618,40 +1637,45 @@ def render_markdown(live: Live, rel: str, raw_text: str, digest: str,
       "offset. Checked by grammar AND by parse. |")
     A("| 5 | `review_packet` | an object carrying `path`, `sha256` and "
       "`record_sha256_at_signing`. See 8.2 - this is the part reviewers get wrong. |")
-    A("| 6 | `revision_history` | an entry whose `author` is your approving role, whose `revision` "
-      "is at least this record's current revision, and whose `description` both records the "
-      "approval **and cites the signed packet by digest or by name**. |")
+    A(f"| 6 | `approval_ledger_ref` | an object naming your entry in the append-only ledger "
+      f"`{LEDGER_PATH}`: `ledger_id` plus `entry_sha256`. **Not** a `revision_history` entry - "
+      f"see 8.4 for why that matters more than it sounds. |")
     A("")
     A("### 8.2 The packet digest, which is the part that is easy to get wrong")
     A("")
     A("Three digests are involved and they are not interchangeable:")
     A("")
     A(f"- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's "
-      f"`packet.json` under `integrity.record_sha256`. It is "
-      f"`{digest}`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it "
-      f"straight out of section 4.")
-    A("- `sha256` is the digest of **this packet file's own bytes**, which the packet cannot "
-      "print about itself. Do not type it by hand. Either run "
-      "`shasum -a 256 <packet.json>` or, much better, let the generator print the whole block:")
+      f"`packet.json` under `integrity.record_sha256`. It is `{digest}`-class: the digest of "
+      f"THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.")
+    A("- `sha256` is the digest of **the archived signed packet you are citing** - the copy under "
+      f"`{SIGNED_ROOT}/` with your signature block filled in. It is not the digest of the "
+      "generated packet in front of you: that is a different file, because yours has your "
+      "signature in it. The packet cannot print its own digest, and it cannot print yours "
+      "before you have written it. Do not type it. Let the generator resolve it:")
     A("")
     A("```")
-    A(f"python3 docs/artifacts/tools/make_review_packets.py --transcribe {aid}"
-      + (f" --profile {profile}" if aid in ("",) else ""))
+    A(f"python3 docs/artifacts/tools/make_review_packets.py --transcribe {aid}")
     A("```")
     A("")
-    A("  That command writes nothing and fills no decision. It resolves both digests against the "
-      "files on disk and prints the exact `approval_evidence` block and the exact "
-      "`revision_history` entry to append, with your name, role, organisation and date left for "
-      "you to supply.")
+    A("  **Run it TWICE.** The first run tells you the signed-copy digest is NOT RESOLVED and to "
+      "archive your signed packet first, because it cannot exist before you have signed. The "
+      "second run, after the archived copy is on disk, resolves it from the file itself. The "
+      "command writes nothing, appends nothing and fills no decision; it prints the exact "
+      "`approval_evidence` block, the exact ledger entry and the exact `approval_ledger_ref` to "
+      "merge, with your name, role, organisation and date left for you to supply.")
     A("")
     A("What the validator does with them, so you can check your work:")
     A("")
-    A("1. `path` must be a `.json` packet twin under `docs/artifacts/reviews/packets/` or under "
-      "the signed-packet archive `docs/artifacts/reviews/signed/`, and it must exist on disk. "
-      "Anything else is rejected.")
-    A("2. `sha256` must equal that file's bytes **as they stand on disk now**. If the packet has "
-      "been regenerated since you signed, the digest no longer matches and the approval is "
-      "rejected - which is correct, because the record state you reviewed has changed.")
+    A(f"1. `path` must be a `.json` packet twin under `{SIGNED_ROOT}/` and it must exist on "
+      f"disk. **A path under `{REGENERATED_ROOT}/` is rejected**, with a message telling you to "
+      f"archive the signed packet first - and that rejection is correct: that tree is rewritten "
+      f"on every regeneration, so evidence left there does not survive. Nothing else outside "
+      f"`{SIGNED_ROOT}/` is admissible either.")
+    A("2. `sha256` must equal that file's bytes **as they stand on disk now**. An archived signed "
+      "packet is byte-stable by rule - it must not be edited after signing - so this digest keeps "
+      "resolving. If you are regenerating packets for other records, your archived copy is "
+      "untouched.")
     A("3. `record_sha256_at_signing` must equal **the packet's own** `integrity.record_sha256`. "
       "This is the binding that matters: citing a packet that exists, is the right shape and is "
       "byte-stable proves nothing unless its recorded record digest is the one you attested to. A "
@@ -1663,43 +1687,78 @@ def render_markdown(live: Live, rel: str, raw_text: str, digest: str,
     A("")
     A("### 8.3 What happens to the numbers, read from the code")
     A("")
-    A("1. **The coverage dimension `human_approval` now moves.** It used to be a literal "
-      "`{\"numerator\": 0}` with the detail string \"all artifacts pending human approval (none "
-      "performed)\" - a constant that measured nothing and would have read 0/321 after three "
-      "hundred signatures. Since 2026-10-04 it is COMPUTED from the records, by the same "
-      "predicate the validator enforces, so it reads 0/321 today and will read 1/321 the moment "
-      "one properly evidenced approval is recorded. `production_authorization` is the same, with "
-      "a STRICTLY higher bar: the approving role must be one the corpus grants production "
-      "authority to (`architect` or `safety_manager`), and the record's family must be one human "
-      "approval is required for (`safety_case`, `post_development_record`, `change`).")
-    A("2. **Recording a properly formed approval keeps `corpus.py check` green.** The finding "
-      "you would get for a bare `approved` names every unmet element, so if you get one, read it "
+    A("1. **The coverage dimension `human_approval` moves.** It used to be a literal "
+      "0/321 with the detail string \"all artifacts pending human approval (none "
+      "performed)\" - a constant that measured nothing and would have read 0/321 after "
+      "three hundred signatures. Since 2026-10-04 it is COMPUTED from the records, by the "
+      "same predicate the validator enforces, so it reads 0/321 today and will read 1/321 the "
+      "moment one properly evidenced, current approval is recorded. `production_authorization` "
+      "is the same, with a STRICTLY higher bar: the approving role must be one the corpus "
+      "grants production authority to (`architect` or `safety_manager`), and the record's family "
+      "must be one human approval is required for (`safety_case`, `post_development_record`, "
+      "`change`).")
+    A("2. **Recording a properly formed approval keeps `corpus.py check` green.** The finding you "
+      "would get for a bare `approved` names every unmet element, so if you get one, read it "
       "rather than guessing: it tells you which of the six is missing.")
-    A("3. **Two controls the signature does not touch.** `automated_review_status` describes "
+    A("3. **`approval_staleness`, a counted metric, reports invalidated judgements.** It reads "
+      "`stale / total approvals` on every coverage run and on `check`. If this record's content "
+      "is corrected AFTER you approve it, your approval becomes STALE: that does not fail "
+      "validation, but it is reported in a finding naming this record, your ledger entry and "
+      "**which fields changed**, and it is excluded from the `human_approval` numerator. "
+      "Re-review the changed fields and append a new ledger entry; do not edit or delete the "
+      "old one.")
+    A("4. **Two controls the signature does not touch.** `automated_review_status` describes "
       "machine checks, not your judgement - leave it alone. And the recursive key scan for "
       "authority claims (`production_release`, `authorized_for_production` and eight siblings, "
       "plus the ASIL/conformity/certification claim classes) is unchanged: nesting a production "
       "claim inside the new `approval_evidence` block is still caught.")
     A("")
-    A("### 8.4 How to record it, in order")
+    A("### 8.4 How to record it, in order. Follow this order exactly.")
     A("")
-    A("1. Fill section 9 and archive the signed packet **outside** "
-      "`docs/artifacts/reviews/packets/` - into `docs/artifacts/reviews/signed/` - because "
-      "regenerating a packet overwrites it, and the generator refuses to overwrite a packet that "
-      "already carries a signature rather than destroy it. Cite the archived copy in "
-      "`review_packet.path`; both locations resolve.")
-    A(f"2. Run `--transcribe {aid}` and paste the block it prints.")
-    A("3. Add the `revision_history` entry it prints. Record the approval against the record's "
-      "CURRENT revision; bumping the revision number makes every link that pins this record's "
-      "revision stale and invalidates the sha256 every review record stores for it.")
-    A("4. Run `python3 docs/artifacts/tools/corpus.py validate` and read the result. Zero "
+    A("1. **Fill section 9 in your own copy of this packet.** No tool may do it. No tool in this "
+      "repository has a code path that writes a signature.")
+    A(f"2. **Archive the signed packet** at `{SIGNED_ROOT}/<profile>/<id>.json`, keeping the "
+      f"twin byte-for-byte as you signed it. A corrected packet is a new document with a new "
+      f"signature, never an edit to a signed one. This archive is not optional and not "
+      f"advisory: it is the only place a signed packet is admissible from.")
+    A(f"3. Run `--transcribe {aid}` and paste what it prints.")
+    A(f"4. **A human appends the printed line to `{LEDGER_PATH}`** - one JSON object, one line, "
+      f"at the end. The ledger is append-only: entries are never reordered and never removed, "
+      f"and each entry names its predecessor's digest, so deleting or editing one breaks the "
+      f"chain and the validator reports where. The entry also carries "
+      f"`packet_first_commit`, the commit that first contained your archived packet; the "
+      f"validator confirms that commit exists and holds the blob.")
+    A(f"5. Merge the printed `approval_ledger_ref` into the record, alongside "
+      f"`human_approval_status` and the `approval_evidence` block.")
+    A("")
+    A("**Why there is no `revision_history` step, and why you must not add one.** An approval "
+      "used to be recorded as a `revision_history` entry. A `revision_history` entry *is* a "
+      "content change, so the record's `revision` has to move; a moved revision makes every "
+      "link that pins that revision stale, and invalidates the `sha256` that every review "
+      "record stores for the record. So an approval recorded that way breaks two controls "
+      "nobody authorised breaking - which is why it was being recorded against the current "
+      "revision as a workaround, which nobody had ratified. The ledger removes the conflict: "
+      "an approval is an **event about** a record, not a change **to** it, and "
+      "`approval_ledger_ref` is metadata excluded from the record's content digest. Recording "
+      "your signature now costs nothing anywhere else. A self-test performs the whole recording "
+      "on a throwaway copy of this tree and asserts that the revision does not move, no link goes "
+      "stale and all 261 review digests still verify.")
+    A("")
+    A("6. Run `python3 docs/artifacts/tools/corpus.py validate` and read the result. Zero "
       "approval findings means the approval is properly evidenced.")
     A("")
-    A("**Still not yours to do:** writing the approval value into the record. The gate now "
-      "*accepts* a legitimately evidenced approval, which is what makes the guard meaningful, but "
-      "*producing* one needs a person. No tool in this repository may do it, and the self-test "
-      "`no record in the corpus carries an approval of any kind` fails the suite if one ever "
-      "appears.")
+    A("**What is still not yours to do, and what is still not provable.** Writing the approval "
+      "value into the record needs a person: the gate now *accepts* a legitimately evidenced "
+      "approval, which is what makes the guard meaningful, but *producing* one is a human act "
+      "and the self-test `no record in the corpus carries an approval of any kind` fails the "
+      "suite if one ever appears without a person.")
+    A("")
+    A("And the limit worth knowing before you sign anything: **the hash chain proves existence, "
+      "ordering and integrity, and the git anchor proves when and in what state your packet was "
+      "committed. Neither proves that you read this record, and none of it makes your approval "
+      "unforgeable.** A determined person can write all six elements, archive a packet, cite a "
+      "real commit and maintain the chain correctly. That limit is irreducible. See "
+      f"`{LEDGER_DOC}`.")
     A("")
     A("`docs/artifacts/governance/closing-list.md` states what is still outstanding and who owns "
       "it. Read it before recording anything.")
@@ -1760,7 +1819,11 @@ def render_json(live: Live, rel: str, raw_bytes: bytes, digest: str, record: dic
             "verdict. Filling it is a human action. As of 2026-10-04 (amendment "
             "APPROVAL-RULE-A1) the corpus ACCEPTS a properly evidenced approval rather "
             "than banning the value outright, so this rule now has to carry the evidence "
-            "contract in full: see signature_block._contract."),
+            "contract in full: see signature_block._contract. Since the same day "
+            "(amendment APPROVAL-LEDGER-A1) the approval is recorded in the append-only "
+            "ledger at " + LEDGER_PATH + " and the record keeps only a reference to it, "
+            "so recording your signature neither bumps the revision nor invalidates any "
+            "review digest."),
         "packet_path": packet_rel_json,
         "integrity": {
             "record_path": rel,
@@ -1878,12 +1941,18 @@ def render_json(live: Live, rel: str, raw_bytes: bytes, digest: str, record: dic
                     "must differ from owner_role AND from the author of the last content revision",
                     "4. date - ISO-8601, checked by grammar and by parse",
                     "5. review_packet{path, sha256, record_sha256_at_signing}; path must resolve "
-                    "to a packet.json on disk under docs/artifacts/reviews/packets/ or "
-                    "docs/artifacts/reviews/signed/; sha256 must equal that file's bytes now; "
-                    "record_sha256_at_signing must equal this packet's integrity.record_sha256; "
-                    "target.record_id and target.profile must both name this record",
-                    "6. a revision_history entry whose author is the approving role and whose "
-                    "description records the approval and cites the signed packet",
+                    "to a packet.json on disk under " + SIGNED_ROOT + " ONLY - the "
+                    "regenerated tree " + REGENERATED_ROOT + " is NOT admissible, because it is "
+                    "rewritten on every regeneration and would destroy your evidence; sha256 must "
+                    "equal that file's bytes now; record_sha256_at_signing must equal this "
+                    "packet's integrity.record_sha256; target.record_id and target.profile must "
+                    "both name this record",
+                    "6. approval_ledger_ref{ledger_id, entry_sha256} naming your entry in " +
+                    LEDGER_PATH + ". It is approval METADATA, not content: it is excluded from the "
+                    "record's content digest and is never a revision_history entry, so recording "
+                    "it neither bumps the revision nor stales a link. NEVER record the approval "
+                    "in revision_history - doing so stales every link pinning this revision and "
+                    "invalidates every stored review digest. See " + LEDGER_DOC,
                 ],
                 "digest_note": (
                     "The digests below are already filled in. Copy them; do not type them. Run "
@@ -1897,20 +1966,31 @@ def render_json(live: Live, rel: str, raw_bytes: bytes, digest: str, record: dic
                 "than filled, because a file cannot contain its own digest. Compute it with "
                 "`shasum -a 256`, or use `--transcribe`, which resolves it."),
             "_recording": (
-                "Transcribe a completed signature into the record as human_approval_status plus "
-                "an approval_evidence.human_approval block plus a revision_history entry naming "
-                "the reviewer and citing this packet, and archive the signed packet under "
-                "docs/artifacts/reviews/signed/."),
+                "Archive the signed packet under " + SIGNED_ROOT + "/<profile>/<id>.json, then "
+                "record the approval as human_approval_status plus an "
+                "approval_evidence.human_approval block on the record, plus "
+                "approval_ledger_ref naming one appended line in " + LEDGER_PATH + ". Do NOT add "
+                "a revision_history entry: see " + LEDGER_DOC + "."),
         },
         "outcome_record": {
             "_note": ("Fields a human or a later process may fill AFTER a signature exists. "
                       "Empty here; present so the outcome can be captured without editing "
-                      "the generator."),
+                      "the generator. Since APPROVAL-LEDGER-A1 the decision is recorded in the "
+                      "append-only ledger at " + LEDGER_PATH + ", and these fields cross-reference "
+                      "that entry rather than being the record of it."),
             "packet_sha256_at_signing": "",
             "signed_by": "",
             "signed_on": "",
             "decision_recorded_in_record": "",
             "recorded_revision": "",
+            "ledger_id": "",
+            "ledger_entry_sha256": "",
+            "packet_first_commit": "",
+            "_ledger_note": (
+                "packet_first_commit is the git commit that FIRST contained the archived signed "
+                "packet. It proves WHEN and IN WHAT STATE the packet was committed. It does NOT "
+                "prove who read it, and nothing in the corpus makes an approval unforgeable. "
+                "See " + LEDGER_DOC),
         },
     }
 
@@ -2216,12 +2296,30 @@ TRANSCRIBE_FIELDS = ("approved_by", "organisation", "role", "date", "decision")
 
 
 def transcribe(root: Path, out_dir: Path, only: str, profile: str = None):
-    """Print the pasteable approval_evidence block for one record. Writes nothing.
+    """Print the pasteable approval block, ledger entry and ledger reference.
 
-    Returns 0 on success, 1 if the record or its packet cannot be found, 2 if
-    the packet is stale (generated against an older state of the record), which
-    would make the digest chain unsatisfiable and is therefore reported rather
-    than printed.
+    Writes NOTHING. Fills no decision, no name, no date, and appends nothing to
+    the ledger. Its only non-trivial outputs are the digests, the paths and the
+    line number in the ledger the human should append to - facts about files,
+    not judgements about records.
+
+    Since APPROVAL-LEDGER-A1 it prints THREE things rather than an evidence
+    block plus a revision_history entry:
+      1. the `approval_evidence.human_approval` block, with both digests resolved;
+      2. the ledger entry to append to LEDGER_PATH, chain fields pre-filled with
+         the genesis value because this entry is expected to be the first (or the
+         reviewer supplies the previous entry's digest if one already exists);
+      3. the `approval_ledger_ref` to merge into the record.
+
+    It deliberately does NOT print a revision_history entry, and says so: an
+    approval recorded there is a content change, which bumps the revision, which
+    stales every link pinning that revision and invalidates every stored review
+    digest.
+
+    Returns 0 on success, 1 if the record or its packet cannot be found, 2 if the
+    packet is stale (generated against an older state of the record), which would
+    make the digest chain unsatisfiable and is therefore reported rather than
+    printed.
     """
     live = Live(root)
     matches = [(rel, path, rec) for rel, path, rec in live.files
@@ -2252,10 +2350,32 @@ def transcribe(root: Path, out_dir: Path, only: str, profile: str = None):
               f"Regenerate the packet before transcribing, or your approval will be rejected at "
               f"element 5.")
         return 2
-    pkt_sha = sha256_bytes(jp.read_bytes())
-    pkt_rel = jp.relative_to(root).as_posix() if jp.is_relative_to(root) else jp.as_posix()
     owner = rec.get("owner_role")
     rev = str(rec.get("revision"))
+    prof = rec.get("profile", "unknown")
+    ledger_p = root / LEDGER_PATH
+    n_existing = len([x for x in (ledger_p.read_text(encoding="utf-8").splitlines()
+                                  if ledger_p.is_file() else []) if x.strip()])
+    archived_rel = f"{SIGNED_ROOT}/{prof}/{rec['id']}.json"
+    ledger_id = f"LEDGER-{rec['id']}-{n_existing + 1:06d}"
+
+    # The digest an approval must cite is the digest of the ARCHIVED signed copy,
+    # not of the generated packet: the archived copy has your signature filled in,
+    # so it is a different file with different bytes. It cannot be known before you
+    # have signed and archived it, so this command resolves it on a SECOND run.
+    # Printing the generated packet's digest here would be worse than useless - it
+    # would be a real digest of the wrong file, and element 5 would reject it.
+    archived_p = root / archived_rel
+    archived_sha = None
+    archived_ok = None
+    if archived_p.is_file():
+        archived_sha = sha256_bytes(archived_p.read_bytes())
+        try:
+            ap = jload(archived_p)
+            archived_ok = (ap.get("integrity") or {}).get("record_sha256") == recorded
+        except Exception:
+            archived_ok = False
+    cite_sha = archived_sha or "<sha256 of " + archived_rel + ">"
 
     block = {
         "approved_by": "<YOUR FULL NAME - a person, not a role, not a team>",
@@ -2273,36 +2393,91 @@ def transcribe(root: Path, out_dir: Path, only: str, profile: str = None):
                           "<your role_id>",
         },
         "review_packet": {
-            "path": pkt_rel,
-            "sha256": pkt_sha,
+            "path": archived_rel,
+            "sha256": cite_sha,
             "record_sha256_at_signing": recorded,
         },
     }
-    hist = {
-        "revision": rev,
+    entry = {
+        "ledger_id": ledger_id,
+        "record_id": rec["id"],
+        "profile": prof,
+        "kind": "human_approval",
+        "approved_record_sha256": recorded,
+        "approved_content_revision": rev,
+        "approved_by": "<YOUR FULL NAME - the same value as above>",
+        "role": "<your role_id - the same value as above>",
+        "independence": block["independence"],
         "date": "<YYYY-MM-DDTHH:MM:SSZ>",
-        "author": "<your role_id, the same value as above>",
-        "description": (f"Recorded human approval of revision {rev} by <YOUR FULL NAME> "
-                        f"(<your role_id>) against review packet {pkt_sha}."),
+        "signed_packet": {"path": archived_rel, "sha256": cite_sha},
+        "packet_first_commit": "<the 40-hex commit that first contained "
+                              + archived_rel + ">",
+        "previous_entry_sha256": ("0" * 64 if n_existing == 0
+                                  else "<digest of the current LAST entry in " + LEDGER_PATH
+                                  + " - see the chain rule in the contract>"),
     }
-    print(f"# transcribe target: {rec.get('profile', 'unknown')} / {rec['id']}")
+    ref = {
+        "ledger_id": ledger_id,
+        "entry_sha256": "<digest of the ledger line you appended - recompute it, or "
+                        "print it with: shasum-style sha256 of the canonical line>",
+        "note": ("Recorded in " + LEDGER_PATH + ". Approval metadata, not content: excluded "
+                 "from the record's content digest and not a revision_history entry, so "
+                 "recording it neither bumps the revision nor stales a link."),
+    }
+    print(f"# transcribe target: {prof} / {rec['id']}")
     print(f"# record file      : {rel}")
     print(f"# owner_role       : {owner}   (your role must differ from this)")
-    print(f"# record revision  : {rev}   (record the approval against this revision; do not")
-    print(f"#                      bump it, or links pinning this revision go stale)")
-    print(f"# packet file      : {pkt_rel}")
-    print(f"# packet sha256    : {pkt_sha}")
+    print(f"# record revision  : {rev}   (DO NOT bump it. An approval is an event about the")
+    print(f"#                      record, not a change to it; see {LEDGER_DOC})")
     print(f"# record sha256    : {recorded}  (== integrity.record_sha256 in packet.json)")
+    print(f"# archive to       : {archived_rel}")
+    if archived_sha:
+        print(f"# signed copy sha  : {archived_sha}   <- resolved from the file on disk")
+        print(f"#   and its own integrity.record_sha256 "
+              + ("matches" if archived_ok else "DOES NOT MATCH")
+              + f" the record digest {recorded}")
+    else:
+        print("# signed copy sha  : NOT RESOLVED - you have not archived it yet.")
+        print(f"#   Archive your signed packet at {archived_rel} FIRST, then run this")
+        print("#   command AGAIN and it will resolve the digest for you. A digest of the")
+        print("#   GENERATED packet is not usable: the archived copy has your signature")
+        print("#   filled in, so it is a different file, and a")
+        print(f"#   {REGENERATED_ROOT}/ path is not admissible at all.")
+    print(f"# ledger           : {LEDGER_PATH} ({n_existing} existing entr"
+          f"{'y' if n_existing == 1 else 'ies'}; yours would be #{n_existing + 1})")
+    print(f"# ledger_id        : {ledger_id}")
     print("#")
-    print("# Replace every <...> placeholder. Leave the two digests exactly as printed.")
-    print("# Then merge into the record as:")
-    print("#   \"human_approval_status\": \"approved\",")
-    print(f"#   \"approval_evidence\": {{\"human_approval\": {json.dumps(block, indent=2)}}}")
-    print("# and append to revision_history:")
-    print(json.dumps(hist, indent=2))
+    print("# Replace every <...> placeholder. Leave the record sha256 exactly as printed.")
     print("#")
-    print("# This command wrote nothing. It is not an approval and records nothing.")
+    print("# 1. Fill section 9 of the packet in your own copy. No tool may do this.")
+    print(f"# 2. Archive the signed packet at {archived_rel}, byte-for-byte as signed.")
+    print("# 3. Merge into the record:")
+    print('#   "human_approval_status": "approved",')
+    print(f'#   "approval_evidence": {{"human_approval": <the block below>}},')
+    print(f'#   "approval_ledger_ref": {json.dumps(ref, indent=2)}')
+    print("#    and NOTHING in revision_history. Recording the approval there is what this")
+    print("#    ledger exists to stop: it is a content change, it bumps the revision, and a")
+    print("#    bumped revision stales every link pinning it and invalidates every stored")
+    print("#    review digest for this record.")
+    print("#")
+    print("# 4. Append this ONE LINE to the ledger (the JSON object, not the comments):")
+    print(canonical_line(entry))
+    print("#")
+    print(f"# 5. Run `python3 docs/artifacts/tools/corpus.py validate` and read the result.")
+    print("#")
+    print(f"# THE LIMIT, BEFORE YOU SIGN: the hash chain proves existence, ordering and")
+    print(f"# integrity, and packet_first_commit proves WHEN and IN WHAT STATE your packet")
+    print(f"# was committed. Neither proves that you read {rec['id']}, and none of this")
+    print(f"# makes your approval unforgeable. See {LEDGER_DOC}.")
+    print("#")
+    print("# This command wrote nothing, appended nothing and filled no decision.")
     return 0
+
+
+def canonical_line(obj) -> str:
+    """One ledger line: UTF-8 JSON, sorted keys, no insignificant whitespace."""
+    return json.dumps(obj, sort_keys=True, separators=(",", ":"),
+                      ensure_ascii=False)
 
 
 # --------------------------------------------------------------------------

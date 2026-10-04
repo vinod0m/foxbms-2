@@ -15,15 +15,23 @@ document, not from a plan. Where a figure is a constant rather than a
 measurement, it says so, because the difference matters when you go looking for
 the number to move.
 
-> **STATUS 2026-10-04 - the two things §0.1 and §0.2 described as blocked are
-> DONE.** Amendment `APPROVAL-RULE-A1` replaced the blanket prohibition with an
-> evidence requirement, and `human_approval` and `production_authorization` are
-> now measured rather than literal. §0.1 and §0.2 below are kept, marked
-> SUPERSEDED, because they record what the corpus looked like before and the
-> reason the amendment was needed; §1.6 P1/P2 and §3.1 are rewritten to the
-> rule now in force. The approval still reads 0/321, and the reason is now a
-> measurement rather than a ban: **no approval has been recorded, because
-> producing one needs a person.**
+> **STATUS 2026-10-04 (second pass) - the approval path is now complete, and
+> three of the four residual risks `CORR-COV-022` recorded are closed.**
+> Amendment `APPROVAL-LEDGER-A1` moved approvals out of `revision_history` into
+> an append-only ledger, so recording one no longer stales a link or invalidates
+> a review digest (RISK 4); made an invalidated judgement a **counted and
+> reported** state rather than a silent one (RISK 3); and made
+> `reviews/signed/` the only admissible home for a signed packet, enforced rather
+> than advised (RISK 2). RISK 1 - that a person can forge all six elements - is
+> **REDUCED, NOT FIXED**, and is stated as such in four places.
+> §0.1, §0.1a, §0.2 and §0.2a below are kept and marked, because they record what
+> the corpus looked like before each amendment and why the amendment was needed.
+> §1.4, §1.6, §1.8 and §3.1 are rewritten to the rule now in force.
+>
+> The approval still reads 0/321, and the reason is still a measurement rather
+> than a ban: **no approval has been recorded, because producing one needs a
+> person.** The ledger at
+> `docs/artifacts/governance/approval-ledger.jsonl` is **0 bytes**.
 
 ---
 
@@ -58,44 +66,55 @@ deliberate decision with its own review - see §1.6.
 
 Both dimensions are computed from the records, by the **same predicate the
 validator enforces** - `_approval_evidence_defects`, reached through
-`_approval_dimension_counts()`:
-
-```python
-dims["human_approval"] = {
-    "numerator": ac["human_approval"]["evidenced"],
-    "denominator": total_art,
-    "detail": "0 of 321 records carry a properly evidenced human approval -- the
-               numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records
-               carry human_approval_status at its no-claim value and 0 carry the grant
-               value. This is a measured zero, not a constant and not a schema
-               limitation. ...",
-    "measured": True, "granted_claims": 0, "evidenced": 0,
-    "unevidenced_claims": 0, "no_claim_records": 321}
-```
+`_approval_dimension_counts()`.
 
 A record counts in the numerator only if its approval field carries a grant
 value **and** its `approval_evidence` block satisfies all six elements of
-`role-and-review-policy.json#/approval_evidence_contract/required_elements`. A
+`role-and-review-policy.json#/approval_ledger_contract/required_elements`. A
 bare `approved` does not count and does not validate. `production_authorization`
 uses the same computation with a **strictly higher** bar (§0.2a).
 
-**What this changes for you.** The figure will move, and it will move only when
-an approval is *properly evidenced*. If it reads 0 after you have recorded
-approvals, they are not properly evidenced - read the validate output, which
-names which of the six elements is missing. If it moves without you signing
-anything, that is §3.1 and it is the worst thing that can happen here.
+**Element 6 changed on 2026-10-04 and the numerator followed it.** Until
+`APPROVAL-LEDGER-A1` it counted an approval whose ledger... whose
+`revision_history` recorded it. It now counts an approval that also resolves to
+a live entry in the ledger **and whose ledger entry still describes the bytes on
+disk**:
 
-**The figure is still 0/321, and the reason is now the right kind of reason.**
-It is 0 because nothing is approved, not because the dimension cannot see an
+| numerator figure | what it means now |
+| --- | --- |
+| `evidenced` | granted, all six elements satisfied |
+| `evidenced_current` (= the numerator) | ...and the ledger entry's `approved_record_sha256` equals the record's current **content** digest |
+| `evidenced_stale` | ...and the record's content has changed since. **Not** counted here; counted in `approval_staleness` (§0.2b) |
+| `unevidenced` | granted, elements unmet. Rejected by the validator |
+
+The numerator means *records carrying an approval that describes the bytes now on
+disk*. A stale approval does not, so it is not counted - and it is not discarded
+either, because `human_approval` and `approval_staleness` together account for
+every approval in the ledger.
+
+**What this changes for you.** The figure will move, and it will move only when
+an approval is *properly evidenced and current*. If it reads 0 after you have
+recorded approvals, they are not properly evidenced - read the validate output,
+which names which of the six elements is missing - or they have gone stale, which
+`approval_staleness` reports separately. If it moves without you signing anything,
+that is §3.1 and it is the worst thing that can happen here.
+
+**The figure is still 0/321, and the reason is now the right kind of reason.** It
+is 0 because nothing is approved, not because the dimension cannot see an
 approval. The self-test *"human_approval and production_authorization are
 measured, not literals"* proves both halves: it reads 0 on the live tree AND it
-reads 1/321 on a throwaway copy carrying one properly evidenced approval. A
-literal could not pass that test.
+reads 1/321 on a throwaway copy carrying one properly evidenced, current
+approval. A literal could not pass that test.
 
 ### 0.2 SUPERSEDED - recording the first approval used to turn `check` RED
 
 > **As of 2026-10-04 this section no longer describes the code.** Recording a
-> properly evidenced approval now keeps `check` green. See §0.2a.
+> properly evidenced approval now keeps `check` green. See §0.2a. It was already
+> incomplete when written, though, because the prohibition it describes could
+> not have been lifted into something that WORKED: the six-element contract it was
+> replaced with required the approval to be recorded in `revision_history`, which
+> made recording one impossible without collateral damage. That is §0.2b and the
+> `APPROVAL-LEDGER-A1` amendment.
 
 Three governance rules fire on the approval fields being anything other than the
 "nothing happened" value:
@@ -136,8 +155,8 @@ An approval passes only if the record itself carries all six elements:
 | 2 | `approved_by` | a named **person**: at least two tokens, not a declared `role_id` or role name, no token a declared `role_id`, no token from the team vocabulary (`team`, `group`, `board`, `committee`, `reviewers`, `automation`, `system`, `tool`, `agent`, ...). |
 | 3 | `role` + `independence` | `role` is a declared `role_id`; `independence` carries `owner_role` (must equal **this record's own** `owner_role`), `satisfied: true`, an `evidence` string of ≥24 characters that is not a placeholder, and a `policy_ref` naming the policy. Then independence is **enforced**, not just asserted: the role must differ from `owner_role` **and** from the author of the last content revision. |
 | 4 | `date` | ISO-8601, grammar-checked **and** parse-checked. |
-| 5 | `review_packet` | `path` resolves to a `packet.json` on disk under `reviews/packets/` or `reviews/signed/`; `sha256` equals that file's bytes **now**; `record_sha256_at_signing` equals **the packet's own** `integrity.record_sha256`; the packet's `target.record_id` **and** `target.profile` name this record; its `integrity.record_path` is this record's file. |
-| 6 | `revision_history` | an entry whose `author` is the approving role, whose `revision` is at least the record's current revision, and whose `description` both records the approval **and cites the signed packet** by digest or name. |
+| 5 | `review_packet` | `path` resolves to a `packet.json` on disk under **`reviews/signed/` and nowhere else**; `sha256` equals that file's bytes **now**; `record_sha256_at_signing` equals **the packet's own** `integrity.record_sha256`; the packet's `target.record_id` **and** `target.profile` name this record; its `integrity.record_path` is this record's file. A path under `reviews/packets/` is **rejected** with a message telling you to archive the signed packet first (§0.2c). |
+| 6 | `approval_ledger_ref` | an object naming the approval's entry in the append-only ledger `docs/artifacts/governance/approval-ledger.jsonl` - `ledger_id` plus `entry_sha256`. The entry must exist, must name this record's `(profile, id)`, must carry this approval's `kind`, and its `approved_record_sha256` must equal the record's current **content** digest. **NOT a `revision_history` entry** - see §0.2b. |
 
 The finding names **which** element is unmet, numbered, so a reviewer can fix it
 in one pass instead of guessing. Example from the suite:
@@ -177,6 +196,171 @@ discovered later as surprises:
   certification claim classes. Those are unchanged, and the self-test *"a
   production grant hidden in a nested key is still caught"* proves nesting a
   claim inside the new `approval_evidence` block does not evade them.
+
+### 0.2b An approval is recorded in the LEDGER, not in `revision_history`
+
+This is the whole of `APPROVAL-LEDGER-A1`, and it exists because the six-element
+contract, as first written, was **unsatisfiable in practice**.
+
+**Why it was unsatisfiable.** Element 6 used to require a `revision_history`
+entry. A `revision_history` entry *is* a statement that the record's content
+moved, so recording an approval through one **forces the revision to bump**. And a
+bumped revision breaks two controls nobody authorised breaking:
+
+| what breaks | why |
+| --- | --- |
+| every link pinning that record's revision | a link states `target_revision`; move the revision and the link is stale |
+| every review record storing that record's sha256 | `reviewed_ids[].digest` is recomputed against the file on disk; move the bytes and it no longer matches |
+
+So a properly evidenced approval could not be recorded at all without collateral
+damage, and the corpus papered over it by recording the approval against the
+record's **current** revision. That was an unratified convention, open P3 in §1.6.
+
+**The tell was the tool's own happy-path self-test.** It had to pick a record
+that **no review record covers**, purely so the approval would not invalidate a
+stored digest. A test that must choose an uncovered record to demonstrate its own
+happy path is demonstrating an unsatisfiable requirement, not a working one.
+
+**What replaced it.** An approval is an **event about** a record, not a change
+**to** it. So it goes in an append-only ledger, and the record keeps only a
+reference:
+
+```
+docs/artifacts/governance/approval-ledger.jsonl     one JSON object per line, 0 bytes today
+  ledger_id, record_id, profile, kind,
+  approved_record_sha256, approved_content_revision,
+  approved_by, role, independence, date,
+  signed_packet{path, sha256},
+  packet_first_commit,             the commit that first held that packet
+  previous_entry_sha256            the preceding entry's digest, or 64 zeros
+
+the record gains exactly one thing:
+  approval_ledger_ref: {ledger_id, entry_sha256}
+```
+
+**The mechanism that makes it free is the CONTENT DIGEST.** A record's content
+digest is its bytes projected through a view in which approval evidence is removed
+and approval state is reset to the no-claim values every record already carries.
+Two consequences, both measured:
+
+- a record nobody approved projects to **its own bytes**, so all **261** stored
+  review digests still verify, unchanged, for all **321** records;
+- an approved record projects back to **the file it had before the approval**,
+  rendered in that file's own detected layout (the records are a mix of 1- and
+  2-space indent, so the layout is probed and verified, never assumed).
+
+The review-digest check compares the **content** digest. Therefore recording an
+approval **neither bumps the revision, nor stales a link, nor invalidates a review
+digest.** The self-test *"an approval recorded through the ledger stales no link
+and invalidates no review digest"* proves it on a record a review record **already
+covers** - the record the old test had to avoid:
+
+```
+FB2-HW-TSR-000001/as_is: revision 2 -> 2;
+  stale-link observations 122/1170 -> 122/1170;
+  review digests verified 261 -> 261; mismatch findings 0 -> 0;
+  approval landed in revision_history = False (must be False);
+  content digest unchanged = True
+```
+
+**What it costs, stated rather than glossed.** A review digest no longer pins a
+record's *approval state*, so flipping `production_authorized` from `false` to
+`true` is not caught by `review_digest_mismatch`. It is caught by four controls
+that are stronger for that purpose: `production_authorized_rejected` (which now
+requires a complete ledger entry), the recursive authority-key scan, the
+ASIL/conformity/certification claim classes, and acceptance gate `[7/8]`. The
+division is deliberate: a review digest is a statement about **what was reviewed**,
+and an approval is not what was reviewed.
+
+### 0.2c `reviews/signed/` is the ONLY admissible home - enforced
+
+Element 5 used to accept a cited packet from **either** `reviews/packets/` or
+`reviews/signed/`, while every packet *told* the reviewer to archive under
+`signed/`. Guidance implemented as a permissive rule. Now:
+
+- an approval citing `docs/artifacts/reviews/packets/...` **fails validation**;
+- the finding names the archive and says **ARCHIVE THE SIGNED PACKET FIRST**,
+  because a reviewer told only that their path is wrong goes looking for a
+  different wrong path.
+
+Why this is the right rule and not a technicality: `reviews/packets/` is
+**rewritten** by `make_review_packets.py` on every regeneration. The generator
+refuses to overwrite a packet that already carries a signature, so evidence
+parked there survives by ordering luck rather than by rule - and when it is
+finally overwritten, the approval fails element 5 for a reason that has nothing to
+do with the reviewer's judgement.
+
+Self-test: *"an approval citing a packet in the regenerated `packets/` tree FAILS
+and names the archive"*, which builds a complete approval, re-points its
+`review_packet.path` at a real `packets/` file and re-points `sha256` at that same
+file, so that admissibility is the *only* thing that can fire - and requires the
+rejection to name the archive.
+
+### 0.2d `approval_staleness` - staleness is a state, not a silence
+
+When a record's content changes after an approval, the ledger entry's
+`approved_record_sha256` no longer matches. That used to be **correct but
+invisible**: the approval simply stopped counting, with no finding and no count.
+The only symptom was a numerator that stopped moving, which is indistinguishable
+from a reviewer who changed their mind.
+
+Now it is a **first-class measured state**:
+
+- **STALE, not invalid.** It does **not** fail validation. A self-test asserts both
+  halves - the stale approval produces zero defects *and* one finding - because a
+  fix that only made it visible would leave the invisibility latent in the
+  validator, and a fix that only made it non-fatal would leave it unmeasured.
+- **Counted.** `approval_staleness` reads `stale / total approvals`, printed by
+  `coverage` beside the fifteen dimensions and by `check`. It is a counted METRIC
+  and not a sixteenth DIMENSION, because "this corpus has fifteen coverage
+  dimensions" is a claim the audit trail relies on.
+- **Reported with what changed.** The finding names the record, the ledger entry,
+  the two digests, the revision delta and **which fields differ** - recoverable
+  because every signed packet embeds the approved record verbatim under
+  `record_verbatim`, so the validator diffs the approved bytes against the current
+  ones instead of printing two opaque digests.
+- **Excluded from the numerator, not discarded.** See §0.1a.
+
+Current value: **0/0**. The ledger holds no entry, so there is nothing to go
+stale - a measured zero over an empty population, and the detail string says so
+rather than claiming a fact nothing looked at.
+
+### 0.2e The hash chain and the git anchor - and the limit that remains
+
+Two controls were added to raise the **cost** of forging an approval and make
+forgery **detectable after the fact**.
+
+| control | what it proves | what it does NOT prove |
+| --- | --- | --- |
+| hash chain: each entry's `previous_entry_sha256` is its predecessor's digest | the entries exist, are in the order written, and none has been edited, deleted or reordered. Deleting, reordering or editing any entry breaks the chain **from that point on**, and `corpus.py` reports the **first** break | that any of it is true |
+| `packet_first_commit`, whose commit and blob presence are both confirmed | **when** the signed packet was first committed, and **in what state** - the bytes the reviewer signed existed in this repository at a known point in its history | **who read them** |
+
+Both are exercised. The chain self-test builds a genuine three-entry chain and
+then mutates a copy of it three ways - edits one entry's payload, deletes the
+middle entry, reorders two entries - and requires each to be detected at the
+first break with exactly one finding. The git-anchor self-test builds a **real
+git repository** in a tempdir, commits the archived packet, and requires that
+citing the commit which contains it anchors, that citing a non-existent commit is
+reported, and that citing a real commit which does **not** contain the blob is
+reported.
+
+> **THE RESIDUAL LIMIT, AND IT IS NOT FIXED.** The chain proves existence,
+> ordering and integrity. The git anchor proves when and in what state the packet
+> was committed. **Neither proves that a human read anything, and none of this
+> makes an approval unforgeable.** A determined person can write all six elements,
+> archive a packet, cite a real commit and maintain the chain correctly, and
+> nothing in this repository can distinguish that from an approval a competent
+> independent reviewer genuinely gave. **That limit is IRREDUCIBLE** - any
+> attestation can be forged by someone determined to lie. What was added is cost
+> and detectability, not prevention.
+
+The limit is recorded in four places so it cannot be quietly dropped:
+`corpus-policy.json#/review_policy/approval_ledger_amendment`,
+`docs/artifacts/governance/approval-ledger.md`, the docstring of
+`CorpusTool._check_ledger_git_anchor`, and
+`docs/artifacts/tools/verify_approval_ledger_independently.py`. A self-test reads
+the code and the documentation and asserts the wording is still there - because an
+anchor that reads as stronger than it is would be worse than no anchor.
 
 ### 0.3 `actual_product_evidence` cannot reach 33/33
 
@@ -307,15 +491,26 @@ Filter to a slice: `--only-type finding`, `--only FB2-SAF-FSR-000001`, or
 
 ### 1.4 What they return
 
-Per record, one signed packet, and one line of transcription into the record:
+Per record: one **signed packet archived under `signed/`**, one **line appended to
+the ledger**, and one small edit to the record. Nothing else.
 
-1. **The signed packet.** Keep it. Do not leave it in
-   `docs/artifacts/reviews/packets/`: regeneration overwrites that tree, and the
-   generator **refuses** to overwrite a packet that already carries a signature
-   rather than destroy it. Archive signed packets in
-   `docs/artifacts/reviews/signed/<profile>/`, which exists and carries a README
-   stating the rules; no generator writes there, by design.
-2. **The decision, transcribed into the record by a human:**
+1. **The signed packet, archived.** Fill section 9 **in your own copy** - no tool
+   may do it - and copy the signed packet twin to
+   `docs/artifacts/reviews/signed/<profile>/<id>.json`, byte-for-byte as you
+   signed it. Keep the `.md` too if you annotated it; the machine-readable twin
+   is what the validator checks. **This is the only admissible home.** A citation
+   into `docs/artifacts/reviews/packets/` is rejected, because that tree is
+   rewritten on every regeneration (§0.2c). A corrected packet is a new document
+   with a new signature, never an edit to a signed one.
+
+2. **One line appended to the ledger.** `--transcribe <ID>` prints the entry with
+   every machine-readable field resolved. You fill in the human fields - your
+   name, role, date - and a human appends the line. The ledger is **append-only**:
+   entries are never reordered and never removed, and each entry names its
+   predecessor's digest, so a deletion or an edit breaks the chain from that point
+   on and the validator says where.
+
+3. **The decision, transcribed into the record by a human:**
    - `human_approval_status`: `approved` or `rejected` (the schema's value set is
      `pending | approved | rejected | not_required`, per
      `role-and-review-policy.json` `approval_semantics`);
@@ -324,22 +519,33 @@ Per record, one signed packet, and one line of transcription into the record:
      ISO-8601, `independence{owner_role, satisfied, evidence, policy_ref}`, and
      `review_packet{path, sha256, record_sha256_at_signing}` - **both** digests,
      so the record is traceable to the exact packet bytes and the exact record
-     bytes that were read. `make_review_packets.py --transcribe <ID>` prints
-     them already resolved; it writes nothing;
-   - a `revision_history` entry naming the reviewer, their role, the date, and
-     **the packet digest they signed**, so element 6 of the contract is
-     satisfied and the entry is self-auditing;
+     bytes that were read. `make_review_packets.py --transcribe <ID>` prints them
+     already resolved; it writes nothing;
+   - **`approval_ledger_ref: {ledger_id, entry_sha256}`**, naming the line you
+     just appended. **Nothing in `revision_history`.** That is the whole point of
+     §0.2b and it is the one instruction in this document that is a hard rule
+     rather than a convention;
    - `automated_review_status` **left alone**. It describes machine checks
      (`schema_valid`, `links_valid`, `provenance_consistent`,
      `consistency_checks`) and is not a statement about human judgement;
    - `production_authorized` and `product_verification_credit` **left `false`**.
      No signature on a corpus record authorises production or confers
      verification credit. Changing those requires a production-authority role
-     (`architect` or `safety_manager`) and a record family human approval is
-     required for (§0.2a) - which a reviewer of an ordinary record will not
-     have. Do not touch them as part of an approval batch.
-3. **The comments**, which are the most valuable output. A `reject` with a
+     (`architect` or `safety_manager`), a record family human approval is required
+     for (§0.2a) and **its own ledger entry** - one reference per kind, because a
+     human approval and a production grant are different claims.
+
+4. **The comments**, which are the most valuable output. A `reject` with a
    reason is worth more than an `approve`.
+
+**Run `--transcribe` twice, not once.** The digest an approval must cite is the
+digest of the **archived signed copy**, and that copy has your signature in it, so
+it is a different file from the generated packet and its digest cannot be known
+before you have signed it. The first run therefore tells you the digest is *not
+resolved* and to archive first; the second run, after the copy exists, resolves it
+from the file on disk. A self-test asserts both halves, that both printed digests
+are the real ones, that the output contains no decision, and that the packet tree
+is byte-identical afterwards.
 
 ### 1.5 Independence - what "independent" has to mean here
 
@@ -375,20 +581,29 @@ Minimum for a signature to mean anything:
 
 ### 1.6 What must be decided before the first signature lands
 
-> **P1 and the first P2 were decided on 2026-10-04** by amendment
-> `APPROVAL-RULE-A1`. They are marked DONE below and kept, because they record
-> what the decision was and why. The two open P2 items and the new P3 are
-> **still open**.
+> **Every item that can be decided by amendment has now been decided.** P1 and the
+> first two P2 items were decided on 2026-10-04 by `APPROVAL-RULE-A1`; the P3
+> revision-convention item and the P2 archive item were decided the same day by
+> `APPROVAL-LEDGER-A1`. They are kept, marked DONE, because they record what was
+> decided and why. **Two P2 items and one P3 remain OPEN**, and one limit is
+> permanently open by nature.
 
 | id | decision | status | why it blocks |
 | --- | --- | --- | --- |
-| **P1** | Amend `human_approval_rejected` so a **recorded, attributed** human approval is not a validation failure. | **DONE 2026-10-04** (`APPROVAL-RULE-A1`) | Without it the first signature turned `check` RED (§0.2). Done as an evidence requirement over six elements, read from `role-and-review-policy.json#/approval_evidence_contract` rather than hardcoded (§0.2a). |
+| **P1** | Amend `human_approval_rejected` so a **recorded, attributed** human approval is not a validation failure. | **DONE 2026-10-04** (`APPROVAL-RULE-A1`) | Without it the first signature turned `check` RED (§0.2). Done as an evidence requirement over six elements, read from the policy file rather than hardcoded (§0.2a). |
 | **P1** | Decide whether `human_approval` stays a constant `0` (§0.1) or becomes a measurement. | **DONE 2026-10-04** - measured, by the validator's own predicate (§0.1a). `production_authorization` likewise, with a strictly higher bar. | Either answer is defensible; leaving it undecided meant nobody could tell whether a landed signature worked. |
-| **P2** | Add the seven undeclared `owner_role` values to `role-and-review-policy.json`, or map them to declared roles (§1.2). | **OPEN** | A signature under an undefined role is not traceable to a competence requirement. Note the new dependency: the approver's `role` must be a **declared** `role_id`, so a record whose `owner_role` is undeclared can still be approved (independence is judged against the owner role, not against the approver's), but the *reviewer's* role must exist in the policy. |
-| **P2** | Confirm `docs/artifacts/reviews/signed/` as the canonical archive location. | **RATIFIED IN PART 2026-10-04** | The validator now resolves a cited packet from `reviews/packets/` **or** `reviews/signed/`, and the packet generator tells reviewers to archive there. Still open: whether the directory is the *only* permitted home, i.e. whether a signed packet may stay in `packets/`. |
-| **P2** | Amend `production_authorized_rejected` and `verification_credit_rejected` - or record explicitly that they stay as they are. | **DONE 2026-10-04** - both amended to the same evidence requirement. `production_authorization` additionally requires the approving role to hold production authority and the record's family to be one human approval is required for (§0.2a). `verification_credit` takes the same six elements. | A corpus owner should say so rather than leave it ambiguous. |
-| **P3** | **NEW.** Decide whether `human_approval_status: "not_required"` should remain rejected. | **OPEN - deliberately unchanged** | The contract governs *approval values*; `not_required` is not one. It still fails for want of evidence, which preserves the pre-amendment verdict rather than relaxing it as a side effect. If a record legitimately needs no approval, there is currently no way to say so. |
-| **P3** | **NEW.** Ratify that recording an approval against the record's **current** revision, without bumping the revision number, is the correct convention. | **OPEN** | Measured, not assumed: bumping the revision makes every link that pins this record's revision stale and invalidates the sha256 every review record stores for it. So an approval that bumps the revision *cannot* be recorded without breaking two other controls. The convention is documented in every packet and implemented by `--transcribe`, but nobody has ratified it as policy. |
+| **P2** | Ratify that recording an approval against the record's **current** revision, without bumping it, is the correct convention. | **RESOLVED DIFFERENTLY 2026-10-04** (`APPROVAL-LEDGER-A1`, §0.2b) | The convention was a workaround for an unsatisfiable requirement, so ratifying it would have ratified the workaround. Instead the approval moved out of `revision_history` into an append-only ledger and the record keeps only a reference; recording one now costs nothing anywhere else, so there is no convention left to ratify. Proven by self-test, not asserted. |
+| **P2** | Confirm `docs/artifacts/reviews/signed/` as the canonical archive location. | **DECIDED 2026-10-04** (`APPROVAL-LEDGER-A1`, §0.2c) | The open half - whether it is the *only* permitted home - is now decided: yes, and it is **enforced**. A `packets/` citation fails with a message naming the archive. Self-tested. |
+| **P2** | Add the seven undeclared `owner_role` values to `role-and-review-policy.json`, or map them to declared roles (§1.2). | **OPEN** | A signature under an undefined role is not traceable to a competence requirement. The approver's `role` must be a **declared** `role_id`, so a record whose `owner_role` is undeclared can still be approved (independence is judged against the owner role, not against the approver's), but the *reviewer's* role must exist in the policy. This is now the **highest-value open item**, because it is the one thing standing between this corpus and its first signature. |
+| **P2** | Amend `production_authorized_rejected` and `verification_credit_rejected` - or record explicitly that they stay as they are. | **DONE 2026-10-04** (`APPROVAL-RULE-A1`) - both amended to the same evidence requirement. `production_authorization` additionally requires the approving role to hold production authority and the record's family to be one human approval is required for, and since `APPROVAL-LEDGER-A1` its own ledger entry. `verification_credit` takes the same six elements. | A corpus owner should say so rather than leave it ambiguous. |
+| **P3** | Decide whether `human_approval_status: "not_required"` should remain rejected. | **OPEN - deliberately unchanged** | The contract governs *approval values*; `not_required` is not one. It still fails for want of evidence, which preserves the pre-amendment verdict rather than relaxing it as a side effect. If a record legitimately needs no approval, there is currently no way to say so. |
+| **P3** | Ratify the approval-recording convention. | **CLOSED, NOT BY RATIFICATION** | See the P3 row above; superseded by the ledger amendment. |
+| **RISK 1** | Make an approval unforgeable. | **NOT POSSIBLE. REDUCED ONLY, AND NOT CLAIMED AS FIXED.** | A determined person can forge all six elements, archive a packet, cite a real commit and maintain the chain correctly. Three controls raise the **cost** and make forgery **detectable** (hash chain, git anchor, archive rule). Neither is prevention. The limit is **irreducible** and is recorded in four places (§0.2e). Do not describe any of it as making approval unforgeable. |
+
+**The one thing left to do, and it is not engineering.** Every item above is
+either decided or explicitly open. What remains is a person reading a record and
+deciding whether they can put their name on it. That is §1.7's batches, and the
+corpus holds **no** approval because doing it needs a person.
 
 ### 1.7 Recommended order
 
@@ -485,44 +700,51 @@ all observations of real source), the `scenario` fixtures (18), the
 
 Per batch, in order:
 
-1. Archive the signed packets **outside** `docs/artifacts/reviews/packets/` -
-   into `docs/artifacts/reviews/signed/`, which the validator also resolves
-   from, so cite the archived copy in `review_packet.path`.
-2. Transcribe each decision into its record as a human act:
-   `human_approval_status` set to `approved` or `rejected`, an
-   `approval_evidence.human_approval` block carrying all six elements of §0.2a,
-   and a `revision_history` entry naming the reviewer, their role, the date and
-   the signed packet digest. **A human does this. No tool does this.**
-   `python3 docs/artifacts/tools/make_review_packets.py --transcribe <ID>`
-   prints the exact block with both digests already resolved; it writes nothing
-   and fills no decision.
-3. Record the batch: which records, which signatures, which rejections and why,
+1. Fill section 9 of each packet **in your own copy**. **A human does this. No
+   tool does this**, and no tool in this repository has a code path that can.
+2. Archive each signed packet to `docs/artifacts/reviews/signed/<profile>/<id>.json`,
+   byte-for-byte as signed. Cite the archived copy in `review_packet.path` - it is
+   the only path that resolves.
+3. Run `--transcribe <ID>` for each record, fill the human fields, and **append one
+   line per record to `docs/artifacts/governance/approval-ledger.jsonl`**. Chain
+   the `previous_entry_sha256` fields: entry N names entry N-1's digest, and the
+   first names 64 zeros.
+4. Merge into each record: `human_approval_status`, the
+   `approval_evidence.human_approval` block, and `approval_ledger_ref`. **Nothing
+   in `revision_history`.**
+5. Record the batch: which records, which signatures, which rejections and why,
    and which records in the batch were not signed and why. A batch record that
    lists only approvals is a misleading batch record.
-4. Re-run and read every number:
+6. Re-run and read every number:
    ```bash
    python3 docs/artifacts/tools/corpus.py validate
    python3 docs/artifacts/tools/corpus.py check
    python3 docs/artifacts/tools/corpus.py selftest
    python3 docs/artifacts/tools/make_review_packets.py --verify
+   python3 docs/artifacts/tools/verify_approval_ledger_independently.py
    ```
-5. **Expect `check` to stay GREEN, and `human_approval` to move by the number
-   you recorded** (since 2026-10-04; before that, §0.2 applied). If `check` is
-   red, read the finding: it names which of the six elements is unmet. A red
-   result on an approval you believe is complete is a defect in the approval or
-   in the rule - do not paper over it by removing the approval.
-6. Expect `human_approval` to read `N/321` where `N` is the number of properly
-   evidenced approvals. If it reads 0 while approvals are recorded, they are not
-   properly evidenced and validate will say why.
-7. Regenerate the packets. Records that changed get new digests; the generator
-   refuses to overwrite the signed packets you archived elsewhere, and the
-   freshly generated packets for those records carry the *new* digest. A signature
-   against the old digest provably does not cover the new bytes - which is the
-   point of the digest, and which now also means the approval fails element 5
-   until a human re-signs.
-8. `automated_review_coverage` is expected to stay at `172/282` and
-   `production_authorization` at `0/321`. Neither measures human approval. If
-   either moves, something wrote a value nobody signed.
+7. **Expect `check` to stay GREEN, and `human_approval` to move by the number of
+   approvals you recorded** that are evidenced *and current*. If `check` is red,
+   read the finding: it names which of the six elements is unmet. A red result on
+   an approval you believe is complete is a defect in the approval or in the rule -
+   do not paper over it by removing the approval.
+8. **Expect the revision numbers and the link counts NOT to move.** That is the
+   whole claim of `APPROVAL-LEDGER-A1`, and if a batch changes a revision or makes
+   a link stale, something recorded the approval the wrong way.
+9. Expect `approval_staleness` to read `0/N` for a batch of current approvals. If
+   it reads `M/N`, `M` human judgements no longer describe the bytes on disk. Read
+   the finding: it names the record, the ledger entry and **which fields
+   changed**. Re-review those fields and append **new** entries - never edit or
+   delete the old ones.
+10. Regenerate the packets. Records that changed get new digests; the generator
+    refuses to overwrite the signed packets you archived elsewhere, and the
+    freshly generated packets for those records carry the *new* digest. A signature
+    against the old digest provably does not cover the new bytes - which is the
+    point of the digest, and which now shows up as **staleness in the ledger** and
+    a named field diff, rather than as a bare validator failure.
+11. `automated_review_coverage` is expected to stay at `172/282` and
+    `production_authorization` at `0/321`. Neither measures human approval. If
+    either moves, something wrote a value nobody signed.
 
 ---
 
@@ -818,37 +1040,84 @@ can no longer tell them apart from the fake.
 | self-test | `corpus.py selftest` | *"a production grant hidden in a nested key is still caught"* - a production-authority key and a conformity claim nested inside the new `approval_evidence` object are still caught by the unchanged recursive scan. The new field is not a shadow. |
 | self-test | `corpus.py selftest` | *"one approval violation produces one finding across both detector paths"* - `cmd_validate` runs two methods that both check these fields; the count must stay 1. |
 | self-test | `corpus.py selftest` | *"no packet states the superseded prohibition"* and *"every packet states the current approval rule and the six required fields"* - all 642 packet files are read, so the instruction a reviewer holds cannot drift back to "your signature turns check red" and cannot be merely deleted. |
-| self-test | `corpus.py selftest` | *"--transcribe resolves both digests correctly and writes nothing"* - runs the command a reviewer runs, asserts both printed digests are the real ones, asserts the packet tree is byte-identical afterwards. |
+| self-test | `corpus.py selftest` | *"--transcribe resolves both digests correctly and writes nothing"* - runs the command a reviewer runs TWICE, because the procedure is two steps: the first must say the digest is not resolved and to archive first, the second must print the real digest of the archived file. Asserts both printed digests are real, that the output contains no decision, that it prints `approval_ledger_ref` and forbids a `revision_history` entry, that it states the forgeability limit, that the packet tree is byte-identical afterwards, and that the ledger is still 0 bytes. |
+| `approval_ledger_ref` resolution | `corpus.py` element 6, inside `_approval_evidence_defects` | the named ledger entry must exist, must name this record's `(profile, id)`, must carry this approval's `kind`, and its `entry_sha256` must equal the digest of that entry as it stands. A forged `ledger_id` or a wrong `entry_sha256` is rejected by name. Self-tested. |
+| chain walk | `corpus.py` `_validate_approval_ledger`, **high** | walks every entry, reports the **first** break of `previous_entry_sha256` with its index, line and `ledger_id`. Also reports a malformed line, a duplicate `ledger_id`, a missing required field, and a non-sha256 digest field. |
+| git anchor | `corpus.py` `_check_ledger_git_anchor`, **high** | the cited `packet_first_commit` must exist (`git cat-file -e`) **and** the packet blob must be present in it. Proves WHEN and IN WHAT STATE; proves nothing about WHO. A tree with no `.git` reports it unverified rather than failing every clean checkout. |
+| the signed archive rule | `corpus.py` `_resolve_approval_packet`, element 5 | a cited packet is admissible **only** from `docs/artifacts/reviews/signed/`. A `reviews/packets/` citation is rejected with a message naming the archive and saying to archive the signed packet first. Self-tested with the digest re-pointed at the same `packets/` file, so admissibility is the only thing that can fire. |
+| staleness, made visible | `corpus.py` `_report_stale_approvals`, **medium, never gating** | an approval whose ledger entry no longer matches the record's current content digest is STALE, not invalid. Reported with the record, the ledger entry, both digests, the revision delta and **the fields that differ** - recoverable because every signed packet embeds the approved record verbatim. |
+| staleness, counted | `coverage` and `check`, plus `corpus.py selftest` | `approval_staleness` reads `stale / total approvals` on every run and is asserted to move from 0 to 1 when a tempdir approval's content is edited afterwards. |
+| the ledger is empty | `corpus.py selftest` | *"the approval ledger is empty and nothing in this repository appends to it"* - asserts the real ledger has zero non-blank lines, zero parsed entries and zero malformed lines, and that EXACTLY ONE append-mode open of it exists across `docs/artifacts/tools` - corpus.py's own self-test fixture - so a second one fails. |
+| from-scratch checker | `docs/artifacts/tools/verify_approval_ledger_independently.py` | imports nothing from `corpus.py`; re-derives the chain, the approvals count, the packet digests, the cited paths, the empty signature blocks and the single-append-site fact from bytes on disk, and states its own limits. |
+| self-test | `corpus.py selftest` | *"governance gate [7/8] sees a ledger fabrication, not only the artifact path"* - proves element 6 is reached through `_validate_governance_semantics`, which is the only path gate [7/8] runs. Without this the gate would go blind to exactly the claim class it exists to catch. |
+| self-test | `corpus.py selftest` | *"the approval ledger hash chain is walked and a mutated chain is detected"* - a genuine three-entry chain, then three mutations of a copy: edit one entry's payload, delete the middle entry, reorder two entries. Each must be detected at the first break with exactly one finding, and the chain must validate again once restored. |
+| self-test | `corpus.py selftest` | *"a ledger entry must anchor its packet to a commit that contains it, and the limit is stated"* - builds a **real git repository** in a tempdir so the anchor check is live rather than vacuous; then cites the commit that holds the packet (anchors), a non-existent commit (rejected), and a real commit that does not hold the blob (rejected). Also reads the code and `approval-ledger.md` and asserts the forgeability limit is still stated in both. |
 
-**The residual risk, stated honestly.** The amendment (2026-10-04) DID weaken
-one thing, and it should be named rather than defended away: before it, *any*
-approval value failed, so the mechanical guard against fabrication was total. Now
-a fully evidenced approval passes, and what guards fabrication is the attribution
-requirement rather than the ban. Six things had to be true for that to be a
-trade rather than a hole - a named person, a declared role, enforced
-independence from both the owner role and the content author, a date, a digest
-chain resolved against a packet on disk and checked against that packet's own
-recorded record digest, and a revision_history entry citing it - and each one is
-a separate way to fabricate less easily than the value alone.
+**Two forgeries this section must also name, because the ledger invites them.**
 
-Three residual risks remain, and none of them is closed by this amendment:
+**Recording the approval in `revision_history` "just this once".** It is the one
+instruction in this document that is a hard rule rather than a convention, and it
+is tempting precisely because it used to be the documented procedure. What it does
+is real damage and does it silently: it bumps the record's revision, which makes
+every link pinning that revision stale, which invalidates the `sha256` that every
+review record stores for it. The corpus ends up with a signed approval and a
+corpus that no longer validates, and the two failures have nothing obviously to do
+with each other. The self-test *"an approval recorded through the ledger stales no
+link and invalidates no review digest"* asserts `approval landed in
+revision_history = False`, on a record that a review record already covers, so the
+right way round is demonstrated on the record where the wrong way round actually
+bites.
 
-1. **A person can still forge all six.** The digest chain proves a packet exists
-   and pins which record state it was generated against; it does not prove a human
-   read anything. The only control against a determined human is that the evidence
-   is public and checkable, and that the batch record names who signed what.
-2. **`reviews/signed/` is an ordinary directory.** Nothing signs it. A signed
-   packet archived there is protected by the generator refusing to overwrite
-   signed packets in `packets/`, not by any cryptographic control over the
-   archive itself. The open P2 in §1.6 is about ratifying this location.
-3. **`human_approval_status: "not_required"` is still rejected**, which means a
+**Editing an existing ledger entry instead of appending a new one.** The ledger is
+append-only, and that is enforced the only way an append-only structure can be:
+each entry binds its predecessor by digest, so editing entry 3 changes its digest
+and invalidates entry 4's `previous_entry_sha256`, to the end. The validator
+reports the **first** break and names it. The same applies to deleting or
+reordering. All three are exercised by a self-test against a copied chain. If you
+need to record a changed judgement - because the content changed, or because you
+were wrong the first time - **append a new entry**. Never repair the old one. (The
+stale one then shows up in `approval_staleness`, which is correct: it is a real
+human judgement that has been overtaken, and hiding it would defeat the point of
+counting it.)
+
+**The residual risk, stated honestly.** The first amendment (2026-10-04) DID
+weaken one thing, and it should be named rather than defended away: before it,
+*any* approval value failed, so the mechanical guard against fabrication was total.
+Now a fully evidenced approval passes, and what guards fabrication is the evidence
+requirement rather than the ban. Six things had to be true for that to be a trade
+rather than a hole - a named person, a declared role, enforced independence from
+both the owner role and the content author, a date, a digest chain resolved
+against an archived packet on disk and checked against that packet's own recorded
+record digest, and a live append-only ledger entry - and each one is a separate
+way to fabricate less easily than the value alone.
+
+Four residual risks remain, and none of them is closed by either amendment:
+
+1. **A person can still forge all six.** This is IRREDUCIBLE, and the second
+   amendment does not change it - it makes forgery more expensive and more
+   detectable, which is not the same thing as preventing it. The hash chain proves
+   the entries exist, are in order and were not edited; the git anchor proves when
+   and in what state the packet was committed. **Neither proves a human read
+   anything.** A determined person can write all six elements, archive a packet,
+   cite a real commit and maintain the chain correctly, and nothing in this
+   repository can tell that from a real approval. See §0.2e.
+2. **`human_approval_status: "not_required"` is still rejected**, which means a
    record that legitimately needs no approval has no way to say so, and the next
    person to hit that will be tempted to work around it. Open P3 in §1.6.
+3. **The seven undeclared `owner_role` values** (§1.2) mean the reviewer's role
+   must still be added to the policy or mapped before their signature is
+   traceable. Open P2 in §1.6.
+4. **A review digest no longer pins a record's approval state**, because approval
+   metadata is excluded from the content digest. Flipping `production_authorized`
+   is therefore not caught by `review_digest_mismatch` - it is caught by four other
+   controls (§0.2b). Stated here because a control that silently stopped covering
+   something is the defect this corpus exists to prevent.
 
-What the amendment did **not** weaken, checked rather than asserted: the recursive
+What neither amendment weakened, checked rather than asserted: the recursive
 authority-key scan, the ASIL/conformity/certification claim classes, the
 provenance gate, and the packet-generator rule that no code path writes a
-signature.
+signature. Element 5 is **tighter** than before, not looser: one of its two
+admissible roots was removed.
 
 ### 3.2 An execution record with fabricated timestamps or hashes
 
@@ -1040,7 +1309,10 @@ python3 docs/artifacts/tools/corpus.py coverage
 
 # 3. the suite passes
 python3 docs/artifacts/tools/corpus.py check     # Acceptance suite: PASSED
-python3 docs/artifacts/tools/corpus.py selftest  # 101/101
+python3 docs/artifacts/tools/corpus.py selftest  # 130/130
+
+# 3b. an independent checker, sharing no code with the tool it checks
+python3 docs/artifacts/tools/verify_approval_ledger_independently.py   # PASS
 
 # 4. it passes from a clean checkout of HEAD, too
 export PATH="$PATH:/opt/homebrew/bin"
@@ -1048,10 +1320,26 @@ git archive HEAD | tar -x -C /tmp/cl && cd /tmp/cl \
   && python3 docs/artifacts/tools/corpus.py check
 ```
 
+```bash
+# 5. the ledger is empty and nothing has been signed
+python3 docs/artifacts/tools/verify_approval_ledger_independently.py
+#    expect: A PASS (0 entries), B PASS (chain valid over an empty ledger),
+#            C PASS (0 non-pending approvals, 0 evidence blocks, 0 ledger refs),
+#            D PASS (321/321 packet digests), E PASS (every cited path resolves),
+#            F PASS (0 filled signature blocks), G PASS (exactly one append site)
+wc -c docs/artifacts/governance/approval-ledger.jsonl   # 0
+```
+
 **If `human_approval` is anything other than `0/321`, or `actual_product_evidence`
 anything other than `0/33`, before any human has signed anything and before any
 hardware has run, then something wrote a value it had no right to write.** Find it
 before anything else.
+
+**Equally: if the ledger is not 0 bytes, or `approval_staleness` is not `0/0`,
+something wrote an approval without a person.** The first is a forgery or a
+leftover; the second is a real judgement that no longer describes the bytes on
+disk. Neither may be fixed by editing or deleting the entry - append a new one, or
+find the person who signed.
 
 ---
 
@@ -1059,8 +1347,21 @@ before anything else.
 `docs/artifacts/sources/source-registry.json`,
 `docs/artifacts/traceability/link-registry/`, `docs/artifacts/reviews/records/`,
 `docs/artifacts/reviews/findings/`,
-`docs/artifacts/governance/role-and-review-policy.json`,
-`docs/artifacts/governance/finding-disposition-vocabulary.md` and
-`docs/artifacts/tools/corpus.py` at commit `cecececf`, with the packet tooling
-uncommitted in the working tree. Every claim about a rule names the rule; every
-claim about a count was counted from the tree, not copied from a report.*
+`docs/artifacts/governance/role-and-review-policy.json` (both
+`#/approval_evidence_contract` and the effective `#/approval_ledger_contract`),
+`docs/artifacts/governance/corpus-policy.json`,
+`docs/artifacts/governance/approval-ledger.jsonl` (0 bytes) and
+`docs/artifacts/governance/approval-ledger.md`,
+`docs/artifacts/governance/finding-disposition-vocabulary.md`,
+`docs/artifacts/tools/corpus.py`,
+`docs/artifacts/tools/make_review_packets.py` and
+`docs/artifacts/tools/verify_approval_ledger_independently.py`. Every claim about
+a rule names the rule; every claim about a count was counted from the tree, not
+copied from a report.
+
+The `approval_staleness` figure is a COUNTED METRIC reported beside the fifteen
+coverage dimensions, not a sixteenth dimension, because "this corpus has fifteen
+coverage dimensions" is a claim the audit trail relies on and inflating the count
+to advertise a new measurement would make it false. It is reported on every
+`coverage` run and on every `check` run, so it is as visible as a dimension would
+be.*

@@ -258,8 +258,12 @@
   }
  ],
  "outcome_record": {
-  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator.",
+  "_ledger_note": "packet_first_commit is the git commit that FIRST contained the archived signed packet. It proves WHEN and IN WHAT STATE the packet was committed. It does NOT prove who read it, and nothing in the corpus makes an approval unforgeable. See docs/artifacts/governance/approval-ledger.md",
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator. Since APPROVAL-LEDGER-A1 the decision is recorded in the append-only ledger at docs/artifacts/governance/approval-ledger.jsonl, and these fields cross-reference that entry rather than being the record of it.",
   "decision_recorded_in_record": "",
+  "ledger_entry_sha256": "",
+  "ledger_id": "",
+  "packet_first_commit": "",
   "packet_sha256_at_signing": "",
   "recorded_revision": "",
   "signed_by": "",
@@ -429,8 +433,8 @@
     "2. approved_by - a named individual, not a role and not a team",
     "3. role - a role_id declared in role-and-review-policy.json#/roles - plus independence{owner_role, satisfied, evidence, policy_ref}; the approving role must differ from owner_role AND from the author of the last content revision",
     "4. date - ISO-8601, checked by grammar and by parse",
-    "5. review_packet{path, sha256, record_sha256_at_signing}; path must resolve to a packet.json on disk under docs/artifacts/reviews/packets/ or docs/artifacts/reviews/signed/; sha256 must equal that file's bytes now; record_sha256_at_signing must equal this packet's integrity.record_sha256; target.record_id and target.profile must both name this record",
-    "6. a revision_history entry whose author is the approving role and whose description records the approval and cites the signed packet"
+    "5. review_packet{path, sha256, record_sha256_at_signing}; path must resolve to a packet.json on disk under docs/artifacts/reviews/signed ONLY - the regenerated tree docs/artifacts/reviews/packets is NOT admissible, because it is rewritten on every regeneration and would destroy your evidence; sha256 must equal that file's bytes now; record_sha256_at_signing must equal this packet's integrity.record_sha256; target.record_id and target.profile must both name this record",
+    "6. approval_ledger_ref{ledger_id, entry_sha256} naming your entry in docs/artifacts/governance/approval-ledger.jsonl. It is approval METADATA, not content: it is excluded from the record's content digest and is never a revision_history entry, so recording it neither bumps the revision nor stales a link. NEVER record the approval in revision_history - doing so stales every link pinning this revision and invalidates every stored review digest. See docs/artifacts/governance/approval-ledger.md"
    ],
    "rule_id": "human_approval_rejected",
    "severity": "high"
@@ -438,7 +442,7 @@
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
   "_record_sha256_at_signing": "2e9755753cca8ada0f27ca22a3fff10d2cbf008a9378a9efd659535a940d0ac7",
-  "_recording": "Transcribe a completed signature into the record as human_approval_status plus an approval_evidence.human_approval block plus a revision_history entry naming the reviewer and citing this packet, and archive the signed packet under docs/artifacts/reviews/signed/.",
+  "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
   "date": "",
@@ -449,7 +453,7 @@
   "role": "",
   "signature": ""
  },
- "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus ACCEPTS a properly evidenced approval rather than banning the value outright, so this rule now has to carry the evidence contract in full: see signature_block._contract.",
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus ACCEPTS a properly evidenced approval rather than banning the value outright, so this rule now has to carry the evidence contract in full: see signature_block._contract. Since the same day (amendment APPROVAL-LEDGER-A1) the approval is recorded in the append-only ledger at docs/artifacts/governance/approval-ledger.jsonl and the record keeps only a reference to it, so recording your signature neither bumps the revision nor invalidates any review digest.",
  "target": {
   "artifact_type": "safety_analysis",
   "engineering_domain": "safety",

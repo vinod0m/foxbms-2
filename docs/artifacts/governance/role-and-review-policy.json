@@ -153,5 +153,55 @@
       "The recursive authority_keys scan (production_release, authorized_for_production and eight siblings) and the four GOVERNANCE_CLAIM_FIELDS claim classes (ASIL determination, conformity, certification) are untouched. This amendment changes only what a properly evidenced approval is ALLOWED to say; it adds no new authority.",
       "No record in this corpus carries an approval. The contract describes how one would be recorded. It does not record one."
     ]
+  },
+  "approval_ledger_contract": {
+    "amendment_id": "APPROVAL-LEDGER-A1",
+    "date": "2026-10-04",
+    "author": "safety_engineer",
+    "supersedes": "Element 6 of approval_evidence_contract.required_elements as written by APPROVAL-RULE-A1, which required 'a revision_history entry whose author is the approving role, whose revision is at least the record's current revision, and whose description both records the approval and references the signed packet by digest or by path'. That requirement is withdrawn, not deleted: its text is preserved above, in approval_evidence_contract.required_elements[5], and the reason it had to be withdrawn is recorded under previous_meaning and under element_6_withdrawal_reason below. Nothing else is superseded. Elements 1-5, the independence_rule, the production-authority bar and the whole of APPROVAL-RULE-A1 stand unaltered.",
+    "effective": true,
+    "effective_note": "corpus.py reads THIS block in preference to approval_evidence_contract when this flag is true, so the six required elements the tool enforces are the six below and not the six above. A superseded element list is kept in the file rather than edited in place, because an amendment that is rewritten cannot be audited.",
+    "element_6_withdrawal_reason": "Recording the approval in revision_history forces a revision bump, and a revision bump breaks two controls that nothing authorised breaking: every link that pins that record's revision goes stale, and every review record stores a sha256 of that record, so the sha256 is invalidated. Measured, not assumed - see closing-list.md 1.6 P3 and coverage-plan.json CORR-COV-023. The consequence of the amendment that introduced the six elements was therefore that a legitimately evidenced approval could not be recorded at all without collateral damage, and the tool's own happy-path self-test had to pick a record that no review digest covers in order to prove the approval validates at all. That is the signature of an unsatisfiable requirement, not of a working one.",
+    "required_elements": [
+      "1. the approval field itself set to its grant value",
+      "2. approval_evidence.<kind>.approved_by - a named individual, not a role and not a team: at least two whitespace-separated tokens, not equal to any role_id or role name declared in this file's roles[] (case-insensitive), no token equal to a role_id, and no token from the team vocabulary (team, group, board, committee, panel, crew, squad, pool, department, office, the, staff, reviewers, approvers, automation, system, tool, script, agent, bot)",
+      "3. approval_evidence.<kind>.role - a role_id declared in this file's roles[] - together with approval_evidence.<kind>.independence, an object carrying owner_role (must equal the record's own owner_role), satisfied (true), evidence (a non-empty explanation of how independence holds, not a placeholder), and policy_ref (must name this file and the role_id)",
+      "4. approval_evidence.<kind>.date - ISO-8601, a date or a date-time",
+      "5. approval_evidence.<kind>.review_packet - an object carrying path (a packet.json under the SIGNED-PACKET ARCHIVE at docs/artifacts/reviews/signed/ ONLY, relative to the repository root, and present on disk; a citation into docs/artifacts/reviews/packets/ is REJECTED because that tree is regenerated and would destroy the evidence), sha256 (the sha256 of that file's bytes as they are on disk now), and record_sha256_at_signing (must equal the packet's own integrity.record_sha256). The packet must also name this record in target.record_id and target.profile, and its integrity.record_path must resolve to this record's own file.",
+      "6. approval_ledger_ref - an object on the record naming the append-only ledger entry that records this approval: ledger_id (the entry's own id in docs/artifacts/governance/approval-ledger.jsonl) and entry_sha256 (the digest of that entry). The entry must exist, must name this record's (profile, id), must carry this approval's kind, and its approved_record_sha256 must equal this record's CURRENT CONTENT digest. approval_ledger_ref is APPROVAL METADATA, not content: it is excluded from the content digest, it is never a revision_history entry, and recording it does not bump the record's revision. An approval is therefore recorded in the ledger and nowhere else, and recording one neither stales a link nor invalidates a review digest."
+    ],
+    "ledger": {
+      "path": "docs/artifacts/governance/approval-ledger.jsonl",
+      "documentation": "docs/artifacts/governance/approval-ledger.md",
+      "format": "JSON Lines, append-only, one JSON object per line, in approval order. Lines are never reordered and never removed. The file as committed is EMPTY: this corpus holds no approval.",
+      "append_only_note": "The ledger is append-only by construction: an entry names its predecessor by digest, so removing, reordering or editing any entry breaks the chain from that point on and the validator reports the first break. There is no code path in this repository that appends to the ledger, and none may be added without a person.",
+      "required_entry_fields": [
+        "ledger_id - unique within the ledger",
+        "record_id",
+        "profile",
+        "kind - one of the kinds in approval_evidence_contract.kinds",
+        "approved_record_sha256 - the CONTENT digest of the record at the moment of signing (see content_digest_rule)",
+        "approved_content_revision - the record's content revision at the moment of signing",
+        "approved_by - a named individual, under the same element-2 rule as on the record",
+        "role - a role_id declared in this file's roles[]",
+        "independence - the same object the record carries, under the same element-3 rule",
+        "date - ISO-8601",
+        "signed_packet - an object carrying path (under docs/artifacts/reviews/signed/) and sha256 (that file's bytes as committed)",
+        "packet_first_commit - the 40-hex git commit that FIRST contained signed_packet.path; the validator confirms the commit exists and that the blob is present in it",
+        "previous_entry_sha256 - the digest of the preceding entry, or 64 zeros for the first entry"
+      ],
+      "content_digest_rule": "The content digest of a record is the sha256 of its bytes with approval metadata removed. A record that carries no approval_ledger_ref therefore has content digest == sha256 of its file bytes, which is what every one of the 321 records in this corpus reads today, so nothing already verified changes. A record that does carry approval_ledger_ref has the field stripped and is re-serialised canonically. This is the mechanism by which recording an approval leaves every stored review digest valid: the approval is metadata about a record, not a change to it.",
+      "chain_rule": "entries[i].previous_entry_sha256 == sha256(canonical_json(entries[i-1])) for every i > 0, and entries[0].previous_entry_sha256 == 64 zeros. canonical_json is UTF-8 JSON with sorted keys and no insignificant whitespace. The chain proves EXISTENCE, ORDER and INTEGRITY of the entries. It does not prove a human read anything.",
+      "staleness_rule": "An entry whose approved_record_sha256 no longer equals the record's current content digest is STALE. STALE IS NOT INVALID: it must not fail validation. It must be reported, counted in the approval_staleness coverage metric as stale/total, and named in a finding that says which record, which ledger entry, and which fields changed - recoverable because every signed packet embeds the approved record verbatim under record_verbatim, so the validator diffs the approved bytes against the current ones rather than reporting two opaque digests.",
+      "stale_approval_and_the_numerator": "A stale approval is not counted in the human_approval numerator, because the numerator means 'records carrying an approval that describes the bytes now on disk' and a stale one does not. It is not discarded either: approval_staleness accounts for it, and the two figures together account for every approval in the ledger. Nothing is silently dropped.",
+      "anchored_to_version_history_meaning": "packet_first_commit proves WHEN the signed packet was first committed and IN WHAT STATE - that the bytes the reviewer signed existed in this repository at a known point in its history. It proves nothing about who read them."
+    },
+    "residual_limit_that_this_does_not_reduce": "THE CHAIN PROVES EXISTENCE, ORDERING AND INTEGRITY. IT DOES NOT PROVE A HUMAN READ ANYTHING, AND IT DOES NOT MAKE AN APPROVAL UNFORGEABLE. A determined person can still write all six elements, archive a packet, cite a real commit and maintain the chain correctly; nothing in this repository can distinguish that from an approval a competent independent reviewer genuinely gave. That limit is IRREDUCIBLE, not mitigated: any attestation can be forged by someone determined to lie, and the cost of forging it has been raised rather than removed. Do not describe the hash chain, the git anchor or the archive rule as making approval unforgeable.",
+    "unchanged_by_this_amendment": [
+      "No record in this corpus carries an approval, and the ledger is empty. This block describes how one WOULD be recorded. It does not record one.",
+      "Elements 1-5, the independence_rule, the production-authority bar and APPROVAL-RULE-A1 in its entirety are unchanged.",
+      "human_approval_status 'not_required' is still rejected, for want of evidence. That remains open P3 in closing-list.md 1.6.",
+      "The recursive authority_keys scan and the four GOVERNANCE_CLAIM_FIELDS claim classes are untouched."
+    ]
   }
 }

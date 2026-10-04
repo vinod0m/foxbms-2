@@ -252,6 +252,10 @@ docs/artifacts/
 │   ├── check_references.py
 │   ├── verify_traceability_document.py
 │   ├── make_review_packets.py         # review packet generator + `--transcribe`
+│   ├── verify_approval_ledger_independently.py
+│   │                                   # from-scratch check of the approval
+│   │                                   # ledger: chain, anchors, emptiness,
+│   │                                   # packet digests, empty signatures
 │   ├── verify_approval_evidence_independently.py
 │   │                                   # from-scratch check of the approval
 │   │                                   # amendment; imports NO tool in this repo
@@ -412,8 +416,8 @@ cannot drift.
 | 2 | `approved_by` | a named **person**: ≥2 tokens, not a declared `role_id` or role name, no token a `role_id`, no token from the team vocabulary |
 | 3 | `role` + `independence` | `role` is a declared `role_id`; `independence{owner_role, satisfied, evidence, policy_ref}` with `owner_role` equal to **this record's own**. Independence is then **enforced**: the role must differ from `owner_role` **and** from the author of the last content revision |
 | 4 | `date` | ISO-8601, grammar- **and** parse-checked |
-| 5 | `review_packet` | `{path, sha256, record_sha256_at_signing}`. The path resolves to a `packet.json` on disk; `sha256` equals that file's bytes **now**; `record_sha256_at_signing` equals **the packet's own** `integrity.record_sha256`; the packet's `target.record_id` **and** `target.profile` name this record |
-| 6 | `revision_history` | an entry whose `author` is the approving role and whose description records the approval **and cites the packet** |
+| 5 | `review_packet` | `{path, sha256, record_sha256_at_signing}`. The path resolves to a `packet.json` on disk **under `reviews/signed/` and nowhere else** (a `reviews/packets/` citation is rejected — see `APPROVAL-LEDGER-A1`); `sha256` equals that file's bytes **now**; `record_sha256_at_signing` equals **the packet's own** `integrity.record_sha256`; the packet's `target.record_id` **and** `target.profile` name this record |
+| 6 | `approval_ledger_ref` | superseded 2026-10-04 — see `APPROVAL-LEDGER-A1` below. It used to require a `revision_history` entry, which made an approval a content change and therefore unsatisfiable in practice |
 
 Every finding names **which** element is unmet, numbered, so a reviewer can fix
 it in one pass. `production_authorization` adds two conditions on top, so its
@@ -451,12 +455,133 @@ residual risks are recorded rather than dropped, at
 python3 docs/artifacts/tools/make_review_packets.py --transcribe FB2-HW-TSR-000001 --profile as_is
 ```
 
-It prints the exact `approval_evidence` block and the exact `revision_history`
-entry with **both digests already resolved**, writes nothing, and fills no
-decision. Section 8 of all 321 generated packets states the same rule.
+It prints the exact `approval_evidence` block and the exact ledger entry, writes
+nothing, appends nothing, and fills no decision. Section 8 of all 321 generated
+packets states the same rule. **Run it twice** — see below.
 
 Recorded in full at `governance/corpus-policy.json`
 `review_policy.approval_rule_amendment` and `coverage-plan.json` `CORR-COV-022`.
+
+---
+
+### APPROVAL-LEDGER-A1 — an approval is an event, not a change (2026-10-04)
+
+**The problem.** `APPROVAL-RULE-A1` made a properly evidenced approval *expressible*
+but not *satisfiable*. Element 6 required the approval to be recorded as a
+`revision_history` entry, and a `revision_history` entry **is** a content change,
+so the record's `revision` had to bump. A bumped revision makes every link pinning
+that record's revision stale, and invalidates the `sha256` that every review
+record stores for it. So recording a legitimate approval broke two controls nobody
+had authorised breaking, and the corpus worked around it by recording the approval
+against the **current** revision — an unratified convention.
+
+The tell was the tool's own happy-path self-test: it had to pick a record that
+**no review record covers**, purely so the approval would not invalidate a stored
+digest. A test that must choose an uncovered record to demonstrate its own happy
+path is demonstrating an unsatisfiable requirement.
+
+**The change.** An approval is an **event about** a record, not a change **to** it.
+It is recorded in an append-only ledger and the record keeps only a reference:
+
+```
+governance/approval-ledger.jsonl        one JSON object per line, APPEND-ONLY, 0 bytes today
+  ledger_id, record_id, profile, kind,
+  approved_record_sha256, approved_content_revision,
+  approved_by, role, independence, date,
+  signed_packet{path, sha256},
+  packet_first_commit,        the commit that first held that packet
+  previous_entry_sha256       the preceding entry's digest, or 64 zeros
+
+the record gains exactly one thing:
+  approval_ledger_ref: {ledger_id, entry_sha256}
+```
+
+**The mechanism is a CONTENT DIGEST**, and it is what makes recording an approval
+free. A record's content digest is its bytes projected through a view in which
+approval evidence is removed and approval state is reset to the no-claim values
+every record already carries. So a record nobody approved projects to **its own
+bytes** — all 261 stored review digests still verify, unchanged — and an approved
+record projects back to **the file it had before the approval**, rendered in that
+file's own detected layout (the records are a mix of 1- and 2-space indent, so the
+layout is probed and verified, never assumed). The review-digest check compares
+the content digest.
+
+**Therefore, proved by self-test on a record a review record already covers:**
+
+```
+FB2-HW-TSR-000001/as_is: revision 2 -> 2
+  stale-link observations  122/1170 -> 122/1170
+  review digests verified      261 -> 261   (0 mismatches before and after)
+  approval landed in revision_history = False
+  content digest unchanged = True
+```
+
+**Two further changes.**
+
+| risk | before | now |
+|---|---|---|
+| staleness was **invisible** | the approval just stopped counting; no finding, no count | an entry whose `approved_record_sha256` no longer matches is **STALE, not invalid**: it does **not** fail validation, it is counted as `approval_staleness` `stale / total`, and it is reported in a finding naming the record, the ledger entry and **the fields that changed** — recoverable because every signed packet embeds the approved record verbatim. A stale approval is excluded from the `human_approval` numerator and not discarded: `human_approval` and `approval_staleness` together account for every approval |
+| `reviews/signed/` was an **ordinary directory** | a `packets/` citation resolved, so nothing stopped a reviewer parking evidence in the regenerated tree | a signed packet is admissible **only** from `reviews/signed/`. A `packets/` citation fails with a message naming the archive and saying to archive first |
+
+`approval_staleness` is a **counted metric reported beside the fifteen coverage
+dimensions**, not a sixteenth dimension: "this corpus has fifteen coverage
+dimensions" is a claim the audit trail relies on, and inflating the count to
+advertise a new measurement would make it false. It is printed by `coverage` and by
+`check` on every run. Current value **0/0** — the ledger holds no entry, so there
+is nothing to go stale.
+
+**What forgery resistance this does and does not give.** Each entry binds to its
+predecessor's digest, so deleting, reordering or editing any entry breaks the chain
+from that point on and the validator reports the **first** break. Each entry cites
+the git commit that first contained the signed packet, and the validator confirms
+that commit exists **and** holds the blob.
+
+> **Neither proves that a human read anything, and none of this makes an approval
+> unforgeable.** A determined person can write all six elements, archive a packet,
+> cite a real commit and maintain the chain correctly, and nothing in this
+> repository can tell that from a real approval. That limit is **irreducible** —
+> any attestation can be forged by someone determined to lie. What was added is
+> **cost** and **detectability**, not prevention. Recorded in four places:
+> `governance/corpus-policy.json`
+> `review_policy.approval_ledger_amendment`, `governance/approval-ledger.md`, the
+> docstring of `CorpusTool._check_ledger_git_anchor`, and
+> `tools/verify_approval_ledger_independently.py`. **Do not describe any of it as
+> making approval unforgeable.**
+
+**What it did NOT do.** It recorded **no** approval and appended **no** ledger
+entry: the file is 0 bytes and every record is still `pending`. It added no
+authority. It moved **no** coverage dimension — `human_approval` 0/321,
+`production_authorization` 0/321, `actual_product_evidence` 0/33, all unchanged —
+and it added two new obstacles rather than removing any: a forged `ledger_id` and
+a forged `entry_sha256` are both rejected by name. Element 5 got **tighter**, not
+looser.
+
+**A reviewer can now record a correct approval first time** — and must run the
+command **twice**, because the digest an approval must cite is the digest of the
+*archived signed copy*, which has their signature in it and so cannot be known
+before they have signed:
+
+```bash
+python3 docs/artifacts/tools/make_review_packets.py --transcribe FB2-HW-TSR-000001 --profile as_is
+# 1. fill section 9 in your own copy;  2. archive at reviews/signed/<profile>/<id>.json
+python3 docs/artifacts/tools/make_review_packets.py --transcribe FB2-HW-TSR-000001 --profile as_is
+# 3. resolves both digests; 4. append the printed line to the ledger; 5. merge the block + approval_ledger_ref
+```
+
+**An independent checker that shares no code with the tool it checks:**
+
+```bash
+python3 docs/artifacts/tools/verify_approval_ledger_independently.py
+```
+
+It re-derives the chain, the approvals count, the packet digests, the cited paths,
+the empty signature blocks and the single-append-site fact from bytes on disk, and
+states its own limits in its own output.
+
+Recorded in full at `governance/corpus-policy.json`
+`review_policy.approval_ledger_amendment`,
+`governance/role-and-review-policy.json#/approval_ledger_contract` and
+`coverage-plan.json` `CORR-COV-023`.
 
 ---
 
