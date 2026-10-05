@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-FSR-000002` |
 | profile | `synthetic_reference` |
 | artifact type | `requirement` |
-| revision | `2` |
+| revision | `3` |
 | lifecycle_status | `baselined` |
 | origin | `synthetic` |
 | owner_role | `safety_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json` |
-| size on disk | 9013 bytes |
+| size on disk | 13236 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-FSR-000002)`, never by `FB2-SAF-FSR-000002` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `8f2f6ebe76cf9556c3627268f6e8d24807bbcb9ee4a0a2d219edd5a75dfb6862` |
-| bytes hashed | 9013 |
+| sha256 of this record's exact current bytes | `49064e3eeab8d4389074598f712942231b81532a0823213b506c320465dc9a7d` |
+| bytes hashed | 13236 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
  "id": "FB2-SAF-FSR-000002",
- "revision": "2",
+ "revision": "3",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "safety",
@@ -73,15 +73,28 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7",
    "status": "mapped",
-   "rationale": "Functional safety requirement from safety goal"
+   "relationship": "derivation_basis",
+   "rationale": "Functional safety requirement from safety goal",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('functional safety requirement from safety goal'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "SYS.2, SWE.1",
    "status": "mapped",
-   "rationale": "System/Software requirements analysis"
+   "relationship": "derivation_basis",
+   "rationale": "System/Software requirements analysis",
+   "relationship_note": "The rationale states the derivation explicitly ('software requirements analysis'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It refines the fictional project's reconstructed safety goal and was written by this corpus, not published by the product.",
+  "misreading_warning": "A reader who sees an ASIL_D FSR specifying a 2-of-100 ms debounce mapped to ISO 26262 Part 4 Clause 7 with status `mapped` will conclude the debounce is a reviewed, allocated safety parameter. It is a fictional requirement; the false-positive rate the record's rationale cites comes from a statistical argument, not from a measurement of this system; and the debounce is the parameter that makes the as_is reaction chain longer than any 100 ms FTTI.",
+  "derivation_basis": {
+   "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) for the limit comparison and the tiered escalation; src/app/application/soa/soa.c:271-351 (SOA_CheckCurrent) and src/app/application/soa/soa.c:148-269 (SOA_CheckTemperatures) for the other two quantities. The debounce itself lives in src/app/engine/diag/diag.c:341-475 (DIAG_Handler), and the debounce COUNTS and DELAYS in the real source are what the as_is profile records as the contradiction with the goal's FTTI. All at 308028fb13d046ba29b98886895c2e17937b1437.",
+   "what_it_supports": "That the pinned source compares values against configured limits and debounces before escalating. It supports NOTHING about 2 violations in 100 ms being the right debounce, about the false-positive rate, or about the ASIL: the counts and delays that are actually configured are the evidence the as_is profile records as contradicting this chain, not as supporting it."
+  }
+ },
  "lifecycle_status": "baselined",
  "automated_review_status": {
   "schema_valid": true,
@@ -94,7 +107,7 @@ The block below is the file's exact bytes. You need no other file open to review
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
@@ -107,6 +120,12 @@ The block below is the file's exact bytes. You need no other file open to review
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "Added the fault_reaction this requirement was missing. AR-002 is one of the four elements FB2-SAF-FSC-000001 does allocate a reaction to, and its entry - enter the latched FAULT mode and refuse to leave it without authorised service action - is reproduced with the concepts' own 3 ms, which equals fault_classification_ms in the safety goal's timing_budget.allocation. The field also records what the reaction is NOT: the request is not the whole reaction, AR-004 executes it, and the chain from the FAULT request to feedback-confirmed open is the 5 + 30 + 5 = 40 ms FB2-SAF-SGO-000001 allocates. mode_dependence states the load-bearing consequence the FSC already states - in MOD-004 the reaction removes propulsion from a moving vehicle, so the item must not enter FAULT for a degraded condition, and the debounce is the mechanism that keeps one out - which is the substantive reason the 2-of-2 debounce exists rather than a false-positive statistic alone. open_limits records that the 1e-6 per hour figure is an analytical estimate conditional on FB2-ASM-005 and that the TSC records the same two assumptions and notes that a debounce makes a systematic offset worse. Nothing else changed: statement, rationale, all four acceptance criteria including the 5 ms classification and the 2 ms FAULT request latency, safety_allocation, the ASIL and the safety goal reference are unchanged and no threshold was relaxed. Human approval remains pending, production_authorized stays false and product_verification_credit stays false. Remediation of the MUT-008 finding on this record."
+  },
+  {
+   "revision": "3",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified."
   }
  ],
  "statement": "The BMS shall monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.",
@@ -409,7 +428,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `8f2f6ebe76cf9556c3627268f6e8d24807bbcb9ee4a0a2d219edd5a75dfb6862`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `49064e3eeab8d4389074598f712942231b81532a0823213b506c320465dc9a7d`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

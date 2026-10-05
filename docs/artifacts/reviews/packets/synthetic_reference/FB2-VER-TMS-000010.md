@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/verification/test-component-soa-diag.json` |
-| size on disk | 2845 bytes |
+| size on disk | 4414 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-VER-TMS-000010)`, never by `FB2-VER-TMS-000010` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `235ea39460e0a7874faca8651c4dc0593c4fa5694372238a2128a73f2266709e` |
-| bytes hashed | 2845 |
+| sha256 of this record's exact current bytes | `d52287d9d2d861aa8a30ecb20776a4d82b83b19f865c95de6abc8b1a741a8c44` |
+| bytes hashed | 4414 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -43,7 +43,130 @@ The signature in section 9 refers to the bytes hashed above. If the record chang
 The block below is the file's exact bytes. You need no other file open to review this record.
 
 ```json
-{"artifact_type": "test_measure", "assumption_refs": ["FB2-ASM-001"], "automated_review_status": {"consistency_checks": false, "last_run": "2026-09-18T00:00:00Z", "links_valid": false, "provenance_consistent": false, "schema_valid": false}, "baseline_id": "BAS-REF-001", "cleanup": "Release test doubles; reset DIAG event store", "created_at": "2026-09-18T00:00:00Z", "engineering_domain": "verification", "environment": {"configuration": "conf/unit/app_project_posix.yml", "hardware": "POSIX host (Linux) — component harness blocked", "software": "Unity/CMock", "tools": ["GCC", "CMock", "Unity"]}, "expected_outcomes": [{"expected_value": "true", "signal": "component_reaction_verified", "tolerance": "exact", "unit": "bool"}], "human_approval_status": "pending", "id": "FB2-VER-TMS-000010", "lifecycle_status": "draft", "objective": "Define the component-level verification intent for the SOA monitor plus DIAG callback chain; PLANNING STUB — no execution performed, execution blocked (no component harness in corpus scope)", "oracle_basis": "synthetic_assumption", "origin": "synthetic", "owner_role": "verification_engineer", "preconditions": ["SOA and DIAG units available as host builds", "Component harness defined (blocked — not in corpus scope)"], "product_verification_credit": false, "production_authorized": false, "profile": "synthetic_reference", "referenced_designs": ["FB2-SW-DSN-000002"], "referenced_requirements": ["FB2-SW-SWR-000002"], "regression_selection": "Include once component harness exists", "revision": "1", "revision_history": [{"author": "verification_engineer", "date": "2026-09-18T00:00:00Z", "description": "Planning stub for SWE.4 component intent; no execution", "revision": "1"}], "scenario_id": "SCN-BASELINE", "schema_version": "1.0.0", "source_refs": [], "standards_mappings": [{"rationale": "Software unit verification", "reference": "Part 6, Clause 10", "standard_id": "ISO_26262_2018", "status": "mapped"}, {"rationale": "Software unit verification (component level)", "reference": "SWE.4", "standard_id": "ASPICE_PAM_41", "status": "mapped"}], "steps": [{"action": "Drive SOA limit violation at component boundary", "expected": "DIAG callback invoked with severity", "step": 1}, {"action": "Confirm occurrence counter and latency fields", "expected": "Counter increments within debounce window", "step": 2}, {"action": "Clear stimulus and confirm recovery", "expected": "No latched fault after clear", "step": 3}], "stimuli": [{"signal": "input", "timing": "t=0", "value": "per step definition"}], "test_type": "unit", "timing": {"max_execution_time_ms": 1000, "setup_time_ms": 100, "teardown_time_ms": 50}, "title": "Test: Component Verification (SOA Monitor + DIAG Callbacks)", "tolerances": {"value": "exact"}, "updated_at": "2026-09-18T00:00:00Z", "variant_applicability": ["VAR-REF-001"]}
+{
+  "artifact_type": "test_measure",
+  "assumption_refs": [
+    "FB2-ASM-001"
+  ],
+  "automated_review_status": {
+    "consistency_checks": false,
+    "last_run": "2026-09-18T00:00:00Z",
+    "links_valid": false,
+    "provenance_consistent": false,
+    "schema_valid": false
+  },
+  "baseline_id": "BAS-REF-001",
+  "cleanup": "Release test doubles; reset DIAG event store",
+  "created_at": "2026-09-18T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+    "configuration": "conf/unit/app_project_posix.yml",
+    "hardware": "POSIX host (Linux) — component harness blocked",
+    "software": "Unity/CMock",
+    "tools": [
+      "GCC",
+      "CMock",
+      "Unity"
+    ]
+  },
+  "expected_outcomes": [
+    {
+      "expected_value": "true",
+      "signal": "component_reaction_verified",
+      "tolerance": "exact",
+      "unit": "bool"
+    }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-TMS-000010",
+  "lifecycle_status": "draft",
+  "objective": "Define the component-level verification intent for the SOA monitor plus DIAG callback chain; PLANNING STUB — no execution performed, execution blocked (no component harness in corpus scope)",
+  "oracle_basis": "synthetic_assumption",
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "preconditions": [
+    "SOA and DIAG units available as host builds",
+    "Component harness defined (blocked — not in corpus scope)"
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "referenced_designs": [
+    "FB2-SW-DSN-000002"
+  ],
+  "referenced_requirements": [
+    "FB2-SW-SWR-000002"
+  ],
+  "regression_selection": "Include once component harness exists",
+  "revision": "1",
+  "revision_history": [
+    {
+      "author": "verification_engineer",
+      "date": "2026-09-18T00:00:00Z",
+      "description": "Planning stub for SWE.4 component intent; no execution",
+      "revision": "1"
+    }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+    {
+      "rationale": "Software unit verification",
+      "reference": "Part 6, Clause 10",
+      "standard_id": "ISO_26262_2018",
+      "status": "mapped",
+      "relationship": "derivation_basis",
+      "relationship_note": "The rationale states the derivation explicitly ('software unit verification'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
+    },
+    {
+      "rationale": "Software unit verification (component level)",
+      "reference": "SWE.4",
+      "standard_id": "ASPICE_PAM_41",
+      "status": "mapped",
+      "relationship": "derivation_basis",
+      "relationship_note": "The rationale states the derivation explicitly ('software unit verification'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
+    }
+  ],
+  "steps": [
+    {
+      "action": "Drive SOA limit violation at component boundary",
+      "expected": "DIAG callback invoked with severity",
+      "step": 1
+    },
+    {
+      "action": "Confirm occurrence counter and latency fields",
+      "expected": "Counter increments within debounce window",
+      "step": 2
+    },
+    {
+      "action": "Clear stimulus and confirm recovery",
+      "expected": "No latched fault after clear",
+      "step": 3
+    }
+  ],
+  "stimuli": [
+    {
+      "signal": "input",
+      "timing": "t=0",
+      "value": "per step definition"
+    }
+  ],
+  "test_type": "unit",
+  "timing": {
+    "max_execution_time_ms": 1000,
+    "setup_time_ms": 100,
+    "teardown_time_ms": 50
+  },
+  "title": "Test: Component Verification (SOA Monitor + DIAG Callbacks)",
+  "tolerances": {
+    "value": "exact"
+  },
+  "updated_at": "2026-09-18T00:00:00Z",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ]
+}
 ```
 
 ## 4. Claims to verify
@@ -205,7 +328,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `235ea39460e0a7874faca8651c4dc0593c4fa5694372238a2128a73f2266709e`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `d52287d9d2d861aa8a30ecb20776a4d82b83b19f865c95de6abc8b1a741a8c44`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

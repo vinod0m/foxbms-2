@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-SEC-000004` |
 | profile | `synthetic_reference` |
 | artifact type | `requirement` |
-| revision | `4` |
+| revision | `5` |
 | lifecycle_status | `draft` |
 | origin | `synthetic` |
 | owner_role | `cybersecurity_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/sec-serial-link-framing-integrity-control-byte.json` |
-| size on disk | 20507 bytes |
+| size on disk | 24676 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-SEC-000004)`, never by `FB2-SAF-SEC-000004` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa` |
-| bytes hashed | 20507 |
+| sha256 of this record's exact current bytes | `50f95b17b0d2141cd37073c2147ebc2b019c9e835c38967c3bbbbeaf0e65ddec` |
+| bytes hashed | 24676 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -44,7 +44,7 @@ The block below is the file's exact bytes. You need no other file open to review
 
 ```json
 {
-  "revision": "4",
+  "revision": "5",
   "schema_version": "1.0.0",
   "artifact_type": "requirement",
   "engineering_domain": "safety",
@@ -68,7 +68,7 @@ The block below is the file's exact bytes. You need no other file open to review
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-29T00:00:00Z",
-  "updated_at": "2026-09-30T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "classification": "security",
   "conditions_modes": [
     "NORMAL",
@@ -148,15 +148,28 @@ The block below is the file's exact bytes. You need no other file open to review
       "standard_id": "ISO_SAE_21434_2021",
       "reference": "Clause 15.4 (mitigation concept); external interface protection per Clause 8.5",
       "status": "unverified",
-      "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists and no conformance is claimed."
+      "relationship": "referenced_only",
+      "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists and no conformance is claimed.",
+      "relationship_note": "The rationale says so in its own words ('named for traceability of intent only'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ISO_26262_2018",
       "reference": "Part 4, Clause 7 (technical safety requirements, freedom from interference)",
       "status": "partially_mapped",
-      "rationale": "The interference path through an unframed serial link is identified; the corresponding safety analysis is not part of this corpus."
+      "relationship": "referenced_only",
+      "rationale": "The interference path through an unframed serial link is identified; the corresponding safety analysis is not part of this corpus.",
+      "relationship_note": "The rationale says so in its own words ('is not part of this corpus'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
+  "safety_class_disclaimer": {
+    "not_a_project_published_artefact": true,
+    "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is a forward-engineered proposal for a fictional item's serial-link integrity, and its asil is `not_applicable`. foxBMS 2 published no such requirement.",
+    "misreading_warning": "A reader who sees a safety-domain requirement mandating serial framing, an integrity field and authorisation, mapped to ISO 26262 Part 4 Clause 7, will conclude the product validates serial frames and demotes its flow-control bytes. It does the opposite: the record's own rationale states the pinned source has no framing, no length field, no integrity field and no authorisation, and that it treats two arbitrary byte values - XOFF and XON - as privileged commands. The requirement is a record of that defect, and the mapping is relationship: `referenced_only`.",
+    "derivation_basis": {
+      "locator": "src/app/driver/uart/uart.c:244-263 (UART_RxInterrupt) for the receive path that validates no length and no integrity; src/app/driver/uart/uart.c:223-242 (UART_HandleFlowControl) and src/app/driver/uart/uart.h:68-69 (UART_XOFF) for the flow-control bytes treated as privileged commands; src/app/driver/uart/uart.c:144-164 (UART_Initialize) for the initialisation; src/app/task/config/ftask_cfg.c:330-338 (FTSK_RunUserCodeUart) for the task that runs the user code over the link. Pinned commit 308028fb13d046ba29b98886895c2e17937b1437. Every element of the requirement is the inverse of what these functions do.",
+      "what_it_supports": "That the pinned source's serial receive path is unframed and unauthenticated, and that two byte values are privileged without validation - a real, checkable and security-relevant observation. It supports nothing about the proposed control being implemented, and the clause is named for traceability rather than as a standard met."
+    }
+  },
   "revision_history": [
     {
       "revision": "1",
@@ -181,6 +194,12 @@ The block below is the file's exact bytes. You need no other file open to review
       "date": "2026-09-30T00:00:00Z",
       "author": "cybersecurity_engineer",
       "description": "Added the fault_reaction block that the safety-requirement completeness validator (MUT-008, safety_requirement_completeness_checker) requires and did not find. That rule used to carry an id filter '-FSR-' in id which made it structurally incapable of reporting this record, while its sibling verification_traceability_checker selected the same population - requirement plus engineering_domain equals safety - with no id filter at all. The filter has been removed from the rule, which widened its scope and weakened nothing; see finding FB2-REV-FND-000039. The block authored here is transcribed from this record's own statement, acceptance_criteria and conditions_modes, and records three absences honestly rather than filling them: neither safety concept allocates a fault reaction to any element for the security chain (element_owns_reaction is therefore false), the safety goal's timing budget has no cybersecurity leg so no reaction-time budget is stated, and the control's real-source status and unverified verification leg are carried through. No acceptance criterion, ASIL value, statement, rationale, verification approach or verification status was changed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human has approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied."
+    },
+    {
+      "revision": "5",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "corpus_governance",
+      "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified."
     }
   ],
   "real_source_presence": "Control ABSENT. src/app/driver/uart/uart.c:163 arms a single-byte interrupt-driven receive into one static byte (declared at :108). In the receive interrupt at :244-263, the values 0x13 and 0x11 (defined at src/app/driver/uart/uart.h:68-69) are consumed at :247-250 to gate transmission, and every other byte is forwarded to a queue at :254 with the enqueue return value discarded, so overflow is silent and no diagnosis entry is raised. No framing, length validation, integrity field or authorisation exists anywhere on this path. A further absence is recorded honestly and constrains the impact rating: the application consumer of this queue is a stub — FTSK_RunUserCodeUart in src/app/task/config/ftask_cfg.c:330-338 contains only UART_HandleFlowControl() and OS_NotifyTake() and never calls UART_Read — so no application data path from the serial receive queue to the database was found, and the evidenced impact is confined to transmit suppression and silent overflow. This requirement MUST be re-derived if the hypothetical project connects a protocol to this queue. Anchors FB2-SRC-COD-000067, FB2-SRC-COD-000068, FB2-SRC-COD-000069, FB2-SRC-COD-000070, FB2-SRC-COD-000071.",
@@ -480,7 +499,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `50f95b17b0d2141cd37073c2147ebc2b019c9e835c38967c3bbbbeaf0e65ddec`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

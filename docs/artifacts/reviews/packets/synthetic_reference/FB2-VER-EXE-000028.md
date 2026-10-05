@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/verification/execution-syr-000006-measurement-validity-and-envelope.json` |
-| size on disk | 4180 bytes |
+| size on disk | 4596 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-VER-EXE-000028)`, never by `FB2-VER-EXE-000028` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `73430bdcd417589de382d48c9fcae6702c1015b86f09b63b2a972673edddd85c` |
-| bytes hashed | 4180 |
+| sha256 of this record's exact current bytes | `c3194c60de042c84c3c7862a6b1a46ac2703b4e6a34e3a1883fcfc8fe13d900a` |
+| bytes hashed | 4596 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -65,7 +65,9 @@ The block below is the file's exact bytes. You need no other file open to review
       "standard_id": "ASPICE_PAM_41",
       "reference": "SYS.5 (system verification) execution record",
       "status": "partially_mapped",
-      "rationale": "This record exists so that the absence of an execution is visible rather than inferred. It reports that nothing was run; it is not evidence that the measure passed."
+      "relationship": "referenced_only",
+      "rationale": "This record exists so that the absence of an execution is visible rather than inferred. It reports that nothing was run; it is not evidence that the measure passed.",
+      "relationship_note": "The rationale says so in its own words ('is not evidence that the measure passed'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "lifecycle_status": "draft",
@@ -307,7 +309,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `73430bdcd417589de382d48c9fcae6702c1015b86f09b63b2a972673edddd85c`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `c3194c60de042c84c3c7862a6b1a46ac2703b4e6a34e3a1883fcfc8fe13d900a`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

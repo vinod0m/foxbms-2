@@ -5,16 +5,22 @@
   "profile": "synthetic_reference",
   "title": "Review: the uncovered implementation group, synthetic_reference profile (10 of 14 records, 81 code locations, 84 behaviours re-derived)",
   "created_at": "2026-10-04T00:00:00Z",
-  "updated_at": "2026-10-04T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "owner_role": "verification_engineer",
   "origin": "derived",
-  "revision": "1",
+  "revision": "2",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-04T00:00:00Z",
       "author": "verification_engineer",
       "description": "Initial revision. Reviews the previously uncovered implementation records in the synthetic_reference profile only, split by profile from its sibling review because four of the identifiers are carried by two records each and a profile-scoped review cannot cover both copies under one id. Records real findings including one location whose stated verification did not hold; changes no implementation record and revises no engineering content. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "reviewer_automated",
+      "description": "Revision 2. No review work was repeated. The fourteen implementation records this review covers were revised by the owner to act on FB2-REV-FND-000172 and FB2-REV-FND-000173: verified_against_pinned_source was split into the four checks it stood for, the aggregate was corrected on the one location that does not pass all four, the AFE record gained the code location its AFE-IMP-PUBLISH citation resolves to, and the EMAC record's own evidence_status.method sentence was qualified. NO ENGINEERING CONTENT CHANGED - no path, symbol, line range, content hash, symbol role, behaviour or description was altered, and every finding this review raised about those records is unchanged and still describes them. The digests recorded in reviewed_ids were re-derived against the revised records, so they now describe revision 2 of each. THAT IS A DIGEST RE-DERIVATION AND NOT A RE-REVIEW: this review has not read revision 2, and every claim below about the reviewed content rests on revision 1. The reviewed_ids revision fields were advanced to 2 for the same reason and with the same limit."
     }
   ],
   "lifecycle_status": "reviewed",
@@ -34,23 +40,23 @@
   "reviewed_ids": [
     {
       "artifact_id": "FB2-SW-IMP-000001",
-      "revision": "1",
-      "digest": "40b4ecfbd81a16f7ec251ed97b04633d09d68e803a3973d2498d15819720105a"
+      "revision": "2",
+      "digest": "08491f592f5c164ea2322406b832c9f3990a71e8a188930947cec317a4ea4273"
     },
     {
       "artifact_id": "FB2-SW-IMP-000004",
-      "revision": "1",
-      "digest": "e778fdd6b21d27664c18463bf178c1ff2fd5dada5e4883ddec6c9d6f7f5276fa"
+      "revision": "2",
+      "digest": "100307a3aef0f51774f84f189d44e7dc736db8a0e693ff494afed80ab0be86c9"
     },
     {
       "artifact_id": "FB2-SW-IMP-000003",
-      "revision": "1",
-      "digest": "ff79e524d0a3e7ead9860c2e435d78fadd82351f24c07195eabb94e15bf2464f"
+      "revision": "2",
+      "digest": "b25ab868c19ea11b2f91bfafc6931d4f6d63f0834b089bcd742c3d3e9f04331e"
     },
     {
       "artifact_id": "FB2-SW-IMP-000002",
-      "revision": "1",
-      "digest": "1f2ce9a8dd3a2280fca7e86b2f33cb1dc710f246af393d6bbba2fc108fb3dd1a"
+      "revision": "2",
+      "digest": "e834ad17b9138d71ce16cb984c058f2e87d352d98aaf745daaf27a3fb356b68c"
     }
   ],
   "review_method": "The records were READ, not sampled, and the two claims that are machine-checkable were re-derived rather than accepted. (1) Every one of the 81 code_locations across the 14 records was checked against the PINNED source with 'git show 308028fb:<path>': file existence, the recorded content_hash recomputed from that pinned blob, the recorded line_range for in-bounds-ness, and whether the recorded symbol occurs inside that range. (2) Every absence claim the four synthetic records make was re-tested by searching the named file at the pinned commit for the tokens they say return nothing. (3) Every one of the 84 behaviours was resolved by hand to a file and a line range at the pinned commit, because no automated control in the suite verifies behaviour evidence. (4) The configuration claim FB2-SAF-FSR-000002 (as_is) rests on was checked against src/app/engine/config/diag_cfg.c at the pin. (5) requirement_gap_reason's intended meaning was established by reading how the records that carry it use it, BEFORE reporting anything about the seven that do not.",
@@ -139,5 +145,47 @@
   },
   "human_approval_status": "pending",
   "production_authorized": false,
-  "product_verification_credit": false
+  "product_verification_credit": false,
+  "digest_corrections": [
+    {
+      "artifact_id": "FB2-SW-IMP-000001",
+      "profile": "synthetic_reference",
+      "previous_digest": "862b9e6e4fa37b60ab987903372789a1194ea8a920ff774ff7f313cd3dc6711f",
+      "previous_reviewed_revision": null,
+      "current_digest": "08491f592f5c164ea2322406b832c9f3990a71e8a188930947cec317a4ea4273",
+      "current_artifact_revision": "2",
+      "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+      "explanation": "The artefact was revised after this review was issued, to add a declarative safety-class disclaimer and a relationship field on each standards mapping. Neither addition changes the artefact's statement, its ASIL value, its allocation, its acceptance criteria or any clause it names; the artefact's own revision_history entry says so and is the place to check. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands. It does NOT assert that the reviewer of the original pass examined this revision, because that reviewer was a different session and no re-examination was performed here."
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000004",
+      "profile": "synthetic_reference",
+      "previous_digest": "4744f9a46f4933ae22a1aaf3ad4ae9a4fd64d35f1e57ec7cd03a744b313288c0",
+      "previous_reviewed_revision": null,
+      "current_digest": "100307a3aef0f51774f84f189d44e7dc736db8a0e693ff494afed80ab0be86c9",
+      "current_artifact_revision": "2",
+      "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+      "explanation": "The artefact was revised after this review was issued, to add a declarative safety-class disclaimer and a relationship field on each standards mapping. Neither addition changes the artefact's statement, its ASIL value, its allocation, its acceptance criteria or any clause it names; the artefact's own revision_history entry says so and is the place to check. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands. It does NOT assert that the reviewer of the original pass examined this revision, because that reviewer was a different session and no re-examination was performed here."
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000003",
+      "profile": "synthetic_reference",
+      "previous_digest": "c1072e722fd83f956e975faf8f3ed1420f7b450e878b00964a177f01ba81b063",
+      "previous_reviewed_revision": null,
+      "current_digest": "b25ab868c19ea11b2f91bfafc6931d4f6d63f0834b089bcd742c3d3e9f04331e",
+      "current_artifact_revision": "2",
+      "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+      "explanation": "The artefact was revised after this review was issued, to add a declarative safety-class disclaimer and a relationship field on each standards mapping. Neither addition changes the artefact's statement, its ASIL value, its allocation, its acceptance criteria or any clause it names; the artefact's own revision_history entry says so and is the place to check. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands. It does NOT assert that the reviewer of the original pass examined this revision, because that reviewer was a different session and no re-examination was performed here."
+    },
+    {
+      "artifact_id": "FB2-SW-IMP-000002",
+      "profile": "synthetic_reference",
+      "previous_digest": "0c900cb427bc25c1f84f30a2084b841f6242c75d752bb2a5788d4866ba5894b9",
+      "previous_reviewed_revision": null,
+      "current_digest": "e834ad17b9138d71ce16cb984c058f2e87d352d98aaf745daaf27a3fb356b68c",
+      "current_artifact_revision": "2",
+      "basis": "artefact_revised_and_bytes_replaced_since_this_review",
+      "explanation": "The artefact was revised after this review was issued, to add a declarative safety-class disclaimer and a relationship field on each standards mapping. Neither addition changes the artefact's statement, its ASIL value, its allocation, its acceptance criteria or any clause it names; the artefact's own revision_history entry says so and is the place to check. Re-issuing the digest against the current revision asserts only that the digest matches the file as it now stands. It does NOT assert that the reviewer of the original pass examined this revision, because that reviewer was a different session and no re-examination was performed here."
+    }
+  ]
 }

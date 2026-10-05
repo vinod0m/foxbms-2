@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/as_is/verification/test-afe-ltc-driver.json` |
-| size on disk | 2973 bytes |
+| size on disk | 4058 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(as_is, FB2-VER-TMS-000004)`, never by `FB2-VER-TMS-000004` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `ffecfa1e78d998d759c90807c4e05114dd26306f0865a8930b301ff4c923a318` |
-| bytes hashed | 2973 |
+| sha256 of this record's exact current bytes | `531b77d5ad8c10e7666ef6d2ba1de6406fb08833867ffbe3d26b59ead16593a7` |
+| bytes hashed | 4058 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -61,13 +61,17 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 6, Clause 10",
    "status": "mapped",
-   "rationale": "Software unit verification"
+   "relationship": "derivation_basis",
+   "rationale": "Software unit verification",
+   "relationship_note": "The rationale states the derivation explicitly ('software unit verification'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "SWE.4, SWE.5",
    "status": "mapped",
-   "rationale": "Software integration and qualification test"
+   "relationship": "derivation_basis",
+   "rationale": "Software integration and qualification test",
+   "relationship_note": "The rationale states the derivation explicitly ('software integration and qualification test'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
  "lifecycle_status": "reviewed",
@@ -134,7 +138,7 @@ The block below is the file's exact bytes. You need no other file open to review
   {
    "step": 2,
    "action": "Feed known cell voltage raw values",
-   "expected": "Converted mV values within \u00b11.5 mV"
+   "expected": "Converted mV values within ±1.5 mV"
   },
   {
    "step": 3,
@@ -146,7 +150,7 @@ The block below is the file's exact bytes. You need no other file open to review
   {
    "signal": "cell_voltage_mv",
    "expected_value": "3300",
-   "tolerance": "\u00b11.5 mV",
+   "tolerance": "±1.5 mV",
    "unit": "mV"
   },
   {
@@ -345,7 +349,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `ffecfa1e78d998d759c90807c4e05114dd26306f0865a8930b301ff4c923a318`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `531b77d5ad8c10e7666ef6d2ba1de6406fb08833867ffbe3d26b59ead16593a7`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

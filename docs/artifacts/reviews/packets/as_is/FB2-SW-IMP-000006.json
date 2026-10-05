@@ -100,7 +100,7 @@
      "review_id": "FB2-REV-000019",
      "review_path": "docs/artifacts/reviews/records/review-implementation-group-as-is.json",
      "review_type": "adversarial",
-     "reviewed_revision": "1",
+     "reviewed_revision": "2",
      "reviewer_model": "openrouter/stealth/space-bunny-alpha",
      "reviewer_role": "verification_engineer",
      "routes": [
@@ -185,13 +185,21 @@
    "claim_class": "traceability_edge",
    "claim_id": "C09-xref",
    "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000173 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.revision_history[1].pinned_source_migration.finding` names FB2-REV-FND-000173."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
    "judgement_needed": "Whether FB2-SRC-COD-000039 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
    "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
    "statement": "`.anchor_refs[0]` names FB2-SRC-COD-000039."
   },
   {
    "claim_class": "traceability_edge",
-   "claim_id": "C10-xref",
+   "claim_id": "C11-xref",
    "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
    "judgement_needed": "Whether FB2-SRC-COD-000040 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
    "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
@@ -199,7 +207,7 @@
   },
   {
    "claim_class": "traceability_edge",
-   "claim_id": "C11-xref",
+   "claim_id": "C12-xref",
    "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
    "judgement_needed": "Whether FB2-SRC-COD-000078 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
    "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
@@ -207,7 +215,7 @@
   },
   {
    "claim_class": "traceability_edge",
-   "claim_id": "C12-xref",
+   "claim_id": "C13-xref",
    "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
    "judgement_needed": "Whether FB2-SRC-COD-000079 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
    "machine_state": "resolves: resolves to a source anchor in docs/artifacts/sources/source-registry.json",
@@ -215,7 +223,7 @@
   },
   {
    "claim_class": "standards_mapping",
-   "claim_id": "C13-std",
+   "claim_id": "C14-std",
    "evidence_in_packet": "The record verbatim in section 3.",
    "judgement_needed": "Whether that clause is the right obligation for this work product and whether `partially_mapped` is the right status.",
    "machine_state": "no machine check: clause selection is not verifiable from the repository",
@@ -223,7 +231,7 @@
   },
   {
    "claim_class": "standards_mapping",
-   "claim_id": "C14-std",
+   "claim_id": "C15-std",
    "evidence_in_packet": "The record verbatim in section 3.",
    "judgement_needed": "Whether that clause is the right obligation for this work product and whether `gap` is the right status.",
    "machine_state": "no machine check: clause selection is not verifiable from the repository",
@@ -235,14 +243,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 12195,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 17643,
   "record_path": "docs/artifacts/corpus/as_is/software/implementation-emac-driver.json",
-  "record_sha256": "2b30b02c674bbe3ddc220975970a108a91c19eb6e9f56072690deef7264874fa",
+  "record_sha256": "7bf96e19390e3ef77a6c651a25742182e563330a4ac7ecf6194cd435773b52b2",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "2b30b02c674bbe3ddc220975970a108a91c19eb6e9f56072690deef7264874fa"
+  "verbatim_block_sha256": "29033a3c8cda519e0527c7e491152b4d7097ed1e815116d4eb9012a9adcd7ca2"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -363,51 +371,71 @@
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
     "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
     "line_range": "217-294",
+    "line_range_within_file": true,
     "path": "src/app/driver/emac/emac.c",
+    "pinned_content_hash_matches": true,
+    "pinned_file_exists": true,
     "repository": "foxbms-2",
     "symbol": "EMAC_InitializeHardware",
     "symbol_role": "definition",
+    "symbol_within_line_range": true,
     "verified_against_pinned_source": true
    },
    {
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
     "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
     "line_range": "375-461",
+    "line_range_within_file": true,
     "path": "src/app/driver/emac/emac.c",
+    "pinned_content_hash_matches": true,
+    "pinned_file_exists": true,
     "repository": "foxbms-2",
     "symbol": "EMAC_Transmit",
     "symbol_role": "definition",
+    "symbol_within_line_range": true,
     "verified_against_pinned_source": true
    },
    {
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
     "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
     "line_range": "585-591",
+    "line_range_within_file": true,
     "path": "src/app/driver/emac/emac.c",
+    "pinned_content_hash_matches": true,
+    "pinned_file_exists": true,
     "repository": "foxbms-2",
     "symbol": "EMAC_TxInterruptServiceRoutine",
     "symbol_role": "definition",
+    "symbol_within_line_range": true,
     "verified_against_pinned_source": true
    },
    {
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
     "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
     "line_range": "601-608",
+    "line_range_within_file": true,
     "path": "src/app/driver/emac/emac.c",
+    "pinned_content_hash_matches": true,
+    "pinned_file_exists": true,
     "repository": "foxbms-2",
     "symbol": "EMAC_RxInterruptServiceRoutine",
     "symbol_role": "definition",
+    "symbol_within_line_range": true,
     "verified_against_pinned_source": true
    },
    {
     "commit": "308028fb13d046ba29b98886895c2e17937b1437",
     "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
     "line_range": "234-239",
+    "line_range_within_file": true,
     "path": "src/app/driver/emac/emac.c",
+    "pinned_content_hash_matches": true,
+    "pinned_file_exists": true,
     "repository": "foxbms-2",
     "symbol": "EMAC_InitializeHardware",
     "symbol_role": "definition",
-    "verified_against_pinned_source": true
+    "symbol_within_line_range": false,
+    "verified_against_pinned_source": false
    }
   ],
   "concurrency_and_isr_context": [
@@ -438,7 +466,7 @@
     "emac.c is unmodified between the pin and the working tree, so the same ranges and hash hold for the checked-out file."
    ],
    "locations_verified": true,
-   "method": "emac.c was read at the pinned commit with 'git show 308028fb:src/app/driver/emac/emac.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000039, -000040, -000078 and -000079 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The function spans were cross-read against 'graft skeleton src/app/driver/emac/emac.c', which reports EMAC_InitializeHardware at L217-L294, EMAC_Transmit at L375-L461, EMAC_TxInterruptServiceRoutine at L585-L591 and EMAC_RxInterruptServiceRoutine at L601-L608 independently of this authoring pass. Note that the registry anchor FB2-SRC-COD-000040 records the receive handler's range as 597-600, which covers its pragma and signature lines rather than its body; the body span 601-608 recorded here is what anchor FB2-SRC-COD-000079 already carries, and both are consistent with the same function."
+   "method": "emac.c was read at the pinned commit with 'git show 308028fb:src/app/driver/emac/emac.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000039, -000040, -000078 and -000079 already carry. Each named symbol was confirmed to occur somewhere in the named file at the pin and each range was confirmed within the file; for four of the five locations the symbol was also confirmed to occur INSIDE the recorded line_range, and for the fifth - the 234-239 destination-address configuration block inside EMAC_InitializeHardware, recorded under that function's name because it is not a separate symbol - it was not, and that location now records symbol_within_line_range=false. See FB2-REV-FND-000171. The function spans were cross-read against 'graft skeleton src/app/driver/emac/emac.c', which reports EMAC_InitializeHardware at L217-L294, EMAC_Transmit at L375-L461, EMAC_TxInterruptServiceRoutine at L585-L591 and EMAC_RxInterruptServiceRoutine at L601-L608 independently of this authoring pass. Note that the registry anchor FB2-SRC-COD-000040 records the receive handler's range as 597-600, which covers its pragma and signature lines rather than its body; the body span 601-608 recorded here is what anchor FB2-SRC-COD-000079 already carries, and both are consistent with the same function."
   },
   "guard": {
    "confers_no_production_authority": true,
@@ -468,13 +496,80 @@
   "provenance_note": "Anchors referenced, all pre-existing: FB2-SRC-COD-000039 and -000040 name the two registered interrupt service routines, FB2-SRC-COD-000078 the destination-address filter configuration and FB2-SRC-COD-000079 the receive handler body, all in emac.c, and are the same four anchors deviations FB2-SW-DEV-000009 and -000010 reference. No new anchor was created.",
   "realises_requirements": [],
   "requirement_gap_reason": "No requirement in the as_is profile covers the EMAC driver. The as_is requirement set is the three cell-voltage, contactor and SOA records; none of them states anything about Ethernet transport, and the requirements that do concern a network interface are security requirements in the synthetic_reference profile, which a source-observed as_is record may not claim as its own coverage. realises_requirements is empty rather than populated with a requirement this code does not serve.",
-  "revision": "1",
+  "revision": "2",
   "revision_history": [
    {
     "author": "sw_engineer",
     "date": "2026-10-02T00:00:00Z",
     "description": "First issue. Authored to cover a module the as_is corpus anchors through two deviations (FB2-SW-DEV-000009 and FB2-SW-DEV-000010) and for which it holds no design artefact at all.",
     "revision": "1"
+   },
+   {
+    "author": "traceability_owner",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered. Qualified one sentence of evidence_status.method that asserted all five locations passed the symbol-in-range check when the fifth does not. This is item (2) of FB2-REV-FND-000171; it is corrected here because recording symbol_within_line_range=false while the record's own method claimed the opposite would leave the record contradicting itself. Item (1) of that finding - the symbol_role of that location - is NOT actioned here and remains open.",
+    "pinned_source_migration": {
+     "aggregate_changed_at": [
+      {
+       "aggregate_now": false,
+       "index": 4,
+       "line_range": "234-239",
+       "part_that_is_false": [
+        "symbol_within_line_range"
+       ],
+       "path": "src/app/driver/emac/emac.c",
+       "previous_aggregate": true,
+       "symbol": "EMAC_InitializeHardware"
+      }
+     ],
+     "aggregate_field": "verified_against_pinned_source",
+     "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+     "finding": "FB2-REV-FND-000173",
+     "parts": [
+      "pinned_file_exists",
+      "pinned_content_hash_matches",
+      "line_range_within_file",
+      "symbol_within_line_range"
+     ],
+     "previous_aggregate_per_location": [
+      {
+       "index": 0,
+       "line_range": "217-294",
+       "path": "src/app/driver/emac/emac.c",
+       "symbol": "EMAC_InitializeHardware",
+       "verified_against_pinned_source": true
+      },
+      {
+       "index": 1,
+       "line_range": "375-461",
+       "path": "src/app/driver/emac/emac.c",
+       "symbol": "EMAC_Transmit",
+       "verified_against_pinned_source": true
+      },
+      {
+       "index": 2,
+       "line_range": "585-591",
+       "path": "src/app/driver/emac/emac.c",
+       "symbol": "EMAC_TxInterruptServiceRoutine",
+       "verified_against_pinned_source": true
+      },
+      {
+       "index": 3,
+       "line_range": "601-608",
+       "path": "src/app/driver/emac/emac.c",
+       "symbol": "EMAC_RxInterruptServiceRoutine",
+       "verified_against_pinned_source": true
+      },
+      {
+       "index": 4,
+       "line_range": "234-239",
+       "path": "src/app/driver/emac/emac.c",
+       "symbol": "EMAC_InitializeHardware",
+       "verified_against_pinned_source": true
+      }
+     ]
+    },
+    "revision": "2"
    }
   ],
   "scenario_id": "SCN-BASELINE",
@@ -489,18 +584,22 @@
    {
     "rationale": "States where the EMAC driver code is. Makes no claim that it was verified and asserts no ASIL classification.",
     "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('makes no claim that'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_26262_2018",
     "status": "partially_mapped"
    },
    {
     "rationale": "There is no software design artefact for the EMAC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design.",
     "reference": "SWE.4 (design-to-code traceability)",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('the gap is declared'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ASPICE_PAM_41",
     "status": "gap"
    }
   ],
   "title": "Implementation: EMAC driver - hardware and DMA initialisation, transmit, and the two registered interrupt service routines (emac.c)",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ]
@@ -527,7 +626,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "2b30b02c674bbe3ddc220975970a108a91c19eb6e9f56072690deef7264874fa",
+  "_record_sha256_at_signing": "7bf96e19390e3ef77a6c651a25742182e563330a4ac7ecf6194cd435773b52b2",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -556,6 +655,6 @@
   "production_authorized": false,
   "profile": "as_is",
   "record_id": "FB2-SW-IMP-000006",
-  "revision": "1"
+  "revision": "2"
  }
 }

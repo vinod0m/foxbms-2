@@ -306,14 +306,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 9013,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 13236,
   "record_path": "docs/artifacts/corpus/synthetic_reference/safety/fsr-soa-monitoring.json",
-  "record_sha256": "8f2f6ebe76cf9556c3627268f6e8d24807bbcb9ee4a0a2d219edd5a75dfb6862",
+  "record_sha256": "49064e3eeab8d4389074598f712942231b81532a0823213b506c320465dc9a7d",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "3cc7a12885f2fb9756f8fd9f44505559f498556909808c2f8fc929896aa47504"
+  "verbatim_block_sha256": "d440447c3181cb80ad77161b8768b9abaace7bd3e2c20e0608d8ef5c8b1e7d85"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -458,7 +458,7 @@
   "profile": "synthetic_reference",
   "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes. Origin remains synthetic, which already declared this content modelled rather than observed.",
   "rationale": "SOA monitoring must detect limit violations fast enough to meet FTTI. Debounce of 2 violations in 100 ms balances false positives vs detection latency (statistical analysis shows < 1e-6 false positive rate for Gaussian noise sigma=5mV).",
-  "revision": "2",
+  "revision": "3",
   "revision_history": [
    {
     "author": "safety_engineer",
@@ -471,12 +471,27 @@
     "date": "2026-09-29T00:00:00Z",
     "description": "Added the fault_reaction this requirement was missing. AR-002 is one of the four elements FB2-SAF-FSC-000001 does allocate a reaction to, and its entry - enter the latched FAULT mode and refuse to leave it without authorised service action - is reproduced with the concepts' own 3 ms, which equals fault_classification_ms in the safety goal's timing_budget.allocation. The field also records what the reaction is NOT: the request is not the whole reaction, AR-004 executes it, and the chain from the FAULT request to feedback-confirmed open is the 5 + 30 + 5 = 40 ms FB2-SAF-SGO-000001 allocates. mode_dependence states the load-bearing consequence the FSC already states - in MOD-004 the reaction removes propulsion from a moving vehicle, so the item must not enter FAULT for a degraded condition, and the debounce is the mechanism that keeps one out - which is the substantive reason the 2-of-2 debounce exists rather than a false-positive statistic alone. open_limits records that the 1e-6 per hour figure is an analytical estimate conditional on FB2-ASM-005 and that the TSC records the same two assumptions and notes that a debounce makes a systematic offset worse. Nothing else changed: statement, rationale, all four acceptance criteria including the 5 ms classification and the 2 ms FAULT request latency, safety_allocation, the ASIL and the safety goal reference are unchanged and no threshold was relaxed. Human approval remains pending, production_authorized stays false and product_verification_credit stays false. Remediation of the MUT-008 finding on this record.",
     "revision": "2"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified.",
+    "revision": "3"
    }
   ],
   "safety_allocation": {
    "asil": "ASIL_D",
    "mitigation": "Diagnostic callbacks, independent HW monitor, plausibility, watchdog",
    "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) for the limit comparison and the tiered escalation; src/app/application/soa/soa.c:271-351 (SOA_CheckCurrent) and src/app/application/soa/soa.c:148-269 (SOA_CheckTemperatures) for the other two quantities. The debounce itself lives in src/app/engine/diag/diag.c:341-475 (DIAG_Handler), and the debounce COUNTS and DELAYS in the real source are what the as_is profile records as the contradiction with the goal's FTTI. All at 308028fb13d046ba29b98886895c2e17937b1437.",
+    "what_it_supports": "That the pinned source compares values against configured limits and debounces before escalating. It supports NOTHING about 2 violations in 100 ms being the right debounce, about the false-positive rate, or about the ASIL: the counts and delays that are actually configured are the evidence the as_is profile records as contradicting this chain, not as supporting it."
+   },
+   "misreading_warning": "A reader who sees an ASIL_D FSR specifying a 2-of-100 ms debounce mapped to ISO 26262 Part 4 Clause 7 with status `mapped` will conclude the debounce is a reviewed, allocated safety parameter. It is a fictional requirement; the false-positive rate the record's rationale cites comes from a statistical argument, not from a measurement of this system; and the debounce is the parameter that makes the as_is reaction chain longer than any 100 ms FTTI.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It refines the fictional project's reconstructed safety goal and was written by this corpus, not published by the product."
   },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
@@ -489,19 +504,23 @@
    {
     "rationale": "Functional safety requirement from safety goal",
     "reference": "Part 4, Clause 7",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the record was written from the clause's concept ('functional safety requirement from safety goal'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "System/Software requirements analysis",
     "reference": "SYS.2, SWE.1",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('software requirements analysis'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "mapped"
    }
   ],
   "statement": "The BMS shall monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.",
   "title": "FSR: SOA Voltage Limit Monitoring with Debounce",
-  "updated_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -529,7 +548,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "8f2f6ebe76cf9556c3627268f6e8d24807bbcb9ee4a0a2d219edd5a75dfb6862",
+  "_record_sha256_at_signing": "49064e3eeab8d4389074598f712942231b81532a0823213b506c320465dc9a7d",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -558,6 +577,6 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "record_id": "FB2-SAF-FSR-000002",
-  "revision": "2"
+  "revision": "3"
  }
 }

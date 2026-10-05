@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-FSR-000002` |
 | profile | `as_is` |
 | artifact type | `requirement` |
-| revision | `3` |
+| revision | `4` |
 | lifecycle_status | `reviewed` |
 | origin | `derived` |
 | owner_role | `safety_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/as_is/safety/fsr-soa-monitoring.json` |
-| size on disk | 15756 bytes |
+| size on disk | 19542 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(as_is, FB2-SAF-FSR-000002)`, never by `FB2-SAF-FSR-000002` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `c8b0232c6c980abdd15afb827de96a92e944e1b3a50323754905dec46944c485` |
-| bytes hashed | 15756 |
+| sha256 of this record's exact current bytes | `23f013abfaf9a1b539da370db9f4634474a39eea92ef9df22f2eca9ad1cbec51` |
+| bytes hashed | 19542 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
   "id": "FB2-SAF-FSR-000002",
-  "revision": "3",
+  "revision": "4",
   "schema_version": "1.0.0",
   "artifact_type": "requirement",
   "engineering_domain": "safety",
@@ -73,15 +73,28 @@ The block below is the file's exact bytes. You need no other file open to review
       "standard_id": "ISO_26262_2018",
       "reference": "Part 4, Clause 7",
       "status": "mapped",
-      "rationale": "Functional safety requirement from safety goal"
+      "relationship": "derivation_basis",
+      "rationale": "Functional safety requirement from safety goal",
+      "relationship_note": "The rationale states the record was written from the clause's concept ('functional safety requirement from safety goal'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.1",
       "status": "mapped",
-      "rationale": "Software requirements analysis"
+      "relationship": "derivation_basis",
+      "rationale": "Software requirements analysis",
+      "relationship_note": "The rationale states the derivation explicitly ('software requirements analysis'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
     }
   ],
+  "safety_class_disclaimer": {
+    "not_a_project_published_artefact": true,
+    "not_a_project_published_artefact_reason": "foxBMS 2 publishes no functional safety requirements with identifiers. This record was written by this corpus from the safe-operating-area comparison code in the pinned source; the project stated no such obligation and allocated nothing.",
+    "misreading_warning": "A reader who sees a safety requirement at ASIL_D with a mapping to ISO 26262 Part 4 Clause 7 with status `mapped` will conclude the product's voltage-limit monitoring is a reviewed, allocated, ASIL_D requirement. It is a back-inference from the comparison code, and the record's own fault_reaction.open_limits records that the configured debounce counts and delays make the reaction longer than the 100 ms the goal above it allocates - a contradiction the corpus recorded rather than resolved.",
+    "derivation_basis": {
+      "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) for the three-tier limit comparison and the tiered DIAG_Handler escalation; src/app/application/soa/soa.c:271-351 (SOA_CheckCurrent) and src/app/application/soa/soa.c:148-269 (SOA_CheckTemperatures) for the current and temperature halves; src/app/engine/diag/diag.c:341-475 (DIAG_Handler) for the debounce the reaction actually waits on. All at the pinned commit 308028fb13d046ba29b98886895c2e17937b1437.",
+      "what_it_supports": "That the pinned source compares cell values against configured limits and reports a violation, and that the debounce sits in DIAG_Handler. It does NOT support the ASIL_D allocation or the 10 ms comparison budget, and it is the evidence that CONTRADICTS the goal's 100 ms FTTI rather than supporting it."
+    }
+  },
   "lifecycle_status": "reviewed",
   "automated_review_status": {
     "schema_valid": true,
@@ -94,7 +107,7 @@ The block below is the file's exact bytes. You need no other file open to review
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-09-08T00:00:00Z",
-  "updated_at": "2026-10-02T00:02:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
@@ -113,6 +126,12 @@ The block below is the file's exact bytes. You need no other file open to review
       "date": "2026-10-02T00:00:00Z",
       "author": "safety_engineer",
       "description": "Added asil_allocation_scope, and moved the origin field from source_observed to derived. An independent audit flagged this record as asserting an unqualified ASIL on an as_is profile record, which presents a classification belonging to the hypothetical reference project as though it were a determination about the real foxBMS product. The ASIL value itself is untouched and remains ASIL_D, because it is legitimate inside the fictional project; what is different now is that the value can no longer be read without the reconstruction stated alongside it. The origin move is required by master prompt section 5: this record carries a back-inferred classification alongside source-derived content, so it may not be labelled wholly observed. It was previously source_observed."
+    },
+    {
+      "revision": "4",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "corpus_governance",
+      "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: derived` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take requirement for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified."
     }
   ],
   "statement": "The BMS shall monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.",
@@ -420,7 +439,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `c8b0232c6c980abdd15afb827de96a92e944e1b3a50323754905dec46944c485`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `23f013abfaf9a1b539da370db9f4634474a39eea92ef9df22f2eca9ad1cbec51`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

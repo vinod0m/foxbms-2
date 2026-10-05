@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/sec-strong-entropy-and-component-vulnerability-governance.json` |
-| size on disk | 20652 bytes |
+| size on disk | 21876 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-SEC-000005)`, never by `FB2-SAF-SEC-000005` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `de81ba78e5bf1d1053691765a8c979144c221cda4df016538f6c0f87b8dba87a` |
-| bytes hashed | 20652 |
+| sha256 of this record's exact current bytes | `700ebb3b5a70ae68529a2a3a25e1045bd557cb1783b0aa6e9bc2710e06d9b11b` |
+| bytes hashed | 21876 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -149,19 +149,25 @@ The block below is the file's exact bytes. You need no other file open to review
       "standard_id": "ISO_SAE_21434_2021",
       "reference": "Clause 11 (cryptography) and Clause 12.3 (third-party component assessment)",
       "status": "unverified",
-      "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists in this corpus, no cryptography concept has been written, and no conformance is claimed. Note that the component-assessment clause is referenced as a process expectation, not as a claim that any assessment was performed."
+      "relationship": "referenced_only",
+      "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists in this corpus, no cryptography concept has been written, and no conformance is claimed. Note that the component-assessment clause is referenced as a process expectation, not as a claim that any assessment was performed.",
+      "relationship_note": "The rationale says so in its own words ('named for traceability of intent only'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ISO_SAE_21434_2021",
       "reference": "Clause 12.3 (cybersecurity claims) and Clause 15.3 (risk assessment)",
       "status": "gap",
-      "rationale": "No cybersecurity claim support process and no risk-assessment method exist in this corpus. This requirement proposes the closure and is unverified."
+      "relationship": "referenced_only",
+      "rationale": "No cybersecurity claim support process and no risk-assessment method exist in this corpus. This requirement proposes the closure and is unverified.",
+      "relationship_note": "The rationale says so in its own words ('proposes the closure and is unverified'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SUP.8, SUP.9, SUP.10 (supplier and third-party component management)",
       "status": "unverified",
-      "rationale": "Referenced because component management and dependency resolution appear in the project's process inventory; no ASPICE assessment of any process has been performed or is claimed."
+      "relationship": "referenced_only",
+      "rationale": "Referenced because component management and dependency resolution appear in the project's process inventory; no ASPICE assessment of any process has been performed or is claimed.",
+      "relationship_note": "The rationale says so in its own words ('referenced because'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "revision_history": [
@@ -501,7 +507,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `de81ba78e5bf1d1053691765a8c979144c221cda4df016538f6c0f87b8dba87a`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `700ebb3b5a70ae68529a2a3a25e1045bd557cb1783b0aa6e9bc2710e06d9b11b`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

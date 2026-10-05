@@ -114,14 +114,14 @@
   "anchor_registry_applies": false,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 15478,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 17158,
   "record_path": "docs/artifacts/corpus/synthetic_reference/production/production-control-and-eol-test.json",
-  "record_sha256": "4e8c7904b202cdb3e03ff72ea994a364d909e75e50c3ace0c0a36849fb40a2fb",
+  "record_sha256": "7f045380bd3de2ca8e9d0121e28c77f0fb0d3215edf9ad14bd7f8f890316b644",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "dd0624b8563535a23bc310aa2a4273ee3eec4250e5e6fab767294706e3f8564d"
+  "verbatim_block_sha256": "aca07f15cb481772438e7d98e03eafe314a36e84e0f3e2cbf90ad7f6996a99fb"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -462,18 +462,24 @@
    {
     "rationale": "Production control of purchased parts and of the delivered item.",
     "reference": "ACQ.4",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('production control of purchased parts'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "mapped"
    },
    {
     "rationale": "The end-of-line test that establishes the item is serviceable before it leaves the line.",
     "reference": "Part 7, Clause 10 (the item is produced and serviceable)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('the end-of-line test that establishes the item is serviceable'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "The production activities this plan identifies.",
     "reference": "Part 7, Clause 11 (release and production after development)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('the production activities this plan identifies'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    }
@@ -585,7 +591,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "4e8c7904b202cdb3e03ff72ea994a364d909e75e50c3ace0c0a36849fb40a2fb",
+  "_record_sha256_at_signing": "7f045380bd3de2ca8e9d0121e28c77f0fb0d3215edf9ad14bd7f8f890316b644",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",

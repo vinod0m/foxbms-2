@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/verification/svs-verification-summary.json` |
-| size on disk | 31101 bytes |
+| size on disk | 32070 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-VER-VSR-000001)`, never by `FB2-VER-VSR-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `694c6d72223d6d3fb02d333d4af3db84be209712786c7c891684bb08a7c6ac49` |
-| bytes hashed | 31101 |
+| sha256 of this record's exact current bytes | `667c6fbabd0163c2c1312ec04463e70b88fd8672e23c1dd5d112575e026cddde` |
+| bytes hashed | 32070 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -65,13 +65,17 @@ The block below is the file's exact bytes. You need no other file open to review
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4, SWE.5, SWE.6",
       "status": "partially_mapped",
-      "rationale": "This is the reporting counterpart of FB2-VER-UTS-000001, FB2-VER-SIP-000001 and FB2-VER-SQP-000001. It reports the state those three plans describe. It is a summary, not a result, and it changes no process disposition by itself."
+      "relationship": "referenced_only",
+      "rationale": "This is the reporting counterpart of FB2-VER-UTS-000001, FB2-VER-SIP-000001 and FB2-VER-SQP-000001. It reports the state those three plans describe. It is a summary, not a result, and it changes no process disposition by itself.",
+      "relationship_note": "The rationale says so in its own words ('it is a summary, not a result'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9",
       "status": "partially_mapped",
-      "rationale": "Summary of the software verification evidence available for the three named software requirements."
+      "relationship": "derivation_basis",
+      "rationale": "Summary of the software verification evidence available for the three named software requirements.",
+      "relationship_note": "The rationale states the derivation explicitly ('summary of the software verification evidence'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
     }
   ],
   "lifecycle_status": "draft",
@@ -627,7 +631,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `694c6d72223d6d3fb02d333d4af3db84be209712786c7c891684bb08a7c6ac49`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `667c6fbabd0163c2c1312ec04463e70b88fd8672e23c1dd5d112575e026cddde`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

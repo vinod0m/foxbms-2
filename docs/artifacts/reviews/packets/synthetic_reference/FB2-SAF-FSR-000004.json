@@ -294,14 +294,14 @@
   "anchor_registry_applies": false,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 13715,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 18793,
   "record_path": "docs/artifacts/corpus/synthetic_reference/safety/fsr-independent-monitor.json",
-  "record_sha256": "1797cd973161cd65f5664240f1c132825639a8c7f27c002a9e1d618de754ec70",
+  "record_sha256": "d80972775f16866ad473946dc777e1ccbc375ccb00a2a22a4be9027841b6103a",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "f19ce8c5b86858f29356a8ac216868dc24a09d79122dba23468b2b69a2ec1755"
+  "verbatim_block_sha256": "fdbf28b2679a7f2ddcbf26df580c1656b300abdbece95d2d5c69ae83c781a32d"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -432,7 +432,7 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "rationale": "Provides freedom from interference for the ASIL D safety goal: a main-path-only reaction leaves no tolerance in the 100 ms interval. As allocated in FB2-SAF-SGO-000001 the main path is 85 ms (25 acquisition + 5 SPI + 2 PEC + 3 publish + 5 SOA check + 2 classification + 3 state transition + 5 coil command + 30 mechanical + 5 feedback), which leaves 15 ms. At the 40 ms upper tolerance of FB2-PRM-000005 the contactor chain is 5 + 40 + 5 = 50 ms and the main path is 95 ms, leaving 5 ms. If detection waits one full acquisition period of FB2-PRM-000003 (50 ms) instead of the 25 ms allocated, the main path is 85 - 25 + 50 = 110 ms and overruns the interval. A parallel ASIL B path with its own 50 ms budget (FB2-PRM-000007) is therefore the second barrier, not an optimisation. This functional requirement states the safety intent and the behaviour that decides it; the hardware obligation and the structural independence properties are specified by FB2-HW-TSR-000004, and the system-level separation is specified by FB2-SYS-SYR-000005.",
-  "revision": "3",
+  "revision": "4",
   "revision_history": [
    {
     "author": "safety_engineer",
@@ -451,12 +451,27 @@
     "date": "2026-09-29T00:00:00Z",
     "description": "Added the fault_reaction this requirement was missing. AR-005 is one of the four elements the FSC allocates a reaction to, and the reaction is the second barrier itself: open the contactors from the independent path, without waiting for the main microcontroller, at 50 ms, which is FB2-PRM-000007. The field records that this budget is an ALTERNATIVE to the main path's and not an addition to it - the two sum to 135 ms against a 100 ms interval, which is why the FSC and TSC both justify the barrier as a sensitivity on the main path (85 ms nominal, 95 ms at the FB2-PRM-000005 upper tolerance, 110 ms if detection waits a full acquisition period) rather than as a sum. mode_dependence states the property the concepts both insist on: there is no mode arbitration in this path, so in MOD-004 a hardware false positive disconnects a moving vehicle with no software able to intervene, and that is why the 50 mV threshold accuracy is a safety requirement in its own right. open_limits states the limit that dominates this record: the independence the reaction depends on is FB2-ASM-008, an assumption, is not demonstrated anywhere in this corpus, and the TSC names the absence of that demonstration as the largest open assumption of the ASIL D allocation. Revision 2 -> 3. Statement, rationale, all three acceptance criteria, safety_allocation including the ASIL_B allocation, feasibility_dependencies and the safety goal reference are unchanged and no threshold was relaxed. Human approval remains pending, production_authorized stays false and product_verification_credit stays false.",
     "revision": "3"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified.",
+    "revision": "4"
    }
   ],
   "safety_allocation": {
    "asil": "ASIL_B",
    "mitigation": "Independent power, sensing, and actuation path",
    "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "No source. This record has NO source_refs at all, which is the point: the independent monitor it requires does not exist in the pinned source, and FB2-ASM-008 is a declared assumption about whether it could be built. The nearest real anchor is the SBC watchdog refresh at src/app/driver/sbc/fs8x_driver/sbc_fs8x.c:160-182 (FS8x_WD_Refresh), which is supervision on the same board and therefore the OPPOSITE of independence from the main path. All at 308028fb13d046ba29b98886895c2e17937b1437.",
+    "what_it_supports": "Nothing about the real product. It supports the reference project's internal argument that a main-path-only reaction leaves no tolerance in the 100 ms interval, and that argument is about the fictional allocation arithmetic. It supports no independence claim, because no analysis of independence exists and the record's own Part 9 mapping is an assumption rather than a result."
+   },
+   "misreading_warning": "A reader who sees an ASIL_B FSR requiring an independent hardware voltage monitor, mapped to ISO 26262 Part 4 Clause 7 AND Part 9 Clause 7 with status `mapped`, will conclude the second barrier exists and that freedom from interference has been established. The Part 9 mapping is the one most easily over-read: naming freedom from interference as the basis of a requirement is not a freedom-from-interference analysis, and the reference project's own technical safety concept names the absence of a demonstration of that independence as its largest open assumption. The barrier is fictional and rests on FB2-ASM-008.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It states the second barrier of the fictional project, and the barrier itself is an assumption: FB2-ASM-008 declares that an independent hardware voltage monitor CAN be implemented, and the record's own rationale says so. Nothing in the real product contains that monitor."
   },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
@@ -465,25 +480,31 @@
    {
     "rationale": "Functional safety requirement from safety goal",
     "reference": "Part 4, Clause 7",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the record was written from the clause's concept ('functional safety requirement from safety goal'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "Freedom from interference / independence",
     "reference": "Part 9, Clause 7",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('freedom from interference / independence'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "System/Hardware requirements analysis",
     "reference": "SYS.2, HWE.1",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('system/hardware requirements analysis'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "mapped"
    }
   ],
   "statement": "The item shall maintain, as a second barrier to the ASIL D cell-voltage safety goal FB2-SAF-SGO-000001, a cell-overvoltage detection and HV-contactor-opening capability that is independent of the main measurement, decision and command path, so that a failure confined to the main path does not remove the overvoltage reaction; the capability shall be allocated ASIL B and shall produce its contactor-open request within 50 ms of the overvoltage it detects.",
   "title": "FSR: Independent Hardware Voltage Monitor",
-  "updated_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -511,7 +532,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "1797cd973161cd65f5664240f1c132825639a8c7f27c002a9e1d618de754ec70",
+  "_record_sha256_at_signing": "d80972775f16866ad473946dc777e1ccbc375ccb00a2a22a4be9027841b6103a",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -540,6 +561,6 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "record_id": "FB2-SAF-FSR-000004",
-  "revision": "3"
+  "revision": "4"
  }
 }

@@ -2011,16 +2011,32 @@ def sec_06(v):
             L.append(f"<p>{v.gap_phrase('implementation code locations')}</p>")
         else:
             L.append("<table class=\"kv\"><thead><tr><th>path</th><th>symbol</th>"
-                     "<th>lines</th><th>role</th><th>verified</th></tr></thead><tbody>")
+                     "<th>lines</th><th>role</th><th>verified</th>"
+                     "<th>pinned parts</th></tr></thead><tbody>")
             for loc in locs:
                 if not isinstance(loc, dict):
                     continue
+                # `verified` was the field name read here and NO code_location
+                # has ever carried it, so the column rendered empty on every row
+                # of every implementation card. The aggregate is
+                # `verified_against_pinned_source`, and since FB2-REV-FND-000173
+                # it is only the conjunction of four named parts, so both are
+                # rendered: a reader who sees the aggregate without the parts is
+                # back to reading one boolean as four checks.
+                parts = [loc.get(f) for f in ("pinned_file_exists",
+                                              "pinned_content_hash_matches",
+                                              "line_range_within_file",
+                                              "symbol_within_line_range")]
+                parts_txt = ("".join("Y" if v is True else ("n" if v is False else "?"))
+                             for v in parts)
+                agg = loc.get('verified_against_pinned_source')
                 L.append("<tr>"
                          f"<td><code>{esc(loc.get('path', ''))}</code></td>"
                          f"<td><code>{esc(loc.get('symbol', ''))}</code></td>"
                          f"<td>{esc(loc.get('line_range', ''))}</td>"
                          f"<td>{esc(loc.get('symbol_role', ''))}</td>"
-                         f"<td>{esc(loc.get('verified', ''))}</td></tr>")
+                         f"<td>{'' if agg is None else esc(agg)}</td>"
+                         f"<td>{esc(parts_txt)}</td></tr>")
             L.append("</tbody></table>")
         imp = d.get("implements") or {}
         L.append(sub("What it implements", level=4, anchor=f"{profile}-{aid}-implements"))

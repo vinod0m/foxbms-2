@@ -259,14 +259,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 25676,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 27284,
   "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-can-transport.json",
-  "record_sha256": "163bdc400b705ef0a91328b248acd3c65a751b179f0bcae0a125cf4d75cbb1e6",
+  "record_sha256": "9f14547015dc044211455adfdbb4540ea23b8a06111929c8bea62ad4a2da18bb",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "163bdc400b705ef0a91328b248acd3c65a751b179f0bcae0a125cf4d75cbb1e6"
+  "verbatim_block_sha256": "0421b238c71d4eefd0c61a27b853ea73919c81f4fc078ac5cf2ba89d713e3dd2"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -752,18 +752,24 @@
    {
     "rationale": "Specifies the CAN transmit and control boundary with the real signatures, four precondition assertions, the mailbox-exhaustion return contract, the interrupt masking that realises the re-entrancy rule, and the one parameter the source explicitly declines to range-check.",
     "reference": "Part 6, Clause 8 (software architectural design - interface specification)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('with the real signatures'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "partially_mapped"
    },
    {
     "rationale": "Supplies an interface specification for the CAN transport that the design records' signal tables did not.",
     "reference": "SWE.2",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('supplies an interface specification'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "partially_mapped"
    },
    {
     "rationale": "Named as the specification the software interface requirements for the communication boundary are derived from.",
     "reference": "SWE.1",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('derived from'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "partially_mapped"
    }
@@ -801,7 +807,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "163bdc400b705ef0a91328b248acd3c65a751b179f0bcae0a125cf4d75cbb1e6",
+  "_record_sha256_at_signing": "9f14547015dc044211455adfdbb4540ea23b8a06111929c8bea62ad4a2da18bb",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",

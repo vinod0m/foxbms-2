@@ -1,6 +1,6 @@
 # Concept and safety — cell voltage vertical slice (generated view)
 
-Generated: 2026-10-04T03:41:34Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
+Generated: 2026-10-05T13:19:34Z | Baseline: BAS-REF-001 | 323 artifacts, 599 links
 
 ## Provenance and status of this file
 
@@ -29,89 +29,89 @@ The canonical cell-voltage safety chain, in traversal order. The same id exists 
 
 ### FB2-SAF-HAZ-000001 (as_is) — Cell Overvoltage / Undervoltage Hazard
 
-- type: `hazard` | revision: `2` | lifecycle: `reviewed`
+- type: `hazard` | revision: `3` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 
 ### FB2-SAF-HAZ-000001 (synthetic_reference) — Cell Overvoltage / Undervoltage Hazard
 
-- type: `hazard` | revision: `1` | lifecycle: `baselined`
+- type: `hazard` | revision: `2` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 
 ### FB2-SAF-SGO-000001 (as_is) — Cell Voltage Safety Goal
 
-- type: `safety_goal` | revision: `2` | lifecycle: `reviewed`
+- type: `safety_goal` | revision: `3` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall detect cell voltage limit violations and open HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events.
 
 ### FB2-SAF-SGO-000001 (synthetic_reference) — Cell Voltage Safety Goal
 
-- type: `safety_goal` | revision: `4` | lifecycle: `baselined`
+- type: `safety_goal` | revision: `5` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall detect cell voltage limit violations and open all HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events, with a target diagnostic test interval of 10 ms, a target contactor mechanical opening time of 30 ms (FB2-PRM-000005 / FB2-ASM-006) and a resulting 40 ms from the fault request to feedback-confirmed contact…
 
 ### FB2-SAF-FSR-000001 (as_is) — FSR: Cell Voltage Acquisition and Validation
 
-- type: `requirement` | revision: `3` | lifecycle: `reviewed`
+- type: `requirement` | revision: `4` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall acquire all cell voltages from AFE slaves at a minimum rate of 20 Hz with PEC/CRC validation, and publish validated data to the database within 25 ms of acquisition trigger.
 
 ### FB2-SAF-FSR-000001 (synthetic_reference) — FSR: Cell Voltage Acquisition and Validation
 
-- type: `requirement` | revision: `2` | lifecycle: `baselined`
+- type: `requirement` | revision: `3` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall acquire all cell voltages from AFE slaves at a minimum rate of 20 Hz with PEC/CRC validation, and publish validated data to the database within 25 ms of acquisition trigger.
 
 ### FB2-SAF-FSR-000002 (as_is) — FSR: SOA Voltage Limit Monitoring with Debounce
 
-- type: `requirement` | revision: `3` | lifecycle: `reviewed`
+- type: `requirement` | revision: `4` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.
 
 ### FB2-SAF-FSR-000002 (synthetic_reference) — FSR: SOA Voltage Limit Monitoring with Debounce
 
-- type: `requirement` | revision: `2` | lifecycle: `baselined`
+- type: `requirement` | revision: `3` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall monitor each cell voltage against configured minimum and maximum limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.
 
 ### FB2-SAF-FSR-000003 (as_is) — FSR: Contactor Opening on SOA Violation
 
-- type: `requirement` | revision: `3` | lifecycle: `reviewed`
+- type: `requirement` | revision: `4` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall open all HV contactors within 30 ms of FAULT state request from SOA/DIAG, with auxiliary feedback confirmation within 5 ms of coil de-energization.
 
 ### FB2-SAF-FSR-000003 (synthetic_reference) — FSR: Contactor Opening on SOA Violation
 
-- type: `requirement` | revision: `3` | lifecycle: `baselined`
+- type: `requirement` | revision: `4` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The BMS shall command all HV contactors to open within 5 ms of a FAULT state request from SOA/DIAG, shall reach the mechanically open state within 35 ms of that request, and shall confirm the commanded state from the auxiliary feedback within 40 ms of that request.
 
 ### FB2-SAF-FSR-000004 (synthetic_reference) — FSR: Independent Hardware Voltage Monitor
 
-- type: `requirement` | revision: `3` | lifecycle: `baselined`
+- type: `requirement` | revision: `4` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The item shall maintain, as a second barrier to the ASIL D cell-voltage safety goal FB2-SAF-SGO-000001, a cell-overvoltage detection and HV-contactor-opening capability that is independent of the main measurement, decision and command path, so that a failure confined to the main path does not remove the overvoltage reaction; the capability shall be allocated ASIL B and shall produce its contactor…
 
 ### FB2-HW-TSR-000001 (as_is) — TSR: AFE Cell Voltage Measurement Accuracy
 
-- type: `requirement` | revision: `2` | lifecycle: `reviewed`
+- type: `requirement` | revision: `3` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE shall measure cell voltages with ±1.5 mV accuracy (including calibration) over -40°C to +85°C for 2.5V-4.2V range.
 
 ### FB2-HW-TSR-000001 (synthetic_reference) — TSR: AFE Cell Voltage Measurement Accuracy
 
-- type: `requirement` | revision: `1` | lifecycle: `baselined`
+- type: `requirement` | revision: `2` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE shall measure cell voltages with ±1.5 mV accuracy (including calibration) over -40°C to +85°C for 2.5V-4.2V range.
 
 ### FB2-SW-SWR-000001 (as_is) — SWR: AFE Driver - Cell Voltage Acquisition
 
-- type: `requirement` | revision: `2` | lifecycle: `reviewed`
+- type: `requirement` | revision: `3` | lifecycle: `reviewed`
 - guard: profile=`as_is` \| origin=`derived` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE driver shall trigger SPI/DMA acquisition of all cell voltages at 20 Hz, validate PEC/CRC, and publish to database within 5 ms of acquisition complete.
 
 ### FB2-SW-SWR-000001 (synthetic_reference) — SWR: AFE Driver - Cell Voltage Acquisition
 
-- type: `requirement` | revision: `1` | lifecycle: `baselined`
+- type: `requirement` | revision: `2` | lifecycle: `baselined`
 - guard: profile=`synthetic_reference` \| origin=`synthetic` \| human_approval_status=`pending` \| production_authorized=`false`
 - statement: The AFE driver shall trigger SPI/DMA acquisition of all cell voltages at 20 Hz, validate PEC/CRC, and publish to database within 5 ms of acquisition complete.
 

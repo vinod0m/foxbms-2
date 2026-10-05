@@ -98,9 +98,9 @@
   "semantic_consistency_checks": {
    "categories": [],
    "declared_not_executed": [],
-   "denominator": 21,
-   "detail": "21 of 21 declared semantic rules evaluated on this run; 21 of them are declared, 0 are executed but undeclared, 0 are declared but did not execute. Measured by the recorder each rule block calls on entry, not declared; finding categories unavailable (no rule fired on this run, which is the expected state of a passing corpus)",
-   "numerator": 21,
+   "denominator": 24,
+   "detail": "24 of 24 declared semantic rules evaluated on this run; 24 of them are declared, 0 are executed but undeclared, 0 are declared but did not execute. Measured by the recorder each rule block calls on entry, not declared; finding categories unavailable (no rule fired on this run, which is the expected state of a passing corpus)",
+   "numerator": 24,
    "rule_ids_executed": [
     "asil_assignment_validator",
     "change_impact_analyzer",
@@ -113,19 +113,22 @@
     "hsi_interface_consistency",
     "identity_uniqueness_checker",
     "incomplete_propagation",
+    "iso26262_conformance_claim",
     "parameter_threshold_order",
     "parameter_unit_consistency",
+    "pinned_verification_aggregate_contradicts_parts",
     "production_authorization_governance_checker",
     "refinement_cycle_detector",
     "requirement_applicability_validator",
+    "safety_class_disclaimer_required",
     "safety_goal_mitigates_hazard",
     "safety_requirement_completeness_checker",
     "source_anchor_drift_detector",
     "traceability_checker",
     "verification_traceability_checker"
    ],
-   "rules_declared": 21,
-   "rules_executed": 21,
+   "rules_declared": 24,
+   "rules_executed": 24,
    "undeclared_executed": []
   },
   "source_grounding": {
@@ -158,8 +161,27 @@
   },
   "verification_planning": {
    "denominator": 7,
-   "detail": "33 test measures for 7 FSRs",
-   "numerator": 33
+   "detail": "33 test measures for 7 FSRs. THE RATIO IS NOT A COVERAGE RATIO: the numerator counts records whose id carries -TMS- and the denominator counts records whose id carries -FSR-, and those are disjoint populations, so 33/7 does not mean 4.7 measures per requirement and over-100% is not over-coverage. The figures that do answer the planning question are measured from the link registry and reported here: 7/7 safety requirements have at least one test measure linked to them, and 9/33 test measures verify at least one safety requirement (as_is: 3/3 FSRs with at least one linked test measure, 3/5 test measures verifying at least one FSR; synthetic_reference: 4/4 FSRs with at least one linked test measure, 6/28 test measures verifying at least one FSR). A test measure that verifies no FSR is not a defect - most of them verify a non-safety requirement, a use case, a stakeholder need or an interface - which is exactly why the two counts are not each other's numerator and denominator",
+   "measures_verifying_a_requirement": 9,
+   "numerator": 33,
+   "per_profile": {
+    "as_is": {
+     "fsr": 3,
+     "fsr_with_measure": 3,
+     "tms": 5,
+     "tms_on_fsr": 3
+    },
+    "synthetic_reference": {
+     "fsr": 4,
+     "fsr_with_measure": 4,
+     "tms": 28,
+     "tms_on_fsr": 6
+    }
+   },
+   "ratio_is_a_coverage_ratio": false,
+   "requirements_with_a_linked_measure": 7,
+   "safety_requirement_records": 7,
+   "test_measure_records": 33
   }
  },
  "final_status": "synthetic_ready_with_limitations",
@@ -168,9 +190,12 @@
   "Feature completeness: 1/20 features fully generated (vertical slice by design)",
   "as_is verification evidence: 1 actual execution (host), 5 more unit-test measures extracted",
   "Human approval: all pending",
-  "Production authorization: all false"
+  "Production authorization: all false",
+  "Behaviour evidence attribution: 84 behaviours across 14 implementation records are now machine-resolved by the behaviour_citation_* rules against the code_locations of their own record and against the pinned blob, and all of them resolve - but NO behaviour names a file, so resolution is containment within a located symbol rather than attribution, and a checkout that cannot produce a pinned blob yields an unverifiable citation reported as neither pass nor fail. Counts here are of records and citations in the corpus, not of verifications performed",
+  "verification_planning publishes 33/7, which is not a coverage ratio: the two numbers count disjoint populations (-TMS- records over -FSR- records). The planning figures are 7/7 requirements with a linked measure and 9/33 measures verifying one. No planning gap is recorded on that evidence; the ratio's own meaning was the gap, and it is stated now (CORR-COV-025)",
+  "Source registry: 13 of the 117 anchors carrying a usable content_hash record a hash that is not the sha256 of the blob at the commit the same anchor names, while all 13 match the checked-out file. Disclosed in each anchor's hash_note, not repaired: see FB2-REV-FND-000197. The anchor reader still hashes the working tree, so nothing in the suite checks the property"
  ],
- "generated_at": "2026-10-04T23:18:04Z",
+ "generated_at": "2026-10-05T15:13:43Z",
  "profile": "synthetic_reference",
  "schema_version": "1.0.0"
 }

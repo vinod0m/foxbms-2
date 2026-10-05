@@ -1,6 +1,6 @@
 {
   "id": "FB2-SW-IMP-000001",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "implementation",
   "engineering_domain": "software",
@@ -25,13 +25,17 @@
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
       "status": "partially_mapped",
-      "rationale": "States where the code for the hypothetical reference project's AFE path is. Makes no claim that it was verified and asserts no ASIL classification for the real product."
+      "relationship": "referenced_only",
+      "rationale": "States where the code for the hypothetical reference project's AFE path is. Makes no claim that it was verified and asserts no ASIL classification for the real product.",
+      "relationship_note": "The rationale says so in its own words ('makes no claim that'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4 (design-to-code traceability)",
       "status": "partially_mapped",
-      "rationale": "Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures."
+      "relationship": "derivation_basis",
+      "rationale": "Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures.",
+      "relationship_note": "The rationale states the derivation explicitly ('supplies the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
     }
   ],
   "lifecycle_status": "draft",
@@ -47,13 +51,96 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-10-02T00:00:00Z",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-02T00:00:00Z",
       "author": "sw_engineer",
       "description": "First issue. The synthetic_reference profile had no artefact of type implementation, so the chain from its three software designs to code was not traversable in that profile either. This record reuses the real, verified source locations rather than describing a hypothetical codebase, and declares the one element the reference project's design needs that the pinned source does not contain as an explicit not_in_source proposal rather than presenting it as implemented."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "traceability_owner",
+      "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered.",
+      "pinned_source_migration": {
+        "finding": "FB2-REV-FND-000173",
+        "parts": [
+          "pinned_file_exists",
+          "pinned_content_hash_matches",
+          "line_range_within_file",
+          "symbol_within_line_range"
+        ],
+        "aggregate_field": "verified_against_pinned_source",
+        "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+        "previous_aggregate_per_location": [
+          {
+            "index": 0,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "833-2964",
+            "symbol": "LTC_Trigger",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 1,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "3678-3711",
+            "symbol": "LTC_StartVoltageMeasurement",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 2,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "3838-3878",
+            "symbol": "LTC_CheckPec",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 3,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "3064-3150",
+            "symbol": "LTC_SaveRxToVoltageBuffer",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 4,
+            "path": "src/app/driver/afe/ltc/common/ltc_pec.c",
+            "line_range": "75-115",
+            "symbol": "LTC_CalculatePec15",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 5,
+            "path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+            "line_range": "142-150",
+            "symbol": "AFE_StartMeasurement",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 6,
+            "path": "src/app/driver/spi/spi.c",
+            "line_range": "403-511",
+            "symbol": "SPI_TransmitReceiveDataDma",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 7,
+            "path": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+            "line_range": "88-93",
+            "symbol": "AFE_DmaCallback",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 8,
+            "path": "src/app/driver/dma/dma.c",
+            "line_range": "393-400",
+            "symbol": "AFE_DmaCallback",
+            "verified_against_pinned_source": true
+          }
+        ],
+        "aggregate_changed_at": []
+      }
     }
   ],
   "implementation_kind": "driver_module",
@@ -66,6 +153,10 @@
       "symbol": "LTC_Trigger",
       "line_range": "833-2964",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -76,6 +167,10 @@
       "symbol": "LTC_StartVoltageMeasurement",
       "line_range": "3678-3711",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -86,6 +181,10 @@
       "symbol": "LTC_CheckPec",
       "line_range": "3838-3878",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -96,6 +195,10 @@
       "symbol": "LTC_SaveRxToVoltageBuffer",
       "line_range": "3064-3150",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -106,6 +209,10 @@
       "symbol": "LTC_CalculatePec15",
       "line_range": "75-115",
       "content_hash": "sha256:af26f839e70fc0cf1bb1ab47231f3f342895f32871b9489163082d37635d18fa",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -116,6 +223,10 @@
       "symbol": "AFE_StartMeasurement",
       "line_range": "142-150",
       "content_hash": "sha256:972adaeef5c8682198672beeb7c90a57fca8b114f9bbe9ee41590f9a19cc7af6",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -126,6 +237,10 @@
       "symbol": "SPI_TransmitReceiveDataDma",
       "line_range": "403-511",
       "content_hash": "sha256:cf3f363240ca36bf2177e90ecdc048672546318db72b1f5d94129deab67d5a92",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -136,6 +251,10 @@
       "symbol": "AFE_DmaCallback",
       "line_range": "88-93",
       "content_hash": "sha256:62fbd4b2bb9cf25916aaa8c40bce6419cc9f6962c08a0bfff1dae8bc6749e285",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -146,6 +265,10 @@
       "symbol": "AFE_DmaCallback",
       "line_range": "393-400",
       "content_hash": "sha256:8d4822e23aa934807bed6bf6b50be97753abd96b80c344dccba0b299cf559d3d",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "translation_unit_body",
       "verified_against_pinned_source": true
     }

@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/as_is/verification/uts-sil-host-unit-test-specification.json` |
-| size on disk | 64629 bytes |
+| size on disk | 66635 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(as_is, FB2-VER-UTS-000002)`, never by `FB2-VER-UTS-000002` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `1ba855756317e28151fe2a6af14b85bf0eb718c88336c2eee8da34099153e424` |
-| bytes hashed | 64629 |
+| sha256 of this record's exact current bytes | `65cb89ada547f12bfc696c456317e2bb02e9119cea6b46204beef5f091a53281` |
+| bytes hashed | 66635 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -66,25 +66,33 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ASPICE_PAM_41",
    "reference": "SWE.4",
    "status": "partially_mapped",
-   "rationale": "SWE.4 requires a software unit verification specification plus evidence of verification against it. The specification exists - this record - and 222 of 313 selected test files produced a green verdict in the recorded SIL host run. It is partially_mapped and not mapped for three reasons, each evidenced in this record rather than asserted: 84 selected test files never executed because they did not build (GAP-UTS-001); 5 of the 222 green verdicts belong to files that assert nothing, so they verify no property (GAP-UTS-002); and 7 executed files were red, so their modules are unverified rather than verified (GAP-UTS-004). A fourth reason is a scope boundary rather than a defect: the harness mocks the TI HAL, so no register map, timing, clocking, interrupt, DMA or electrical property was verified at unit level for any module (GAP-UTS-006)."
+   "relationship": "derivation_basis",
+   "rationale": "SWE.4 requires a software unit verification specification plus evidence of verification against it. The specification exists - this record - and 222 of 313 selected test files produced a green verdict in the recorded SIL host run. It is partially_mapped and not mapped for three reasons, each evidenced in this record rather than asserted: 84 selected test files never executed because they did not build (GAP-UTS-001); 5 of the 222 green verdicts belong to files that assert nothing, so they verify no property (GAP-UTS-002); and 7 executed files were red, so their modules are unverified rather than verified (GAP-UTS-004). A fourth reason is a scope boundary rather than a defect: the harness mocks the TI HAL, so no register map, timing, clocking, interrupt, DMA or electrical property was verified at unit level for any module (GAP-UTS-006).",
+   "relationship_note": "The rationale states the derivation explicitly ('software unit verification'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "SWE.5, SWE.6",
    "status": "not_applicable",
-   "rationale": "Named only to record the boundary of this record's scope. Software integration testing and software qualification testing are separate processes, are dispositioned separately, and are outside the scope of this authoring pass. This record makes no claim about them and does not stand in for either."
+   "relationship": "referenced_only",
+   "rationale": "Named only to record the boundary of this record's scope. Software integration testing and software qualification testing are separate processes, are dispositioned separately, and are outside the scope of this authoring pass. This record makes no claim about them and does not stand in for either.",
+   "relationship_note": "The rationale says so in its own words ('named only to record the boundary'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 6, Clause 10 (software unit verification)",
    "status": "partially_mapped",
-   "rationale": "Clause 10 requires unit verification to be based on the software unit design and the software requirements, with the verification criteria and the pass criteria derived from them, and it requires that the verification be shown to be free from the influence of the party that performed the unit development. The derivation from requirement to test is recorded in requirement_traceability and is honest about how many criteria it reaches: 0 of 6 acceptance criteria have an executed unit assertion. The independence requirement is not met and is not claimed: this record was authored by an AI agent, not by a party independent of the unit development, and independence_statement says so."
+   "relationship": "derivation_basis",
+   "rationale": "Clause 10 requires unit verification to be based on the software unit design and the software requirements, with the verification criteria and the pass criteria derived from them, and it requires that the verification be shown to be free from the influence of the party that performed the unit development. The derivation from requirement to test is recorded in requirement_traceability and is honest about how many criteria it reaches: 0 of 6 acceptance criteria have an executed unit assertion. The independence requirement is not met and is not claimed: this record was authored by an AI agent, not by a party independent of the unit development, and independence_statement says so.",
+   "relationship_note": "The rationale states the derivation explicitly ('derived from'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 2, Clause 7 (determination of verification measures)",
    "status": "unverified",
-   "rationale": "Which modules deserve what depth of verification is normally an analysis output. The six modules chosen here were chosen by the authoring agent for oracle diversity, and the corpus contains no analysis record justifying the selection. Recorded as unverified rather than mapped so that the absence is visible."
+   "relationship": "derivation_basis",
+   "rationale": "Which modules deserve what depth of verification is normally an analysis output. The six modules chosen here were chosen by the authoring agent for oracle diversity, and the corpus contains no analysis record justifying the selection. Recorded as unverified rather than mapped so that the absence is visible.",
+   "relationship_note": "The rationale states the derivation explicitly ('normally an analysis output'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
  "lifecycle_status": "reviewed",
@@ -894,7 +902,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `1ba855756317e28151fe2a6af14b85bf0eb718c88336c2eee8da34099153e424`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `65cb89ada547f12bfc696c456317e2bb02e9119cea6b46204beef5f091a53281`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

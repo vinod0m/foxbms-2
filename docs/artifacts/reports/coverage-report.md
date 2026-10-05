@@ -1,10 +1,106 @@
 # Coverage Report
 
+> # ARCHIVAL SNAPSHOT — DO NOT READ AS CURRENT
+>
+> **This file is a dated record of one tool run and nothing else. It is kept
+> because its value is its audit trail, not its figures.** Every number below
+> was true of the corpus on **2026-10-01** and several are no longer true of it.
+> They are left as they were rather than refreshed, on purpose: this document
+> carries the `CORR-COV-*` correction history that the corpus relies on to show
+> which standards mappings were demoted and why, and re-baselining it would
+> have destroyed the evidence of that history while re-creating the staleness
+> the history exists to prevent. It is therefore labelled archival rather than
+> re-baselined.
+>
+> **For the live figures use the machine-readable sibling,
+> `docs/artifacts/reports/coverage-report.json`, or run
+> `python3 docs/artifacts/tools/corpus.py coverage`.** The JSON is regenerated
+> by that command on every run; this Markdown file is not, and cannot be.
+>
+> **How far the two have drifted, measured 2026-10-05** (live figure /
+> the figure printed below, which is the 2026-10-01 run):
+>
+> | | live | below |
+> |---|---|---|
+> | indexed records | 323 | 298 |
+> | `standards_mapping` | 38/38 | 33/38 |
+> | `source_grounding` | 131/323 | 99/263 |
+> | `traceability_integrity` | 599/599 | 489/489 |
+> | `semantic_consistency_checks` | 24/24 | 10/10 |
+> | `automated_review_coverage` | 182/284 | 144/259 |
+> | `human_approval` | 0/323 | 0/298 |
+> | `production_authorization` | 0/323 | 0/298 |
+>
+> Two of those rows were not merely stale but **wrong in kind**, and both are
+> corrected in `corpus.py` rather than here: the `10/10` semantic figure counted
+> declared check *categories* rather than rules actually executed (it is 22
+> rules — 24 as of the 2026-10-05 safety-class amendment, which added
+> `safety_class_disclaimer_required` and `iso26262_conformance_claim`), and the
+> `human_approval` / `production_authorization` zeros were
+> literals classified as `constant` rather than measurements (they are computed
+> from the records, and they still read zero). The zero figures did not move and
+> are not expected to: nothing in this corpus has been approved by a person or
+> authorized for production.
+>
+> The decision to mark this file archival rather than re-baseline it is recorded
+> as `CORR-COV-025` in
+> [`docs/artifacts/governance/coverage-plan.json`](../governance/coverage-plan.json).
+>
+> ### What the inputs are, stated exactly
+>
+> The strongest fact about this corpus is that its inputs are a real, dated,
+> released upstream checkout rather than a synthesis, and that fact belongs on
+> the record here rather than being left for a reader to infer from a short SHA.
+>
+> Every `as_is` anchor, `code_location` and behaviour citation is read against
+> one commit: **`308028fb13d046ba29b98886895c2e17937b1437`**, subject
+> **"Minor release of foxBMS 2 (v1.11.0)"**, committer date
+> **2026-04-20T15:42:16+02:00**. It is pinned to **the v1.11.0 release
+> _commit_**.
+>
+> It is **not** pinned to a tag, and "pinned to tag v1.11.0" would be false
+> here. **There is no git tag object for this commit in the pinned clone.**
+> Measured in that clone: `git tag -l` lists nothing (0 tags);
+> `git describe --tags 308028fb…` returns `fatal: No names found, cannot
+> describe anything`; `git describe --tags --always` returns `308028fb`, the
+> abbreviated SHA rather than a tag name; `git cat-file -t` returns `commit`.
+> The version in the commit's subject is where "v1.11.0" comes from — the
+> commit message, not a tag. The full statement, with the same measurements, is
+> `provenance_basis` in
+> [`docs/artifacts/sources/source-registry.json`](../sources/source-registry.json).
+>
+> What a real pinned release checkout establishes: the commit exists, it is an
+> ancestor of the tree this corpus was authored in
+> (`git merge-base --is-ancestor 308028fb… HEAD` is true), and every hash the
+> corpus claims about upstream source is re-derivable against it. What it does
+> **not** establish: any ISO 26262 conformity, any ASPICE capability level, or
+> any assessment of foxBMS 2. The upstream project publishes no formal
+> requirements with identifiers, no HARA, no safety concept, and no test or
+> coverage reports, and it tells its users to perform their own risk assessment.
+> None of this corpus conforms to ISO 26262, and no `standards_mappings` entry
+> in it claims otherwise — that claim is checkable, and the check is a rule:
+> `iso26262_conformance_claim`.
+>
+> **One further drift, measured 2026-10-05 after the safety-class
+> amendment.** `semantic_consistency_checks` moved from 22/22 to **24/24**,
+> because two rules were added: `safety_class_disclaimer_required` and
+> `iso26262_conformance_claim`. The denominator is the declared rule set and the
+> numerator is what actually executed, so the figure moved because the work
+> moved. The other fourteen dimensions are unchanged, including the four
+> measured zeros — `human_approval` 0/323, `production_authorization` 0/323,
+> `actual_product_evidence` 0/33 and `approval_staleness` 0/0 — and they are not
+> expected to move: nothing here has been approved by a person, authorized for
+> production, or run on the product's own hardware. As with everything else in
+> this file, the live figures are
+> [`coverage-report.json`](coverage-report.json) or a fresh
+> `python3 docs/artifacts/tools/corpus.py coverage`, not this page.
+
 **Generated:** 2026-10-01 (figures refreshed; disposition audit `CORR-COV-016`)
 **Baseline:** BAS-REF-001 — source pinned to commit `308028fb` (v1.11.0), corpus authored at `2a408d5`
 **Profiles:** `synthetic_reference` (primary), `as_is` (comparison)
 **Machine-readable sibling:** `coverage-report.json` (regenerated by
-`python3 docs/artifacts/tools/corpus.py coverage`)
+`python3 docs/artifacts/tools/corpus.py coverage`) — **this is the live source;
+the table below is not**
 
 > Every number below comes from a live tool run on 2026-10-01. This report
 > states structural mapping coverage only. It asserts **no ISO 26262
@@ -20,8 +116,7 @@
 > predicate the validator enforces, so their zero is a measurement. The ratios
 > in the table are the 2026-10-01 denominators and are left as they were rather
 > than re-baselined in a report whose header names its run date; the live
-> figures are `python3 docs/artifacts/tools/corpus.py coverage`, which reads
-> `human_approval 0/321` and `production_authorization 0/321`.
+> figures are `python3 docs/artifacts/tools/corpus.py coverage`.
 
 ## 1. The 15 Coverage Dimensions
 

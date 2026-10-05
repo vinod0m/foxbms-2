@@ -256,14 +256,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 7980,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 12147,
   "record_path": "docs/artifacts/corpus/as_is/safety/hazard-analysis-cell-voltage.json",
-  "record_sha256": "df3e55e3fc575fd7b860951da15c93394afeb5eeafd6a041d474da21cfd034c5",
+  "record_sha256": "74a858c2a72fd6f26b93eff18798bbaa7a90d1b80b294fd7094998d5f9248e41",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "d099d3accaebcee534b5034503b426fc9220ab8795ce702134ddc436d0eccb88"
+  "verbatim_block_sha256": "879b7ebb05a7ca472d34d50e200bd26092fdf09c27f68e535289f632aefc61ce"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -403,7 +403,7 @@
   "production_authorized": false,
   "profile": "as_is",
   "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchors FB2-SRC-COD-000001 and -000004 previously named AFE_GetCellVoltages and SOA_CheckVoltageLimits, neither of which exists; they now name AFE_StartMeasurement (afe.h:124) and SOA_CheckVoltages (soa.c:81-146). Anchor FB2-SRC-DOC-000001 previously carried a placeholder content hash and now carries the sha256 of the document body retrieved on 2026-10-01. Origin remains derived; the corrected anchors make the inference chain checkable rather than changing its category.",
-  "revision": "2",
+  "revision": "3",
   "revision_history": [
    {
     "author": "safety_engineer",
@@ -416,6 +416,12 @@
     "date": "2026-10-02T00:00:00Z",
     "description": "Added asil_allocation_scope. An independent audit flagged the ASIL_D on this record's HE-01 entry as an unqualified classification on an as_is record. The class values and the S/E/C ratings are untouched; what is different now is that the record states in its own data that its hazardous events and their classifications are authored inputs of the hypothetical reference project, and that the real product has never had a hazard analysis and risk assessment. This record's safety goal child FB2-SAF-SGO-000001 already carried an equivalent statement in its asil_justification field; that field is untouched and the two are consistent.",
     "revision": "2"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: derived` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take hazard for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified.",
+    "revision": "3"
    }
   ],
   "safe_states": [
@@ -423,6 +429,15 @@
    "Charging disabled",
    "Fault logged to FRAM"
   ],
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) for the limit thresholds that make a violation detectable; src/app/driver/afe/api/afe.h:124 (AFE_StartMeasurement) for the measurement start the reaction chain depends on; and https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/structure/software-structure.html (section anchor sw-structure, retrieved 2026-10-01) for the documented module structure. All at the pinned commit 308028fb13d046ba29b98886895c2e17937b1437.",
+    "what_it_supports": "That cell voltages are measured and checked against configured limits in the pinned source, and that a wrong or missing measurement is a credible malfunctioning behaviour. It does NOT support the hazardous events, their operational situations, or their S3/E4/C3 and S2/E3/C2 ratings: those are authored, and the exposure rating in particular is flagged NOT EVIDENCED in the goal record that recomputes the ASIL from them."
+   },
+   "misreading_warning": "A reader who sees artifact_type `hazard` and a mapping to ISO 26262 Part 3 Clause 6 with status `mapped` will conclude the product has been through a HARA and that HE-01 is a hazard of the real foxBMS 2 at ASIL_D. The clause reference is the basis the hazardous-event shape was reconstructed from, not evidence of an assessment, and the hazardous events themselves are authored inputs - the record's own asil_allocation_scope states that the real product's safety integrity level is UNDETERMINED, not ASIL_D.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "foxBMS 2 has never had a hazard analysis and risk assessment performed for it. No HARA exists for the product, none is claimed here, and this record is not a partial one or a substitute for one. The corpus reconstructed the hazardous-event set of its own fictional reference project so that the as_is chain from hazard to goal to requirement would have a starting point, and recorded the malformed behaviour and the limit thresholds the pinned code actually implements."
+  },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
   "source_refs": [
@@ -434,18 +449,22 @@
    {
     "rationale": "Hazard analysis for E/E system",
     "reference": "Part 3, Clause 6",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the record was written from the clause's concept ('hazard analysis for e/e system'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "System-level hazard analysis",
     "reference": "Part 4, Clause 6",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the record was written from the clause's concept ('system-level hazard analysis'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    }
   ],
   "title": "Cell Overvoltage / Undervoltage Hazard",
-  "updated_at": "2026-10-02T00:02:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ]
@@ -472,7 +491,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "df3e55e3fc575fd7b860951da15c93394afeb5eeafd6a041d474da21cfd034c5",
+  "_record_sha256_at_signing": "74a858c2a72fd6f26b93eff18798bbaa7a90d1b80b294fd7094998d5f9248e41",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -501,6 +520,6 @@
   "production_authorized": false,
   "profile": "as_is",
   "record_id": "FB2-SAF-HAZ-000001",
-  "revision": "2"
+  "revision": "3"
  }
 }

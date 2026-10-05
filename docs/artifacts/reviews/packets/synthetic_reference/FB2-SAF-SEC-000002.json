@@ -266,14 +266,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 17928,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 22025,
   "record_path": "docs/artifacts/corpus/synthetic_reference/safety/sec-bounded-connection-admission-resource-budget.json",
-  "record_sha256": "f19fb37d59bae6278f01c2cafd30924e03999a550af123915666d470f4bcd333",
+  "record_sha256": "cdc47980a3a9d28a1df5472a932d47d5135b283cb2506fc8953aeafde79f3c3b",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "d7b6b75a84d99218b646188083878ca5ffb2df712db202b3dab2240ab3378d62"
+  "verbatim_block_sha256": "3a326e1a6483ed76a7ff3e84f913d87db50cf3c16ee0290590df69aa860bfdbf"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -447,7 +447,7 @@
   "real_source_control_status": "partially_present",
   "real_source_control_status_note": "Part of the capability this requirement specifies is present in the real foxBMS 2 source and part is not; see real_source_presence for the itemised split.",
   "real_source_presence": "Control PARTIALLY PRESENT, and the partial presence is stated explicitly. Present: the receive into the service buffer is length-bounded \u2014 src/app/application/ethernet/ethernet.c:157 declares uint8_t rxBuffer[ipconfigTCP_MSS] and :175 passes ipconfigTCP_MSS as the receive length, and :224 does the same on the drain path, so no read can exceed the array (TARA mitigation MIT-003, present_in_source). ABSENT: every admission control. src/app/application/config/ethernet_cfg.h:85 sets the backlog to 1, :94 sets the receive timeout to portMAX_DELAY, src/app/application/ethernet/ethernet.c:292 discards the return value of the queue send, and no per-connection cap, idle timeout or deterministic close exists. Anchors FB2-SRC-COD-000058, FB2-SRC-COD-000062.",
-  "revision": "3",
+  "revision": "4",
   "revision_history": [
    {
     "author": "cybersecurity_engineer",
@@ -466,12 +466,27 @@
     "date": "2026-09-30T00:00:00Z",
     "description": "Added the fault_reaction block that the safety-requirement completeness validator (MUT-008, safety_requirement_completeness_checker) requires and did not find. That rule used to carry an id filter '-FSR-' in id which made it structurally incapable of reporting this record, while its sibling verification_traceability_checker selected the same population - requirement plus engineering_domain equals safety - with no id filter at all. The filter has been removed from the rule, which widened its scope and weakened nothing; see finding FB2-REV-FND-000039. The block authored here is transcribed from this record's own statement, acceptance_criteria and conditions_modes, and records three absences honestly rather than filling them: neither safety concept allocates a fault reaction to any element for the security chain (element_owns_reaction is therefore false), the safety goal's timing budget has no cybersecurity leg so no reaction-time budget is stated, and the control's real-source status and unverified verification leg are carried through. No acceptance criterion, ASIL value, statement, rationale, verification approach or verification status was changed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human has approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
     "revision": "3"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified.",
+    "revision": "4"
    }
   ],
   "safety_allocation": {
    "asil": "not_applicable",
    "mitigation": "Availability mitigation. The recorded impact of TARA threat THR-003 is currently bounded because the affected service is not on a safety path in the real source; this requirement exists so that the hypothetical project does not rely on that boundary once it adds a safety-relevant service.",
    "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "src/app/application/ethernet/ethernet.c:241-294 (ETH_ListenForConnection) for the accept path and src/app/application/ethernet/ethernet.c:128-239 (ETH_EchoServerInstance) for the service whose resource use is unbounded, with src/app/application/config/ethernet_cfg.h:84-96 (ETH_ECHO_SERVER_PORT_NUMBER) for the port it listens on. Pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The caps themselves are the reference project's proposal; the source contains none of them.",
+    "what_it_supports": "That the pinned source has no per-connection or per-service resource bound, which is a real and checkable observation and the reason the record is worth keeping. It supports nothing about the proposed caps being implemented, and the clause is named as a gap rather than as a standard the record meets."
+   },
+   "misreading_warning": "A reader who sees a safety-domain requirement with a connection cap, a receive timeout and a per-connection byte budget, mapped to ISO 26262 Part 4 Clause 7, will conclude the product bounds the resources its network services consume. The mapping is `relationship: referenced_only` with status `gap`, the asil is `not_applicable`, and the record's own rationale says the unbounded conditions are present in the source in combination - so this is a record of a defect, not of a control.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is a forward-engineered proposal for a fictional item's resource budget, and its ISO mapping status is `gap`: the clause is named to record what does not exist, not to assert that something does."
   },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
@@ -484,19 +499,23 @@
    {
     "rationale": "Named for traceability of intent only; no ISO/SAE 21434 work product exists and no conformance is claimed.",
     "reference": "Clause 15.4 (mitigation concept), resource-exhaustion threat category",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('named for traceability of intent only'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_SAE_21434_2021",
     "status": "unverified"
    },
    {
     "rationale": "The hypothetical project has no resource-budget concept for communication services. This requirement is the proposed closure and it is unverified.",
     "reference": "Part 4, Clause 7 (availability of technical safety requirements)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('is the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "gap"
    }
   ],
   "statement": "The BMS master software shall bound the resources consumed by any network service by enforcing, for every service, a hard cap on concurrently serviced connections, a finite receive timeout, a per-connection byte budget, and a deterministic close of any connection that exceeds its budget, and shall raise a diagnosis entry on every admission refusal and every budget breach.",
   "title": "SEC-000002: Bounded connection admission and per-service resource budget",
-  "updated_at": "2026-09-30T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -525,7 +544,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "f19fb37d59bae6278f01c2cafd30924e03999a550af123915666d470f4bcd333",
+  "_record_sha256_at_signing": "cdc47980a3a9d28a1df5472a932d47d5135b283cb2506fc8953aeafde79f3c3b",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -554,6 +573,6 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "record_id": "FB2-SAF-SEC-000002",
-  "revision": "3"
+  "revision": "4"
  }
 }

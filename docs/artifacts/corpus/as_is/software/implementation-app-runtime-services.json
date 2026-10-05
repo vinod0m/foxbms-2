@@ -1,6 +1,6 @@
 {
   "id": "FB2-SW-IMP-000009",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "implementation",
   "engineering_domain": "software",
@@ -26,13 +26,17 @@
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 8 (programming guidelines for the language) and Clause 9 (implementation-level items these headers exist to support)",
       "status": "partially_mapped",
-      "rationale": "These headers carry the assertion macro, the privilege transition and the datatype utilities the rest of the application is written against. This record states what they are; it does not assert that using them is compliant with any coding guideline."
+      "relationship": "referenced_only",
+      "rationale": "These headers carry the assertion macro, the privilege transition and the datatype utilities the rest of the application is written against. This record states what they are; it does not assert that using them is compliant with any coding guideline.",
+      "relationship_note": "The rationale says so in its own words ('does not assert that using them is compliant'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4 (design-to-code traceability)",
       "status": "gap",
-      "rationale": "There is no software design artefact for the cross-cutting runtime headers in this profile. The gap is declared rather than closed by attaching them to an unrelated design."
+      "relationship": "referenced_only",
+      "rationale": "There is no software design artefact for the cross-cutting runtime headers in this profile. The gap is declared rather than closed by attaching them to an unrelated design.",
+      "relationship_note": "The rationale says so in its own words ('the gap is declared'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "lifecycle_status": "reviewed",
@@ -48,13 +52,68 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-10-02T00:00:00Z",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-02T00:00:00Z",
       "author": "sw_engineer",
       "description": "First issue. Authored because no artefact of type implementation existed and the as_is corpus anchors these three application headers through five source anchors and five deviations (FB2-SW-DEV-000017, -000018, -000019, -000020, -000021), with no design artefact covering them."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "traceability_owner",
+      "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered.",
+      "pinned_source_migration": {
+        "finding": "FB2-REV-FND-000173",
+        "parts": [
+          "pinned_file_exists",
+          "pinned_content_hash_matches",
+          "line_range_within_file",
+          "symbol_within_line_range"
+        ],
+        "aggregate_field": "verified_against_pinned_source",
+        "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+        "previous_aggregate_per_location": [
+          {
+            "index": 0,
+            "path": "src/app/main/include/fassert.h",
+            "line_range": "97-120",
+            "symbol": "FAS_DisableInterrupts",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 1,
+            "path": "src/app/main/include/fsystem.h",
+            "line_range": "66-119",
+            "symbol": "FSYS_RaisePrivilege",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 2,
+            "path": "src/app/main/include/general.h",
+            "line_range": "212-214",
+            "symbol": "GEN_REPEAT_Ux",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 3,
+            "path": "src/app/main/include/general.h",
+            "line_range": "248-255",
+            "symbol": "GEN_STRIP",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 4,
+            "path": "src/app/main/include/general.h",
+            "line_range": "94-102",
+            "symbol": "FAS_STATIC_ASSERT",
+            "verified_against_pinned_source": true
+          }
+        ],
+        "aggregate_changed_at": []
+      }
     }
   ],
   "implementation_kind": "cross_cutting_header",
@@ -67,6 +126,10 @@
       "symbol": "FAS_DisableInterrupts",
       "line_range": "97-120",
       "content_hash": "sha256:bb6b152030bf7fe0fb86397bfb085a613d2008d9598b99e3106abb9fe00478a9",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -77,6 +140,10 @@
       "symbol": "FSYS_RaisePrivilege",
       "line_range": "66-119",
       "content_hash": "sha256:6010244017c7d1ea6fed94ac49b689392894bd4438296c3cc46ddc0882468180",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -87,6 +154,10 @@
       "symbol": "GEN_REPEAT_Ux",
       "line_range": "212-214",
       "content_hash": "sha256:a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "macro_definition",
       "verified_against_pinned_source": true
     },
@@ -97,6 +168,10 @@
       "symbol": "GEN_STRIP",
       "line_range": "248-255",
       "content_hash": "sha256:a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "macro_definition",
       "verified_against_pinned_source": true
     },
@@ -107,6 +182,10 @@
       "symbol": "FAS_STATIC_ASSERT",
       "line_range": "94-102",
       "content_hash": "sha256:a0be6d949501b0bff2de8008336a087a7000a5dd688ab94e2638caff49790254",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "macro_definition",
       "verified_against_pinned_source": true
     }

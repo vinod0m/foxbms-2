@@ -316,14 +316,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 20507,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 24676,
   "record_path": "docs/artifacts/corpus/synthetic_reference/safety/sec-serial-link-framing-integrity-control-byte.json",
-  "record_sha256": "e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa",
+  "record_sha256": "50f95b17b0d2141cd37073c2147ebc2b019c9e835c38967c3bbbbeaf0e65ddec",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "e2a833dcde690009d2df14f781d204ed5afa8be11c86a2b32297fdb1a18c6b1b"
+  "verbatim_block_sha256": "54059ab35757f3032a7e1c268acead5489881665fffe8177d67d95b3ebb7303f"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -495,7 +495,7 @@
   "real_source_control_status": "absent",
   "real_source_control_status_note": "The control this requirement specifies is NOT present in the real foxBMS 2 source at commit 308028fb.",
   "real_source_presence": "Control ABSENT. src/app/driver/uart/uart.c:163 arms a single-byte interrupt-driven receive into one static byte (declared at :108). In the receive interrupt at :244-263, the values 0x13 and 0x11 (defined at src/app/driver/uart/uart.h:68-69) are consumed at :247-250 to gate transmission, and every other byte is forwarded to a queue at :254 with the enqueue return value discarded, so overflow is silent and no diagnosis entry is raised. No framing, length validation, integrity field or authorisation exists anywhere on this path. A further absence is recorded honestly and constrains the impact rating: the application consumer of this queue is a stub \u2014 FTSK_RunUserCodeUart in src/app/task/config/ftask_cfg.c:330-338 contains only UART_HandleFlowControl() and OS_NotifyTake() and never calls UART_Read \u2014 so no application data path from the serial receive queue to the database was found, and the evidenced impact is confined to transmit suppression and silent overflow. This requirement MUST be re-derived if the hypothetical project connects a protocol to this queue. Anchors FB2-SRC-COD-000067, FB2-SRC-COD-000068, FB2-SRC-COD-000069, FB2-SRC-COD-000070, FB2-SRC-COD-000071.",
-  "revision": "4",
+  "revision": "5",
   "revision_history": [
    {
     "author": "cybersecurity_engineer",
@@ -520,12 +520,27 @@
     "date": "2026-09-30T00:00:00Z",
     "description": "Added the fault_reaction block that the safety-requirement completeness validator (MUT-008, safety_requirement_completeness_checker) requires and did not find. That rule used to carry an id filter '-FSR-' in id which made it structurally incapable of reporting this record, while its sibling verification_traceability_checker selected the same population - requirement plus engineering_domain equals safety - with no id filter at all. The filter has been removed from the rule, which widened its scope and weakened nothing; see finding FB2-REV-FND-000039. The block authored here is transcribed from this record's own statement, acceptance_criteria and conditions_modes, and records three absences honestly rather than filling them: neither safety concept allocates a fault reaction to any element for the security chain (element_owns_reaction is therefore false), the safety goal's timing budget has no cybersecurity leg so no reaction-time budget is stated, and the control's real-source status and unverified verification leg are carried through. No acceptance criterion, ASIL value, statement, rationale, verification approach or verification status was changed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human has approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
     "revision": "4"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified.",
+    "revision": "5"
    }
   ],
   "safety_allocation": {
    "asil": "not_applicable",
    "mitigation": "Security mitigation for the serial communication path. asil is recorded as not_applicable because this is a security requirement; the trace to the safety goal records that a link carrying measurement data is an interference vector for the requirements derived from that goal, not an ASIL allocation.",
    "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "src/app/driver/uart/uart.c:244-263 (UART_RxInterrupt) for the receive path that validates no length and no integrity; src/app/driver/uart/uart.c:223-242 (UART_HandleFlowControl) and src/app/driver/uart/uart.h:68-69 (UART_XOFF) for the flow-control bytes treated as privileged commands; src/app/driver/uart/uart.c:144-164 (UART_Initialize) for the initialisation; src/app/task/config/ftask_cfg.c:330-338 (FTSK_RunUserCodeUart) for the task that runs the user code over the link. Pinned commit 308028fb13d046ba29b98886895c2e17937b1437. Every element of the requirement is the inverse of what these functions do.",
+    "what_it_supports": "That the pinned source's serial receive path is unframed and unauthenticated, and that two byte values are privileged without validation - a real, checkable and security-relevant observation. It supports nothing about the proposed control being implemented, and the clause is named for traceability rather than as a standard met."
+   },
+   "misreading_warning": "A reader who sees a safety-domain requirement mandating serial framing, an integrity field and authorisation, mapped to ISO 26262 Part 4 Clause 7, will conclude the product validates serial frames and demotes its flow-control bytes. It does the opposite: the record's own rationale states the pinned source has no framing, no length field, no integrity field and no authorisation, and that it treats two arbitrary byte values - XOFF and XON - as privileged commands. The requirement is a record of that defect, and the mapping is relationship: `referenced_only`.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is a forward-engineered proposal for a fictional item's serial-link integrity, and its asil is `not_applicable`. foxBMS 2 published no such requirement."
   },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
@@ -540,19 +555,23 @@
    {
     "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists and no conformance is claimed.",
     "reference": "Clause 15.4 (mitigation concept); external interface protection per Clause 8.5",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('named for traceability of intent only'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_SAE_21434_2021",
     "status": "unverified"
    },
    {
     "rationale": "The interference path through an unframed serial link is identified; the corresponding safety analysis is not part of this corpus.",
     "reference": "Part 4, Clause 7 (technical safety requirements, freedom from interference)",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('is not part of this corpus'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_26262_2018",
     "status": "partially_mapped"
    }
   ],
   "statement": "The BMS master software shall accept a serial (SCI/UART, RS485) frame only after an explicit length field has been validated against the received byte count and an integrity field has been verified, shall pass only authenticated frames to the application layer, and shall treat the XOFF and XON byte values as ordinary payload unless they arrive inside a frame that has already been authenticated.",
   "title": "SEC-000004: Framing, integrity and authorisation on the serial link, and demotion of the XOFF/XON control bytes",
-  "updated_at": "2026-09-30T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -581,7 +600,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "e7f243e171d03a0071574601e68107ca603dfe5905604b8b322139b835bde0aa",
+  "_record_sha256_at_signing": "50f95b17b0d2141cd37073c2147ebc2b019c9e835c38967c3bbbbeaf0e65ddec",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -610,6 +629,6 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "record_id": "FB2-SAF-SEC-000004",
-  "revision": "4"
+  "revision": "5"
  }
 }

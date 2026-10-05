@@ -1,6 +1,6 @@
 {
   "id": "FB2-SW-IMP-000005",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "implementation",
   "engineering_domain": "software",
@@ -24,13 +24,17 @@
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
       "status": "partially_mapped",
-      "rationale": "States where the I2C driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+      "relationship": "referenced_only",
+      "rationale": "States where the I2C driver code is. Makes no claim that it was verified and asserts no ASIL classification.",
+      "relationship_note": "The rationale says so in its own words ('makes no claim that'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4 (design-to-code traceability)",
       "status": "gap",
-      "rationale": "There is no software design artefact for the I2C driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+      "relationship": "referenced_only",
+      "rationale": "There is no software design artefact for the I2C driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design.",
+      "relationship_note": "The rationale says so in its own words ('the gap is declared'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "lifecycle_status": "reviewed",
@@ -46,13 +50,54 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-10-02T00:00:00Z",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-02T00:00:00Z",
       "author": "sw_engineer",
       "description": "First issue. Authored to cover a module the as_is corpus anchors through three deviations (FB2-SW-DEV-000011, -000012, -000013) and for which it holds no design artefact at all."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "traceability_owner",
+      "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered.",
+      "pinned_source_migration": {
+        "finding": "FB2-REV-FND-000173",
+        "parts": [
+          "pinned_file_exists",
+          "pinned_content_hash_matches",
+          "line_range_within_file",
+          "symbol_within_line_range"
+        ],
+        "aggregate_field": "verified_against_pinned_source",
+        "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+        "previous_aggregate_per_location": [
+          {
+            "index": 0,
+            "path": "src/app/driver/i2c/i2c.c",
+            "line_range": "415-508",
+            "symbol": "I2C_ReadDma",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 1,
+            "path": "src/app/driver/i2c/i2c.c",
+            "line_range": "510-597",
+            "symbol": "I2C_WriteDma",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 2,
+            "path": "src/app/driver/i2c/i2c.c",
+            "line_range": "599-764",
+            "symbol": "I2C_WriteReadDma",
+            "verified_against_pinned_source": true
+          }
+        ],
+        "aggregate_changed_at": []
+      }
     }
   ],
   "implementation_kind": "driver_module",
@@ -65,6 +110,10 @@
       "symbol": "I2C_ReadDma",
       "line_range": "415-508",
       "content_hash": "sha256:ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -75,6 +124,10 @@
       "symbol": "I2C_WriteDma",
       "line_range": "510-597",
       "content_hash": "sha256:ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -85,6 +138,10 @@
       "symbol": "I2C_WriteReadDma",
       "line_range": "599-764",
       "content_hash": "sha256:ed7f330c5c3a18426d9792761103468706501d8ee4ef69b142e8fb5459466bb1",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     }

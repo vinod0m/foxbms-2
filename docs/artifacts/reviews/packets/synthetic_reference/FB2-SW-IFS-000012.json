@@ -138,14 +138,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 18324,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 18848,
   "record_path": "docs/artifacts/corpus/synthetic_reference/software/ifs-balancing-fsm.json",
-  "record_sha256": "b95f24220813ddc8939839697dbcca36b7b3f3ef45ef83f3da215119bbb426ad",
+  "record_sha256": "39d5456dfbaa5b81a62a5a34c1efa791b54af840e6ed3dd2725ec9d12df5233b",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "7841a57746f51f645bd401f8787299834d0f18504eeeb5df3bd5e8bf5088a87a"
+  "verbatim_block_sha256": "2de6675a2b275b9559b2effd072fbbf5354b2436b53cc7d0756ebaf06e444243"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -478,6 +478,8 @@
    {
     "rationale": "Backs SWE.2 with a real interface specification: providing and consuming module, the real C signature transcribed from the header at 308028fb, per-parameter direction, unit, meaning and valid range with the mechanism that enforces it, a return contract whose values are the enumerators the source defines, validity signalling read off the real error paths, timing where the source imposes one, concurrency, and a required not_specified_by_source list. Three elements over the balancing state machine, and records the strategy-vtable structure the interface does not express. The status stays partially_mapped: the whole family remains a reconstruction of an existing implementation rather than the product of an architectural design activity, and Component Design remains absent.",
     "reference": "SWE.2",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('backs '): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "partially_mapped"
    }
@@ -515,7 +517,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "b95f24220813ddc8939839697dbcca36b7b3f3ef45ef83f3da215119bbb426ad",
+  "_record_sha256_at_signing": "39d5456dfbaa5b81a62a5a34c1efa791b54af840e6ed3dd2725ec9d12df5233b",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",

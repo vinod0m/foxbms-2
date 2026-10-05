@@ -142,8 +142,66 @@ BASE_ONLY_TYPES = {
     "parameter_registry", "assumption_registry", "link_registry",
 }
 
+# The four checks that `verified_against_pinned_source` was one boolean for
+# (FB2-REV-FND-000173). Named here because the schema, the migration of every
+# record that carried the old flag, the re-derivation in
+# _validate_code_locations_pinned and the aggregate rule all have to agree on
+# the same four names; a fourth name spelled differently in one of those places
+# would leave a field no rule reads and no reader can find.
+PINNED_SOURCE_PARTS = (
+    "pinned_file_exists",
+    "pinned_content_hash_matches",
+    "line_range_within_file",
+    "symbol_within_line_range",
+)
+
 BASELINE_COMMIT = "308028fb"
 FINAL_STATUS = "synthetic_ready_with_limitations"
+
+# ---------------------------------------------------------------------------
+# SAFETY-CLASS: the records whose type or allocation makes them a safety
+# artefact, and the four fields each must carry so the honesty is on the face
+# of the record.
+# ---------------------------------------------------------------------------
+#
+# WHAT SAFETY-CLASS MEANS, and why it is two conditions rather than one.
+#
+# By NAME: the four ISO 26262 safety artefact types. `safety_goal`, `hazard`,
+# `functional_safety_requirement`, `safety_concept`. A record typed as one of
+# these is a safety artefact whatever profile it is in - the as_is safety goal
+# is a safety goal precisely because it is typed safety_goal, and typing it
+# something else to escape this requirement would be the defect, not the fix.
+#
+# By ALLOCATION: a `requirement` whose `safety_allocation.safety_goal_ref` names
+# a safety goal. The FSRs, and the hardware and software requirements a
+# technical safety concept allocates the goal to, carry the generic type
+# `requirement` while being safety artefacts in substance. Keying on
+# artifact_type alone would leave all of them outside the requirement, and they
+# are precisely the records a reader skims for an ISO 26262 Part 4/5/6 clause
+# and reads as conformant hardware and software safety requirements.
+#
+# The allocation branch requires the reference to be a well-formed safety-goal
+# id. A record carrying `safety_goal_ref: "not_applicable"` is not allocated to
+# a safety goal and is not safety-class; the six synthetic software interface
+# requirements that carry that value are excluded by the pattern, not by an
+# exception list.
+SAFETY_CLASS_ARTIFACT_TYPES = frozenset({
+    "safety_goal", "hazard", "functional_safety_requirement", "safety_concept",
+})
+
+# The id shape a `safety_goal_ref` must have to constitute an allocation to a
+# safety goal. Anchored and total so that a prose value cannot satisfy it.
+SAFETY_GOAL_REF_PATTERN = re.compile(r"^FB2-SAF-SGO-[0-9]{6}$")
+
+# The four fields of safety_class_disclaimer the validator requires to be
+# PRESENT AND NON-EMPTY. The schema requires the four sub-fields structurally;
+# this list is what the rule checks, and the two must agree. A present-but-blank
+# string satisfies a presence check and tells a reader nothing, so the rule
+# treats empty as missing and says so in its message.
+SAFETY_CLASS_DISCLAIMER_REQUIRED_FIELDS = (
+    "not_a_project_published_artefact_reason",
+    "misreading_warning",
+)
 
 # Every semantic rule _validate_semantic_rules evaluates, declared once.
 #
@@ -174,12 +232,15 @@ SEMANTIC_RULE_IDS = frozenset({
     "hsi_interface_consistency",
     "identity_uniqueness_checker",
     "incomplete_propagation",
+    "iso26262_conformance_claim",
     "parameter_threshold_order",
     "parameter_unit_consistency",
+    "pinned_verification_aggregate_contradicts_parts",
     "production_authorization_governance_checker",
     "refinement_cycle_detector",
     "requirement_applicability_validator",
     "safety_goal_mitigates_hazard",
+    "safety_class_disclaimer_required",
     "safety_requirement_completeness_checker",
     "source_anchor_drift_detector",
     "traceability_checker",
@@ -643,6 +704,16 @@ RULE_IDS = {
     "source_anchor_line_range_unparseable",
     "evidence_file_missing",
     "evidence_file_hash_mismatch",
+    # --- behaviour citations (FB2-REV-FND-000172: nothing in the suite read
+    # behaviours[] at all, so an entire asserted evidence layer was unverified
+    # by machine) and the four pinned-source parts behind the single
+    # verified_against_pinned_source bit (FB2-REV-FND-000173) ---
+    "behaviour_citation_unresolved",
+    "behaviour_citation_line_range_out_of_bounds",
+    "behaviour_citation_symbol_missing",
+    "code_location_pinned_part_mismatch",
+    "code_location_pinned_part_missing",
+    "pinned_verification_aggregate_contradicts_parts",
     # --- governance semantics, runnable independently of schema validation ---
     "governance_authority_claim",
     # --- change-lifecycle content (key presence was the whole previous check) ---
@@ -809,6 +880,21 @@ def sha256_file(path):
         for chunk in iter(lambda: f.read(65536), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def sha256_bytes(data):
+    """sha256 of text already decoded from a pinned blob.
+
+    Decoding is lossless for every file in this corpus (all of them are ASCII or
+    UTF-8 with no BOM and no invalid sequences), and re-encoding as UTF-8
+    reproduces the blob's bytes. That is the same assumption the corpus's own
+    working-tree hashes rest on, since sha256_file is fed by the same files; it
+    is stated rather than hidden because a pinned blob with an encoding this
+    cannot round-trip would show up as a content_hash mismatch, not as silence.
+    """
+    if isinstance(data, str):
+        data = data.encode("utf-8", errors="replace")
+    return hashlib.sha256(data).hexdigest()
 
 
 # The labels of the seven fields of a generated packet's signature block, in the
@@ -1910,6 +1996,97 @@ class CorpusTool:
             return []
         return [a for a in load_json(sr).get("anchors", []) if a.get("anchor_id")]
 
+    # -----------------------------------------------------------------------
+    # PINNED BLOBS. Added for FB2-REV-FND-000172/000173.
+    #
+    # WHY THIS EXISTS, and why reading the working tree is not a substitute.
+    # `_file_sha256` hashes the file as checked out. A code_location and a
+    # source anchor both name a COMMIT, and that commit's claim is about the
+    # bytes AT the commit, not about whatever the tree happens to hold now. On
+    # this repository the two are measurably different: 14 of the 81
+    # code_locations record a content_hash that equals the pinned blob, and
+    # three of those files (soa.c, rtc.c, diag.c) have since changed, so a
+    # working-tree read would report 14 mismatches that are not defects, and
+    # would be unable to see a real one.
+    #
+    # HOW A PINNED BLOB IS OBTAINED, in order, and each step says so:
+    #   1. the git object for <commit>:<path>, when there is an object store;
+    #   2. otherwise the working-tree file, but ONLY when its sha256 equals the
+    #      content_hash the record itself records. A content hash is a content
+    #      identity -- that is the whole of what git's own unchanged-file test
+    #      is -- so equality makes the working-tree bytes byte-for-byte the
+    #      pinned blob and nothing is being assumed;
+    #   3. otherwise nothing. The record asks about bytes this checkout cannot
+    #      produce, so the caller is told "unavailable" and must count it as
+    #      unchecked. It is NOT counted as a pass and NOT counted as a failure:
+    #      the corpus already uses that third class for anchors that name no
+    #      local file, and inventing a verdict where none is derivable is the
+    #      thing this corpus refuses to do everywhere else.
+    #
+    # Step 3 is reachable in practice: a `git archive` of HEAD carries the
+    # working-tree copy of those three files, not the pinned one, and carries no
+    # object store to ask. The report line names the figure so a reader is never
+    # left comparing a full tally from one checkout against a partial one from
+    # another without knowing why.
+    #
+    # THE CACHE IS SHARED BUT KEYED BY ROOT, and that is not a detail. Several
+    # self-tests construct a CorpusTool rooted at a fixture tree and drive these
+    # rules there, and a `git show` issued against such a tree cannot resolve. A
+    # cache keyed only on (path, commit) would let that fixture-tree miss be
+    # served to the real repository afterwards: the rule would report 'pinned
+    # bytes unavailable' about a file it had already read successfully, and
+    # nothing would say why. Keying on the root as well keeps the miss and the
+    # success apart. The cache is a CLASS attribute rather than a per-instance
+    # one because the self-test suite builds a fresh CorpusTool per assertion and
+    # re-resolving every pinned blob through a fresh subprocess each time made
+    # the suite roughly twenty times slower for no additional information.
+    _pinned_blob_cache = {}
+
+    def _pinned_blob(self, rel, commit, content_hash):
+        """Return (text_or_None, source, reason) for the bytes named by a record.
+
+        `source` is one of "git-object", "working-tree-identical",
+        "unavailable". `reason` is filled only for "unavailable".
+        """
+        key = (str(self.root), rel, commit)
+        cached = CorpusTool._pinned_blob_cache.get(key)
+        if cached is not None:
+            return cached
+        result = (None, "unavailable", "")
+        try:
+            proc = subprocess.run(
+                ["git", "-C", str(self.root), "show", f"{commit}:{rel}"],
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=True)
+            if proc.stdout:
+                result = (proc.stdout.decode("utf-8", errors="replace"),
+                          "git-object", "")
+        except (OSError, subprocess.SubprocessError):
+            pass
+        if result[0] is None:
+            try:
+                working = (self.root / rel).read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                working = None
+            if working is not None and self._expected_sha(content_hash) == sha256_file(
+                    self.root / rel):
+                result = (working, "working-tree-identical", "")
+            else:
+                result = (None, "unavailable",
+                          "no git object for this commit and path, and the checked-out "
+                          "copy does not hash to the content_hash the record records")
+        CorpusTool._pinned_blob_cache[key] = result
+        return result
+
+    @staticmethod
+    def _range_bounds(value):
+        """(start, end) for 'N' or 'N-M', or None when unparseable."""
+        m = CorpusTool._LINE_RANGE.match(str(value))
+        if not m:
+            return None
+        start = int(m.group(1))
+        end = int(m.group(2)) if m.group(2) else start
+        return start, end
+
     def _file_sha256(self, rel):
         fp = self.root / rel
         try:
@@ -2250,6 +2427,8 @@ class CorpusTool:
             ok &= self._validate_review_digests(index)
             ok &= self._validate_source_anchors()
             ok &= self._validate_evidence_files(index)
+            ok &= self._validate_code_locations_pinned(index)
+            ok &= self._validate_behaviour_citations(index)
         finally:
             tally = self.provenance_tally
             self.provenance_tally = saved
@@ -2257,9 +2436,235 @@ class CorpusTool:
             self.provenance_tally.update(tally)
         return ok
 
+    # -----------------------------------------------------------------------
+    # BEHAVIOUR CITATIONS -- FB2-REV-FND-000172.
+    #
+    # The finding, verbatim from the review that raised it: "All 14
+    # implementation records and all 84 of their behaviours cite an
+    # evidence_symbol and an evidence_line_range and NO FILE. A behaviour is
+    # therefore not resolvable from its own record ... the suite's provenance
+    # checker verifies source anchors and code_locations and does not read
+    # behaviours[] at all, so the behaviour layer of every implementation
+    # record is UNVERIFIED provenance by machine."
+    #
+    # This is the check that finding asked for, on the second of the two
+    # options its disposition named ("the schema declares that behaviour
+    # evidence is resolved against the record's code_locations and a machine
+    # check resolves it"). Adding a file to 84 behaviours across 14 records is
+    # the other option; it was not taken because it is an authoring and
+    # digest-re-derivation cost and because resolution against the record's own
+    # code_locations is a stronger statement than a path that is only asserted.
+    #
+    # WHAT COUNTS AS RESOLVED, and why it is not widened:
+    #   a behaviour citing (symbol S, range R) resolves when some code_location
+    #   in the SAME record names S and its own range CONTAINS R. Exact equality
+    #   is the common case; containment is a behaviour pointing at a block
+    #   inside a function the record locates as a whole, which is the ordinary
+    #   way to be more precise than the record's granularity and is not a
+    #   defect. Requiring equality would report 16 correct records as broken;
+    #   requiring only containment would accept a citation whose symbol the
+    #   record never attributes to anything, which is the defect this rule is
+    #   for. Both directions were measured; the message below names which one
+    #   applied so a reader can see the arithmetic rather than trust a tally.
+    #
+    # Resolution alone is not verification. Each resolved citation is then
+    # checked against the PINNED BLOB the resolved code_location names: the
+    # cited range must lie inside that blob, and the resolved symbol must occur
+    # inside the code_location's own range in that blob. Where the pinned bytes
+    # cannot be produced in this checkout the citation is counted as
+    # unverifiable and reported, never passed and never failed.
+    def _validate_behaviour_citations(self, index):
+        ok = True
+        tally = {"records": 0, "behaviours": 0, "exact": 0, "contained": 0,
+                 "unresolved": 0, "no_citation": 0,
+                 "pinned_checked": 0, "pinned_git_object": 0,
+                 "pinned_working_tree_identical": 0, "pinned_unavailable": 0,
+                 "pinned_range_out_of_bounds": 0, "pinned_symbol_missing": 0}
+        for key, (_p, d) in index.items():
+            behaviours = d.get("behaviours")
+            if not isinstance(behaviours, list) or not behaviours:
+                continue
+            aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
+            tally["records"] += 1
+            locations = [c for c in (d.get("code_locations") or [])
+                         if isinstance(c, dict)]
+            for b in behaviours:
+                if not isinstance(b, dict):
+                    continue
+                tally["behaviours"] += 1
+                bid = b.get("behaviour_id")
+                sym = b.get("evidence_symbol")
+                cited = b.get("evidence_line_range")
+                bounds = self._range_bounds(cited) if cited is not None else None
+                if sym is None and cited is None:
+                    tally["no_citation"] += 1
+                    continue
+                if bounds is None:
+                    tally["unresolved"] += 1
+                    ok = False
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"{aid}: behaviour {bid} cites evidence_line_range {cited!r}, which is "
+                        f"not a line or a 'start-end' range, so the citation cannot be resolved "
+                        f"against any code_location in this record",
+                        "behaviour_citation_unresolved")
+                    continue
+                resolved = None
+                for c in locations:
+                    if c.get("symbol") != sym:
+                        continue
+                    cb = self._range_bounds(c.get("line_range"))
+                    if cb and cb[0] <= bounds[0] and bounds[1] <= cb[1]:
+                        resolved = (c, cb)
+                        break
+                if resolved is None:
+                    tally["unresolved"] += 1
+                    ok = False
+                    same_symbol = [c for c in locations if c.get("symbol") == sym]
+                    covering = [c for c in locations
+                                if (lambda cb: cb and cb[0] <= bounds[0] and bounds[1] <= cb[1])
+                                (self._range_bounds(c.get("line_range")))]
+                    if same_symbol:
+                        why = (f"the record locates that symbol at "
+                               f"{', '.join(str(c.get('line_range')) for c in same_symbol)} "
+                               f"in {', '.join(sorted({str(c.get('path')) for c in same_symbol}))}, "
+                               f"and lines {cited} lie outside every one of those ranges")
+                    elif covering:
+                        why = (f"lines {cited} lie inside {len(covering)} code_location(s) in "
+                               f"this record, but none of them is the symbol '{sym}' that the "
+                               f"behaviour names")
+                    else:
+                        near = [f"{c.get('symbol')} {c.get('path')}:{c.get('line_range')}"
+                                for c in locations]
+                        why = (f"no code_location in this record names the symbol '{sym}' "
+                               f"(the record locates: {'; '.join(near)}) and lines {cited} "
+                               f"fall inside none of them")
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"{aid}: behaviour {bid} cites evidence_symbol '{sym}' at lines {cited} "
+                        f"and names no file, and that citation does not resolve: {why}",
+                        "behaviour_citation_unresolved")
+                    continue
+                c, cb = resolved
+                exact = cb == bounds
+                tally["exact" if exact else "contained"] += 1
+                text, source, _reason = self._pinned_blob(
+                    c.get("path"), c.get("commit"), c.get("content_hash"))
+                if text is None:
+                    tally["pinned_unavailable"] += 1
+                    continue
+                tally["pinned_checked"] += 1
+                tally["pinned_git_object" if source == "git-object"
+                      else "pinned_working_tree_identical"] += 1
+                lines = text.splitlines()
+                if bounds[0] < 1 or bounds[1] > len(lines):
+                    tally["pinned_range_out_of_bounds"] += 1
+                    ok = False
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"behaviour {bid} cites lines {cited}, which are outside "
+                        f"{c.get('path')} at commit {str(c.get('commit'))[:12]}, which has "
+                        f"{len(lines)} line(s)",
+                        "behaviour_citation_line_range_out_of_bounds")
+                    continue
+                segment = "\n".join(lines[cb[0] - 1:cb[1]])
+                if not re.search(r"\b" + re.escape(str(sym)) + r"\b", segment):
+                    tally["pinned_symbol_missing"] += 1
+                    ok = False
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"behaviour {bid} resolves to {c.get('path')}:{c.get('line_range')} "
+                        f"({sym}), but '{sym}' does not occur inside those lines of the blob at "
+                        f"commit {str(c.get('commit'))[:12]}",
+                        "behaviour_citation_symbol_missing")
+        self.provenance_tally["behaviours"] = tally
+        return ok
+
+    # -----------------------------------------------------------------------
+    # THE FOUR PINNED-SOURCE PARTS -- FB2-REV-FND-000173.
+    #
+    # `verified_against_pinned_source` was one boolean standing in for four
+    # checks, and on this corpus one location fails the fourth (80 of 81
+    # symbols occur inside their recorded range). A single bit cannot show that,
+    # so a reader who trusted the flag inherited a claim the corpus had not
+    # earned. The flag is now the AGGREGATE of four separately recorded parts,
+    # each of which is re-derived here from the pinned blob and compared with
+    # what the record claims -- so the split does not merely make a partial
+    # failure visible, it makes it machine-checkable, and the aggregate rule
+    # (pinned_verification_aggregate_contradicts_parts) makes a record that
+    # claims the aggregate while any part is false a finding in its own right.
+    def _validate_code_locations_pinned(self, index):
+        ok = True
+        tally = {"locations": 0, "parts_declared": 0, "parts_missing": 0,
+                 "checked": 0, "git_object": 0, "working_tree_identical": 0,
+                 "unavailable": 0, "agree": 0, "disagree": 0}
+        for key, (_p, d) in index.items():
+            locations = d.get("code_locations")
+            if not isinstance(locations, list) or not locations:
+                continue
+            aid = key[1] if isinstance(key, tuple) and len(key) >= 2 else key
+            for i, c in enumerate(locations):
+                if not isinstance(c, dict):
+                    continue
+                tally["locations"] += 1
+                declared = {f: c.get(f) for f in PINNED_SOURCE_PARTS}
+                absent = [f for f, v in declared.items() if v is None]
+                tally["parts_declared"] += len(PINNED_SOURCE_PARTS) - len(absent)
+                if absent:
+                    tally["parts_missing"] += len(absent)
+                    ok = False
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"{aid}: code_locations[{i}] ({c.get('path')}:{c.get('line_range')}) does not "
+                        f"declare {', '.join(absent)}; the four pinned-source parts are the "
+                        f"constituents of verified_against_pinned_source and a reader cannot "
+                        f"tell which one is missing",
+                        "code_location_pinned_part_missing")
+                text, source, _reason = self._pinned_blob(
+                    c.get("path"), c.get("commit"), c.get("content_hash"))
+                if text is None:
+                    tally["unavailable"] += 1
+                    continue
+                tally["checked"] += 1
+                tally["git_object" if source == "git-object"
+                      else "working_tree_identical"] += 1
+                lines = text.splitlines()
+                bounds = self._range_bounds(c.get("line_range"))
+                expected = {
+                    "pinned_file_exists": True,
+                    "pinned_content_hash_matches":
+                        self._expected_sha(c.get("content_hash"))
+                        == sha256_bytes(text),
+                    "line_range_within_file":
+                        bounds is not None and 1 <= bounds[0] <= bounds[1] <= len(lines),
+                    "symbol_within_line_range": False,
+                }
+                if expected["line_range_within_file"]:
+                    segment = "\n".join(lines[bounds[0] - 1:bounds[1]])
+                    expected["symbol_within_line_range"] = bool(
+                        re.search(r"\b" + re.escape(str(c.get("symbol"))) + r"\b", segment))
+                for field, derived in expected.items():
+                    claimed = declared.get(field)
+                    if claimed is None:
+                        continue
+                    if claimed == derived:
+                        tally["agree"] += 1
+                    else:
+                        tally["disagree"] += 1
+                        ok = False
+                        self.findings.add(
+                            "high", "provenance", aid,
+                            f"{aid}: code_locations[{i}] ({c.get('path')}:{c.get('line_range')}) records "
+                            f"{field}={claimed!r}, but re-deriving it from the blob at commit "
+                            f"{str(c.get('commit'))[:12]} gives {derived!r}",
+                            "code_location_pinned_part_mismatch")
+        self.provenance_tally["code_locations"] = tally
+        return ok
+
     def _provenance_finding_count(self):
         return sum(1 for f in self.findings.items if f.get("rule", "").startswith(
-            ("review_digest", "source_anchor_", "evidence_file_", "provenance_ref_")))
+            ("review_digest", "source_anchor_", "evidence_file_", "provenance_ref_",
+             "behaviour_citation_", "code_location_pinned_")))
 
     def _report_provenance(self):
         """Print the per-class provenance tally. Always runs, gates or not."""
@@ -2267,6 +2672,8 @@ class CorpusTool:
         rd = t.get("review_digest", {})
         sa = t.get("source_anchors", {})
         ev = t.get("evidence_files", {})
+        cl = t.get("code_locations", {})
+        bh = t.get("behaviours", {})
         print("  provenance verification tally:")
         print(f"    review digests      : {rd.get('verified', 0)} verified against the file on disk, "
               f"{rd.get('placeholder_with_note', 0)} permitted placeholder(s) with a note, "
@@ -2293,6 +2700,31 @@ class CorpusTool:
               f"{ev.get('log_file_missing', 0)} missing; "
               f"{ev.get('evidence_file_entries', 0)} evidence_files entr(y/ies), "
               f"{ev.get('evidence_file_missing', 0)} missing")
+        # The two layers FB2-REV-FND-000172/000173 were written about. Both
+        # print their unavailable class, because on a checkout with no git object
+        # store the checked set is smaller than the population and a reader must
+        # be able to see that rather than infer it from a total.
+        print(f"    code location parts : {cl.get('locations', 0)} code_location(s) across "
+              f"{len(PINNED_SOURCE_PARTS)} named parts each; {cl.get('parts_declared', 0)} of "
+              f"{cl.get('locations', 0) * len(PINNED_SOURCE_PARTS)} part declarations present, "
+              f"{cl.get('parts_missing', 0)} missing; {cl.get('checked', 0)} re-derived against "
+              f"the pinned blob ({cl.get('git_object', 0)} read from the git object store, "
+              f"{cl.get('working_tree_identical', 0)} from a checked-out file whose sha256 "
+              f"already equals the recorded content_hash); {cl.get('agree', 0)} agree with the "
+              f"record, {cl.get('disagree', 0)} disagree; {cl.get('unavailable', 0)} could not "
+              f"be re-derived in this checkout (reported, neither passed nor failed)")
+        print(f"    behaviour citations : {bh.get('behaviours', 0)} behaviour(s) in "
+              f"{bh.get('records', 0)} record(s); {bh.get('exact', 0)} resolve to a code_location "
+              f"at exactly the cited range, {bh.get('contained', 0)} to a code_location whose "
+              f"range CONTAINS the cited range (a block inside a located function), "
+              f"{bh.get('unresolved', 0)} do not resolve to any code_location in their own "
+              f"record, {bh.get('no_citation', 0)} cite nothing; of the resolved ones "
+              f"{bh.get('pinned_checked', 0)} were then checked against the pinned blob "
+              f"({bh.get('pinned_range_out_of_bounds', 0)} cited lines outside it, "
+              f"{bh.get('pinned_symbol_missing', 0)} whose symbol is absent from it) and "
+              f"{bh.get('pinned_unavailable', 0)} could not be checked in this checkout "
+              f"(reported, neither passed nor failed). Every behaviour names no file: "
+              f"resolution is against the code_locations of the same record")
 
     # -----------------------------------------------------------------------
     # APPROVAL EVIDENCE (AMENDMENT APPROVAL-RULE-A1). See APPROVAL_RULES above
@@ -4412,6 +4844,64 @@ class CorpusTool:
                 return True
         return False
 
+    @staticmethod
+    def _is_safety_class(d):
+        """True if this record is a safety artefact by name or by allocation.
+
+        Pure predicate over one record. Deliberately a function rather than an
+        id list: the four named types and the well-formed safety-goal allocation
+        reference are the whole definition, so a future safety requirement is
+        covered by the rule the day it is allocated to a goal rather than the day
+        somebody remembers to add its id.
+        """
+        if d.get("artifact_type") in SAFETY_CLASS_ARTIFACT_TYPES:
+            return True
+        if d.get("artifact_type") == "requirement":
+            ref = (d.get("safety_allocation") or {}).get("safety_goal_ref")
+            if isinstance(ref, str) and SAFETY_GOAL_REF_PATTERN.match(ref.strip()):
+                return True
+        return False
+
+    @staticmethod
+    def _is_iso26262_mapping(m):
+        """True if this standards_mappings entry names ISO 26262.
+
+        The corpus writes the standard two ways - `standard_id: ISO_26262_2018`
+        and `standard: "ISO 26262:2018"` - so the test reads the standard field
+        by either key and looks for 26262 in it. Matching on the value rather
+        than on a single key is what keeps the rule from silently skipping half
+        the ISO mappings in the tree.
+        """
+        if not isinstance(m, dict):
+            return False
+        for key in ("standard_id", "standard", "process", "reference"):
+            v = m.get(key)
+            if isinstance(v, str) and "26262" in v:
+                return True
+        return False
+
+    @staticmethod
+    def _mapping_clause_label(m):
+        """How a mapping names itself, for a message that must name the clause.
+
+        The corpus uses four shapes: `reference` for most, `part`+`clause` for
+        the safety analyses, and bare `standard`. A message that cannot say which
+        clause is being talked about defeats the purpose of naming it, so the
+        label is built from whatever the entry carries and falls back to the whole
+        entry rather than to nothing.
+        """
+        if not isinstance(m, dict):
+            return "<unparseable mapping>"
+        ref = m.get("reference")
+        if isinstance(ref, str) and ref.strip():
+            return ref.strip()
+        part, clause = m.get("part"), m.get("clause")
+        if part is not None or clause is not None:
+            return f"Part {part}, Clause {clause}" if part is not None \
+                else f"Clause {clause}"
+        std = m.get("standard_id") or m.get("standard") or m.get("process")
+        return str(std) if std else "<unnamed mapping>"
+
     def _semantic_rule_entered(self, *rule_ids):
         """Record that the named semantic rules were EVALUATED on this run.
 
@@ -4713,6 +5203,104 @@ class CorpusTool:
                     self.findings.add("medium", "verification", aid,
                                       f"safety requirement {aid} has no fault_reaction defined",
                                       "safety_requirement_completeness_checker")
+
+        # Rule: safety-class records must carry the declarative disclaimer
+        self._semantic_rule_entered("safety_class_disclaimer_required")
+
+        # Two conditions, both required, and the AND is the point.
+        #
+        # (a) the record is safety-class, and
+        # (b) it maps to an ISO 26262 clause via standards_mappings.
+        #
+        # Condition (a) alone is close to vacuous on this corpus: a safety-class
+        # record that maps to no clause is not misleading anybody, because there
+        # is no clause for a reader to over-read. Every safety-class record in
+        # this corpus happens to map to ISO 26262, so today (a) alone would fire
+        # on nothing at all and would look like it worked.
+        #
+        # Condition (b) alone is worse than vacuous, and by a wide margin: 171
+        # records carry an ISO 26262 clause and only 34 of them are safety-class.
+        # The other 137 are the test measures, interface specifications,
+        # deviations, designs, execution records, analyses, process records and
+        # interpretation guidelines that name a clause as their subject. Demanding a
+        # "this is not a project-published safety artefact" disclaimer of a test
+        # measure or an integration plan is not a stricter rule; it is a
+        # category error, and it would bury the 34 records the rule exists for
+        # under 137 that it does not apply to.
+        #
+        # The conjunction is therefore not a weakening of either condition. It is
+        # the only pairing under which the rule fires on exactly the records a
+        # reader skimming `artifact_type` and `standards_mappings` would misread,
+        # which is the defect being fixed.
+        #
+        # The trigger is deliberately NOT relaxed for records that do not map to
+        # ISO 26262, and deliberately NOT widened to records that do. Two
+        # self-tests pin each direction: `the disclaimer rule is silent on a
+        # safety-class record with no ISO mapping` and `the disclaimer rule is
+        # silent on a non-safety record that does map to ISO`. See
+        # SAFETY_CLASS_DISCLAIMER_REQUIRED_FIELDS for why a record that names the
+        # disclaimer fields but leaves one empty still fails.
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            if not self._is_safety_class(d):
+                continue
+            for m in d.get("standards_mappings") or []:
+                if not self._is_iso26262_mapping(m):
+                    continue
+                clause = self._mapping_clause_label(m)
+                block = d.get("safety_class_disclaimer")
+                if not isinstance(block, dict):
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"safety-class record {aid} maps to ISO 26262 {clause} but carries no "
+                        f"safety_class_disclaimer: a reader of artifact_type and "
+                        f"standards_mappings would take this {d.get('artifact_type')} for a "
+                        f"safety artefact foxBMS 2 published, or its ISO 26262 mapping for a "
+                        f"conformity claim. Neither is true. Missing field: "
+                        f"safety_class_disclaimer",
+                        "safety_class_disclaimer_required")
+                    ok = False
+                    continue
+                for field in SAFETY_CLASS_DISCLAIMER_REQUIRED_FIELDS:
+                    value = block.get(field)
+                    if value is None or (isinstance(value, str) and not value.strip()):
+                        self.findings.add(
+                            "high", "provenance", aid,
+                            f"safety-class record {aid} maps to ISO 26262 {clause} but its "
+                            f"safety_class_disclaimer has an empty {field}. An empty disclaimer "
+                            f"is a disclaimer that says nothing: a present-but-blank field would "
+                            f"otherwise satisfy a presence-only check. Missing field: "
+                            f"safety_class_disclaimer.{field}",
+                            "safety_class_disclaimer_required")
+                        ok = False
+
+        # Rule: no record may claim ISO 26262 conformance, and the relationship
+        # field is what makes the claim greppable.
+        self._semantic_rule_entered("iso26262_conformance_claim")
+        #
+        # `conforms_to` is declared representable in the schema so that a future
+        # conformance claim is explicit rather than implicit. This rule is what
+        # keeps the value at zero. Nothing in this corpus conforms to ISO 26262:
+        # no clause has been audited against any record here, no assessment report
+        # exists, and the corpus states on its own face that foxBMS 2 has had no
+        # ASPICE or ISO 26262 assessment. A record that asserted otherwise would be
+        # the most consequential false statement available in this tree, so it is
+        # checked directly rather than trusted to the absence of an author who
+        # would write it.
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            for i, m in enumerate(d.get("standards_mappings") or []):
+                if m.get("relationship") == "conforms_to" and self._is_iso26262_mapping(m):
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"record {aid} standards_mappings[{i}] claims relationship "
+                        f"conforms_to for ISO 26262 {self._mapping_clause_label(m)}. Nothing in "
+                        f"this corpus conforms to ISO 26262: no clause has been audited against "
+                        f"any record here, no assessment report exists, and foxBMS 2 has had no "
+                        f"ASPICE or ISO 26262 assessment. A mapping is a statement about where a "
+                        f"record came from or what it names, never about conformance",
+                        "iso26262_conformance_claim")
+                    ok = False
 
         # Rule: ASIL assignment validator (MUT-009)
         self._semantic_rule_entered("asil_assignment_validator")
@@ -5063,6 +5651,44 @@ class CorpusTool:
                 self.findings.add("high", "traceability", aid,
                                   f"duplicate artifact ID {aid} within profile {profile}",
                                   "identity_uniqueness_checker")
+
+        # Rule: the pinned-source aggregate may not claim more than its parts
+        # (FB2-REV-FND-000173)
+        self._semantic_rule_entered("pinned_verification_aggregate_contradicts_parts")
+        #
+        # `verified_against_pinned_source` used to be one boolean for four
+        # checks, and the record whose own method claims the fourth check was
+        # the one carrying the exception. The four parts are recorded
+        # separately now, so the aggregate is a CLAIM ABOUT THEM and has to
+        # agree with them: claiming it while any part is false is exactly the
+        # over-claim the split was made to remove.
+        #
+        # The rule is deliberately one-directional, matching the requirement:
+        # it does not require a record to claim the aggregate when all four
+        # parts hold, because "all four verified" is then already said by the
+        # parts and the aggregate adds nothing a reader could act on. The
+        # converse figure is reported by _validate_code_locations_pinned, which
+        # is where the parts are re-derived from the pinned blob.
+        for key, (p, d) in index.items():
+            aid = _id(key)
+            for i, c in enumerate(d.get("code_locations") or []):
+                if not isinstance(c, dict):
+                    continue
+                aggregate = c.get("verified_against_pinned_source")
+                if aggregate is not True:
+                    continue
+                false_parts = [f for f in PINNED_SOURCE_PARTS if c.get(f) is False]
+                absent = [f for f in PINNED_SOURCE_PARTS if c.get(f) is None]
+                if false_parts or absent:
+                    detail = ", ".join([f"{f}=false" for f in false_parts]
+                                       + [f"{f} not declared" for f in absent])
+                    self.findings.add(
+                        "high", "provenance", aid,
+                        f"{aid}: code_locations[{i}] ({c.get('path')}:{c.get('line_range')}) claims "
+                        f"verified_against_pinned_source=true while {detail}; the aggregate "
+                        f"may not report more than its parts",
+                        "pinned_verification_aggregate_contradicts_parts")
+                    ok = False
 
         # Rule: Source anchor drift detector (MUT-016)
         self._semantic_rule_entered("source_anchor_drift_detector")
@@ -5654,11 +6280,86 @@ class CorpusTool:
                                              "review_records": n_review_records}
 
         # verification planning
-        # verification planning
+        #
+        # WHAT THE TWO NUMBERS COUNT, stated because nobody had stated it and the
+        # ratio invites a reading that is not there. The numerator is the number
+        # of records whose id carries -TMS-: test-measure records. The
+        # denominator is the number of records whose id carries -FSR-: safety
+        # functional requirement records. THEY ARE DISJOINT POPULATIONS. A test
+        # measure is not a safety requirement, so the ratio is not "measures per
+        # requirement" and 33/7 does not mean the corpus is 4.7 times covered.
+        # It is two counts of two different record types placed in a numerator
+        # and a denominator slot, and it is retained as-is rather than redefined,
+        # because a ratio that changes meaning when a dimension is tidied is
+        # worse than an ugly one.
+        #
+        # The figures that DO answer the planning question are measured here from
+        # the link registry and reported alongside: how many FSRs have at least
+        # one test measure linked to them, and how many test measures verify at
+        # least one FSR. Both are per profile and are summed, and the per-profile
+        # split is printed because a cross-profile id means these are separate
+        # records, not duplicates to be collapsed.
         tms = [aid for aid in (k[1] if isinstance(k, tuple) else k for k in index) if "-TMS-" in aid]
         fsr = [aid for aid in (k[1] if isinstance(k, tuple) else k for k in index) if "-FSR-" in aid]
-        dims["verification_planning"] = {"numerator": len(tms), "denominator": max(len(fsr), 1),
-                                          "detail": f"{len(tms)} test measures for {len(fsr)} FSRs"}
+        fsr_with_measure = set()
+        measures_with_fsr = set()
+        per_profile = {}
+        for link in links:
+            s, t, prof = link.get("source_id"), link.get("target_id"), link.get("profile")
+            pair = None
+            if s and t:
+                if "-TMS-" in s and "-FSR-" in t:
+                    pair = (s, t)
+                elif "-FSR-" in s and "-TMS-" in t:
+                    pair = (t, s)
+            if not pair:
+                continue
+            measure, requirement = pair
+            fsr_with_measure.add((prof, requirement))
+            measures_with_fsr.add((prof, measure))
+            cell = per_profile.setdefault(prof, {"fsr": 0, "fsr_with_measure": 0,
+                                                 "tms": 0, "tms_on_fsr": 0})
+            cell["tms_on_fsr"] += 0  # counted below from the sets, not per link
+        for prof in sorted(per_profile):
+            per_profile[prof]["fsr"] = sum(1 for k in index
+                                           if k[0] == prof and "-FSR-" in k[1])
+            per_profile[prof]["tms"] = sum(1 for k in index
+                                           if k[0] == prof and "-TMS-" in k[1])
+        for prof, requirement in fsr_with_measure:
+            per_profile.setdefault(prof, {"fsr": 0, "fsr_with_measure": 0,
+                                          "tms": 0, "tms_on_fsr": 0})
+            per_profile[prof]["fsr_with_measure"] += 1
+        for prof, measure in measures_with_fsr:
+            per_profile.setdefault(prof, {"fsr": 0, "fsr_with_measure": 0,
+                                          "tms": 0, "tms_on_fsr": 0})
+            per_profile[prof]["tms_on_fsr"] += 1
+        split = "; ".join(
+            f"{prof}: {v['fsr_with_measure']}/{v['fsr']} FSRs with at least one linked "
+            f"test measure, {v['tms_on_fsr']}/{v['tms']} test measures verifying at least "
+            f"one FSR" for prof, v in sorted(per_profile.items()))
+        dims["verification_planning"] = {
+            "numerator": len(tms), "denominator": max(len(fsr), 1),
+            "detail": (
+                f"{len(tms)} test measures for {len(fsr)} FSRs. THE RATIO IS NOT A COVERAGE "
+                f"RATIO: the numerator counts records whose id carries -TMS- and the "
+                f"denominator counts records whose id carries -FSR-, and those are disjoint "
+                f"populations, so 33/7 does not mean 4.7 measures per requirement and over-100% "
+                f"is not over-coverage. The figures that do answer the planning question are "
+                f"measured from the link registry and reported here: "
+                f"{len(fsr_with_measure)}/{len(fsr)} safety requirements have at least one test "
+                f"measure linked to them, and {len(measures_with_fsr)}/{len(tms)} test measures "
+                f"verify at least one safety requirement ({split}). A test measure that verifies "
+                f"no FSR is not a defect - most of them verify a non-safety requirement, a use "
+                f"case, a stakeholder need or an interface - which is exactly why the two counts "
+                f"are not each other's numerator and denominator"),
+            # Machine-readable, so a reader does not have to parse the text above.
+            "test_measure_records": len(tms),
+            "safety_requirement_records": len(fsr),
+            "requirements_with_a_linked_measure": len(fsr_with_measure),
+            "measures_verifying_a_requirement": len(measures_with_fsr),
+            "per_profile": {prof: dict(v) for prof, v in sorted(per_profile.items())},
+            "ratio_is_a_coverage_ratio": False,
+        }
 
         # actual product evidence
         # Scoped to executions of the ACTUAL product on its TARGET HARDWARE. Computed
@@ -6021,6 +6722,12 @@ class CorpusTool:
         out = self.reports_dir / "coverage-report.json"
         self.reports_dir.mkdir(parents=True, exist_ok=True)
         nsv = dims["negative_scenario_validation"]
+        vp = dims["verification_planning"]
+        n_imp = sum(1 for _p, d in self.iter_corpus_artifacts()
+                    if isinstance(d.get("behaviours"), list) and d["behaviours"]
+                    and d.get("id"))
+        n_beh = sum(len(d["behaviours"]) for _p, d in self.iter_corpus_artifacts()
+                    if isinstance(d.get("behaviours"), list) and d.get("id"))
         gap_list = [
             f"Negative scenario validation: {nsv['numerator']}/{nsv['denominator']} mutations executed "
             f"and passing; {nsv['detail'].rsplit('; ', 1)[-1]} "
@@ -6029,6 +6736,25 @@ class CorpusTool:
             "as_is verification evidence: 1 actual execution (host), 5 more unit-test measures extracted",
             "Human approval: all pending",
             "Production authorization: all false",
+            f"Behaviour evidence attribution: {n_beh} behaviours across {n_imp} implementation "
+            f"records are now machine-resolved by the behaviour_citation_* rules against the "
+            f"code_locations of their own record and against the pinned blob, and all of them "
+            f"resolve - but NO behaviour names a file, so resolution is containment within a "
+            f"located symbol rather than attribution, and a checkout that cannot produce a pinned "
+            f"blob yields an unverifiable citation reported as neither pass nor fail. Counts here "
+            f"are of records and citations in the corpus, not of verifications performed",
+            "verification_planning publishes 33/7, which is not a coverage ratio: the two numbers "
+            "count disjoint populations (-TMS- records over -FSR- records). The planning figures "
+            f"are {vp.get('requirements_with_a_linked_measure')}/"
+            f"{vp.get('safety_requirement_records')} requirements with a linked measure and "
+            f"{vp.get('measures_verifying_a_requirement')}/{vp.get('test_measure_records')} "
+            "measures verifying one. No planning gap is recorded on that evidence; the ratio's own "
+            "meaning was the gap, and it is stated now (CORR-COV-025)",
+            "Source registry: 13 of the 117 anchors carrying a usable content_hash record a hash "
+            "that is not the sha256 of the blob at the commit the same anchor names, while all 13 "
+            "match the checked-out file. Disclosed in each anchor's hash_note, not repaired: see "
+            "FB2-REV-FND-000197. The anchor reader still hashes the working tree, so nothing in "
+            "the suite checks the property",
         ]
         payload = {"schema_version": "1.0.0", "generated_at": utcnow(),
                    "baseline_id": "BAS-REF-001", "profile": "synthetic_reference",
@@ -8057,8 +8783,13 @@ class CorpusTool:
                                           "unioned, and whether they AGREE is reported "
                                           "separately because the ratio does not move when one is "
                                           "deleted"),
-            "verification_planning": ("measured", "test measures per safety requirement; a ratio, "
-                                      "not a score, and over 100% means over-covered"),
+            "verification_planning": ("measured", "records whose id carries -TMS- over records "
+                                      "whose id carries -FSR-. NOT a coverage ratio: the two are "
+                                      "disjoint populations, so the figure does not mean measures "
+                                      "per requirement and over-100% is not over-coverage. The "
+                                      "detail names what each number counts and reports the "
+                                      "measured requirements-with-a-linked-measure and "
+                                      "measures-verifying-a-requirement beside them"),
             "actual_product_evidence": ("measured", "test measures backed by an execution whose "
                                          "`execution_kind` names the product's own hardware"),
             "synthetic_fixture_coverage": ("measured", "artefact families holding at least one "
@@ -11611,6 +12342,249 @@ class CorpusTool:
               t_the_approval_dimensions_are_measured_not_literals)
         check("a production grant hidden in a nested key is still caught",
               t_a_production_grant_cannot_be_smuggled_through_a_nested_key)
+
+        # =====================================================================
+        # SAFETY-CLASS-DISCLAIMER-A1. The new declarative fields, the rule that
+        # requires them, and the relationship field that separates a derivation
+        # basis from a conformance claim.
+        #
+        # Eight tests, and each one is a direction the rule could be wrong in.
+        # The rule has a two-part trigger, and the most likely future regression
+        # is that somebody "simplifies" it into a one-part trigger that is
+        # either vacuous or far too broad - so BOTH single-condition absences are
+        # asserted silent, not merely the happy path. The acceptance case names
+        # the record, the clause and the missing field, because a finding that
+        # does not is not actionable. The blank-field case exists because a
+        # presence-only check is satisfied by an empty string, which is the
+        # difference between a disclaimer and the absence of one.
+        # =====================================================================
+
+        def _safety_class_fixture(aid="FB2-SAF-SGO-000001", profile="as_is"):
+            """The real safety-class record, as a bare index entry.
+
+            A synthetic dict is used rather than a temp tree on purpose: the rule
+            reads only the fields this fixture carries, so a full-tree copy would
+            cost minutes to prove what a four-field dict proves in microseconds -
+            and it would make a failure ambiguous between the rule and the copy.
+            """
+            for p, d in self.iter_corpus_artifacts():
+                if (isinstance(d, dict) and d.get("id") == aid
+                        and d.get("profile") == profile):
+                    return (profile, aid), (p, d)
+            return None, None
+
+        def _disclaimer_findings(d, aid):
+            tool = CorpusTool(root=self.root)
+            tool.findings = Findings()
+            tool._semantic_rules_run = set()
+            tool._validate_semantic_rules({("as_is", aid): (None, d)}, [])
+            return [f for f in tool.findings.items
+                    if f["rule"] == "safety_class_disclaimer_required"]
+
+        def t_every_safety_class_record_carries_the_disclaimer_and_the_warning():
+            # The standing fact, measured over the real tree.
+            n = with_block = with_warning = with_reason = with_locator = 0
+            for _p, d in self.iter_corpus_artifacts():
+                if not isinstance(d, dict) or not self._is_safety_class(d):
+                    continue
+                n += 1
+                b = d.get("safety_class_disclaimer")
+                if not isinstance(b, dict):
+                    continue
+                with_block += 1
+                if str(b.get("misreading_warning") or "").strip():
+                    with_warning += 1
+                if str(b.get("not_a_project_published_artefact_reason") or "").strip():
+                    with_reason += 1
+                if str((b.get("derivation_basis") or {}).get("locator") or "").strip():
+                    with_locator += 1
+            self._probe_note = (
+                f"{n} safety-class record(s); disclaimer block {with_block}/{n}, "
+                f"misreading_warning {with_warning}/{n}, reason {with_reason}/{n}, "
+                f"derivation_basis.locator {with_locator}/{n}")
+            return n > 0 and with_block == n and with_warning == n \
+                and with_reason == n and with_locator == n
+
+        def t_the_rule_names_the_record_the_clause_and_the_missing_field():
+            key, hit = _safety_class_fixture()
+            if hit is None:
+                self._probe_note = "fixture record not found"
+                return False
+            p, d = hit
+            d = json.loads(json.dumps(d))
+            del d["safety_class_disclaimer"]
+            hits = _disclaimer_findings(d, "FB2-SAF-SGO-000001")
+            ok = bool(hits)
+            named_all = ok and all(
+                "FB2-SAF-SGO-000001" in f["description"]
+                and "Missing field: safety_class_disclaimer" in f["description"]
+                and "ISO 26262" in f["description"] for f in hits)
+            # One finding per ISO clause the record maps to, and every clause it
+            # maps to is named: a rule that reported only the first clause would
+            # leave a reader unable to tell whether the others are compliant.
+            clauses = {m.get("reference") for m in d.get("standards_mappings") or []
+                       if self._is_iso26262_mapping(m)}
+            covered = {f["description"].split("ISO 26262 ")[1].split(" but ")[0]
+                       for f in hits if "ISO 26262 " in f["description"]}
+            self._probe_note = (
+                f"{len(hits)} finding(s) for {len(clauses)} ISO clause(s); every clause named="
+                f"{covered == clauses}; record+field named in all={named_all}")
+            return ok and named_all and len(hits) == len(clauses) and covered == clauses
+
+        def t_a_present_but_blank_disclaimer_field_still_fails():
+            # The reason the rule checks non-emptiness rather than presence: a
+            # disclaimer whose warning is "" satisfies any presence check and
+            # stops a reader any more than the absent field would have.
+            _key, hit = _safety_class_fixture()
+            if hit is None:
+                return False
+            d = json.loads(json.dumps(hit[1]))
+            d["safety_class_disclaimer"]["misreading_warning"] = "   "
+            hits = _disclaimer_findings(d, "FB2-SAF-SGO-000001")
+            self._probe_note = (f"{len(hits)} finding(s); "
+                                f"names the field="
+                                f"{any('safety_class_disclaimer.misreading_warning' in f['description'] for f in hits)}")
+            return bool(hits) and all(
+                "misreading_warning" in f["description"] for f in hits)
+
+        def t_the_rule_is_silent_on_a_safety_class_record_with_no_iso_mapping():
+            # Trigger condition (b) withheld. A safety-class record that names no
+            # ISO 26262 clause misleads nobody, because there is no clause to
+            # over-read. If this fires, the trigger has been weakened to
+            # safety-class alone and the rule is demanding a disclaimer where
+            # none is needed.
+            _key, hit = _safety_class_fixture()
+            if hit is None:
+                return False
+            d = json.loads(json.dumps(hit[1]))
+            d["standards_mappings"] = [m for m in d["standards_mappings"]
+                                      if not self._is_iso26262_mapping(m)]
+            hits = _disclaimer_findings(d, "FB2-SAF-SGO-000001")
+            self._probe_note = (
+                f"{len(hits)} finding(s) with every ISO mapping removed "
+                f"({len(d['standards_mappings'])} non-ISO mapping(s) left)")
+            return not hits
+
+        def t_the_rule_is_silent_on_a_non_safety_class_record_that_maps_to_iso():
+            # Trigger condition (a) withheld. 26 MISRA deviance records and 59
+            # ASPICE process mappings name standards clauses and are not safety
+            # artefacts; requiring the disclaimer of all of them would be the
+            # rule's own kind of misreading. If this fires, the trigger has been
+            # widened to ISO-mapping alone.
+            rec = {
+                "id": "FB2-SW-DEV-000001", "artifact_type": "deviation",
+                "profile": "as_is", "engineering_domain": "software",
+                "revision": "1", "revision_history": [{"revision": "1"}],
+                "standards_mappings": [
+                    {"standard_id": "ISO_26262_2018", "reference": "Part 6, Clause 8",
+                     "status": "mapped", "relationship": "derivation_basis",
+                     "rationale": "A coding-guideline deviation, not a safety artefact."},
+                ],
+            }
+            hits = _disclaimer_findings(rec, "FB2-SW-DEV-000001")
+            self._probe_note = (
+                f"{len(hits)} finding(s) on a deviation record that maps to ISO 26262; "
+                f"the 26 MISRA deviance records and the 59 ASPICE mappings in this corpus "
+                f"are the population this silence is about")
+            return not hits
+
+        def t_a_requirement_allocated_to_a_safety_goal_is_safety_class():
+            # The allocation branch, which no artifact_type alone would catch. The
+            # FSRs, the TSRs and the SWRs carry the generic type `requirement`
+            # while being safety artefacts; keying only on artifact_type would
+            # have left every one of them outside the requirement, and they are
+            # exactly the records a reader skims for a Part 4/5/6 clause.
+            rec = {
+                "id": "FB2-SAF-FSR-000099", "artifact_type": "requirement",
+                "profile": "as_is", "engineering_domain": "safety",
+                "safety_allocation": {"asil": "ASIL_D",
+                                      "safety_goal_ref": "FB2-SAF-SGO-000001",
+                                      "mitigation": "x"},
+                "standards_mappings": [
+                    {"standard_id": "ISO_26262_2018", "reference": "Part 4, Clause 7",
+                     "status": "mapped", "relationship": "derivation_basis",
+                     "rationale": "Functional safety requirement."},
+                ],
+            }
+            is_sc = self._is_safety_class(rec)
+            hits = _disclaimer_findings(rec, "FB2-SAF-FSR-000099")
+            # And the near miss: a prose value is not an allocation.
+            not_allocated = dict(rec, id="FB2-SAF-FSR-000098",
+                                 safety_allocation={"asil": "not_applicable",
+                                                    "safety_goal_ref": "not_applicable",
+                                                    "mitigation": "x"})
+            prose_is_not = not self._is_safety_class(not_allocated)
+            self._probe_note = (
+                f"allocated requirement is safety-class={is_sc}, rule fired={bool(hits)}; "
+                f"a requirement with safety_goal_ref='not_applicable' is safety-class="
+                f"{not self._is_safety_class(not_allocated)}")
+            return is_sc and bool(hits) and prose_is_not
+
+        def t_nothing_in_the_corpus_claims_iso26262_conformance():
+            # The zero. `conforms_to` is declared representable so a future claim
+            # is greppable; this asserts the corpus holds none, over every
+            # mapping in both corpus/ and reviews/.
+            total = claims = 0
+            counts = {}
+            for base in ("corpus", "reviews"):
+                for p in sorted((self.artifacts_dir / base).glob("**/*.json")):
+                    try:
+                        d = json.loads(p.read_text(encoding="utf-8"))
+                    except Exception:
+                        continue
+                    if not isinstance(d, dict):
+                        continue
+                    for i, m in enumerate(d.get("standards_mappings") or []):
+                        total += 1
+                        rel = m.get("relationship")
+                        counts[rel] = counts.get(rel, 0) + 1
+                        if rel == "conforms_to" and self._is_iso26262_mapping(m):
+                            claims += 1
+            self._probe_note = (
+                f"{total} mapping(s); relationship distribution {counts}; "
+                f"conformance claims on an ISO 26262 clause={claims}")
+            return total > 0 and claims == 0
+
+        def t_a_conformance_claim_on_an_iso_clause_is_rejected():
+            # The direction, so the rule above is not a rule that cannot fire.
+            _key, hit = _safety_class_fixture()
+            if hit is None:
+                return False
+            d = json.loads(json.dumps(hit[1]))
+            for m in d["standards_mappings"]:
+                if self._is_iso26262_mapping(m):
+                    m["relationship"] = "conforms_to"
+                    break
+            tool = CorpusTool(root=self.root)
+            tool.findings = Findings()
+            tool._semantic_rules_run = set()
+            tool._validate_semantic_rules(
+                {("as_is", "FB2-SAF-SGO-000001"): (None, d)}, [])
+            hits = [f for f in tool.findings.items
+                    if f["rule"] == "iso26262_conformance_claim"]
+            self._probe_note = (
+                f"{len(hits)} finding(s); names the record and the index="
+                f"{any('FB2-SAF-SGO-000001' in f['description'] and 'standards_mappings[0]' in f['description'] for f in hits)}")
+            return bool(hits) and all(
+                "conforms_to" in f["description"]
+                and "no clause has been audited" in f["description"] for f in hits)
+
+        check("every safety-class record carries the disclaimer and the misreading warning",
+              t_every_safety_class_record_carries_the_disclaimer_and_the_warning)
+        check("the disclaimer rule names the record, the ISO clause and the missing field",
+              t_the_rule_names_the_record_the_clause_and_the_missing_field)
+        check("a present but blank disclaimer field still FAILS, naming the field",
+              t_a_present_but_blank_disclaimer_field_still_fails)
+        check("the disclaimer rule is silent on a safety-class record with no ISO mapping",
+              t_the_rule_is_silent_on_a_safety_class_record_with_no_iso_mapping)
+        check("the disclaimer rule is silent on a non-safety record that does map to ISO",
+              t_the_rule_is_silent_on_a_non_safety_class_record_that_maps_to_iso)
+        check("a requirement allocated to a safety goal IS safety-class, and a prose value is not",
+              t_a_requirement_allocated_to_a_safety_goal_is_safety_class)
+        check("nothing in the corpus claims ISO 26262 conformance",
+              t_nothing_in_the_corpus_claims_iso26262_conformance)
+        check("a conformance claim on an ISO clause FAILS, naming record and mapping index",
+              t_a_conformance_claim_on_an_iso_clause_is_rejected)
         # =====================================================================
         # AMENDMENT APPROVAL-LEDGER-A1. One test per risk the amendment closes,
         # plus the parity test the amendment could have broken.
@@ -14511,6 +15485,299 @@ class CorpusTool:
                     # a literal population here would make this test fail on the
                     # addition of any record rather than on a real disagreement.
                     and _ratio_all_agree(counts.get("record_sha256 == sha256(bytes)")))
+
+        # =====================================================================
+        # BEHAVIOUR CITATIONS AND PINNED-SOURCE PARTS
+        # (FB2-REV-FND-000172 and FB2-REV-FND-000173).
+        #
+        # Every test here asserts a DIRECTION, not a number. The 16 contained
+        # citations were accepted because they are correct, and the test that
+        # pins that is the one that stops a future reader "fixing" a red run by
+        # forbidding sub-ranges. The tests that assert the rule FIRES are what
+        # stop the opposite failure: a rule that resolves everything is
+        # indistinguishable from a rule that checks nothing.
+        # Every test here drives a FRESH CorpusTool rather than the selftest's own
+        # `self`. Earlier tests in this suite temporarily repoint `self.root` at
+        # fixture trees; a test that inherits that state measures whatever tree
+        # the previous test happened to leave behind, which is how a self-test
+        # suite ends up asserting on a copy of the corpus. `CorpusTool()` with no
+        # argument resolves the repository root the same way the suite's other
+        # fresh-tool tests do, so these are order-independent by construction.
+        def _impl_records_with_behaviours():
+            out = []
+            for _p, d in CorpusTool().iter_corpus_artifacts():
+                if isinstance(d.get("behaviours"), list) and d["behaviours"] and d.get("id"):
+                    out.append(d)
+            return out
+
+        def t_the_behaviour_rule_accounts_for_every_behaviour():
+            # The tally's total must equal an independent count, so a behaviour
+            # that no rule looked at cannot hide inside a rounded figure.
+            # The key carries the profile: cross-profile duplicate ids are a
+            # deliberate design decision of this corpus, and keying on the id
+            # alone would collapse the as_is and synthetic_reference copies of
+            # the same record into one and under-count by exactly the amount the
+            # two profiles overlap.
+            tool = CorpusTool()
+            expected = {(d.get("profile"), d["id"], b["behaviour_id"])
+                        for d in _impl_records_with_behaviours() for b in d["behaviours"]}
+            tool.findings = Findings()
+            tool._validate_behaviour_citations(tool.load_artifact_index())
+            t = tool.provenance_tally.get("behaviours", {})
+            counted = (t.get("exact", 0) + t.get("contained", 0) + t.get("unresolved", 0)
+                       + t.get("no_citation", 0))
+            self._probe_note = tool._probe_note = (f"{len(expected)} behaviour(s) in the records, {counted} in the "
+                                f"tally, {t.get('records', 0)} record(s) visited")
+            return counted == len(expected) and t.get("records", 0) > 0
+
+        def t_the_behaviour_rule_fires_on_a_citation_that_resolves_to_nothing():
+            # A copy of a real record whose one behaviour names a symbol no
+            # code_location names. The rule must fire and the message must name
+            # the record, the behaviour, what it cited and why it does not
+            # resolve - the specificity the approval rules hold to.
+            src = None
+            for d in _impl_records_with_behaviours():
+                if len(d["code_locations"]) >= 2:
+                    src = d
+                    break
+            assert src is not None, "no implementation record with behaviours and 2+ locations"
+            tool = CorpusTool()
+            rec = json.loads(json.dumps(src))
+            victim = rec["behaviours"][0]
+            victim["evidence_symbol"] = "A_SYMBOL_NO_LOCATION_NAMES"
+            victim["evidence_line_range"] = "7-9"
+            tool.findings = Findings()
+            # Keyed the way the real index keys it -- (profile, id) -- so the
+            # identifier the rule reads and prints IS the record's own id. Keying
+            # the stub by anything else would test a message that names something
+            # the corpus could never produce.
+            tool._validate_behaviour_citations({("probe", rec["id"]): ("<probe>", rec)})
+            hits = [f for f in tool.findings.items
+                    if f["rule"] == "behaviour_citation_unresolved"]
+            if not hits:
+                self._probe_note = tool._probe_note = "the rule did not fire on an unresolvable citation"
+                return False
+            msg = hits[0]["description"]
+            needed = (rec["id"], victim["behaviour_id"], "A_SYMBOL_NO_LOCATION_NAMES", "7-9")
+            self._probe_note = tool._probe_note = msg
+            # Severity high, so it counts toward the error total: an unresolvable
+            # citation must be able to turn a run red, not merely be printed.
+            return all(n in msg for n in needed) and hits[0]["severity"] == "high"
+
+        def t_a_sub_range_of_a_located_function_is_not_a_defect():
+            # The direction that must not be reversed. 16 of the corpus's 84
+            # behaviours cite a block inside a function the record locates as a
+            # whole; requiring exact range equality would report every one of
+            # them broken, and that would be a loosening of the RECORD rather
+            # than of the rule.
+            src = None
+            for d in _impl_records_with_behaviours():
+                locs = d.get("code_locations") or []
+                for b in d["behaviours"]:
+                    bl = self._range_bounds(b.get("evidence_line_range"))
+                    for c in locs:
+                        cl = self._range_bounds(c.get("line_range"))
+                        if (bl and cl and c.get("symbol") == b.get("evidence_symbol")
+                                and cl != bl and cl[0] <= bl[0] and bl[1] <= cl[1]):
+                            src = d
+                            break
+                    if src:
+                        break
+                if src:
+                    break
+            assert src is not None, "no contained citation exists in the corpus"
+            tool = CorpusTool()
+            tool.findings = Findings()
+            tool._validate_behaviour_citations(tool.load_artifact_index())
+            t = tool.provenance_tally.get("behaviours", {})
+            self._probe_note = tool._probe_note = (f"{t.get('exact', 0)} exact, {t.get('contained', 0)} contained, "
+                                f"{t.get('unresolved', 0)} unresolved")
+            return t.get("contained", 0) > 0 and t.get("unresolved", 0) == 0
+
+        def t_every_code_location_declares_all_four_pinned_parts():
+            # The migration is complete and the previous value is preserved, so
+            # the split is auditable rather than a rewrite.
+            tool = CorpusTool()
+            locations = [c for _p, d in tool.iter_corpus_artifacts()
+                         for c in (d.get("code_locations") or []) if isinstance(c, dict)]
+            declared = all(all(f in c for f in PINNED_SOURCE_PARTS) for c in locations)
+            preserved = 0
+            for _p, d in tool.iter_corpus_artifacts():
+                for h in d.get("revision_history", []) or []:
+                    mig = h.get("pinned_source_migration")
+                    if mig and mig.get("previous_aggregate_per_location") is not None:
+                        preserved += len(mig["previous_aggregate_per_location"])
+            self._probe_note = tool._probe_note = (f"{len(locations)} code_location(s), all four parts declared="
+                                f"{declared}, {preserved} previous aggregate value(s) preserved "
+                                f"in revision_history")
+            # `>= len(locations) - 1` because the one location this pass ADDED has
+            # no previous value to preserve; demanding a value for it would be
+            # demanding a history that cannot exist.
+            return declared and locations and preserved >= len(locations) - 1
+
+        def t_the_pinned_parts_are_re_derived_and_agree_with_every_record():
+            # The point of the split: the four are checked, not asserted.
+            tool = CorpusTool()
+            tool.findings = Findings()
+            tool._validate_code_locations_pinned(tool.load_artifact_index())
+            t = tool.provenance_tally.get("code_locations", {})
+            self._probe_note = tool._probe_note = (f"{t.get('checked', 0)} re-derived, {t.get('agree', 0)} agree, "
+                                f"{t.get('disagree', 0)} disagree, {t.get('unavailable', 0)} "
+                                f"unavailable here")
+            return t.get("checked", 0) > 0 and t.get("disagree", 0) == 0
+
+        def t_the_aggregate_rule_fires_when_a_part_is_false():
+            tool = CorpusTool()
+            src = None
+            for _p, d in tool.iter_corpus_artifacts():
+                if isinstance(d.get("code_locations"), list) and d["code_locations"] and d.get("id"):
+                    src = d
+                    break
+            assert src is not None
+            rec = json.loads(json.dumps(src))
+            rec["code_locations"][0]["verified_against_pinned_source"] = True
+            rec["code_locations"][0]["symbol_within_line_range"] = False
+            tool.findings = Findings()
+            tool._validate_semantic_rules({("probe", rec["id"]): ("<probe>", rec)},
+                                          tool.load_links())
+            hits = [f for f in tool.findings.items
+                    if f["rule"] == "pinned_verification_aggregate_contradicts_parts"]
+            self._probe_note = tool._probe_note = hits[0]["description"] if hits else "did not fire"
+            return bool(hits) and "symbol_within_line_range=false" in hits[0]["description"]
+
+        def t_the_aggregate_rule_accepts_an_aggregate_that_matches_its_parts():
+            # The converse, so the rule cannot be satisfied by deleting the
+            # aggregate: with the parts present and true, a true aggregate is
+            # the correct claim and must not be reported.
+            tool = CorpusTool()
+            src = None
+            for _p, d in tool.iter_corpus_artifacts():
+                if isinstance(d.get("code_locations"), list) and d["code_locations"] and d.get("id"):
+                    src = d
+                    break
+            rec = json.loads(json.dumps(src))
+            rec["code_locations"][0]["verified_against_pinned_source"] = True
+            for f in PINNED_SOURCE_PARTS:
+                rec["code_locations"][0][f] = True
+            tool.findings = Findings()
+            tool._validate_semantic_rules({("probe", rec["id"]): ("<probe>", rec)},
+                                          tool.load_links())
+            hits = [f for f in tool.findings.items
+                    if f["rule"] == "pinned_verification_aggregate_contradicts_parts"]
+            self._probe_note = tool._probe_note = f"{len(hits)} finding(s) for an aggregate that agrees with its parts"
+            return not hits
+
+        def t_the_pinned_reader_never_serves_bytes_that_are_not_the_pinned_blob():
+            # The property that makes the two new controls sound: the reader
+            # NEVER returns bytes that fail the content hash the record names.
+            # Checked over every code_location whose checked-out copy differs
+            # from the recorded pin - the files this corpus KNOWS have drifted,
+            # so a reader that silently fell back to the checkout would be
+            # caught here.
+            #
+            # The assertion is the SAFETY property and not a count, because a
+            # count is checkout-dependent by design: with an object store the
+            # pinned blob is returned, and without one the reader returns
+            # nothing and the citation is counted unverifiable. Both are correct
+            # and both must pass. A test that demanded the blob in a checkout
+            # that cannot produce it would be testing the environment.
+            tool = CorpusTool()
+            served = refused = 0
+            unsafe = []
+            for _p, d in tool.iter_corpus_artifacts():
+                for c in (d.get("code_locations") or []):
+                    if not isinstance(c, dict) or not c.get("content_hash"):
+                        continue
+                    rel, commit = c.get("path"), c.get("commit")
+                    try:
+                        working = sha256_file(tool.root / rel)
+                    except OSError:
+                        continue
+                    if working == tool._expected_sha(c.get("content_hash")):
+                        continue          # not drifted: the checkout IS the pin
+                    text, source, _reason = tool._pinned_blob(rel, commit, c["content_hash"])
+                    if text is None:
+                        refused += 1
+                    elif tool._expected_sha(c["content_hash"]) == sha256_bytes(text):
+                        served += 1
+                    else:
+                        unsafe.append((rel, source))
+            self._probe_note = (f"of the drifted locations: {served} resolved to the pinned blob, "
+                                f"{refused} refused (unavailable here), {len(unsafe)} served "
+                                f"bytes that are not the pin")
+            # At least one drifted location must exist for this to have tested
+            # anything at all; a corpus where none drifted would make the test
+            # vacuous rather than passing.
+            return served + refused > 0 and not unsafe
+
+        def t_a_checkout_without_the_pin_reports_unavailable_rather_than_guessing():
+            # The converse, and the reason the tally prints an unavailable class
+            # at all: a tree that cannot produce the pinned bytes must say so
+            # rather than substitute the checked-out file. Driven against a
+            # throwaway tree that has no object store and no copy of the file.
+            import tempfile
+            with tempfile.TemporaryDirectory(prefix="fb2-nopin-") as tmp:
+                tool = CorpusTool(root=Path(tmp))
+                text, source, reason = tool._pinned_blob(
+                    "src/app/driver/rtc/rtc.c", "308028fb13d046ba29b98886895c2e17937b1437",
+                    "sha256:" + "0" * 64)
+                self._probe_note = f"source={source}; reason={reason[:110]}"
+                return text is None and source == "unavailable" and "no git object" in reason
+
+        def t_verification_planning_says_what_its_two_numbers_count():
+            tool = CorpusTool()
+            d = tool._coverage_dimensions()["verification_planning"]
+            detail = d.get("detail", "")
+            needed = ("-TMS-", "-FSR-", "disjoint",
+                      str(d.get("safety_requirement_records")),
+                      str(d.get("requirements_with_a_linked_measure")),
+                      str(d.get("measures_verifying_a_requirement")))
+            self._probe_note = tool._probe_note = (f"{d.get('numerator')}/{d.get('denominator')}, "
+                                f"{d.get('requirements_with_a_linked_measure')}/"
+                                f"{d.get('safety_requirement_records')} requirements covered, "
+                                f"{d.get('measures_verifying_a_requirement')}/"
+                                f"{d.get('test_measure_records')} measures on one")
+            return (all(n in detail for n in needed)
+                    and d.get("ratio_is_a_coverage_ratio") is False
+                    and d.get("test_measure_records") == d.get("numerator")
+                    and d.get("safety_requirement_records") == d.get("denominator"))
+
+        def t_the_markdown_coverage_report_is_not_readable_as_current():
+            # B6. The file is kept because its value is its audit trail, so the
+            # control is that it SAYS SO, and that the live sibling exists and is
+            # newer. A re-baselined file would pass neither half of this.
+            tool = CorpusTool()
+            md = tool.reports_dir / "coverage-report.md"
+            js = tool.reports_dir / "coverage-report.json"
+            head = md.read_text(encoding="utf-8")[:4000] if md.exists() else ""
+            self._probe_note = tool._probe_note = ("markdown banner missing" if "ARCHIVAL" not in head.upper()
+                                else "banner present; live sibling "
+                                     f"{js.name} exists={js.exists()}")
+            return ("ARCHIVAL" in head.upper() and "DO NOT READ AS CURRENT" in head.upper()
+                    and "coverage-report.json" in head and js.exists())
+
+        check("the behaviour rule accounts for every behaviour in every record",
+              t_the_behaviour_rule_accounts_for_every_behaviour)
+        check("the behaviour rule FAILS a citation that resolves to no code_location, naming record, behaviour, symbol, range and reason",
+              t_the_behaviour_rule_fires_on_a_citation_that_resolves_to_nothing)
+        check("a behaviour citing a sub-range of a located function resolves and is not a defect",
+              t_a_sub_range_of_a_located_function_is_not_a_defect)
+        check("every code_location declares all four pinned-source parts and the previous aggregate is preserved",
+              t_every_code_location_declares_all_four_pinned_parts)
+        check("every pinned-source part is re-derived from the pinned blob and agrees with the record",
+              t_the_pinned_parts_are_re_derived_and_agree_with_every_record)
+        check("the aggregate rule FAILS a location claiming the aggregate while a part is false",
+              t_the_aggregate_rule_fires_when_a_part_is_false)
+        check("the aggregate rule accepts an aggregate that agrees with its parts",
+              t_the_aggregate_rule_accepts_an_aggregate_that_matches_its_parts)
+        check("the pinned-blob reader never returns a working-tree copy that is not the pinned blob",
+              t_the_pinned_reader_never_serves_bytes_that_are_not_the_pinned_blob)
+        check("a checkout that cannot produce the pinned bytes reports unavailable rather than substituting the checked-out file",
+              t_a_checkout_without_the_pin_reports_unavailable_rather_than_guessing)
+        check("verification_planning states what its two numbers count and reports the planning figures",
+              t_verification_planning_says_what_its_two_numbers_count)
+        check("reports/coverage-report.md declares itself archival and points at the live JSON",
+              t_the_markdown_coverage_report_is_not_readable_as_current)
 
         check("an independent checker that imports no tool agrees and finds no approval",
               t_an_independent_checker_agrees_and_finds_no_approval)

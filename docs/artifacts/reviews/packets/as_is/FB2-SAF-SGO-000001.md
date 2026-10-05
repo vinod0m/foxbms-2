@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-SGO-000001` |
 | profile | `as_is` |
 | artifact type | `safety_goal` |
-| revision | `2` |
+| revision | `3` |
 | lifecycle_status | `reviewed` |
 | origin | `derived` |
 | owner_role | `safety_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/as_is/safety/safety-goal-cell-voltage.json` |
-| size on disk | 15773 bytes |
+| size on disk | 20616 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(as_is, FB2-SAF-SGO-000001)`, never by `FB2-SAF-SGO-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `17bc8bfca691caafa9ab8f8444531b0a301ce5875ae85b9119c10ec2b909f060` |
-| bytes hashed | 15773 |
+| sha256 of this record's exact current bytes | `44816aa7b009610bfd43b3e44ec0c2cd24e85e382ae0f46605393197a3a9a981` |
+| bytes hashed | 20616 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
  "id": "FB2-SAF-SGO-000001",
- "revision": "2",
+ "revision": "3",
  "schema_version": "1.0.0",
  "artifact_type": "safety_goal",
  "engineering_domain": "safety",
@@ -73,21 +73,36 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 7",
    "status": "mapped",
-   "rationale": "Safety goal definition"
+   "relationship": "derivation_basis",
+   "rationale": "Safety goal definition",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('safety goal definition'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7",
    "status": "mapped",
-   "rationale": "Functional safety requirements"
+   "relationship": "derivation_basis",
+   "rationale": "Functional safety requirements",
+   "relationship_note": "The rationale states the derivation explicitly ('functional safety requirements'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 6",
    "status": "mapped",
-   "rationale": "Hazard analysis and ASIL determination of the hazardous event by severity and exposure; the derivation that produces this record's asil field is recorded in asil_justification"
+   "relationship": "derivation_basis",
+   "rationale": "Hazard analysis and ASIL determination of the hazardous event by severity and exposure; the derivation that produces this record's asil field is recorded in asil_justification",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('hazard analysis and asil determination'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "The foxBMS 2 project publishes no safety goal. It has no HARA, no safety concept and no ISO 26262 assessment, and its own documentation tells users to perform their own risk assessment. This record was written by this corpus: the corpus read the safe-operating-area checks in the pinned source, noticed that they detect a cell-voltage limit violation and report it, and wrote down the shape of the goal that such a check would serve. That is a back-inference from code, not a requirement the project stated and not a goal it accepted.",
+  "misreading_warning": "A reader who sees artifact_type `safety_goal` and a mapping to ISO 26262 Part 3 Clause 7 with status `mapped` will conclude that foxBMS 2 has a safety goal at ASIL_D for cell overvoltage, and that the standard's safety-goal requirement is satisfied. Both halves are wrong: the goal was inferred from source code by this corpus and was never a project deliverable, and `mapped` says the record was derived from the clause's concept, not that the clause was met. The `asil` field is a reconstruction; the record's own asil_justification says at length that no ASIL is determined for the real product.",
+  "derivation_basis": {
+   "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) - the MOL/RSL/MSL over-voltage comparison ladder and its DIAG_Handler escalation; with src/app/application/soa/soa.c:271-351 (SOA_CheckCurrent) and src/app/application/soa/soa.c:148-269 (SOA_CheckTemperatures) for the current and temperature halves. All three at the pinned commit 308028fb13d046ba29b98886895c2e17937b1437.",
+   "what_it_supports": "That a cell-voltage limit violation is DETECTED and reported by the pinned source, and that a fault-tolerant reaction is a plausible goal to attach to that detection. It does NOT support the ASIL_D value, the FTTI of 100 ms, the safe state, the hazardous events, or any of the severity, exposure and controllability ratings: those are authored inputs of the fictional reference project this corpus declares, not observations of the code. The code contains no ASIL, no FTTI and no hazardous-event analysis, and grepping it for any of those terms finds nothing."
+  }
+ },
  "lifecycle_status": "reviewed",
  "automated_review_status": {
   "schema_valid": true,
@@ -100,7 +115,7 @@ The block below is the file's exact bytes. You need no other file open to review
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
@@ -113,6 +128,12 @@ The block below is the file's exact bytes. You need no other file open to review
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "Added the asil_justification the ASIL assignment validator required and did not find. The field is a derivation, not a restatement: severity, exposure, controllability and the operational situation are copied from the HE-01 entry of FB2-SAF-HAZ-000001 in this same profile, the ASIL is then RECOMPUTED from the ISO 26262-3:2018 severity/exposure determination table and compared with what this record and the hazard record already claimed. They agree - S3 with E4 gives ASIL_D, and the second hazardous event HE-02 at S2/E3 gives ASIL_B, which is also what that entry already claimed - so there was no contradiction between the S/E/C values and the ASIL to resolve, and neither was changed. What the derivation adds is the working: the reasoning behind each rating, the whole S3 row so the sensitivity of the answer is visible, the inheritance of the higher ASIL from the two events the goal covers, and the consistency check against the allocation beneath it, where an ASIL B second barrier is admissible precisely because it is not the sole means of achieving an ASIL D goal. The field also states what it does not assert, at length and specifically: this is a hypothetical classification inside a fictional reference project, the real foxBMS 2 product has never had a hazard analysis and risk assessment and no ASIL is determined for it, the S/E/C ratings are authored inputs that were not obtained from any exposure analysis, mission profile, fleet statistic, FMEA or measurement, no design is claimed to meet ASIL D, no conformity with ISO 26262 and no certification is claimed, no tool is claimed to be qualified, and no ASPICE capability level is claimed. The exposure rating is flagged as the unevidenced input on which the whole classification turns, because S3 with E3 would be ASIL_C - one class lower - and nothing in this corpus establishes the exposure. Nothing else in the record changed: the asil value, the statement, the safe state, the degraded state, the fault_tolerant_time_interval_ms and the whole timing_budget allocation including the 15 ms margin that FB2-REV-FND-000025 reconciled are untouched. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. Remediation of the ASIL-assignment finding on this record. This is the as_is copy, whose origin is 'derived' and whose as_is hazard record states the operational situation as 'CHARGING mode, high SOC, fast charge'. The ASIL_D on an as_is record is a back-inference: it records that this corpus's requirement set was written against an ASIL D goal, not that an ASIL was assigned to the real item, and the field says so where it describes the scope of the classification."
+  },
+  {
+   "revision": "3",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: derived` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take safety_goal for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified."
   }
  ],
  "statement": "The BMS shall detect cell voltage limit violations and open HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events.",
@@ -424,7 +445,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `17bc8bfca691caafa9ab8f8444531b0a301ce5875ae85b9119c10ec2b909f060`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `44816aa7b009610bfd43b3e44ec0c2cd24e85e382ae0f46605393197a3a9a981`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

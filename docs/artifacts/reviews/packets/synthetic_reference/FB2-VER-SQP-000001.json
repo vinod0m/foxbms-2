@@ -246,14 +246,14 @@
   "anchor_registry_applies": false,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 22828,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 24306,
   "record_path": "docs/artifacts/corpus/synthetic_reference/verification/svp-software-qualification-test-plan.json",
-  "record_sha256": "11bd1df0b043753017f4cef42e53c86eb192ca79e93902ac3474fc2621a8369b",
+  "record_sha256": "c628561c4d6eb28613fbe2193009eddc11669c90e20c7df39fb4162b720edf6d",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "11bd1df0b043753017f4cef42e53c86eb192ca79e93902ac3474fc2621a8369b"
+  "verbatim_block_sha256": "4d6e23a120b2a7e0572cf2f970f677561e43f287a052d2c7f7666b42a21a8ec6"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -612,18 +612,24 @@
    {
     "rationale": "This record supplies the SWE.6 expected family 'SW Qualification Test Plan', which coverage-plan.json recorded as ABSENT. The other two families remain ABSENT: 'SW Qualification Test Specification' has no record, and 'SW Qualification Test Results' does not exist because FB2-VER-EXE-000008 is execution_kind none with outcome blocked and the five security measures FB2-VER-TMS-000016..000020 have no executed result either. A plan with no specification behind it and no executed result cannot make the process mapped.",
     "reference": "SWE.6",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('supplies the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "partially_mapped"
    },
    {
     "rationale": "Qualification strategy and acceptance criteria for the three software requirements the corpus names. The network-security qualification measures FB2-VER-TMS-000016..000020 cover the security-relevant cases; this plan states the level structure they sit in and what remains outside it.",
     "reference": "Part 6, Clause 9",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('qualification strategy and acceptance criteria'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "partially_mapped"
    },
    {
     "rationale": "Functional safety concept. This is a software verification plan and does not restate the FSC; FB2-SAF-* records carry that.",
     "reference": "Part 2, Clause 7",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('does not restate the fsc'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_26262_2018",
     "status": "not_applicable"
    }
@@ -713,7 +719,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "11bd1df0b043753017f4cef42e53c86eb192ca79e93902ac3474fc2621a8369b",
+  "_record_sha256_at_signing": "c628561c4d6eb28613fbe2193009eddc11669c90e20c7df39fb4162b720edf6d",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",

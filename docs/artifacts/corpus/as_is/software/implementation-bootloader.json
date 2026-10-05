@@ -1,6 +1,6 @@
 {
   "id": "FB2-SW-IMP-000010",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "implementation",
   "engineering_domain": "software",
@@ -26,13 +26,17 @@
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
       "status": "partially_mapped",
-      "rationale": "States where the bootloader code is. Makes no claim that it was verified, asserts no ASIL classification and claims nothing about whether the bootloader satisfies any ISO 26262 requirement."
+      "relationship": "referenced_only",
+      "rationale": "States where the bootloader code is. Makes no claim that it was verified, asserts no ASIL classification and claims nothing about whether the bootloader satisfies any ISO 26262 requirement.",
+      "relationship_note": "The rationale says so in its own words ('makes no claim that'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4 (design-to-code traceability)",
       "status": "gap",
-      "rationale": "There is no software design artefact for the bootloader in this profile. The gap is declared rather than closed by attaching it to an unrelated design."
+      "relationship": "referenced_only",
+      "rationale": "There is no software design artefact for the bootloader in this profile. The gap is declared rather than closed by attaching it to an unrelated design.",
+      "relationship_note": "The rationale says so in its own words ('the gap is declared'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "lifecycle_status": "reviewed",
@@ -48,13 +52,82 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-10-02T00:00:00Z",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-02T00:00:00Z",
       "author": "sw_engineer",
       "description": "First issue. Authored because no artefact of type implementation existed and the as_is corpus anchors the bootloader through five source anchors and five deviations (FB2-SW-DEV-000022 through -000026), with no design artefact covering it."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "traceability_owner",
+      "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered.",
+      "pinned_source_migration": {
+        "finding": "FB2-REV-FND-000173",
+        "parts": [
+          "pinned_file_exists",
+          "pinned_content_hash_matches",
+          "line_range_within_file",
+          "symbol_within_line_range"
+        ],
+        "aggregate_field": "verified_against_pinned_source",
+        "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+        "previous_aggregate_per_location": [
+          {
+            "index": 0,
+            "path": "src/bootloader/main/main.c",
+            "line_range": "87-186",
+            "symbol": "main",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 1,
+            "path": "src/bootloader/engine/boot/boot.c",
+            "line_range": "244-281",
+            "symbol": "BOOT_GetBootState",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 2,
+            "path": "src/bootloader/engine/boot/boot.c",
+            "line_range": "292-440",
+            "symbol": "BOOT_GetBootStateDuringLoad",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 3,
+            "path": "src/bootloader/engine/boot/boot.c",
+            "line_range": "470-530",
+            "symbol": "BOOT_IsProgramAvailableAndValidated",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 4,
+            "path": "src/bootloader/driver/crc/crc.c",
+            "line_range": "151-297",
+            "symbol": "CRC_SemiAutoCrcCalculation",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 5,
+            "path": "src/bootloader/driver/config/flash_cfg.c",
+            "line_range": "68-402",
+            "symbol": "FLASH_FLASH_BANK_s",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 6,
+            "path": "src/bootloader/main/include/fsystem.h",
+            "line_range": "101-145",
+            "symbol": "FSYS_RaisePrivilegeToSystemModeSWI",
+            "verified_against_pinned_source": true
+          }
+        ],
+        "aggregate_changed_at": []
+      }
     }
   ],
   "implementation_kind": "bootloader_component",
@@ -67,6 +140,10 @@
       "symbol": "main",
       "line_range": "87-186",
       "content_hash": "sha256:1ba6e0d69d649553f256d7506e35df31f473b4c652a0abf1dde8ac1a6129646d",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -77,6 +154,10 @@
       "symbol": "BOOT_GetBootState",
       "line_range": "244-281",
       "content_hash": "sha256:61f3e76cdb6aad718032bf3c22fdfd7fc2808aa236a789523ac8b99682552655",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -87,6 +168,10 @@
       "symbol": "BOOT_GetBootStateDuringLoad",
       "line_range": "292-440",
       "content_hash": "sha256:61f3e76cdb6aad718032bf3c22fdfd7fc2808aa236a789523ac8b99682552655",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -97,6 +182,10 @@
       "symbol": "BOOT_IsProgramAvailableAndValidated",
       "line_range": "470-530",
       "content_hash": "sha256:61f3e76cdb6aad718032bf3c22fdfd7fc2808aa236a789523ac8b99682552655",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -107,6 +196,10 @@
       "symbol": "CRC_SemiAutoCrcCalculation",
       "line_range": "151-297",
       "content_hash": "sha256:401d1fbd060d45dab488d48607db9ddb6834b1f72955b6329b2bd25ccb3b337e",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -117,6 +210,10 @@
       "symbol": "FLASH_FLASH_BANK_s",
       "line_range": "68-402",
       "content_hash": "sha256:21f683880196342a88420283e6fc526c2709b124d546ba3e79a4d702d37be2c1",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "table_definition",
       "verified_against_pinned_source": true
     },
@@ -127,6 +224,10 @@
       "symbol": "FSYS_RaisePrivilegeToSystemModeSWI",
       "line_range": "101-145",
       "content_hash": "sha256:cc5b128cf270e69aa553a3b96a2df9ee7def659d665139c229553c6c8f45252a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     }

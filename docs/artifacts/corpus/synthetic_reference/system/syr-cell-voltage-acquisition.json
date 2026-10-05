@@ -1,6 +1,6 @@
 {
  "id": "FB2-SYS-SYR-000001",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "system",
@@ -24,15 +24,28 @@
    "standard_id": "ASPICE_PAM_41",
    "reference": "SYS.2",
    "status": "mapped",
-   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software."
+   "relationship": "derivation_basis",
+   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software.",
+   "relationship_note": "The rationale states the derivation explicitly ('derived from'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7 (system requirements)",
    "status": "mapped",
-   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced."
+   "relationship": "derivation_basis",
+   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced.",
+   "relationship_note": "The rationale states the derivation explicitly ('is the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is the system-level statement of the reference project's acquisition obligation, written by this corpus. Its own limitations field already says it establishes nothing about the real foxBMS project.",
+  "misreading_warning": "A reader who sees an ASIL_D system requirement with a 20 Hz rate, a validation obligation and a data-age publication requirement mapped to ISO 26262 Part 4 Clause 7 with status `mapped` will conclude the product has a system-level acquisition requirement with a data-integrity mechanism. It is fictional, it has no source_refs of its own because it restates two records that are themselves reconstructions, and the source publishes no data age with a measurement.",
+  "derivation_basis": {
+   "locator": "No source of its own. It is the system-level statement of src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages)'s upstream path and of the acquisition behaviour at src/app/driver/afe/api/afe.h:124 (AFE_StartMeasurement) and src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_cell-voltages.c:238-305 (CANTX_CellVoltages); all at pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The 20 Hz comes from the reference project's FB2-ASM-004 and FB2-ASM-005 assumptions.",
+   "what_it_supports": "That the real source acquires and publishes cell voltages, which is what makes a system-level acquisition statement a real subject. It supports nothing about the rate, the age stamping, the validation obligation as a REQUIREMENT, or the ASIL: none of the three is present in the source as a stated requirement."
+  }
+ },
  "lifecycle_status": "baselined",
  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
  "automated_review_status": {
@@ -46,13 +59,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-29T00:00:00Z",
    "author": "system_engineer",
    "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them."
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified."
   }
  ],
  "statement": "The item shall acquire the voltage of every monitored cell, validate the integrity of every transferred value before it is used by any decision, and publish each validated value together with the age of the acquisition that produced it, at a rate of at least 20 acquisitions per second in every mode in which the item is monitoring.",

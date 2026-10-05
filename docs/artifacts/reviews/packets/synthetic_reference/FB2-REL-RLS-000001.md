@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/release/release-configuration-identification.json` |
-| size on disk | 15412 bytes |
+| size on disk | 17049 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-REL-RLS-000001)`, never by `FB2-REL-RLS-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `9b656e4ab1231ffd4166472c682d91d8d7e9e8d4e07f3352a119ca66db64bfec` |
-| bytes hashed | 15412 |
+| sha256 of this record's exact current bytes | `0c3a482dc65fa6aece4345eef9a011b623c93eff35e667e2dd90364b8586db74` |
+| bytes hashed | 17049 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -69,19 +69,25 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ASPICE_PAM_41",
    "reference": "SPL.2",
    "status": "mapped",
-   "rationale": "Release management: what is released, identified and how it is described."
+   "relationship": "derivation_basis",
+   "rationale": "Release management: what is released, identified and how it is described.",
+   "relationship_note": "The rationale states the derivation explicitly ('release management'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 7, Clause 9 (configuration management and release)",
    "status": "mapped",
-   "rationale": "The identification of a released configuration and its records."
+   "relationship": "derivation_basis",
+   "rationale": "The identification of a released configuration and its records.",
+   "relationship_note": "The rationale states the derivation explicitly ('the identification of a released configuration'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 7, Clause 11 (release and production after development)",
    "status": "mapped",
-   "rationale": "The activities this record identifies. Recorded as mapped for the activity identity only; no clause text is reproduced."
+   "relationship": "derivation_basis",
+   "rationale": "The activities this record identifies. Recorded as mapped for the activity identity only; no clause text is reproduced.",
+   "relationship_note": "The rationale states the derivation explicitly ('the activities this record identifies'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
  "lifecycle_status": "baselined",
@@ -552,7 +558,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `9b656e4ab1231ffd4166472c682d91d8d7e9e8d4e07f3352a119ca66db64bfec`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `0c3a482dc65fa6aece4345eef9a011b623c93eff35e667e2dd90364b8586db74`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

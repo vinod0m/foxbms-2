@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/tara-communication-attack-surface.json` |
-| size on disk | 62300 bytes |
+| size on disk | 63591 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-TAR-000001)`, never by `FB2-SAF-TAR-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `6839fe9146d24db863da57c3bbd9db0dc40537b3a04d322042cf9a0e1b866b39` |
-| bytes hashed | 62300 |
+| sha256 of this record's exact current bytes | `d66a95c2133de3ba686c80f92489269c58fa2adfd53a2a557eb808ac9858bfd0` |
+| bytes hashed | 63591 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -77,20 +77,20 @@ The block below is the file's exact bytes. You need no other file open to review
   "FB2-SRC-COD-000072",
   "FB2-SRC-COD-000073",
   "FB2-SRC-COD-000074",
-   "FB2-SRC-COD-000075",
-   "FB2-SRC-COD-000076",
-   "FB2-SRC-COD-000077",
-   "FB2-SRC-COD-000078",
-   "FB2-SRC-COD-000079",
-   "FB2-SRC-COD-000080",
-   "FB2-SRC-COD-000081",
-   "FB2-SRC-COD-000082",
-   "FB2-SRC-COD-000083",
-   "FB2-SRC-COD-000084",
-   "FB2-SRC-COD-000085",
-   "FB2-SRC-COD-000086",
-   "FB2-SRC-COD-000087"
-  ],
+  "FB2-SRC-COD-000075",
+  "FB2-SRC-COD-000076",
+  "FB2-SRC-COD-000077",
+  "FB2-SRC-COD-000078",
+  "FB2-SRC-COD-000079",
+  "FB2-SRC-COD-000080",
+  "FB2-SRC-COD-000081",
+  "FB2-SRC-COD-000082",
+  "FB2-SRC-COD-000083",
+  "FB2-SRC-COD-000084",
+  "FB2-SRC-COD-000085",
+  "FB2-SRC-COD-000086",
+  "FB2-SRC-COD-000087"
+ ],
  "assumption_refs": [
   "FB2-ASM-011"
  ],
@@ -99,19 +99,25 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_SAE_21434_2021",
    "reference": "Clause 15 (Threat analysis and risk assessment)",
    "status": "unverified",
-   "rationale": "Named for traceability of intent only. This record is NOT an ISO/SAE 21434 TARA: the work product required by that clause (asset list with damage scenarios and impact ratings, threat scenarios, attack paths, risk assessment, mitigation concept, residual risk evaluation with review) has NOT been produced. Clause conformance is not claimed and must not be inferred."
+   "relationship": "referenced_only",
+   "rationale": "Named for traceability of intent only. This record is NOT an ISO/SAE 21434 TARA: the work product required by that clause (asset list with damage scenarios and impact ratings, threat scenarios, attack paths, risk assessment, mitigation concept, residual risk evaluation with review) has NOT been produced. Clause conformance is not claimed and must not be inferred.",
+   "relationship_note": "The rationale says so in its own words ('named for traceability of intent only'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
   },
   {
    "standard_id": "ISO_SAE_21434_2021",
    "reference": "Clause 15.4 mitigation concept -> Clause 8.5 security requirements",
    "status": "gap",
-   "rationale": "The derived security requirements FB2-SAF-SEC-000001..000005 are forward-engineered for a hypothetical project and have no verification evidence in this corpus. The mitigation-to-requirement traceability exists; the verification leg does not."
+   "relationship": "derivation_basis",
+   "rationale": "The derived security requirements FB2-SAF-SEC-000001..000005 are forward-engineered for a hypothetical project and have no verification evidence in this corpus. The mitigation-to-requirement traceability exists; the verification leg does not.",
+   "relationship_note": "The rationale states the derivation explicitly ('forward-engineered'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7 (technical safety requirements incl. freedom from interference)",
    "status": "partially_mapped",
-   "rationale": "Threats THR-003, THR-005 and THR-006 identify ways in which the freedom-from-interference argument for safety requirements could be undermined by a communication fault or injection. The argument itself (FMEDA, freedom from interference analysis) is NOT part of this corpus, so only the identification of interference paths is mapped."
+   "relationship": "referenced_only",
+   "rationale": "Threats THR-003, THR-005 and THR-006 identify ways in which the freedom-from-interference argument for safety requirements could be undermined by a communication fault or injection. The argument itself (FMEDA, freedom from interference analysis) is NOT part of this corpus, so only the identification of interference paths is mapped.",
+   "relationship_note": "The rationale says so in its own words ('is not part of this corpus'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
   }
  ],
  "lifecycle_status": "draft",
@@ -171,8 +177,8 @@ The block below is the file's exact bytes. You need no other file open to review
    "Only the dispatch layers of the CAN and UART receive paths were traced. The per-message receive callbacks registered against can_rxMessages[] were NOT individually audited, so this record cannot state whether any individual callback adds its own counter, CRC or plausibility check. Absence of such a check is asserted at the dispatch layer only.",
    "The FreeRTOS-Plus-TCP TCP input processing (src/os/freertos/freertos-plus/freertos-plus-tcp/source/FreeRTOS_TCP_Recv.c) was not line-by-line audited. The consequences claimed for THR-004 are therefore bounded to what the application hook itself shows.",
    "Reachability of the Ethernet segment, the CAN bus and the RS485 wires is a deployment property. The source shows a link-local 169.254.107.24/16 address with no DHCP; this record cannot determine whether any given deployment is reachable from outside the ECU.",
-    "The FreeRTOS and FreeRTOS-Plus-TCP trees are vendored and locally modified for the TI TMS570LC43x port. Any statement about the behaviour of those components is a statement about the vendored copy in this repository, not about an upstream release.",
-    "The EMAC MAC/PHY ingress path (AST-009) was read to the point of frame delivery to the IP task, and the controls present and absent on it are enumerated in that asset. NO NEW THREAT ID WAS DERIVED FROM IT, and the reason is recorded here rather than left implicit. The only security-relevant property the path adds is that it discards some off-target traffic: a destination-MAC match filter (emac.c:238), a frame-type filter that is active in this configuration (FreeRTOSIPConfig.h:275 selecting NetworkInterface.c:73), and a bound on the received length (NetworkInterface.c:237). None of these is authentication, integrity, replay protection or rate limiting, and the destination-MAC filter is trivially satisfied by any attacker already on the segment because the destination address is chosen by the sender. The attacker precondition of every threat this asset could support is therefore identical to the precondition already stated in THR-001 and THR-002, namely presence on the segment, so a separate threat ID would double-count one exposure and inflate the apparent breadth of this record. The absent controls on this path are recorded as observations in AST-009.exposure. The vendored IP stack's own receive-path processing, including its own minimum-length test in prvProcessEthernetPacket, was NOT audited; the observations in AST-009 are asserted about the driver layer only, and the presence of any further check inside the vendored stack is unknown to this record."
+   "The FreeRTOS and FreeRTOS-Plus-TCP trees are vendored and locally modified for the TI TMS570LC43x port. Any statement about the behaviour of those components is a statement about the vendored copy in this repository, not about an upstream release.",
+   "The EMAC MAC/PHY ingress path (AST-009) was read to the point of frame delivery to the IP task, and the controls present and absent on it are enumerated in that asset. NO NEW THREAT ID WAS DERIVED FROM IT, and the reason is recorded here rather than left implicit. The only security-relevant property the path adds is that it discards some off-target traffic: a destination-MAC match filter (emac.c:238), a frame-type filter that is active in this configuration (FreeRTOSIPConfig.h:275 selecting NetworkInterface.c:73), and a bound on the received length (NetworkInterface.c:237). None of these is authentication, integrity, replay protection or rate limiting, and the destination-MAC filter is trivially satisfied by any attacker already on the segment because the destination address is chosen by the sender. The attacker precondition of every threat this asset could support is therefore identical to the precondition already stated in THR-001 and THR-002, namely presence on the segment, so a separate threat ID would double-count one exposure and inflate the apparent breadth of this record. The absent controls on this path are recorded as observations in AST-009.exposure. The vendored IP stack's own receive-path processing, including its own minimum-length test in prvProcessEthernetPacket, was NOT audited; the observations in AST-009 are asserted about the driver layer only, and the presence of any further check inside the vendored stack is unknown to this record."
   ]
  },
  "assets_or_entry_points": [
@@ -293,13 +299,13 @@ The block below is the file's exact bytes. You need no other file open to review
  "threats": [
   {
    "threat_id": "THR-001",
-    "description": "Unauthenticated, unencrypted TCP session establishment on the echo server. ETH_ListenForConnection calls FreeRTOS_socket/freeRTOS_bind/FreeRTOS_listen and then loops on FreeRTOS_accept (src/app/application/ethernet/ethernet.c:255, :276-283, :286-293). Between accept and the hand-off of the connected socket there is no check of the peer address (clientAddress is filled by accept as an output parameter and never inspected; pParameters is explicitly discarded at :248), no credential exchange, no cryptographic handshake, and no connection-rate limit. No TLS library is present anywhere in the master communication stack. The MAC/PHY ingress path in front of this service (AST-009) was also read: it filters on the destination MAC address (src/app/driver/emac/emac.c:238) and applies a frame-type filter before handing a frame up (NetworkInterface.c:285, active in this configuration per src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h:275), but neither is a security control against a peer on the segment, because the destination MAC is chosen by the sender and the frame-type filter discards protocol types rather than authenticating a peer. This threat therefore holds at the MAC layer as well as at the TCP application layer.",
-    "target_asset_ids": [
-     "AST-001",
-     "AST-002",
-     "AST-009"
-    ],
-    "attack_vector": "Adjacent host on the same Ethernet link, or any host with a routed path to 169.254.107.24, opens TCP to port 7. The handshake succeeds unconditionally.",
+   "description": "Unauthenticated, unencrypted TCP session establishment on the echo server. ETH_ListenForConnection calls FreeRTOS_socket/freeRTOS_bind/FreeRTOS_listen and then loops on FreeRTOS_accept (src/app/application/ethernet/ethernet.c:255, :276-283, :286-293). Between accept and the hand-off of the connected socket there is no check of the peer address (clientAddress is filled by accept as an output parameter and never inspected; pParameters is explicitly discarded at :248), no credential exchange, no cryptographic handshake, and no connection-rate limit. No TLS library is present anywhere in the master communication stack. The MAC/PHY ingress path in front of this service (AST-009) was also read: it filters on the destination MAC address (src/app/driver/emac/emac.c:238) and applies a frame-type filter before handing a frame up (NetworkInterface.c:285, active in this configuration per src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h:275), but neither is a security control against a peer on the segment, because the destination MAC is chosen by the sender and the frame-type filter discards protocol types rather than authenticating a peer. This threat therefore holds at the MAC layer as well as at the TCP application layer.",
+   "target_asset_ids": [
+    "AST-001",
+    "AST-002",
+    "AST-009"
+   ],
+   "attack_vector": "Adjacent host on the same Ethernet link, or any host with a routed path to 169.254.107.24, opens TCP to port 7. The handshake succeeds unconditionally.",
    "impact": "The peer obtains an established TCP session to the master and an on-target task that services it. The capability granted is limited to the echo service: the received bytes are echoed and are never written to the internal database, so this does NOT by itself permit actuation or measurement manipulation. The concrete impact is occupancy of the single echo-server queue slot and of an echo-server task (see THR-003), and the ability to use the ECU as a fixed-target TCP reflector (see THR-002).",
    "affected_safety_goals_or_requirements": [
     "FB2-SAF-SGO-000001"
@@ -313,21 +319,21 @@ The block below is the file's exact bytes. You need no other file open to review
    "residual_risk_justification": "With MIT-001 and MIT-002 implemented in the hypothetical project, an unauthenticated peer is rejected before a task is created, so residual likelihood is governed by the strength of the credential store and by network segmentation, neither of which is defined in this corpus. The rating is therefore bounded to 'the exposure is removed but the compensating segmentation controls are unspecified', and is explicitly not a statement that the residual risk is acceptable.",
    "origin": "source_observed",
    "observed_in_pinned_source": true,
-    "source_refs": [
-     "FB2-SRC-COD-000057",
-     "FB2-SRC-COD-000062",
-     "FB2-SRC-COD-000063",
-     "FB2-SRC-COD-000078",
-     "FB2-SRC-COD-000080",
-     "FB2-SRC-COD-000081",
-     "FB2-SRC-COD-000083"
-    ],
-    "honest_unknowns": [
-     "Whether any deployment puts a routable interface in front of this segment is unknown.",
-     "No attempt was made to connect to port 7 on hardware; reachability is inferred from the code and the configured address only.",
-     "Whether FreeRTOS-Plus-TCP applies any connection-level rate limit of its own was not audited.",
-     "The EMAC does filter on the destination MAC address and does apply a frame-type filter before a frame is handed up (AST-009), but neither was tested on hardware and the frame-type filter is a vendored-stack mechanism whose coverage of this configuration was read from the configuration macro rather than exercised. Neither is an authentication control, and the destination-MAC filter is satisfied by any sender on the segment, so neither reduces the attacker precondition stated in attack_vector."
-    ]
+   "source_refs": [
+    "FB2-SRC-COD-000057",
+    "FB2-SRC-COD-000062",
+    "FB2-SRC-COD-000063",
+    "FB2-SRC-COD-000078",
+    "FB2-SRC-COD-000080",
+    "FB2-SRC-COD-000081",
+    "FB2-SRC-COD-000083"
+   ],
+   "honest_unknowns": [
+    "Whether any deployment puts a routable interface in front of this segment is unknown.",
+    "No attempt was made to connect to port 7 on hardware; reachability is inferred from the code and the configured address only.",
+    "Whether FreeRTOS-Plus-TCP applies any connection-level rate limit of its own was not audited.",
+    "The EMAC does filter on the destination MAC address and does apply a frame-type filter before a frame is handed up (AST-009), but neither was tested on hardware and the frame-type filter is a vendored-stack mechanism whose coverage of this configuration was read from the configuration macro rather than exercised. Neither is an authentication control, and the destination-MAC filter is satisfied by any sender on the segment, so neither reduces the attacker precondition stated in attack_vector."
+   ]
   },
   {
    "threat_id": "THR-002",
@@ -336,7 +342,7 @@ The block below is the file's exact bytes. You need no other file open to review
     "AST-002"
    ],
    "attack_vector": "A third party that can direct traffic at the ECU's IP and port 7 receives that traffic back, giving the ECU a stable, non-rewriting reflector endpoint and a liveness oracle for the segment.",
-    "impact": "The ECU can be used as a fixed-target reflector. IMPORTANT BOUND: the evidenced echo is one-for-one in the send direction (receivedBytes in, receivedBytes out), so this is NOT a volumetric amplification primitive as the code is written. The reflection property is real; an amplification factor is not evidenced and is not claimed. Separately, the fixed 30-byte banner sent at :151-152 and the verbatim echo make the service trivially fingerprintable. The banner length is the compile-time constant ETH_DEFAULT_DEBUG_MESSAGE_SIZE = 30u (src/app/application/ethernet/ethernet.c:80), which is exactly the size of the string literal \"Started connection instance \\n\" including its terminating NUL (29 characters plus NUL); :151 declares the send buffer at that size and :152 transmits all 30 bytes unconditionally at the start of every accepted connection. This 30 is a distinct constant from the 536-byte receive buffer discussed under AST-002 (ipconfigTCP_MSS, src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h:294, declared at :157) and the two must not be conflated. The fingerprinting argument is unchanged by the correct number and does not depend on it: a fixed, unauthenticated, compile-time greeting sent to every peer that completes a handshake is a reliable service identifier regardless of its length.",
+   "impact": "The ECU can be used as a fixed-target reflector. IMPORTANT BOUND: the evidenced echo is one-for-one in the send direction (receivedBytes in, receivedBytes out), so this is NOT a volumetric amplification primitive as the code is written. The reflection property is real; an amplification factor is not evidenced and is not claimed. Separately, the fixed 30-byte banner sent at :151-152 and the verbatim echo make the service trivially fingerprintable. The banner length is the compile-time constant ETH_DEFAULT_DEBUG_MESSAGE_SIZE = 30u (src/app/application/ethernet/ethernet.c:80), which is exactly the size of the string literal \"Started connection instance \\n\" including its terminating NUL (29 characters plus NUL); :151 declares the send buffer at that size and :152 transmits all 30 bytes unconditionally at the start of every accepted connection. This 30 is a distinct constant from the 536-byte receive buffer discussed under AST-002 (ipconfigTCP_MSS, src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h:294, declared at :157) and the two must not be conflated. The fingerprinting argument is unchanged by the correct number and does not depend on it: a fixed, unauthenticated, compile-time greeting sent to every peer that completes a handshake is a reliable service identifier regardless of its length.",
    "affected_safety_goals_or_requirements": [],
    "likelihood_impact_reasoning": "Impact on the battery system is low: no safety goal depends on the echo service, which is why affected_safety_goals_or_requirements is empty. Impact as a network attack-surface liability is medium. Likelihood is low and is entirely a function of segment reachability, which is unknown. The value of recording this threat is that it is the reason MIT-001 is stated as a confidentiality requirement and not merely an authentication requirement.",
    "mitigation_ids": [
@@ -686,9 +692,9 @@ The block below is the file's exact bytes. You need no other file open to review
   "accepted_by": "none",
   "statement": "In the hypothetical synthetic_reference project, acceptance of the residual risk tabulated above would have to be performed by named cybersecurity authority, functional-safety authority and vehicle-level security authority jointly, with the vehicle integrator, because the highest-rated threat (THR-005) touches measurement and state-request messages that safety requirements depend on. NO SUCH ACCEPTANCE EXISTS. Nothing in this record has been reviewed, approved, signed or accepted by any person or body. This artifact carries human_approval_status 'pending' and production_authorized false, and no residual risk in it is accepted. In reality there is nothing to accept: the real foxBMS 2 project at commit 308028fb contains no threat analysis, no residual-risk evaluation and no acceptance record, and this synthetic record does not create one for it."
  },
-  "assumptions": [
-    "The analysis assumes the code read at commit 308028fb is the code that is built and deployed. If a downstream integration adds a protocol on the serial receive queue, or a write-capable service on the network interface, the corresponding threats (THR-006, THR-007) must be re-analysed before those ratings may be reused.",
-    "The analysis assumes the configured values are the effective values: ETH_ECHO_SERVER_PORT_NUMBER = 7, ETH_ECHO_SERVER_BACKLOG = 1, ETH_ECHO_SERVER_RECEIVE_TIMEOUT = portMAX_DELAY (src/app/application/config/ethernet_cfg.h:90, :85, :94), ipconfigTCP_MSS = 536 (src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h:294), and ETH_DEFAULT_DEBUG_MESSAGE_SIZE = 30 (src/app/application/ethernet/ethernet.c:80, which is defined in the module itself rather than in a configuration header). The 30 is the length of the fixed greeting banner and the 536 is the length of the receive buffer; they are separate constants at separate locations and neither is derived from the other. No build was performed and no binary was inspected.",
+ "assumptions": [
+  "The analysis assumes the code read at commit 308028fb is the code that is built and deployed. If a downstream integration adds a protocol on the serial receive queue, or a write-capable service on the network interface, the corresponding threats (THR-006, THR-007) must be re-analysed before those ratings may be reused.",
+  "The analysis assumes the configured values are the effective values: ETH_ECHO_SERVER_PORT_NUMBER = 7, ETH_ECHO_SERVER_BACKLOG = 1, ETH_ECHO_SERVER_RECEIVE_TIMEOUT = portMAX_DELAY (src/app/application/config/ethernet_cfg.h:90, :85, :94), ipconfigTCP_MSS = 536 (src/os/freertos/freertos-plus/freertos-plus-tcp/source/include/FreeRTOSIPConfig.h:294), and ETH_DEFAULT_DEBUG_MESSAGE_SIZE = 30 (src/app/application/ethernet/ethernet.c:80, which is defined in the module itself rather than in a configuration header). The 30 is the length of the fixed greeting banner and the 536 is the length of the receive buffer; they are separate constants at separate locations and neither is derived from the other. No build was performed and no binary was inspected.",
   "The analysis assumes ipconfigHAS_DEBUG_PRINTF is not enabled. It is not defined in the project's FreeRTOSIPConfig.h, so it takes the default ipconfigDISABLE, which reduces FreeRTOS_debug_printf to a no-op. Under that configuration the latent unterminated-buffer read at ethernet.c:189 is compiled out. If a variant enabled debug printf, that statement would no longer hold and the defect would become live. This is recorded as a configuration-dependent latent defect, NOT as a vulnerability, and no out-of-bounds read is claimed to be reachable in the evidenced configuration.",
   "The analysis assumes the diagnosis engine reports entries as configured. DIAG_ID_CAN_RX_QUEUE_FULL is configured DIAG_EVALUATION_ENABLED with DIAG_SEN_EVENT_1; whether the reporting path is itself functional at runtime was not tested.",
   "The analysis assumes the CAN identifiers in tools/dbc/foxbms.dbc correspond to the receive table compiled into the target. That correspondence was not re-derived for this record.",
@@ -2059,7 +2065,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `6839fe9146d24db863da57c3bbd9db0dc40537b3a04d322042cf9a0e1b866b39`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `d66a95c2133de3ba686c80f92489269c58fa2adfd53a2a557eb808ac9858bfd0`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

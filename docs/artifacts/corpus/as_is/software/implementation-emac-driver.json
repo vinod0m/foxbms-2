@@ -1,6 +1,6 @@
 {
   "id": "FB2-SW-IMP-000006",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "implementation",
   "engineering_domain": "software",
@@ -25,13 +25,17 @@
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
       "status": "partially_mapped",
-      "rationale": "States where the EMAC driver code is. Makes no claim that it was verified and asserts no ASIL classification."
+      "relationship": "referenced_only",
+      "rationale": "States where the EMAC driver code is. Makes no claim that it was verified and asserts no ASIL classification.",
+      "relationship_note": "The rationale says so in its own words ('makes no claim that'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4 (design-to-code traceability)",
       "status": "gap",
-      "rationale": "There is no software design artefact for the EMAC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design."
+      "relationship": "referenced_only",
+      "rationale": "There is no software design artefact for the EMAC driver in this profile. The gap is declared rather than closed by attaching this module to an unrelated design.",
+      "relationship_note": "The rationale says so in its own words ('the gap is declared'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "lifecycle_status": "reviewed",
@@ -47,13 +51,80 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-10-02T00:00:00Z",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-02T00:00:00Z",
       "author": "sw_engineer",
       "description": "First issue. Authored to cover a module the as_is corpus anchors through two deviations (FB2-SW-DEV-000009 and FB2-SW-DEV-000010) and for which it holds no design artefact at all."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "traceability_owner",
+      "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered. Qualified one sentence of evidence_status.method that asserted all five locations passed the symbol-in-range check when the fifth does not. This is item (2) of FB2-REV-FND-000171; it is corrected here because recording symbol_within_line_range=false while the record's own method claimed the opposite would leave the record contradicting itself. Item (1) of that finding - the symbol_role of that location - is NOT actioned here and remains open.",
+      "pinned_source_migration": {
+        "finding": "FB2-REV-FND-000173",
+        "parts": [
+          "pinned_file_exists",
+          "pinned_content_hash_matches",
+          "line_range_within_file",
+          "symbol_within_line_range"
+        ],
+        "aggregate_field": "verified_against_pinned_source",
+        "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+        "previous_aggregate_per_location": [
+          {
+            "index": 0,
+            "path": "src/app/driver/emac/emac.c",
+            "line_range": "217-294",
+            "symbol": "EMAC_InitializeHardware",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 1,
+            "path": "src/app/driver/emac/emac.c",
+            "line_range": "375-461",
+            "symbol": "EMAC_Transmit",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 2,
+            "path": "src/app/driver/emac/emac.c",
+            "line_range": "585-591",
+            "symbol": "EMAC_TxInterruptServiceRoutine",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 3,
+            "path": "src/app/driver/emac/emac.c",
+            "line_range": "601-608",
+            "symbol": "EMAC_RxInterruptServiceRoutine",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 4,
+            "path": "src/app/driver/emac/emac.c",
+            "line_range": "234-239",
+            "symbol": "EMAC_InitializeHardware",
+            "verified_against_pinned_source": true
+          }
+        ],
+        "aggregate_changed_at": [
+          {
+            "index": 4,
+            "path": "src/app/driver/emac/emac.c",
+            "line_range": "234-239",
+            "symbol": "EMAC_InitializeHardware",
+            "previous_aggregate": true,
+            "aggregate_now": false,
+            "part_that_is_false": [
+              "symbol_within_line_range"
+            ]
+          }
+        ]
+      }
     }
   ],
   "implementation_kind": "driver_module",
@@ -66,6 +137,10 @@
       "symbol": "EMAC_InitializeHardware",
       "line_range": "217-294",
       "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -76,6 +151,10 @@
       "symbol": "EMAC_Transmit",
       "line_range": "375-461",
       "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -86,6 +165,10 @@
       "symbol": "EMAC_TxInterruptServiceRoutine",
       "line_range": "585-591",
       "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -96,6 +179,10 @@
       "symbol": "EMAC_RxInterruptServiceRoutine",
       "line_range": "601-608",
       "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -106,8 +193,12 @@
       "symbol": "EMAC_InitializeHardware",
       "line_range": "234-239",
       "content_hash": "sha256:744dca2d620a8aab8ae684546bfe7b1aba7a48877574733b7df5453dfb7a27c0",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": false,
       "symbol_role": "definition",
-      "verified_against_pinned_source": true
+      "verified_against_pinned_source": false
     }
   ],
   "implements": {
@@ -183,7 +274,7 @@
   },
   "evidence_status": {
     "locations_verified": true,
-    "method": "emac.c was read at the pinned commit with 'git show 308028fb:src/app/driver/emac/emac.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000039, -000040, -000078 and -000079 already carry. Each named symbol was confirmed to occur inside its recorded line_range at the pin and each range was confirmed within the file. The function spans were cross-read against 'graft skeleton src/app/driver/emac/emac.c', which reports EMAC_InitializeHardware at L217-L294, EMAC_Transmit at L375-L461, EMAC_TxInterruptServiceRoutine at L585-L591 and EMAC_RxInterruptServiceRoutine at L601-L608 independently of this authoring pass. Note that the registry anchor FB2-SRC-COD-000040 records the receive handler's range as 597-600, which covers its pragma and signature lines rather than its body; the body span 601-608 recorded here is what anchor FB2-SRC-COD-000079 already carries, and both are consistent with the same function.",
+    "method": "emac.c was read at the pinned commit with 'git show 308028fb:src/app/driver/emac/emac.c'; the content_hash recorded is that pinned blob's sha256 and equals the value anchors FB2-SRC-COD-000039, -000040, -000078 and -000079 already carry. Each named symbol was confirmed to occur somewhere in the named file at the pin and each range was confirmed within the file; for four of the five locations the symbol was also confirmed to occur INSIDE the recorded line_range, and for the fifth - the 234-239 destination-address configuration block inside EMAC_InitializeHardware, recorded under that function's name because it is not a separate symbol - it was not, and that location now records symbol_within_line_range=false. See FB2-REV-FND-000171. The function spans were cross-read against 'graft skeleton src/app/driver/emac/emac.c', which reports EMAC_InitializeHardware at L217-L294, EMAC_Transmit at L375-L461, EMAC_TxInterruptServiceRoutine at L585-L591 and EMAC_RxInterruptServiceRoutine at L601-L608 independently of this authoring pass. Note that the registry anchor FB2-SRC-COD-000040 records the receive handler's range as 597-600, which covers its pragma and signature lines rather than its body; the body span 601-608 recorded here is what anchor FB2-SRC-COD-000079 already carries, and both are consistent with the same function.",
     "limitations": [
       "The fifth location's symbol is EMAC_InitializeHardware and its range 234-239 is the destination-address match configuration inside that function's body, which is the range anchor FB2-SRC-COD-000078 already records. That anchor spells the symbol as 'EMAC_Initialize', and no symbol of that name exists in emac.c; this record uses the name that does exist rather than reproducing the anchor's. The anchor's own spelling is a source-registry matter and is left for the digest workstream that owns the registry, not altered here.",
       "Behaviour was verified by reading the code. No Ethernet frame was sent or received, no PHY was linked, and no timing measurement of this driver exists in this corpus.",

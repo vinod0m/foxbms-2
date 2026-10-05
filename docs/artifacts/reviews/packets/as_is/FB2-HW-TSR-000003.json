@@ -263,14 +263,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 8370,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 12035,
   "record_path": "docs/artifacts/corpus/as_is/hardware/tsr-contactor-driver.json",
-  "record_sha256": "16aa13c26ab94e2c2941bb450ffd206afa7c799e4eafcc9b7f60eafd1799be30",
+  "record_sha256": "a334724778fbf5837cdd0149f28227db941e60a5a74c9b8b7339a5bb446caac9",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "c502c0a19700e6aaa8f58121dfdf4c58a3b07b08f1ca36fa5489dae069fcb5d7"
+  "verbatim_block_sha256": "8003cf2fafcc6848d0c3eecd64d7efebd19075c928b29117d61646242d95c902"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -418,7 +418,7 @@
   "profile": "as_is",
   "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. Anchor FB2-SRC-COD-000007 (CONTACTOR_StateMachine) was deleted: contactor.c contains no state machine of any kind (graft skeleton lists every function; graft grep for StateMachine/FSM in that file returns nothing). FB2-SRC-COD-000008 now names CONT_CheckFeedback (contactor.c:125-163), which genuinely performs auxiliary feedback monitoring, and FB2-SRC-COD-000027 now names FS8x_WD_Refresh (sbc_fs8x.c:160-182), which performs the watchdog service. Neither states a coil slew rate or a 2 ms feedback latency; those come from the FS85xx datasheet, and FB2-SRC-HW-000001 names a master schematic absent from foxbms-2. Part observed, part modelled, so labelled derived.",
   "rationale": "Contactor control and feedback monitoring must meet FSR-003 30 ms latency budget",
-  "revision": "2",
+  "revision": "3",
   "revision_history": [
    {
     "author": "hw_engineer",
@@ -431,12 +431,27 @@
     "date": "2026-10-02T00:00:00Z",
     "description": "Added asil_allocation_scope, and moved the origin field from source_observed to derived. An independent audit flagged this record as asserting an unqualified ASIL on an as_is profile record, which presents a classification belonging to the hypothetical reference project as though it were a determination about the real foxBMS product. The ASIL value itself is untouched and remains ASIL_D, because it is legitimate inside the fictional project; what is different now is that the value can no longer be read without the reconstruction stated alongside it. The origin move is required by master prompt section 5: this record carries a back-inferred classification alongside source-derived content, so it may not be labelled wholly observed. It was previously source_observed.",
     "revision": "2"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: derived` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take requirement for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified.",
+    "revision": "3"
    }
   ],
   "safety_allocation": {
    "asil": "ASIL_D",
    "mitigation": "Independent SBC, feedback monitoring, watchdog",
    "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "src/app/driver/contactor/contactor.c:125-163 (CONT_CheckFeedback) for the auxiliary-contact feedback the < 2 ms figure is about; src/app/driver/sbc/fs8x_driver/sbc_fs8x.c:160-182 (FS8x_WD_Refresh) for the driver-side watchdog refresh; and FB2-SRC-HW-000001 - an Altium .SchDoc in the separate foxBMS2_hw repository, absent here, content hash 'unresolved'.",
+    "what_it_supports": "That the pinned firmware confirms contactor feedback and that the SBC driver is supervised by a watchdog, so actuation and feedback are real subjects for a hardware requirement. It supports NOTHING about the controlled slew rate or the < 2 ms latency: neither figure is derived from or checked against anything in this repository, and the slew rate is a property of a board this corpus cannot read."
+   },
+   "misreading_warning": "A reader who sees a hardware requirement at ASIL_D with a < 2 ms feedback-latency figure and a mapping to ISO 26262 Part 5 Clause 7 with status `mapped` will conclude the contactor actuation and feedback timing is a characterised, verified hardware property. The latency figure is unsourced, the schematic is in a repository this corpus cannot read, and no timing measurement exists.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "foxBMS 2 publishes no hardware safety requirements. The contactor driver board is documented in an Altium design file in a separate repository, and this record was written by this corpus from the driver and feedback code the pinned firmware runs."
   },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
@@ -449,19 +464,23 @@
    {
     "rationale": "Hardware safety requirements",
     "reference": "Part 5, Clause 7",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the record was written from the clause's concept ('hardware safety requirements'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "Hardware requirements and architecture",
     "reference": "HWE.1, HWE.2",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('hardware requirements and architecture'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "mapped"
    }
   ],
   "statement": "The SBC (FS85xx) shall drive contactor coils with controlled slew rate and monitor auxiliary feedback contacts with < 2 ms latency.",
   "title": "TSR: Contactor Driver and Feedback",
-  "updated_at": "2026-10-02T00:02:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -489,7 +508,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "16aa13c26ab94e2c2941bb450ffd206afa7c799e4eafcc9b7f60eafd1799be30",
+  "_record_sha256_at_signing": "a334724778fbf5837cdd0149f28227db941e60a5a74c9b8b7339a5bb446caac9",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -518,6 +537,6 @@
   "production_authorized": false,
   "profile": "as_is",
   "record_id": "FB2-HW-TSR-000003",
-  "revision": "2"
+  "revision": "3"
  }
 }

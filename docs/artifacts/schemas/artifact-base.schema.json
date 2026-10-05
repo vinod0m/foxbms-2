@@ -2,8 +2,63 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://foxbms2.softwaredevlabs.org/schemas/artifact-base.schema.json",
   "title": "Artifact Base Schema",
-  "description": "Base schema for all engineering artifacts in the foxBMS 2 lifecycle corpus",
+  "description": "Base schema for all engineering artifacts in the foxBMS 2 lifecycle corpus. Carries two declarative requirements that exist because a reader skimming `artifact_type` and `standards_mappings` would otherwise get a correct-looking wrong answer. The first is `safety_class_disclaimer`, required of every safety-class record (the `allOf` branch at the end of this file) so that 'this is not something foxBMS 2 published' is stated in the same declarative fields as everything else rather than being inferable only from `origin` and revision prose. The second is `standards_mappings[].relationship`, required of every mapping, so that a clause this record was DERIVED FROM cannot be read as a clause this record CONFORMS TO. `status` cannot carry that distinction: both read `mapped`.",
   "type": "object",
+  "allOf": [
+    {
+      "$comment": "SAFETY-CLASS, BRANCH 1 of 2: the record's own artifact_type is one of the four safety artefact types. Every record whose type is safety_goal, hazard, functional_safety_requirement or safety_concept is safety-class, whatever its profile.",
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "enum": [
+              "safety_goal",
+              "hazard",
+              "functional_safety_requirement",
+              "safety_concept"
+            ]
+          }
+        },
+        "required": [
+          "artifact_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "safety_class_disclaimer"
+        ]
+      }
+    },
+    {
+      "$comment": "SAFETY-CLASS, BRANCH 2 of 2: the record is a `requirement` ALLOCATED TO a safety goal. The four named types are the safety artefacts by name, but the requirements that hang off a safety goal are safety artefacts in substance while carrying the generic type `requirement` - the FSRs, and the TSRs and SWRs a technical safety concept allocates the goal to. Keying only on artifact_type would have left every one of them outside this requirement, and they are exactly the records a reader skims for an ISO 26262 mapping and reads as conformant hardware and software safety requirements. The branch keys on the allocation reference rather than on the record's own type, so it does not sweep in the requirements that carry `safety_goal_ref: \"not_applicable\"` or any other non-reference value: only a value that actually names a safety goal counts, which is what the pattern requires.",
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "const": "requirement"
+          },
+          "safety_allocation": {
+            "properties": {
+              "safety_goal_ref": {
+                "type": "string",
+                "pattern": "^FB2-SAF-SGO-[0-9]{6}$"
+              }
+            },
+            "required": [
+              "safety_goal_ref"
+            ]
+          }
+        },
+        "required": [
+          "artifact_type",
+          "safety_allocation"
+        ]
+      },
+      "then": {
+        "required": [
+          "safety_class_disclaimer"
+        ]
+      }
+    }
+  ],
   "$defs": {
     "revision_history_item": {
       "type": "object",
@@ -29,6 +84,16 @@
           "type": "string"
         }
       }
+    },
+    "standards_mapping_relationship": {
+      "type": "string",
+      "enum": [
+        "derivation_basis",
+        "conforms_to",
+        "referenced_only",
+        "unclassifiable"
+      ],
+      "description": "WHAT THE CLAUSE IS TO THIS RECORD. Required on every standards_mappings entry, and the reason it is required is that `status` cannot carry this. `status: mapped` answers 'is the disposition of this mapping MAPPED, PARTIALLY_MAPPED, UNVERIFIED, NOT_APPLICABLE or GAP' - a question about the MAPPING. It does not answer 'what is the relationship between this record and this clause', and the two questions have different answers for almost every entry: a record derived FROM a clause's concept is mapped, and so is a record that merely NAMES the clause, and a reader who sees only `status: mapped` cannot tell which. Reading the first as the second is the specific misreading this field exists to prevent. - `derivation_basis`: the record was derived FROM the standard's concept. The clause is the intellectual source of the content; the record could not have been written without it. - `conforms_to`: the record claims to satisfy the clause. A conformance claim is a strong assertion about a real item and a real assessment, and NOTHING in this corpus is entitled to make one: no ISO 26262 clause has been audited against any record here, no assessment report exists, and no third party has verified anything. The value is declared representable so that a future conformance claim is an explicit, greppable assertion rather than an implicit one - and so that the corpus can assert today that zero entries carry it. - `referenced_only`: the clause is named. The record draws nothing from the clause's content and claims nothing about it; the reference records where an obligation or a topic is addressed elsewhere, or names a boundary. - `unclassifiable`: the record's own rationale does not determine which of the three it is. Used instead of defaulting to whichever value sounds weakest, and REQUIRES `relationship_note` saying why. Silence here would be a guess presented as a finding."
     },
     "standards_mapping": {
       "type": "object",
@@ -59,6 +124,54 @@
           "type": "string"
         }
       }
+    },
+    "safety_class_disclaimer": {
+      "type": "object",
+      "description": "The four fields a safety-class record must carry so that its honesty is legible from the record's own face rather than only from `origin` plus revision prose. A reader who skims `artifact_type` and `standards_mappings` will otherwise read a safety_goal as a safety goal that foxBMS 2 published, and an ISO 26262 mapping on a record as a claim of conformity. Neither is true and both are the natural reading. These fields put the correction where the misreading happens.",
+      "required": [
+        "not_a_project_published_artefact",
+        "not_a_project_published_artefact_reason",
+        "misreading_warning",
+        "derivation_basis"
+      ],
+      "properties": {
+        "not_a_project_published_artefact": {
+          "const": true,
+          "description": "Asserts that the foxBMS 2 project did not publish this artefact. `const: true` rather than a boolean, because the only value that carries information here is `true`; a record able to state `false` could state a safety goal the project published, and no such artefact exists to describe."
+        },
+        "not_a_project_published_artefact_reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "WHY it is not published, stated specifically for THIS record. Not 'because it is synthetic' and not boilerplate: what this record's author actually did, and what the project did not do."
+        },
+        "misreading_warning": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One sentence naming the specific wrong conclusion a reader could draw from this record, and why that conclusion is wrong. The failure mode this prevents is not vagueness but a correct-looking wrong answer, so the field has to name the wrong answer."
+        },
+        "derivation_basis": {
+          "type": "object",
+          "description": "What the derivation actually rests on, so a grader can check fidelity instead of taking the record's word for it.",
+          "required": [
+            "locator",
+            "what_it_supports"
+          ],
+          "properties": {
+            "locator": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The source sentence or file:line range the derivation rests on. For a record derived from real code this is a file and line range at the pinned commit; for one derived from a document it is the document anchor; for one derived from this corpus's own reference project it names that, because there is no external source to point at."
+            },
+            "what_it_supports": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Which claim in this record the locator supports, and what it does NOT support. A locator that supports the whole record over-claims; a record whose basis is a reconstruction has no source sentence at all, and saying so is the honest entry."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
   },
   "properties": {
@@ -160,9 +273,13 @@
     },
     "standards_mappings": {
       "type": "array",
+      "description": "Clause/process/practice mappings. Every entry must name its own RELATIONSHIP as well as its disposition. See $defs/standards_mapping_relationship for why `status` cannot carry it: `status` describes the mapping, and a record that merely names a clause and a record derived from that clause's concept are both `mapped`, so a reader of `status` alone cannot tell the two apart. The two of them being indistinguishable is the defect this requirement removes.",
       "items": {
         "type": "object",
         "additionalProperties": true,
+        "required": [
+          "relationship"
+        ],
         "anyOf": [
           {
             "required": [
@@ -178,6 +295,35 @@
             "required": [
               "process"
             ]
+          }
+        ],
+        "properties": {
+          "relationship": {
+            "$ref": "#/$defs/standards_mapping_relationship"
+          },
+          "relationship_note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Required when relationship is `unclassifiable`, and the reason the record's own rationale does not determine the relationship. Also the place a reader looks to see WHY a `derivation_basis` or `referenced_only` entry is what it is, so it is worth populating whenever there is something true to say."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "relationship": {
+                  "const": "unclassifiable"
+                }
+              },
+              "required": [
+                "relationship"
+              ]
+            },
+            "then": {
+              "required": [
+                "relationship_note"
+              ]
+            }
           }
         ]
       }

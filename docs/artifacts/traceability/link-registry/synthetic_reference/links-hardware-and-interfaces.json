@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0.0",
- "updated_at": "2026-10-01T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "links": [
   {
    "link_id": "FB2-LNK-HW-000001",
@@ -143,7 +143,7 @@
    "source_id": "FB2-SW-IFS-000004",
    "source_revision": "1",
    "target_id": "FB2-SW-IMP-000004",
-   "target_revision": "1",
+   "target_revision": "2",
    "relation_type": "refines",
    "profile": "synthetic_reference",
    "scenario_id": "SCN-BASELINE",
@@ -154,7 +154,25 @@
    "rationale": "The CAN implementation record maps the transport to named symbols in the pinned source. FB2-SW-IFS-000004 adds what that mapping cannot carry: that the identifier argument is deliberately not range-checked, that a full transmit mailbox causes the queue pump to discard the frame in a branch whose body is empty, and that interrupts are masked around the message-box search. It refines the implementation record because the implementation record is the coarser statement of what this boundary does.",
    "provenance": "derived",
    "review_state": "pending",
-   "change_suspect_status": false
+   "change_suspect_status": true,
+   "provenance_repair": {
+    "endpoint_revision_refreshes": [
+     {
+      "endpoint_role": "target",
+      "endpoint_id": "FB2-SW-IMP-000004",
+      "previous_revision": "1",
+      "current_revision": "2",
+      "basis": "endpoint_artifact_revision_is_2",
+      "cause_class": "pinned_source_verification_granularity_split",
+      "change_record_id": null,
+      "session": "opencode-2026-10-05-pinned-source-parts-migration",
+      "date": "2026-10-05T00:00:00Z",
+      "attribution": "The endpoint record was revised to split verified_against_pinned_source into the four checks it stood for (FB2-REV-FND-000173) and, for FB2-SW-IMP-000001, to add the code location its AFE-IMP-PUBLISH citation resolves to. No engineering content of the endpoint changed: no path, symbol, line range, content hash, symbol role, behaviour or description was altered. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+     }
+    ],
+    "session": "opencode-2026-10-05-pinned-source-parts-migration",
+    "date": "2026-10-05T00:00:00Z"
+   }
   },
   {
    "link_id": "FB2-LNK-SIR-000020",

@@ -162,14 +162,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 10381,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 11381,
   "record_path": "docs/artifacts/corpus/synthetic_reference/verification/test-syr-000001-integrity-and-data-age.json",
-  "record_sha256": "7c639cc511554db9b57a9e42e3160cc3cae39c1ee005cfaf109368e6a0ea6743",
+  "record_sha256": "c3e1e920c5e30051869744434bfb3a579ff477795122421bcd7641c0b70657bf",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "37de0f982acf81591d9dc8da52e5df212353b1e9fc8a8177aa0567111c2178f0"
+  "verbatim_block_sha256": "3f556a154ec89877850f420b365b5e4fb8aedebaa5501e0e05e334151277cc90"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -352,12 +352,16 @@
    {
     "rationale": "This measure is the verification the system requirement states as needed. Its oracle is declared and distinguishable and its execution status is declared; neither constitutes evidence that the requirement is met.",
     "reference": "SYS.4 (system integration testing) and SYS.5 (system verification)",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('neither constitutes evidence that the requirement is met'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ASPICE_PAM_41",
     "status": "partially_mapped"
    },
    {
     "rationale": "Verification of the system requirement as written, against its own acceptance criteria. The requirement carries a reconstructed ASIL allocation in the reference project; this measure verifies the requirement's behaviour and asserts nothing about whether that allocation is correct.",
     "reference": "Part 4, Clause 9 (system verification)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('verification of the system requirement as written'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "partially_mapped"
    }
@@ -441,7 +445,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "7c639cc511554db9b57a9e42e3160cc3cae39c1ee005cfaf109368e6a0ea6743",
+  "_record_sha256_at_signing": "c3e1e920c5e30051869744434bfb3a579ff477795122421bcd7641c0b70657bf",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",

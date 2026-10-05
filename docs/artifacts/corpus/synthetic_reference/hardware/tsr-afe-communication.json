@@ -1,6 +1,6 @@
 {
  "id": "FB2-HW-TSR-000002",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "hardware",
@@ -28,15 +28,28 @@
    "standard_id": "ISO_26262_2018",
    "reference": "Part 5, Clause 7",
    "status": "mapped",
-   "rationale": "Hardware safety requirements"
+   "relationship": "derivation_basis",
+   "rationale": "Hardware safety requirements",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('hardware safety requirements'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "HWE.1, HWE.2",
    "status": "mapped",
-   "rationale": "Hardware requirements and architecture"
+   "relationship": "derivation_basis",
+   "rationale": "Hardware requirements and architecture",
+   "relationship_note": "The rationale states the derivation explicitly ('hardware requirements and architecture'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is the reference project's interface-integrity requirement, written by this corpus. The interface is documented in an Altium file in a separate repository.",
+  "misreading_warning": "A reader who sees an ASIL_D hardware requirement with BER < 10^-9 and a 5 ms detection figure mapped to ISO 26262 Part 5 Clause 7 with status `mapped` will conclude the interface's error performance is characterised and verified. No bit-error measurement exists in this corpus, the 5 ms figure is unsourced, and framing a message in code is not a measurement of its error rate.",
+  "derivation_basis": {
+   "locator": "src/app/driver/can/cbs/tx-cyclic/can_cbs_tx_f_cell-voltages.c:238-305 (CANTX_CellVoltages) and src/app/driver/can/cbs/rx/can_cbs_rx_afe_cell-voltages.c:155-182 (CANRX_CellVoltages) for the frames that cross the interface; FB2-SRC-HW-000003 - an Altium .SchDoc in the separate foxBMS2_hw repository, absent here, content_hash 'unresolved'. Pinned commit 308028fb13d046ba29b98886895c2e17937b1437.",
+   "what_it_supports": "That the pinned firmware exchanges cell voltages across the interface, so integrity and failure detection are real subjects. It supports nothing about the BER, the 5 ms, or the ASIL allocation."
+  }
+ },
  "lifecycle_status": "baselined",
  "automated_review_status": {
   "schema_valid": true,
@@ -49,13 +62,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "hw_engineer",
    "description": "Synthetic TSR with timing budget allocation"
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified."
   }
  ],
  "statement": "The isoSPI interface shall provide communication with BER < 10^-9 and detect communication failures within 5 ms.",

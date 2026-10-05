@@ -1,6 +1,6 @@
 {
  "id": "FB2-SW-SWR-000002",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "software",
@@ -28,15 +28,28 @@
    "standard_id": "ISO_26262_2018",
    "reference": "Part 6, Clause 7",
    "status": "mapped",
-   "rationale": "Software safety requirements"
+   "relationship": "derivation_basis",
+   "rationale": "Software safety requirements",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('software safety requirements'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "SWE.1, SWE.2",
    "status": "mapped",
-   "rationale": "Software requirements and architecture"
+   "relationship": "derivation_basis",
+   "rationale": "Software requirements and architecture",
+   "relationship_note": "The rationale states the derivation explicitly ('software requirements and architecture'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is the reference project's software limit-monitoring requirement, written by this corpus. foxBMS 2 published no software safety requirement and allocated no ASIL.",
+  "misreading_warning": "A reader who sees an ASIL_D software safety requirement specifying a 2-of-100 ms debounce and explicit 2.5V/4.2V limits mapped to ISO 26262 Part 6 Clause 7 with status `mapped` will conclude these are reviewed, allocated, verified safety parameters. They are fictional; the voltage limits come from FB2-ASM-001, a declared assumption about cell chemistry; and the debounce counts configured in the real source are what the as_is profile records as contradicting the goal's FTTI.",
+  "derivation_basis": {
+   "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) for the limit comparison this requirement obliges, with src/app/application/soa/soa.c:271-351 (SOA_CheckCurrent) and src/app/application/soa/soa.c:148-269 (SOA_CheckTemperatures); src/app/engine/diag/diag.c:341-475 (DIAG_Handler) for the debounce the reaction waits on; src/app/engine/diag/cbs/diag_cbs_voltage.c:72-194 (DIAG_ErrorOvervoltage) for the over-voltage diagnostic. The 2.5V/4.2V limits are FB2-ASM-001, not the source. Pinned commit 308028fb13d046ba29b98886895c2e17937b1437.",
+   "what_it_supports": "That the pinned source compares against configured limits and debounces before escalating - the behaviour this requirement obliges. It supports nothing about the specific limits, the debounce parameters, the classification budget, or the ASIL."
+  }
+ },
  "lifecycle_status": "baselined",
  "automated_review_status": {
   "schema_valid": true,
@@ -49,13 +62,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "sw_engineer",
    "description": "Synthetic SWR with debounce rationale"
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified."
   }
  ],
  "statement": "The SOA module shall read cell voltages from database and compare against configured minimum (2.5V) and maximum (4.2V) limits with a debounce of 2 consecutive violations within 100 ms, and classify violations within 5 ms of data availability, triggering FAULT state request on confirmed violation.",

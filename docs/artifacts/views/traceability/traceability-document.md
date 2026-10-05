@@ -1,6 +1,6 @@
 # Traceability — the corpus traceability document (generated)
 
-Generated: 2026-10-04T03:41:39Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
+Generated: 2026-10-05T13:19:46Z | Baseline: BAS-REF-001 | 323 artifacts, 599 links
 
 ## Provenance and status of this file
 
@@ -29,7 +29,7 @@ This is the traceability document for the foxBMS 2 lifecycle artifact corpus. It
 
 It reports three different populations and does not merge them:
 
-- **321 artifacts, 585 links** — records and links in the tool's index, the population every count below is drawn from.
+- **323 artifacts, 599 links** — records and links in the tool's index, the population every count below is drawn from.
 - Records that exist in both profiles appear once per profile. The same identifier in `as_is` and in `synthetic_reference` is two different records by design, and are counted separately.
 - A coverage ratio is a ratio, not a score. Where the denominator is a target rather than a population, the table says so in its own column.
 
@@ -61,7 +61,7 @@ Computed from the artifact index at render time.
 | `project_plan` | 0 | 1 | 1 |
 | `qualification_test_plan` | 0 | 1 | 1 |
 | `requirement` | 9 | 31 | 40 |
-| `review` | 6 | 12 | 18 |
+| `review` | 7 | 13 | 20 |
 | `risk_register` | 0 | 1 | 1 |
 | `safety_analysis` | 0 | 4 | 4 |
 | `safety_case` | 0 | 1 | 1 |
@@ -76,9 +76,9 @@ Computed from the artifact index at render time.
 | `use_case` | 0 | 4 | 4 |
 | `verification_deficiency_register` | 0 | 1 | 1 |
 | `verification_summary` | 0 | 1 | 1 |
-| **Total** | 92 | 229 | 321 |
+| **Total** | 93 | 230 | 323 |
 
-321 records carry an `id` and are therefore countable. Registry container files (parameter and assumption registries) carry no top-level `id` and are counted separately below; they are not lifecycle artifacts.
+323 records carry an `id` and are therefore countable. Registry container files (parameter and assumption registries) carry no top-level `id` and are counted separately below; they are not lifecycle artifacts.
 
 ### Non-record registries
 
@@ -95,7 +95,7 @@ Counted from the index. This is the population-wide position of the four guard f
 
 | `human_approval_status` | `production_authorized` | `product_verification_credit` | Records |
 |---|---|---|---|
-| pending | false | false | 321 |
+| pending | false | false | 323 |
 
 
 No record in this corpus carries a human approval: 0 records are in any state other than `pending`. No record is authorized for production: 0 records are in any state other than `false`. Automated review performed by this toolchain is not organizational independence and is not a human confirmation. Nothing in this document can change those two numbers.
@@ -118,23 +118,23 @@ Computed from the canonical link registries at render time.
 | `mitigates` | 1 | 2 | 3 |
 | `refines` | 9 | 42 | 51 |
 | `result_of` | 5 | 28 | 33 |
-| `reviewed_by` | 82 | 179 | 261 |
+| `reviewed_by` | 92 | 183 | 275 |
 | `specified_by` | 0 | 15 | 15 |
 | `supports` | 0 | 30 | 30 |
 | `validates` | 0 | 15 | 15 |
 | `verifies` | 12 | 52 | 64 |
-| **Total** | 128 | 457 | 585 |
+| **Total** | 138 | 461 | 599 |
 
 Link metadata completeness, counted over the same links:
 
 | Link field | Links carrying it | Links total | Share |
 |---|---|---|---|
-| `rationale` | 585 | 585 | 100% |
-| `provenance` | 585 | 585 | 100% |
-| `review_state` | 585 | 585 | 100% |
-| `change_suspect_status` | 585 | 585 | 100% |
+| `rationale` | 599 | 599 | 100% |
+| `provenance` | 599 | 599 | 100% |
+| `review_state` | 599 | 599 | 100% |
+| `change_suspect_status` | 599 | 599 | 100% |
 
-344 links are marked change-suspect and 133 links are not in `review_state: reviewed`. Neither number is a defect count: both are the state the registries record.
+374 links are marked change-suspect and 133 links are not in `review_state: reviewed`. Neither number is a defect count: both are the state the registries record.
 
 ## Verification reachability
 
@@ -183,18 +183,18 @@ Recomputed by the same function `corpus.py coverage` prints, at render time. Not
 | `scope_accounting` | 1/1 | **presence** | source/feature/variant inventories present — 1 if the source inventory file carries a claimed file count; it does not compare that claim against the tree, which acceptance gate [2/8] inventory does |
 | `artifact_population` | 13/13 | **measured** | families populated: ['change', 'design', 'deviation', 'execution', 'hazard', 'requirement', 'review', 'safety_analysis', 'safety_case', 'safety_goal'… — artifact families that hold at least one record |
 | `standards_mapping` | 38/38 | **measured** | 38/38 standards entries are backed by an artefact that exists in the index. ASPICE: 28/28 applicable processes backed, 4 declared not_applicable; ISO… — ASPICE processes and ISO 26262 parts whose coverage-plan text names at least one FB2- id that RESOLVES against the artifact index or the source registry. It is a measure of entries that are BACKED BY AN ARTEFACT THAT EXISTS, not a count of plan entries and not a count of satisfied mappings; entries declaring not_applicable are out of the denominator and named in the detail, and entries that claim a disposition while naming nothing that exists are counted as unbacked. Read the disposition tally in the detail for the ASPICE/ISO split |
-| `source_grounding` | 131/321 | **measured** | artifacts with source_refs (130 anchors available) — records carrying at least one `source_refs` entry |
-| `traceability_integrity` | 585/585 | **measured** | 585 links, 0 dangling (link validation re-run for this figure) — links that are not dangling, from a link validation re-run for this figure |
-| `semantic_consistency_checks` | 21/21 | **measured** | 21 of 21 declared semantic rules evaluated on this run; 21 of them are declared, 0 are executed but undeclared, 0 are declared but did not execute. M… — semantic rules _validate_semantic_rules actually EVALUATED this run, counted by the recorder each rule block fills in on entry, over the rules SEMANTIC_RULE_IDS declares. Computed, not declared: the previous figure was the literal 10/10 against a function that evaluates 21 rules |
-| `automated_review_coverage` | 172/282 | **measured** | 172/282 artifacts covered by 18 review records; reviewed_by links consistent with reviewed_ids — unique indexed ids covered by a review record or a `reviewed_by` link; the two sources are unioned, and whether they AGREE is reported separately because the ratio does not move when one is deleted |
-| `verification_planning` | 33/7 | **measured** | 33 test measures for 7 FSRs — test measures per safety requirement; a ratio, not a score, and over 100% means over-covered |
+| `source_grounding` | 131/323 | **measured** | artifacts with source_refs (130 anchors available) — records carrying at least one `source_refs` entry |
+| `traceability_integrity` | 599/599 | **measured** | 599 links, 0 dangling (link validation re-run for this figure) — links that are not dangling, from a link validation re-run for this figure |
+| `semantic_consistency_checks` | 24/24 | **measured** | 24 of 24 declared semantic rules evaluated on this run; 24 of them are declared, 0 are executed but undeclared, 0 are declared but did not execute. M… — semantic rules _validate_semantic_rules actually EVALUATED this run, counted by the recorder each rule block fills in on entry, over the rules SEMANTIC_RULE_IDS declares. Computed, not declared: the previous figure was the literal 10/10 against a function that evaluates 21 rules |
+| `automated_review_coverage` | 182/284 | **measured** | 182/284 artifacts covered by 20 review records; reviewed_by links consistent with reviewed_ids — unique indexed ids covered by a review record or a `reviewed_by` link; the two sources are unioned, and whether they AGREE is reported separately because the ratio does not move when one is deleted |
+| `verification_planning` | 33/7 | **measured** | 33 test measures for 7 FSRs. THE RATIO IS NOT A COVERAGE RATIO: the numerator counts records whose id carries -TMS- and the denominator counts record… — records whose id carries -TMS- over records whose id carries -FSR-. NOT a coverage ratio: the two are disjoint populations, so the figure does not mean measures per requirement and over-100% is not over-coverage. The detail names what each number counts and reports the measured requirements-with-a-linked-measure and measures-verifying-a-requirement beside them |
 | `actual_product_evidence` | 0/33 | **measured** | 0 target-hardware executions: execution_kind can now express a run on the product's own hardware, but none has been performed (blocked, not fabricate… — test measures backed by an execution whose `execution_kind` names the product's own hardware |
-| `synthetic_fixture_coverage` | 12/13 | **measured** | 12/13 artefact families hold at least one synthetic_reference record; 229 synthetic_reference records in total (a count, not the numerator). families… — artefact families holding at least one `synthetic_reference` record, over the families the corpus defines; the record count is reported in the detail as a count. Not a ratio against a typed-in target |
+| `synthetic_fixture_coverage` | 12/13 | **measured** | 12/13 artefact families hold at least one synthetic_reference record; 230 synthetic_reference records in total (a count, not the numerator). families… — artefact families holding at least one `synthetic_reference` record, over the families the corpus defines; the record count is reported in the detail as a count. Not a ratio against a typed-in target |
 | `negative_scenario_validation` | 20/20 | **measured** | 20/20 mutations passed (executed and detected by their own declared rule); 3/3 change lifecycles — mutation scenarios that PASS when executed: the rule each declares is implemented, is silent on the unmutated corpus, and produces a finding the baseline did not contain |
 | `final_status` | `synthetic_ready_with_limitations` | — | recorded status |
 | `export_reproducibility` | 1/1 | **measured** | 3 exported file(s) hashed identically across two independent exports into separate temporary directories; measured here, not read from docs/artifacts… — 1 if exporting the corpus into two separate temporary directories yields identical content hashes for every declared file; measured in this dimension rather than read from exports/manifest.json, which the acceptance suite creates moments before this runs |
-| `human_approval` | 0/321 | **measured** | 0 of 321 records carry a properly evidenced human approval -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carry human_ap… — records whose human_approval_status carries a human decision AND whose approval_evidence.human_approval carries all six required elements (named individual, declared role, independence evidence against owner_role and the current-revision author, ISO-8601 date, a review-packet digest chain resolved against a packet on disk whose own recorded record digest matches, and a revision_history entry citing it), over every record. Was the literal {"numerator": 0}, which read 0/321 before any signature existed and would have read 0/321 after three hundred. Computed by the same predicate the `human_approval_rejected` rule enforces, so the figure cannot exceed what the gate permits |
-| `production_authorization` | 0/321 | **measured** | 0 of 321 records carry a properly evidenced production authorization -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 321 of 321 records carr… — the same computation over production_authorized, with the bar STRICTLY HIGHER: the approving role must be one this corpus grants production authority to and the record's family must be one human approval is required for. Was the literal {"numerator": 0}. Enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
+| `human_approval` | 0/323 | **measured** | 0 of 323 records carry a properly evidenced human approval -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 323 of 323 records carry human_ap… — records whose human_approval_status carries a human decision AND whose approval_evidence.human_approval carries all six required elements (named individual, declared role, independence evidence against owner_role and the current-revision author, ISO-8601 date, a review-packet digest chain resolved against a packet on disk whose own recorded record digest matches, and a revision_history entry citing it), over every record. Was the literal {"numerator": 0}, which read 0/321 before any signature existed and would have read 0/321 after three hundred. Computed by the same predicate the `human_approval_rejected` rule enforces, so the figure cannot exceed what the gate permits |
+| `production_authorization` | 0/323 | **measured** | 0 of 323 records carry a properly evidenced production authorization -- the numerator is 0 because NOTHING HAS BEEN APPROVED: 323 of 323 records carr… — the same computation over production_authorized, with the bar STRICTLY HIGHER: the approving role must be one this corpus grants production authority to and the record's family must be one human approval is required for. Was the literal {"numerator": 0}. Enforced by the `production_authorized_rejected` rule and by acceptance gate [7/8] |
 
 
 ## Negative-scenario validation

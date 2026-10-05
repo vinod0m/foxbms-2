@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "updated_at": "2026-10-04T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "links": [
     {
       "link_id": "FB2-LNK-IFS-000008",
@@ -527,9 +527,9 @@
     {
       "link_id": "FB2-LNK-REVC-000001",
       "source_id": "FB2-REV-000020",
-      "source_revision": "1",
+      "source_revision": "2",
       "target_id": "FB2-SW-IMP-000001",
-      "target_revision": "1",
+      "target_revision": "2",
       "relation_type": "reviewed_by",
       "profile": "synthetic_reference",
       "scenario_id": "SCN-BASELINE",
@@ -540,14 +540,44 @@
       "rationale": "FB2-REV-000020 reviewed FB2-SW-IMP-000001 at revision 1 in the synthetic_reference profile and enumerates it in reviewed_ids with the sha256 of the artifact's bytes at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The link exists because the coverage dimension takes the UNION of reviewed_ids and reviewed_by links and gate [3/8] asserts the two sources name the same set; a review record that named records without links would leave that assertion false.",
       "provenance": "derived",
       "review_state": "reviewed",
-      "change_suspect_status": false
+      "change_suspect_status": true,
+      "provenance_repair": {
+        "endpoint_revision_refreshes": [
+          {
+            "endpoint_role": "target",
+            "endpoint_id": "FB2-SW-IMP-000001",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "pinned_source_verification_granularity_split",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-pinned-source-parts-migration",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint record was revised to split verified_against_pinned_source into the four checks it stood for (FB2-REV-FND-000173) and, for FB2-SW-IMP-000001, to add the code location its AFE-IMP-PUBLISH citation resolves to. No engineering content of the endpoint changed: no path, symbol, line range, content hash, symbol role, behaviour or description was altered. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000020",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "review_record_digest_rederivation_after_owner_revision",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-review-digest-rederivation",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint review record was revised to re-derive its recorded digests after the owner revised the fourteen implementation records it covers, and to record what the new behaviour-citation and pinned-part controls found. Its findings and dispositions are unchanged or extended; no reviewed artifact's engineering content was touched. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          }
+        ],
+        "session": "opencode-2026-10-05-pinned-source-parts-migration",
+        "date": "2026-10-05T00:00:00Z"
+      }
     },
     {
       "link_id": "FB2-LNK-REVC-000002",
       "source_id": "FB2-REV-000020",
-      "source_revision": "1",
+      "source_revision": "2",
       "target_id": "FB2-SW-IMP-000004",
-      "target_revision": "1",
+      "target_revision": "2",
       "relation_type": "reviewed_by",
       "profile": "synthetic_reference",
       "scenario_id": "SCN-BASELINE",
@@ -558,14 +588,44 @@
       "rationale": "FB2-REV-000020 reviewed FB2-SW-IMP-000004 at revision 1 in the synthetic_reference profile and enumerates it in reviewed_ids with the sha256 of the artifact's bytes at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The link exists because the coverage dimension takes the UNION of reviewed_ids and reviewed_by links and gate [3/8] asserts the two sources name the same set; a review record that named records without links would leave that assertion false.",
       "provenance": "derived",
       "review_state": "reviewed",
-      "change_suspect_status": false
+      "change_suspect_status": true,
+      "provenance_repair": {
+        "endpoint_revision_refreshes": [
+          {
+            "endpoint_role": "target",
+            "endpoint_id": "FB2-SW-IMP-000004",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "pinned_source_verification_granularity_split",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-pinned-source-parts-migration",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint record was revised to split verified_against_pinned_source into the four checks it stood for (FB2-REV-FND-000173) and, for FB2-SW-IMP-000001, to add the code location its AFE-IMP-PUBLISH citation resolves to. No engineering content of the endpoint changed: no path, symbol, line range, content hash, symbol role, behaviour or description was altered. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000020",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "review_record_digest_rederivation_after_owner_revision",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-review-digest-rederivation",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint review record was revised to re-derive its recorded digests after the owner revised the fourteen implementation records it covers, and to record what the new behaviour-citation and pinned-part controls found. Its findings and dispositions are unchanged or extended; no reviewed artifact's engineering content was touched. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          }
+        ],
+        "session": "opencode-2026-10-05-pinned-source-parts-migration",
+        "date": "2026-10-05T00:00:00Z"
+      }
     },
     {
       "link_id": "FB2-LNK-REVC-000003",
       "source_id": "FB2-REV-000020",
-      "source_revision": "1",
+      "source_revision": "2",
       "target_id": "FB2-SW-IMP-000003",
-      "target_revision": "1",
+      "target_revision": "2",
       "relation_type": "reviewed_by",
       "profile": "synthetic_reference",
       "scenario_id": "SCN-BASELINE",
@@ -576,14 +636,44 @@
       "rationale": "FB2-REV-000020 reviewed FB2-SW-IMP-000003 at revision 1 in the synthetic_reference profile and enumerates it in reviewed_ids with the sha256 of the artifact's bytes at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The link exists because the coverage dimension takes the UNION of reviewed_ids and reviewed_by links and gate [3/8] asserts the two sources name the same set; a review record that named records without links would leave that assertion false.",
       "provenance": "derived",
       "review_state": "reviewed",
-      "change_suspect_status": false
+      "change_suspect_status": true,
+      "provenance_repair": {
+        "endpoint_revision_refreshes": [
+          {
+            "endpoint_role": "target",
+            "endpoint_id": "FB2-SW-IMP-000003",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "pinned_source_verification_granularity_split",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-pinned-source-parts-migration",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint record was revised to split verified_against_pinned_source into the four checks it stood for (FB2-REV-FND-000173) and, for FB2-SW-IMP-000001, to add the code location its AFE-IMP-PUBLISH citation resolves to. No engineering content of the endpoint changed: no path, symbol, line range, content hash, symbol role, behaviour or description was altered. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000020",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "review_record_digest_rederivation_after_owner_revision",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-review-digest-rederivation",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint review record was revised to re-derive its recorded digests after the owner revised the fourteen implementation records it covers, and to record what the new behaviour-citation and pinned-part controls found. Its findings and dispositions are unchanged or extended; no reviewed artifact's engineering content was touched. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          }
+        ],
+        "session": "opencode-2026-10-05-pinned-source-parts-migration",
+        "date": "2026-10-05T00:00:00Z"
+      }
     },
     {
       "link_id": "FB2-LNK-REVC-000004",
       "source_id": "FB2-REV-000020",
-      "source_revision": "1",
+      "source_revision": "2",
       "target_id": "FB2-SW-IMP-000002",
-      "target_revision": "1",
+      "target_revision": "2",
       "relation_type": "reviewed_by",
       "profile": "synthetic_reference",
       "scenario_id": "SCN-BASELINE",
@@ -594,7 +684,37 @@
       "rationale": "FB2-REV-000020 reviewed FB2-SW-IMP-000002 at revision 1 in the synthetic_reference profile and enumerates it in reviewed_ids with the sha256 of the artifact's bytes at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact. The link exists because the coverage dimension takes the UNION of reviewed_ids and reviewed_by links and gate [3/8] asserts the two sources name the same set; a review record that named records without links would leave that assertion false.",
       "provenance": "derived",
       "review_state": "reviewed",
-      "change_suspect_status": false
+      "change_suspect_status": true,
+      "provenance_repair": {
+        "endpoint_revision_refreshes": [
+          {
+            "endpoint_role": "target",
+            "endpoint_id": "FB2-SW-IMP-000002",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "pinned_source_verification_granularity_split",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-pinned-source-parts-migration",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint record was revised to split verified_against_pinned_source into the four checks it stood for (FB2-REV-FND-000173) and, for FB2-SW-IMP-000001, to add the code location its AFE-IMP-PUBLISH citation resolves to. No engineering content of the endpoint changed: no path, symbol, line range, content hash, symbol role, behaviour or description was altered. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          },
+          {
+            "endpoint_role": "source",
+            "endpoint_id": "FB2-REV-000020",
+            "previous_revision": "1",
+            "current_revision": "2",
+            "basis": "endpoint_artifact_revision_is_2",
+            "cause_class": "review_record_digest_rederivation_after_owner_revision",
+            "change_record_id": null,
+            "session": "opencode-2026-10-05-review-digest-rederivation",
+            "date": "2026-10-05T00:00:00Z",
+            "attribution": "The endpoint review record was revised to re-derive its recorded digests after the owner revised the fourteen implementation records it covers, and to record what the new behaviour-citation and pinned-part controls found. Its findings and dispositions are unchanged or extended; no reviewed artifact's engineering content was touched. The link's relationship, rationale and review state are untouched and are NOT re-examined by this refresh, which is why the derived change_suspect_status becomes true."
+          }
+        ],
+        "session": "opencode-2026-10-05-pinned-source-parts-migration",
+        "date": "2026-10-05T00:00:00Z"
+      }
     }
   ]
 }

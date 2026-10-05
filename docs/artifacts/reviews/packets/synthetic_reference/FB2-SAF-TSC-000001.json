@@ -912,14 +912,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 48044,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 53437,
   "record_path": "docs/artifacts/corpus/synthetic_reference/safety/safety-concept-technical.json",
-  "record_sha256": "8cf3e4b1307fa7735ae4e9cef974cadf2eff3a9964cfe5e14dc5ab8f8a58780c",
+  "record_sha256": "27917daf92c42a199b036867d38fd832cd4c4eca558d3b7d3a787a298fbad0ef",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "7497267a2d3c19bd6f5751c745f9e99362c78eb62d1f144e18e4fc2201d99b00"
+  "verbatim_block_sha256": "6559683a6a1cac2c9565f4594e036ac2a2e4588b4a709ddd41deab613ddda237"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -1409,7 +1409,7 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "provenance_note": "Provenance re-checked 2026-10-01 after the source-registry repair. This record's source_refs pointed at anchor(s) that named C symbols existing nowhere in the repository. Those anchors now name real, verified symbols and carry real content hashes. Origin remains synthetic, which already declared this content modelled rather than observed.",
-  "revision": "3",
+  "revision": "4",
   "revision_history": [
    {
     "author": "safety_engineer",
@@ -1428,8 +1428,23 @@
     "date": "2026-09-29T00:00:00Z",
     "description": "Regenerated as a dependent of findings FB2-REV-FND-000025 and FB2-REV-FND-000027. Two entries still described the pre-fix state: safety_strategies.fault_detection[AR-005].coverage_claim and diagnostic_coverage_assumptions[Independent hardware threshold monitor].claimed_coverage both carried the requirement's old unmeasurable disjunction ('all monitored cells, or a representative subset of at least 50%') and labelled it synthetic_assumption, and verification_and_validation_criteria[1] stated that FB2-SAF-SGO-000001 does not pass the FTTI check. All three now reflect the corrected records: the coverage claims state 100 percent of the main chain's monitored cell set as specified by FB2-HW-TSR-000004, and the V&V criterion records that both this concept and the safety goal pass at 100 ms exactly and names the tool that checks it. The coverage entries remain labelled synthetic_assumption and their justification_basis is unchanged, because the requirement being specified is not the same as the coverage being demonstrated and nothing in this corpus demonstrates it. No architectural element, allocation, safety strategy detection budget, reaction budget or diagnostic-coverage mechanism was changed.",
     "revision": "3"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: synthetic` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take safety_concept for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified.",
+    "revision": "4"
    }
   ],
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "The real system's contribution is the driver-side behaviour the allocation describes - principally src/app/driver/sbc/fs8x_driver/sbc_fs8x.c:160-182 (FS8x_WD_Refresh), the port-expander and SPI chip-select headers at src/app/driver/config/pex_cfg.h:73-97 and src/app/driver/spi/spi_cfg-helper.h:79-173, and the three Altium anchors FB2-SRC-HW-000001..000003 which are ABSENT from this repository and carry content_hash 'unresolved'. All at 308028fb13d046ba29b98886895c2e17937b1437. The ALLOCATION, the technical safety requirements, the FTTI budget and the coverage justifications are authored for the fictional project.",
+    "what_it_supports": "That the named drivers and headers exist in the real source and are subject to the hardware monitor the concept relies on. It supports NOTHING about the independence of that monitor - the concept itself names that the absence of a demonstration of independence is its largest open assumption - nor about the allocation, the budget arithmetic, or any diagnostic coverage figure, every one of which carries justification_basis synthetic_assumption or source_grounded rather than a measurement."
+   },
+   "misreading_warning": "A reader who sees artifact_type `safety_concept`, concept_stage `technical_safety_concept` and three ISO 26262 mappings with status `mapped` will conclude foxBMS 2 has a technical safety concept with a hardware/software allocation, technical safety requirements, a closed FTTI budget and justified diagnostic coverage. It has no such concept; this one is fictional, its diagnostic-coverage justifications are synthetic assumptions, and the mappings record which clause concepts it was built from rather than any satisfaction of them.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "foxBMS 2 has no technical safety concept, and this is not one. It is the technical safety concept of the fictional reference project, written to allocate that project's safety goal to hardware and software elements. Its own concept_identity carries fictional: true, and it inherits the absence of a real item definition: its three hardware anchors are Altium files in a separate repository this one cannot read."
+  },
   "safety_goals_addressed": [
    {
     "allocation_statement": "This concept realises the goal's objective for the five elements FB2-SAF-FSC-000001 allocated to it (AR-001 to AR-005) and leaves AR-006 with no part of it. Technically the objective is carried by FB2-HW-TSR-000001, FB2-HW-TSR-000002 and FB2-HW-TSR-000003 on the hardware side and FB2-SW-SWR-000001, FB2-SW-SWR-000002 and FB2-SW-SWR-000003 on the software side, plus FB2-HW-TSR-000004 as the independent hardware path. The ASIL of each of those records is stated in its own safety_allocation and is not restated as a uniform value here: the independent path is allocated ASIL B while the main path is allocated ASIL D, and that difference is the decomposition the ASIL D goal rests on.",
@@ -1586,24 +1601,32 @@
    {
     "rationale": "Hardware/software allocation, the technical safety requirements that follow from it, the timing budget and the diagnostic assumptions are what this clause asks for. Recorded as mapped for the conceptual role only; no clause text was consulted or reproduced.",
     "reference": "Part 4, Clause 7 (technical safety concept)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the record was written from the clause's concept ('are what this clause asks for'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "This concept consumes the allocation made in FB2-SAF-FSC-000001 and must stay consistent with it.",
     "reference": "Part 3, Clause 7 (functional safety concept)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('consumes the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "The independence argument for the hardware monitor is a Part 9 concern and is recorded here as an assumption rather than as an established result.",
     "reference": "Part 9, Clause 7 (freedom from interference)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('the independence argument for the hardware monitor is a part 9 concern'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "System architectural design with the hardware and software requirement analyses it allocates to.",
     "reference": "SYS.3, HWE.1, SWE.1",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('system architectural design'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "mapped"
    }
@@ -1688,7 +1711,7 @@
    }
   ],
   "title": "Technical Safety Concept: hardware/software allocation, technical safety requirements, timing budget and diagnostic-coverage assumptions for the cell-voltage safety goal",
-  "updated_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -1742,7 +1765,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "8cf3e4b1307fa7735ae4e9cef974cadf2eff3a9964cfe5e14dc5ab8f8a58780c",
+  "_record_sha256_at_signing": "27917daf92c42a199b036867d38fd832cd4c4eca558d3b7d3a787a298fbad0ef",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -1771,6 +1794,6 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "record_id": "FB2-SAF-TSC-000001",
-  "revision": "3"
+  "revision": "4"
  }
 }

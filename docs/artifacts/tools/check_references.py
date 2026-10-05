@@ -123,6 +123,39 @@ def artifact_index():
     return index
 
 
+def finding_index():
+    """finding_id -> (path, owning review id), from the findings review OUTPUT.
+
+    A finding is not an indexed artefact: it is nested inside the review record
+    that raised it, and the artifact index keys on the record's own `id`. So
+    before this existed, ANY record that carried a bare `FB2-REV-FND-...` string
+    in an id-shaped field was reported as dangling - including references to
+    findings that exist. That is the same class of error as reading a coverage
+    figure out of a report instead of the JSON: the reference resolves and the
+    tool had no registry to resolve it against.
+
+    Both the findings and the dispositions are collected, because a disposition
+    names the finding it answers and a finding may be recorded without one.
+    Resolving them is strictly more checking, not less: a mistyped finding id
+    now fails where it previously would not have been looked at.
+    """
+    findings = set()
+    recs = ARTIFACTS / "reviews" / "records"
+    if not recs.exists():
+        return findings
+    for p in sorted(recs.glob("*.json")):
+        try:
+            d = load_json(p)
+        except Exception:
+            continue
+        if not isinstance(d, dict):
+            continue
+        for entry in (d.get("findings") or []) + (d.get("dispositions") or []):
+            if isinstance(entry, dict) and entry.get("finding_id"):
+                findings.add(str(entry["finding_id"]).strip())
+    return findings
+
+
 def registries():
     anchors, assumptions, links, params = set(), set(), set(), set()
     sr = ARTIFACTS / "sources" / "source-registry.json"
@@ -162,7 +195,8 @@ def walk(node, path=""):
 def check_references():
     index = artifact_index()
     anchors, assumptions, links, params = registries()
-    known = anchors | assumptions | links | params
+    findings = finding_index()
+    known = anchors | assumptions | links | params | findings
     all_ids = {k[1] for k in index}
     dangling = []
     declared_forward = []

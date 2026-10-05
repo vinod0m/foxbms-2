@@ -189,14 +189,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 6124,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 7195,
   "record_path": "docs/artifacts/corpus/synthetic_reference/software/design-afe-driver.json",
-  "record_sha256": "135884137c533f4da3786b32043502c445d1b31328ca4ccc361749023f850423",
+  "record_sha256": "55237ee5cbd42eee9bb64fc01480460b1f15247aa0f9db804e63f2f752674230",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "2b9c02eb32af9b8d7018af08de02dc6a67edecba3a59d89473d3a74987473234"
+  "verbatim_block_sha256": "a6198c05298511d83e25b88587187e893413e3e2375dddf2fe37615a4373e4ab"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -510,12 +510,16 @@
    {
     "rationale": "Software architectural design",
     "reference": "Part 6, Clause 8",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('software architectural design'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    },
    {
     "rationale": "Software architectural design",
     "reference": "SWE.2",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('software architectural design'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "mapped"
    }
@@ -548,7 +552,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "135884137c533f4da3786b32043502c445d1b31328ca4ccc361749023f850423",
+  "_record_sha256_at_signing": "55237ee5cbd42eee9bb64fc01480460b1f15247aa0f9db804e63f2f752674230",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",

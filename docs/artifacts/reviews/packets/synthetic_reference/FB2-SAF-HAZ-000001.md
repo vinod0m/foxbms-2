@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-HAZ-000001` |
 | profile | `synthetic_reference` |
 | artifact type | `hazard` |
-| revision | `1` |
+| revision | `2` |
 | lifecycle_status | `baselined` |
 | origin | `synthetic` |
 | owner_role | `safety_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/hazard-analysis-cell-voltage.json` |
-| size on disk | 3819 bytes |
+| size on disk | 7652 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-HAZ-000001)`, never by `FB2-SAF-HAZ-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `779a56395692b0f20811c9d1e06e82816da94f1e8b3a2315140c9dfeed3ae6f3` |
-| bytes hashed | 3819 |
+| sha256 of this record's exact current bytes | `44be1f41be1ae7264e1b043ddcc01455a6121ba110dce9146fef88a4da9d7522` |
+| bytes hashed | 7652 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
  "id": "FB2-SAF-HAZ-000001",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "hazard",
  "engineering_domain": "safety",
@@ -73,15 +73,28 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 6",
    "status": "mapped",
-   "rationale": "Hazard analysis for E/E system"
+   "relationship": "derivation_basis",
+   "rationale": "Hazard analysis for E/E system",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('hazard analysis for e/e system'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 6",
    "status": "mapped",
-   "rationale": "System-level hazard analysis"
+   "relationship": "derivation_basis",
+   "rationale": "System-level hazard analysis",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('system-level hazard analysis'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "No hazard analysis and risk assessment exists for foxBMS 2, and this is not one. The hazardous events belong to the fictional reference project this corpus declares; they are authored inputs of that project, and the record is in the corpus precisely so that the reference project's concept chain has a hazard to start from.",
+  "misreading_warning": "A reader who sees artifact_type `hazard` with HE-01 at ASIL_D and ISO 26262 Part 3 and Part 4 Clause 6 mappings with status `mapped` will conclude a HARA was performed and returned an ASIL_D cell-overvoltage hazard. No HARA was performed for the product; these events and their S/E/C ratings are authored for a fictional project; and the mappings record which clause concepts the event shape was built from, not that a hazard analysis was carried out.",
+  "derivation_basis": {
+   "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) for the limit thresholds that make the hazard reachable; src/app/driver/afe/api/afe.h:124 (AFE_StartMeasurement) for the measurement the reaction chain depends on; https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/structure/software-structure.html (section anchor sw-structure, retrieved 2026-10-01) for the module structure. All at the pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The hazardous EVENTS have no external source: they originate in the fictional reference project.",
+   "what_it_supports": "That the pinned source can detect the violation, and that a wrong measurement is a credible malfunctioning behaviour. It supports nothing about the events' severity, exposure, controllability or ASIL, all four of which are authored inputs of the reference project."
+  }
+ },
  "lifecycle_status": "baselined",
  "automated_review_status": {
   "schema_valid": true,
@@ -94,13 +107,19 @@ The block below is the file's exact bytes. You need no other file open to review
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "safety_engineer",
    "description": "Synthetic hazard analysis for hypothetical automotive BMS project"
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: synthetic` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take hazard for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified."
   }
  ],
  "malfunctioning_behavior": "AFE reports incorrect cell voltage (stuck-at, drift, communication error) OR SOA fails to detect limit violation OR contactor fails to open on violation OR BMS fails to request contactor opening",
@@ -108,7 +127,7 @@ The block below is the file's exact bytes. You need no other file open to review
   {
    "id": "HE-01",
    "description": "Cell overvoltage during charging leading to thermal runaway",
-   "operational_situation": "CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45\u00b0C",
+   "operational_situation": "CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45°C",
    "severity": "S3",
    "exposure": "E4",
    "controllability": "C3",
@@ -342,7 +361,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `779a56395692b0f20811c9d1e06e82816da94f1e8b3a2315140c9dfeed3ae6f3`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `44be1f41be1ae7264e1b043ddcc01455a6121ba110dce9146fef88a4da9d7522`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

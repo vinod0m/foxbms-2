@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/verification/svp-software-qualification-test-plan.json` |
-| size on disk | 22828 bytes |
+| size on disk | 24306 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-VER-SQP-000001)`, never by `FB2-VER-SQP-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `11bd1df0b043753017f4cef42e53c86eb192ca79e93902ac3474fc2621a8369b` |
-| bytes hashed | 22828 |
+| sha256 of this record's exact current bytes | `c628561c4d6eb28613fbe2193009eddc11669c90e20c7df39fb4162b720edf6d` |
+| bytes hashed | 24306 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -67,19 +67,25 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ASPICE_PAM_41",
    "reference": "SWE.6",
    "status": "partially_mapped",
-   "rationale": "This record supplies the SWE.6 expected family 'SW Qualification Test Plan', which coverage-plan.json recorded as ABSENT. The other two families remain ABSENT: 'SW Qualification Test Specification' has no record, and 'SW Qualification Test Results' does not exist because FB2-VER-EXE-000008 is execution_kind none with outcome blocked and the five security measures FB2-VER-TMS-000016..000020 have no executed result either. A plan with no specification behind it and no executed result cannot make the process mapped."
+   "relationship": "derivation_basis",
+   "rationale": "This record supplies the SWE.6 expected family 'SW Qualification Test Plan', which coverage-plan.json recorded as ABSENT. The other two families remain ABSENT: 'SW Qualification Test Specification' has no record, and 'SW Qualification Test Results' does not exist because FB2-VER-EXE-000008 is execution_kind none with outcome blocked and the five security measures FB2-VER-TMS-000016..000020 have no executed result either. A plan with no specification behind it and no executed result cannot make the process mapped.",
+   "relationship_note": "The rationale states the derivation explicitly ('supplies the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 6, Clause 9",
    "status": "partially_mapped",
-   "rationale": "Qualification strategy and acceptance criteria for the three software requirements the corpus names. The network-security qualification measures FB2-VER-TMS-000016..000020 cover the security-relevant cases; this plan states the level structure they sit in and what remains outside it."
+   "relationship": "derivation_basis",
+   "rationale": "Qualification strategy and acceptance criteria for the three software requirements the corpus names. The network-security qualification measures FB2-VER-TMS-000016..000020 cover the security-relevant cases; this plan states the level structure they sit in and what remains outside it.",
+   "relationship_note": "The rationale states the derivation explicitly ('qualification strategy and acceptance criteria'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 2, Clause 7",
    "status": "not_applicable",
-   "rationale": "Functional safety concept. This is a software verification plan and does not restate the FSC; FB2-SAF-* records carry that."
+   "relationship": "referenced_only",
+   "rationale": "Functional safety concept. This is a software verification plan and does not restate the FSC; FB2-SAF-* records carry that.",
+   "relationship_note": "The rationale says so in its own words ('does not restate the fsc'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
   }
  ],
  "lifecycle_status": "draft",
@@ -647,7 +653,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `11bd1df0b043753017f4cef42e53c86eb192ca79e93902ac3474fc2621a8369b`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `c628561c4d6eb28613fbe2193009eddc11669c90e20c7df39fb4162b720edf6d`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

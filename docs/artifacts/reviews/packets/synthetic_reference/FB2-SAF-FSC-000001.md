@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-FSC-000001` |
 | profile | `synthetic_reference` |
 | artifact type | `safety_concept` |
-| revision | `3` |
+| revision | `4` |
 | lifecycle_status | `baselined` |
 | origin | `synthetic` |
 | owner_role | `safety_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/safety-concept-functional.json` |
-| size on disk | 36125 bytes |
+| size on disk | 40886 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-FSC-000001)`, never by `FB2-SAF-FSC-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `ecd4f0564c65f5fa018bdb3b2880c258fa09e2e5165d865bc8cb4c8ff0216d0f` |
-| bytes hashed | 36125 |
+| sha256 of this record's exact current bytes | `ef998da056248b881d2e462ec843811240865509ce1735aa51450db48d7b179b` |
+| bytes hashed | 40886 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
  "id": "FB2-SAF-FSC-000001",
- "revision": "3",
+ "revision": "4",
  "schema_version": "1.0.0",
  "artifact_type": "safety_concept",
  "engineering_domain": "safety",
@@ -84,21 +84,36 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 7 (functional safety concept)",
    "status": "mapped",
-   "rationale": "The item-related assumptions, the high-level architectural elements and the safety strategies are exactly what this clause asks for. Recorded as mapped for the conceptual role only; no normative text is reproduced and the clause was not consulted for this record."
+   "relationship": "derivation_basis",
+   "rationale": "The item-related assumptions, the high-level architectural elements and the safety strategies are exactly what this clause asks for. Recorded as mapped for the conceptual role only; no normative text is reproduced and the clause was not consulted for this record.",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('are exactly what this clause asks for'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 6 (hazard analysis and safety goals)",
    "status": "mapped",
-   "rationale": "The concept consumes the safety goal produced there and allocates it."
+   "relationship": "derivation_basis",
+   "rationale": "The concept consumes the safety goal produced there and allocates it.",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('the concept consumes the safety goal produced there'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "SYS.3",
    "status": "mapped",
-   "rationale": "System architectural design: the high-level architectural elements and their allocation."
+   "relationship": "derivation_basis",
+   "rationale": "System architectural design: the high-level architectural elements and their allocation.",
+   "relationship_note": "The rationale states the derivation explicitly ('system architectural design'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "foxBMS 2 has no functional safety concept, and this is not one. It is the functional safety concept of the fictional reference project this corpus declares, authored so that project would have the Part 3 concept its goal could be allocated into. Its own concept_identity carries fictional: true as a required field.",
+  "misreading_warning": "A reader who sees artifact_type `safety_concept`, concept_stage `functional_safety_concept` and a mapping to ISO 26262 Part 3 Clause 7 with status `mapped` will conclude foxBMS 2 has a functional safety concept defining its item boundary, architectural elements and safety strategies. It has no such concept: this one belongs to a fictional project, its `item_ref` is a fictional item definition, and the clause is the source of its structure rather than a standard it has been shown to meet.",
+  "derivation_basis": {
+   "locator": "The real system's contribution is limited to what the pinned source does - principally src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages), src/app/driver/contactor/contactor.c:125-163 (CONT_CheckFeedback), src/app/engine/diag/diag.c:341-475 (DIAG_Handler), src/app/driver/sbc/fs8x_driver/sbc_fs8x.c:160-182 (FS8x_WD_Refresh), the database accessor at src/app/engine/database/database.c:130-196 and SYS_SetStateRequest at src/app/engine/sys/sys.c:691-739, all at 308028fb13d046ba29b98886895c2e17937b1437. The CONCEPT ITSELF has no external source: its item definition, architectural elements, safety strategies, timing budget and diagnostic assumptions are authored by this corpus for a fictional item.",
+   "what_it_supports": "That the named subsystems exist in the real source, so the concept is anchored to real code paths. It supports NOTHING about the item boundary, the architectural elements' independence, the ASIL allocation, the FTTI arithmetic or the diagnostic-coverage assumptions: the concept's own contradictions_found_while_authoring records that the timing arithmetic does not close, and its verification_and_validation_criteria are criteria, not results."
+  }
+ },
  "lifecycle_status": "baselined",
  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
  "automated_review_status": {
@@ -112,7 +127,7 @@ The block below is the file's exact bytes. You need no other file open to review
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
@@ -131,6 +146,12 @@ The block below is the file's exact bytes. You need no other file open to review
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "Regenerated as a dependent of finding FB2-REV-FND-000027. safety_strategies.fault_detection[AR-005] still carried the requirement's old unmeasurable coverage disjunction ('All monitored cells, or a representative subset of at least 50%') and pointed at finding FB2-REV-FND-000027 as an unresolved conflict. FB2-HW-TSR-000004 now states the coverage as 100 percent of the main measurement chain's monitored cell set, so this strategy entry states the same figure and records that the requirement is specified rather than demonstrated. No functional element, capability, safety strategy detection budget, reaction budget or degradation mode was changed."
+  },
+  {
+   "revision": "4",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: synthetic` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take safety_concept for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified."
   }
  ],
  "concept_stage": "functional_safety_concept",
@@ -1017,7 +1038,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `ecd4f0564c65f5fa018bdb3b2880c258fa09e2e5165d865bc8cb4c8ff0216d0f`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `ef998da056248b881d2e462ec843811240865509ce1735aa51450db48d7b179b`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

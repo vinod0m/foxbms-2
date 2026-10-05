@@ -62,7 +62,11 @@
               "path",
               "symbol",
               "line_range",
-              "content_hash"
+              "content_hash",
+              "pinned_file_exists",
+              "pinned_content_hash_matches",
+              "line_range_within_file",
+              "symbol_within_line_range"
             ],
             "properties": {
               "repository": {
@@ -103,13 +107,30 @@
                   "macro_definition",
                   "type_definition",
                   "translation_unit_body",
-                  "table_definition"
+                  "table_definition",
+                  "macro_invocation"
                 ],
-                "description": "What the named symbol is at that location"
+                "description": "What the named symbol is at that location. 'macro_invocation' names a call site of a macro rather than its definition; it was absent until finding FB2-REV-FND-000172 was acted on, and its absence is why one behaviour's citation (a DATA_WRITE_DATA call) had no location it could resolve to."
+              },
+              "pinned_file_exists": {
+                "type": "boolean",
+                "description": "Part 1 of 4 behind verified_against_pinned_source (FB2-REV-FND-000173): the named path exists as a blob at the named commit."
+              },
+              "pinned_content_hash_matches": {
+                "type": "boolean",
+                "description": "Part 2 of 4: the recorded content_hash equals the sha256 of that blob."
+              },
+              "line_range_within_file": {
+                "type": "boolean",
+                "description": "Part 3 of 4: the recorded line_range lies inside that blob."
+              },
+              "symbol_within_line_range": {
+                "type": "boolean",
+                "description": "Part 4 of 4: the named symbol occurs inside the recorded line_range of that blob. This is the only part a location in this corpus fails, and it is why the aggregate could not be read as 'all four passed'."
               },
               "verified_against_pinned_source": {
-                "type": "boolean",
-                "description": "True only when path, symbol and line range were each confirmed to exist in the pinned file. False means the location is recorded but unconfirmed, and the record must say so in its own words."
+                "type": ["boolean", "null"],
+                "description": "The AGGREGATE of the four parts above, and nothing more. Null means the record declines to state the aggregate; the four parts are then the whole claim. True requires all four parts to be true, and the validator rejects a location that claims true while any part is false or undeclared (rule pinned_verification_aggregate_contradicts_parts). It was a required boolean before FB2-REV-FND-000173 and carried four checks behind one bit, so a partial failure could not be seen."
               }
             }
           }
@@ -231,7 +252,7 @@
         "behaviours": {
           "type": "array",
           "minItems": 0,
-          "description": "Typed description of what the element does, so the record is not a bare pointer list.",
+          "description": "Typed description of what the element does, so the record is not a bare pointer list. RESOLUTION CONTRACT, declared here because finding FB2-REV-FND-000172 required one of two things and this is the one that was taken: a behaviour carries NO file, and it is resolved against THIS RECORD'S OWN code_locations by the validator rule behaviour_citation_unresolved and its two companions. A behaviour citing (evidence_symbol S, evidence_line_range R) resolves when some code_location in the same record names S and its range contains R; exact equality is the common case and containment is a behaviour pointing at a block inside a function the record locates as a whole. A citation that names a symbol no code_location names, or lines that fall inside no code_location range, is a finding against the record - not a formatting variant. The resolved citation is then checked against the PINNED BLOB that code_location names. A behaviour that names no symbol and no range declares no evidence and is counted as such.",
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -272,11 +293,12 @@
               "evidence_symbol": {
                 "type": "string",
                 "minLength": 1,
-                "description": "The symbol in the pinned source that carries this behaviour. Must be a symbol that exists."
+                "description": "The symbol in the pinned source that carries this behaviour. Must be a symbol that exists AND that one of this record's code_locations names: the citation is resolved by symbol, which is what supplies the file the behaviour itself does not name. A symbol no code_location names does not resolve."
               },
               "evidence_line_range": {
                 "type": "string",
-                "pattern": "^[0-9]+(-[0-9]+)?$"
+                "pattern": "^[0-9]+(-[0-9]+)?$",
+                "description": "Inclusive line range, or a single line, inside the resolved code_location's range and inside the pinned blob. Being a strict sub-range of a located function is expected and is not a defect; being outside every located range is."
               }
             }
           }

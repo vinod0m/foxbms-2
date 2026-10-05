@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-SGO-000001` |
 | profile | `synthetic_reference` |
 | artifact type | `safety_goal` |
-| revision | `4` |
+| revision | `5` |
 | lifecycle_status | `baselined` |
 | origin | `synthetic` |
 | owner_role | `safety_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/safety-goal-cell-voltage.json` |
-| size on disk | 20806 bytes |
+| size on disk | 25207 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-SGO-000001)`, never by `FB2-SAF-SGO-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `b24479212b8cffd2dedd2d49b268ff3ede619ce3433190d6b2dc773a5d4843da` |
-| bytes hashed | 20806 |
+| sha256 of this record's exact current bytes | `e5f473f22a97971ea97ee994da97420da4b353f3a2823d3f2a97515cfcc53ac0` |
+| bytes hashed | 25207 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
  "id": "FB2-SAF-SGO-000001",
- "revision": "4",
+ "revision": "5",
  "schema_version": "1.0.0",
  "artifact_type": "safety_goal",
  "engineering_domain": "safety",
@@ -74,21 +74,36 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 7",
    "status": "mapped",
-   "rationale": "Safety goal definition"
+   "relationship": "derivation_basis",
+   "rationale": "Safety goal definition",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('safety goal definition'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7",
    "status": "mapped",
-   "rationale": "Functional safety requirements"
+   "relationship": "derivation_basis",
+   "rationale": "Functional safety requirements",
+   "relationship_note": "The rationale states the derivation explicitly ('functional safety requirements'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 6",
    "status": "mapped",
-   "rationale": "Hazard analysis and ASIL determination of the hazardous event by severity and exposure; the derivation that produces this record's asil field is recorded in asil_justification"
+   "relationship": "derivation_basis",
+   "rationale": "Hazard analysis and ASIL determination of the hazardous event by severity and exposure; the derivation that produces this record's asil field is recorded in asil_justification",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('hazard analysis and asil determination'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "The foxBMS 2 project published no safety goal, and this is not one: it belongs to the fictional reference project this corpus declares in its synthetic_reference profile, written to give that project an ASIL_D goal to argue from. The pinned source informed its shape but nothing in it was authored as this goal, and no person accepted it.",
+  "misreading_warning": "A reader who sees artifact_type `safety_goal`, `asil: ASIL_D` and three ISO 26262 mappings with status `mapped` will conclude foxBMS 2 has an ASIL_D safety goal that satisfies Part 3 Clause 6 and Clause 7. It has no safety goal at all: this is a fictional project's goal, the ASIL was computed from authored S/E ratings that are flagged as unevidenced in the same file, and the mappings record derivations from clause concepts, not conformity.",
+  "derivation_basis": {
+   "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) with src/app/application/soa/soa.c:271-351 (SOA_CheckCurrent) and src/app/application/soa/soa.c:148-269 (SOA_CheckTemperatures) for the real detection behaviour the fictional goal was shaped around, all at the pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The GOAL ITSELF has no external source: it originates in this corpus's reference project, and the one input it takes from the real project is the fact that a limit violation is detected.",
+   "what_it_supports": "That the pinned source detects a cell-voltage limit violation, which is the only reason this corpus believed a safety goal was worth writing for this system. It supports NOTHING about the goal's ASIL, its FTTI, its safe state or its hazardous events: those are properties of the fictional project and are sourced to it, not to foxBMS 2."
+  }
+ },
  "lifecycle_status": "baselined",
  "automated_review_status": {
   "schema_valid": true,
@@ -101,7 +116,7 @@ The block below is the file's exact bytes. You need no other file open to review
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
@@ -126,6 +141,12 @@ The block below is the file's exact bytes. You need no other file open to review
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "Bound the fault tolerant time interval to the parameter that fixes it, so the interval has one authoritative home instead of three. Added the ftti.parameter_ref field naming FB2-PRM-000004. The record previously restated the interval twice on itself - fault_tolerant_time_interval_ms and timing_budget.total_ftti_ms - while the authoritative value lived in the parameter registry as ftti_ms = 100 with tolerance min = max = 100, and neither the record nor the registry pointed at the other. The ftti budget consistency checker read a third spelling, ftti_ms or ftti, which no safety goal in this corpus carried, so it could never fire on this record and SCN-MUT-006 had no detector. The rule now resolves the interval from the bound parameter and requires every declaration on the record to agree with it, so the three spellings are now cross-checked instead of merely coexisting; a drift in any of them is reported. Neither of the two existing declarations was removed: the technical safety concept and several review records read them, and deleting them would move a value rather than bind it. The interval value is unchanged at 100 ms, the ASIL is unchanged at ASIL_D, the ten serial allocations and the 15 ms margin are unchanged, and the budget still closes at 85 + 15 = 100 ms. Nothing here asserts ISO 26262 conformity, certification, tool qualification, an ASPICE capability level or human approval; human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. Remediation of finding FB2-REV-FND-000032."
+  },
+  {
+   "revision": "5",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: synthetic` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take safety_goal for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified."
   }
  ],
  "statement": "The BMS shall detect cell voltage limit violations and open all HV contactors within the fault tolerant time interval (FTTI = 100 ms) to prevent cell overvoltage/undervoltage hazardous events, with a target diagnostic test interval of 10 ms, a target contactor mechanical opening time of 30 ms (FB2-PRM-000005 / FB2-ASM-006) and a resulting 40 ms from the fault request to feedback-confirmed contactor open (FB2-SAF-FSR-000003).",
@@ -479,7 +500,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `b24479212b8cffd2dedd2d49b268ff3ede619ce3433190d6b2dc773a5d4843da`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `e5f473f22a97971ea97ee994da97420da4b353f3a2823d3f2a97515cfcc53ac0`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

@@ -276,14 +276,14 @@
   "anchor_registry_applies": false,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 5934,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 9968,
   "record_path": "docs/artifacts/corpus/synthetic_reference/system/syr-soa-enforcement-and-degraded-boundary.json",
-  "record_sha256": "8c1f7f2c6fa8c5a01376e6026d1575e474787b0798e75571d4bf4f3f6808fb6a",
+  "record_sha256": "27d030a2ddfcdcb21a25dd8def043d064f13a0051a822e2cdd213bb12690f7a0",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "cc72da12a7154f7926850018abff2fc8cebc4524c67e340ba6394d541cf0f39b"
+  "verbatim_block_sha256": "8a173929be21c87b2d8db8420def59ea253dd3de164de65a82a1993594f49512"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -448,19 +448,34 @@
   ],
   "requirement_id": "FB2-SYS-SYR-000002",
   "requirement_level": "system",
-  "revision": "1",
+  "revision": "2",
   "revision_history": [
    {
     "author": "system_engineer",
     "date": "2026-09-29T00:00:00Z",
     "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them.",
     "revision": "1"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified.",
+    "revision": "2"
    }
   ],
   "safety_allocation": {
    "asil": "ASIL_D",
    "mitigation": "Debounce, plausibility and redundancy comparison, with the degraded-mode capability described in the functional safety concept",
    "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "No source of its own. The comparison behaviour it states is at src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) and the degradation reporting at src/app/engine/diag/cbs/diag_cbs_voltage.c:72-194 (DIAG_ErrorOvervoltage), pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The 2.5V/4.2V limits and the 2-of-100 ms debounce come from FB2-ASM-001 and FB2-ASM-005, declared assumptions of the fictional project.",
+    "what_it_supports": "That the pinned source compares against configured limits and reports through a diagnostic, so a degraded/safe distinction is a real subject for a system requirement. It supports nothing about the specific limits, the debounce, the degraded-mode behaviour as a design, or the ASIL."
+   },
+   "misreading_warning": "A reader who sees an ASIL_D system requirement that mandates a degraded mode distinct from the safe state, mapped to ISO 26262 Part 4 Clause 7 with status `mapped`, will conclude the product distinguishes a recoverable degradation from a limit violation by design. The design is the reference project's, its own limitations say so, and the distinction rests on FB2-ASM-001 and FB2-ASM-005, declared assumptions about cell chemistry and measurement noise.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is the reference project's system-level enforcement obligation, written by this corpus. Its own limitations field says it establishes nothing about the real foxBMS project."
   },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
@@ -469,12 +484,16 @@
    {
     "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software.",
     "reference": "SYS.2",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('derived from'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ASPICE_PAM_41",
     "status": "mapped"
    },
    {
     "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced.",
     "reference": "Part 4, Clause 7 (system requirements)",
+    "relationship": "derivation_basis",
+    "relationship_note": "The rationale states the derivation explicitly ('is the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against.",
     "standard_id": "ISO_26262_2018",
     "status": "mapped"
    }
@@ -482,7 +501,7 @@
   "statement": "The item shall compare every monitored cell voltage against the configured maximum and minimum limits, shall require two consecutive violations within 100 ms before classifying a violation, and shall move to its degraded mode rather than to the safe state when a measurement channel's disagreement is explainable by a degradation within the declared plausibility envelope, escalating to the safe state only when the degradation removes the reference the item needs.",
   "title": "SYR: the item shall enforce the configured safe operating area, and shall distinguish a recoverable measurement degradation from a limit violation",
   "trace_to_architecture_elements": [],
-  "updated_at": "2026-09-29T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -510,7 +529,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "8c1f7f2c6fa8c5a01376e6026d1575e474787b0798e75571d4bf4f3f6808fb6a",
+  "_record_sha256_at_signing": "27d030a2ddfcdcb21a25dd8def043d064f13a0051a822e2cdd213bb12690f7a0",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -539,6 +558,6 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "record_id": "FB2-SYS-SYR-000002",
-  "revision": "1"
+  "revision": "2"
  }
 }

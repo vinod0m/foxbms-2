@@ -1,6 +1,6 @@
 # Traceability — links, chains and coverage (generated view)
 
-Generated: 2026-10-04T03:41:34Z | Baseline: BAS-REF-001 | 321 artifacts, 585 links
+Generated: 2026-10-05T13:19:34Z | Baseline: BAS-REF-001 | 323 artifacts, 599 links
 
 ## Provenance and status of this file
 
@@ -37,12 +37,12 @@ Derived from the canonical link registries. Counts are computed here, not transc
 | `mitigates` | 1 | 2 | 3 |
 | `refines` | 9 | 42 | 51 |
 | `result_of` | 5 | 28 | 33 |
-| `reviewed_by` | 82 | 179 | 261 |
+| `reviewed_by` | 92 | 183 | 275 |
 | `specified_by` | 0 | 15 | 15 |
 | `supports` | 0 | 30 | 30 |
 | `validates` | 0 | 15 | 15 |
 | `verifies` | 12 | 52 | 64 |
-| **Total** | 128 | 457 | 585 |
+| **Total** | 138 | 461 | 599 |
 
 `related_to` is forbidden in canonical registries and appears only in mutation fixtures, where it is the injected defect.
 
@@ -137,6 +137,16 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-LIF-000108` | synthetic_reference | depends_on | `FB2-SUP-CFM-000001` | `FB2-MAN-PLN-000001` | reviewed | false |
 | `FB2-LNK-LIF-000109` | synthetic_reference | depends_on | `FB2-SUP-QAP-000001` | `FB2-PIM-IMP-000001` | reviewed | false |
 | `FB2-LNK-LIF-000110` | synthetic_reference | depends_on | `FB2-DEC-DCM-000001` | `FB2-SAF-ITE-000001` | reviewed | false |
+| `FB2-LNK-REVA-000001` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000001` | reviewed | true |
+| `FB2-LNK-REVA-000002` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000009` | reviewed | true |
+| `FB2-LNK-REVA-000003` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000010` | reviewed | true |
+| `FB2-LNK-REVA-000004` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000004` | reviewed | true |
+| `FB2-LNK-REVA-000005` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000003` | reviewed | true |
+| `FB2-LNK-REVA-000006` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000006` | reviewed | true |
+| `FB2-LNK-REVA-000007` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000005` | reviewed | true |
+| `FB2-LNK-REVA-000008` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000007` | reviewed | true |
+| `FB2-LNK-REVA-000009` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000002` | reviewed | true |
+| `FB2-LNK-REVA-000010` | as_is | reviewed_by | `FB2-REV-000019` | `FB2-SW-IMP-000008` | reviewed | true |
 | `FB2-LNK-REVB-000001` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-HAZ-000001` | reviewed | true |
 | `FB2-LNK-REVB-000001` | synthetic_reference | reviewed_by | `FB2-REV-000009` | `FB2-SAF-HAZ-000001` | reviewed | true |
 | `FB2-LNK-REVB-000002` | as_is | reviewed_by | `FB2-REV-000010` | `FB2-SAF-SGO-000001` | reviewed | true |
@@ -396,6 +406,10 @@ Cross-cutting relations that do not sit on a single vertical chain.
 | `FB2-LNK-REVB-000207` | synthetic_reference | reviewed_by | `FB2-REV-000018` | `FB2-SW-IFS-000014` | reviewed | false |
 | `FB2-LNK-REVB-000208` | synthetic_reference | reviewed_by | `FB2-REV-000018` | `FB2-SW-IFS-000015` | reviewed | false |
 | `FB2-LNK-REVB-000209` | synthetic_reference | reviewed_by | `FB2-REV-000018` | `FB2-SW-IFS-000016` | reviewed | false |
+| `FB2-LNK-REVC-000001` | synthetic_reference | reviewed_by | `FB2-REV-000020` | `FB2-SW-IMP-000001` | reviewed | true |
+| `FB2-LNK-REVC-000002` | synthetic_reference | reviewed_by | `FB2-REV-000020` | `FB2-SW-IMP-000004` | reviewed | true |
+| `FB2-LNK-REVC-000003` | synthetic_reference | reviewed_by | `FB2-REV-000020` | `FB2-SW-IMP-000003` | reviewed | true |
+| `FB2-LNK-REVC-000004` | synthetic_reference | reviewed_by | `FB2-REV-000020` | `FB2-SW-IMP-000002` | reviewed | true |
 | `FB2-LNK-SAF-000019` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-HAZ-000001` | reviewed | true |
 | `FB2-LNK-SAF-000020` | as_is | reviewed_by | `FB2-REV-000001` | `FB2-SAF-FSR-000001` | reviewed | true |
 | `FB2-LNK-SEC-000001` | synthetic_reference | supports | `FB2-SAF-TAR-000001` | `FB2-SAF-SEC-000001` | pending | true |

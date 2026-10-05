@@ -345,14 +345,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 4679,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 5733,
   "record_path": "docs/artifacts/corpus/synthetic_reference/safety/analyses/freedom-from-interference.json",
-  "record_sha256": "f402de5f3bd932f2f742d870516a390ce1e69f1de6fd9a8613150e15c3f2db7f",
+  "record_sha256": "f886402eaec3bb2536c716aefe556843bae391c814be7abf0e0c7c882058a213",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "ec62b994f9c3fabc7217adf6a438f27830bbd8b34e3c20059bc515f6622be2c9"
+  "verbatim_block_sha256": "4974cfc91c045afca6f388d6a9f7598f4c9ee34c6055609477aab30118549fe7"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -574,11 +574,15 @@
    {
     "clause": "7.4.4",
     "part": "6",
+    "relationship": "unclassifiable",
+    "relationship_note": "This mapping names ISO 26262:2018  and carries no rationale, so nothing in the entry itself says whether the clause is a derivation basis, a conformance claim or a bare reference. Classifying it either way would be a guess presented as a finding, so it is recorded as unclassifiable rather than defaulted to whichever value sounds weakest. It is also unstatused (status=None), which is the same gap: this entry was never given the disposition its siblings carry.",
     "standard": "ISO 26262:2018"
    },
    {
     "clause": "6",
     "part": "9",
+    "relationship": "unclassifiable",
+    "relationship_note": "This mapping names ISO 26262:2018  and carries no rationale, so nothing in the entry itself says whether the clause is a derivation basis, a conformance claim or a bare reference. Classifying it either way would be a guess presented as a finding, so it is recorded as unclassifiable rather than defaulted to whichever value sounds weakest. It is also unstatused (status=None), which is the same gap: this entry was never given the disposition its siblings carry.",
     "standard": "ISO 26262:2018"
    }
   ],
@@ -616,7 +620,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "f402de5f3bd932f2f742d870516a390ce1e69f1de6fd9a8613150e15c3f2db7f",
+  "_record_sha256_at_signing": "f886402eaec3bb2536c716aefe556843bae391c814be7abf0e0c7c882058a213",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",

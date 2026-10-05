@@ -11,7 +11,7 @@
 | record id | `FB2-SAF-FSR-000004` |
 | profile | `synthetic_reference` |
 | artifact type | `requirement` |
-| revision | `3` |
+| revision | `4` |
 | lifecycle_status | `baselined` |
 | origin | `synthetic` |
 | owner_role | `safety_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/fsr-independent-monitor.json` |
-| size on disk | 13715 bytes |
+| size on disk | 18793 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-FSR-000004)`, never by `FB2-SAF-FSR-000004` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `1797cd973161cd65f5664240f1c132825639a8c7f27c002a9e1d618de754ec70` |
-| bytes hashed | 13715 |
+| sha256 of this record's exact current bytes | `d80972775f16866ad473946dc777e1ccbc375ccb00a2a22a4be9027841b6103a` |
+| bytes hashed | 18793 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
  "id": "FB2-SAF-FSR-000004",
- "revision": "3",
+ "revision": "4",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "safety",
@@ -67,21 +67,36 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7",
    "status": "mapped",
-   "rationale": "Functional safety requirement from safety goal"
+   "relationship": "derivation_basis",
+   "rationale": "Functional safety requirement from safety goal",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('functional safety requirement from safety goal'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 9, Clause 7",
    "status": "mapped",
-   "rationale": "Freedom from interference / independence"
+   "relationship": "derivation_basis",
+   "rationale": "Freedom from interference / independence",
+   "relationship_note": "The rationale states the derivation explicitly ('freedom from interference / independence'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "SYS.2, HWE.1",
    "status": "mapped",
-   "rationale": "System/Hardware requirements analysis"
+   "relationship": "derivation_basis",
+   "rationale": "System/Hardware requirements analysis",
+   "relationship_note": "The rationale states the derivation explicitly ('system/hardware requirements analysis'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It states the second barrier of the fictional project, and the barrier itself is an assumption: FB2-ASM-008 declares that an independent hardware voltage monitor CAN be implemented, and the record's own rationale says so. Nothing in the real product contains that monitor.",
+  "misreading_warning": "A reader who sees an ASIL_B FSR requiring an independent hardware voltage monitor, mapped to ISO 26262 Part 4 Clause 7 AND Part 9 Clause 7 with status `mapped`, will conclude the second barrier exists and that freedom from interference has been established. The Part 9 mapping is the one most easily over-read: naming freedom from interference as the basis of a requirement is not a freedom-from-interference analysis, and the reference project's own technical safety concept names the absence of a demonstration of that independence as its largest open assumption. The barrier is fictional and rests on FB2-ASM-008.",
+  "derivation_basis": {
+   "locator": "No source. This record has NO source_refs at all, which is the point: the independent monitor it requires does not exist in the pinned source, and FB2-ASM-008 is a declared assumption about whether it could be built. The nearest real anchor is the SBC watchdog refresh at src/app/driver/sbc/fs8x_driver/sbc_fs8x.c:160-182 (FS8x_WD_Refresh), which is supervision on the same board and therefore the OPPOSITE of independence from the main path. All at 308028fb13d046ba29b98886895c2e17937b1437.",
+   "what_it_supports": "Nothing about the real product. It supports the reference project's internal argument that a main-path-only reaction leaves no tolerance in the 100 ms interval, and that argument is about the fictional allocation arithmetic. It supports no independence claim, because no analysis of independence exists and the record's own Part 9 mapping is an assumption rather than a result."
+  }
+ },
  "lifecycle_status": "baselined",
  "automated_review_status": {
   "schema_valid": true,
@@ -94,7 +109,7 @@ The block below is the file's exact bytes. You need no other file open to review
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
@@ -113,6 +128,12 @@ The block below is the file's exact bytes. You need no other file open to review
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "Added the fault_reaction this requirement was missing. AR-005 is one of the four elements the FSC allocates a reaction to, and the reaction is the second barrier itself: open the contactors from the independent path, without waiting for the main microcontroller, at 50 ms, which is FB2-PRM-000007. The field records that this budget is an ALTERNATIVE to the main path's and not an addition to it - the two sum to 135 ms against a 100 ms interval, which is why the FSC and TSC both justify the barrier as a sensitivity on the main path (85 ms nominal, 95 ms at the FB2-PRM-000005 upper tolerance, 110 ms if detection waits a full acquisition period) rather than as a sum. mode_dependence states the property the concepts both insist on: there is no mode arbitration in this path, so in MOD-004 a hardware false positive disconnects a moving vehicle with no software able to intervene, and that is why the 50 mV threshold accuracy is a safety requirement in its own right. open_limits states the limit that dominates this record: the independence the reaction depends on is FB2-ASM-008, an assumption, is not demonstrated anywhere in this corpus, and the TSC names the absence of that demonstration as the largest open assumption of the ASIL D allocation. Revision 2 -> 3. Statement, rationale, all three acceptance criteria, safety_allocation including the ASIL_B allocation, feasibility_dependencies and the safety goal reference are unchanged and no threshold was relaxed. Human approval remains pending, production_authorized stays false and product_verification_credit stays false."
+  },
+  {
+   "revision": "4",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified."
   }
  ],
  "statement": "The item shall maintain, as a second barrier to the ASIL D cell-voltage safety goal FB2-SAF-SGO-000001, a cell-overvoltage detection and HV-contactor-opening capability that is independent of the main measurement, decision and command path, so that a failure confined to the main path does not remove the overvoltage reaction; the capability shall be allocated ASIL B and shall produce its contactor-open request within 50 ms of the overvoltage it detects.",
@@ -366,7 +387,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `1797cd973161cd65f5664240f1c132825639a8c7f27c002a9e1d618de754ec70`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `d80972775f16866ad473946dc777e1ccbc375ccb00a2a22a4be9027841b6103a`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/verification/test-sys-qualification.json` |
-| size on disk | 3597 bytes |
+| size on disk | 5228 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-VER-TMS-000008)`, never by `FB2-VER-TMS-000008` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `b1901bfc9f013950ad3f017b1347faafe312cf94ddaebce69085e5faf3d17ab2` |
-| bytes hashed | 3597 |
+| sha256 of this record's exact current bytes | `2deb94c27288422a77955d9e0da8c828100c5f0f29bfe5cab9e15f60f4b7e5aa` |
+| bytes hashed | 5228 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -65,19 +65,25 @@ The block below is the file's exact bytes. You need no other file open to review
       "standard_id": "ISO_26262_2018",
       "reference": "Part 4, Clause 8",
       "status": "mapped",
-      "rationale": "System qualification test"
+      "relationship": "derivation_basis",
+      "rationale": "System qualification test",
+      "relationship_note": "The rationale states the derivation explicitly ('system qualification test'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SYS.5",
       "status": "mapped",
-      "rationale": "System qualification test"
+      "relationship": "derivation_basis",
+      "rationale": "System qualification test",
+      "relationship_note": "The rationale states the derivation explicitly ('system qualification test'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.6",
       "status": "mapped",
-      "rationale": "Software qualification test"
+      "relationship": "derivation_basis",
+      "rationale": "Software qualification test",
+      "relationship_note": "The rationale states the derivation explicitly ('software qualification test'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
     }
   ],
   "lifecycle_status": "draft",
@@ -386,7 +392,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `b1901bfc9f013950ad3f017b1347faafe312cf94ddaebce69085e5faf3d17ab2`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `2deb94c27288422a77955d9e0da8c828100c5f0f29bfe5cab9e15f60f4b7e5aa`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

@@ -11,7 +11,7 @@
 | record id | `FB2-SYS-SYR-000005` |
 | profile | `synthetic_reference` |
 | artifact type | `requirement` |
-| revision | `1` |
+| revision | `2` |
 | lifecycle_status | `baselined` |
 | origin | `synthetic` |
 | owner_role | `system_engineer` |
@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/system/syr-independent-monitor-second-barrier.json` |
-| size on disk | 5584 bytes |
+| size on disk | 9817 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SYS-SYR-000005)`, never by `FB2-SYS-SYR-000005` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `1faf5356893ef9e22ba1d331e90083b276964439bf0f6246cdb15f9c860abe7f` |
-| bytes hashed | 5584 |
+| sha256 of this record's exact current bytes | `d4ad777bf8ebe51787ef9e82aac4be52f8387969d928ee6de59976f9cb9a400d` |
+| bytes hashed | 9817 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -45,7 +45,7 @@ The block below is the file's exact bytes. You need no other file open to review
 ```json
 {
  "id": "FB2-SYS-SYR-000005",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "requirement",
  "engineering_domain": "system",
@@ -67,15 +67,28 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ASPICE_PAM_41",
    "reference": "SYS.2",
    "status": "mapped",
-   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software."
+   "relationship": "derivation_basis",
+   "rationale": "System requirements analysis: derived from the stakeholder needs and the safety goal, allocated to hardware and software.",
+   "relationship_note": "The rationale states the derivation explicitly ('derived from'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7 (system requirements)",
    "status": "mapped",
-   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced."
+   "relationship": "derivation_basis",
+   "rationale": "Where the requirement carries a safety allocation, this is the level at which it is expressed. Where it does not, the mapping is recorded as not applicable rather than forced.",
+   "relationship_note": "The rationale states the derivation explicitly ('is the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It requires an independent hardware voltage monitor that does not exist in the pinned source, and its record's own rationale records that the FSR and the TSR state the same intent in identical words, which it calls a defect in the set. Its own limitations field says it establishes nothing about the real foxBMS project.",
+  "misreading_warning": "A reader who sees an ASIL_B system requirement for a monitor that opens the contactors without the main microcontroller, mapped to ISO 26262 Part 4 Clause 7 with status `mapped`, will conclude such a second barrier exists in the product. It does not: the source contains no independent divider, comparator, threshold reference, supply or contactor drive, the record says so, and the requirement's basis is FB2-ASM-008, a declared assumption that one could be built.",
+  "derivation_basis": {
+   "locator": "No source. The chain this requirement describes - own divider, own comparator, own threshold reference, own supply, own contactor drive - has no counterpart in the pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The nearest real hardware is the SBC driver at src/app/driver/sbc/fs8x_driver/sbc_fs8x.c:160-182 (FS8x_WD_Refresh), which is on the same board and is therefore the opposite of independent of the main path.",
+   "what_it_supports": "Nothing about the real product: the hardware it requires is not there. Within the reference project it supports the system-level statement of a second barrier whose independence FB2-ASM-008 only assumes and whose absence of demonstration the project's own technical safety concept names as its largest open assumption."
+  }
+ },
  "lifecycle_status": "baselined",
  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
  "automated_review_status": {
@@ -89,13 +102,19 @@ The block below is the file's exact bytes. You need no other file open to review
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-29T00:00:00Z",
    "author": "system_engineer",
    "description": "System requirement authored because SYS.2 was recorded as a coverage gap with no system requirement record in either profile. System-level: it states what the integrated item must do and allocates to the existing technical requirements rather than restating them."
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified."
   }
  ],
  "statement": "The item shall include a cell-voltage monitor that measures through its own divider and comparator chain, holds its own threshold reference and its own supply, and commands the contactors open within 50 ms of detecting an overvoltage, using no processing resource, no supply rail and no communication path of the main microcontroller.",
@@ -363,7 +382,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `1faf5356893ef9e22ba1d331e90083b276964439bf0f6246cdb15f9c860abe7f`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `d4ad777bf8ebe51787ef9e82aac4be52f8387969d928ee6de59976f9cb9a400d`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

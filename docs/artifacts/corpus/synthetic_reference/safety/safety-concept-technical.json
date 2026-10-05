@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-TSC-000001",
- "revision": "3",
+ "revision": "4",
  "schema_version": "1.0.0",
  "artifact_type": "safety_concept",
  "engineering_domain": "safety",
@@ -33,27 +33,44 @@
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 7 (technical safety concept)",
    "status": "mapped",
-   "rationale": "Hardware/software allocation, the technical safety requirements that follow from it, the timing budget and the diagnostic assumptions are what this clause asks for. Recorded as mapped for the conceptual role only; no clause text was consulted or reproduced."
+   "relationship": "derivation_basis",
+   "rationale": "Hardware/software allocation, the technical safety requirements that follow from it, the timing budget and the diagnostic assumptions are what this clause asks for. Recorded as mapped for the conceptual role only; no clause text was consulted or reproduced.",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('are what this clause asks for'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 7 (functional safety concept)",
    "status": "mapped",
-   "rationale": "This concept consumes the allocation made in FB2-SAF-FSC-000001 and must stay consistent with it."
+   "relationship": "derivation_basis",
+   "rationale": "This concept consumes the allocation made in FB2-SAF-FSC-000001 and must stay consistent with it.",
+   "relationship_note": "The rationale states the derivation explicitly ('consumes the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 9, Clause 7 (freedom from interference)",
    "status": "mapped",
-   "rationale": "The independence argument for the hardware monitor is a Part 9 concern and is recorded here as an assumption rather than as an established result."
+   "relationship": "derivation_basis",
+   "rationale": "The independence argument for the hardware monitor is a Part 9 concern and is recorded here as an assumption rather than as an established result.",
+   "relationship_note": "The rationale states the derivation explicitly ('the independence argument for the hardware monitor is a part 9 concern'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   },
   {
    "standard_id": "ASPICE_PAM_41",
    "reference": "SYS.3, HWE.1, SWE.1",
    "status": "mapped",
-   "rationale": "System architectural design with the hardware and software requirement analyses it allocates to."
+   "relationship": "derivation_basis",
+   "rationale": "System architectural design with the hardware and software requirement analyses it allocates to.",
+   "relationship_note": "The rationale states the derivation explicitly ('system architectural design'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "foxBMS 2 has no technical safety concept, and this is not one. It is the technical safety concept of the fictional reference project, written to allocate that project's safety goal to hardware and software elements. Its own concept_identity carries fictional: true, and it inherits the absence of a real item definition: its three hardware anchors are Altium files in a separate repository this one cannot read.",
+  "misreading_warning": "A reader who sees artifact_type `safety_concept`, concept_stage `technical_safety_concept` and three ISO 26262 mappings with status `mapped` will conclude foxBMS 2 has a technical safety concept with a hardware/software allocation, technical safety requirements, a closed FTTI budget and justified diagnostic coverage. It has no such concept; this one is fictional, its diagnostic-coverage justifications are synthetic assumptions, and the mappings record which clause concepts it was built from rather than any satisfaction of them.",
+  "derivation_basis": {
+   "locator": "The real system's contribution is the driver-side behaviour the allocation describes - principally src/app/driver/sbc/fs8x_driver/sbc_fs8x.c:160-182 (FS8x_WD_Refresh), the port-expander and SPI chip-select headers at src/app/driver/config/pex_cfg.h:73-97 and src/app/driver/spi/spi_cfg-helper.h:79-173, and the three Altium anchors FB2-SRC-HW-000001..000003 which are ABSENT from this repository and carry content_hash 'unresolved'. All at 308028fb13d046ba29b98886895c2e17937b1437. The ALLOCATION, the technical safety requirements, the FTTI budget and the coverage justifications are authored for the fictional project.",
+   "what_it_supports": "That the named drivers and headers exist in the real source and are subject to the hardware monitor the concept relies on. It supports NOTHING about the independence of that monitor - the concept itself names that the absence of a demonstration of independence is its largest open assumption - nor about the allocation, the budget arithmetic, or any diagnostic coverage figure, every one of which carries justification_basis synthetic_assumption or source_grounded rather than a measurement."
+  }
+ },
  "lifecycle_status": "baselined",
  "lifecycle_status_note": "Set to the value above because no human has reviewed or approved this record. `automated_review_status` below refers to corpus automation (schema, link, provenance and consistency checks run by docs/artifacts/tools/corpus.py) and is not a statement about engineering validity, organisational independence or human confirmation.",
  "automated_review_status": {
@@ -67,7 +84,7 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-29T00:00:00Z",
- "updated_at": "2026-09-29T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
@@ -86,6 +103,12 @@
    "date": "2026-09-29T00:00:00Z",
    "author": "safety_engineer",
    "description": "Regenerated as a dependent of findings FB2-REV-FND-000025 and FB2-REV-FND-000027. Two entries still described the pre-fix state: safety_strategies.fault_detection[AR-005].coverage_claim and diagnostic_coverage_assumptions[Independent hardware threshold monitor].claimed_coverage both carried the requirement's old unmeasurable disjunction ('all monitored cells, or a representative subset of at least 50%') and labelled it synthetic_assumption, and verification_and_validation_criteria[1] stated that FB2-SAF-SGO-000001 does not pass the FTTI check. All three now reflect the corrected records: the coverage claims state 100 percent of the main chain's monitored cell set as specified by FB2-HW-TSR-000004, and the V&V criterion records that both this concept and the safety goal pass at 100 ms exactly and names the tool that checks it. The coverage entries remain labelled synthetic_assumption and their justification_basis is unchanged, because the requirement being specified is not the same as the coverage being demonstrated and nothing in this corpus demonstrates it. No architectural element, allocation, safety strategy detection budget, reaction budget or diagnostic-coverage mechanism was changed."
+  },
+  {
+   "revision": "4",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: synthetic` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take safety_concept for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified."
   }
  ],
  "concept_stage": "technical_safety_concept",

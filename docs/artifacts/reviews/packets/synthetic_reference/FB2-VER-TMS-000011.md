@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/verification/test-hil-fault-reaction.json` |
-| size on disk | 2917 bytes |
+| size on disk | 4492 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-VER-TMS-000011)`, never by `FB2-VER-TMS-000011` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `bf34c67d10ea481f7a8f35a887096f53f0986d38df0d7a358a85fad21aa20ea4` |
-| bytes hashed | 2917 |
+| sha256 of this record's exact current bytes | `8b5ec21d025d11cf3b8a01cc9f08acaeb1d9dcb579d4a07beb1c49a5ba4685f6` |
+| bytes hashed | 4492 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -43,7 +43,133 @@ The signature in section 9 refers to the bytes hashed above. If the record chang
 The block below is the file's exact bytes. You need no other file open to review this record.
 
 ```json
-{"artifact_type": "test_measure", "assumption_refs": ["FB2-ASM-001"], "automated_review_status": {"consistency_checks": false, "last_run": "2026-09-18T00:00:00Z", "links_valid": false, "provenance_consistent": false, "schema_valid": false}, "baseline_id": "BAS-REF-001", "cleanup": "Return HIL bench to safe state", "created_at": "2026-09-18T00:00:00Z", "engineering_domain": "verification", "environment": {"configuration": "tests/hil placeholder (unpublished upstream)", "hardware": "Target TMS570LC4357 + HIL bench (blocked — unpublished)", "software": "Linked target program", "tools": ["GCC"]}, "expected_outcomes": [{"expected_value": "true", "signal": "hil_reaction_verified", "tolerance": "exact", "unit": "bool"}], "human_approval_status": "pending", "id": "FB2-VER-TMS-000011", "lifecycle_status": "draft", "objective": "Define the HIL verification intent for the cell-voltage safety chain on target hardware; PLANNING STUB — no execution performed, execution blocked (tests/hil placeholder only, no target hardware in corpus scope)", "oracle_basis": "synthetic_assumption", "origin": "synthetic", "owner_role": "verification_engineer", "preconditions": ["HIL bench available (blocked — unpublished upstream)", "Target program built with coverage instrumentation (blocked)"], "product_verification_credit": false, "production_authorized": false, "profile": "synthetic_reference", "referenced_designs": ["FB2-SW-DSN-000001", "FB2-SW-DSN-000002", "FB2-SW-DSN-000003"], "referenced_requirements": ["FB2-SAF-FSR-000001", "FB2-SAF-FSR-000002", "FB2-SAF-FSR-000003", "FB2-SAF-FSR-000004"], "regression_selection": "Include once HIL bench exists", "revision": "1", "revision_history": [{"author": "verification_engineer", "date": "2026-09-18T00:00:00Z", "description": "Planning stub for HIL intent; no execution", "revision": "1"}], "scenario_id": "SCN-BASELINE", "schema_version": "1.0.0", "source_refs": [], "standards_mappings": [{"rationale": "System qualification test on target", "reference": "Part 4, Clause 8", "standard_id": "ISO_26262_2018", "status": "mapped"}, {"rationale": "System qualification test (HIL)", "reference": "SYS.5", "standard_id": "ASPICE_PAM_41", "status": "mapped"}], "steps": [{"action": "Apply overvoltage stimulus on HIL cell emulator", "expected": "AFE path acquires violated sample", "step": 1}, {"action": "Observe contactor command on target I/O", "expected": "Coils de-energized within FTTI", "step": 2}, {"action": "Collect line/branch coverage on target", "expected": "Coverage record retained", "step": 3}], "stimuli": [{"signal": "input", "timing": "t=0", "value": "per step definition"}], "test_type": "system", "timing": {"max_execution_time_ms": 60000, "setup_time_ms": 5000, "teardown_time_ms": 1000}, "title": "Test: HIL Fault Reaction (Target)", "tolerances": {"value": "exact"}, "updated_at": "2026-09-18T00:00:00Z", "variant_applicability": ["VAR-REF-001"]}
+{
+  "artifact_type": "test_measure",
+  "assumption_refs": [
+    "FB2-ASM-001"
+  ],
+  "automated_review_status": {
+    "consistency_checks": false,
+    "last_run": "2026-09-18T00:00:00Z",
+    "links_valid": false,
+    "provenance_consistent": false,
+    "schema_valid": false
+  },
+  "baseline_id": "BAS-REF-001",
+  "cleanup": "Return HIL bench to safe state",
+  "created_at": "2026-09-18T00:00:00Z",
+  "engineering_domain": "verification",
+  "environment": {
+    "configuration": "tests/hil placeholder (unpublished upstream)",
+    "hardware": "Target TMS570LC4357 + HIL bench (blocked — unpublished)",
+    "software": "Linked target program",
+    "tools": [
+      "GCC"
+    ]
+  },
+  "expected_outcomes": [
+    {
+      "expected_value": "true",
+      "signal": "hil_reaction_verified",
+      "tolerance": "exact",
+      "unit": "bool"
+    }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-VER-TMS-000011",
+  "lifecycle_status": "draft",
+  "objective": "Define the HIL verification intent for the cell-voltage safety chain on target hardware; PLANNING STUB — no execution performed, execution blocked (tests/hil placeholder only, no target hardware in corpus scope)",
+  "oracle_basis": "synthetic_assumption",
+  "origin": "synthetic",
+  "owner_role": "verification_engineer",
+  "preconditions": [
+    "HIL bench available (blocked — unpublished upstream)",
+    "Target program built with coverage instrumentation (blocked)"
+  ],
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "referenced_designs": [
+    "FB2-SW-DSN-000001",
+    "FB2-SW-DSN-000002",
+    "FB2-SW-DSN-000003"
+  ],
+  "referenced_requirements": [
+    "FB2-SAF-FSR-000001",
+    "FB2-SAF-FSR-000002",
+    "FB2-SAF-FSR-000003",
+    "FB2-SAF-FSR-000004"
+  ],
+  "regression_selection": "Include once HIL bench exists",
+  "revision": "1",
+  "revision_history": [
+    {
+      "author": "verification_engineer",
+      "date": "2026-09-18T00:00:00Z",
+      "description": "Planning stub for HIL intent; no execution",
+      "revision": "1"
+    }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "source_refs": [],
+  "standards_mappings": [
+    {
+      "rationale": "System qualification test on target",
+      "reference": "Part 4, Clause 8",
+      "standard_id": "ISO_26262_2018",
+      "status": "mapped",
+      "relationship": "derivation_basis",
+      "relationship_note": "The rationale states the derivation explicitly ('system qualification test'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
+    },
+    {
+      "rationale": "System qualification test (HIL)",
+      "reference": "SYS.5",
+      "standard_id": "ASPICE_PAM_41",
+      "status": "mapped",
+      "relationship": "derivation_basis",
+      "relationship_note": "The rationale states the derivation explicitly ('system qualification test'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
+    }
+  ],
+  "steps": [
+    {
+      "action": "Apply overvoltage stimulus on HIL cell emulator",
+      "expected": "AFE path acquires violated sample",
+      "step": 1
+    },
+    {
+      "action": "Observe contactor command on target I/O",
+      "expected": "Coils de-energized within FTTI",
+      "step": 2
+    },
+    {
+      "action": "Collect line/branch coverage on target",
+      "expected": "Coverage record retained",
+      "step": 3
+    }
+  ],
+  "stimuli": [
+    {
+      "signal": "input",
+      "timing": "t=0",
+      "value": "per step definition"
+    }
+  ],
+  "test_type": "system",
+  "timing": {
+    "max_execution_time_ms": 60000,
+    "setup_time_ms": 5000,
+    "teardown_time_ms": 1000
+  },
+  "title": "Test: HIL Fault Reaction (Target)",
+  "tolerances": {
+    "value": "exact"
+  },
+  "updated_at": "2026-09-18T00:00:00Z",
+  "variant_applicability": [
+    "VAR-REF-001"
+  ]
+}
 ```
 
 ## 4. Claims to verify
@@ -252,7 +378,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `bf34c67d10ea481f7a8f35a887096f53f0986d38df0d7a358a85fad21aa20ea4`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `8b5ec21d025d11cf3b8a01cc9f08acaeb1d9dcb579d4a07beb1c49a5ba4685f6`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

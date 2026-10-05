@@ -300,14 +300,14 @@
   "anchor_registry_applies": true,
   "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
   "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
-  "anchor_registry_sha256": "c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7",
-  "record_bytes": 17469,
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 22139,
   "record_path": "docs/artifacts/corpus/synthetic_reference/safety/sec-authenticated-transport-network-service.json",
-  "record_sha256": "6ee726f47d7a7c1884e9e35fa395d6eab7967069e7a53ddb5bf7295a14c11fe6",
+  "record_sha256": "26a2da1b99f85ae086c8bf7db2a76af3fd69e731a169a4163d272b27fdd25527",
   "verbatim_block_fence": "```",
   "verbatim_block_is_record_bytes": true,
   "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
-  "verbatim_block_sha256": "cc7b3814680f7112a7790f63c15d66b5548687d3374a7a8361cf838e6a8688a1"
+  "verbatim_block_sha256": "b058ad3c1b04480712043073fe0570f04ac1e3a3e54a2ce0cfb2c78c934b2fbf"
  },
  "is_a_corpus_record": false,
  "known_limitations_verbatim": [
@@ -473,7 +473,7 @@
   "real_source_control_status": "absent",
   "real_source_control_status_note": "The control this requirement specifies is NOT present in the real foxBMS 2 source at commit 308028fb.",
   "real_source_presence": "Control ABSENT. The real foxBMS 2 master's only network service is a plain-TCP echo server: src/app/application/ethernet/ethernet.c:255 creates an AF_INET/SOCK_STREAM/IPPROTO_TCP socket, :276-281 binds it, :288 calls FreeRTOS_accept, and the accepted socket is handed to a task at :292 with no credential exchange, no peer-address check and no cryptographic handshake. The peer address is captured by accept as an output parameter and never inspected, and the endpoint parameter is explicitly discarded at :248. No TLS or equivalent cryptographic library is present in the master communication stack. Anchor FB2-SRC-COD-000057.",
-  "revision": "3",
+  "revision": "4",
   "revision_history": [
    {
     "author": "cybersecurity_engineer",
@@ -492,12 +492,27 @@
     "date": "2026-09-30T00:00:00Z",
     "description": "Added the fault_reaction block that the safety-requirement completeness validator (MUT-008, safety_requirement_completeness_checker) requires and did not find. That rule used to carry an id filter '-FSR-' in id which made it structurally incapable of reporting this record, while its sibling verification_traceability_checker selected the same population - requirement plus engineering_domain equals safety - with no id filter at all. The filter has been removed from the rule, which widened its scope and weakened nothing; see finding FB2-REV-FND-000039. The block authored here is transcribed from this record's own statement, acceptance_criteria and conditions_modes, and records three absences honestly rather than filling them: neither safety concept allocates a fault reaction to any element for the security chain (element_owns_reaction is therefore false), the safety goal's timing budget has no cybersecurity leg so no reaction-time budget is stated, and the control's real-source status and unverified verification leg are carried through. No acceptance criterion, ASIL value, statement, rationale, verification approach or verification status was changed. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false. No human has approved this revision, no tool is claimed to be qualified, and no certification, ISO 26262 conformity or ASPICE capability level is claimed or implied.",
     "revision": "3"
+   },
+   {
+    "author": "corpus_governance",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect corrected is legibility: this record was already marked `profile: synthetic_reference` and, for the SYRs, already says in its own limitations field that it establishes nothing about the real project - but a reader skimming `artifact_type`, `asil` and `standards_mappings` sees a safety requirement at an ASIL with an ISO 26262 clause and status `mapped`, and reads it as an allocated, conformant safety obligation of the product. It is a requirement of the fictional reference project this corpus declares. derivation_basis names what the derivation actually rests on - for most of these, specific pinned file:line ranges, and for FB2-SAF-FSR-000004, FB2-HW-TSR-000004, FB2-SYS-SYR-000004 and FB2-SYS-SYR-000005, the explicit statement that there is no such source because the subject does not exist - and states what it does not support. No other field of the record was modified.",
+    "revision": "4"
    }
   ],
   "safety_allocation": {
    "asil": "not_applicable",
    "mitigation": "Security mitigation for the freedom-from-interference assumption of the safety requirements. This requirement is classified as a security requirement, not an ASIL allocation; asil is recorded as not_applicable because ISO 26262 does not allocate ASIL to a security requirement. It is traced to FB2-SAF-SGO-000001 because a compromised communication path can undermine the assurance of the requirements derived from that goal.",
    "safety_goal_ref": "FB2-SAF-SGO-000001"
+  },
+  "safety_class_disclaimer": {
+   "derivation_basis": {
+    "locator": "src/app/application/ethernet/ethernet.c:241-294 (ETH_ListenForConnection) for the unauthenticated accept path this requirement forbids; src/app/application/ethernet/ethernet.c:128-239 (ETH_EchoServerInstance) for the service that runs on it; src/app/application/config/ethernet_cfg.h:84-96 (ETH_ECHO_SERVER_PORT_NUMBER) and src/app/application/config/ethernet_cfg.c:65-69 (eth_ipAddress) for the fixed port and configured address. Pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The requirement is a forward-engineered proposal: the real source has no authentication, no session and no cryptography for it to satisfy.",
+    "what_it_supports": "That the pinned source accepts a network connection without authenticating the peer, which is a real and checkable observation. It supports nothing about the obligation being adopted, implemented or verified: no authentication exists in the source to verify, and the corpus holds no ISO/SAE 21434 work product."
+   },
+   "misreading_warning": "A reader who sees a safety-domain requirement with a `safety_goal_ref` naming a safety goal, mapped to ISO 26262 Part 4 Clause 7, will conclude the product requires authenticated transport and that the requirement is an allocated safety obligation. The record's own ISO mapping is relationship: `referenced_only` and status `partially_mapped` - the freedom-from-interference clause is NAMED as the reason authentication matters, and no interference analysis exists here. The asil is `not_applicable`, and the pinned source has no authentication at all.",
+   "not_a_project_published_artefact": true,
+   "not_a_project_published_artefact_reason": "This requirement belongs to the fictional reference project this corpus declares in its synthetic_reference profile, not to the foxBMS 2 product. foxBMS 2 published no requirement of any kind with an identifier, and nothing was ever allocated to an ASIL on its behalf. It is one of the reference project's security requirements, and its asil is `not_applicable`: this is a cybersecurity obligation written for a fictional item, not an ISO 26262 safety requirement. foxBMS 2 published no such requirement and performed no ISO/SAE 21434 work."
   },
   "scenario_id": "SCN-BASELINE",
   "schema_version": "1.0.0",
@@ -510,25 +525,31 @@
    {
     "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists in this corpus, clause conformance is not claimed, and the mapping has not been reviewed by any authority.",
     "reference": "Clause 8.5 (security requirements) derived from the Clause 15 mitigation concept; communication protection concept per Clause 10",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('named for traceability of intent only'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_SAE_21434_2021",
     "status": "unverified"
    },
    {
     "rationale": "The hypothetical project has no communication protection concept. The gap is deliberate and is what this requirement is intended to close.",
     "reference": "Clause 8.6 / Clause 10.3 (communication protection)",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('the gap is deliberate'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_SAE_21434_2021",
     "status": "gap"
    },
    {
     "rationale": "Only the identification of the communication path as an interference vector is mapped. The freedom-from-interference analysis itself is not part of this corpus.",
     "reference": "Part 4, Clause 7 (technical safety requirements, freedom from interference)",
+    "relationship": "referenced_only",
+    "relationship_note": "The rationale says so in its own words ('is not part of this corpus'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause.",
     "standard_id": "ISO_26262_2018",
     "status": "partially_mapped"
    }
   ],
   "statement": "The BMS master software shall not service any externally reachable network session until the peer has been authenticated by a cryptographically sound mechanism, and shall protect the confidentiality and integrity of all session data after authentication.",
   "title": "SEC-000001: Authenticated and confidential transport for externally reachable network services",
-  "updated_at": "2026-09-30T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "variant_applicability": [
    "VAR-REF-001"
   ],
@@ -557,7 +578,7 @@
   },
   "_packet_sha256": null,
   "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
-  "_record_sha256_at_signing": "6ee726f47d7a7c1884e9e35fa395d6eab7967069e7a53ddb5bf7295a14c11fe6",
+  "_record_sha256_at_signing": "26a2da1b99f85ae086c8bf7db2a76af3fd69e731a169a4163d272b27fdd25527",
   "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
   "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
   "comments": "",
@@ -586,6 +607,6 @@
   "production_authorized": false,
   "profile": "synthetic_reference",
   "record_id": "FB2-SAF-SEC-000001",
-  "revision": "3"
+  "revision": "4"
  }
 }

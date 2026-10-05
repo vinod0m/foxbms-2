@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/analyses/fmea-cell-voltage.json` |
-| size on disk | 7072 bytes |
+| size on disk | 8136 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-ANL-000001)`, never by `FB2-SAF-ANL-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `10fe3e64e8432c9e245351809f3887396c705e8efb8bd64c1409ff9ae1598704` |
-| bytes hashed | 7072 |
+| sha256 of this record's exact current bytes | `5cd71bd43090c9c5524e3c51f4098b049cd2f79945937fb22e76d2494dbcd8cf` |
+| bytes hashed | 8136 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -73,11 +73,15 @@ The block below is the file's exact bytes. You need no other file open to review
   {
    "standard": "ISO 26262:2018",
    "part": "9",
-   "clause": "7.4.2"
+   "clause": "7.4.2",
+   "relationship": "unclassifiable",
+   "relationship_note": "This mapping names ISO 26262:2018  and carries no rationale, so nothing in the entry itself says whether the clause is a derivation basis, a conformance claim or a bare reference. Classifying it either way would be a guess presented as a finding, so it is recorded as unclassifiable rather than defaulted to whichever value sounds weakest. It is also unstatused (status=None), which is the same gap: this entry was never given the disposition its siblings carry."
   },
   {
    "standard": "Automotive SPICE PAM 4.1",
-   "process": "MAN.5"
+   "process": "MAN.5",
+   "relationship": "unclassifiable",
+   "relationship_note": "This mapping names Automotive SPICE PAM 4.1  and carries no rationale, so nothing in the entry itself says whether the clause is a derivation basis, a conformance claim or a bare reference. Classifying it either way would be a guess presented as a finding, so it is recorded as unclassifiable rather than defaulted to whichever value sounds weakest. It is also unstatused (status=None), which is the same gap: this entry was never given the disposition its siblings carry."
   }
  ],
  "lifecycle_status": "baselined",
@@ -656,7 +660,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `10fe3e64e8432c9e245351809f3887396c705e8efb8bd64c1409ff9ae1598704`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `5cd71bd43090c9c5524e3c51f4098b049cd2f79945937fb22e76d2494dbcd8cf`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

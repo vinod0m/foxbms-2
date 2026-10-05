@@ -1,6 +1,6 @@
 {
  "id": "FB2-SAF-HAZ-000001",
- "revision": "1",
+ "revision": "2",
  "schema_version": "1.0.0",
  "artifact_type": "hazard",
  "engineering_domain": "safety",
@@ -28,15 +28,28 @@
    "standard_id": "ISO_26262_2018",
    "reference": "Part 3, Clause 6",
    "status": "mapped",
-   "rationale": "Hazard analysis for E/E system"
+   "relationship": "derivation_basis",
+   "rationale": "Hazard analysis for E/E system",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('hazard analysis for e/e system'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 4, Clause 6",
    "status": "mapped",
-   "rationale": "System-level hazard analysis"
+   "relationship": "derivation_basis",
+   "rationale": "System-level hazard analysis",
+   "relationship_note": "The rationale states the record was written from the clause's concept ('system-level hazard analysis'). Where the same rationale also says that no clause text was reproduced or consulted, that is a RIGHTS statement about wording, not a statement about influence: the record took the concept's shape and not its words, which is why the clause is its derivation basis. It is not a conformance claim - no clause was audited against this record and no assessment was performed."
   }
  ],
+ "safety_class_disclaimer": {
+  "not_a_project_published_artefact": true,
+  "not_a_project_published_artefact_reason": "No hazard analysis and risk assessment exists for foxBMS 2, and this is not one. The hazardous events belong to the fictional reference project this corpus declares; they are authored inputs of that project, and the record is in the corpus precisely so that the reference project's concept chain has a hazard to start from.",
+  "misreading_warning": "A reader who sees artifact_type `hazard` with HE-01 at ASIL_D and ISO 26262 Part 3 and Part 4 Clause 6 mappings with status `mapped` will conclude a HARA was performed and returned an ASIL_D cell-overvoltage hazard. No HARA was performed for the product; these events and their S/E/C ratings are authored for a fictional project; and the mappings record which clause concepts the event shape was built from, not that a hazard analysis was carried out.",
+  "derivation_basis": {
+   "locator": "src/app/application/soa/soa.c:81-146 (SOA_CheckVoltages) for the limit thresholds that make the hazard reachable; src/app/driver/afe/api/afe.h:124 (AFE_StartMeasurement) for the measurement the reaction chain depends on; https://iisb-foxbms.iisb.fraunhofer.de/foxbms/gen2/docs/html/latest/software/structure/software-structure.html (section anchor sw-structure, retrieved 2026-10-01) for the module structure. All at the pinned commit 308028fb13d046ba29b98886895c2e17937b1437. The hazardous EVENTS have no external source: they originate in the fictional reference project.",
+   "what_it_supports": "That the pinned source can detect the violation, and that a wrong measurement is a credible malfunctioning behaviour. It supports nothing about the events' severity, exposure, controllability or ASIL, all four of which are authored inputs of the reference project."
+  }
+ },
  "lifecycle_status": "baselined",
  "automated_review_status": {
   "schema_valid": true,
@@ -49,13 +62,19 @@
  "production_authorized": false,
  "product_verification_credit": false,
  "created_at": "2026-09-08T00:00:00Z",
- "updated_at": "2026-09-08T00:00:00Z",
+ "updated_at": "2026-10-05T00:00:00Z",
  "revision_history": [
   {
    "revision": "1",
    "date": "2026-09-08T00:00:00Z",
    "author": "safety_engineer",
    "description": "Synthetic hazard analysis for hypothetical automotive BMS project"
+  },
+  {
+   "revision": "2",
+   "date": "2026-10-05T00:00:00Z",
+   "author": "corpus_governance",
+   "description": "Added safety_class_disclaimer, carrying no modification of the statement, the ASIL value, the allocation, the acceptance criteria or any standards mapping. The defect this corrects is legibility, not content: this record was already honest in `origin: synthetic` and in revision prose, but a reader skimming `artifact_type` and `standards_mappings` would take hazard for something the foxBMS 2 project published and its ISO 26262 mapping for a claim of satisfaction. Neither is true, and the correction now says so in declarative fields on the record itself. derivation_basis names the file:line or the corpus record the derivation actually rests on, and states what it does not support, so a grader can check the derivation instead of taking it on trust. No other field of the record was modified."
   }
  ],
  "malfunctioning_behavior": "AFE reports incorrect cell voltage (stuck-at, drift, communication error) OR SOA fails to detect limit violation OR contactor fails to open on violation OR BMS fails to request contactor opening",
@@ -63,7 +82,7 @@
   {
    "id": "HE-01",
    "description": "Cell overvoltage during charging leading to thermal runaway",
-   "operational_situation": "CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45\u00b0C",
+   "operational_situation": "CHARGING mode, high SOC (>90%), fast charge (>1C), ambient > 45°C",
    "severity": "S3",
    "exposure": "E4",
    "controllability": "C3",

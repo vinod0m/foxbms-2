@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/sec-message-integrity-freshness-safety-bus.json` |
-| size on disk | 21225 bytes |
+| size on disk | 22462 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-SEC-000003)`, never by `FB2-SAF-SEC-000003` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `49a864216377ffe3f1927e7b7ee5d5d532c9f3a9ae0d775388adaffd05c55483` |
-| bytes hashed | 21225 |
+| sha256 of this record's exact current bytes | `c5910cc572aa24350bdc6aafa62dca64ca2de70a838a2c108c6a151978780b23` |
+| bytes hashed | 22462 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | yes - this record cites source anchors |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -147,19 +147,25 @@ The block below is the file's exact bytes. You need no other file open to review
       "standard_id": "ISO_SAE_21434_2021",
       "reference": "Clause 15.4 (mitigation concept); asset-integrity protection per Clause 8.5",
       "status": "unverified",
-      "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists, no conformance is claimed and no review has taken place."
+      "relationship": "referenced_only",
+      "rationale": "Named for traceability of intent only. No ISO/SAE 21434 work product exists, no conformance is claimed and no review has taken place.",
+      "relationship_note": "The rationale says so in its own words ('named for traceability of intent only'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ISO_26262_2018",
       "reference": "Part 4, Clause 7 and Part 6, Clause 7 (protection of safety mechanisms from unintended effects)",
       "status": "partially_mapped",
-      "rationale": "The interference path is identified; the corresponding safety-mechanism protection analysis is not part of this corpus."
+      "relationship": "referenced_only",
+      "rationale": "The interference path is identified; the corresponding safety-mechanism protection analysis is not part of this corpus.",
+      "relationship_note": "The rationale says so in its own words ('is not part of this corpus'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9 (diagnostic coverage)",
       "status": "gap",
-      "rationale": "The rejection diagnosability criterion has no verification evidence in this corpus."
+      "relationship": "referenced_only",
+      "rationale": "The rejection diagnosability criterion has no verification evidence in this corpus.",
+      "relationship_note": "The rationale says so in its own words ('has no verification evidence in this corpus'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "revision_history": [
@@ -450,7 +456,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `49a864216377ffe3f1927e7b7ee5d5d532c9f3a9ae0d775388adaffd05c55483`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `c5910cc572aa24350bdc6aafa62dca64ca2de70a838a2c108c6a151978780b23`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

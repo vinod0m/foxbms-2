@@ -1,6 +1,6 @@
 {
   "id": "FB2-SW-IMP-000001",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "implementation",
   "engineering_domain": "software",
@@ -25,13 +25,17 @@
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9 (software unit verification is separate; this record is the code location the design maps to)",
       "status": "partially_mapped",
-      "rationale": "This record states where the code is and what it does. It makes no claim that the software unit was verified, and no ISO 26262 classification is asserted for it."
+      "relationship": "referenced_only",
+      "rationale": "This record states where the code is and what it does. It makes no claim that the software unit was verified, and no ISO 26262 classification is asserted for it.",
+      "relationship_note": "The rationale says so in its own words ('makes no claim that'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4 (software unit verification and traceability to the implementation)",
       "status": "partially_mapped",
-      "rationale": "The record supplies the design-to-code traceability that SWE.4 expects. It does not supply the verification evidence, which lives in the FB2-VER-TMS-* measures."
+      "relationship": "referenced_only",
+      "rationale": "The record supplies the design-to-code traceability that SWE.4 expects. It does not supply the verification evidence, which lives in the FB2-VER-TMS-* measures.",
+      "relationship_note": "The rationale says so in its own words ('does not supply the'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     }
   ],
   "lifecycle_status": "reviewed",
@@ -47,13 +51,113 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-10-02T00:00:00Z",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-02T00:00:00Z",
       "author": "sw_engineer",
       "description": "First issue. Authored because the corpus held no artefact of type implementation: the design-to-code relationship existed only as an implementation_mapping array inside FB2-SW-DSN-000001, and that array asserted four symbols (LTC_AFE_TriggerMeasurement, LTC_AFE_DMA_RxCallback, LTC_PEC_Calculate, LTC_6813_ReadVoltages) that exist nowhere in the repository. This record names only symbols that were read out of the pinned source and verified to exist there."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "traceability_owner",
+      "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered. Also repaired the one behaviour citation that resolved to nothing. AFE-IMP-PUBLISH cited evidence_symbol DATA_WRITE_DATA at line 653 with no file, and no code_location in this record named that symbol; line 653 also falls outside every code_location range the record carries, the nearest being LTC_Trigger at 833. Read at the pinned commit, line 653 of src/app/driver/afe/ltc/6813-1/ltc_6813-1.c is 'DATA_WRITE_DATA(ltc_state->ltcData.cellVoltage);' inside LTC_SaveVoltages, so the citation is accurate and was merely unattributable. The implementation schema had no symbol_role for a call site, which is why the record had nowhere to put it; 'macro_invocation' was added to the enum and the location recorded. The behaviour's own evidence_symbol and evidence_line_range are UNCHANGED - the repair makes the existing assertion resolvable rather than restating it.",
+      "pinned_source_migration": {
+        "finding": "FB2-REV-FND-000173",
+        "parts": [
+          "pinned_file_exists",
+          "pinned_content_hash_matches",
+          "line_range_within_file",
+          "symbol_within_line_range"
+        ],
+        "aggregate_field": "verified_against_pinned_source",
+        "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+        "previous_aggregate_per_location": [
+          {
+            "index": 0,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "833-2964",
+            "symbol": "LTC_Trigger",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 1,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "3678-3711",
+            "symbol": "LTC_StartVoltageMeasurement",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 2,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "3838-3878",
+            "symbol": "LTC_CheckPec",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 3,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "3064-3150",
+            "symbol": "LTC_SaveRxToVoltageBuffer",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 4,
+            "path": "src/app/driver/afe/ltc/common/ltc_pec.c",
+            "line_range": "75-115",
+            "symbol": "LTC_CalculatePec15",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 5,
+            "path": "src/app/driver/afe/ltc/api/ltc_afe.c",
+            "line_range": "142-150",
+            "symbol": "AFE_StartMeasurement",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 6,
+            "path": "src/app/driver/spi/spi.c",
+            "line_range": "403-511",
+            "symbol": "SPI_TransmitReceiveDataDma",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 7,
+            "path": "src/app/driver/afe/ltc/common/ltc_afe_dma.c",
+            "line_range": "88-93",
+            "symbol": "AFE_DmaCallback",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 8,
+            "path": "src/app/driver/dma/dma.c",
+            "line_range": "393-400",
+            "symbol": "AFE_DmaCallback",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 9,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "653",
+            "symbol": "DATA_WRITE_DATA",
+            "verified_against_pinned_source": null
+          }
+        ],
+        "aggregate_changed_at": [
+          {
+            "index": 9,
+            "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+            "line_range": "653",
+            "symbol": "DATA_WRITE_DATA",
+            "previous_aggregate": null,
+            "aggregate_now": true,
+            "part_that_is_false": null
+          }
+        ]
+      }
     }
   ],
   "implementation_kind": "driver_module",
@@ -66,6 +170,10 @@
       "symbol": "LTC_Trigger",
       "line_range": "833-2964",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -76,6 +184,10 @@
       "symbol": "LTC_StartVoltageMeasurement",
       "line_range": "3678-3711",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -86,6 +198,10 @@
       "symbol": "LTC_CheckPec",
       "line_range": "3838-3878",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -96,6 +212,10 @@
       "symbol": "LTC_SaveRxToVoltageBuffer",
       "line_range": "3064-3150",
       "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -106,6 +226,10 @@
       "symbol": "LTC_CalculatePec15",
       "line_range": "75-115",
       "content_hash": "sha256:af26f839e70fc0cf1bb1ab47231f3f342895f32871b9489163082d37635d18fa",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -116,6 +240,10 @@
       "symbol": "AFE_StartMeasurement",
       "line_range": "142-150",
       "content_hash": "sha256:972adaeef5c8682198672beeb7c90a57fca8b114f9bbe9ee41590f9a19cc7af6",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -126,6 +254,10 @@
       "symbol": "SPI_TransmitReceiveDataDma",
       "line_range": "403-511",
       "content_hash": "sha256:cf3f363240ca36bf2177e90ecdc048672546318db72b1f5d94129deab67d5a92",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -136,6 +268,10 @@
       "symbol": "AFE_DmaCallback",
       "line_range": "88-93",
       "content_hash": "sha256:62fbd4b2bb9cf25916aaa8c40bce6419cc9f6962c08a0bfff1dae8bc6749e285",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -146,7 +282,25 @@
       "symbol": "AFE_DmaCallback",
       "line_range": "393-400",
       "content_hash": "sha256:8d4822e23aa934807bed6bf6b50be97753abd96b80c344dccba0b299cf559d3d",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "translation_unit_body",
+      "verified_against_pinned_source": true
+    },
+    {
+      "repository": "foxbms-2",
+      "commit": "308028fb13d046ba29b98886895c2e17937b1437",
+      "path": "src/app/driver/afe/ltc/6813-1/ltc_6813-1.c",
+      "symbol": "DATA_WRITE_DATA",
+      "line_range": "653",
+      "content_hash": "sha256:f0b32ada54771f07d952422e9501043ac081c380e685d265cbd5ba6c431a429a",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
+      "symbol_role": "macro_invocation",
       "verified_against_pinned_source": true
     }
   ],

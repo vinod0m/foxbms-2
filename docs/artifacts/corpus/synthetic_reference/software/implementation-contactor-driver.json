@@ -1,6 +1,6 @@
 {
   "id": "FB2-SW-IMP-000003",
-  "revision": "1",
+  "revision": "2",
   "schema_version": "1.0.0",
   "artifact_type": "implementation",
   "engineering_domain": "software",
@@ -24,13 +24,17 @@
       "standard_id": "ISO_26262_2018",
       "reference": "Part 6, Clause 9 (this record is a code location, not a verification record)",
       "status": "partially_mapped",
-      "rationale": "States where the code for the hypothetical reference project's contactor path is. Makes no claim that it was verified and asserts no ASIL classification for the real product."
+      "relationship": "referenced_only",
+      "rationale": "States where the code for the hypothetical reference project's contactor path is. Makes no claim that it was verified and asserts no ASIL classification for the real product.",
+      "relationship_note": "The rationale says so in its own words ('makes no claim that'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
     },
     {
       "standard_id": "ASPICE_PAM_41",
       "reference": "SWE.4 (design-to-code traceability)",
       "status": "partially_mapped",
-      "rationale": "Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures."
+      "relationship": "derivation_basis",
+      "rationale": "Supplies the traceability SWE.4 expects for the reference project. Verification evidence lives in the FB2-VER-TMS-* measures.",
+      "relationship_note": "The rationale states the derivation explicitly ('supplies the'): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
     }
   ],
   "lifecycle_status": "draft",
@@ -46,13 +50,75 @@
   "production_authorized": false,
   "product_verification_credit": false,
   "created_at": "2026-10-02T00:00:00Z",
-  "updated_at": "2026-10-02T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
   "revision_history": [
     {
       "revision": "1",
       "date": "2026-10-02T00:00:00Z",
       "author": "sw_engineer",
       "description": "First issue. The reference project's design FB2-SW-DSN-000003 lists 'Count contactor cycles (FRAM persistence)' among its responsibilities. The pinned contactor.c contains no occurrence of fram or of cycle at all, so that element is declared here as an explicit not_in_source proposal rather than being reported as implemented."
+    },
+    {
+      "revision": "2",
+      "date": "2026-10-05T00:00:00Z",
+      "author": "traceability_owner",
+      "description": "Split verified_against_pinned_source into the four checks it stood for, per FB2-REV-FND-000173. The flag was one boolean over four constituents -- the file exists at the pinned commit, the recorded content_hash equals that blob's sha256, the line_range lies inside the file, and the symbol occurs inside the range -- and 80 of 81 locations passed all four, so the flag was rarely wrong and still could not be read as 'all four passed'. Each part is now recorded separately, the aggregate is recorded as what it is (the conjunction, and the validator rejects it when any part is false or undeclared), and every part is re-derived from the pinned blob by the corpus on every run, so the four are machine-checked rather than asserted. No engineering content changed: no path, symbol, line_range, content_hash or symbol_role was altered, and no behaviour description was altered.",
+      "pinned_source_migration": {
+        "finding": "FB2-REV-FND-000173",
+        "parts": [
+          "pinned_file_exists",
+          "pinned_content_hash_matches",
+          "line_range_within_file",
+          "symbol_within_line_range"
+        ],
+        "aggregate_field": "verified_against_pinned_source",
+        "aggregate_semantics": "conjunction of the four parts; null declines the claim",
+        "previous_aggregate_per_location": [
+          {
+            "index": 0,
+            "path": "src/app/driver/contactor/contactor.c",
+            "line_range": "125-163",
+            "symbol": "CONT_CheckFeedback",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 1,
+            "path": "src/app/driver/contactor/contactor.c",
+            "line_range": "165-182",
+            "symbol": "CONT_OpenContactor",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 2,
+            "path": "src/app/driver/contactor/contactor.c",
+            "line_range": "184-201",
+            "symbol": "CONT_CloseContactor",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 3,
+            "path": "src/app/driver/contactor/contactor.c",
+            "line_range": "86-106",
+            "symbol": "CONT_GetFeedbackOfAllContactors",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 4,
+            "path": "src/app/application/bms/bms.c",
+            "line_range": "898-1691",
+            "symbol": "BMS_Trigger",
+            "verified_against_pinned_source": true
+          },
+          {
+            "index": 5,
+            "path": "src/app/engine/diag/cbs/diag_cbs_contactor.c",
+            "line_range": "73-100",
+            "symbol": "DIAG_StringContactorFeedback",
+            "verified_against_pinned_source": true
+          }
+        ],
+        "aggregate_changed_at": []
+      }
     }
   ],
   "implementation_kind": "driver_module",
@@ -65,6 +131,10 @@
       "symbol": "CONT_CheckFeedback",
       "line_range": "125-163",
       "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -75,6 +145,10 @@
       "symbol": "CONT_OpenContactor",
       "line_range": "165-182",
       "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -85,6 +159,10 @@
       "symbol": "CONT_CloseContactor",
       "line_range": "184-201",
       "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -95,6 +173,10 @@
       "symbol": "CONT_GetFeedbackOfAllContactors",
       "line_range": "86-106",
       "content_hash": "sha256:71802c84e9b3ed5f9cd00c4b5c26c81cd459fc21006e98b3e62c929b171c0b83",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -105,6 +187,10 @@
       "symbol": "BMS_Trigger",
       "line_range": "898-1691",
       "content_hash": "sha256:c0e2f1d4dd83f059b91c11dd91543ef052d515eb7a247fa26be7b53897523286",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     },
@@ -115,6 +201,10 @@
       "symbol": "DIAG_StringContactorFeedback",
       "line_range": "73-100",
       "content_hash": "sha256:a191de93d454df12db6cd5a4b033700a20d24119fc1c8a17b92ebf1ed75d1775",
+      "pinned_file_exists": true,
+      "pinned_content_hash_matches": true,
+      "line_range_within_file": true,
+      "symbol_within_line_range": true,
       "symbol_role": "definition",
       "verified_against_pinned_source": true
     }

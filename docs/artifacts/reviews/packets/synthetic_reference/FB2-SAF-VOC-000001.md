@@ -20,7 +20,7 @@
 | production_authorized | `False` |
 | product_verification_credit | `False` |
 | file (exact) | `docs/artifacts/corpus/synthetic_reference/safety/controlled-vocabulary.json` |
-| size on disk | 275367 bytes |
+| size on disk | 276380 bytes |
 
 **`(profile, id)` is the primary key.** Under amendment ID-RULE-004-A1 an artefact identifier is unique *within its profile*, and two records of different profiles may legitimately carry the same identifier string. So this record is uniquely named by the pair `(synthetic_reference, FB2-SAF-VOC-000001)`, never by `FB2-SAF-VOC-000001` alone. If you are comparing this packet against a reference that gives only the id, it is ambiguous until the profile is also given.
 
@@ -28,10 +28,10 @@
 
 | field | value |
 | --- | --- |
-| sha256 of this record's exact current bytes | `beb85e09371508213f0e6d14dc2c353f19b88d8fb89c79263aca27fde35a0053` |
-| bytes hashed | 275367 |
+| sha256 of this record's exact current bytes | `eed4f524428769fdc82663afe575a0f3f78dae00cceee82730fee92ca25d8cb5` |
+| bytes hashed | 276380 |
 | embedded in section 3 verbatim | yes - the block is the file's bytes, not a re-serialisation |
-| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `c55e8125d0e9f2260d8614c8c82b264a197be2d94c8f050e1248e7a717dd7cd7` |
+| sha256 of `docs/artifacts/sources/source-registry.json` (the anchor registry the provenance gate reads) | `7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d` |
 | applies to this record | no - this record cites no source anchors, so the registry digest is recorded for completeness only |
 
 The signature in section 9 refers to the bytes hashed above. If the record changes, the digest changes, and a signature against the old digest no longer covers what is on disk. Run `make_review_packets.py --verify` to detect that.
@@ -65,13 +65,17 @@ The block below is the file's exact bytes. You need no other file open to review
    "standard_id": "ISO_26262_2018",
    "reference": "Part 1, Clause 4",
    "status": "mapped",
-   "rationale": "The vocabulary of terms the other parts of the standard introduce. This record supplies the reading of those terms AS THIS CORPUS USES THEM, which is what the corpus needed and did not have. No clause text is reproduced or paraphrased; the clause identifier is the whole of the standard reference."
+   "relationship": "referenced_only",
+   "rationale": "The vocabulary of terms the other parts of the standard introduce. This record supplies the reading of those terms AS THIS CORPUS USES THEM, which is what the corpus needed and did not have. No clause text is reproduced or paraphrased; the clause identifier is the whole of the standard reference.",
+   "relationship_note": "The rationale says so in its own words ('the clause identifier is the whole of the standard reference'): the clause is named for traceability or to record a boundary or an absence, and the record draws no content from the clause and claims nothing about it. The disposition is carried by `status`; the relationship is not a mapping from this record onto the clause."
   },
   {
    "standard_id": "ISO_26262_2018",
    "reference": "Part 1, Clause 5",
    "status": "partially_mapped",
-   "rationale": "The abbreviated terms the corpus uses (ASIL, FTTI, QM) and their expansions. The corpus uses all three abbreviations and defines none of them in a record; the expansions this record gives are the expansions the corpus's own prose and field names use, not a definition taken from the standard."
+   "relationship": "derivation_basis",
+   "rationale": "The abbreviated terms the corpus uses (ASIL, FTTI, QM) and their expansions. The corpus uses all three abbreviations and defines none of them in a record; the expansions this record gives are the expansions the corpus's own prose and field names use, not a definition taken from the standard.",
+   "relationship_note": "The rationale states the derivation explicitly (\"the expansions this record gives are the expansions the corpus's own\"): this record was written from the clause's concept, or supplies the work product the clause expects, or consumes the one the clause produces. The clause is the intellectual source of the content, which is what `derivation_basis` names. It is NOT a conformance claim: no clause text was consulted, no assessment was performed, and the clause is not a yardstick this record was measured against."
   }
  ],
  "lifecycle_status": "baselined",
@@ -7691,7 +7695,7 @@ The corpus now reads its approval contract from `docs/artifacts/governance/role-
 
 Three digests are involved and they are not interchangeable:
 
-- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `beb85e09371508213f0e6d14dc2c353f19b88d8fb89c79263aca27fde35a0053`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
+- `record_sha256_at_signing` is printed in section 4 of this packet and in this packet's `packet.json` under `integrity.record_sha256`. It is `eed4f524428769fdc82663afe575a0f3f78dae00cceee82730fee92ca25d8cb5`-class: the digest of THIS RECORD's bytes as they stand now. You can copy it straight out of section 4.
 - `sha256` is the digest of **the archived signed packet you are citing** - the copy under `docs/artifacts/reviews/signed/` with your signature block filled in. It is not the digest of the generated packet in front of you: that is a different file, because yours has your signature in it. The packet cannot print its own digest, and it cannot print yours before you have written it. Do not type it. Let the generator resolve it:
 
 ```

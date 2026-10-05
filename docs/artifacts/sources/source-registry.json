@@ -2041,5 +2041,28 @@
  "created_at": "2026-09-10T00:00:00Z",
  "repository_commit": "308028fb13d046ba29b98886895c2e17937b1437",
  "schema_version": "1.0.0",
- "updated_at": "2026-10-01T00:00:00Z"
+ "updated_at": "2026-10-01T00:00:00Z",
+ "provenance_basis": {
+  "what_is_pinned": "Every source anchor in this registry, and every as_is record's code_location and behaviour citation, is read against ONE commit: the commit named in `repository_commit` above. This is the commit the pinned blobs are taken from, and it is the commit the corpus's content hashes describe.",
+  "commit_sha": "308028fb13d046ba29b98886895c2e17937b1437",
+  "commit_subject": "Minor release of foxBMS 2 (v1.11.0)",
+  "commit_date": "2026-04-20T15:42:16+02:00",
+  "pinned_to": "the v1.11.0 release COMMIT",
+  "not_pinned_to_a_tag": {
+   "claim_that_would_be_false": "pinned to tag v1.11.0",
+   "why_it_is_false": "There is NO git tag object for this commit in the clone this corpus was built in. `git tag -l` lists nothing at all, so the repository was never fetched with tags.",
+   "measured_in_this_clone": {
+    "git tag -l": "no output (0 tags)",
+    "git describe --tags <sha>": "fatal: No names found, cannot describe anything.",
+    "git describe --tags --always <sha>": "308028fb (the abbreviated SHA, not a tag name)",
+    "git cat-file -t <sha>": "commit"
+   },
+   "what_is_true_and_what_is_not": "It is true that the pinned commit is the one foxBMS 2 released as v1.11.0: the commit's own subject line says so, and that is where the version in the subject comes from - the commit message, not a tag. It is NOT true that the corpus is pinned to a tag object, because there is none here to pin to, and `git describe` cannot name one. The distinction is recorded because 'pinned to tag v1.11.0' is the phrasing a reader will reach for, and writing it would put a claim in the audit trail that the clone cannot support.",
+   "the_strong_fact_this_preserves": "The inputs to this corpus are a real, dated, released upstream checkout, not a synthesis. That is worth stating plainly and it is verifiable: the commit exists, its subject names the release, its committer date is recorded above, and `git merge-base --is-ancestor <sha> HEAD` returns true, so the pinned source really is an ancestor of the tree this corpus was authored in. What that does NOT establish is any conformance to ISO 26262, any ASPICE capability level, or any assessment of foxBMS 2 by anyone - the upstream project has published no formal requirements with identifiers, no HARA, no safety concept and no test or coverage reports."
+  },
+  "how_this_is_verified": [
+   "corpus.py validate re-derives every code_location part and every behaviour citation against the blob at this commit, reading the git object store rather than the working tree, and reports the per-part agreement count on every run.",
+   "corpus.py selftest pins the registry's repository_commit to the expected baseline and fails if it is moved."
+  ]
+ }
 }
