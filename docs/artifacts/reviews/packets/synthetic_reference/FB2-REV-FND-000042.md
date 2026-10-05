@@ -156,17 +156,31 @@ Do not redo this. Three states are distinguished and they are not interchangeabl
 | primary key uniqueness | within-profile (profile, id) index built by this tool | unique in profile |
 | authority fields | direct read of the record | human_approval_status=pending, production_authorized=false, product_verification_credit=false |
 | source anchors | not applicable | this record cites no source_refs, so it asserts nothing about source bytes |
-| peer review coverage | reviewed_ids and reviewed_by lookup | UNEXAMINED: no review record in this corpus covers it |
+| peer review coverage (1 review record(s)) | reviewed_ids entries and reviewed_by links | 1 digest(s) match the record now, 0 mismatch, 0 placeholder |
 
 These are re-derived by this tool, independently of `corpus.py`. `corpus.py check` runs the same classes of check as part of the acceptance suite; its verdict is a separate, corroborating source, not the basis of the rows above.
 
 ### 5.2 Reviewed by a peer, and what it concluded
 
-**UNEXAMINED by any other record in this corpus.** No review record lists this record in its `reviewed_ids`, and no `reviewed_by` link targets it. That is a fact about the corpus, not about the record's quality - and it is the reason your signature carries more weight on this packet than on a covered one.
+1 review record(s) cover this record. Where a review is named by both a `reviewed_ids` entry and a `reviewed_by` link, it is one row.
+
+| review | type | reviewer role | reviewer model | reviewed revision | digest state | how it is recorded |
+| --- | --- | --- | --- | --- | --- | --- |
+| `FB2-REV-000023` | meta | quality_engineer | opencode/space-bunny-free | 1 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-finding-family-synthetic-reference.json; reviewed_by link FB2-LNK-REV-000128 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json |
+
+**1 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
+
+| finding | severity | category | description |
+| --- | --- | --- | --- |
+| `FB2-REV-FND-000201` | high | finding_provenance | The entire evidential basis of this record lies outside the distribution, so no reader of this repository can re-derive any of its numbers. FB2-REV-FND-000042 is severity high and disposition accepted - an OPEN finding - and every headline figure it states comes from three files under docs/artifacts/.work/: verification-env/sil/tools/find_vacuous_tests.py, verification-env/sil/logs/vacuous-final.… |
 
 ### 5.3 Traceability edges touching this record
 
-No link in the registry has this record as an endpoint. For a record of type `finding` that is unusual and is itself part of what is being reviewed.
+1 link(s) in the registry have this record as an endpoint.
+
+| link | from -> to | relation | review_state | rationale (short) |
+| --- | --- | --- | --- | --- |
+| `FB2-LNK-REV-000128` | FB2-REV-000023 -> FB2-REV-FND-000042 | reviewed_by | reviewed | FB2-REV-000023 re-derived this finding record's asserted condition from the corpus bytes it cites and checked its severity, dispo… |
 
 ### 5.4 The three states, stated explicitly
 
@@ -220,10 +234,10 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 - *What in this packet bears on it:* resolution text in the record.
 - *Your answer:*
 
-**Q4. This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?**
+**Q4. 1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
 
-- *Why a machine cannot answer this:* Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them.
-- *What in this packet bears on it:* Claims section; provenance_note; assumption_refs.
+- *Why a machine cannot answer this:* A prior reviewer and this record already disagree. Resolving that is the point of a second reader.
+- *What in this packet bears on it:* The disputed findings listed under what is already checked.
 - *Your answer:*
 
 _3 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._

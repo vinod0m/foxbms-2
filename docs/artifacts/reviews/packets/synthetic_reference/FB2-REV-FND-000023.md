@@ -181,26 +181,32 @@ Do not redo this. Three states are distinguished and they are not interchangeabl
 | primary key uniqueness | within-profile (profile, id) index built by this tool | unique in profile |
 | authority fields | direct read of the record | human_approval_status=pending, production_authorized=false, product_verification_credit=false |
 | source anchors | not applicable | this record cites no source_refs, so it asserts nothing about source bytes |
-| peer review coverage (1 review record(s)) | reviewed_ids entries and reviewed_by links | 1 digest(s) match the record now, 0 mismatch, 0 placeholder |
+| peer review coverage (2 review record(s)) | reviewed_ids entries and reviewed_by links | 2 digest(s) match the record now, 0 mismatch, 0 placeholder |
 
 These are re-derived by this tool, independently of `corpus.py`. `corpus.py check` runs the same classes of check as part of the acceptance suite; its verdict is a separate, corroborating source, not the basis of the rows above.
 
 ### 5.2 Reviewed by a peer, and what it concluded
 
-1 review record(s) cover this record. Where a review is named by both a `reviewed_ids` entry and a `reviewed_by` link, it is one row.
+2 review record(s) cover this record. Where a review is named by both a `reviewed_ids` entry and a `reviewed_by` link, it is one row.
 
 | review | type | reviewer role | reviewer model | reviewed revision | digest state | how it is recorded |
 | --- | --- | --- | --- | --- | --- | --- |
+| `FB2-REV-000023` | meta | quality_engineer | opencode/space-bunny-free | 3 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-finding-family-synthetic-reference.json; reviewed_by link FB2-LNK-REV-000116 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json |
 | `FB2-REV-000015` | domain | cybersecurity_engineer | openrouter/stealth/space-bunny-alpha | 3 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-security-verification-measures.json; reviewed_by link FB2-LNK-REVB-000171 in docs/artifacts/traceability/link-registry/synthetic_reference/links-concept-lifecycle.json |
 
-No finding in the corpus references this record.
+**1 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
+
+| finding | severity | category | description |
+| --- | --- | --- | --- |
+| `FB2-REV-FND-000205` | low | consistency | Seven records state their own disposition wrongly, in a field that now contradicts the field that carries it. FB2-REV-FND-000023 through FB2-REV-FND-000029 are all dispositioned 'resolved'. The lifecycle_status_note on each of the seven nonetheless ends: 'The disposition stays \'accepted\' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is … |
 
 ### 5.3 Traceability edges touching this record
 
-1 link(s) in the registry have this record as an endpoint.
+2 link(s) in the registry have this record as an endpoint.
 
 | link | from -> to | relation | review_state | rationale (short) |
 | --- | --- | --- | --- | --- |
+| `FB2-LNK-REV-000116` | FB2-REV-000023 -> FB2-REV-FND-000023 | reviewed_by | reviewed | FB2-REV-000023 re-derived this finding record's asserted condition from the corpus bytes it cites and checked its severity, dispo… |
 | `FB2-LNK-REVB-000171` | FB2-REV-000015 -> FB2-REV-FND-000023 | reviewed_by | reviewed | FB2-REV-000015 reviewed FB2-REV-FND-000023 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's cont… |
 
 ### 5.4 The three states, stated explicitly
@@ -255,13 +261,13 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 - *What in this packet bears on it:* resolution text; the named record id or rule.
 - *Your answer:*
 
-**Q4. This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?**
+**Q4. 1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
 
-- *Why a machine cannot answer this:* Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error.
-- *What in this packet bears on it:* The record's profile and corpus_boundaries block.
+- *Why a machine cannot answer this:* A prior reviewer and this record already disagree. Resolving that is the point of a second reader.
+- *What in this packet bears on it:* The disputed findings listed under what is already checked.
 - *Your answer:*
 
-_2 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._
+_3 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._
 
 ## 8. What your signature changes, and exactly what to write
 

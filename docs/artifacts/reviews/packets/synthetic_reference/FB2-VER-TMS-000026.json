@@ -1,14 +1,7 @@
 {
  "additional_questions_derived_not_shown": {
-  "count": 2,
+  "count": 1,
   "questions": [
-   {
-    "group": "standards mapping",
-    "priority": 40,
-    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
-    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
-    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
-   },
    {
     "group": "lifecycle status",
     "priority": 50,
@@ -38,6 +31,15 @@
     "review_state": "pending",
     "source_id": "FB2-VER-EXE-000026",
     "target_id": "FB2-VER-TMS-000026"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000220",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its central mechanism was re-derived against the pinned blob and verifies exactly: SOA_CheckTemperatures begins at src/app/application/soa/soa.c:148, tests BMS_GetCurrentFlowDirection(i_current) == BMS_DISCHARGING at line 160 and branches to the charge tier set at line 186, with distinct BC_TEMPERATURE_MAX_DISCHARGE_* and BC_TEMPERATURE_MAX_CHARGE_* constants and distinct diagnosis identifiers, which is the direction-selected tier set the record claims. The record's own residual_risk already discloses that identifying current direction with the requirement's notion of mode is an interpretation. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000026"
    }
   ],
   "machine_verified": [
@@ -62,20 +64,35 @@
     "result": "1/1 fully checked with no contradiction"
    },
    {
-    "check": "peer review coverage",
-    "method": "reviewed_ids and reviewed_by lookup",
-    "result": "UNEXAMINED: no review record in this corpus covers it"
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
    }
   ],
   "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
   "peer_review": {
-   "covered": false,
+   "covered": true,
    "digest_mismatch": 0,
-   "digest_ok": 0,
+   "digest_ok": 1,
    "digest_placeholder": 0,
    "disputed": [],
    "findings_about": [],
-   "reviews": []
+   "reviews": [
+    {
+     "checklist_version": "CHKL-TMS-PROV-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000021",
+     "review_path": "docs/artifacts/reviews/records/review-test-measure-synthetic.json",
+     "review_type": "adversarial",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "verification_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-test-measure-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000220 in docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json"
+     ]
+    }
+   ]
   },
   "state_legend": {
    "machine-verified": "settled by a detector; see machine_verified above",
@@ -219,11 +236,11 @@
    "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
   },
   {
-   "group": "review coverage",
-   "priority": 30,
-   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
-   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
-   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   "group": "standards mapping",
+   "priority": 40,
+   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
   }
  ],
  "questions_shown_count": 4,

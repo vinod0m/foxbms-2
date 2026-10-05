@@ -1,7 +1,14 @@
 {
  "additional_questions_derived_not_shown": {
-  "count": 2,
+  "count": 3,
   "questions": [
+   {
+    "group": "provenance honesty",
+    "priority": 20,
+    "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
+    "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
+    "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+   },
    {
     "group": "standards mapping",
     "priority": 40,
@@ -21,6 +28,15 @@
  },
  "already_checked": {
   "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REV-000116",
+    "rationale": "FB2-REV-000023 re-derived this finding record's asserted condition from the corpus bytes it cites and checked its severity, disposition and currency proof. Profile-scoped: only the synthetic_reference copy.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000023",
+    "target_id": "FB2-REV-FND-000023"
+   },
    {
     "link_id": "FB2-LNK-REVB-000171",
     "rationale": "FB2-REV-000015 reviewed FB2-REV-FND-000023 at revision 1 and enumerates it in reviewed_ids with the sha256 of the artifact's content at review time. Direction follows the pre-existing reviewed_by links in this registry, which run review -> artifact.",
@@ -53,20 +69,52 @@
     "result": "this record cites no source_refs, so it asserts nothing about source bytes"
    },
    {
-    "check": "peer review coverage (1 review record(s))",
+    "check": "peer review coverage (2 review record(s))",
     "method": "reviewed_ids entries and reviewed_by links",
-    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
+    "result": "2 digest(s) match the record now, 0 mismatch, 0 placeholder"
    }
   ],
   "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
   "peer_review": {
    "covered": true,
    "digest_mismatch": 0,
-   "digest_ok": 1,
+   "digest_ok": 2,
    "digest_placeholder": 0,
-   "disputed": [],
-   "findings_about": [],
+   "disputed": [
+    {
+     "category": "consistency",
+     "description": "Seven records state their own disposition wrongly, in a field that now contradicts the field that carries it. FB2-REV-FND-000023 through FB2-REV-FND-000029 are all dispositioned 'resolved'. The lifecycle_status_note on each of the seven nonetheless ends: 'The disposition stays \\'accepted\\' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is \u2026",
+     "finding_id": "FB2-REV-FND-000205",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-finding-family-synthetic-reference.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "consistency",
+     "description": "Seven records state their own disposition wrongly, in a field that now contradicts the field that carries it. FB2-REV-FND-000023 through FB2-REV-FND-000029 are all dispositioned 'resolved'. The lifecycle_status_note on each of the seven nonetheless ends: 'The disposition stays \\'accepted\\' because this schema has no closed value and the finding was valid: the acceptance stands and the closure is \u2026",
+     "finding_id": "FB2-REV-FND-000205",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-finding-family-synthetic-reference.json"
+    }
+   ],
    "reviews": [
+    {
+     "checklist_version": "CHKL-FINDING-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000023",
+     "review_path": "docs/artifacts/reviews/records/review-finding-family-synthetic-reference.json",
+     "review_type": "meta",
+     "reviewed_revision": "3",
+     "reviewer_model": "opencode/space-bunny-free",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-finding-family-synthetic-reference.json",
+      "reviewed_by link FB2-LNK-REV-000116 in docs/artifacts/traceability/link-registry/synthetic_reference/links-cell-voltage.json"
+     ]
+    },
     {
      "checklist_version": "2.0.0-concept-lifecycle",
      "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
@@ -196,11 +244,11 @@
    "why_this_needs_a_human": "`resolved` is a claim about the world. Re-deriving it is work no digest does."
   },
   {
-   "group": "provenance honesty",
-   "priority": 20,
-   "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
-   "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
-   "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
   }
  ],
  "questions_shown_count": 4,

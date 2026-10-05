@@ -47,6 +47,15 @@
     "review_state": "pending",
     "source_id": "FB2-MAN-CHG-000002",
     "target_id": "FB2-VER-TMS-000005"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000214",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its three steps include a retry-counter expectation with no matching expected_outcomes entry, which is part of FB2-REV-FND-000176, and it shares the template tolerances and timing constants that finding names. It is the only record in the family whose referenced_designs array is empty while it still claims an AFE SPI subject. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000005"
    }
   ],
   "machine_verified": [
@@ -71,16 +80,16 @@
     "result": "this record cites no source_refs, so it asserts nothing about source bytes"
    },
    {
-    "check": "peer review coverage",
-    "method": "reviewed_ids and reviewed_by lookup",
-    "result": "UNEXAMINED: no review record in this corpus covers it"
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
    }
   ],
   "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
   "peer_review": {
-   "covered": false,
+   "covered": true,
    "digest_mismatch": 0,
-   "digest_ok": 0,
+   "digest_ok": 1,
    "digest_placeholder": 0,
    "disputed": [
     {
@@ -102,7 +111,22 @@
      "source_path": "docs/artifacts/reviews/records/review-verification-planning-as-is.json"
     }
    ],
-   "reviews": []
+   "reviews": [
+    {
+     "checklist_version": "CHKL-TMS-PROV-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000021",
+     "review_path": "docs/artifacts/reviews/records/review-test-measure-synthetic.json",
+     "review_type": "adversarial",
+     "reviewed_revision": "1",
+     "reviewer_model": "openrouter/stealth/space-bunny-alpha",
+     "reviewer_role": "verification_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-test-measure-synthetic.json",
+      "reviewed_by link FB2-LNK-REVB-000214 in docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json"
+     ]
+    }
+   ]
   },
   "state_legend": {
    "machine-verified": "settled by a detector; see machine_verified above",
@@ -202,18 +226,18 @@
    "why_this_needs_a_human": "A test that cannot fail is indistinguishable from a passing test. This corpus measured 53 such files in its own suite and recorded it as FB2-REV-FND-000042."
   },
   {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
    "group": "provenance honesty",
    "priority": 20,
    "question": "This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?",
    "what_in_this_packet_bears_on_it": "The record's profile and corpus_boundaries block.",
    "why_this_needs_a_human": "Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error."
-  },
-  {
-   "group": "review coverage",
-   "priority": 30,
-   "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
-   "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
-   "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
   }
  ],
  "questions_shown_count": 4,

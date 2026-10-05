@@ -1,7 +1,14 @@
 {
  "additional_questions_derived_not_shown": {
-  "count": 1,
+  "count": 2,
   "questions": [
+   {
+    "group": "standards mapping",
+    "priority": 40,
+    "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
+    "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
+    "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
+   },
    {
     "group": "lifecycle status",
     "priority": 50,
@@ -111,8 +118,26 @@
    "digest_mismatch": 0,
    "digest_ok": 3,
    "digest_placeholder": 0,
-   "disputed": [],
-   "findings_about": [],
+   "disputed": [
+    {
+     "category": "verification",
+     "description": "Two records label an inequality as though it were an equality, in the one field that is supposed to say how the comparison is to be judged. FB2-VER-TMS-000002 records expected_outcomes[0] as {signal: contactor_open_latency_ms, expected_value: '<50', tolerance: 'exact', unit: 'ms'}. FB2-VER-TMS-000004 records {signal: independent_open_latency_ms, expected_value: '<80', tolerance: 'exact', unit: 'm\u2026",
+     "finding_id": "FB2-REV-FND-000177",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-test-measure-synthetic.json"
+    }
+   ],
+   "findings_about": [
+    {
+     "category": "verification",
+     "description": "Two records label an inequality as though it were an equality, in the one field that is supposed to say how the comparison is to be judged. FB2-VER-TMS-000002 records expected_outcomes[0] as {signal: contactor_open_latency_ms, expected_value: '<50', tolerance: 'exact', unit: 'ms'}. FB2-VER-TMS-000004 records {signal: independent_open_latency_ms, expected_value: '<80', tolerance: 'exact', unit: 'm\u2026",
+     "finding_id": "FB2-REV-FND-000177",
+     "raised_in": null,
+     "severity": "low",
+     "source_path": "docs/artifacts/reviews/records/review-test-measure-synthetic.json"
+    }
+   ],
    "reviews": [
     {
      "checklist_version": "CHKL-CHALLENGE-SAFETY-1.0.0",
@@ -288,18 +313,18 @@
    "why_this_needs_a_human": "A test that cannot fail is indistinguishable from a passing test. This corpus measured 53 such files in its own suite and recorded it as FB2-REV-FND-000042."
   },
   {
+   "group": "existing disagreement",
+   "priority": 15,
+   "question": "1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?",
+   "what_in_this_packet_bears_on_it": "The disputed findings listed under what is already checked.",
+   "why_this_needs_a_human": "A prior reviewer and this record already disagree. Resolving that is the point of a second reader."
+  },
+  {
    "group": "provenance honesty",
    "priority": 20,
    "question": "This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?",
    "what_in_this_packet_bears_on_it": "Claims section, source anchors; and the record's own provenance_note.",
    "why_this_needs_a_human": "A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong."
-  },
-  {
-   "group": "standards mapping",
-   "priority": 40,
-   "question": "For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?",
-   "what_in_this_packet_bears_on_it": "standards_mappings in section 3.",
-   "why_this_needs_a_human": "Clause selection is a reading of a standard, not a property of the repository."
   }
  ],
  "questions_shown_count": 4,

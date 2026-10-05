@@ -321,7 +321,11 @@ These are re-derived by this tool, independently of `corpus.py`. `corpus.py chec
 | `FB2-REV-000011` | meta | quality_engineer | openrouter/stealth/space-bunny-alpha | 1 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-prior-review.json; reviewed_by link FB2-LNK-REVB-000058 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json |
 | `FB2-REV-000001` | domain | safety_engineer | nvidia/nemotron-3-ultra-550b-a55b | 1 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-vertical-slice.json; reviewed_by link FB2-LNK-REVB-000075 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json |
 
-No finding in the corpus references this record.
+**1 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
+
+| finding | severity | category | description |
+| --- | --- | --- | --- |
+| `FB2-REV-FND-000177` | low | verification | Two records label an inequality as though it were an equality, in the one field that is supposed to say how the comparison is to be judged. FB2-VER-TMS-000002 records expected_outcomes[0] as {signal: contactor_open_latency_ms, expected_value: '<50', tolerance: 'exact', unit: 'ms'}. FB2-VER-TMS-000004 records {signal: independent_open_latency_ms, expected_value: '<80', tolerance: 'exact', unit: 'm… |
 
 ### 5.3 Traceability edges touching this record
 
@@ -375,19 +379,19 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 - *What in this packet bears on it:* acceptance_criteria in section 3.
 - *Your answer:*
 
-**Q3. This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?**
+**Q3. 1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
+
+- *Why a machine cannot answer this:* A prior reviewer and this record already disagree. Resolving that is the point of a second reader.
+- *What in this packet bears on it:* The disputed findings listed under what is already checked.
+- *Your answer:*
+
+**Q4. This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?**
 
 - *Why a machine cannot answer this:* A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong.
 - *What in this packet bears on it:* Claims section, source anchors; and the record's own provenance_note.
 - *Your answer:*
 
-**Q4. For each standards mapping: is the cited clause the right obligation for this work product, and is the status right?**
-
-- *Why a machine cannot answer this:* Clause selection is a reading of a standard, not a property of the repository.
-- *What in this packet bears on it:* standards_mappings in section 3.
-- *Your answer:*
-
-_1 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._
+_2 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._
 
 ## 8. What your signature changes, and exactly what to write
 

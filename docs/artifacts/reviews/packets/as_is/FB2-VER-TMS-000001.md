@@ -293,10 +293,11 @@ These are re-derived by this tool, independently of `corpus.py`. `corpus.py chec
 | `FB2-REV-000011` | meta | quality_engineer | openrouter/stealth/space-bunny-alpha | 1 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-meta-review-prior-review.json; reviewed_by link FB2-LNK-REVB-000057 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json |
 | `FB2-REV-000001` | domain | safety_engineer | nvidia/nemotron-3-ultra-550b-a55b | 1 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-vertical-slice.json; reviewed_by link FB2-LNK-REVB-000074 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json |
 
-**1 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
+**2 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
 
 | finding | severity | category | description |
 | --- | --- | --- | --- |
+| `FB2-REV-FND-000174` | medium | provenance | Five records in this family assert a review state that no review record supports, and no automated control can detect it. FB2-VER-TMS-000001, -000002, -000003, -000004 and -000005 each carry lifecycle_status 'reviewed'. Before this review existed, NONE of the five was named by any review record or by any reviewed_by link: they were all in the uncovered population this review was scoped to. So 're… |
 | `FB2-FND-000005` | medium | verification | Unit test uses mocked database and does not verify end-to-end timing from AFE acquisition to contactor opening. |
 
 ### 5.3 Traceability edges touching this record
@@ -351,7 +352,7 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 - *What in this packet bears on it:* acceptance_criteria in section 3.
 - *Your answer:*
 
-**Q3. 1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
+**Q3. 2 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
 
 - *Why a machine cannot answer this:* A prior reviewer and this record already disagree. Resolving that is the point of a second reader.
 - *What in this packet bears on it:* The disputed findings listed under what is already checked.

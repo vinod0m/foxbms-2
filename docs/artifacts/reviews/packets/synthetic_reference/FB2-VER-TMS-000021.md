@@ -313,22 +313,33 @@ Do not redo this. Three states are distinguished and they are not interchangeabl
 | primary key uniqueness | within-profile (profile, id) index built by this tool | unique in profile |
 | authority fields | direct read of the record | human_approval_status=pending, production_authorized=false, product_verification_credit=false |
 | source anchors (2) | per-anchor existence / content_hash / line_range / symbol, re-derived against the files on disk | 2/2 fully checked with no contradiction |
-| peer review coverage | reviewed_ids and reviewed_by lookup | UNEXAMINED: no review record in this corpus covers it |
+| peer review coverage (1 review record(s)) | reviewed_ids entries and reviewed_by links | 1 digest(s) match the record now, 0 mismatch, 0 placeholder |
 
 These are re-derived by this tool, independently of `corpus.py`. `corpus.py check` runs the same classes of check as part of the acceptance suite; its verdict is a separate, corroborating source, not the basis of the rows above.
 
 ### 5.2 Reviewed by a peer, and what it concluded
 
-**UNEXAMINED by any other record in this corpus.** No review record lists this record in its `reviewed_ids`, and no `reviewed_by` link targets it. That is a fact about the corpus, not about the record's quality - and it is the reason your signature carries more weight on this packet than on a covered one.
+1 review record(s) cover this record. Where a review is named by both a `reviewed_ids` entry and a `reviewed_by` link, it is one row.
+
+| review | type | reviewer role | reviewer model | reviewed revision | digest state | how it is recorded |
+| --- | --- | --- | --- | --- | --- | --- |
+| `FB2-REV-000021` | adversarial | verification_engineer | openrouter/stealth/space-bunny-alpha | 1 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-test-measure-synthetic.json; reviewed_by link FB2-LNK-REVB-000215 in docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json |
+
+**1 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
+
+| finding | severity | category | description |
+| --- | --- | --- | --- |
+| `FB2-REV-FND-000175` | low | provenance | One source-grounded oracle attributes to the wrong function a flag that function does not set. The record's oracle_detail.why_this_oracle reads: "'A transferred value whose recomputed packet error code differs from the received one is marked invalid, and an invalid value is not consumed by a decision' is what LTC_CheckPec (ltc_6813-1.c:3838-3878) and the invalidCellVoltage flag it sets at line 64… |
 
 ### 5.3 Traceability edges touching this record
 
-2 link(s) in the registry have this record as an endpoint.
+3 link(s) in the registry have this record as an endpoint.
 
 | link | from -> to | relation | review_state | rationale (short) |
 | --- | --- | --- | --- | --- |
 | `FB2-LNK-SYR-000121` | FB2-VER-TMS-000021 -> FB2-SYS-SYR-000001 | verifies | pending | This measure is the source-grounded part of FB2-SYS-SYR-000001's verification: it decides the requirement's integrity-before-use … |
 | `FB2-LNK-EXE-000121` | FB2-VER-EXE-000021 -> FB2-VER-TMS-000021 | result_of | pending | FB2-VER-EXE-000021 is the execution record for FB2-VER-TMS-000021. It carries execution_kind 'none' and outcome 'blocked' with th… |
+| `FB2-LNK-REVB-000215` | FB2-REV-000021 -> FB2-VER-TMS-000021 | reviewed_by | reviewed | FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its two so… |
 
 ### 5.4 The three states, stated explicitly
 
@@ -383,16 +394,16 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 - *What in this packet bears on it:* acceptance_criteria in section 3.
 - *Your answer:*
 
-**Q3. This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?**
+**Q3. 1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
+
+- *Why a machine cannot answer this:* A prior reviewer and this record already disagree. Resolving that is the point of a second reader.
+- *What in this packet bears on it:* The disputed findings listed under what is already checked.
+- *Your answer:*
+
+**Q4. This record is a synthetic fixture of the hypothetical reference project this corpus also declares. Is anything in it readable as a claim about the real foxBMS 2 product?**
 
 - *Why a machine cannot answer this:* Contamination between the fictional project and the real one is the failure this corpus's whole as_is/synthetic split exists to prevent, and it is a reading failure, not a data error.
 - *What in this packet bears on it:* The record's profile and corpus_boundaries block.
-- *Your answer:*
-
-**Q4. No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?**
-
-- *Why a machine cannot answer this:* Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that.
-- *What in this packet bears on it:* What is already checked, below: the review coverage column for this record.
 - *Your answer:*
 
 _2 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._

@@ -154,17 +154,31 @@ Do not redo this. Three states are distinguished and they are not interchangeabl
 | primary key uniqueness | within-profile (profile, id) index built by this tool | unique in profile |
 | authority fields | direct read of the record | human_approval_status=pending, production_authorized=false, product_verification_credit=false |
 | source anchors | not applicable | this record cites no source_refs, so it asserts nothing about source bytes |
-| peer review coverage | reviewed_ids and reviewed_by lookup | UNEXAMINED: no review record in this corpus covers it |
+| peer review coverage (1 review record(s)) | reviewed_ids entries and reviewed_by links | 1 digest(s) match the record now, 0 mismatch, 0 placeholder |
 
 These are re-derived by this tool, independently of `corpus.py`. `corpus.py check` runs the same classes of check as part of the acceptance suite; its verdict is a separate, corroborating source, not the basis of the rows above.
 
 ### 5.2 Reviewed by a peer, and what it concluded
 
-**UNEXAMINED by any other record in this corpus.** No review record lists this record in its `reviewed_ids`, and no `reviewed_by` link targets it. That is a fact about the corpus, not about the record's quality - and it is the reason your signature carries more weight on this packet than on a covered one.
+1 review record(s) cover this record. Where a review is named by both a `reviewed_ids` entry and a `reviewed_by` link, it is one row.
+
+| review | type | reviewer role | reviewer model | reviewed revision | digest state | how it is recorded |
+| --- | --- | --- | --- | --- | --- | --- |
+| `FB2-REV-000022` | meta | quality_engineer | opencode/space-bunny-free | 4 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-finding-family-as-is.json; reviewed_by link FB2-LNK-REV-000012 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json |
+
+**1 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
+
+| finding | severity | category | description |
+| --- | --- | --- | --- |
+| `FB2-REV-FND-000199` | medium | finding_provenance | This record's proof-of-currency block contradicts both the source it claims to have re-read and the record's own evidence field. The reverification block of FB2-REV-FND-000036 states: 'FreeRTOS.h:587-592 still defines the three queue-registry functions as empty function-like macros and configQUEUE_REGISTRY_SIZE is still defined nowhere, so the shipped configuration is still exposed: the condition… |
 
 ### 5.3 Traceability edges touching this record
 
-No link in the registry has this record as an endpoint. For a record of type `finding` that is unusual and is itself part of what is being reviewed.
+1 link(s) in the registry have this record as an endpoint.
+
+| link | from -> to | relation | review_state | rationale (short) |
+| --- | --- | --- | --- | --- |
+| `FB2-LNK-REV-000012` | FB2-REV-000022 -> FB2-REV-FND-000036 | reviewed_by | reviewed | FB2-REV-000022 re-derived this finding record's asserted condition from the corpus bytes it cites and checked its severity, dispo… |
 
 ### 5.4 The three states, stated explicitly
 
@@ -218,10 +232,10 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 - *What in this packet bears on it:* resolution text in the record.
 - *Your answer:*
 
-**Q4. This record is labelled origin=`source_observed`: it claims its content was read out of the foxBMS 2 source rather than constructed. Reading the anchors listed under claims, is that true - and is the record a faithful statement of what those files actually say?**
+**Q4. 1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
 
-- *Why a machine cannot answer this:* A file's bytes and a record's reading of them can disagree, and only the reader who looked can say which is wrong.
-- *What in this packet bears on it:* Claims section, source anchors; and the record's own provenance_note.
+- *Why a machine cannot answer this:* A prior reviewer and this record already disagree. Resolving that is the point of a second reader.
+- *What in this packet bears on it:* The disputed findings listed under what is already checked.
 - *Your answer:*
 
 _2 further question(s) were derived from this record and are NOT shown above, because a reviewer handed a long list reads none of it. They are recorded in `packet.json` beside this file under `additional_questions_derived_not_shown` - nothing was discarded. Ask for them if the four above do not cover what you need to decide._

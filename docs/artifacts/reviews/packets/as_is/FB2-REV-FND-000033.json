@@ -1,14 +1,7 @@
 {
  "additional_questions_derived_not_shown": {
-  "count": 2,
+  "count": 1,
   "questions": [
-   {
-    "group": "review coverage",
-    "priority": 30,
-    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
-    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
-    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
-   },
    {
     "group": "lifecycle status",
     "priority": 50,
@@ -20,7 +13,17 @@
   "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
  },
  "already_checked": {
-  "links_touching_record": [],
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REV-000009",
+    "rationale": "FB2-REV-000022 re-derived this finding record's asserted condition from the corpus bytes it cites and checked its severity, disposition and currency proof. Profile-scoped: only the as_is copy.",
+    "registry_path": "docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000022",
+    "target_id": "FB2-REV-FND-000033"
+   }
+  ],
   "machine_verified": [
    {
     "check": "schema validity",
@@ -43,20 +46,35 @@
     "result": "this record cites no source_refs, so it asserts nothing about source bytes"
    },
    {
-    "check": "peer review coverage",
-    "method": "reviewed_ids and reviewed_by lookup",
-    "result": "UNEXAMINED: no review record in this corpus covers it"
+    "check": "peer review coverage (1 review record(s))",
+    "method": "reviewed_ids entries and reviewed_by links",
+    "result": "1 digest(s) match the record now, 0 mismatch, 0 placeholder"
    }
   ],
   "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
   "peer_review": {
-   "covered": false,
+   "covered": true,
    "digest_mismatch": 0,
-   "digest_ok": 0,
+   "digest_ok": 1,
    "digest_placeholder": 0,
    "disputed": [],
    "findings_about": [],
-   "reviews": []
+   "reviews": [
+    {
+     "checklist_version": "CHKL-FINDING-META-REVIEW-1.0.0",
+     "digest_state": "digest matches this record on disk NOW, so the review provably read these bytes",
+     "review_id": "FB2-REV-000022",
+     "review_path": "docs/artifacts/reviews/records/review-finding-family-as-is.json",
+     "review_type": "meta",
+     "reviewed_revision": "2",
+     "reviewer_model": "opencode/space-bunny-free",
+     "reviewer_role": "quality_engineer",
+     "routes": [
+      "reviewed_ids entry in docs/artifacts/reviews/records/review-finding-family-as-is.json",
+      "reviewed_by link FB2-LNK-REV-000009 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json"
+     ]
+    }
+   ]
   },
   "state_legend": {
    "machine-verified": "settled by a detector; see machine_verified above",

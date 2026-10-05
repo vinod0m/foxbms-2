@@ -268,10 +268,11 @@ These are re-derived by this tool, independently of `corpus.py`. `corpus.py chec
 | --- | --- | --- | --- | --- | --- | --- |
 | `FB2-REV-000006` | domain | verification_engineer | openrouter/stealth/space-bunny-alpha | 1 | digest matches this record on disk NOW, so the review provably read these bytes | reviewed_ids entry in docs/artifacts/reviews/records/review-verification-planning-as-is.json; reviewed_by link FB2-LNK-REVB-000059 in docs/artifacts/traceability/link-registry/as_is/links-cell-voltage.json |
 
-**1 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
+**2 finding(s) in the corpus reference this record.** These are peer-review output, not machine output.
 
 | finding | severity | category | description |
 | --- | --- | --- | --- |
+| `FB2-REV-FND-000176` | medium | completeness | In five of the thirteen records the machine-readable oracle encodes only the expected path, so the case that gives the test its distinguishing power has no expected value. The defect is systematic and it is in the same five records FB2-REV-FND-000174 names. Set each record's steps beside its own expected_outcomes. FB2-VER-TMS-000001 has three steps; step 3 injects a voltage within limits and expe… |
 | `FB2-REV-FND-000141` | medium | verification | Oracle independence is asserted by category label, not demonstrated by construction. All three in-scope test measures declare oracle_basis 'source_grounded' and specify expected values such as cell_voltage_mv = 3300 with tolerance +/- 1.5 mV, but none states where that expected value came from or how it was derived independently of the implementation under test. 'source_grounded' names the proven… |
 
 ### 5.3 Traceability edges touching this record
@@ -323,7 +324,7 @@ Reproduced verbatim. Where the record limits itself, that limit is part of the c
 - *What in this packet bears on it:* acceptance_criteria in section 3.
 - *Your answer:*
 
-**Q3. 1 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
+**Q3. 2 finding(s) already dispute something about this record. Do you agree with the dispute, with the record, or with neither?**
 
 - *Why a machine cannot answer this:* A prior reviewer and this record already disagree. Resolving that is the point of a second reader.
 - *What in this packet bears on it:* The disputed findings listed under what is already checked.
