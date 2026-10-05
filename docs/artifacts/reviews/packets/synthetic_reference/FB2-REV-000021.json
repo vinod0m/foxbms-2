@@ -1,0 +1,860 @@
+{
+ "additional_questions_derived_not_shown": {
+  "count": 2,
+  "questions": [
+   {
+    "group": "review coverage",
+    "priority": 30,
+    "question": "No other record in this corpus reviews this one. Is it in fact unreviewed, and does that matter for what you are signing?",
+    "what_in_this_packet_bears_on_it": "What is already checked, below: the review coverage column for this record.",
+    "why_this_needs_a_human": "Approving an unreviewed record is close to meaningless: the packet gives you the record and the machine checks, not a second reader's reasoning. Say so in the comments if you accept that."
+   },
+   {
+    "group": "lifecycle status",
+    "priority": 50,
+    "question": "`lifecycle_status` is `reviewed`. Is that the right status for this revision?",
+    "what_in_this_packet_bears_on_it": "lifecycle_status and its note in section 3.",
+    "why_this_needs_a_human": "A status is a claim about how far the work has actually got, and no detector measures it."
+   }
+  ],
+  "why": "This record raised more judgement calls than a packet shows, so a reviewer is not handed a list long enough to skip. These are derived from the record's own fields and are recorded here rather than discarded, so nothing this tool found is lost. A reviewer who wants them should ask for them; the point of the cap is that the four highest-value questions are the ones that get answered."
+ },
+ "already_checked": {
+  "links_touching_record": [
+   {
+    "link_id": "FB2-LNK-REVB-000210",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. The record's step 3 expects no fault for an in-limit voltage and its expected_outcomes array holds no outcome that can express that, which is the substance of FB2-REV-FND-000176, and its stated accuracy objective has no tolerance in the record. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000001"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000211",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its step 1 defers to a state table the record does not contain and no expected_outcomes entry corresponds to that step, and its contactor_open_latency_ms outcome pairs an inequality with tolerance 'exact'; both are recorded in FB2-REV-FND-000176 and FB2-REV-FND-000177. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000002"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000212",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. This record is the clearest instance of FB2-REV-FND-000176: it has two steps, the second of which expects a 4900 mV reading to be rejected, and exactly one expected_outcomes entry, plausibility_result = 'pass', which is the first step's expectation. A test whose subject is rejection would pass against an implementation that accepted every value. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000003"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000213",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its independent_open_latency_ms outcome pairs the inequality '<80' with tolerance 'exact', recorded in FB2-REV-FND-000177, and its step 1's independent-open expectation has no distinct expected outcome, recorded in FB2-REV-FND-000176. This is a fault_injection measure whose declared subject is path independence. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000004"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000214",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its three steps include a retry-counter expectation with no matching expected_outcomes entry, which is part of FB2-REV-FND-000176, and it shares the template tolerances and timing constants that finding names. It is the only record in the family whose referenced_designs array is empty while it still claims an AFE SPI subject. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000005"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000215",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its two source citations were re-derived against the pinned blob and both verify exactly: LTC_CheckPec occupies ltc_6813-1.c:3838-3878 as cited, and DATA_CopyData occupies src/app/engine/database/database.c:164-196 as cited, copying previousTimestamp and stamping timestamp from OS_GetTickCount at lines 181-182. The record's oracle_detail mis-attributes the invalidCellVoltage flag at line 641 to LTC_CheckPec, which sets errorTable->PEC_valid and never that flag; the real propagation is ltc_6813-1.c:3114-3130. Recorded as FB2-REV-FND-000175. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000021"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000216",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. This is the one record in the family whose oracle rests on a corpus value rather than on code, so the review re-read that value instead of taking it from the record: FB2-PRM-000003 carries value 50, unit ms, with tolerance min 49 max 51, and the record's 1000/50 = 20 arithmetic is correct and its zero-margin statement is honest. The registry's own tolerance band extending to 51 ms corroborates the record's claim that any period longer than 50 ms fails the criterion. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000022"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000217",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its severity claim was re-derived against the pinned configuration and verifies exactly: src/app/engine/config/diag_cfg.c configures DIAG_ID_CELL_VOLTAGE_OVERVOLTAGE_MSL as DIAG_FATAL_ERROR with DIAG_DELAY_200ms at line 126, the _RSL entry as DIAG_WARNING with DIAG_DELAY_DISCARD at line 127 and the _MOL entry as DIAG_INFO with DIAG_DELAY_DISCARD at line 128, which is the 'fatal with a delay, warning and information with the delay discarded' grading the record states. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000023"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000218",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. It is the family's clearest demonstration of the negative-case oracle this review found the five older records lack: soa_debounce_state_found_in_source = '0' with unit 'occurrences' is the absence case, and degraded_to_fault_boundary_declared_declared_boundary_value = 'not_declared' records an absent boundary as an absent value rather than as a pass. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000024"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000219",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its expected outcome is an over-run and the record says so in its own first limitation, so a reader must not read it as a pass; the tolerance vocabulary is also used correctly here, with 'at least' and 'outside' carrying the comparison rather than a relational string. This review did not re-derive the waits the computation sums, which is named as not-done in its limitations. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000025"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000220",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its central mechanism was re-derived against the pinned blob and verifies exactly: SOA_CheckTemperatures begins at src/app/application/soa/soa.c:148, tests BMS_GetCurrentFlowDirection(i_current) == BMS_DISCHARGING at line 160 and branches to the charge tier set at line 186, with distinct BC_TEMPERATURE_MAX_DISCHARGE_* and BC_TEMPERATURE_MAX_CHARGE_* constants and distinct diagnosis identifiers, which is the direction-selected tier set the record claims. The record's own residual_risk already discloses that identifying current direction with the requirement's notion of mode is an interpretation. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000026"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000221",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. It declares a synthetic_assumption oracle for a barrier that exists in neither profile, and its outcomes record the absence rather than a verdict: independence_requirements_with_evidence_in_corpus = '0' and accuracy_allocation_measured_threshold_accuracy_mV_measured = 'not_measured'. This review confirmed the declared assumption is the corpus's own and that the record claims no measurement, and it raised no finding against this record. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000027"
+   },
+   {
+    "link_id": "FB2-LNK-REVB-000222",
+    "rationale": "FB2-REV-000021 read this record and names it in reviewed_ids with the sha256 of the artefact's content at review time. Its two cited sites were re-derived against the pinned blob and both verify exactly: the current-sensor receive callback range and SOA_CheckCurrent at src/app/application/soa/soa.c:271-279, where line 277 tests pTablePackValues->invalidStringCurrent[s] == 0u and gates the entire comparison, which is the skip the record claims. It also records limit_entries_raised_while_invalid = '0', the negative-case outcome the five older records in this family omit. Authored together with the review it belongs to and its target digest was computed from the file on disk, so the two agree by construction rather than by later repair; the review has not been re-examined since.",
+    "registry_path": "docs/artifacts/traceability/link-registry/synthetic_reference/links-verification-planning.json",
+    "relation_type": "reviewed_by",
+    "review_state": "reviewed",
+    "source_id": "FB2-REV-000021",
+    "target_id": "FB2-VER-TMS-000028"
+   }
+  ],
+  "machine_verified": [
+   {
+    "check": "schema validity",
+    "method": "jsonschema Draft 2020-12 against review.schema.json",
+    "result": "valid against its schema"
+   },
+   {
+    "check": "primary key uniqueness",
+    "method": "within-profile (profile, id) index built by this tool",
+    "result": "unique in profile"
+   },
+   {
+    "check": "authority fields",
+    "method": "direct read of the record",
+    "result": "human_approval_status=pending, production_authorized=false, product_verification_credit=false"
+   },
+   {
+    "check": "source anchors",
+    "method": "not applicable",
+    "result": "this record cites no source_refs, so it asserts nothing about source bytes"
+   },
+   {
+    "check": "peer review coverage",
+    "method": "reviewed_ids and reviewed_by lookup",
+    "result": "UNEXAMINED: no review record in this corpus covers it"
+   }
+  ],
+  "method_note": "Re-derived by make_review_packets.py, independently of corpus.py. corpus.py check runs the same classes of check; its verdict corroborates, it is not the basis of these rows.",
+  "peer_review": {
+   "covered": false,
+   "digest_mismatch": 0,
+   "digest_ok": 0,
+   "digest_placeholder": 0,
+   "disputed": [],
+   "findings_about": [],
+   "reviews": []
+  },
+  "state_legend": {
+   "machine-verified": "settled by a detector; see machine_verified above",
+   "reviewed_by_a_peer_and_disputed": "a finding in the corpus references this record; see peer_review.findings_about",
+   "unexamined": "everything else, including every judgement in claims_to_verify whose machine_state is descriptive rather than decisive"
+  }
+ },
+ "claims_to_verify": [
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C01-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[0].artifact_id` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C02-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[1].artifact_id` names FB2-VER-TMS-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C03-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[2].artifact_id` names FB2-VER-TMS-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C04-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000004 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[3].artifact_id` names FB2-VER-TMS-000004."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C05-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000005 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[4].artifact_id` names FB2-VER-TMS-000005."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C06-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000021 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[5].artifact_id` names FB2-VER-TMS-000021."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C07-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000022 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[6].artifact_id` names FB2-VER-TMS-000022."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C08-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000023 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[7].artifact_id` names FB2-VER-TMS-000023."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C09-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000024 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[8].artifact_id` names FB2-VER-TMS-000024."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C10-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000025 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[9].artifact_id` names FB2-VER-TMS-000025."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C11-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000026 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[10].artifact_id` names FB2-VER-TMS-000026."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C12-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000027 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[11].artifact_id` names FB2-VER-TMS-000027."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C13-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000028 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.reviewed_ids[12].artifact_id` names FB2-VER-TMS-000028."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C14-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000174 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[0].finding_id` names FB2-REV-FND-000174."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C15-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000001 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[0].artifact_id` names FB2-VER-TMS-000001."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C16-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000175 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[1].finding_id` names FB2-REV-FND-000175."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C17-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000021 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[1].artifact_id` names FB2-VER-TMS-000021."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C18-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000176 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[2].finding_id` names FB2-REV-FND-000176."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C19-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000003 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[2].artifact_id` names FB2-VER-TMS-000003."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C20-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000177 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.findings[3].finding_id` names FB2-REV-FND-000177."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C21-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-VER-TMS-000002 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "resolves: resolves to a record in this profile",
+   "statement": "`.findings[3].artifact_id` names FB2-VER-TMS-000002."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C22-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000174 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[0].finding_id` names FB2-REV-FND-000174."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C23-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000175 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[1].finding_id` names FB2-REV-FND-000175."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C24-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000176 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[2].finding_id` names FB2-REV-FND-000176."
+  },
+  {
+   "claim_class": "traceability_edge",
+   "claim_id": "C25-xref",
+   "evidence_in_packet": "The record verbatim in section 3. The link registry is separate from this field and may disagree, and that disagreement is itself part of what is being reviewed.",
+   "judgement_needed": "Whether FB2-REV-FND-000177 is the record this field should point at. Resolution is not correctness: a field can resolve and still name the wrong record.",
+   "machine_state": "DOES NOT RESOLVE: shaped like an artefact id but no such record exists in any profile",
+   "statement": "`.dispositions[3].finding_id` names FB2-REV-FND-000177."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C26-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-soa-voltage-limits.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000001 at revision `1` with digest `f02aacf7ba42460a6aade852e9a0e8257dfb1ed466eb318890f006d123f660af`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C27-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-contactor-statemachine.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000002 at revision `1` with digest `b6036e1aed198d10b91f46761aedb083308678bafba7afd5243cdc02707e3c5f`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C28-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-afe-plausibility.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000003 at revision `1` with digest `423a8539a142d8bd93df315a97c71c01d5b1e8f9e748e9f02d052f187199c554`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C29-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-independent-monitor.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000004 at revision `1` with digest `bfb09eaba82857293020509823f833b77364412164e98416a82084d1be035659`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C30-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-afe-communication.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000005 at revision `1` with digest `1c76809fcd47f44cb2b996f2356e046882b2960d490e35ddfa27766d9ccd977a`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C31-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000001-integrity-and-data-age.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000021 at revision `1` with digest `c3e1e920c5e30051869744434bfb3a579ff477795122421bcd7641c0b70657bf`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C32-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000001-acquisition-rate-budget.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000022 at revision `1` with digest `5f324f76d926ed324326ad454ee785668dcc5945e1551e1f8de0a0b70ef2d3f5`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C33-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000002-limit-tier-grading.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000023 at revision `1` with digest `33f35e4565074adf1b3df0411f85db905e3d112ca67fbfda046cdb9e76e096a0`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C34-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000002-debounce-and-degraded-boundary.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000024 at revision `1` with digest `7b4e20d095191e197a36cf804cc6b10a6332ee454e9d6cdf9621bfd4512f9536`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C35-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000003-reaction-time-budget.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000025 at revision `1` with digest `66cfcdcc87d7b54a70415690364e09881d4b5edb993bbb5ef196b5178d804bc8`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C36-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000004-mode-dependent-reaction.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000026 at revision `1` with digest `eff556897a06d108cc2edd3351d06255dd4eb0549c5b9d0b574eda0762d54de3`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C37-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000005-independent-monitor-separation.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000027 at revision `1` with digest `72bfe0529d13d2b56fa501cd7332fc1d6dea6339514b23ac34d886152627e54d`."
+  },
+  {
+   "claim_class": "review_coverage",
+   "claim_id": "C38-rev",
+   "evidence_in_packet": "The review's own findings and dispositions, listed under what is already checked.",
+   "judgement_needed": "Whether the conclusion this review reached about that record is correct. A matching digest proves the bytes; it does not prove the reading.",
+   "machine_state": "resolves to docs/artifacts/corpus/synthetic_reference/verification/test-syr-000006-measurement-validity-and-envelope.json; recorded digest matches that file now, so this review provably examined those bytes",
+   "statement": "This review states it reviewed FB2-VER-TMS-000028 at revision `1` with digest `23383e7ea6707a9e2d1db9222956b721a7107ed8498e926bfff57fd90a9a3600`."
+  },
+  {
+   "claim_class": "review_independence",
+   "claim_id": "C39-rev-id",
+   "evidence_in_packet": "The record verbatim in section 3, including the reviewer's own note.",
+   "judgement_needed": "Whether this reviewer was independent enough for the claim being made. A single AI session reviewing its own output is not independence, and the record says so.",
+   "machine_state": "declared in the record; independence is not machine-verifiable",
+   "statement": "reviewer_identity = {\"model\": \"openrouter/stealth/space-bunny-alpha\", \"role\": \"verification_engineer\", \"session_id\": \"opencode-2026-10-05-item1-test-measure-synthetic-review\"}"
+  }
+ ],
+ "generated_by": "docs/artifacts/tools/make_review_packets.py",
+ "integrity": {
+  "anchor_registry_applies": false,
+  "anchor_registry_note": "The corpus provenance gate verifies each anchor against the file that anchor names and stores no registry-level digest of its own. This digest is recorded so a signature also pins which anchor set was in force.",
+  "anchor_registry_path": "docs/artifacts/sources/source-registry.json",
+  "anchor_registry_sha256": "7d678ec4a4b0699e6649e7e12ebceaf17a8a4d74e48871e399e89b35daf5ca3d",
+  "record_bytes": 37752,
+  "record_path": "docs/artifacts/reviews/records/review-test-measure-synthetic.json",
+  "record_sha256": "fa3d1d3ae06bb7bd6d1c74166fac382eb63218cd4313c318c34fb3e91cb525b0",
+  "verbatim_block_fence": "```",
+  "verbatim_block_is_record_bytes": true,
+  "verbatim_block_note": "The block in section 3 is the file's decoded text with any single trailing newline removed, which is what the markdown fences require. `record_sha256` above is over the raw file bytes and is the digest a signature refers to; this one is over the text as embedded, so a verifier can compare either.",
+  "verbatim_block_sha256": "75ecf2593b48f44b104888e93c5edc2523b59edbc851c2cd79f64f8886b5f408"
+ },
+ "is_a_corpus_record": false,
+ "known_limitations_verbatim": [
+  {
+   "field": "limitations",
+   "value": [
+    "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. This is an AUTOMATED REVIEW: it is NOT organizational independence, NOT human confirmation and NOT a qualified-checker result. No human reviewer, no independent party and no separate agent session participated. Consistent with corpus-policy.json#/review_policy/ai_review_limitations, a distinct agent session would not have been independence either.",
+    "Automated review in one session. Not organizational independence, not human confirmation, not a qualified-checker result.",
+    "human_approval_status is 'pending' for every record covered and for this review. No human signed any of them, and this review is not a signature.",
+    "No record covered carries production authority or product verification credit.",
+    "PARTIAL SCOPE, AND THE PART NOT COVERED IS THE LARGER PART. The uncovered population in this profile and the other is 128 records over 128 identifiers; this review covers 13. NOT REACHED: 12 requirement records (FB2-HW-TSR-000001 to -000003, FB2-SW-SIR-000001 to -000006, FB2-SW-SWR-000001 to -000003), 12 singleton-family records across 11 families, 35 finding records, 18 scenario records, 20 review records and 12 execution records. The 35 finding records are arguably the highest-value group remaining, because a finding is review output and reviewing one is a meta-review; they were not reached here because reading 35 records was not affordable in this pass, and a review that certifies without reading would be worse than no review. That is a statement about budget, not a judgement that the unreviewed groups are in better shape - FB2-REV-FND-000174 shows the unreviewed population is where the corpus's largest unmeasured honesty gap sits.",
+    "THE COVERAGE FIGURE UNDERSTATES THE UNCOVERED POPULATION, AND THIS REVIEW'S OWN CONTRIBUTION IS A WORKED EXAMPLE. The automated_review_coverage dimension builds its numerator and denominator from UNIQUE ID STRINGS: index_ids is a set of the id half of the (profile, id) key, so the 323 records of this corpus collapse to 284 identifiers, 39 of which are carried by two records each. A record can therefore be entirely unreviewed while the dimension reads as covered, because an as_is record shares its identifier. That is exactly the case for the five older records in this review: FB2-VER-TMS-000001 to -000005 were already inside the covered numerator, which is why the coverage figure did not move for them, and they were unreviewed all the same. Measured on this tree: 284 unique identifiers, 195 covered records, 182 covered identifiers, 128 uncovered records, 128 uncovered identifiers of which 26 are counted as covered because the sibling profile's record is reviewed. So the 102 that the dimension's denominator-minus-numerator reports is 26 short of the real figure of 128. This review does not treat that as one of its four findings, because its findings array is about records it read and no covered record is the locus of a measurement defect in the tool; it is recorded here instead, and it is the single most consequential thing this review learned.",
+    "No test_measure record was edited, revised or re-hashed by this review. The four findings are dispositions for the owner; every stored review digest over the reviewed records still verifies.",
+    "Source grounding was re-derived for the citations the records themselves state. It was NOT re-derived for every threshold the records assert: the SOA voltage limits, the debounce window of 100 ms, the 4200 mV limit in FB2-VER-TMS-000001, the 4900 mV and 3300 mV stimuli and the contactor figures in FB2-VER-TMS-000004 and -000025 were read as the record states them and were not each traced to a configuration constant at the pin. The two arithmetic claims that were checked are FB2-VER-TMS-000022's 50 ms period, re-read from the parameter registry where FB2-PRM-000003 carries value 50 with tolerance min 49 max 51, and the 1000/50 = 20 arithmetic, which is correct.",
+    "The eight newer records were read for what they claim and for how well they are grounded. This review did not re-derive the requirement-side acceptance criteria they verify, because those requirements are outside its scope and six of the twelve uncovered requirement records are among the population this review did not reach. A defect in a requirement would not be found by this pass even where a measure under review verifies it.",
+    "Nothing here constitutes a verification result. No module was executed, no timing, coverage or throughput measurement of any test_measure record exists as a result of this review, and no target hardware was used, powered or commanded. The eight newer records each state that the paired execution record is blocked, and this review did not contradict that.",
+    "This review asserts no ISO 26262 conformity, no certification, no tool qualification, no ASPICE capability level, no ASIL determination for the real product, no human approval, no production authorisation and no product verification credit.",
+    "THIS REVIEW REPRODUCES THE DEFECT IT REPORTS, AND THE HONEST FIGURE IS THEREFORE 18, NOT 17. FB2-REV-FND-000174 measures 22 records asserting lifecycle_status 'reviewed' with no covering review. This review covers the five of them named in the finding, so the population falls to 17 - and then this review's own record enters it, because a review record carries lifecycle_status 'reviewed' and a review record cannot cover itself. The population as it stands after this review is 18: 14 with no covering review and no lifecycle_status_note, and 4 with no covering review but a note. This record is one of those 4, and it is in the mitigated class only because it carries a lifecycle_status_note saying in terms what 'reviewed' means here. So the control FB2-REV-FND-000174 asks for has a second reason to exist: as written it would catch a review record asserting its own completion. The figures were re-measured after the fact by an independent checker written for this pass that imports nothing from corpus.py; it reproduced 19 silent and 3 noted before this review and 14 silent and 3 noted plus this record after it, from its own index walk.",
+    "THIS IS A FIRST PASS, NOT A DIGEST RE-DERIVATION, AND THE TWO ARE NOT THE SAME THING. The thirteen digests in reviewed_ids were computed from the bytes on disk at the moment this review was authored, and they describe revision 1 of each record as it stands now. If any of these records is later revised, the repair pattern used elsewhere in this corpus applies: a digest_corrections entry recording the previous digest, the new digest, the basis and an explicit statement that re-deriving a digest is NOT a re-review. This review has not re-examined any record twice and asserts nothing about a revision other than the one named."
+   ]
+  },
+  {
+   "field": "lifecycle_status_note",
+   "value": "Set to the value above because this review did read the records it names and the digests below were computed from the bytes on disk at authoring time. It is NOT a statement about engineering validity, organisational independence or human confirmation, and this review is not a signature. No human read any record covered here."
+  },
+  {
+   "field": "scope",
+   "value": "TARGETED SCOPE: the test_measure records in the synthetic_reference profile that no review record covered, and nothing else. That is 13 records: FB2-VER-TMS-000001 through -000005 and -000021 through -000028. PROFILE-SCOPED, and the reason is measured rather than assumed: the coverage dimension is computed on UNIQUE ID STRINGS, so five of these thirteen identifiers (FB2-VER-TMS-000001 to -000005) already read as covered because an as_is record carries the same id. They are still reviewed here, because under ID-RULE-004-A1 the pair (profile, id) is the key and a digest is a statement about one record, not about an identifier. NOT COVERED HERE AND NOT CLAIMED: the 12 uncovered requirement records, the 12 uncovered singleton-family records, the 35 uncovered finding records, the 18 uncovered scenario records, the 20 uncovered review records and the 12 uncovered execution records. Those are named in limitations."
+  },
+  {
+   "field": "automated_review_status",
+   "value": {
+    "consistency_checks": true,
+    "last_run": "2026-10-05T00:00:00Z",
+    "links_valid": true,
+    "provenance_consistent": true,
+    "schema_valid": true
+   }
+  }
+ ],
+ "outcome_record": {
+  "_ledger_note": "packet_first_commit is the git commit that FIRST contained the archived signed packet. It proves WHEN and IN WHAT STATE the packet was committed. It does NOT prove who read it, and nothing in the corpus makes an approval unforgeable. See docs/artifacts/governance/approval-ledger.md",
+  "_note": "Fields a human or a later process may fill AFTER a signature exists. Empty here; present so the outcome can be captured without editing the generator. Since APPROVAL-LEDGER-A1 the decision is recorded in the append-only ledger at docs/artifacts/governance/approval-ledger.jsonl, and these fields cross-reference that entry rather than being the record of it.",
+  "decision_recorded_in_record": "",
+  "ledger_entry_sha256": "",
+  "ledger_id": "",
+  "packet_first_commit": "",
+  "packet_sha256_at_signing": "",
+  "recorded_revision": "",
+  "signed_by": "",
+  "signed_on": ""
+ },
+ "packet_format": "foxbms2-review-packet/1.0.0",
+ "packet_path": "docs/artifacts/reviews/packets/synthetic_reference/FB2-REV-000021.json",
+ "questions_cap": 4,
+ "questions_for_human": [
+  {
+   "group": "engineering validity",
+   "priority": 1,
+   "question": "As the verification_engineer for this verification record, do you agree that \"Review: the uncovered test_measure group, synthetic_reference profile (13 records; 8 source-grounded citations re-derived against the pinned blob)\" is a correct and complete statement of verification measures, execution classification, trace coverage, evidence handling?",
+   "what_in_this_packet_bears_on_it": "The record verbatim in section 3.",
+   "why_this_needs_a_human": "Correctness of engineering content is not derivable from the repository. The corpus can prove the record is well-formed and internally consistent; it cannot prove the engineering is right."
+  },
+  {
+   "group": "review conclusion",
+   "priority": 5,
+   "question": "This review reached conclusions about the records it covers. Are those conclusions correct?",
+   "what_in_this_packet_bears_on_it": "The findings and dispositions listed under what is already checked.",
+   "why_this_needs_a_human": "A review is an argument. Its digests prove it read the bytes; nothing proves it read them correctly."
+  },
+  {
+   "group": "independence",
+   "priority": 10,
+   "question": "This review was performed by openrouter/stealth/space-bunny-alpha in session `opencode-2026-10-05-item1-test-measure-synthetic-review`. Is that independence sufficient for the weight this review's conclusions are being given?",
+   "what_in_this_packet_bears_on_it": "reviewer_identity in section 3, including its note.",
+   "why_this_needs_a_human": "Independence is a governance judgement. A single automated session reviewing its own output is not organisational independence, and the corpus says so itself."
+  },
+  {
+   "group": "provenance honesty",
+   "priority": 20,
+   "question": "This record is labelled origin=`derived`, not observed. Is the derivation reproducible from what it names, or does it assert more than its sources carry?",
+   "what_in_this_packet_bears_on_it": "Claims section; provenance_note; assumption_refs.",
+   "why_this_needs_a_human": "Derivation is a human act. The corpus can check that the named sources exist; it cannot check that the conclusion follows from them."
+  }
+ ],
+ "questions_shown_count": 4,
+ "record_verbatim": {
+  "artifact_type": "review",
+  "assumption_refs": [],
+  "automated_review_status": {
+   "consistency_checks": true,
+   "last_run": "2026-10-05T00:00:00Z",
+   "links_valid": true,
+   "provenance_consistent": true,
+   "schema_valid": true
+  },
+  "baseline_id": "BAS-REF-001",
+  "checklist_version": "CHKL-TMS-PROV-1.0.0",
+  "created_at": "2026-10-05T00:00:00Z",
+  "digest_corrections": [],
+  "dispositions": [
+   {
+    "action": "Accepted, in two separable parts. (1) For the five records named, set lifecycle_status to the value the record can support and add the lifecycle_status_note the eight siblings already carry; the honest value is 'draft' unless a review record is authored that covers them, and this review now does cover them, so 'reviewed' is defensible for them from this revision onward - but the note explaining what 'reviewed' means is not optional and is currently absent. (2) The durable repair is a control, not an edit: a rule that reports any record whose lifecycle_status is 'reviewed' with no covering review record, so the 22 - and any future instance - is visible on every run instead of only when a reader happens to compare a field against the coverage dimension. The 19 that carry no note are the priority subset. Referred to the verification and corpus-tooling owners. This review changed nothing: any edit to a test_measure record changes its content digest and invalidates every stored review digest over it, so the record repair is a revision with re-derived digests and belongs to the owner. The control is a tools/ change and is outside this review's write scope.",
+    "disposition": "accepted",
+    "finding_id": "FB2-REV-FND-000174",
+    "resolved_artifact_id": null
+   },
+   {
+    "action": "Accepted. Correct the attribution in oracle_detail.why_this_oracle: either cite the actual propagation site, ltc_6813-1.c:3114-3130, where PEC_valid gates both the store of cellVoltage_mV and the setting of invalidCellVoltage, or attribute line 641 to LTC_SaveVoltages, which is the function that contains it and whose branch handles the open-wire case rather than the PEC case. While the record is being revised, the residual_risk is the natural place to name the one configuration dependency the oracle rests on, namely that LTC_DISCARD_PEC is (false) in ltc_6813-1_cfg.h:106, since the same function marks a corrupted frame VALID when that macro is true. Referred to the verification owner. This review changed nothing: the fix is an edit to a test_measure record, which is a revision plus digest re-derivation and is not this review's write scope.",
+    "disposition": "accepted",
+    "finding_id": "FB2-REV-FND-000175",
+    "resolved_artifact_id": null
+   },
+   {
+    "action": "Accepted. For each of the five records, give the negative or absence case an entry in expected_outcomes, following the pattern the same family already uses in FB2-VER-TMS-000021, -000024 and -000028, where the distinguishing case is recorded as a count with an explicit unit (0 frames, 0 occurrences, 0 entries). Two named instances are the minimum: FB2-VER-TMS-000003 needs an outcome for the 4900 mV rejection, and FB2-VER-TMS-000001 needs one for the 4100 mV non-fault. FB2-VER-TMS-000002 needs more than an added outcome, because its step 1 defers to a state table the record does not contain; either carry the table or restate the step as an enumerated transition list. Separately, the per-record tolerances and timing objects in these five are template constants rather than values about the measure, and FB2-VER-TMS-000001's stated accuracy objective has no tolerance at all; a reader should not have to guess which numbers in these records are about the test. Referred to the verification owner. This review changed nothing.",
+    "disposition": "accepted",
+    "finding_id": "FB2-REV-FND-000176",
+    "resolved_artifact_id": null
+   },
+   {
+    "action": "Accepted. Two records, two edits, following the convention the same family already uses: express the bounded assertions so that tolerance carries the comparison, as FB2-VER-TMS-000028 does with expected_value 'at least 1' and tolerance 'at least'. Under that convention a latency ceiling is tolerance 'at most' with a numeric expected_value of 50 and 80 respectively, rather than a relational string carrying tolerance 'exact'. Referred to the verification owner. This review changed nothing.",
+    "disposition": "accepted",
+    "finding_id": "FB2-REV-FND-000177",
+    "resolved_artifact_id": null
+   }
+  ],
+  "engineering_domain": "verification",
+  "findings": [
+   {
+    "artifact_id": "FB2-VER-TMS-000001",
+    "category": "provenance",
+    "description": "Five records in this family assert a review state that no review record supports, and no automated control can detect it. FB2-VER-TMS-000001, -000002, -000003, -000004 and -000005 each carry lifecycle_status 'reviewed'. Before this review existed, NONE of the five was named by any review record or by any reviewed_by link: they were all in the uncovered population this review was scoped to. So 'reviewed' was a claim about a review that did not exist. Three further facts make it worse rather than better, and all three are measured, not inferred. (1) Each of the five carries automated_review_status with schema_valid, links_valid, provenance_consistent and consistency_checks all true and last_run 2026-09-13T00:00:00Z - the same instant as its own created_at, so the flags were authored rather than produced by a later run. (2) None of the five carries a lifecycle_status_note. The eight sibling records in the SAME family, dated 2026-10-02, each carry a lifecycle_status_note that says in terms that no human has reviewed the record and that automated_review_status refers to corpus automation and is not a statement about engineering validity or human confirmation. The correction is therefore already written, in this very family, and these five do not have it. (3) None of the five carries a limitations array at all, while each of the eight carries four limitations. THE CONTROL GAP, which is the part that outlives these five records: I searched the suite for any rule relating lifecycle_status 'reviewed' to the existence of a covering review record and found none. A record can therefore be marked reviewed, forever, with nothing behind it and the suite stays green. I measured the size of that gap across the whole corpus: 22 of 323 records assert lifecycle_status 'reviewed' with no covering review record, of which only 3 carry any lifecycle_status_note, so 19 are silent about it. By family: execution 12, test_measure 5, review 3, unit_test_specification 1, finding 1. By profile: as_is 14, synthetic_reference 8. NOT CLAIMED: no record's engineering content is wrong, no oracle is wrong, no digest is wrong, and no safety-relevant statement depends on any of it. The defect is that a review-state field reads as a fact about the corpus when it is an unverified assertion, on a field the other eight records in the same family show is capable of carrying the honest value 'draft' with a note explaining it.",
+    "evidence": "Directly measured, not inferred. For each of the 13 records: lifecycle_status, presence of lifecycle_status_note, len(limitations), and automated_review_status. FB2-VER-TMS-000001 through -000005: lifecycle_status 'reviewed', note ABSENT, limitations length 0, automated_review_status all four flags true with last_run 2026-09-13T00:00:00Z equal to their created_at. FB2-VER-TMS-000021 through -000028: lifecycle_status 'draft', note PRESENT, limitations length 4 each, last_run 2026-10-02T00:00:00Z. Coverage: the union of every reviewed_ids entry across the 20 review records that existed before this one and of every reviewed_by target_id in docs/artifacts/traceability/link-registry/ names none of the five; after this review the five are named by it. Corpus-wide tally: iterate load_artifact_index(), keep records whose lifecycle_status == 'reviewed', subtract the covered set, count 22, of which 3 carry a lifecycle_status_note. Control search: 'lifecycle_status' appears in docs/artifacts/tools/corpus.py in no expression that compares it to a review record's existence, and the gate at the automated_review_coverage dimension reads only review records and reviewed_by links, never the per-record lifecycle_status field. This review changed nothing.",
+    "finding_id": "FB2-REV-FND-000174",
+    "severity": "medium"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000021",
+    "category": "provenance",
+    "description": "One source-grounded oracle attributes to the wrong function a flag that function does not set. The record's oracle_detail.why_this_oracle reads: \"'A transferred value whose recomputed packet error code differs from the received one is marked invalid, and an invalid value is not consumed by a decision' is what LTC_CheckPec (ltc_6813-1.c:3838-3878) and the invalidCellVoltage flag it sets at line 641 do.\" Three checks against the pinned blob. (1) LTC_CheckPec at ltc_6813-1.c:3838-3878 is cited exactly right - line 3838 is the definition, line 3878 its closing brace, and the body is the per-LTC loop the record describes. (2) That body contains ZERO occurrences of the identifier invalidCellVoltage. It writes errorTable->PEC_valid[stringNumber][i] and nothing else; the word 'it' in 'the invalidCellVoltage flag it sets' therefore names a function that does not set that flag. (3) Line 641 is a real line inside the real file, so the citation is not a dangling reference - it is simply in a different function. Line 641 sits inside LTC_SaveVoltages, which begins at line 597, roughly 3200 lines below LTC_CheckPec, and its surrounding branch is the OPEN-WIRE else-path, whose own comment at line 640 reads 'Set cell voltage measurement value invalid, if not already invalid because of PEC Error'. The two sites are peers, not one: LTC_SaveVoltages handles open-wire and range plausibility, and sets invalidCellVoltage at line 636 on a plausibility failure and at line 641 on an open-wire condition. THE SUBSTANTIVE CLAIM SURVIVES, and this review says so explicitly because it is the part that matters: the propagation the record asserts is real and I found it. The actual site is ltc_6813-1.c:3114-3130, in the voltage-extraction loop, where the code tests errorTable->PEC_valid[stringNumber][m] and, when it is false, both SKIPS storing cellVoltage_mV and sets invalidCellVoltage to true for that register's cells. The record's expected outcome corrupted_frames_consumed_unchallenged = '0' is therefore reachable, and its 'decided before use' claim is sound at the pinned commit. LTC_DISCARD_PEC is (false) in src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h:106, so the branch that marks the frame invalid is the one the build takes. So this is a CITATION-ATTRIBUTION defect in a reviewable record whose substantive claim holds, not a provenance failure and not an over-claiming oracle. Severity is low for that reason, and it would be dishonest to raise it higher. The record's own residual_risk already discloses the general shape of the exposure - that a source-grounded oracle rests on the code doing what the authoring pass read it to do - but it does not name the conditionality on LTC_DISCARD_PEC, and it attributes the flag to the wrong function.",
+    "evidence": "Read with 'git show 308028fb13d046ba29b98886895c2e17937b1437:src/app/driver/afe/ltc/6813-1/ltc_6813-1.c', 4860 lines. Lines 3838-3878 are LTC_CheckPec: signature at 3838, 'for (uint16_t i = 0u; i < LTC_N_LTC; i++)' at 3850, the PEC comparison at 3863-3864, the LTC_DISCARD_PEC branch at 3866-3871, return at 3877, closing brace at 3878. A grep for invalidCellVoltage over exactly those 41 lines returns 0 matches. The file's own use of invalidCellVoltage outside that range is at lines 623, 636, 641, 3118-3122 and 3126-3129. The nearest function signature at or before line 641 is 'extern void LTC_SaveVoltages(LTC_STATE_s *ltc_state, uint8_t stringNumber)' at line 597, so line 641 is inside LTC_SaveVoltages and inside the else-branch whose comment at line 640 names the open-wire case. The real PEC-to-invalid site is lines 3114-3131: 'if (ltc_state->ltcData.errorTable->PEC_valid[stringNumber][m] == true)' at 3114 stores cellVoltage_mV and clears invalidCellVoltage at 3118-3122, and the else at 3124-3130 sets invalidCellVoltage true without storing the value. LTC_DISCARD_PEC is defined '(false)' at src/app/driver/afe/ltc/6813-1/config/ltc_6813-1_cfg.h:106 at the same pin. This review changed nothing.",
+    "finding_id": "FB2-REV-FND-000175",
+    "severity": "low"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000003",
+    "category": "completeness",
+    "description": "In five of the thirteen records the machine-readable oracle encodes only the expected path, so the case that gives the test its distinguishing power has no expected value. The defect is systematic and it is in the same five records FB2-REV-FND-000174 names. Set each record's steps beside its own expected_outcomes. FB2-VER-TMS-000001 has three steps; step 3 injects a voltage within limits and expects 'No fault triggered', and the array holds exactly two outcomes, fault_request = 'true' and violation_type = 'OVERVOLTAGE'. Neither can express step 3, and both describe step 2. FB2-VER-TMS-000003 has two steps; step 2 injects an out-of-range 4900 mV and expects 'Flagged implausible', and the array holds exactly one outcome, plausibility_result = 'pass', which is step 1's expectation. A test whose entire purpose is that 4900 mV is REJECTED has as its only recorded oracle that 3300 mV is ACCEPTED, so it would pass against an implementation that accepted everything. FB2-VER-TMS-000002 is the same shape and worse: step 1 expects 'Transitions match state table' and no outcome corresponds to it, and the state table the step defers to is not in the record, so the record's primary oracle points at an artefact that does not exist in it. THIS IS NOT A SCHEMA LIMITATION AND NOT MY JUDGEMENT OF WHAT A TEST SHOULD CONTAIN, and the family itself proves both: the eight newer records use the same expected_outcomes structure to encode exactly the negative case the older five omit. FB2-VER-TMS-000028 records limit_entries_raised_while_invalid = '0' with unit 'entries', which is the invalid-data case; FB2-VER-TMS-000024 records soa_debounce_state_found_in_source = '0' with unit 'occurrences', which is the absence case; FB2-VER-TMS-000021 records corrupted_frames_consumed_unchallenged = '0' with unit 'frames'. Corroborating evidence that the five older records are template instances rather than measures written about their own subject: tolerances is the identical object {\"value\": \"exact\"} in all five, and timing is byte-identical in all five (max_execution_time_ms 100, setup_time_ms 10, teardown_time_ms 5) - so the record-level timing budget of 100 ms is both uninformative for each measure and looser than the only timing assertion two of the five actually make (FB2-VER-TMS-000002's contactor_open_latency_ms < 50 and FB2-VER-TMS-000004's independent_open_latency_ms < 80). FB2-VER-TMS-000001 states an objective of 'Verify SOA voltage limit detection accuracy and latency' and contains no accuracy tolerance anywhere. NOT CLAIMED: nothing here says the tests would fail, nothing says the recorded outcomes are false, and nothing says the tests are worthless - steps and expected prose are present and readable. The defect is that a reader or a harness that trusts expected_outcomes reads a weaker claim than the record's own steps state.",
+    "evidence": "Parsed steps[] and expected_outcomes[] of all 13 records and compared them pairwise. FB2-VER-TMS-000001: 3 steps, 2 outcomes, step 3 ('No fault triggered') unrepresented. FB2-VER-TMS-000002: 3 steps, 2 outcomes, step 1 ('Transitions match state table') unrepresented; the string 'state table' occurs nowhere else in the record and no field carries such a table. FB2-VER-TMS-000003: 2 steps, 1 outcome, step 2 ('Flagged implausible') unrepresented. FB2-VER-TMS-000004: 3 steps, 2 outcomes, step 1 ('Monitor path triggers independent open') has no distinct outcome though path_independent partially covers it. FB2-VER-TMS-000005: 3 steps, 2 outcomes, step 2 ('Error counter increments') unrepresented. By contrast FB2-VER-TMS-000021 has 4 steps and 4 outcomes including corrupted_frames_consumed_unchallenged = '0'; FB2-VER-TMS-000024 has 4 steps and 4 outcomes including soa_debounce_state_found_in_source = '0'; FB2-VER-TMS-000028 has 5 steps and 4 outcomes including limit_entries_raised_while_invalid = '0'. Tolerances and timing objects compared by value across the five older records: tolerances is {\"value\": \"exact\"} in all five; timing is {max_execution_time_ms: 100, setup_time_ms: 10, teardown_time_ms: 5} in all five; the eight newer records each carry a distinct tolerances object and a distinct timing object. This review changed nothing.",
+    "finding_id": "FB2-REV-FND-000176",
+    "severity": "medium"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000002",
+    "category": "verification",
+    "description": "Two records label an inequality as though it were an equality, in the one field that is supposed to say how the comparison is to be judged. FB2-VER-TMS-000002 records expected_outcomes[0] as {signal: contactor_open_latency_ms, expected_value: '<50', tolerance: 'exact', unit: 'ms'}. FB2-VER-TMS-000004 records {signal: independent_open_latency_ms, expected_value: '<80', tolerance: 'exact', unit: 'ms'}. The expected_value is an ordering relation, so 'exact' describes no possible outcome: a measured 49 ms and a measured 12 ms are equally not 'exact'. Read together with the record-level tolerances object, which in both records is the same uninformative {\"value\": \"exact\"} that FB2-REV-FND-000176 names, the record ends up asserting exactness in three places while its only timing claim is an inequality. THE FIELD IS USED CORRECTLY ELSEWHERE IN THE SAME FAMILY, which is what makes this an authoring inconsistency rather than a vocabulary limitation: FB2-VER-TMS-000022 pairs expected_value '20' with tolerance 'at least'; FB2-VER-TMS-000025 pairs tolerance 'outside' and 'at least' with expected values that are relations in words; FB2-VER-TMS-000028 pairs expected_value 'at least 1' with tolerance 'at least'. So the corpus already has a working convention for a bounded assertion and these two records do not use it. CONSEQUENCE, stated at its real size: a harness that evaluates tolerance == 'exact' as string equality would reject every possible measurement of these two outcomes, and a harness that ignores the tolerance would compare the string '<50' to a number. Either way the timing assertions of these two measures are not machine-evaluable as written. NOT CLAIMED: no threshold is wrong - '<50' and '<80' are also the figures their own steps state in prose, the values are consistent with each other, and no engineering content is affected.",
+    "evidence": "expected_outcomes of FB2-VER-TMS-000002: [{signal: contactor_open_latency_ms, expected_value: '<50', tolerance: 'exact', unit: 'ms'}, {signal: fault_feedback_diag, expected_value: 'true', tolerance: 'exact', unit: 'bool'}]; step 2 of the same record states 'Open contactors within 50 ms', so the prose and the outcome agree on the number. expected_outcomes of FB2-VER-TMS-000004: [{signal: independent_open_latency_ms, expected_value: '<80', tolerance: 'exact', unit: 'ms'}, {signal: path_independent, expected_value: 'true', tolerance: 'exact', unit: 'bool'}]; step 2 states 'Contactors opened within 80 ms'. Contrast within the same family: FB2-VER-TMS-000022 expected_values '20'/'0'/'50' with tolerances 'at least'/'at least'/'at most'; FB2-VER-TMS-000025 tolerances 'at least'/'outside'/'exact'; FB2-VER-TMS-000028 expected_value 'at least 1' with tolerance 'at least'. Affected records are 2 of 13; the other 11 use a tolerance consistent with their expected_value. This review changed nothing.",
+    "finding_id": "FB2-REV-FND-000177",
+    "severity": "low"
+   }
+  ],
+  "human_approval_status": "pending",
+  "id": "FB2-REV-000021",
+  "lifecycle_status": "reviewed",
+  "lifecycle_status_note": "Set to the value above because this review did read the records it names and the digests below were computed from the bytes on disk at authoring time. It is NOT a statement about engineering validity, organisational independence or human confirmation, and this review is not a signature. No human read any record covered here.",
+  "limitations": [
+   "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. This is an AUTOMATED REVIEW: it is NOT organizational independence, NOT human confirmation and NOT a qualified-checker result. No human reviewer, no independent party and no separate agent session participated. Consistent with corpus-policy.json#/review_policy/ai_review_limitations, a distinct agent session would not have been independence either.",
+   "Automated review in one session. Not organizational independence, not human confirmation, not a qualified-checker result.",
+   "human_approval_status is 'pending' for every record covered and for this review. No human signed any of them, and this review is not a signature.",
+   "No record covered carries production authority or product verification credit.",
+   "PARTIAL SCOPE, AND THE PART NOT COVERED IS THE LARGER PART. The uncovered population in this profile and the other is 128 records over 128 identifiers; this review covers 13. NOT REACHED: 12 requirement records (FB2-HW-TSR-000001 to -000003, FB2-SW-SIR-000001 to -000006, FB2-SW-SWR-000001 to -000003), 12 singleton-family records across 11 families, 35 finding records, 18 scenario records, 20 review records and 12 execution records. The 35 finding records are arguably the highest-value group remaining, because a finding is review output and reviewing one is a meta-review; they were not reached here because reading 35 records was not affordable in this pass, and a review that certifies without reading would be worse than no review. That is a statement about budget, not a judgement that the unreviewed groups are in better shape - FB2-REV-FND-000174 shows the unreviewed population is where the corpus's largest unmeasured honesty gap sits.",
+   "THE COVERAGE FIGURE UNDERSTATES THE UNCOVERED POPULATION, AND THIS REVIEW'S OWN CONTRIBUTION IS A WORKED EXAMPLE. The automated_review_coverage dimension builds its numerator and denominator from UNIQUE ID STRINGS: index_ids is a set of the id half of the (profile, id) key, so the 323 records of this corpus collapse to 284 identifiers, 39 of which are carried by two records each. A record can therefore be entirely unreviewed while the dimension reads as covered, because an as_is record shares its identifier. That is exactly the case for the five older records in this review: FB2-VER-TMS-000001 to -000005 were already inside the covered numerator, which is why the coverage figure did not move for them, and they were unreviewed all the same. Measured on this tree: 284 unique identifiers, 195 covered records, 182 covered identifiers, 128 uncovered records, 128 uncovered identifiers of which 26 are counted as covered because the sibling profile's record is reviewed. So the 102 that the dimension's denominator-minus-numerator reports is 26 short of the real figure of 128. This review does not treat that as one of its four findings, because its findings array is about records it read and no covered record is the locus of a measurement defect in the tool; it is recorded here instead, and it is the single most consequential thing this review learned.",
+   "No test_measure record was edited, revised or re-hashed by this review. The four findings are dispositions for the owner; every stored review digest over the reviewed records still verifies.",
+   "Source grounding was re-derived for the citations the records themselves state. It was NOT re-derived for every threshold the records assert: the SOA voltage limits, the debounce window of 100 ms, the 4200 mV limit in FB2-VER-TMS-000001, the 4900 mV and 3300 mV stimuli and the contactor figures in FB2-VER-TMS-000004 and -000025 were read as the record states them and were not each traced to a configuration constant at the pin. The two arithmetic claims that were checked are FB2-VER-TMS-000022's 50 ms period, re-read from the parameter registry where FB2-PRM-000003 carries value 50 with tolerance min 49 max 51, and the 1000/50 = 20 arithmetic, which is correct.",
+   "The eight newer records were read for what they claim and for how well they are grounded. This review did not re-derive the requirement-side acceptance criteria they verify, because those requirements are outside its scope and six of the twelve uncovered requirement records are among the population this review did not reach. A defect in a requirement would not be found by this pass even where a measure under review verifies it.",
+   "Nothing here constitutes a verification result. No module was executed, no timing, coverage or throughput measurement of any test_measure record exists as a result of this review, and no target hardware was used, powered or commanded. The eight newer records each state that the paired execution record is blocked, and this review did not contradict that.",
+   "This review asserts no ISO 26262 conformity, no certification, no tool qualification, no ASPICE capability level, no ASIL determination for the real product, no human approval, no production authorisation and no product verification credit.",
+   "THIS REVIEW REPRODUCES THE DEFECT IT REPORTS, AND THE HONEST FIGURE IS THEREFORE 18, NOT 17. FB2-REV-FND-000174 measures 22 records asserting lifecycle_status 'reviewed' with no covering review. This review covers the five of them named in the finding, so the population falls to 17 - and then this review's own record enters it, because a review record carries lifecycle_status 'reviewed' and a review record cannot cover itself. The population as it stands after this review is 18: 14 with no covering review and no lifecycle_status_note, and 4 with no covering review but a note. This record is one of those 4, and it is in the mitigated class only because it carries a lifecycle_status_note saying in terms what 'reviewed' means here. So the control FB2-REV-FND-000174 asks for has a second reason to exist: as written it would catch a review record asserting its own completion. The figures were re-measured after the fact by an independent checker written for this pass that imports nothing from corpus.py; it reproduced 19 silent and 3 noted before this review and 14 silent and 3 noted plus this record after it, from its own index walk.",
+   "THIS IS A FIRST PASS, NOT A DIGEST RE-DERIVATION, AND THE TWO ARE NOT THE SAME THING. The thirteen digests in reviewed_ids were computed from the bytes on disk at the moment this review was authored, and they describe revision 1 of each record as it stands now. If any of these records is later revised, the repair pattern used elsewhere in this corpus applies: a digest_corrections entry recording the previous digest, the new digest, the basis and an explicit statement that re-deriving a digest is NOT a re-review. This review has not re-examined any record twice and asserts nothing about a revision other than the one named."
+  ],
+  "origin": "derived",
+  "owner_role": "verification_engineer",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "results_summary": {
+   "analytical_oracle_inputs_re_read_from_registry": 1,
+   "expected_outcomes_compared_against_steps": 13,
+   "findings": 4,
+   "findings_corrected_after_a_second_read": 1,
+   "findings_corrected_note": "BOTH CORRECTIONS ARE RECORDED HERE BECAUSE THEY POINT IN OPPOSITE DIRECTIONS AND THE POINT IS THAT THE DISCIPLINE IS THE SAME FOR EACH. (1) WITHDRAWN: this review first raised, against FB2-VER-TMS-000021, that a PEC mismatch might not gate invalidCellVoltage at all - in which case the record's expected outcome corrupted_frames_consumed_unchallenged = '0' would be unreachable and the record's central claim false. A second read of the same file located the propagation at ltc_6813-1.c:3114-3130, where PEC_valid gates both the store of the value and the setting of the flag, and confirmed LTC_DISCARD_PEC is (false) in the pinned configuration, so the branch the record relies on is the branch the build takes. The claim was therefore sound and the candidate finding was NOT A DEFECT. It is withdrawn rather than softened, and what survives of it is only the citation-attribution defect recorded as FB2-REV-FND-000175. Had it been reported at the severity the first reading implied, it would have asserted that a record was false when the corpus says nothing of the kind. (2) CORRECTED: the same review nearly reported a second, larger defect on the same evidence - that ltc_6813-1.c contains two definitions of DATA_CopyData, at line 123 and line 164, on the reading that the record cites a duplicate or shadowed function. A second read showed line 123 is the forward DECLARATION and line 164 is the definition, with no conditional compilation between them, and the record cites 164-196, which is the definition and its closing brace. That candidate is also withdrawn. Both corrections are recorded because a review that over-claims is the same defect as a review that under-claims, and because a reader comparing this record against the corpus should be able to see that the two discrepancies were found, checked, and found not to be defects rather than never noticed.",
+   "findings_raised_then_withdrawn": 1,
+   "findings_withdrawn_after_a_second_read": 1,
+   "records_edited": 0,
+   "records_reviewed": 13,
+   "records_revised": 0,
+   "source_citations_rederived_against_pinned_blob": 7,
+   "source_citations_verifying_exactly": 6,
+   "statement": "Coverage went up by the identifiers this review names and by nothing else. The findings do not close on their own: no test_measure record was edited, so no step, expected outcome, threshold, oracle, digest or source anchor changed, and every stored review digest over these records still verifies. The family is split by quality, not uniformly: the eight records dated 2026-10-02 are the best-grounded test measures in this corpus on the evidence of this pass, seven distinct source citations of which six verify to the exact line, while the five dated 2026-09-13 are template instances whose oracles do not measure their own stated objectives. A single family-level verdict would have been wrong in both directions."
+  },
+  "review_method": "The 13 records were READ in full, field by field, and the machine-checkable claims were re-derived rather than accepted. (1) The two populations inside the family were separated before anything was reported, because they are not the same kind of record: five records dated 2026-09-13 carry a boilerplate revision_history entry, no oracle_detail, no lifecycle_status_note and an empty limitations array, while eight records dated 2026-10-02 each carry a four-field oracle_detail, a four-item limitations array and a lifecycle_status_note. Judging the family as one kind of record would have produced findings that were false of eight of the thirteen. (2) Every expected_outcomes entry in all 13 records was set beside the steps array of the same record, outcome by outcome, to establish what the record's machine-readable oracle actually encodes. (3) Every source-grounded claim in the eight newer records was re-derived against the PINNED source with 'git show 308028fb:<path>': the cited line range was read, the cited symbol was located in the file, and the mechanism the record attributes to that range was compared with what the range contains. Seven distinct citations were checked and six verify exactly; the seventh is FB2-REV-FND-000175. (4) The one analytical-model claim that rests on a corpus value rather than on code, FB2-VER-TMS-000022's 50 ms acquisition period, was re-read out of the parameter registry rather than taken from the record. (5) The claim that no record in this family is covered by any review was not taken from the coverage figure: it was measured directly against the review records and the reviewed_by link registry, and the lifecycle_status of every uncovered record in the whole corpus was tallied, which is how FB2-REV-FND-000174 got its corpus-wide figure.",
+  "review_type": "adversarial",
+  "reviewed_ids": [
+   {
+    "artifact_id": "FB2-VER-TMS-000001",
+    "digest": "f02aacf7ba42460a6aade852e9a0e8257dfb1ed466eb318890f006d123f660af",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000002",
+    "digest": "b6036e1aed198d10b91f46761aedb083308678bafba7afd5243cdc02707e3c5f",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000003",
+    "digest": "423a8539a142d8bd93df315a97c71c01d5b1e8f9e748e9f02d052f187199c554",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000004",
+    "digest": "bfb09eaba82857293020509823f833b77364412164e98416a82084d1be035659",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000005",
+    "digest": "1c76809fcd47f44cb2b996f2356e046882b2960d490e35ddfa27766d9ccd977a",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000021",
+    "digest": "c3e1e920c5e30051869744434bfb3a579ff477795122421bcd7641c0b70657bf",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000022",
+    "digest": "5f324f76d926ed324326ad454ee785668dcc5945e1551e1f8de0a0b70ef2d3f5",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000023",
+    "digest": "33f35e4565074adf1b3df0411f85db905e3d112ca67fbfda046cdb9e76e096a0",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000024",
+    "digest": "7b4e20d095191e197a36cf804cc6b10a6332ee454e9d6cdf9621bfd4512f9536",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000025",
+    "digest": "66cfcdcc87d7b54a70415690364e09881d4b5edb993bbb5ef196b5178d804bc8",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000026",
+    "digest": "eff556897a06d108cc2edd3351d06255dd4eb0549c5b9d0b574eda0762d54de3",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000027",
+    "digest": "72bfe0529d13d2b56fa501cd7332fc1d6dea6339514b23ac34d886152627e54d",
+    "revision": "1"
+   },
+   {
+    "artifact_id": "FB2-VER-TMS-000028",
+    "digest": "23383e7ea6707a9e2d1db9222956b721a7107ed8498e926bfff57fd90a9a3600",
+    "revision": "1"
+   }
+  ],
+  "reviewer_identity": {
+   "model": "openrouter/stealth/space-bunny-alpha",
+   "note": "Automated review performed in a single AI coding-agent session (opencode). The model identifier is the identifier exposed to this session's runtime. No platform-issued session id was available to the reviewer, so session_id is a locally chosen label for this run and is not a platform-issued identifier. This is an AUTOMATED REVIEW: it is NOT organizational independence, NOT human confirmation and NOT a qualified-checker result. No human reviewer, no independent party and no separate agent session participated. Consistent with corpus-policy.json#/review_policy/ai_review_limitations, a distinct agent session would not have been independence either.",
+   "role": "verification_engineer",
+   "session_id": "opencode-2026-10-05-item1-test-measure-synthetic-review"
+  },
+  "revision": "1",
+  "revision_history": [
+   {
+    "author": "reviewer_automated",
+    "date": "2026-10-05T00:00:00Z",
+    "description": "Initial revision. Reviews the 13 uncovered test_measure records in the synthetic_reference profile. Records four findings, two of them medium. Records one candidate finding that a second read showed was not a defect and WITHDREW it rather than softening it. Changes no test_measure record and revises no engineering content. human_approval_status remains pending, production_authorized remains false and product_verification_credit remains false.",
+    "revision": "1"
+   }
+  ],
+  "scenario_id": "SCN-BASELINE",
+  "schema_version": "1.0.0",
+  "scope": "TARGETED SCOPE: the test_measure records in the synthetic_reference profile that no review record covered, and nothing else. That is 13 records: FB2-VER-TMS-000001 through -000005 and -000021 through -000028. PROFILE-SCOPED, and the reason is measured rather than assumed: the coverage dimension is computed on UNIQUE ID STRINGS, so five of these thirteen identifiers (FB2-VER-TMS-000001 to -000005) already read as covered because an as_is record carries the same id. They are still reviewed here, because under ID-RULE-004-A1 the pair (profile, id) is the key and a digest is a statement about one record, not about an identifier. NOT COVERED HERE AND NOT CLAIMED: the 12 uncovered requirement records, the 12 uncovered singleton-family records, the 35 uncovered finding records, the 18 uncovered scenario records, the 20 uncovered review records and the 12 uncovered execution records. Those are named in limitations.",
+  "source_refs": [],
+  "standards_mappings": [],
+  "title": "Review: the uncovered test_measure group, synthetic_reference profile (13 records; 8 source-grounded citations re-derived against the pinned blob)",
+  "updated_at": "2026-10-05T00:00:00Z",
+  "variant_applicability": [
+   "VAR-REF-001"
+  ]
+ },
+ "shape_note": "Deliberately not shaped like a corpus record: no top-level id, profile, artifact_type or source_refs, so that generating packets cannot change any coverage number. See the module docstring of make_review_packets.py.",
+ "signature_block": {
+  "_contract": {
+   "digest_note": "The digests below are already filled in. Copy them; do not type them. Run `make_review_packets.py --transcribe FB2-REV-000021` to have them printed as a pasteable block.",
+   "evidence_key": "human_approval",
+   "evidence_record_field": "approval_evidence",
+   "grant_is": "any value other than \"pending\" or absent",
+   "policy_ref": "docs/artifacts/governance/role-and-review-policy.json#/approval_evidence_contract",
+   "record_field": "human_approval_status",
+   "required_elements": [
+    "1. human_approval_status carries the grant value",
+    "2. approved_by - a named individual, not a role and not a team",
+    "3. role - a role_id declared in role-and-review-policy.json#/roles - plus independence{owner_role, satisfied, evidence, policy_ref}; the approving role must differ from owner_role AND from the author of the last content revision",
+    "4. date - ISO-8601, checked by grammar and by parse",
+    "5. review_packet{path, sha256, record_sha256_at_signing}; path must resolve to a packet.json on disk under docs/artifacts/reviews/signed ONLY - the regenerated tree docs/artifacts/reviews/packets is NOT admissible, because it is rewritten on every regeneration and would destroy your evidence; sha256 must equal that file's bytes now; record_sha256_at_signing must equal this packet's integrity.record_sha256; target.record_id and target.profile must both name this record",
+    "6. approval_ledger_ref{ledger_id, entry_sha256} naming your entry in docs/artifacts/governance/approval-ledger.jsonl. It is approval METADATA, not content: it is excluded from the record's content digest and is never a revision_history entry, so recording it neither bumps the revision nor stales a link. NEVER record the approval in revision_history - doing so stales every link pinning this revision and invalidates every stored review digest. See docs/artifacts/governance/approval-ledger.md"
+   ],
+   "rule_id": "human_approval_rejected",
+   "severity": "high"
+  },
+  "_packet_sha256": null,
+  "_packet_sha256_note": "The digest of this packet.json's own bytes. It is deliberately left null rather than filled, because a file cannot contain its own digest. Compute it with `shasum -a 256`, or use `--transcribe`, which resolves it.",
+  "_record_sha256_at_signing": "fa3d1d3ae06bb7bd6d1c74166fac382eb63218cd4313c318c34fb3e91cb525b0",
+  "_recording": "Archive the signed packet under docs/artifacts/reviews/signed/<profile>/<id>.json, then record the approval as human_approval_status plus an approval_evidence.human_approval block on the record, plus approval_ledger_ref naming one appended line in docs/artifacts/governance/approval-ledger.jsonl. Do NOT add a revision_history entry: see docs/artifacts/governance/approval-ledger.md.",
+  "_rule": "Empty by construction. No automated process may fill this. Filling it in is the only thing that changes human_approval_status on the record. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus rule human_approval_rejected is an EVIDENCE requirement, not a prohibition: a properly evidenced approval is ACCEPTED and keeps `corpus.py check` green, while a bare grant value is still rejected. What the validator reads is contract.approval_evidence_block below; it fails if any of its six elements is missing, and the finding names which.",
+  "comments": "",
+  "date": "",
+  "decision": "",
+  "filled": false,
+  "organisation": "",
+  "reviewer_name": "",
+  "role": "",
+  "signature": ""
+ },
+ "signature_policy": "The signature block below is empty by construction. This tool has no code path that writes a decision, an approval, a signature or an execution verdict. Filling it is a human action. As of 2026-10-04 (amendment APPROVAL-RULE-A1) the corpus ACCEPTS a properly evidenced approval rather than banning the value outright, so this rule now has to carry the evidence contract in full: see signature_block._contract. Since the same day (amendment APPROVAL-LEDGER-A1) the approval is recorded in the append-only ledger at docs/artifacts/governance/approval-ledger.jsonl and the record keeps only a reference to it, so recording your signature neither bumps the revision nor invalidates any review digest.",
+ "target": {
+  "artifact_type": "review",
+  "engineering_domain": "verification",
+  "human_approval_status": "pending",
+  "lifecycle_status": "reviewed",
+  "origin": "derived",
+  "owner_role": "verification_engineer",
+  "primary_key": [
+   "synthetic_reference",
+   "FB2-REV-000021"
+  ],
+  "primary_key_rule": "ID-RULE-004-A1: an artefact identifier is unique within its profile; two records of different profiles may carry the same identifier string.",
+  "product_verification_credit": false,
+  "production_authorized": false,
+  "profile": "synthetic_reference",
+  "record_id": "FB2-REV-000021",
+  "revision": "1"
+ }
+}
